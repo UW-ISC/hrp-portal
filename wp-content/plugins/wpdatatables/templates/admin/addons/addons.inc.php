@@ -97,6 +97,7 @@
                                     <?php if (!defined('WDT_MD_ROOT_PATH')) { ?>
                                         <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&medium=addons&campaign=addons"
                                            target="_blank"
+                                           rel="nofollow"
                                            class="wdt-addons-find-out-more"
                                            role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                         </a>
@@ -204,6 +205,7 @@
                                     <?php if (!defined('WDT_FF_ROOT_PATH')) { ?>
                                     <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
                                        target="_blank"
+                                       rel="nofollow"
                                        class="wdt-addons-find-out-more"
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>
@@ -238,6 +240,7 @@
                                     <?php if (!defined('WDT_GF_ROOT_PATH')) { ?>
                                     <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
                                        target="_blank"
+                                       rel="nofollow"
                                        class="wdt-addons-find-out-more"
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>

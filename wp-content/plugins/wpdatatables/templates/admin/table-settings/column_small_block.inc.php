@@ -15,7 +15,8 @@
                     class="wpdt-icon-pen column-control wdt-toggle-enable-editing"></i></span>
         <?php }?>
 
-        <?php if(isset($tableData)) do_action('wpdt_add_small_column_block', $tableData);?>
+        <?php if(isset($tableData)) do_action_deprecated( 'wpdt_add_small_column_block', array($tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_small_column_block' ); ?>
+        <?php if(isset($tableData)) do_action('wpdatatables_add_small_column_block', $tableData);?>
 
         <span class="pull-right wdt-column-block-icon formula-remove-option" data-toggle="tooltip" title="<?php esc_attr_e('Enable/disable in global search'); ?>"><i
                     class="wpdt-icon-search2 column-control wdt-toggle-global-search"></i></span>

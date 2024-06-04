@@ -17,6 +17,13 @@ if ($this->getFilteringForm()) {
     include WDT_TEMPLATE_PATH . 'frontend/filter_form.inc.php';
 }
 ?>
+<?php $customClasses = apply_filters_deprecated(
+    'wdt_add_class_to_table_html_element',
+    array( esc_attr($this->getCSSClasses()), $this->getWpId() ),
+    WDT_INITIAL_STARTER_VERSION,
+    'wpdatatables_add_class_to_table_html_element'
+); ?>
+<?php $customClasses = apply_filters('wpdatatables_add_class_to_table_html_element', esc_attr($this->getCSSClasses()), $this->getWpId()) ?>
 <?php do_action('wpdatatables_before_table', $this->getWpId()); ?>
 <?php if ((is_admin() && current_user_can('administrator') && $this->getTableType() == 'manual') || $this->isEditable()): ?>
     <?php wp_nonce_field('wdtFrontendEditTableNonce' . $this->getWpId(), 'wdtNonceFrontendEdit_' . $this->getWpId()); ?>
@@ -28,7 +35,7 @@ if ($this->getFilteringForm()) {
            value='<?php echo $this->getJsonDescription(); ?>'/>
 
     <table id="<?php echo esc_attr($this->getId()) ?>"
-           class="<?php if ($this->isFixedHeaders()) { ?>wpFixedHeader<?php } ?><?php if ($this->groupingEnabled()) { ?> wpdt-has-grouping<?php } ?> <?php if ($this->isScrollable()) { ?>scroll<?php } ?> <?php if ($this->isResponsive()) { ?>responsive<?php } ?> display nowrap <?php echo esc_attr($this->getCssClassesArr()) ?> <?php echo apply_filters('wdt_add_class_to_table_html_element', esc_attr($this->getCSSClasses()), $this->getWpId()) ?> wpDataTable wpDataTableID-<?php echo esc_attr($this->getWpId()) ?>"
+           class="<?php if ($this->isFixedHeaders()) { ?>wpFixedHeader<?php } ?><?php if ($this->groupingEnabled()) { ?> wpdt-has-grouping<?php } ?> <?php if ($this->isScrollable()) { ?>scroll<?php } ?> <?php if ($this->isResponsive()) { ?>responsive<?php } ?> display nowrap <?php echo esc_attr($this->getCssClassesArr()) ?> <?php echo esc_attr($customClasses) ?> wpDataTable wpDataTableID-<?php echo esc_attr($this->getWpId()) ?>"
            style="<?php echo esc_attr($this->getCSSStyle()) ?>"
            data-described-by='<?php echo esc_attr($this->getId()) ?>_desc'
            data-wpdatatable_id="<?php echo esc_attr($this->getWpId()); ?>

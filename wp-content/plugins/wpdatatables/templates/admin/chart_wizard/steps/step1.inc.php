@@ -76,14 +76,6 @@
     </div>
     <!-- /div.google-charts-type -->
 
-    <!-- div.highcharts-charts-type -->
-    <div class="charts-type highcharts-charts-type col-sm-12 col-md-12">
-
-        <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/steps/charts_pick/highcharts.inc.php'; ?>
-
-    </div>
-    <!-- /div.highcharts-charts-type -->
-
     <!-- div.chartjs-charts-type -->
     <div class="charts-type chartjs-charts-type col-sm-12 col-md-12">
 
@@ -92,19 +84,10 @@
     </div>
     <!-- /div.chartjs-charts-type -->
 
-    <!-- div.apexcharts-charts-type -->
-    <div class="charts-type apexcharts-charts-type col-sm-12 col-md-12">
 
-        <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/steps/charts_pick/apexcharts.inc.php'; ?>
 
-    </div>
-    <!-- /div.apexcharts-charts-type -->
+    <?php do_action('wpdatatables_add_chart_picker') ?>
 
-    <!-- div.highstock-charts-type -->
-    <div class="charts-type highstock-charts-type col-sm-12 col-md-12">
-        <?php do_action('wpdatatables_add_chart_picker') ?>
-    </div>
-    <!-- /div.highstock-charts-type -->
 
 </div>
 <!--/.row -->

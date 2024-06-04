@@ -130,33 +130,31 @@
                            data-dismiss="fileinput">×</a>
                     <?php } ?>
                     </div>
-
-                <?php } elseif ($dataColumn->getDataType() == 'hidden') { ?>
-                    <input type="hidden"
-                           value=""
-                           id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
-                           data-key="<?php echo esc_attr($dataColumn_key) ?>"
-                           data-value=""
-                           data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
-                           data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
-                           data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
-                           class="form-control input-sm editDialogInput"
-                    />
-                <?php } else { ?>
-                    <input type="text"
-                           value=""
-                           id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
-                           data-key="<?php echo esc_attr($dataColumn_key) ?>"
-                           data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
-                           data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
-                           data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
-                           class="form-control input-sm editDialogInput
-                                        <?php if ($dataColumn->isNotNull()) { ?>mandatory<?php } ?>
-                                        <?php if ($dataColumn->getDataType() == 'float' || $dataColumn->getDataType() == 'int') { ?>wdt-maskmoney<?php } ?>
-                                        <?php if ($dataColumn->getInputType() == 'date') { ?>wdt-datepicker<?php } ?>
-                                        <?php if ($dataColumn->getInputType() == 'time') { ?>wdt-timepicker<?php } ?>
-                                        <?php if ($dataColumn->getInputType() == 'datetime') { ?>wdt-datetimepicker<?php } ?>"
-                    />
+                <?php } else {
+                    if (has_action('wpdatatables_insert_field_in_edit_dialog_input_type_' . $dataColumn->getInputType())) {
+                        do_action(
+                            'wpdatatables_insert_field_in_edit_dialog_input_type_' . $dataColumn->getInputType(),
+                            $dataColumn,
+                            $dataColumn_key,
+                            $this->getId(),
+                            $this->getWpId()
+                        );
+                    } else { ?>
+                        <input type="text"
+                               value=""
+                               id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                               data-key="<?php echo esc_attr($dataColumn_key) ?>"
+                               data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
+                               data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
+                               data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
+                               class="form-control input-sm editDialogInput
+                                            <?php if ($dataColumn->isNotNull()) { ?>mandatory<?php } ?>
+                                            <?php if ($dataColumn->getDataType() == 'float' || $dataColumn->getDataType() == 'int') { ?>wdt-maskmoney<?php } ?>
+                                            <?php if ($dataColumn->getInputType() == 'date') { ?>wdt-datepicker<?php } ?>
+                                            <?php if ($dataColumn->getInputType() == 'time') { ?>wdt-timepicker<?php } ?>
+                                            <?php if ($dataColumn->getInputType() == 'datetime') { ?>wdt-datetimepicker<?php } ?>"
+                        />
+                    <?php } ?>
                 <?php } ?>
             </div>
         </div>

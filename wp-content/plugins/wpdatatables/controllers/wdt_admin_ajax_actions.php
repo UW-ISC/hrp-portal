@@ -131,31 +131,10 @@ function wdtSavePluginSettings()
 
 add_action('wp_ajax_wpdatatables_save_plugin_settings', 'wdtSavePluginSettings');
 
-/**
- * Save Google settings
- */
-function wdtSaveGoogleSettings()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtSettingsNonce')) {
-        exit();
-    }
-    $result = [];
-    $settings = json_decode(stripslashes_deep($_POST['settings']), true);
-    if (json_last_error() === JSON_ERROR_NONE) {
-        WDTSettingsController::saveGoogleSettings($settings);
-        $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
-    } else {
-        $result['error'] = 'Data don\'t have valid JSON format';
-    }
-    echo json_encode($result);
-    exit();
 
-}
-
-add_action('wp_ajax_wpdatatables_save_google_settings', 'wdtSaveGoogleSettings');
 
 /**
- * Save Google settings
+ * Save Google Maps API settings
  */
 function wdtSaveGoogleMapsApiKey()
 {
@@ -180,51 +159,35 @@ function wdtSaveGoogleMapsApiKey()
             update_option('wdtGoogleApiMapsValidated', false);
             switch ($data['status']) {
                 case 'ZERO_RESULTS':
-                    echo esc_html_e('No results found. The Google Maps Geocoding API may not be enabled.', 'wpdatatables');
+                    esc_html_e('No results found. The Google Maps Geocoding API may not be enabled.', 'wpdatatables');
                     break;
                 case 'OVER_QUERY_LIMIT':
-                    echo esc_html_e('The Google Maps API usage limit has been exceeded. Check your billing status.', 'wpdatatables');
+                    esc_html_e('The Google Maps API usage limit has been exceeded. Check your billing status.', 'wpdatatables');
                     break;
                 case 'REQUEST_DENIED':
-                    echo esc_html_e('The Google Maps API request was denied. Check your API key and check your billing status.', 'wpdatatables');
+                    esc_html_e('The Google Maps API request was denied. Check your API key and check your billing status.', 'wpdatatables');
                     break;
                 case 'INVALID_REQUEST':
-                    echo esc_html_e('Invalid request. Check your API key and parameters.', 'wpdatatables');
+                    esc_html_e('Invalid request. Check your API key and parameters.', 'wpdatatables');
                     break;
                 default:
-                    echo esc_html_e('Unknown error occurred.', 'wpdatatables');
+                    esc_html_e('Unknown error occurred.', 'wpdatatables');
             }
         } else {
             $settings = '';
             update_option('wdtGoogleApiMapsValidated', false);
-            echo esc_html_e('API key is invalid or there was an error.', 'wpdatatables');
+            esc_html_e('API key is invalid or there was an error.', 'wpdatatables');
         }
     } else {
         $settings = '';
         update_option('wdtGoogleApiMapsValidated', false);
-        echo esc_html_e('An error occurred while making the API request.', 'wpdatatables');
+        esc_html_e('An error occurred while making the API request.', 'wpdatatables');
     }
     WDTSettingsController::saveGoogleApiMaps($settings);
 }
 
 add_action('wp_ajax_wpdatatables_save_google_maps_api_key', 'wdtSaveGoogleMapsApiKey');
-/**
- * Delete Google settings
- */
-function wdtDeleteGoogleSettings()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtSettingsNonce')) {
-        exit();
-    }
 
-    update_option('wdtGoogleSettings', '');
-    update_option('wdtGoogleToken', '');
-
-    echo admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_delete_google_settings', 'wdtDeleteGoogleSettings');
 
 /**
  * Delete log_errors in cache table
@@ -726,6 +689,7 @@ function wdtCreateManualTable()
 
     $tableData = stripslashes_deep($_POST['tableData']);
     $tableData = apply_filters('wpdatatables_before_create_manual_table', $tableData);
+    $result = new stdClass();
 
     // Create a new Constructor object
     $constructor = new wpDataTableConstructor($tableData['connection']);
@@ -733,126 +697,20 @@ function wdtCreateManualTable()
     // Generate and return a new 'Manual' type table
     $newTableId = $constructor->generateManualTable($tableData);
 
+    if (!is_numeric($newTableId)) {
+        $result->error = $newTableId->getMessage();
+        echo json_encode($result);
+        exit();
+    }
+
     // Generate a link for new table
-    echo admin_url('admin.php?page=wpdatatables-constructor&source&table_id=' . $newTableId);
+    $result->link = admin_url('admin.php?page=wpdatatables-constructor&source&table_id=' . $newTableId);
+    echo json_encode($result);
 
     exit();
 }
 
 add_action('wp_ajax_wpdatatables_create_manual_table', 'wdtCreateManualTable');
-
-/**
- * Action for generating a WP-based MySQL query
- */
-function wdtGenerateWPBasedQuery()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
-        exit();
-    }
-
-    $tableData = WDTConfigController::sanitizeGeneratedSQLTableData($_POST['tableData']);
-    $tableData = apply_filters('wpdatatables_before_generate_wp_based_query', $tableData);
-
-    $constructor = new wpDataTableConstructor();
-    $constructor->generateWPBasedQuery($tableData);
-    $result = array(
-        'query' => $constructor->getQuery(),
-        'preview' => $constructor->getQueryPreview()
-    );
-
-    echo json_encode($result);
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_generate_wp_based_query', 'wdtGenerateWPBasedQuery');
-
-/**
- * Action for refreshing the WP-based query
- */
-function wdtRefreshWPQueryPreview()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
-        exit();
-    }
-
-    $query = $_POST['query'];
-
-    $constructor = new wpDataTableConstructor($_POST['connection']);
-    $constructor->setQuery($query);
-
-    echo $constructor->getQueryPreview($_POST['connection']);
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_refresh_wp_query_preview', 'wdtRefreshWPQueryPreview');
-
-/**
- * Action for generating the table from query/constructed table data
- */
-function wdtConstructorGenerateWDT()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
-        exit();
-    }
-
-    $tableData = $_POST['table_data'];
-
-    $constructor = new wpDataTableConstructor($tableData['connection']);
-    $res = $constructor->generateWdtBasedOnQuery($tableData);
-    if (empty($res->error)) {
-        $res->link = get_admin_url() . "admin.php?page=wpdatatables-constructor&source&table_id={$res->table_id}";
-    }
-
-    echo json_encode($res);
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_constructor_generate_wdt', 'wdtConstructorGenerateWDT');
-
-/**
- * Request the column list for the selected tables
- */
-function wdtConstructorGetMySqlTableColumns()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
-        exit();
-    }
-    if (isset($_POST['tables'])) {
-        $tables = array_map('sanitize_text_field', $_POST['tables']);
-        $columns = wpDataTableConstructor::listMySQLColumns($tables, $_POST['connection']);
-    } else {
-        $columns = array('allColumns' => array(), 'sortedColumns' => array());
-    }
-    echo json_encode($columns);
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_constructor_get_mysql_table_columns', 'wdtConstructorGetMySqlTableColumns');
-
-/**
- * Action for generating a WP-based MySQL query
- */
-function wdtGenerateMySqlBasedQuery()
-{
-    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
-        exit();
-    }
-
-    $tableData = WDTConfigController::sanitizeGeneratedSQLTableData($_POST['tableData']);
-    $tableData = apply_filters('wpdatatables_before_generate_mysql_based_query', $tableData);
-
-    $constructor = new wpDataTableConstructor($tableData['connection']);
-    $constructor->generateMySQLBasedQuery($tableData);
-    $result = array(
-        'query' => $constructor->getQuery(),
-        'preview' => $constructor->getQueryPreview($tableData['connection'])
-    );
-
-    echo json_encode($result);
-    exit();
-}
-
-add_action('wp_ajax_wpdatatables_generate_mysql_based_query', 'wdtGenerateMySqlBasedQuery');
 
 /**
  * Generate a file-based table preview (first 4 rows)

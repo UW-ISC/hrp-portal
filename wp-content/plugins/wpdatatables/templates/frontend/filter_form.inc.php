@@ -9,9 +9,16 @@
 
 /** @var WPDataTable $this */
 /** @var WDTColumn $dataColumn */
+$insertArray = apply_filters_deprecated(
+    'wdt_add_class_to_filter_in_form_element',
+    array( esc_attr($this->getCSSClasses()), $this->getWpId() ),
+    WDT_INITIAL_STARTER_VERSION,
+    'wpdatatables_add_class_to_filter_in_form_element'
+);
+$customClasses = apply_filters('wpdatatables_add_class_to_filter_in_form_element', esc_attr($this->getCSSClasses()), $this->getWpId());
 ?>
 <?php do_action('wpdatatables_before_filtering_form', $this->getWpId()); ?>
-    <div class="wpDataTables <?php if ($this->isTableWCAG()) { ?>wpTableWCAG <?php } ?>wpDataTablesFilter wpDataTablesWrapper wdt-skin-<?php echo esc_attr($this->getTableSkin()); ?> <?php echo apply_filters('wdt_add_class_to_filter_in_form_element', esc_attr($this->getCSSClasses()), $this->getWpId()) ?>"
+    <div class="wpDataTables <?php if ($this->isTableWCAG()) { ?>wpTableWCAG <?php } ?>wpDataTablesFilter wpDataTablesWrapper wdt-skin-<?php echo esc_attr($this->getTableSkin()); ?> <?php echo esc_attr($customClasses) ?>"
          data-wpdatatable_id="<?php echo esc_attr($this->getWpId()); ?>">
         <div id="filterBox_<?php echo esc_attr($this->getId()) ?>" class="wpDataTableFilterBox">
             <?php foreach ($this->getColumns() as $key => $dataColumn) { ?>

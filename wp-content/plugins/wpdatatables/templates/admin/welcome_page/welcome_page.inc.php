@@ -1,7 +1,6 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 <!-- .wdt-datatables-admin-wrap .wrap -->
 <div class="wrap wdt-datatables-admin-wrap">
-    <?php do_action('wpdatatables_admin_before_settings'); ?>
     <!-- Preloader -->
     <?php include WDT_TEMPLATE_PATH . 'admin/common/preloader.inc.php'; ?>
     <!-- /Preloader -->
@@ -214,7 +213,7 @@
                                 </p>
                                 <button class="wdt-start-creating"><a
                                             href="https://wpdatatables.com/documentation/general/features-overview/"
-                                            target="_blank">
+                                            rel="nofollow" target="_blank">
                                         <?php esc_html_e('View Documentation', 'wpdatatables'); ?>
                                     </a>
                                 </button>
@@ -346,14 +345,14 @@
     <div class="row">
         <h6 class="text-center wdt-footer-title">
             <?php esc_html_e('Made by', 'wpdatatables'); ?>
-            <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
+            <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                 <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
             </a>
         </h6>
         <ul class="wpdt-footer-links text-center">
             <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
             <li>|</li>
-            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
+            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
             </li>
             <li>|</li>
             <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">

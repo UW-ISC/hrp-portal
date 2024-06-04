@@ -270,8 +270,6 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-handsontable-css', WDT_CSS_PATH . 'handsontable.full.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-table-tools', WDT_CSS_PATH . 'TableTools.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-datatables-responsive', WDT_CSS_PATH . 'datatables.responsive.css', array(), WDT_CURRENT_VERSION);
-    wp_enqueue_style('wdt-datatables-fixedHeader', WDT_CSS_PATH . 'fixedHeader.dataTables.min.css', array(), WDT_CURRENT_VERSION);
-    wp_enqueue_style('wdt-datatables-fixedColumn', WDT_CSS_PATH . 'fixedColumns.dataTables.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-dragula');
 
     wp_enqueue_style('wdt-skin-material', WDT_ASSETS_PATH . 'css/wdt-skins/material.css', array(), WDT_CURRENT_VERSION);
@@ -294,10 +292,7 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-vfs-fonts', WDT_JS_PATH . 'export-tools/vfs_fonts.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-button-print', WDT_JS_PATH . 'export-tools/buttons.print.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-button-vis', WDT_JS_PATH . 'export-tools/buttons.colVis.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-fixed-columns', WDT_JS_PATH . 'fixedcolumn/dataTables.fixedColumns.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-fixed-header', WDT_JS_PATH . 'fixedheader/dataTables.fixedHeader.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-funcs-js');
-    wp_enqueue_script('wdt-inline-editing', WDT_JS_PATH . 'wpdatatables/wdt.inlineEditing.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array(
         'jquery',
         'wdt-datatables'
@@ -337,7 +332,8 @@ function wdtEditEnqueue()
     wp_localize_script('wdt-wpdatatables', 'wpdatatables_functions_strings', WDTTools::getTranslationStringsFunctions());
     wp_localize_script('wdt-advanced-filter', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
 
-    do_action('wdt_enqueue_on_edit_page');
+    do_action_deprecated( 'wdt_enqueue_on_edit_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_edit_page' );
+    do_action('wpdatatables_enqueue_on_edit_page');
 }
 
 /**
@@ -387,19 +383,6 @@ function wdtChartWizardEnqueue()
 {
     $googleLibSource = get_option('wdtGoogleStableVersion') ? WDT_JS_PATH . 'wdtcharts/googlecharts/googlecharts.js' : '//www.gstatic.com/charts/loader.js';
 
-    $highChartLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts.js' : '//code.highcharts.com/highcharts.js';
-    $highChartMoreLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-more.js' : '//code.highcharts.com/highcharts-more.js';
-    $highChart3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-3D.js' : '//code.highcharts.com/highcharts-3d.js';
-    $highChartCylinderLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-cylinder.js' : '//code.highcharts.com/modules/cylinder.js';
-    $highChartHeatMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-heatmap.js' : '//code.highcharts.com/modules/heatmap.js';
-    $highChartFunnelLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel.js' : '//code.highcharts.com/modules/funnel.js';
-    $highChartFunnel3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel3D.js' : '//code.highcharts.com/modules/funnel3d.js';
-    $highChartTreeMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-treemap.js' : '//code.highcharts.com/modules/treemap.js';
-    $highChartExportingLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting.js' : '//code.highcharts.com/modules/exporting.js';
-    $highChartExportingDataLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting-data.js' : '//code.highcharts.com/modules/export-data.js';
-    $highChartAccessibilityLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-accessibility.js' : '//code.highcharts.com/modules/accessibility.js';
-
-    $apexChartLibSource = get_option('wdtApexStableVersion') ? WDT_JS_PATH . 'wdtcharts/apexcharts/apexcharts.js' : '//cdn.jsdelivr.net/npm/apexcharts';
     WDTTools::wdtUIKitEnqueue();
 
     wp_enqueue_style('wdt-dragula');
@@ -408,26 +391,16 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-jsrender');
     wp_enqueue_script('wdt-dragula');
     wp_enqueue_script('wdt-google-charts', $googleLibSource, array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts', $highChartLibSource, array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-more', $highChartMoreLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-3d', $highChart3DLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-cylinder', $highChartCylinderLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-heatmap', $highChartHeatMapLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-funnel', $highChartFunnelLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-funnel3d', $highChartFunnel3DLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-treemap', $highChartTreeMapLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-exporting', $highChartExportingLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-exporting-data', $highChartExportingDataLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-accessibility', $highChartAccessibilityLibSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
+
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'wdtcharts/chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-apexcharts', $apexChartLibSource, array(), WDT_CURRENT_VERSION, true);
+
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wdtcharts/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wdtcharts/googlecharts/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-highcharts', WDT_JS_PATH . 'wdtcharts/highcharts/wdt.highcharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-apexcharts', WDT_JS_PATH . 'wdtcharts/apexcharts/wdt.apexcharts.js', array(), WDT_CURRENT_VERSION, true);
+
+    //wp_enqueue_script('wdt-wp-apexcharts', WDT_JS_PATH . 'wdtcharts/apexcharts/wdt.apexcharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-chart-js', WDT_JS_PATH . 'wdtcharts/chartjs/wdt.chartJS.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
@@ -464,7 +437,8 @@ function wdtSettingsEnqueue()
 
     wp_localize_script('wdt-settings-main-js', 'wpdatatables_settings_strings', WDTTools::getTranslationStringsTableSettingsMain());
 
-    do_action('wdt_enqueue_on_settings_page');
+    do_action_deprecated( 'wdt_enqueue_on_settings_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_settings_page' );
+    do_action('wpdatatables_enqueue_on_settings_page');
 }
 
 /**
@@ -478,7 +452,8 @@ function wdtDashboardEnqueue()
     wp_enqueue_script('wdt-doc-js');
     wp_enqueue_script('wdt-dashboard-psl', WDT_ROOT_URL . 'assets/js/psl/psl.min.js', array(), WDT_CURRENT_VERSION, true);
 
-    do_action('wdt_enqueue_on_dashboard_page');
+    do_action_deprecated( 'wdt_enqueue_on_dashboard_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_dashboard_page' );
+    do_action('wpdatatables_enqueue_on_dashboard_page');
 }
 
 /**

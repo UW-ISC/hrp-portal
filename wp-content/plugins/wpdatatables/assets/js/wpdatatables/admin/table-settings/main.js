@@ -48,23 +48,6 @@
             wpdatatable_config.setFileLocation($(this).val());
         });
 
-        $('#wdt-fixed-header').change(function (e) {
-            wpdatatable_config.setFixedHeader($(this).is(':checked') ? 1 : 0);
-        });
-        $('#wdt-fixed-header-offset').change(function (e) {
-            wpdatatable_config.setFixedHeaderOffset($(this).val());
-        });
-
-        $('#wdt-fixed-columns').change(function (e) {
-            wpdatatable_config.setFixedColumns($(this).is(':checked') ? 1 : 0);
-        });
-        $('#wdt-fixed-columns-left-number').change(function (e) {
-            wpdatatable_config.setLeftFixedColumnNumber($(this).val());
-        });
-        $('#wdt-fixed-columns-right-number').change(function (e) {
-            wpdatatable_config.setRightFixedColumnNumber($(this).val());
-        });
-
         /**
          * Toggle server-side processing
          */
@@ -202,6 +185,12 @@
             wpdatatable_config.setInfoBlock($(this).is(':checked') ? 1 : 0);
         });
 
+        /**
+         * Enable to go on the top of the table after clicking the pagination buttons
+         */
+        $('#wdt-pagination-top').change(function (e) {
+            wpdatatable_config.setPaginationOnTop($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Enable pagination
          */
@@ -746,7 +735,7 @@
         $('#wdt-rows-per-page').on('show.bs.select', function (e) {
             e.preventDefault();
             var customValue = $('#wdt-custom-rows-per-page').val(),
-                originalValue = $('#wdt-rows-per-page').data('original-data-length'), newOptions;
+            originalValue = $('#wdt-rows-per-page').data('original-data-length'), newOptions;
 
             $(this).empty();
             if (customValue !== '') {
@@ -1298,12 +1287,11 @@
          * Show/hide predefined input for hidden fields (post-meta, query-param and acf-data)
          */
         $(document).on('change','#wdt-editing-hidden-default-value-selectpicker', function (e) {
+            $('.wdt-editing-hidden-query-param-value-block').hide()
+            $('.wdt-editing-hidden-post-meta-value-block').hide()
+            $('.wdt-editing-hidden-acf-data-value-block').hide()
             if ($.inArray($(this).val(), ['query-param', 'post-meta', 'acf-data']) != -1) {
                 $('.wdt-editing-hidden-' + $(this).val() + '-value-block').show()
-            } else {
-                $('.wdt-editing-hidden-query-param-value-block').hide()
-                $('.wdt-editing-hidden-post-meta-value-block').hide()
-                $('.wdt-editing-hidden-acf-data-value-block').hide()
             }
         });
 
@@ -1434,35 +1422,46 @@
                     $defaultValueSelectpickerBlock.find('.bs-searchbox .form-control').val('').trigger('keyup');
                 });
             } else if (editorInputType == 'hidden') {
-                $('div.wdt-editing-enabled-block').hide();
-                $('div.wdt-dynamic-editing-predefined-block').show();
-                if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("query-param:") != -1){
-                    var queryParam = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('query-param:','')
-                    $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'query-param');
-                    $('.wdt-editing-hidden-query-param-value-block').show()
-                    $('.wdt-editing-hidden-query-param-value').val(queryParam)
-                    $('.wdt-editing-hidden-acf-data-value-block').hide()
-                    $('.wdt-editing-hidden-acf-data-value').val('')
-                    $('.wdt-editing-hidden-post-meta-value-block').hide()
-                    $('.wdt-editing-hidden-post-meta-value').val('')
-                } else if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("post-meta:") != -1){
-                    var postMeta = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('post-meta:','')
-                    $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'post-meta');
-                    $('.wdt-editing-hidden-post-meta-value-block').show()
-                    $('.wdt-editing-hidden-post-meta-value').val(postMeta)
-                    $('.wdt-editing-hidden-query-param-value-block').hide()
-                    $('.wdt-editing-hidden-query-param-value').val('')
-                    $('.wdt-editing-hidden-acf-data-value-block').hide()
-                    $('.wdt-editing-hidden-acf-data-value').val('')
-                } else if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("acf-data:") != -1){
-                    var acfData = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('acf-data:','')
-                    $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'acf-data');
-                    $('.wdt-editing-hidden-acf-data-value-block').show()
-                    $('.wdt-editing-hidden-acf-data-value').val(acfData)
-                    $('.wdt-editing-hidden-post-meta-value-block').hide()
-                    $('.wdt-editing-hidden-post-meta-value').val('')
-                    $('.wdt-editing-hidden-query-param-value-block').hide()
-                    $('.wdt-editing-hidden-query-param-value').val('')
+                if (wpdatatable_config.currentOpenColumn.editingDefaultValue) {
+                    $('div.wdt-editing-enabled-block').hide();
+                    $('div.wdt-dynamic-editing-predefined-block').show();
+                    if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("query-param:") != -1) {
+                        var queryParam = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('query-param:', '')
+                        $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'query-param');
+                        $('.wdt-editing-hidden-query-param-value-block').show()
+                        $('.wdt-editing-hidden-query-param-value').val(queryParam)
+                        $('.wdt-editing-hidden-acf-data-value-block').hide()
+                        $('.wdt-editing-hidden-acf-data-value').val('')
+                        $('.wdt-editing-hidden-post-meta-value-block').hide()
+                        $('.wdt-editing-hidden-post-meta-value').val('')
+                    } else if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("post-meta:") != -1) {
+                        var postMeta = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('post-meta:', '')
+                        $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'post-meta');
+                        $('.wdt-editing-hidden-post-meta-value-block').show()
+                        $('.wdt-editing-hidden-post-meta-value').val(postMeta)
+                        $('.wdt-editing-hidden-query-param-value-block').hide()
+                        $('.wdt-editing-hidden-query-param-value').val('')
+                        $('.wdt-editing-hidden-acf-data-value-block').hide()
+                        $('.wdt-editing-hidden-acf-data-value').val('')
+                    } else if (wpdatatable_config.currentOpenColumn.editingDefaultValue.indexOf("acf-data:") != -1) {
+                        var acfData = wpdatatable_config.currentOpenColumn.editingDefaultValue.replace('acf-data:', '')
+                        $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', 'acf-data');
+                        $('.wdt-editing-hidden-acf-data-value-block').show()
+                        $('.wdt-editing-hidden-acf-data-value').val(acfData)
+                        $('.wdt-editing-hidden-post-meta-value-block').hide()
+                        $('.wdt-editing-hidden-post-meta-value').val('')
+                        $('.wdt-editing-hidden-query-param-value-block').hide()
+                        $('.wdt-editing-hidden-query-param-value').val('')
+                    } else {
+                        $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', wpdatatable_config.currentOpenColumn.editingDefaultValue);
+                        $('.wdt-editing-hidden-query-param-value-block').hide()
+                        $('.wdt-editing-hidden-query-param-value').val('')
+                        $('.wdt-editing-hidden-post-meta-value-block').hide()
+                        $('.wdt-editing-hidden-post-meta-value').val('')
+                        $('.wdt-editing-hidden-acf-data-value-block').hide()
+                        $('.wdt-editing-hidden-acf-data-value').val('')
+                    }
+                    $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('refresh');
                 } else {
                     $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', wpdatatable_config.currentOpenColumn.editingDefaultValue);
                     $('.wdt-editing-hidden-query-param-value-block').hide()
@@ -1472,7 +1471,6 @@
                     $('.wdt-editing-hidden-acf-data-value-block').hide()
                     $('.wdt-editing-hidden-acf-data-value').val('')
                 }
-                $('#wdt-editing-hidden-default-value-selectpicker').selectpicker('refresh');
             } else {
                 $defaultValueInput.val('');
                 $('div.wdt-editing-enabled-block').hide();

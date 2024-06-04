@@ -480,7 +480,17 @@ class WPDataChart
     {
         $wdtChart = 'Wdt' . ucfirst($constructedChartData['engine']) . 'Chart' . '\Wdt' . ucfirst($constructedChartData['engine']) . 'Chart';
         $chartClassFileName = 'class.' . $constructedChartData['engine'] . '.wpdatachart.php';
-        require_once(WDT_ROOT_PATH . 'source/' . $chartClassFileName);
+        if ($constructedChartData['engine'] == 'highcharts') {
+            require_once(WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php');
+        } else if ($constructedChartData['engine'] == 'highstock') {
+            require_once(WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php');
+            require_once(WDT_HS_ROOT_PATH . 'source/class.highstock.wpdatachart.php');
+        } else if ($constructedChartData['engine'] == 'apexcharts') {
+            require_once(WDT_AC_ROOT_PATH . 'source/class.apexcharts.wpdatachart.php');
+        } else {
+            require_once(WDT_ROOT_PATH . 'source/' . $chartClassFileName);
+        }
+
         return new $wdtChart($constructedChartData, $loadFromDB);
     }
 
@@ -1110,6 +1120,7 @@ class WPDataChart
             wp_enqueue_script('underscore');
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
         }
         wp_enqueue_script('wpdatatables-render-chart', WDT_JS_PATH . 'wdtcharts/wdt.chartsRender' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
         wp_localize_script('wpdatatables-render-chart', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
@@ -1131,7 +1142,13 @@ class WPDataChart
      */
     public function enqueueScriptsAfterChartRender()
     {
-        do_action('wdt-enqueue-scripts-after-chart-render');
+        do_action_deprecated(
+            'wdt-enqueue-scripts-after-chart-render',
+            array(),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_enqueue_scripts_after_chart_render'
+        );
+        do_action('wpdatatables_enqueue_scripts_after_chart_render');
 
         $id = $this->_id;
         ob_start();

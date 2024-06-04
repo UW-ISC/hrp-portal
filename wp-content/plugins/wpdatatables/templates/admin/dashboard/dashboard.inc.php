@@ -263,16 +263,17 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with bug fixes:
+                            New update with features and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with vulnerability for editable tables. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with empty columns (after last column data) from Excel and CSV files. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with saving table description for Simple tables. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with close element in modals for mojito skin. </li>
-                                <li><strong>BugFix:</strong> Fixed typo in "Custom rows per page". </li>
+                                <li><strong>Feature:</strong> Customize your database by choosing unique names for your tables directly through the user interface. </li>
+                                <li><strong>BugFix:</strong> Fixed vulnerability issue with import functionality. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Transform Value handling special characters in headers. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Header Rotation on Safari. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with filters on front-end for header. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Follow Table Filtering (only chart on page).</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>
@@ -284,7 +285,6 @@
                 <div class="card wdt-store-login-card">
                     <div class="card-header ">
                         <div class="wdt-card-header-title">
-                            <i class="wpdt-icon-star-full" style="color: #FFD721;"></i>
                             <?php esc_html_e('You are a premium user!', 'wpdatatables'); ?>
                         </div>
                         <ul class="actions">
@@ -516,7 +516,7 @@
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
                                 <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&amp;medium=addons&amp;campaign=addons"
-                                   target="_blank" class="wdt-addons-find-out-more" role="button">
+                                   target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
                                 <div class="clear"></div>
@@ -641,7 +641,7 @@
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
                                 <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
-                                   target="_blank" class="wdt-addons-find-out-more" role="button">
+                                   target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
                                 <div class="clear"></div>
@@ -682,7 +682,7 @@
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
                                 <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
-                                   target="_blank" class="wdt-addons-find-out-more" role="button">
+                                   target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
                                 <div class="clear"></div>
@@ -733,14 +733,14 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php esc_html_e('Made by', 'wpdatatables'); ?>
-                <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
+                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
                 <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
-                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
+                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
                 </li>
                 <li>|</li>
                 <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">

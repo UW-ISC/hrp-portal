@@ -2379,7 +2379,7 @@ div.dt-button-collection.wdt-skin-mojito button.dt-button.buttons-columnVisibili
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito .modal-dialog .modal-content{
         width: 350px;
         position: relative;
-        left: -28px;
+        left: 5px;
     }
 
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button,

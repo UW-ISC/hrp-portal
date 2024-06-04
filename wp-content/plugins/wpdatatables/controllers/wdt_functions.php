@@ -87,8 +87,8 @@ function wdtActivationCreateTables()
 						orig_header varchar(255) NOT NULL,
 						display_header varchar(255) NOT NULL,
 						filter_type enum('none','null_str','text','number','number-range','date-range','datetime-range','time-range','select','multiselect','checkbox') NOT NULL,
-						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail','hidden') NOT NULL,
-						input_type enum('none','text','textarea','mce-editor','date','datetime','time','link','email','selectbox','multi-selectbox','attachment','hidden') NOT NULL default 'text',
+						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail') NOT NULL,
+						input_type enum('none','text','textarea','mce-editor','date','datetime','time','link','email','selectbox','multi-selectbox','attachment') NOT NULL default 'text',
 						input_mandatory tinyint(1) NOT NULL default '0',
                         id_column tinyint(1) NOT NULL default '0',
 						group_column tinyint(1) NOT NULL default '0',
@@ -456,6 +456,9 @@ function wdtUninstallDelete()
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatacharts");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_rows");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_cache");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_folders");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_folders_meta");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_templates");
 
         do_action('wpdatatables_after_uninstall_method');
     }
@@ -561,7 +564,7 @@ function wdtAdminRatingMessages()
 
     if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false && get_option('wdtMDNewsDiv') == "no") {
         echo '<div class="notice notice-info is-dismissible wpdt-md-news-notice">
-             <p class="wpdt-md-news">NEWS! wpDataTables just launched a new addon - Master-Detail Tables. You can find it in the <a href="' . esc_url($urlAddonsPage) . '">Addons page</a>, read more about it in our docs on this <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/">link</a>.</p>
+             <p class="wpdt-md-news">NEWS! wpDataTables just launched a new addon - Master-Detail Tables. You can find it in the <a href="' . esc_url($urlAddonsPage) . '">Addons page</a>, read more about it in our docs on this <a rel="nofollow" target="_blank" href="https://wpdatatables.com/documentation/addons/master-detail-tables/">link</a>.</p>
          </div>';
     }
 
@@ -766,6 +769,11 @@ function wdtOnDeleteSiteOnMultisiteNetwork($tables)
     $tables[] = $wpdb->prefix . 'wpdatatables';
     $tables[] = $wpdb->prefix . 'wpdatatables_columns';
     $tables[] = $wpdb->prefix . 'wpdatacharts';
+    $tables[] = $wpdb->prefix . 'wpdatatables_cache';
+    $tables[] = $wpdb->prefix . 'wpdatatables_folders';
+    $tables[] = $wpdb->prefix . 'wpdatatables_folders_meta';
+    $tables[] = $wpdb->prefix . 'wpdatatables_rows';
+    $tables[] = $wpdb->prefix . 'wpdatatables_templates';
 
     return $tables;
 }
@@ -1632,7 +1640,13 @@ function wdtSanitizeQuery($query)
     $query = stripslashes($query);
     $query = rtrim($query, "; \t\n");
 
-    $query = apply_filters('wpdt_sanitize_query', $query);
+    $query = apply_filters_deprecated(
+        'wpdt_sanitize_query',
+        array( $query ),
+        WDT_INITIAL_STARTER_VERSION,
+        'wpdatatables_sanitize_query'
+    );
+    $query = apply_filters('wpdatatables_sanitize_query', $query);
 
     return $query;
 }
@@ -1875,18 +1889,6 @@ function welcome_page_activation_redirect($plugin)
 }
 
 add_action('activated_plugin', 'welcome_page_activation_redirect');
-
-function addChartPickerStepNotice()
-{
-    ob_start();
-    include WDT_ROOT_PATH . 'templates/admin/chart_wizard/steps/charts_pick/highstock.inc.php';
-    $highStockChartsNotice = ob_get_contents();
-    ob_end_clean();
-    echo $highStockChartsNotice;
-
-}
-
-add_action('wpdatatables_add_chart_picker', 'addChartPickerStepNotice');
 
 /**
  *  Add plugin action links Plugins page

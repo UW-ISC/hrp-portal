@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.3.2
+ * @version 6.5
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.3.2
+Version: 6.5
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -104,9 +104,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wdtsettingscontroller.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtexception.php');
     require_once(WDT_ROOT_PATH . 'source/class.connection.php');
-    require_once(WDT_ROOT_PATH . 'source/class.pgsql.connection.php');
-    require_once(WDT_ROOT_PATH . 'source/class.sql.php');
-    require_once(WDT_ROOT_PATH . 'source/class.sql.pdo.php');
+
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatacolumn.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablerows.php');
@@ -122,26 +120,8 @@ function wpdatatables_load()
     //[<--/ Full version -->]//
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsetable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsechartstable.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/GutenbergBlock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WpDataTablesGutenbergBlock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/gutenberg/WpDataChartsGutenbergBlock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/class.wdtelementorblock.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/divi-wpdt/divi-wpdt.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/avada/class.wdtavadaelements.php');
-    require_once(WDT_ROOT_PATH . 'integrations/page_builders/wpbakery/wdtBakeryBlock.php');
-    if (is_file(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php')) {
-        require_once(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php');
-    }
-    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.wpdatafolders.php'))
-        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.wpdatafolders.php');
-    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.factory.wpdatafolders.php'))
-        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.factory.wpdatafolders.php');
-    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.tables.wpdatafolders.php'))
-        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.tables.wpdatafolders.php');
-    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.charts.wpdatafolders.php'))
-        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.charts.wpdatafolders.php');
-    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.reports.wpdatafolders.php'))
-        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.reports.wpdatafolders.php');
+
+    require_once(WDT_ROOT_PATH . 'integrations/wdt-integrations-loader.php');
 
     add_action('plugins_loaded', 'wdtLoadTextdomain');
 

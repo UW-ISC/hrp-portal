@@ -30,7 +30,8 @@
                     <?php if (isset($tableData->wdtJsonConfig) && isset($tableData->wdtJsonConfig->masterDetail)) {?>
                         <input id="wdt-select-all-column-master-detail" type="checkbox" class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide Master-detail column'); ?>">
                     <?php }?>
-                    <?php if(isset($tableData)) do_action('wpdt_add_small_column_block', $tableData);?>
+                    <?php if(isset($tableData)) do_action_deprecated( 'wpdt_add_small_column_block', array($tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_small_column_block' );?>
+                    <?php if(isset($tableData)) do_action('wpdatatables_add_small_column_block', $tableData);?>
 
                     <input id="wdt-select-all-column-global-search" type="checkbox" class="pull-right wdt-column-block-icon formula-remove-option select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Enable/disable in global search'); ?>">
                     <input id="wdt-select-all-column-filters" type="checkbox" class="pull-right wdt-column-block-icon formula-remove-option select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide filters'); ?>">

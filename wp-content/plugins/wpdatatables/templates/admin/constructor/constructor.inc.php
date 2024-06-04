@@ -43,15 +43,13 @@
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_2.inc.php'; ?>
 
-                    <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_3.inc.php'; ?>
-
-                    <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_4.inc.php'; ?>
-
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_2_2.inc.php'; ?>
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_2_3.inc.php'; ?>
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/constructor_column_block.inc.php'; ?>
+
+                    <?php do_action( 'wpdatatables_add_constructor_step_in_wizard' ); ?>
 
                 </div>
                 <!-- /.card-body -->
