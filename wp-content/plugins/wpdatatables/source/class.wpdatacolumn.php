@@ -1,7 +1,6 @@
 <?php
 
 defined('ABSPATH') or die('Access denied.');
-
 class WDTColumn {
 
     protected $_id = null;
@@ -353,7 +352,12 @@ class WDTColumn {
             }
         }
 
-        $value = apply_filters('wpdt_filter_filtering_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
+        $value = apply_filters_deprecated(
+            'wpdt_filter_filtering_default_value',
+            array( $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId() ),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_filter_filtering_default_value' );
+        $value = apply_filters('wpdatatables_filter_filtering_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
 
         return $value;
     }
@@ -756,7 +760,13 @@ class WDTColumn {
                 }
             }
         }
-        $value = apply_filters('wpdt_filter_editing_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
+        $value = apply_filters_deprecated(
+            'wpdt_filter_editing_default_value',
+            array( $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId() ),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_filter_editing_default_value'
+        );
+        $value = apply_filters('wpdatatables_filter_editing_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
 
         return $value;
     }
@@ -839,67 +849,9 @@ class WDTColumn {
      * @return mixed
      */
     private function applyPlaceholders($value) {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
-        if ($value && !is_array($value) && !is_object ($value)) {
-            // Current user ID
-            if (strpos($value, '%CURRENT_USER_ID%') !== false) {
-                $value = str_replace('%CURRENT_USER_ID%', get_current_user_id(), $value);
-            }// Current user login
-            if (strpos($value, '%CURRENT_USER_LOGIN%') !== false) {
-                $value = str_replace('%CURRENT_USER_LOGIN%', wp_get_current_user()->user_login, $value);
-            }// Current post id
-            if (strpos($value, '%CURRENT_POST_ID%') !== false) {
-                $value = str_replace('%CURRENT_POST_ID%', get_the_ID(), $value);
-            }// Current user first name
-            if (strpos($value, '%CURRENT_USER_FIRST_NAME%') !== false) {
-                $value = str_replace('%CURRENT_USER_FIRST_NAME%', wp_get_current_user()->first_name, $value);
-            }// Current user last name
-            if (strpos($value, '%CURRENT_USER_LAST_NAME%') !== false) {
-                $value = str_replace('%CURRENT_USER_LAST_NAME%', wp_get_current_user()->last_name, $value);
-            }// Current user display name
-            if (strpos($value, '%CURRENT_USER_DISPLAY_NAME%') !== false) {
-                $value = str_replace('%CURRENT_USER_DISPLAY_NAME%', wp_get_current_user()->display_name, $value);
-            }// Current user email
-            if (strpos($value, '%CURRENT_USER_EMAIL%') !== false) {
-                $value = str_replace('%CURRENT_USER_EMAIL%', wp_get_current_user()->user_email, $value);
-            }// Current date
-            if (strpos($value, '%CURRENT_DATE%') !== false) {
-                $value = str_replace('%CURRENT_DATE%', current_time(get_option('wdtDateFormat')), $value);
-            }// Current datetime
-            if (strpos($value, '%CURRENT_DATETIME%') !== false) {
-                $value = str_replace('%CURRENT_DATETIME%', current_time(get_option('wdtDateFormat')) . ' ' . current_time(get_option('wdtTimeFormat')), $value);
-            }// Current time
-            if (strpos($value, '%CURRENT_TIME%') !== false) {
-                $value = str_replace('%CURRENT_TIME%', current_time(get_option('wdtTimeFormat')), $value);
-            }// Shortcode VAR1
-            if (strpos($value, '%VAR1%') !== false) {
-                $value = str_replace('%VAR1%', $wdtVar1, $value);
-            }// Shortcode VAR2
-            if (strpos($value, '%VAR2%') !== false) {
-                $value = str_replace('%VAR2%', $wdtVar2, $value);
-            }// Shortcode VAR3
-            if (strpos($value, '%VAR3%') !== false) {
-                $value = str_replace('%VAR3%', $wdtVar3, $value);
-            }// Shortcode VAR4
-            if (strpos($value, '%VAR4%') !== false) {
-                $value = str_replace('%VAR4%', $wdtVar4, $value);
-            }// Shortcode VAR5
-            if (strpos($value, '%VAR5%') !== false) {
-                $value = str_replace('%VAR5%', $wdtVar5, $value);
-            }// Shortcode VAR6
-            if (strpos($value, '%VAR6%') !== false) {
-                $value = str_replace('%VAR6%', $wdtVar6, $value);
-            }// Shortcode VAR7
-            if (strpos($value, '%VAR7%') !== false) {
-                $value = str_replace('%VAR7%', $wdtVar7, $value);
-            }// Shortcode VAR8
-            if (strpos($value, '%VAR8%') !== false) {
-                $value = str_replace('%VAR8%', $wdtVar8, $value);
-            }// Shortcode VAR9
-            if (strpos($value, '%VAR9%') !== false) {
-                $value = str_replace('%VAR9%', $wdtVar9, $value);
-            }
+        if (defined('WDT_PH_INTEGRATION')) {
+            return \WDTIntegration\Placeholders::maybeApplyInColumns($value);
         }
 
         return $value;

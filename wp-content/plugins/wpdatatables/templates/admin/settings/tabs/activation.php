@@ -151,7 +151,8 @@
         </div>
         <!-- /Panel Group -->
 
-        <?php do_action('wdt_add_activation'); ?>
+        <?php do_action_deprecated( 'wdt_add_activation', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_activation' ); ?>
+        <?php do_action('wpdatatables_add_activation'); ?>
 
     </div>
     <!-- /Row -->

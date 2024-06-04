@@ -342,7 +342,7 @@
             columns: columns,
             start: 0,
             length: -1,
-            wdtNonce: $('#wdtNonceFrontendEdit_' + excelPlugin.tableWpId).val()
+            wdtNonce: $('#wdtNonceFrontendServerSide_' + excelPlugin.tableWpId).val()
             //search: search_param
         };
 
@@ -569,7 +569,7 @@
                     }
 
                     if( return_data.error.length > 0 ) {
-                        alert(return_data.error);
+                        wdtNotify('Error!', return_data.error, 'danger');
                     } else if( return_data.formula_cells ) {
                         //do some callback function call
                         excelPlugin.applyCellsData( return_data.formula_cells, 'updateFormulaValues' );
@@ -578,7 +578,7 @@
                 error: function ( return_data ) {
                     excelPlugin.toggleTableOverlay('hide');
                     //redraw
-                    alert(return_data.error);
+                    wdtNotify('Error!', return_data.error, 'danger');
                     excelPlugin.getRemoteTableData();
                 },
                 beforeSend: function() {
@@ -805,6 +805,7 @@
                     excelPlugin.toggleTableOverlay('hide');
 
                     if( response.error.length > 0 ) {
+                        wdtNotify('Error!', response.error, 'danger');
                         excelPlugin.getRemoteTableData();
                     } else if( response.success.length > 0 ) {
                         for ( var rowIdx = startRow; rowIdx <= endRow; rowIdx++ ) {

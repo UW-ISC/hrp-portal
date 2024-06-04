@@ -49,19 +49,59 @@
     border-spacing: 26px 0 !important;
 }
 
-.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison th {
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison th:first-child {
     padding: 0;
     width: 25%;
 }
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison th:nth-child(2) {
+    padding: 0;
+    width: 10%;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison th:last-child {
+    padding: 0;
+    width: 65%;
+}
 .wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison td{
-    padding: 10px 10px 0 12px;
-    width: 15%;
+    padding: 10px 0 0 0;
     font-family: Inter;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
     line-height: 20px;
     color: #304463;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison thead.sticky-thead {
+    position: sticky;
+    background: white;
+    top: 32px;
+    z-index: 10;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison .sticky-tr{
+    position: sticky;
+    background: white;
+    top: 66px;
+    z-index: 10;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison .sticky{
+    position: sticky;
+    background: white;
+    top: 117px;
+    z-index: 10;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 24px;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison tr{
+    z-index: 2;
+}
+
+
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison td.bg-blue-pro,
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison td.bg-blue-dev,
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison td.bg-blue-standard,
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison td.bg-blue-starter
+{
+    width: 15%;
 }
 .wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison tr:first-child td{
     padding-top: 18px !important;
@@ -76,7 +116,6 @@
     border: 1px solid #E7E9EC;
 }
 .wdt-datatables-admin-wrap .wdt-lite-vs-premium-card table#wpdt-comparison th:first-child{
-    width: 28%;
     padding-right: 10px !important;
     padding-left: 0 !important;
 }
@@ -104,16 +143,19 @@
 .wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-grey hr{
     border: 1px solid #E7E9EC;
 }
-.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue{
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-dev{
     background: #d0ecff;
 }
-.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-basic{
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-starter{
+    background: #f1faff;
+}
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-standard{
     background: #f1faff;
 }
 .wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-pro{
-    background: #e8f6ff;
+    background: #f1faff;
 }
-.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue hr{
+.wdt-datatables-admin-wrap .wdt-lite-vs-premium-card #wpdt-comparison .bg-blue-dev hr{
     opacity: 0.2;
     border: 1px solid #008CFF;
 }

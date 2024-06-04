@@ -615,83 +615,31 @@ input::-webkit-inner-spin-button {
     border-radius: 0 5px 5px 0;
 }
 
-.wpdt-c .highstock-not-available-notice {
+.wpdt-c .charts-type.highstock-charts-type.highstock-not-available-notice,
+.wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice,
+.wpdt-c .charts-type.highcharts-charts-type.highcharts-not-available-notice {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 10px;
     text-align: center;
-    width: 50%;
-    left: 25%;
-    right: 25%;
-    position: absolute;
 }
 
-.wpdt-c .highstock-charts-type {
-    min-height: 700px;
+.wpdt-c .charts-type.highstock-charts-type.highstock-not-available-notice .btn a,
+.wpdt-c .charts-type.highstock-charts-type.highstock-not-available-notice .btn a:hover,
+.wpdt-c .charts-type.highcharts-charts-type.highcharts-not-available-notice .btn a,
+.wpdt-c .charts-type.highcharts-charts-type.highcharts-not-available-notice .btn a:hover,
+.wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice .btn a,
+.wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice .btn a:hover {
+    color: #ffffff;
+}
+.wpdt-c .charts-type.highstock-charts-type.highstock-not-available-notice .btn a:hover,
+.wpdt-c .charts-type.highcharts-charts-type.highcharts-not-available-notice .btn a:hover,
+.wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice .btn a:hover {
+    background-color: #0B86EC!important;
 }
 
+.wpdt-c .highcharts-img,
 .wpdt-c .highstock-img {
-    position: relative;
-    left: 20%;
-    right: 20%;
-    top: 100px;
-    max-width: 1000px;
-}
-
-@media only screen and (max-width: 440px) {
-    .wpdt-c .highstock-img {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .wpdt-c .highstock-charts-type {
-        min-height: 250px !important;
-    }
-
-    .wpdt-c .highstock-not-available-notice {
-        text-align: center;
-        width: 70%;
-        left: 15%;
-        right: 15%;
-    }
-    .wpdt-c .highstock-img {
-        position: relative;
-        left: 9%;
-        right: 20%;
-        top: 183px;
-        max-width: 600px;
-    }
-    .wpdt-c .highstock-img {
-        display: none;
-    }
-}
-@media screen and (max-width: 990px) {
-    .wpdt-c .highstock-img {
-        position: relative;
-        left: 15% !important;
-        right: 20% !important;
-        top: 225px !important;
-        max-width: 487px !important;
-    }
-    .wpdt-c .highstock-charts-type {
-        min-height: 520px;
-    }
-}
-@media screen and (max-width: 1024px) {
-    .wpdt-c .highstock-img {
-        position: relative;
-        left: 9%;
-        right: 20%;
-        top: 169px;
-        max-width: 660px;
-    }
-}
-@media screen and (max-width: 1440px) {
-    .wpdt-c .highstock-img {
-        left: 10%;
-    }
-}
-@media screen and (max-width: 2600px) and (min-width:2000px) {
-    .wpdt-c .highstock-img {
-        left: 22%;
-        max-width: 1309px;
-    }
+    width: 100%;
+    max-width: 1440px;
 }

@@ -28,6 +28,7 @@ var wpdatatable_config = {
     auto_refresh: 0,
     content: '',
     info_block: 1,
+    pagination_top: 0,
     pagination: 1,
     paginationAlign: 'right',
     paginationLayout: 'full_numbers',
@@ -97,11 +98,6 @@ var wpdatatable_config = {
     tableBorderRemoval: 0,
     tableBorderRemovalHeader: 0,
     tableCustomCss: '',
-    fixed_header: 0,
-    fixed_header_offset: 0,
-    fixed_columns: 0,
-    fixed_left_columns_number: 0,
-    fixed_right_columns_number: 0,
     table_wcag: 0,
     simple_template_id: 0,
     customRowDisplay: '',
@@ -124,6 +120,12 @@ var wpdatatable_config = {
                     jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
                     jQuery('.wdt-table-settings .mysql-settings-block').animateFadeIn();
                     jQuery('.wdt-table-settings .wdt-server-side-processing').animateFadeIn();
+                } else {
+                    jQuery('.wdt-mysql-query-notice-block').animateFadeIn();
+                    jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .cache-settings-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
                 }
                 jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
                 jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
@@ -144,6 +146,7 @@ var wpdatatable_config = {
                 jQuery('.wdt-source-file-path').removeClass('hidden');
                 jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 jQuery('.wdt-add-data-source-change-field').removeClass('col-sm-6').addClass('col-sm-4');
+                jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
                 break;
             case 'csv':
             case 'xls':
@@ -151,6 +154,7 @@ var wpdatatable_config = {
             case 'xml':
             case 'json':
             case 'serialized':
+                jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
                 jQuery('.placeholders-settings-tab').animateFadeIn();
                 jQuery('.wdt-table-settings #wdt-browse-button').removeClass('hidden');
                 jQuery('.wdt-table-settings #wdt-get-nested-json-roots').addClass('hidden');
@@ -179,6 +183,7 @@ var wpdatatable_config = {
                 }
                 break;
             case 'nested_json':
+                jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
                 jQuery('.placeholders-settings-tab').animateFadeIn();
                 jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
                 if (jQuery('.wdt-table-settings .input-nested-json-url-block').hasClass('hidden')) {
@@ -198,6 +203,7 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 break;
             default:
+                jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
                 jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
                 jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
                 jQuery('.wdt-table-settings .mysql-settings-block').addClass('hidden');
@@ -332,16 +338,21 @@ var wpdatatable_config = {
                 if (!jQuery('.placeholders-settings-tab').is(':visible')) {
                     jQuery('.placeholders-settings-tab').animateFadeIn();
                 }
-                var aceEditor = ace.edit('wdt-mysql-query');
-                aceEditor.$blockScrolling = Infinity;
-                if (aceEditor.getValue() != content) {
-                    aceEditor.setValue(content);
+                if (jQuery('#wdt-mysql-query').length){
+                    var aceEditor = ace.edit('wdt-mysql-query');
+                    aceEditor.$blockScrolling = Infinity;
+                    if (aceEditor.getValue() != content) {
+                        aceEditor.setValue(content);
+                    }
+                } else {
+                    jQuery('.wdt-mysql-query-notice-block').animateFadeIn();
                 }
             } else {
                 wpdatatable_config.table_type == 'manual' ?
                     !jQuery('.editing-settings-tab').is(':visible') ? jQuery('.editing-settings-tab').animateFadeIn() : null :
                     jQuery('.editing-settings-tab').addClass('hidden');
                 jQuery('#wdt-input-url').val(content);
+                jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
             }
             jQuery('button.wdt-apply').prop('disabled', '');
         } else {
@@ -352,6 +363,7 @@ var wpdatatable_config = {
             jQuery('.placeholders-settings-tab').addClass('hidden');
             jQuery('.master-detail-settings-tab').addClass('hidden');
             jQuery('button.wdt-apply').prop('disabled', 'disabled');
+            jQuery('.wdt-mysql-query-notice-block').animateFadeOut();
         }
         if (wpdatatable_config.table_type == 'nested_json' && content != '') {
             let jsonParams = JSON.parse(content)
@@ -586,6 +598,14 @@ var wpdatatable_config = {
         jQuery('#wdt-info-block').prop('checked', infoBlock);
     },
     /**
+     * Enable or disable pagination on top of the table
+     * @param paginationTop 1 or 0
+     */
+    setPaginationOnTop: function (paginationTop) {
+        wpdatatable_config.pagination_top = paginationTop;
+        jQuery('#wdt-pagination-top').prop('checked', paginationTop);
+    },
+    /**
      * Enable or disable pagination
      * @param pagination 1 or 0
      */
@@ -596,6 +616,7 @@ var wpdatatable_config = {
             jQuery('.pagination-align-settings-block').removeClass('hidden');
             jQuery('.pagination-layout-settings-block').removeClass('hidden');
             jQuery('.pagination-layout-mobile-settings-block').removeClass('hidden');
+            jQuery('.pagination-on-top').removeClass('hidden');
         } else {
             wpdatatable_config.setPaginationAlign('right');
             wpdatatable_config.setPaginationLayout('full_numbers');
@@ -603,6 +624,7 @@ var wpdatatable_config = {
             jQuery('.pagination-align-settings-block').addClass('hidden');
             jQuery('.pagination-layout-settings-block').addClass('hidden');
             jQuery('.pagination-layout-mobile-settings-block').addClass('hidden');
+            jQuery('.pagination-on-top').addClass('hidden');
         }
     },
     /**
@@ -625,24 +647,6 @@ var wpdatatable_config = {
             .val(paginationLayout)
             .selectpicker('refresh');
     },
-
-    setFixedHeader: function (fixedheader) {
-        wpdatatable_config.fixed_header = fixedheader;
-        jQuery('#wdt-fixed-header').prop('checked', fixedheader);
-
-        if (fixedheader === 1) {
-            jQuery('.advanced-table-settings-block-fixed-header').removeClass('hidden');
-        } else {
-            jQuery('.advanced-table-settings-block-fixed-header').addClass('hidden');
-            wpdatatable_config.setFixedHeaderOffset(0);
-        }
-    },
-    setFixedHeaderOffset: function (fixheaderoffset) {
-        wpdatatable_config.fixed_header_offset = fixheaderoffset;
-        if (jQuery('#wdt-fixed-header-offset').val() != wpdatatable_config.fixed_header_offset) {
-            jQuery('#wdt-fixed-header-offset').val(wpdatatable_config.fixed_header_offset);
-        }
-    },
     /**
      * Set pagination layout for mobile devices
      * @param paginationLayout string
@@ -652,41 +656,6 @@ var wpdatatable_config = {
         jQuery('#wdt-pagination-layout-mobile')
             .val(paginationLayout)
             .selectpicker('refresh');
-    },
-
-    setFixedColumns: function(fixedcolumn){
-        wpdatatable_config.fixed_columns = fixedcolumn;
-        jQuery('#wdt-fixed-columns').prop('checked', fixedcolumn);
-
-        if (fixedcolumn === 1) {
-            jQuery('.advanced-table-settings-block-fixed-columns').removeClass('hidden');
-            wpdatatable_config.setScrollable(1);
-            wpdatatable_config.setLimitLayout(0);
-            wpdatatable_config.setWordWrap(0);
-        } else {
-            jQuery('.advanced-table-settings-block-fixed-columns').addClass('hidden');
-            wpdatatable_config.setLeftFixedColumnNumber(0);
-            wpdatatable_config.setRightFixedColumnNumber(0);
-        }
-    },
-    setLeftFixedColumnNumber: function (fixed_left_columns_number){
-        if(jQuery('#wdt-fixed-columns-left-number').val() == '') jQuery('#wdt-fixed-columns-left-number').val(0);
-        if(fixed_left_columns_number === 0 && wpdatatable_config.fixed_right_columns_number === 0 ||  fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number === 0) fixed_left_columns_number = 1;
-        if(fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number !== 0) fixed_left_columns_number = 0;
-        wpdatatable_config.fixed_left_columns_number = fixed_left_columns_number;
-        if( jQuery('#wdt-fixed-columns-left-number').val() != wpdatatable_config.fixed_left_columns_number ){
-            jQuery('#wdt-fixed-columns-left-number').val( wpdatatable_config.fixed_left_columns_number );
-        }
-    },
-
-    setRightFixedColumnNumber: function (fixed_right_columns_number){
-        if(jQuery('#wdt-fixed-columns-right-number').val() == '') jQuery('#wdt-fixed-columns-right-number').val(0);
-        if(fixed_right_columns_number < 0) fixed_right_columns_number = 0;
-        wpdatatable_config.fixed_right_columns_number = fixed_right_columns_number;
-        if(fixed_right_columns_number === 0 && wpdatatable_config.fixed_left_columns_number === 0) wpdatatable_config.setLeftFixedColumnNumber(1);
-        if( jQuery('#wdt-fixed-columns-right-number').val() != wpdatatable_config.fixed_right_columns_number ){
-            jQuery('#wdt-fixed-columns-right-number').val( wpdatatable_config.fixed_right_columns_number );
-        }
     },
     /**
      * Enable or disable simple responsive
@@ -931,6 +900,10 @@ var wpdatatable_config = {
             wpdatatable_config.setMySQLTableName(mysqlTableName);
 
             wpdatatable_config.setServerSide(1);
+
+            if (wpdatatable_config.editor_roles == null){
+                wpdatatable_config.setEditorRoles(['Administrator'])
+            }
             if (wpdatatable_config.editor_roles != null && !wpdatatable_config.editor_roles.length){
                 jQuery('.editing-warning-settings-block').removeClass('hidden')
             }
@@ -947,10 +920,7 @@ var wpdatatable_config = {
             wpdatatable_config.popover_tools = 0;
             wpdatatable_config.inline_editing = 0;
             wpdatatable_config.id_editing_column = false;
-            wpdatatable_config.editor_roles = '';
-            jQuery('#wdt-editor-roles')
-                .val('')
-                .selectpicker('refresh');
+            wpdatatable_config.setEditorRoles(['Administrator'])
 
             wpdatatable_config.editButtonsDisplayed = ["all"];
             jQuery('#wdt-edit-buttons-displayed')
@@ -1559,6 +1529,7 @@ var wpdatatable_config = {
         wpdatatable_config.setGlobalSearch(parseInt(tableJSON.global_search));
         wpdatatable_config.setHideBeforeLoad(parseInt(tableJSON.hide_before_load));
         wpdatatable_config.setInfoBlock(parseInt(tableJSON.info_block));
+        wpdatatable_config.setPaginationOnTop(parseInt(tableJSON.pagination_top));
         wpdatatable_config.setPagination(parseInt(tableJSON.pagination));
         wpdatatable_config.setPaginationAlign(tableJSON.paginationAlign);
         wpdatatable_config.setPaginationLayout(tableJSON.paginationLayout);
@@ -1602,11 +1573,6 @@ var wpdatatable_config = {
         for (var value in tableJSON.tableFontColorSettings) {
             wpdatatable_config.setTableFontColorSettings(value, tableJSON.tableFontColorSettings[value]);
         }
-        wpdatatable_config.setFixedColumns(tableJSON.fixed_columns);
-        wpdatatable_config.setRightFixedColumnNumber(tableJSON.fixed_right_columns_number);
-        wpdatatable_config.setLeftFixedColumnNumber(tableJSON.fixed_left_columns_number);
-        wpdatatable_config.setFixedHeader(tableJSON.fixed_header);
-        wpdatatable_config.setFixedHeaderOffset(tableJSON.fixed_header_offset);
     },
     /**
      * Method which draws the "column settings" and "delete formula" buttons in wpDataTable

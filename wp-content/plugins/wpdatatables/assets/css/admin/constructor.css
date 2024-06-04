@@ -522,7 +522,19 @@
     margin-bottom: 15px;
     margin-top: 13px;
     min-height: 107px;
+    align-items: center;
 }
+.wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.wdt-premium-feature.selected,
+.wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.wdt-premium-feature {
+    position: relative;
+    border: 1px solid #091D70;
+    box-shadow: none !important;
+}
+.wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.wdt-premium-feature .wdt-upgrade-btn {
+    max-height: 40px;
+    background: #091D70 !important;
+}
+
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.selected {
     border: 1px solid #008CFF;
     box-shadow: 0 3px 2px rgba(23, 43, 77, 0.04), 0 0 2px rgba(23, 43, 77, 0.03), 0 0 0 3px rgb(230, 240, 255);
@@ -548,6 +560,10 @@
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card:hover {
     cursor: pointer;
     border: 1px solid #008CFF;
+}
+.wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.wdt-premium-feature:hover {
+    cursor: default;
+    border: 1px solid #091D70;
 }
 
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card-header {
@@ -591,6 +607,10 @@
 
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.not-selected .card-header {
     opacity: 1;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.not-selected.wdt-premium-feature .card-header {
+    opacity: .6;
 }
 
 .wdt-table-constructor .wdt-constructor-type-selecter-block .card.not-selected:hover .card-header {

@@ -13,12 +13,11 @@ class WDTTools
      */
     public static function getPossibleColumnTypes(): array
     {
-        return array(
+        $possibleColumnTypes = array(
             'input' => __('One line string', 'wpdatatables'),
             'memo' => __('Multi-line string', 'wpdatatables'),
             'select' => __('One-line selectbox', 'wpdatatables'),
             'multiselect' => __('Multi-line selectbox', 'wpdatatables'),
-            'hidden' => __('Hidden (Dynamic)', 'wpdatatables'),
             'int' => __('Integer', 'wpdatatables'),
             'float' => __('Float', 'wpdatatables'),
             'date' => __('Date', 'wpdatatables'),
@@ -29,6 +28,8 @@ class WDTTools
             'image' => __('Image', 'wpdatatables'),
             'file' => __('Attachment', 'wpdatatables')
         );
+
+        return apply_filters( 'wpdatatables_filter_possible_column_types', $possibleColumnTypes );
     }
 
     /**
@@ -57,625 +58,12 @@ class WDTTools
      */
     public static function applyPlaceholders($string)
     {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wpdb;
-
-        $table = isset($_POST['table']) ? json_decode(stripslashes($_POST['table'])) : null;
-
-        // Placeholders
-        if (strpos($string, '%CURRENT_USER_ID%') !== false) {
-            if (isset($table->currentUserIdPlaceholder)) {
-                $currentUserIdPlaceholder = $table->currentUserIdPlaceholder;
-            } elseif (isset($_POST['currentUserId'])) {
-                $currentUserIdPlaceholder = $_POST['currentUserId'];
-            }
-
-            $wdtCurUserId = $currentUserIdPlaceholder ?? get_current_user_id();
-
-            $string = str_replace('%CURRENT_USER_ID%', $wdtCurUserId, $string);
-        }
-        if (strpos($string, '%CURRENT_USER_LOGIN%') !== false) {
-            if (isset($table->currentUserLoginPlaceholder)) {
-                $currentUserLoginPlaceholder = $table->currentUserLoginPlaceholder;
-            } elseif (isset($_POST['currentUserLogin'])) {
-                $currentUserLoginPlaceholder = $_POST['currentUserLogin'];
-            }
-
-            $wdtCurUserLogin = $currentUserLoginPlaceholder ?? wp_get_current_user()->user_login;
-
-            $string = str_replace('%CURRENT_USER_LOGIN%', "{$wdtCurUserLogin}", $string);
-        }
-        if (strpos($string, '%CURRENT_POST_ID%') !== false) {
-            if (isset($table->currentPostIdPlaceholder)) {
-                $currentPostIdPlaceholder = $table->currentPostIdPlaceholder;
-            } elseif (isset($_POST['currentPostIdPlaceholder'])) {
-                $currentPostIdPlaceholder = $_POST['currentPostIdPlaceholder'];
-            }
-
-            $url = wp_get_referer();
-            $postID = url_to_postid($url);
-
-            $wdtCurPostId = $currentPostIdPlaceholder ?? (!empty($postID) ? $postID : get_the_ID());
-
-            $string = str_replace('%CURRENT_POST_ID%', $wdtCurPostId, $string);
-        }
-        if (strpos($string, '%CURRENT_USER_DISPLAY_NAME%') !== false) {
-            if (isset($table->currentUserDisplayNamePlaceholder)) {
-                $currentUserDisplayNamePlaceholder = $table->currentUserDisplayNamePlaceholder;
-            } elseif (isset($_POST['currentUserDisplayName'])) {
-                $currentUserDisplayNamePlaceholder = $_POST['currentUserDisplayName'];
-            }
-
-            $wdtCurUserDisplayName = $currentUserDisplayNamePlaceholder ?? wp_get_current_user()->display_name;
-
-            $string = str_replace('%CURRENT_USER_DISPLAY_NAME%', "{$wdtCurUserDisplayName}", $string);
-        }
-        if (strpos($string, '%CURRENT_USER_FIRST_NAME%') !== false) {
-            if (isset($table->currentUserFirstNamePlaceholder)) {
-                $currentUserFirstNamePlaceholder = $table->currentUserFirstNamePlaceholder;
-            } elseif (isset($_POST['currentUserFirstName'])) {
-                $currentUserFirstNamePlaceholder = $_POST['currentUserFirstName'];
-            }
-
-            $wdtCurUserFirstName = $currentUserFirstNamePlaceholder ?? wp_get_current_user()->user_firstname;
-
-            $string = str_replace('%CURRENT_USER_FIRST_NAME%', "{$wdtCurUserFirstName}", $string);
-        }
-        if (strpos($string, '%CURRENT_USER_LAST_NAME%') !== false) {
-            if (isset($table->currentUserLastNamePlaceholder)) {
-                $currentUserLastNamePlaceholder = $table->currentUserLastNamePlaceholder;
-            } elseif (isset($_POST['currentUserLastName'])) {
-                $currentUserLastNamePlaceholder = $_POST['currentUserLastName'];
-            }
-
-            $wdtCurUserLastName = $currentUserLastNamePlaceholder ?? wp_get_current_user()->user_lastname;
-
-            $string = str_replace('%CURRENT_USER_LAST_NAME%', "{$wdtCurUserLastName}", $string);
-        }
-        if (strpos($string, '%CURRENT_USER_EMAIL%') !== false) {
-            if (isset($table->currentUserEmailPlaceholder)) {
-                $currentUserEmailPlaceholder = $table->currentUserEmailPlaceholder;
-            } elseif (isset($_POST['currentUserEmail'])) {
-                $currentUserEmailPlaceholder = $_POST['currentUserEmail'];
-            }
-
-            $wdtCurUserEmail = $currentUserEmailPlaceholder ?? wp_get_current_user()->user_email;
-
-            $string = str_replace('%CURRENT_USER_EMAIL%', "{$wdtCurUserEmail}", $string);
-        }
-        if (strpos($string, '%CURRENT_DATE%') !== false) {
-
-            $wdtCurDate = current_time('Y-m-d');
-
-            $string = str_replace('%CURRENT_DATE%', "{$wdtCurDate}", $string);
-        }
-        if (strpos($string, '%CURRENT_DATETIME%') !== false) {
-
-            $wdtCurDateTime = current_time('Y-m-d') . ' ' . current_time('H:i');
-
-            $string = str_replace('%CURRENT_DATETIME%', "{$wdtCurDateTime}", $string);
-        }
-        if (strpos($string, '%CURRENT_TIME%') !== false) {
-
-            $wdtCurTime = current_time('H:i');
-
-            $string = str_replace('%CURRENT_TIME%', "{$wdtCurTime}", $string);
-        }
-        if (strpos($string, '%WPDB%') !== false) {
-            if (isset($table->wpdbPlaceholder)) {
-                $wpdbPlaceholder = $table->wpdbPlaceholder;
-            } elseif (isset($_POST['wpdbPlaceholder'])) {
-                $wpdbPlaceholder = $_POST['wpdbPlaceholder'];
-            }
-
-            $wpdbPrefix = $wpdbPlaceholder ?? $wpdb->prefix;
-
-            $string = str_replace('%WPDB%', $wpdbPrefix, $string);
-        }
-        // Shortcode VAR1
-        if (strpos($string, '%VAR1%') !== false) {
-            $string = str_replace('%VAR1%', addslashes($wdtVar1), $string);
-        }
-
-        // Shortcode VAR2
-        if (strpos($string, '%VAR2%') !== false) {
-            $string = str_replace('%VAR2%', addslashes($wdtVar2), $string);
-        }
-
-        // Shortcode VAR3
-        if (strpos($string, '%VAR3%') !== false) {
-            $string = str_replace('%VAR3%', addslashes($wdtVar3), $string);
-        }
-
-        // Shortcode VAR4
-        if (strpos($string, '%VAR4%') !== false) {
-            $string = str_replace('%VAR4%', addslashes($wdtVar4), $string);
-        }
-
-        // Shortcode VAR5
-        if (strpos($string, '%VAR5%') !== false) {
-            $string = str_replace('%VAR5%', addslashes($wdtVar5), $string);
-        }
-
-        // Shortcode VAR6
-        if (strpos($string, '%VAR6%') !== false) {
-            $string = str_replace('%VAR6%', addslashes($wdtVar6), $string);
-        }
-
-        // Shortcode VAR7
-        if (strpos($string, '%VAR7%') !== false) {
-            $string = str_replace('%VAR7%', addslashes($wdtVar7), $string);
-        }
-
-        // Shortcode VAR8
-        if (strpos($string, '%VAR8%') !== false) {
-            $string = str_replace('%VAR8%', addslashes($wdtVar8), $string);
-        }
-
-        // Shortcode VAR9
-        if (strpos($string, '%VAR9%') !== false) {
-            $string = str_replace('%VAR9%', addslashes($wdtVar9), $string);
+        if (defined('WDT_PH_INTEGRATION')) {
+            return \WDTIntegration\Placeholders::maybeApply($string);
         }
 
         return $string;
 
-    }
-    /**
-     * Helper function for getting hidden dynamic value
-     * @param $value
-     * @return string
-     */
-    public static function getHiddenDefaultValues($value, $tableData): string
-    {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
-
-        $arePlaceholdersInUrl = isset($_POST['wdtAjaxURL']) ? sanitize_url($_POST['wdtAjaxURL']) : '';
-        if ( $tableData != null ){
-
-            $wdtVar1 = $tableData->var1;
-            $wdtVar2 = $tableData->var2;
-            $wdtVar3 = $tableData->var3;
-            $wdtVar4 = $tableData->var4;
-            $wdtVar5 = $tableData->var5;
-            $wdtVar6 = $tableData->var6;
-            $wdtVar7 = $tableData->var7;
-            $wdtVar8 = $tableData->var8;
-            $wdtVar9 = $tableData->var9;
-
-            if ($arePlaceholdersInUrl) {
-                $urlComponents = parse_url($arePlaceholdersInUrl);
-                parse_str($urlComponents['query'], $params);
-                if (isset($params['wdt_var1']))
-                    $wdtVar1 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var1']));
-                if (isset($params['wdt_var2']))
-                    $wdtVar2 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var2']));
-                if (isset($params['wdt_var3']))
-                    $wdtVar3 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var3']));
-                if (isset($params['wdt_var4']))
-                    $wdtVar4 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var4']));
-                if (isset($params['wdt_var5']))
-                    $wdtVar5 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var5']));
-                if (isset($params['wdt_var6']))
-                    $wdtVar6 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var6']));
-                if (isset($params['wdt_var7']))
-                    $wdtVar7 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var7']));
-                if (isset($params['wdt_var8']))
-                    $wdtVar8 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var8']));
-                if (isset($params['wdt_var9']))
-                    $wdtVar9 = sanitize_text_field(wdtSanitizeQuery($params['wdt_var9']));
-            }
-        }
-
-        $defaultHiddenValue = '';
-        $url          = wp_get_referer();
-        $postID       = url_to_postid( $url );
-        $embedUrl     = esc_url( get_permalink( $postID ) );
-        if (strpos($value,'acf-data:') !== false){
-            $defaultHiddenValue = $value;
-            $value = 'acf-data';
-        }
-        if (strpos($value,'post-meta:') !== false){
-            $defaultHiddenValue = $value;
-            $value = 'post-meta';
-        }
-        if (strpos($value,'query-param:') !== false){
-            $defaultHiddenValue = $value;
-            $value = 'query-param';
-        }
-
-        switch ( $value ) {
-            case 'user-ip':
-                $defaultHiddenValue = self::getUserIP();
-                break;
-            case 'user-id':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_ID%' );
-                break;
-            case 'user-display-name':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_DISPLAY_NAME%' );
-                break;
-            case 'user-first-name':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_FIRST_NAME%' );
-                break;
-            case 'user-last-name':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_LAST_NAME%' );
-                break;
-            case 'user-email':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_EMAIL%' );
-                break;
-            case 'user-login':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_USER_LOGIN%' );
-                break;
-            case 'date':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_DATE%' );
-                break;
-            case 'datetime':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_DATETIME%' );
-                break;
-            case 'time':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%CURRENT_TIME%' );
-                break;
-            case 'p-var1':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR1%' );
-                break;
-            case 'p-var2':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR2%' );
-                break;
-            case 'p-var3':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR3%' );
-                break;
-            case 'p-var4':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR4%' );
-                break;
-            case 'p-var5':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR5%' );
-                break;
-            case 'p-var6':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR6%' );
-                break;
-            case 'p-var7':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR7%' );
-                break;
-            case 'p-var8':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR8%' );
-                break;
-            case 'p-var9':
-                $defaultHiddenValue = WDTTools::applyPlaceholders( '%VAR9%' );
-                break;
-            case 'post-id':
-                $defaultHiddenValue = self::getPostData('ID');;
-                break;
-            case 'post-title':
-                $defaultHiddenValue = self::getPostData( 'post_title' );
-                break;
-            case 'post-author':
-                $defaultHiddenValue = self::getPostData( 'post_author' );
-                break;
-            case 'post-type':
-                $defaultHiddenValue = self::getPostData( 'post_type' );
-                break;
-            case 'post-status':
-                $defaultHiddenValue = self::getPostData( 'post_status' );
-                break;
-            case 'post-parent':
-                $defaultHiddenValue = self::getPostData( 'post_parent' );
-                break;
-            case 'post-meta':
-                $defaultHiddenValue = self::getPostMetaData($defaultHiddenValue);
-                break;
-            case 'acf-data':
-                $defaultHiddenValue = self::getACFData($defaultHiddenValue);
-                break;
-            case 'post-url':
-                $defaultHiddenValue = $embedUrl;
-                break;
-            case 'user-agent':
-                $defaultHiddenValue = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash(( $_SERVER['HTTP_USER_AGENT'] ))) : '';
-                break;
-            case 'refer-url':
-                $defaultHiddenValue = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_url( $_SERVER['HTTP_REFERER'] ) : $embedUrl;
-                break;
-            case 'query-param':
-                $defaultHiddenValue = self::getQueryParam($defaultHiddenValue);
-                break;
-            default:
-                break;
-        }
-
-        return apply_filters( 'wpdatatables_default_hidden_column_value', $defaultHiddenValue, $value );
-    }
-
-    /**
-     * Helper function to get query param
-     * @return string
-     */
-    public static function getQueryParam ($value): string
-    {
-        $queryKeyValue = '';
-        $queryValue = str_replace('query-param:','', $value);
-
-        if(isset( $_REQUEST['queryParams'] ) && is_array($_REQUEST['queryParams'])){
-            $queryParamsArray = $_REQUEST['queryParams'];
-            if ( $queryValue ) {
-                if ( isset( $queryParamsArray[$queryValue] )) {
-                    $queryKeyValue = sanitize_text_field(esc_sql(rawurldecode($queryParamsArray[$queryValue])));
-                }
-            }
-        }
-
-        return $queryKeyValue;
-    }
-
-    /**
-     * Helper function to get post meta data
-     * @return string
-     */
-    public static function getPostMetaData ($value): string
-    {
-        $metaValue = '';
-        $metaKey = str_replace('post-meta:','', $value);
-        $postID = self::getPostData('ID');
-        if ($postID){
-            if(get_post_meta( $postID, $metaKey, true )) {
-                $metaValue = get_post_meta( $postID, $metaKey, true );
-                $metaValue = sanitize_text_field($metaValue);
-                if (!$metaValue)
-                    return '';
-            }
-        }
-
-
-        return $metaValue;
-    }
-
-    /**
-     * Helper function to get ACF data
-     * @return string
-     */
-    public static function getACFData ($value): string
-    {
-        $acfValue = '';
-        $acfReturnValue = '';
-        $postID = '';
-        $acfKey = str_replace('acf-data:','', $value);
-        if ($acfKey){
-            $postID = self::getPostData('ID');
-            if ($postID) {
-                if (class_exists('ACF') && function_exists('get_field')) {
-                    $acfReturnValue = get_field($acfKey, $postID);
-                    if ($acfReturnValue) {
-                        if (is_object($acfReturnValue)) {
-                            if ($acfReturnValue instanceof WP_Post){
-                                $acfValue = sanitize_text_field($acfReturnValue->post_title);
-                            }
-                        } else if (is_array($acfReturnValue)) {
-                            $acfReturnValue = implode(', ', $acfReturnValue);
-                            $acfValue = sanitize_text_field($acfReturnValue);
-
-                            if (!$acfValue) {
-                                return '';
-                            }
-                        } else {
-                            $acfValue = sanitize_text_field($acfReturnValue);
-                        }
-                    }
-                }
-            } else {
-                if (class_exists('ACF') && function_exists('acf_get_field')) {
-                    $acfDefaultValues = acf_get_field($acfKey)['default_value'];
-                    if ($acfDefaultValues) {
-                        if (is_array($acfDefaultValues)) {
-                            $acfValue = implode(',', $acfDefaultValues);
-                        } else if (is_string($acfDefaultValues)) {
-                            $acfValue = $acfDefaultValues;
-                        }
-                    }
-                }
-            }
-        }
-
-        return apply_filters( 'wpdatatables_default_hidden_acf_value', $acfValue, $acfKey, $acfReturnValue, $postID );
-    }
-
-    /**
-     * Helper function to get user IP
-     * @return string|null
-     */
-    public static function getUserIP (): ?string
-    {
-        $client  = isset( $_SERVER['HTTP_CLIENT_IP'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) ) : null;
-        $forward = isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) : null;
-        $is_cf   = self::isCloudflare(); // Check if request is from CloudFlare.
-        if ( $is_cf ) {
-            $cf_ip = isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) : null; // We already make sure this is set in the checks.
-            if ( filter_var( $cf_ip, FILTER_VALIDATE_IP ) ) {
-                return  $cf_ip;
-            }
-        } else {
-            $remote = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null;
-        }
-        $client_real = isset( $_SERVER['HTTP_X_REAL_IP'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) ) : null;
-        $user_ip     = $remote;
-        if ( filter_var( $client, FILTER_VALIDATE_IP ) ) {
-            $user_ip = $client;
-        } elseif ( filter_var( $client_real, FILTER_VALIDATE_IP ) ) {
-            $user_ip = $client_real;
-        } elseif ( ! empty( $forward ) ) {
-            $forward = explode( ',', $forward );
-            $ip      = array_shift( $forward );
-            $ip      = trim( $ip );
-            if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-                $user_ip = $ip;
-            }
-        }
-
-        return $user_ip;
-
-    }
-
-    /**
-     * Check if the request is from cloudflare. If it is, we get the IP
-     *
-     * @return bool
-     */
-    private static function isCloudflare() {
-        $ip = '';
-        if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-            $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
-        } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
-        } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-            $ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
-        }
-        if ( ! empty( $ip ) ) {
-            $request_check = self::_cloudflareRequestsCheck();
-            if ( ! $request_check ) {
-                return false;
-            }
-
-            $ip_check = self::_validateCloudflareIP( $ip );
-
-            return $ip_check;
-        }
-
-        return false;
-    }
-
-    /**
-     * Validates that the IP that made the request is from cloudflare
-     *
-     * @param String $ip - the ip to check.
-     *
-     * @return bool
-     */
-    private static function _validateCloudflareIP( $ip ): bool
-    {
-        $cloudflare_ips = array(
-            '199.27.128.0/21',
-            '173.245.48.0/20',
-            '103.21.244.0/22',
-            '103.22.200.0/22',
-            '103.31.4.0/22',
-            '141.101.64.0/18',
-            '108.162.192.0/18',
-            '190.93.240.0/20',
-            '188.114.96.0/20',
-            '197.234.240.0/22',
-            '198.41.128.0/17',
-            '162.158.0.0/15',
-            '104.16.0.0/12',
-        );
-        $is_cf_ip       = false;
-        foreach ( $cloudflare_ips as $cloudflare_ip ) {
-            if ( self::_cloudflareIPInRange( $ip, $cloudflare_ip ) ) {
-                $is_cf_ip = true;
-                break;
-            }
-        }
-
-        return $is_cf_ip;
-    }
-
-    /**
-     * Check if the cloudflare IP is in range
-     *
-     * @param String $ip - the current IP.
-     * @param String $range - the allowed range of cloudflare ips.
-     *
-     * @return bool
-     */
-    private static function _cloudflareIPInRange( $ip, $range ) {
-        if ( strpos( $range, '/' ) === false ) {
-            $range .= '/32';
-        }
-
-        // $range is in IP/CIDR format eg 127.0.0.1/24.
-        list( $range, $netmask ) = explode( '/', $range, 2 );
-        $range_decimal           = ip2long( $range );
-        $ip_decimal              = ip2long( $ip );
-        $wildcard_decimal        = pow( 2, ( 32 - $netmask ) ) - 1;
-        $netmask_decimal         = ~$wildcard_decimal;
-
-        return ( ( $ip_decimal & $netmask_decimal ) === ( $range_decimal & $netmask_decimal ) );
-    }
-
-    /**
-     * Check if there are any cloudflare headers in the request
-     *
-     * @return bool
-     */
-    private static function _cloudflareRequestsCheck() {
-        $flag = true;
-
-        if ( ! isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
-            $flag = false;
-        }
-        if ( ! isset( $_SERVER['HTTP_CF_IPCOUNTRY'] ) ) {
-            $flag = false;
-        }
-        if ( ! isset( $_SERVER['HTTP_CF_RAY'] ) ) {
-            $flag = false;
-        }
-        if ( ! isset( $_SERVER['HTTP_CF_VISITOR'] ) ) {
-            $flag = false;
-        }
-
-        return $flag;
-    }
-
-    /**
-     * Helper function to get post data
-     * @param $property
-     * @param $post_id
-     * @param $default
-     * @return mixed|null
-     */
-    public static function getPostData ($property, $post_id = null, $default = '' )
-    {
-        global $post;
-
-        if ( $post_id ) {
-            $post_object = get_post( $post_id );
-            if ( $post_object instanceof WP_Post ) {
-                $post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-            }
-        }
-
-        if ( ! $post ) {
-            $wp_referer = wp_get_referer();
-            if ( $wp_referer ) {
-                $post_id = url_to_postid( $wp_referer );
-                if ( $post_id ) {
-                    $post_object = get_post( $post_id );
-                    if ( $post_object instanceof WP_Post ) {
-                        $post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-                    }
-                }
-            }
-        }
-
-        $post_data = self::objectToArray( $post );
-
-        return $post_data[$property] ?? $default;
-    }
-
-    /**
-     * Convert object to array
-     *
-     * @param $object
-     *
-     * @return array
-     */
-    public static function objectToArray( $object ) {
-        $array = array();
-
-        if ( empty( $object ) ) {
-            return $array;
-        }
-
-        foreach ( $object as $key => $value ) {
-            $array[ $key ] = $value;
-        }
-
-        return $array;
     }
 
     /**
@@ -960,9 +348,11 @@ class WDTTools
     }
     public static function getTranslationStringsConstructor()
     {
+        global $wpdb;
         return array(
             'success' => __('Success!', 'wpdatatables'),
             'error' => __('Error!', 'wpdatatables'),
+            'hiddenColumnNotAllowed' => __('Hidden column is not available in this licence! Please upgrade to Standard licence to use it!', 'wpdatatables'),
             'fileUploadEmptyFile' => __('Please upload or choose a file from Media Library!', 'wpdatatables'),
             'columnsEmpty' => __('Please select columns that you want to use in table', 'wpdatatables'),
             'tableNameEmpty' => __('Table name can not be empty! Please provide a name for your table.', 'wpdatatables'),
@@ -971,6 +361,10 @@ class WDTTools
             'newColumnName' => __('New column', 'wpdatatables'),
             'selectAll' => __('Select all', 'wpdatatables'),
             'deselectAll' => __('Deselect all', 'wpdatatables'),
+            'customDatabaseNameError' =>  __('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
+            'customDatabaseNameLengthError' =>  __('The database name must be less than 64 characters.', 'wpdatatables'),
+            'customDatabaseNameTypeError' =>  __('The database name can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
+            'wpPrefixForDatabase' => $wpdb->prefix,
         );
     }
     public static function getTranslationStringsSimpleTable()
@@ -1089,10 +483,8 @@ class WDTTools
             'sInfoPostFix' => '',
             'sInfoThousands' => __(',', 'wpdatatables'),
             'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
-            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
             'sProcessing' => __('Processing...', 'wpdatatables'),
             'sSearch' => __('Search: ', 'wpdatatables'),
-            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
             'lengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
             'sEmptyTable' => __('No data available in table', 'wpdatatables'),
             'sZeroRecords' => __('No matching records found', 'wpdatatables'),
@@ -1212,7 +604,6 @@ class WDTTools
             'sLoadingRecords' => __('Loading...', 'wpdatatables'),
             'sProcessing' => __('Processing...', 'wpdatatables'),
             'sSearch' => __('Search: ', 'wpdatatables'),
-            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
             'lengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
             'sEmptyTable' => __('No data available in table', 'wpdatatables'),
             'sZeroRecords' => __('No matching records found', 'wpdatatables'),
@@ -1262,6 +653,7 @@ class WDTTools
             'columnAdded' => __('Column has been added!', 'wpdatatables'),
             'columnHeaderEmpty' => __('Column header cannot be empty!', 'wpdatatables'),
             'outOfRangeTypeValue' => __('Type value is out-of-range!', 'wpdatatables'),
+            'hiddenColumnNotAllowed' => __('Hidden column is not available in this licence! Please upgrade to Standard licence to use it!', 'wpdatatables'),
             'columnRemoveConfirm' => __('Please confirm column deletion!', 'wpdatatables'),
             'columnRemoved' => __('Column has been removed!', 'wpdatatables'),
             'columnsEmpty' => __('Please select columns that you want to use in table', 'wpdatatables'),
@@ -1478,38 +870,38 @@ class WDTTools
         return array(
             'version'  => get_option('wdtVersion'),
             'features' => [
-//                0 => [
-//                    'text' => '',
-//                    'link' => ''
-//                ]
+                0 => [
+                    'text' => 'Customize your database by choosing unique names for your tables directly through the user interface.',
+                    'link' => ''
+                ]
             ],
             'improvements' => [
 //                0 => [
-//                    'text' => '',
+//                    'text' => 'Added notice for creating charts from simple tables.',
 //                    'link' => ''
 //                ]
             ],
             'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed issue with vulnerability for editable tables.',
+                    'text' => 'Fixed vulnerability issue with import functionality.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with empty columns (after last column data) from Excel and CSV files.',
+                    'text' => 'Fixed issue with Transform Value handling special characters in headers.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with saving table description for Simple tables.',
+                    'text' => 'Fixed issue with Header Rotation on Safari.',
                     'link' => ''
                 ],
                 3 => [
-                    'text' => 'Fixed issue with close element in modals for mojito skin.',
+                    'text' => 'Fixed issue with filters on front-end for header.',
                     'link' => ''
                 ],
                 4 => [
-                    'text' => 'Fixed typo in "Custom rows per page".',
+                    'text' => 'Fixed issue with Follow Table Filtering (only chart on page).',
                     'link' => ''
-                ]
+                ],
             ]
         );
     }

@@ -6,35 +6,10 @@
     </h4>
 
     <?php if (Connection::enabledSeparate()) { ?>
-    <div class="col-sm-2 p-l-0">
-        <!-- Separate connection -->
-        <h4 class="c-title-color m-b-2 f-15">
-            <?php esc_html_e('Connection', 'wpdatatables'); ?>
-            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-               title="<?php _e('Use separate connection', 'wpdatatables'); ?>"></i>
-        </h4>
-        <!-- input source type selection -->
-        <div class="form-group">
-            <div class="fg-line">
-                <div class="select">
-                    <select class="selectpicker" id="wdt-constructor-table-connection">
-                        <option value="">WP Connection</option>
-                        <?php foreach (Connection::getAll() as $key => $wdtSeparateConnection) { ?>
-                            <option data-vendor='<?php echo esc_attr($wdtSeparateConnection['vendor']) ?>' value="<?php echo esc_attr($wdtSeparateConnection['id']) ?>" <?php echo $wdtSeparateConnection['default'] ? 'selected' : '' ?>><?php echo esc_html($wdtSeparateConnection['name']) ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <!-- /Server side processing toggle -->
-    </div>
-    <?php
-    } else {
-    ?>
+        <?php do_action( 'wpdatatables_add_separate_connection_element_in_wizard' ); ?>
+    <?php } else { ?>
         <input type="hidden" id="wdt-constructor-table-connection" value="">
-    <?php
-    }
-    ?>
+    <?php } ?>
 
     <div class="col-sm-12 p-0">
 
@@ -96,33 +71,7 @@
 
         </div>
 
-        <div class="row wpdt-flex wdt-third-row">
-            <div class="wdt-constructor-type-selecter-block col-sm-6">
-                <div class="card" data-value="wp">
-                    <div class="card-header">
-                        <img class="img-responsive"
-                             src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-wordpress-database.png">
-                    </div>
-                    <div class="card-body p-b-20 p-r-20 p-t-20">
-                        <h4 class="m-t-0 m-b-8 f-14"><?php esc_html_e('Generate a query to the WordPress database', 'wpdatatables'); ?>.</h4>
-                        <span><?php esc_html_e('Create a MySQL-query-based data table by generating a query to the WordPress database (posts, taxonomies, postmeta) with a GUI tool.', 'wpdatatables'); ?></span>
-                    </div>
-                </div>
-            </div>
-            <div class="wdt-constructor-type-selecter-block col-sm-6">
-                <div class="card" data-value="mysql">
-                    <div class="card-header">
-                        <img class="img-responsive"
-                             src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-mysql-database.png">
-                    </div>
-                    <div class="card-body p-b-20 p-r-20 p-t-20">
-                        <h4 class="m-t-0 m-b-8 f-14"><?php esc_html_e('Generate a query to the MySQL database', 'wpdatatables'); ?>.</h4>
-                        <span><?php esc_html_e('Create a SQL-query-based data table by generating a query to any custom SQL database with a GUI tool.', 'wpdatatables'); ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <?php do_action( 'wpdatatables_add_table_constructor_type_in_wizard' ); ?>
 
     </div>
 

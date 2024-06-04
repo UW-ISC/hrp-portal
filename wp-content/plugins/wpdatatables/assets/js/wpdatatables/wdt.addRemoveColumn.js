@@ -266,9 +266,17 @@
                 defaultValue = defaultValue.replace(/:(\d)$/, ':0$1');
             }
         }
-        var hiddenDefaultValue = $addColumnModal.find('.wdt-add-hidden-default-value').selectpicker('val');
-        if ($.inArray( hiddenDefaultValue, ['query-param','post-meta', 'acf-data']) != -1){
-            hiddenDefaultValue += ":" + $addColumnModal.find('.wdt-add-hidden-' + hiddenDefaultValue + '-value').val();
+        if (columnType == 'hidden' && !$addColumnModal.find('.wdt-add-hidden-default-value').length){
+            wdtNotify(wpdatatables_add_remove_column_strings.error, wpdatatables_add_remove_column_strings.hiddenColumnNotAllowed, 'danger');
+            return false;
+        }
+
+        var hiddenDefaultValue = '';
+        if (columnType == 'hidden' && $addColumnModal.find('.wdt-add-hidden-default-value').length) {
+            hiddenDefaultValue = $addColumnModal.find('.wdt-add-hidden-default-value').selectpicker('val');
+            if ($.inArray(hiddenDefaultValue, ['query-param', 'post-meta', 'acf-data']) != -1) {
+                hiddenDefaultValue += ":" + $addColumnModal.find('.wdt-add-hidden-' + hiddenDefaultValue + '-value').val();
+            }
         }
 
         var newColumnData = {

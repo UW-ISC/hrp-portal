@@ -23,13 +23,8 @@
 
             // If "Render advanced filter" is "In the header"
             if (properties.sPlaceHolder === 'head:before') {
-                if ($("tr:first th")[0].classList.contains('wdtheader') === false) {
-                    tr = $("tr:first", oTable.fnSettings().nTHead).detach();
-                    tr.appendTo($(oTable.fnSettings().nTHead));
-                } else {
-                    tr = $("tr:last", oTable.fnSettings().nTHead).detach();
-                    tr.appendTo($(oTable.fnSettings().nTHead));
-                }
+                tr = $("tr:first", oTable.fnSettings().nTHead).detach();
+                tr.appendTo($(oTable.fnSettings().nTHead));
                 aoFilterCells = oTable.fnSettings().aoHeader[0];
             } else {
                 aoFilterCells = oTable.fnSettings().aoFooter[0];
@@ -49,6 +44,7 @@
                 };
 
                 sColumnLabel = oTable.fnSettings().aoColumns[columnIndex].sTitle
+                sColumnLabel = sColumnLabel.replace(/<\/?span>/g, "");
 
                 if (properties.aoColumns !== null) {
                     if (properties.aoColumns.length < columnIndex || properties.aoColumns[columnIndex] === null)
@@ -174,6 +170,7 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
     var sCSSClass = aoColumn.type === 'number' ? 'number_filter' : 'text_filter';
 
     sColumnLabel = sColumnLabel.replace(/(^\s*)|(\s*$)/g, "");
+    sColumnLabel = sColumnLabel.replace(/<\/?span>/g, "");
     var placeholder = aoColumn.filterLabel ? aoColumn.filterLabel : sColumnLabel;
 
     var input = jQuery('<input type="' + aoColumn.type + '" class="form-control wdt-filter-control ' + sCSSClass + '" placeholder="' + _.escape(placeholder) + '" aria-label="' + wpdatatables_filter_strings.filterInputString + _.escape(placeholder) + '"/>');

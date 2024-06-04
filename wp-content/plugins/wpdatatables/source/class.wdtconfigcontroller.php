@@ -51,7 +51,9 @@ class WDTConfigController
 
         //Add data source to table if a file was used
         if (isset($tableData->file) && $tableData->file != 'http://0' && $tableData->file && $tableData->fileSourceAction) {
-            $tableData = WDTConfigController::addDataSourceToTable($tableData);
+            if (defined('WDT_UMFF_INTEGRATION')) {
+                $tableData = \WDTIntegration\UpdateManualFromFile::addDataSourceToTable($tableData);
+            }
         }
 
         // trying to generate/validate the WPDataTable config
@@ -212,6 +214,7 @@ class WDTConfigController
             $table->showTableToolsIncludeHTML = (isset($advancedSettings->showTableToolsIncludeHTML)) ? $advancedSettings->showTableToolsIncludeHTML : 0;
             $table->showTableToolsIncludeTitle = (isset($advancedSettings->showTableToolsIncludeTitle)) ? $advancedSettings->showTableToolsIncludeTitle : 0;
             $table->responsiveAction = (isset($advancedSettings->responsiveAction)) ? $advancedSettings->responsiveAction : 'icon';
+            $table->pagination_top = (isset($advancedSettings->pagination_top)) ? $advancedSettings->pagination_top : 0;
             $table->pagination = (isset($advancedSettings->pagination)) ? $advancedSettings->pagination : 1;
             $table->paginationAlign = (isset($advancedSettings->paginationAlign)) ? $advancedSettings->paginationAlign : 'right';
             $table->paginationLayout = (isset($advancedSettings->paginationLayout)) ? $advancedSettings->paginationLayout : 'full_numbers';
@@ -416,6 +419,7 @@ class WDTConfigController
                     'showTableToolsIncludeHTML' => $table->showTableToolsIncludeHTML,
                     'showTableToolsIncludeTitle' => $table->showTableToolsIncludeTitle,
                     'responsiveAction' => $table->responsiveAction,
+                    'pagination_top' => $table->pagination_top,
                     'pagination' => $table->pagination,
                     'paginationAlign' => $table->paginationAlign,
                     'paginationLayout' => $table->paginationLayout,
@@ -512,6 +516,7 @@ class WDTConfigController
         $table->auto_refresh = (int)$table->auto_refresh;
         $table->info_block = (int)$table->info_block;
         $table->responsiveAction = sanitize_text_field($table->responsiveAction);
+        $table->pagination_top = (int)$table->pagination_top;
         $table->pagination = (int)$table->pagination;
         $table->paginationAlign = sanitize_text_field($table->paginationAlign);
         $table->paginationLayout = sanitize_text_field($table->paginationLayout);
@@ -547,11 +552,11 @@ class WDTConfigController
         $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
         $table->showAllRows = (int)$table->showAllRows;
         $table->pdfPaperSize = sanitize_text_field($table->pdfPaperSize);
-        $table->fixed_header = (int)$table->fixed_header;
-        $table->fixed_header_offset = (int)$table->fixed_header_offset;
-        $table->fixed_columns = (int)$table->fixed_columns;
-        $table->fixed_left_columns_number  = (int)$table->fixed_left_columns_number;
-        $table->fixed_right_columns_number  = (int)$table->fixed_right_columns_number;
+        $table->fixed_header = isset($table->fixed_header) ? (int)$table->fixed_header : 0;
+        $table->fixed_header_offset = isset($table->fixed_header_offset) ? (int)$table->fixed_header_offset : 0;
+        $table->fixed_columns = isset($table->fixed_columns) ? (int)$table->fixed_columns : 0;
+        $table->fixed_left_columns_number = isset($table->fixed_left_columns_number) ? (int)$table->fixed_left_columns_number : 0;
+        $table->fixed_right_columns_number = isset($table->fixed_right_columns_number) ? (int)$table->fixed_right_columns_number : 0;
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
         $table->userid_column_id = $table->userid_column_id != null ?
@@ -1426,7 +1431,13 @@ class WDTConfigController
         // JSON-encoding all the 2.0+ settings
         $columnConfig['advanced_settings'] = json_encode($columnConfig['advanced_settings']);
 
-        $columnConfig = apply_filters('wpdt_filter_column_config_object', $columnConfig, $feColumn);
+        $columnConfig = apply_filters_deprecated(
+            'wpdt_filter_column_config_object',
+            array( $columnConfig, $feColumn ),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_filter_column_config_object'
+        );
+        $columnConfig = apply_filters('wpdatatables_filter_column_config_object', $columnConfig, $feColumn);
 
         //[<--/ Full version -->]//
 
@@ -1624,7 +1635,13 @@ class WDTConfigController
             $feColumn->foreignKeyRule->allowAllPossibleValuesForeignKey = $advancedSettings->foreignKeyRule->allowAllPossibleValuesForeignKey;
         }
 
-        $feColumn = apply_filters('wpdt_filter_column_description_object', $feColumn, $dbColumn, $advancedSettings);
+        $feColumn = apply_filters_deprecated(
+            'wpdt_filter_column_description_object',
+            array( $feColumn, $dbColumn, $advancedSettings ),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_filter_column_description_object'
+        );
+        $feColumn = apply_filters('wpdatatables_filter_column_description_object', $feColumn, $dbColumn, $advancedSettings);
 
         return $feColumn;
 
@@ -1656,6 +1673,7 @@ class WDTConfigController
         $table->auto_refresh = 0;
         $table->info_block = 1;
         $table->responsiveAction = 'icon';
+        $table->pagination_top = 0;
         $table->pagination = 1;
         $table->paginationAlign = 'right';
         $table->paginationLayout = 'full_numbers';
@@ -1800,94 +1818,6 @@ class WDTConfigController
         do_action('wpdatatables_after_save_row');
     }
 
-    /**
-     * Adding data from source to the table columns
-     *
-     * @param $tableData
-     *
-     * @return mixed|string|void
-     * @throws WDTException
-     * @throws Exception
-     */
-    public static function addDataSourceToTable($tableData)
-    {
-        $columnTypes = array();
-        $columnDateInputFormat = array();
-
-        $uploadedFile = $tableData->file;
-        $fileSourceAction = $tableData->fileSourceAction;
-
-        if (!($file = wpDataTableConstructor::isUploadedFileEmpty($uploadedFile))) {
-            return __('Empty file', 'wpdatatables');
-        }
-
-        for ($i = 0; $i < count($tableData->columns); $i++) {
-            $columnTypes[$tableData->columns[$i]->orig_header] = sanitize_text_field($tableData->columns[$i]->type);
-            $columnDateInputFormat[$tableData->columns[$i]->orig_header] = sanitize_text_field($tableData->columns[$i]->dateInputFormat);
-        }
-
-        $objSourceFile = new wpDataTableSourceFile(
-            $file,
-            $tableData,
-            $columnTypes,
-            $columnDateInputFormat,
-            $fileSourceAction
-        );
-
-        $objSourceFile->getTableTypeFromFile();
-        try {
-            $objSourceFile->prepareHeadingsArray();
-        } catch (Exception $e) {
-            die($e);
-        }
-
-        $vendor = Connection::getVendor($objSourceFile->getTableData()->connection);
-
-        $columnQuoteStart = Connection::getLeftColumnQuote($vendor);
-        $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
-
-        $columnHeaders = array();
-        foreach ($objSourceFile->getTableData()->columns as $column) {
-            if (!in_array($column->type, array('formula', 'masterdetail'))) {
-                $columnHeaders[] = preg_replace('/\s*/', '', strtolower($column->orig_header));
-            }
-        }
-        //Removes the WPDT table id from the array
-        $columnHeaders = array_values(array_filter($columnHeaders, function ($el) {
-            $standardColumnHeaders = ["wdt_id", "wdt_created_by", "wdt_created_at", "wdt_last_edited_by", "wdt_last_edited_at"];
-            return !in_array($el, $standardColumnHeaders);
-        }));
-
-        //Error handling
-        try {
-            $objSourceFile->checkIfFileDataIsCorrect($columnHeaders);
-        } catch (WDTException $exception) {
-            die($exception);
-        }
-
-        if ($objSourceFile->getFileSourceAction() == 'replaceTableData' || $objSourceFile->getFileSourceAction() == 'replaceTable') {
-            //Creating delete statement
-            $delete_table_data_statement = "DELETE FROM " . $columnQuoteStart
-                . $objSourceFile->getTableData()->mysql_table_name . $columnQuoteEnd;
-
-            $objSourceFile->executeQueryStatement($delete_table_data_statement, $objSourceFile->getTableData()->connection);
-        }
-
-        //Removing all existing columns from the table
-        $objSourceFile->maybeReplaceData($columnTypes);
-
-        //Creating insert statement
-        $insert_statement_beginning = self::createInsertStatement(
-            $objSourceFile->getTableData()->mysql_table_name,
-            $objSourceFile->getColumnOrigHeaders(),
-            $columnQuoteStart,
-            $columnQuoteEnd
-        );
-
-        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(), $objSourceFile->getTableData()->mysql_table_name, 'upload');
-
-        return $objSourceFile->getTableData();
-    }
 
     /**
      * Create insert statement beginning
@@ -1967,7 +1897,7 @@ class WDTConfigController
     public static function wdt_create_chart_notice()
     {
 
-        return 'Please create a wpDataChart first. You can check out how on this <a target="_blank" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.';
+        return 'Please create a wpDataChart first. You can check out how on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.';
 
     }
 
@@ -1981,7 +1911,7 @@ class WDTConfigController
     public static function wdt_create_table_notice()
     {
 
-        return 'Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
+        return 'Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
     }
 
     public static function wdt_select_table_notice()

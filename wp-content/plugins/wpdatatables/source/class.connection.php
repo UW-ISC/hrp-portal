@@ -64,6 +64,20 @@ class Connection {
 //                return new PDOSql($vendor, "mysql:host=$host;port=$port;dbname=$database", $user, $password);
         }
     }
+    /**
+     * Return left/right quote for table based on vendor
+     * @param String $vendor of the connection
+     * @return String
+     */
+    public static function getTableLeftRightQuote($vendor) {
+        if ($vendor === Connection::$MYSQL) {
+            return '`';
+        }
+
+        if ($vendor === Connection::$MSSQL || $vendor === Connection::$POSTGRESQL) {
+            return '"';
+        }
+    }
 
     /**
      * Return left quote for table column based on vendor
