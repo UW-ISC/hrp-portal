@@ -1646,7 +1646,12 @@ var singleClick = false;
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     e.preventDefault();
-                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, false);
+                    if ($(tableDescription.selector + '_edit_dialog_buttons').find('.wdt-apply-duplicate-button').hasClass('hidden')) {
+                        wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, false);
+                    } else {
+                        wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, true);
+                    }
+
                 });
 
                 /**

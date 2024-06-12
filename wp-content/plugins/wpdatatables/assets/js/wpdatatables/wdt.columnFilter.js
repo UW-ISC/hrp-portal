@@ -1509,6 +1509,9 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             if (!orderCheckbox.includes(checkedValue)) {
                 orderCheckbox.push(checkedValue)
             }
+            if (aoColumn.defaultValue[0] && !orderCheckbox.includes(aoColumn.defaultValue[0])) {
+                orderCheckbox.push(aoColumn.defaultValue[0]);
+            }
         }
 
         var i = 0;

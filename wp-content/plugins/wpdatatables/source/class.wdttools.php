@@ -870,10 +870,10 @@ class WDTTools
         return array(
             'version'  => get_option('wdtVersion'),
             'features' => [
-                0 => [
-                    'text' => 'Customize your database by choosing unique names for your tables directly through the user interface.',
-                    'link' => ''
-                ]
+//                0 => [
+//                    'text' => 'Customize your database by choosing unique names for your tables directly through the user interface.',
+//                    'link' => ''
+//                ]
             ],
             'improvements' => [
 //                0 => [
@@ -883,25 +883,21 @@ class WDTTools
             ],
             'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed vulnerability issue with import functionality.',
+                    'text' => 'Fixed issue with charts using Date/Datetime columns for the x-axis.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with Transform Value handling special characters in headers.',
+                    'text' => 'Fixed issue with the duplicate button when the table ID column is without WDT_',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with Header Rotation on Safari.',
+                    'text' => 'Fixed issue with the checkbox filter using predefined values.',
                     'link' => ''
                 ],
                 3 => [
-                    'text' => 'Fixed issue with filters on front-end for header.',
+                    'text' => 'Other small bug fixes.',
                     'link' => ''
-                ],
-                4 => [
-                    'text' => 'Fixed issue with Follow Table Filtering (only chart on page).',
-                    'link' => ''
-                ],
+                ]
             ]
         );
     }

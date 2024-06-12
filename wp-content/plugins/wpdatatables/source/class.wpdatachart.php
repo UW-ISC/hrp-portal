@@ -707,14 +707,14 @@ class WPDataChart
                         $thousandsSeparator = $this->_wpdatatable->getColumn($columnKey)->isShowThousandsSeparator();
                         switch ($dataType) {
                             case 'date':
-                                $timestamp = is_int($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
+                                $timestamp = is_numeric($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
                                 $return_data_row[] = date(
                                     $dateFormat,
                                     $timestamp
                                 );
                                 break;
                             case 'datetime':
-                                $timestamp = is_int($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
+                                $timestamp = is_numeric($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
                                 if ($this->getEngine() == 'google') {
                                     $return_data_row[] = date(
                                         $dateFormat,
