@@ -861,7 +861,7 @@ class GFFormDisplay {
 		$post_render_script = '
 			jQuery(document).trigger("gform_pre_post_render", [{ formId: "' . $form_id . '", currentPage: "' . $current_page . '", abort: function() { this.preventDefault(); } }]);
 	        
-	        if (event.defaultPrevented) {
+	        if (event && event.defaultPrevented) {
             	    return; 
         	}
 	        const gformWrapperDiv = document.getElementById( "gform_wrapper_' . $form_id . '" );
@@ -1164,9 +1164,10 @@ class GFFormDisplay {
 		//When called via a shortcode, this will be ignored (too late to enqueue), but the scripts will be enqueued via the enqueue_scripts event
 		self::enqueue_form_scripts( $form, $ajax );
 
-		$is_form_editor  = GFCommon::is_form_editor();
-		$is_entry_detail = GFCommon::is_entry_detail();
-		$is_admin        = $is_form_editor || $is_entry_detail;
+		$is_form_editor       = GFCommon::is_form_editor();
+		$is_entry_detail      = GFCommon::is_entry_detail();
+		$is_admin             = $is_form_editor || $is_entry_detail;
+		$should_render_hidden = self::has_conditional_logic( $form ) && rgar( rgget( 'attributes' ), 'formPreview' ) !== 'true';
 
 		if ( empty( $confirmation_message ) ) {
 			$wrapper_css_class = GFCommon::get_browser_class() . ' gform_wrapper';
@@ -1179,7 +1180,7 @@ class GFFormDisplay {
 
 			//Hiding entire form if conditional logic is on to prevent 'hidden' fields from blinking. Form will be set to visible in the conditional_logic.php after the rules have been applied.
 
-			$style = ( self::has_conditional_logic( $form ) && rgar( rgget( 'attributes' ), 'formPreview' ) !== 'true' ) ? "style='display:none'" : '';
+			$style = $should_render_hidden ? "style='display:none'" : '';
 
 			// Split form CSS class by spaces and apply wrapper to each.
 			$custom_wrapper_css_class = '';
@@ -1454,6 +1455,7 @@ class GFFormDisplay {
 						'var is_form = form_content.length > 0 && ! is_redirect && ! is_confirmation;' .
 						"var mt = parseInt(jQuery('html').css('margin-top'), 10) + parseInt(jQuery('body').css('margin-top'), 10) + 100;" .
 						'if(is_form){' .
+						( $should_render_hidden ? "form_content.find('form').css('opacity', 0);" : "" ) .
 						"jQuery('#gform_wrapper_{$form_id}').html(form_content.html());" .
 						"if(form_content.hasClass('gform_validation_error')){jQuery('#gform_wrapper_{$form_id}').addClass('gform_validation_error');} else {jQuery('#gform_wrapper_{$form_id}').removeClass('gform_validation_error');}" .
 						"setTimeout( function() { /* delay the scroll by 50 milliseconds to fix a bug in chrome */ {$scroll_position['default']} }, 50 );" .
@@ -1469,13 +1471,11 @@ class GFFormDisplay {
 						'if(!confirmation_content){' .
 						'confirmation_content = contents;' .
 						'}' .
-						'setTimeout(function(){' .
 						"jQuery('#gform_wrapper_{$form_id}').replaceWith(confirmation_content);" .
 						"{$scroll_position['confirmation']}" .
 						"jQuery(document).trigger('gform_confirmation_loaded', [{$form_id}]);" .
 						"window['gf_submitting_{$form_id}'] = false;" .
 						"wp.a11y.speak(jQuery('#gform_confirmation_message_{$form_id}').text());" .
-						'}, 50);' .
 						'}' .
 						'else{' .
 						"jQuery('#gform_{$form_id}').append(contents);" .
@@ -2669,7 +2669,7 @@ class GFFormDisplay {
 		if ( ! isset( $_gf_state ) ) {
 			$state = json_decode( base64_decode( $_POST[ "state_{$form_id}" ] ), true );
 
-			if ( ! $state || sizeof( $state ) != 2 ) {
+			if ( ! $state || ! is_array( $state ) || sizeof( $state ) != 2 ) {
 				return true;
 			}
 
@@ -3514,6 +3514,7 @@ class GFFormDisplay {
             "window['gformInitPriceFields']();" .
 	        "gf_apply_rules({$form['id']}, " . json_encode( $fields_with_logic ) . ', true);' .
 			"jQuery('#gform_wrapper_{$form['id']}').show();" .
+			"jQuery('#gform_wrapper_{$form['id']} form').css('opacity', '');" .
 			"jQuery(document).trigger('gform_post_conditional_logic', [{$form['id']}, null, true]);" .
 			"gform.utils.trigger({ event: 'gform/conditionalLogic/init/end', native: false, data: { formId: {$form['id']}, fields: null, isInit: true } });" .
 
@@ -4257,16 +4258,21 @@ class GFFormDisplay {
 		$sublabel_class        = "field_sublabel_{$sublabel_setting}";
 
 		$has_description_class    = ! empty( $field->description ) ? 'gfield--has-description' : 'gfield--no-description';
-		$form_description_setting = rgar( $form, 'descriptionPlacement', 'below' );
+		$form_description_setting = rgempty( 'descriptionPlacement', $form ) ? 'below' : $form['descriptionPlacement'];
 		$description_setting      = ! isset( $field->descriptionPlacement ) || empty( $field->descriptionPlacement ) ? $form_description_setting : $field->descriptionPlacement;
+		$description_setting      = $description_setting == 'above' && ( $field->labelPlacement == 'top_label' || $field->labelPlacement == 'hidden_label' || ( empty( $field->labelPlacement ) && $form[ 'labelPlacement' ] == 'top_label' ) ) ? 'above' : 'below';
 		$description_class        = "field_description_{$description_setting}";
 
+		$form_validation_setting = rgempty( 'validationPlacement', $form ) ? 'below' : $form['validationPlacement'];
+		$validation_setting      = ! isset( $field->validationPlacement ) || empty( $field->validationPlacement ) ? $form_validation_setting : $field->validationPlacement;
+		$validation_class        = "field_validation_{$validation_setting}";
+
 		$field_setting_label_placement = $field->labelPlacement;
-		$label_placement              = empty( $field_setting_label_placement ) ? '' : $field_setting_label_placement;
+		$label_placement               = empty( $field_setting_label_placement ) ? '' : $field_setting_label_placement;
 
 		$span_class = $field->get_css_grid_class( $form );
 
-		$css_class = "gfield gfield--type-{$field->type} $choice_input_type_class $field_input_type_class $field_specific_class $selectable_class $span_class $error_class $section_class $admin_only_class $custom_class $hidden_class $html_block_class $html_formatted_class $html_no_follows_desc_class $option_class $quantity_class $product_class $total_class $donation_class $shipping_class $page_class $required_class $hidden_product_class $creditcard_warning_class $submit_width_class $calculation_class $sublabel_class $has_description_class $description_class $label_placement $visibility_class $admin_hidden_class";
+		$css_class = "gfield gfield--type-{$field->type} $choice_input_type_class $field_input_type_class $field_specific_class $selectable_class $span_class $error_class $section_class $admin_only_class $custom_class $hidden_class $html_block_class $html_formatted_class $html_no_follows_desc_class $option_class $quantity_class $product_class $total_class $donation_class $shipping_class $page_class $required_class $hidden_product_class $creditcard_warning_class $submit_width_class $calculation_class $sublabel_class $has_description_class $description_class $label_placement $validation_class $visibility_class $admin_hidden_class";
 		$css_class = preg_replace( '/\s+/', ' ', $css_class ); // removing extra spaces
 
 		/*
