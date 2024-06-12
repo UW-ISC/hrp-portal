@@ -67,16 +67,17 @@ class WDTIntegrationsLoader
             require_once(WDT_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php');
         }
 
+        // Include Formula Column
+        if (is_file(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php')) {
+            require_once(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php');
+        }
+
         // Include Table Editing
         if (is_file(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php')) {
             require_once(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php');
         }
 
         if (is_admin()) {
-            // Include Formula Column
-            if (is_file(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php');
-            }
 
             // Include SQL Constructor
             if (is_file(WDT_INTEGRATIONS_PATH . 'sql-constructor/wdt-sql-constructor-integration.php')) {

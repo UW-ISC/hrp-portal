@@ -263,17 +263,14 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with features and bug fixes:
+                            New update with bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Customize your database by choosing unique names for your tables directly through the user interface. </li>
-                                <li><strong>BugFix:</strong> Fixed vulnerability issue with import functionality. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Transform Value handling special characters in headers. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Header Rotation on Safari. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with filters on front-end for header. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Follow Table Filtering (only chart on page).</li>
+                                <li><strong>BugFix:</strong> Fixed issue with charts using Date/Datetime columns for the x-axis. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with the duplicate button when the table ID column is without 'WDT_'.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with the checkbox filter using predefined values.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

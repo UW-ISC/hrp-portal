@@ -99,7 +99,7 @@ class WPExcelDataTable extends WPDataTable {
 
         $init_date_format = get_option('wdtDateFormat');
         $obj->dataTableParams->displayDateFormat = WDTTools::convertPhpToMomentDateFormat($init_date_format);//custom option
-        $obj->dataTableParams->dataSourceDateFormat = $obj->dataTableParams->displayDateFormat;//custom option
+        $obj->dataTableParams->dataSourceDateFormat = WDTTools::convertPhpToMomentDateFormat('Y-m-d');
         $timeFormat = get_option('wdtTimeFormat');
 
         $obj->dataTableParams->origTimeFormat = $timeFormat;

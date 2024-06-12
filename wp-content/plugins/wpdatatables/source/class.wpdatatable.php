@@ -1834,11 +1834,13 @@ class WPDataTable
         if (empty($wdtParameters['dates_detected'])
             && count(array_intersect(array('date', 'datetime', 'time'), $wdtColumnTypes))
         ) {
-            foreach ($wdtColumnTypes as $key => $columnType) {
-                $currentDateFormat = isset($wdtParameters['dateInputFormat'][$key]) ? $wdtParameters['dateInputFormat'][$key] : null;
-                if (in_array($columnType, array('date', 'datetime', 'time'))) {
-                    foreach ($this->_dataRows as &$dataRow) {
-                        $dataRow[$key] = WDTTools::wdtConvertStringToUnixTimestamp($dataRow[$key], $currentDateFormat);
+            if (!($this instanceof WPExcelDataTable && !$this->serverSide())){
+                foreach ($wdtColumnTypes as $key => $columnType) {
+                    $currentDateFormat = isset($wdtParameters['dateInputFormat'][$key]) ? $wdtParameters['dateInputFormat'][$key] : null;
+                    if (in_array($columnType, array('date', 'datetime', 'time'))) {
+                        foreach ($this->_dataRows as &$dataRow) {
+                            $dataRow[$key] = WDTTools::wdtConvertStringToUnixTimestamp($dataRow[$key], $currentDateFormat);
+                        }
                     }
                 }
             }
