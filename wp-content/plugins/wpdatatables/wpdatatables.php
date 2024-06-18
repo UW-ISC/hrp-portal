@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.5.2
+ * @version 6.5.3
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.5.2
+Version: 6.5.3
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins

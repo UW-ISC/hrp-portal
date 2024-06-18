@@ -268,9 +268,7 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with charts using Date/Datetime columns for the x-axis. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with the duplicate button when the table ID column is without 'WDT_'.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with the checkbox filter using predefined values.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with editing entries making them duplicates.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>
