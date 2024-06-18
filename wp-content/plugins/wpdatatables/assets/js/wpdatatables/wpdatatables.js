@@ -1646,7 +1646,8 @@ var singleClick = false;
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     e.preventDefault();
-                    if ($(tableDescription.selector + '_edit_dialog_buttons').find('.wdt-apply-duplicate-button').hasClass('hidden')) {
+                    if ($(tableDescription.selector + '_edit_dialog_buttons').find('.wdt-apply-duplicate-button').hasClass('hidden')
+                          || $(tableDescription.selector + '_edit_dialog_buttons').find('.wdt-apply-duplicate-button').length == 0) {
                         wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, false);
                     } else {
                         wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, true);
