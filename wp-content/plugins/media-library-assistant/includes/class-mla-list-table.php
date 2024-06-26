@@ -414,14 +414,18 @@ class MLA_List_Table extends WP_List_Table {
 
 		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$field = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$field = strtolower( wp_unslash( $_REQUEST['order'] ) );
 			$submenu_arguments['order'] = ( 'desc' === $field ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			foreach ( MLAQuery::$default_sortable_columns as $sortable_column ) {
-				if ( $sortable_column[0] === $_REQUEST['orderby'] ) {
-					$submenu_arguments['orderby'] = urlencode( $sortable_column[0] );
+			if ( 'rml' === $_REQUEST['orderby'] ) {
+				$submenu_arguments['orderby'] = 'rml';
+			} else {
+				foreach ( MLAQuery::$default_sortable_columns as $sortable_column ) {
+					if ( $sortable_column[0] === $_REQUEST['orderby'] ) {
+						$submenu_arguments['orderby'] = urlencode( $sortable_column[0] );
+					}
 				}
 			}
 		}

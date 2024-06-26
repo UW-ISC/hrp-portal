@@ -665,13 +665,6 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 						$( '#mla-search-submit', toolbar ).trigger('click');
 						return false;
 					});
-
-					$( '#mla-terms-search-input' ).on( 'keypress', function( e ){
-						if ( 13 == e.which ) {
-							e.preventDefault();
-							$( '#mla-terms-search-submit' ).trigger('click');
-						}
-					});
 				}
 			}
 		}); // wp.media.view.MlaTermsSearch
@@ -691,6 +684,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 
 			events: {
+				'keyup': 'searchKey',
 				'input': 'search',
 				'change': 'search',
 				'click': 'search',
@@ -722,6 +716,15 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				
 				this.$el.html( this.template( data ) );
 				return this;
+			},
+
+			searchKey: function( event ) {
+				var toolbar;
+
+				if ( 13 === event.which ) {
+					toolbar = $( this.el ).closest( 'div.media-toolbar' );
+					$( '#mla-search-submit', toolbar ).trigger('click');
+				}
 			},
 
 			search: function( event ) {
@@ -1342,12 +1345,12 @@ console.log( 'listening to controller events' );
 			});
 
 			$( 'input.newtag', ajaxTag ).on( 'keyup', function( e ){
-				if ( 13 == e.which ) {
+				if ( 13 === e.which ) {
 					mlaModal.tagBox.flushTags( tagsDiv );
 					return false;
 				}
 			}).on( 'keypress', function( e ){
-				if ( 13 == e.which ) {
+				if ( 13 === e.which ) {
 					e.preventDefault();
 					return false;
 				}
@@ -1808,7 +1811,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 				// Convert "Enter" key to a click
 				thisJQuery.find( taxonomyNewIdSelector ).on( 'keypress', function(event){
-					if( 13 === event.keyCode ) {
+					if ( 13 === event.keyCode ) {
 						event.preventDefault();
 						thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).trigger('click');
 					}
@@ -1869,7 +1872,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 				thisJQuery.find( taxonomySearchIdSelector ).on( 'keypress', function( event ){
 					// Enter key cancels the filter and closes the search field
-					if( 13 === event.keyCode ) {
+					if ( 13 === event.keyCode ) {
 						event.preventDefault();
 						thisJQuery.find( taxonomySearchIdSelector ).val( '' );
 						thisJQuery.find( taxonomyIdPrefix + '-searcher' ).addClass( 'mla-hidden-children' );
@@ -1885,7 +1888,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					var searchValue, termList, termListPopular, matchingTerms, matchingTermsPopular;
 
 					// keyup happens after keypress; change the focus if the text box has been closed
-					if( 13 === event.keyCode ) {
+					if ( 13 === event.keyCode ) {
 						event.preventDefault();
 						thisJQuery.find( taxonomyIdPrefix + '-search-toggle' ).focus();
 						return;

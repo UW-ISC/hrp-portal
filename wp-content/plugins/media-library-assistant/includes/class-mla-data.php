@@ -1486,8 +1486,9 @@ class MLAData {
 		$placeholders = self::mla_get_template_placeholders( $tpl, $default_option );
 		foreach ($placeholders as $key => $value ) {
 			// Braces in the key must become brackets for template parsing
+			$markup_key = $key;
 			$key = str_replace( '{', '[', str_replace( '}', ']', $key ) );
-			if ( isset( $markup_values[ $key ] ) ) {
+			if ( isset( $markup_values[ $markup_key ] ) ) {
 				continue;
 			}
 
@@ -1507,13 +1508,13 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_find_array_element( $value['value'], $item_metadata, $value['option'] );
+					$markup_values[ $markup_key ] = self::mla_find_array_element( $value['value'], $item_metadata, $value['option'] );
 					break;
 				case 'query':
 					if ( isset( $query ) && isset( $query[ $value['value'] ] ) ) {
-						$markup_values[ $key ] = $query[ $value['value'] ];
+						$markup_values[ $markup_key ] = $query[ $value['value'] ];
 					} else {
-						$markup_values[ $key ] = '';
+						$markup_values[ $markup_key ] = '';
 					}
 
 					break;
@@ -1553,14 +1554,14 @@ class MLAData {
 						}
 					} // is_array
 
-					$markup_values[ $key ] = $text;
+					$markup_values[ $markup_key ] = $text;
 					break;
 				case 'terms':
 					if ( 0 < $post_id ) {
 						$text = self::_expand_terms( $value, $post_id );
 						
 						if ( false !== $text ) {
-							$markup_values[ $key ] = $text;
+							$markup_values[ $markup_key ] = $text;
 						}
 					}
 
@@ -1572,7 +1573,7 @@ class MLAData {
 						$text = self::_expand_terms( $value, $page_id );
 						
 						if ( false !== $text ) {
-							$markup_values[ $key ] = $text;
+							$markup_values[ $markup_key ] = $text;
 						}
 					}
 
@@ -1584,14 +1585,14 @@ class MLAData {
 						$text = self::_expand_terms( $value, $parent_id );
 						
 						if ( false !== $text ) {
-							$markup_values[ $key ] = $text;
+							$markup_values[ $markup_key ] = $text;
 						}
 					}
 
 					break;
 				case 'custom':
 					if ( 0 < $post_id ) {
-						$markup_values[ $key ] = self::_expand_custom_field( $value, $post_id );
+						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $post_id );
 					}
 
 					break;
@@ -1599,7 +1600,7 @@ class MLAData {
 					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (integer) $markup_values[ 'page_ID' ] : 0;
 					
 					if ( 0 < $page_id ) {
-						$markup_values[ $key ] = self::_expand_custom_field( $value, $page_id );
+						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $page_id );
 					}
 
 					break;
@@ -1607,7 +1608,7 @@ class MLAData {
 					$parent_id = isset( $markup_values[ 'parent' ] ) ? (integer) $markup_values[ 'parent' ] : 0;
 					
 					if ( 0 < $parent_id ) {
-						$markup_values[ $key ] = self::_expand_custom_field( $value, $parent_id );
+						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $parent_id );
 					}
 
 					break;
@@ -1620,7 +1621,7 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_iptc_metadata_value( $value['value'], $attachment_metadata, $value['option'], $keep_existing );
+					$markup_values[ $markup_key ] = self::mla_iptc_metadata_value( $value['value'], $attachment_metadata, $value['option'], $keep_existing );
 					break;
 				case 'exif':
 					if ( is_null( $attachment_metadata ) ) {
@@ -1633,9 +1634,9 @@ class MLAData {
 
 					$record = self::mla_exif_metadata_value( $value['value'], $attachment_metadata, $value['option'], $keep_existing );
 					if ( is_array( $record ) ) {
-						$markup_values[ $key ] = self::_process_field_level_array( $record, $value['option'], $keep_existing );
+						$markup_values[ $markup_key ] = self::_process_field_level_array( $record, $value['option'], $keep_existing );
 					} else {
-						$markup_values[ $key ] = $record;
+						$markup_values[ $markup_key ] = $record;
 					}
 
 					break;
@@ -1648,7 +1649,7 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_xmp_metadata_value( $value['value'], $attachment_metadata['mla_xmp_metadata'], $value['option'], $keep_existing );
+					$markup_values[ $markup_key ] = self::mla_xmp_metadata_value( $value['value'], $attachment_metadata['mla_xmp_metadata'], $value['option'], $keep_existing );
 					break;
 				case 'id3':
 					if ( is_null( $id3_metadata ) ) {
@@ -1659,7 +1660,7 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_id3_metadata_value( $value['value'], $id3_metadata, $value['option'], $keep_existing );
+					$markup_values[ $markup_key ] = self::mla_id3_metadata_value( $value['value'], $id3_metadata, $value['option'], $keep_existing );
 					break;
 				case 'pdf':
 					if ( is_null( $attachment_metadata ) ) {
@@ -1672,9 +1673,9 @@ class MLAData {
 
 					$record = self::mla_pdf_metadata_value( $value['value'], $attachment_metadata );
 					if ( is_array( $record ) ) {
-						$markup_values[ $key ] = self::_process_field_level_array( $record, $value['option'], $keep_existing );
+						$markup_values[ $markup_key ] = self::_process_field_level_array( $record, $value['option'], $keep_existing );
 					} else {
-						$markup_values[ $key ] = $record;
+						$markup_values[ $markup_key ] = $record;
 					}
 
 					break;
@@ -1687,7 +1688,7 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_png_metadata_value( $value['value'], $attachment_metadata['mla_png_metadata'], $value['option'], $keep_existing );
+					$markup_values[ $markup_key ] = self::mla_png_metadata_value( $value['value'], $attachment_metadata['mla_png_metadata'], $value['option'], $keep_existing );
 					break;
 				case 'mso':
 					if ( is_null( $attachment_metadata ) ) {
@@ -1698,10 +1699,10 @@ class MLAData {
 						}
 					}
 
-					$markup_values[ $key ] = self::mla_mso_metadata_value( $value['value'], $attachment_metadata['mla_mso_metadata'], $value['option'], $keep_existing );
+					$markup_values[ $markup_key ] = self::mla_mso_metadata_value( $value['value'], $attachment_metadata['mla_mso_metadata'], $value['option'], $keep_existing );
 					break;
 				case 'matches':
-					$markup_values[ $key ] = isset( MLAData::$regex_matches[ $value['value'] ] ) ? MLAData::$regex_matches[ $value['value'] ] : '';
+					$markup_values[ $markup_key ] = isset( MLAData::$regex_matches[ $value['value'] ] ) ? MLAData::$regex_matches[ $value['value'] ] : '';
 					break;
 				case '':
 					$candidate = str_replace( '{', '[', str_replace( '}', ']', $value['value'] ) );
@@ -1714,14 +1715,14 @@ class MLAData {
 							'format' => 'raw',
 							'option' => $value['option'] ); // single, export, text for array values, e.g., alt_text
 
-						$markup_values[ $key ] = MLAShortcodes::mla_get_data_source( $post_id, 'single_attachment_mapping', $data_value );
+						$markup_values[ $markup_key ] = MLAShortcodes::mla_get_data_source( $post_id, 'single_attachment_mapping', $data_value );
 					} elseif ( isset( $markup_values[ $value['value'] ] ) ) {
 						// A standard element can have a format modifier, e.g., commas, attr
-						$markup_values[ $key ] = $markup_values[ $value['value'] ];
+						$markup_values[ $markup_key ] = $markup_values[ $value['value'] ];
 					} else {
 						$custom_value = apply_filters( 'mla_expand_custom_data_source', NULL, $key, $candidate, $value, $query, $markup_values, $post_id, $keep_existing, $default_option );
 						if ( !is_null( $custom_value ) ) {
-							$markup_values[ $key ] = $custom_value;
+							$markup_values[ $markup_key ] = $custom_value;
 						}
 					}
 
@@ -1729,13 +1730,13 @@ class MLAData {
 				default:
 					$custom_value = apply_filters( 'mla_expand_custom_prefix', NULL, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option );
 					if ( !is_null( $custom_value ) ) {
-						$markup_values[ $key ] = $custom_value;
+						$markup_values[ $markup_key ] = $custom_value;
 					}
 			} // switch
 
-			if ( isset( $markup_values[ $key ] ) ) {
-				$markup_values[ $key ] = self::mla_apply_field_level_format( $markup_values[ $key ], $value );
-			} // isset( $markup_values[ $key ] )
+			if ( isset( $markup_values[ $markup_key ] ) ) {
+				$markup_values[ $markup_key ] = self::mla_apply_field_level_format( $markup_values[ $markup_key ], $value );
+			} // isset( $markup_values[ $markup_key ] )
 		} // foreach placeholder
 
 		if ( $template_count ) {

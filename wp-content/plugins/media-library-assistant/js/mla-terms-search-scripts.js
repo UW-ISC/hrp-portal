@@ -67,9 +67,14 @@ var jQuery, wpAjax, ajaxurl,
 			$( '#mla-terms-search-div' ).show();
 
 			$( '#mla-terms-search-input ' ).focus().on( 'keyup', function( event ){
-				if ( event.which == 27 ) {
+				if ( 27 === event.which ) {
 					mlaTaxonomy.termsSearch.close();
 				} // close on Escape
+
+				if ( 13 === event.which ) {
+					event.preventDefault();
+					$( '#mla-terms-search-form' ).trigger('submit');
+				}
 			});
 
 			return false;
