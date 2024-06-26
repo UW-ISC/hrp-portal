@@ -2785,6 +2785,10 @@ class MLAShortcode_Support {
 
 		$results = array ();
 		$order = isset( $query_parameters['order'] ) ? ' ' . trim( strtoupper( $query_parameters['order'] ) ) : '';
+		if ( !empty( $order ) ) {
+			$order = ( 'DESC' === $order ) ? 'DESC' : 'ASC';
+		}
+		
 		$orderby = isset( $query_parameters['orderby'] ) ? $query_parameters['orderby'] : '';
 		$meta_key = isset( $query_parameters['meta_key'] ) ? $query_parameters['meta_key'] : '';
 
@@ -2875,7 +2879,7 @@ class MLAShortcode_Support {
 								}
 						} // switch $matches[1]
 
-						$results[] = isset( $matches[2] ) ? $matches[1] . $matches[2] : $matches[1] . $order;
+						$results[] = isset( $matches[2] ) ? $matches[1] . $matches[2] : $matches[1] . ' ' . $order;
 					} // not 'rand'
 				} // allowed key
 			} // valid column specification
@@ -2897,7 +2901,7 @@ class MLAShortcode_Support {
 	 * @var	array
 	 */
 	private static $mla_get_shortcode_attachments_parameters = array(
-			'order' => 'ASC', // or 'DESC' or 'RAND'
+			'order' => 'ASC', // or 'DESC'
 			'orderby' => 'menu_order,ID',
 			'id' => NULL,
 			'ids' => array(),

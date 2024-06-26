@@ -1570,11 +1570,11 @@ class MLA {
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) {
-			$_GET['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
+			$_GET['order'] = ( 'desc' === strtolower( wp_unslash( $_REQUEST['order'] ) ) ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			$_GET['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
+			$_GET['orderby'] = esc_attr( wp_unslash( $_REQUEST['orderby'] ) );
 		}
 
 		// bulk_refresh simply refreshes the page, ignoring other bulk actions

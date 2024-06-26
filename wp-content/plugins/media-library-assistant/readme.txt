@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.5.3
-Stable tag: 3.16
+Tested up to: 6.5.4
+Stable tag: 3.17
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,16 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.17 =
+* Fix: **IMPORTANT: An Unauthenticated SQL Injection security risk in the `[mla_tag_cloud]` and `[mla_term_list]` shortcodes has been mitigated.**
+* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Assistant page has been mitigated.**
+* Fix: A problem with formatting the `order=` portion of the SQL orderby clause from shortcode parameters has been corrected.
+* Fix: When the "Real Media Library" plugin (Pro version) is active, `orderby=rml` is propegated to the Media/Assistant pagination controls.
+* Fix: For the `[mla_gallery]` shortcode, handling of brace-delimited array values in the `,str_replace(s,r)` format code has been corrected.
+* Fix: For the Media Manager Modal (popup) Window, the Enter key now triggers the MLA Enhanced Search Media function.
+* Fix: When the Elementor page editor is active, buttons on the "Insert Media" popup window are now sized correctly.
+* Fix: Some references in the Documentation tab to IPTC standards have been updated to newer versions of those standards.
+
 = 3.16 =
 * New: The "MLA Multi-search Example" plugin now includes a special `custom:*` feature that will perform a "Simple Custom Field" query on all custom fields that have values for one or more items.
 * Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Edit Media page has been mitigated.**
@@ -366,8 +376,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.16 =
-IMPORTANT: Security risks in the Media/Edit Media screen and [mla_custom_list] shortcode have been mitigated. Shortcode bug fixes and a new feature in the MLA Multi-search Example plugin. One enhancement, four fixes in all.
+= 3.17 =
+IMPORTANT: Security risks in the Media/Edit Media screen and shortcodes have been mitigated. Elementor fix for the Media Manager Modal (popup) Window. Eight fixes in all.
 
 == Acknowledgements ==
 
