@@ -2,6 +2,11 @@
  * This stylesheet is used for the "Search Terms" popup window.
  */
 
+/* Elementor hack */
+.mla-terms-search-button {
+	width: auto;
+}
+
 #mla-terms-search-div {
 	background-color: #fff;
 	-webkit-box-shadow: 0 3px 6px rgba( 0, 0, 0, 0.3 );

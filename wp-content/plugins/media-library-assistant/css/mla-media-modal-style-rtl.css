@@ -26,6 +26,11 @@
 
 .mla-search-options > li:last-child { margin-left: 0; }
 
+/* Elementor hack */
+.mla-search-submit-button {
+	width: auto;
+}
+
 /**
  * MMMW Popup adapted from EML Media Toolbar Controls
  */
