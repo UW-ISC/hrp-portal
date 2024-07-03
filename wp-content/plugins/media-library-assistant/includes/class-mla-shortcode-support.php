@@ -2786,7 +2786,7 @@ class MLAShortcode_Support {
 		$results = array ();
 		$order = isset( $query_parameters['order'] ) ? ' ' . trim( strtoupper( $query_parameters['order'] ) ) : '';
 		if ( !empty( $order ) ) {
-			$order = ( 'DESC' === $order ) ? 'DESC' : 'ASC';
+			$order = ( ' DESC' === $order ) ? ' DESC' : ' ASC';
 		}
 		
 		$orderby = isset( $query_parameters['orderby'] ) ? $query_parameters['orderby'] : '';

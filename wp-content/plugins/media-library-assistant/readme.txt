@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
 Tested up to: 6.5.4
-Stable tag: 3.17
+Stable tag: 3.18
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -186,6 +186,10 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 9. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
 
 == Changelog ==
+
+= 3.18 =
+* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Assistant page when `orderby=rml` is used has been mitigated.**
+* Fix: Another problem with formatting the `order=DESC` portion of the SQL orderby clause from shortcode parameters has been corrected.
 
 = 3.17 =
 * Fix: **IMPORTANT: An Unauthenticated SQL Injection security risk in the `[mla_tag_cloud]` and `[mla_term_list]` shortcodes has been mitigated.**
@@ -376,8 +380,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.17 =
-IMPORTANT: Security risks in the Media/Edit Media screen and shortcodes have been mitigated. Elementor fix for the Media Manager Modal (popup) Window. Eight fixes in all.
+= 3.18 =
+IMPORTANT: A security risk in the Media/Edit Media screen has been mitigated. A defect in formatting the order=DESC shortcode parameter has been corrected. Two fixes in all.
 
 == Acknowledgements ==
 
