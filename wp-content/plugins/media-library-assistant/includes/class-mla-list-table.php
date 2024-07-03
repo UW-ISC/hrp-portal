@@ -1845,7 +1845,12 @@ class MLA_List_Table extends WP_List_Table {
 				if ( isset( $_REQUEST['orderby'] ) ) {
 					$orderby = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
 					if ( 'rml' === $orderby ) {
-						$order = isset( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
+						if ( isset( $_REQUEST['order'] ) ) {
+							$field = strtolower( wp_unslash( $_REQUEST['order'] ) );
+							$order['order'] = ( 'desc' === $field ) ? 'desc' : 'asc';
+						} else {
+							$order = 'asc';
+						}
 
 						$base_url .= '&orderby=' . $orderby . '&order=' . $order;
 					}
