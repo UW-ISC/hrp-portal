@@ -1624,10 +1624,10 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         e.stopImmediatePropagation();
         if ($(this).hasClass('select-all-columns')) {
             $(this).closest('.card').find('div.chart-column-block').addClass('selected');
-            $(this).text(wpdatatables_chart_wizard_strings.deselectAll);
+            $(this).text(wpdatatables_chart_wizard_strings.deselectAllChart);
         } else {
             $(this).closest('.card').find('div.chart-column-block').removeClass('selected');
-            $(this).text(wpdatatables_chart_wizard_strings.selectAll);
+            $(this).text(wpdatatables_chart_wizard_strings.selectAllChart);
         }
         $(this).toggleClass('select-all-columns deselect-all-columns');
 
@@ -1746,7 +1746,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             ($('.wdt-chart-wizart-existing-columns-container div.chart-column-block').length === 0
                 && $('.wdt-chart-column-picker-container .existing-columns button').hasClass('select-all-columns'))) {
             $('.wdt-chart-wizart-existing-columns-container div.chart-column-block').removeClass('selected');
-            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAll);
+            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAllChart);
             $('.wdt-chart-column-picker-container .existing-columns button').toggleClass('select-all-columns deselect-all-columns');
             $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
@@ -1791,7 +1791,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         if ($('.wdt-chart-column-picker-container .chosen_columns button').hasClass('deselect-all-columns') ||
             ($('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').length === 0 && $('.wdt-chart-column-picker-container .chosen_columns button').hasClass('select-all-columns'))) {
             $('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').removeClass('selected');
-            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAll);
+            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAllChart);
             $('.wdt-chart-column-picker-container .chosen_columns button').toggleClass('select-all-columns deselect-all-columns');
             $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');

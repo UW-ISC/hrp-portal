@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.5.3
+ * @version 6.6
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.5.3
+Version: 6.6
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -112,6 +112,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablecache.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtnestedjson.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablestemplates.php');
+    require_once(WDT_ROOT_PATH . 'source/class.feedback.php');
     //[<-- Full version -->]//
     require_once(WDT_ROOT_PATH . 'source/class.wpexceldatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpexcelcolumn.php');
@@ -178,6 +179,7 @@ add_shortcode('wpdatatable_sum', 'wdtFuncsShortcodeHandler');
 add_shortcode('wpdatatable_avg', 'wdtFuncsShortcodeHandler');
 add_shortcode('wpdatatable_min', 'wdtFuncsShortcodeHandler');
 add_shortcode('wpdatatable_max', 'wdtFuncsShortcodeHandler');
+
 
 //[<-- Full version -->]//
 // Widget

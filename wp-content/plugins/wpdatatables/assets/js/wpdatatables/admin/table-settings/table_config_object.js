@@ -566,7 +566,7 @@ var wpdatatable_config = {
             }
             for (var i = 0; i < newOptions.length; i++) {
                 var value = newOptions[i];
-                var displayText = (value === '-1') ? wpdatatables_frontend_strings.all : newOptions[i];
+                var displayText = (value === '-1') ? wpdatatables_frontend_strings.all_wpdatatables : newOptions[i];
 
                 jQuery('#wdt-rows-per-page').append(jQuery('<option>', {
                     value: value,
@@ -1387,7 +1387,7 @@ var wpdatatable_config = {
         jQuery('#wdt-filter-default-value-selectpicker').selectpicker('refresh');
         jQuery('#wdt-editing-default-value-selectpicker').selectpicker('refresh');
         for (var i=0; i< wpdatatable_config.columns.length;i++){
-            if(jQuery.inArray(wpdatatable_config.columns[i].type,['email', 'image','link']) != -1){
+            if (jQuery.inArray(wpdatatable_config.columns[i].type,['email', 'image','link']) != -1) {
                 hasLinkType++;
                 break;
             }

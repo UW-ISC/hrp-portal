@@ -263,12 +263,21 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with bug fixes:
+                            New update:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with editing entries making them duplicates.</li>
+                                <li><strong>Feature:</strong> Added global search function for searching multiple tables on one page using a shortcode. </li>
+                                <li><strong>Improvement:</strong> Implemented placeholders (loaders) during table loading. </li>
+                                <li><strong>Improvement:</strong> Implemented placeholders (loaders) during chart loading. </li>
+                                <li><strong>Improvement:</strong> Changed all string names so that they're unique for PO Edit. </li>
+                                <li><strong>Improvement:</strong> Updated ApexCharts library. </li>
+                                <li><strong>Improvement:</strong> Updated HighCharts library. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with sorting date columns for non-SS tables. </li>
+                                <li><strong>BugFix:</strong> Fixed issue preventing the removal of empty values from select boxes. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with HighCharts Stock not showing the time zoom toolbar when the stable version option is turned on. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with grouping not working properly on charts with float columns. </li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

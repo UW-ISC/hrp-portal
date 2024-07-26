@@ -933,13 +933,46 @@ class WPDataChart
                     }
                 }
                 $this->_group_chart = 1;
-                $this->_render_data['rows'] = $output;
+                $precision = $this->findPrecision($output);
+                $this->_render_data['rows'] = $this->roundFloatsInArray($output, $precision);
             } else {
                 $this->_group_chart = 0;
             }
         } else {
             $this->_group_chart = 0;
         }
+    }
+
+    public function roundFloatsInArray($data, $precision) {
+        array_walk_recursive($data, function(&$value) use ($precision) {
+            if (is_float($value)) {
+                $value = round($value, $precision);
+            }
+        });
+        return $data;
+    }
+
+    public function findPrecision($data)
+    {
+        $max_precision = get_option('wdtDecimalPlaces');
+        $number_format = get_option('wdtNumberFormat');
+
+        array_walk_recursive($data, function($value) use ($number_format, &$max_precision) {
+            if (is_float($value)) {
+                if ($number_format == 1) {
+                    $decimal_part = explode('.', (string)$value);
+                } else {
+                    $value_string = str_replace('.', ',',(string)$value);
+                    $decimal_part = explode(',', $value_string);
+                }
+
+                $precision = isset($decimal_part[1]) ? strlen($decimal_part[1]) : 0;
+                if ($precision > $max_precision) {
+                    $max_precision = $precision;
+                }
+            }
+        });
+        return $max_precision;
     }
 
     /**
@@ -1123,6 +1156,7 @@ class WPDataChart
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
         }
         wp_enqueue_script('wpdatatables-render-chart', WDT_JS_PATH . 'wdtcharts/wdt.chartsRender' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wpdatatables-loader-chart', WDT_CSS_PATH . 'loaderChart.min.css', array(), WDT_CURRENT_VERSION);
         wp_localize_script('wpdatatables-render-chart', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
         $this->setJsonChartRenderData($this->enqueueChartSpecificScripts($js_ext));
         return $this->enqueueScriptsAfterChartRender();

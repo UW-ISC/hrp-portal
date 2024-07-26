@@ -189,23 +189,23 @@
                 </div>
             </div>
             <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
-                <h4 class="c-title-color m-b-4">
+                    <h4 class="c-title-color m-b-4">
                     <?php esc_html_e('Type', 'wpdatatables'); ?>
-                </h4>
-                <div class="cp-container">
-                    <div class="form-group">
-                         <div class="fg-line">
-                              <div class="select">
-                                  <select class="selectpicker apex-series-type" name="apex-series-type" id="apex-series-type-{{:#index}}">
-                                      <option selected="selected" value=""></option>
-                                      <option value="line">Line</option>
-                                      <option value="bar">Column</option>
-                                      <option value="area">Area</option>
-                                  </select>
-                              </div>
-                         </div>
+                    </h4>
+                    <div class="cp-container">
+                        <div class="form-group">
+                            <div class="fg-line">
+                                <div class="select">
+                                    <select class="selectpicker apex-series-type" name="apex-series-type" id="apex-series-type-{{:#index}}">
+                                        <option selected="selected" value=""></option>
+                                        <option value="line">Line</option>
+                                        <option value="bar">Column</option>
+                                        <option value="area">Area</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
             </div>
             <div class="apexcharts chart-series-image doNotTriggerChange" id="series-image-{{:#index}}-container">
                 <h4 class="c-title-color m-b-4">

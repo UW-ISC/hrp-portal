@@ -450,7 +450,7 @@
                 $('#wdt-rows-per-page').val(displayoption).selectpicker('refresh');
                 wpdatatable_config.setDisplayLength(displayoption);
             } else {
-                $('#wdt-error-modal .modal-body').html(wpdatatables_frontend_strings.customDisplayError);
+                $('#wdt-error-modal .modal-body').html(wpdatatables_frontend_strings.customDisplayError_wpdatatables);
                 $('#wdt-error-modal').modal('show');
             }
         });
@@ -745,7 +745,7 @@
             }
             for (var i = 0; i < newOptions.length; i++) {
                 var value = newOptions[i];
-                var displayText = (value === '-1') ? wpdatatables_frontend_strings.all : newOptions[i];
+                var displayText = (value === '-1') ? wpdatatables_frontend_strings.all_wpdatatables : newOptions[i];
 
                 $(this).append($('<option>', {
                     value: value,
@@ -1149,7 +1149,7 @@
                 $andLogicBlock.hide();
 
                 // Must recreate selectpicker block because Ajax Selectpicker
-                $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected + '"></select></div></div>');
+                $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected_wpdatatables + '" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected_wpdatatables + '"></select></div></div>');
                 $filterInputSelectpicker = $('#wdt-filter-default-value-selectpicker');
                 $filterInputSelectpicker.html('');
 
@@ -1236,14 +1236,14 @@
                             emptyRequest: true,
                             preserveSelectedPosition: 'before',
                             locale: {
-                                emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                                statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                                currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                                errorText: wpdatatables_frontend_strings.errorText,
-                                searchPlaceholder: wpdatatables_frontend_strings.search,
-                                statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                                statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                                statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                                emptyTitle: wpdatatables_frontend_strings.nothingSelected_wpdatatables,
+                                statusSearching: wpdatatables_frontend_strings.sLoadingRecords_wpdatatables,
+                                currentlySelected: wpdatatables_frontend_strings.currentlySelected_wpdatatables,
+                                errorText: wpdatatables_frontend_strings.errorText_wpdatatables,
+                                searchPlaceholder: wpdatatables_frontend_strings.search_wpdatatables,
+                                statusInitialized: wpdatatables_frontend_strings.statusInitialized_wpdatatables,
+                                statusNoResults: wpdatatables_frontend_strings.statusNoResults_wpdatatables,
+                                statusTooShort: wpdatatables_frontend_strings.statusTooShort_wpdatatables
                             }
                         });
 
@@ -1348,7 +1348,7 @@
                 }
                 $defaultValueInput.val('');
 
-                $defaultValueSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-editing-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true"></select></div></div>');
+                $defaultValueSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-editing-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected_wpdatatables + '" data-live-search="true"></select></div></div>');
                 $defaultValueSelectpicker = $('#wdt-editing-default-value-selectpicker');
                 $defaultValueSelectpicker.html('');
 
@@ -1406,14 +1406,14 @@
                         emptyRequest: true,
                         preserveSelectedPosition: 'before',
                         locale: {
-                            emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                            statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                            currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                            errorText: wpdatatables_frontend_strings.errorText,
-                            searchPlaceholder: wpdatatables_frontend_strings.search,
-                            statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                            statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                            statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                            emptyTitle: wpdatatables_frontend_strings.nothingSelected_wpdatatables,
+                            statusSearching: wpdatatables_frontend_strings.sLoadingRecords_wpdatatables,
+                            currentlySelected: wpdatatables_frontend_strings.currentlySelected_wpdatatables,
+                            errorText: wpdatatables_frontend_strings.errorText_wpdatatables,
+                            searchPlaceholder: wpdatatables_frontend_strings.search_wpdatatables,
+                            statusInitialized: wpdatatables_frontend_strings.statusInitialized_wpdatatables,
+                            statusNoResults: wpdatatables_frontend_strings.statusNoResults_wpdatatables,
+                            statusTooShort: wpdatatables_frontend_strings.statusTooShort_wpdatatables
                         }
                     });
 
@@ -1599,13 +1599,13 @@
                 let alertSaveMessage;
                 switch (selectedFileSourceOption) {
                     case 'replaceTableData':
-                        alertSaveMessage = wpdatatables_edit_strings.selected_replace_data_option;
+                        alertSaveMessage = wpdatatables_edit_strings.selected_replace_data_option_common;
                         break;
                     case 'addDataToTable':
-                        alertSaveMessage = wpdatatables_edit_strings.selected_add_data_option;
+                        alertSaveMessage = wpdatatables_edit_strings.selected_add_data_option_common;
                         break;
                     case 'replaceTable':
-                        alertSaveMessage = wpdatatables_edit_strings.selected_replace_table_option;
+                        alertSaveMessage = wpdatatables_edit_strings.selected_replace_table_option_common;
                         break;
                 }
                 let alertMessageDiv = document.getElementById('wdt-save-table-message');
@@ -1630,7 +1630,7 @@
                 return;
             }
             if (!wpdatatable_config.title) {
-                wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.tableNameEmpty, 'danger');
+                wdtNotify(wpdatatables_edit_strings.error_common, wpdatatables_edit_strings.tableNameEmpty_common, 'danger');
                 return;
             }
 
@@ -1677,18 +1677,18 @@
                 };
 
                 if (wpdatatable_config.jsonAuthParams.root === '') {
-                    wdtNotify(wpdatatables_edit_strings.error, 'JSON roots can not be empty. Please set proper JSON roots or insert proper JSON params and click on Fetch JSON button again to get valid roots from JSON URL.', 'danger');
+                    wdtNotify(wpdatatables_edit_strings.error_common, 'JSON roots can not be empty. Please set proper JSON roots or insert proper JSON params and click on Fetch JSON button again to get valid roots from JSON URL.', 'danger');
                     return;
                 }
                 if (wpdatatable_config.jsonAuthParams.url === '') {
                     $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                     $('.wdt-table-settings .nested-json-roots').addClass('hidden');
-                    wdtNotify(wpdatatables_edit_strings.error, 'JSON URL can not be empty', 'danger');
+                    wdtNotify(wpdatatables_edit_strings.error_common, 'JSON URL can not be empty', 'danger');
                     return;
                 }
                 if (wpdatatable_config.jsonAuthParams.authOption !== '') {
                     if (wpdatatable_config.jsonAuthParams.username === '' || wpdatatable_config.jsonAuthParams.password === '') {
-                        wdtNotify(wpdatatables_edit_strings.error, 'Credentials can not be empty', 'danger');
+                        wdtNotify(wpdatatables_edit_strings.error_common, 'Credentials can not be empty', 'danger');
                         return;
                     }
                 }
@@ -1740,8 +1740,8 @@
 
                         // Show success message
                         wdtNotify(
-                            wpdatatables_edit_strings.success,
-                            wpdatatables_edit_strings.tableSaved,
+                            wpdatatables_edit_strings.success_common,
+                            wpdatatables_edit_strings.tableSaved_common,
                             'success'
                         );
                     }
@@ -2018,9 +2018,9 @@
 
             // Extend the wp.media object
             custom_uploader = wp.media.frames.file_frame = wp.media({
-                title: wpdatatables_edit_strings.selectExcelCsv,
+                title: wpdatatables_edit_strings.selectExcelCsv_common,
                 button: {
-                    text: wpdatatables_edit_strings.choose_file
+                    text: wpdatatables_edit_strings.choose_file_common
                 },
                 multiple: false,
                 library: {
@@ -2073,7 +2073,7 @@
             if (url === '') {
                 $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                 $('.wdt-table-settings .nested-json-roots').addClass('hidden');
-                wdtNotify(wpdatatables_edit_strings.error, 'JSON URL can not be empty', 'danger');
+                wdtNotify(wpdatatables_edit_strings.error_common, 'JSON URL can not be empty', 'danger');
                 return;
             }
             params.url = url;
@@ -2081,7 +2081,7 @@
             if (authOption !== '') {
                 params.authOption = authOption;
                 if (username === '' || password === '') {
-                    wdtNotify(wpdatatables_edit_strings.error, 'Credentials can not be empty', 'danger');
+                    wdtNotify(wpdatatables_edit_strings.error_common, 'Credentials can not be empty', 'danger');
                     return;
                 }
                 params.username = username;
@@ -2114,8 +2114,8 @@
                         $('#main-table-settings').css('opacity', '1')
                         jQuery('button.wdt-apply').prop('disabled', '');
                         wdtNotify(
-                            wpdatatables_edit_strings.success,
-                            wpdatatables_edit_strings.getJsonRoots,
+                            wpdatatables_edit_strings.success_common,
+                            wpdatatables_edit_strings.getJsonRoots_common,
                             'success'
                         );
                     } else {
@@ -2124,7 +2124,7 @@
                         $('#main-table-settings .nested-json-loader').remove();
                         $('#main-table-settings').css('opacity', '1')
                         $('button.wdt-apply').prop('disabled', 'disabled');
-                        wdtNotify('Error!', wpdatatables_edit_strings.errorText, 'danger');
+                        wdtNotify('Error!', wpdatatables_edit_strings.errorText_common, 'danger');
                     }
                 },
                 error: function (xhr, status, error) {

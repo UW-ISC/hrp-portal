@@ -25,8 +25,8 @@
 
                 document.execCommand('copy');
                 wdtNotify(
-                    wpdatatables_edit_strings.success,
-                    wpdatatables_edit_strings.systemInfoSaved,
+                    wpdatatables_edit_strings.success_common,
+                    wpdatatables_edit_strings.systemInfoSaved_common,
                     'success'
                 );
             }

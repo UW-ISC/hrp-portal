@@ -2570,3 +2570,10 @@ div.dt-button-collection.wdt-skin-mojito button.dt-button.buttons-columnVisibili
 .wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable .columnValue{
     color: #5a606c;
 }
+.wpdt-c.wdt-skin-mojito .bootstrap-select .bs-searchbox:before {
+    top: -10px;
+}
+.wpdt-c.wdt-skin-mojito tfoot .bootstrap-select .bs-searchbox:before,
+.wpdt-c.wdt-skin-mojito .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
+    top: 10px;
+}

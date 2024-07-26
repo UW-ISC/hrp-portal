@@ -242,13 +242,13 @@
         var $addColumnModal = $('.wdt-add-column-modal-block');
 
         if ($('div#wdt-add-column-modal #wdt-add-column-column-header').val() == '') {
-            wdtNotify(wpdatatables_add_remove_column_strings.error, wpdatatables_add_remove_column_strings.columnHeaderEmpty, 'danger');
+            wdtNotify(wpdatatables_add_remove_column_strings.errorAddRemoveColumn, wpdatatables_add_remove_column_strings.columnHeaderEmptyAddRemoveColumn, 'danger');
             return false;
         }
 
         if(!($.inArray($(document).find('.wdt-default-add-column-db-type').selectpicker('val'),['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)) {
             if ($(document).find('.wdt-default-add-column-db-type-value').val() == '' || ($(document).find('.wdt-default-add-column-db-type').selectpicker('val') == 'VARCHAR' && parseInt($(document).find('.wdt-default-add-column-db-type-value').val()) > '4294967295')) {
-                wdtNotify(wpdatatables_add_remove_column_strings.error, wpdatatables_add_remove_column_strings.outOfRangeTypeValue, 'danger');
+                wdtNotify(wpdatatables_add_remove_column_strings.errorAddRemoveColumn, wpdatatables_add_remove_column_strings.outOfRangeTypeValueAddRemoveColumn, 'danger');
                 return false;
             }
         }
@@ -307,7 +307,7 @@
             },
             success: function () {
                 $('#wdt-add-column-modal').find('.wdt-preload-layer').animateFadeOut();
-                wdtNotify(wpdatatables_add_remove_column_strings.success, wpdatatables_add_remove_column_strings.columnAdded, 'success');
+                wdtNotify(wpdatatables_add_remove_column_strings.successAddRemoveColumn, wpdatatables_add_remove_column_strings.columnAddedAddRemoveColumn, 'success');
                 setTimeout(function () {
                     $('#wdt-add-column-modal').modal('hide');
                     window.location.reload(true);
@@ -324,7 +324,7 @@
         e.preventDefault();
 
         if ($('#wdt-remove-column-confirm').is(':checked') == false) {
-            wdtNotify(wpdatatables_add_remove_column_strings.error, wpdatatables_add_remove_column_strings.columnRemoveConfirm, 'danger');
+            wdtNotify(wpdatatables_add_remove_column_strings.errorAddRemoveColumn, wpdatatables_add_remove_column_strings.columnRemoveConfirmAddRemoveColumn, 'danger');
             return false;
         }
 
@@ -344,7 +344,7 @@
             },
             success: function () {
                 $('#wdt-remove-column-modal').find('.wdt-preload-layer').animateFadeOut();
-                wdtNotify(wpdatatables_add_remove_column_strings.success, wpdatatables_add_remove_column_strings.columnRemoved, 'success');
+                wdtNotify(wpdatatables_add_remove_column_strings.successAddRemoveColumn, wpdatatables_add_remove_column_strings.columnRemovedAddRemoveColumn, 'success');
                 setTimeout(function () {
                     $('#wdt-remove-column-modal').modal('hide');
                     window.location.reload(true);
