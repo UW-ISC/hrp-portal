@@ -16,6 +16,7 @@ global $wp_version;
 function wdtActivationInsertTemplates() {
     WPDataTablesTemplates::importStandardSimpleTemplates();
 }
+
 /**
  * The installation/activation method, installs the plugin table
  */
@@ -368,7 +369,6 @@ function wdtActivationCreateTables()
 
 function wdtDeactivation()
 {
-
 }
 
 /**
@@ -602,6 +602,58 @@ function wdtHideUpdateModal()
 }
 
 add_action('wp_ajax_wdtHideUpdateModal', 'wdtHideUpdateModal');
+function wdt_sanitize_multi_upload( $fields ) {
+    return array_map( function( $field ) {
+        return array_map( 'sanitize_file_name', $field );
+    }, $fields );
+}
+
+function wdt_get_super_global_value( $super_global, $key ) {
+        if ( ! isset( $super_global[ $key ] ) ) {
+            return null;
+        }
+
+        if ( $_FILES === $super_global ) {
+            return isset( $super_global[ $key ]['name'] ) ?
+                sanitize_file_name( $super_global[ $key ] ) :
+                wdt_sanitize_multi_upload( $super_global[ $key ] );
+        }
+
+        return wp_kses_post_deep( wp_unslash( $super_global[ $key ] ) );
+}
+
+function wdtSaveDeactivationinfo()
+{
+    if (!is_admin() || !wp_verify_nonce($_POST['wdtNonce'], 'wdtDeactivationNonce')) {
+        wp_send_json_error();
+    }
+
+    if (!current_user_can( 'activate_plugins' )) {
+        wp_send_json_error();
+    }
+
+    $reason = wdt_get_super_global_value( $_POST, 'choice' ) ?? '';
+    $reason_caption = wdt_get_super_global_value( $_POST, "textareaDescription" ) ?? '';
+
+    $reason = sanitize_key($reason);
+    $reason_caption = sanitize_textarea_field($reason_caption);
+
+    WPDataTablesFeedback::wdtSendFeedback($reason, $reason_caption);
+
+    wp_send_json_success();
+}
+
+add_action('wp_ajax_wdtSaveDeactivationinfo', 'wdtSaveDeactivationinfo');
+
+function wdtEnqueueDeactivationModal()
+{
+    if((strpos($_SERVER['REQUEST_URI'],'plugins.php') !== false)) {
+        wp_enqueue_script('wdt-deactivate-info-js', WDT_ROOT_URL . 'assets/js/deactivation/deactivation-modal.js', array(), WDT_CURRENT_VERSION, true);
+        wp_localize_script('wdt-deactivate-info-js', 'wpdatatables_deactivate_info', WDTTools::getDeactivationInfo());
+    }
+}
+add_action('admin_enqueue_scripts', 'wdtEnqueueDeactivationModal');
+
 function wdtIsPluginInstalled($plugin_path) {
     $plugins_dir = WP_PLUGIN_DIR;
     $plugin_file = $plugins_dir . '/' . $plugin_path;

@@ -2669,3 +2669,10 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 #wdt-filter-widget .wdt-skin-raspberry-cream.wpTableWCAG  .wdt-checkbox-filter.btn{
     color: #6e6e6e;
 }
+.wpdt-c.wdt-skin-raspberry-cream .bootstrap-select .bs-searchbox:before {
+    top: -10px;
+}
+.wpdt-c.wdt-skin-raspberry-cream tfoot .bootstrap-select .bs-searchbox:before,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
+    top: 10px;
+}

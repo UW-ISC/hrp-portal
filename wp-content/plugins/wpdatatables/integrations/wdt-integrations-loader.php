@@ -76,6 +76,9 @@ class WDTIntegrationsLoader
         if (is_file(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php')) {
             require_once(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php');
         }
+        if (is_file(WDT_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php')) {
+            require_once(WDT_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php');
+        }
 
         if (is_admin()) {
 

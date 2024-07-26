@@ -153,6 +153,14 @@ var wpDataTablesHighchart = function () {
             if (this.renderCallback !== null) {
                 this.renderCallback(this);
             }
+            var chartID = this.container.replace(/.*_(\d+)/, '$1');
+            if (jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
+                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                    if (jQuery(this).attr('data-id') === chartID) {
+                        jQuery(this).hide();
+                    }
+                });
+            }
             this.chart = new Highcharts.Chart(this.options);
         },
         setType: function (type) {
@@ -731,6 +739,14 @@ var wpDataTablesHighchart = function () {
                         obj.renderCallback(obj);
                     }
                     obj.chart = new Highcharts.Chart(obj.options);
+                    var chartID = obj.container.replace(/.*_(\d+)/, '$1');
+                    if (jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
+                        jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                            if (jQuery(this).attr('data-id') === chartID) {
+                                jQuery(this).hide();
+                            }
+                        });
+                    }
                     Highcharts.setOptions({
                         lang: {
                             decimalPoint: obj.getNumberFormat() === 1 ? ',' : '.',

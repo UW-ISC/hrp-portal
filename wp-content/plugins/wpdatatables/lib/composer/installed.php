@@ -3,7 +3,7 @@
         'name' => 'tmsplugins/wpdatatables',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9a9689de2b6ff017206340b2ea69297fa3d1b442',
+        'reference' => '2f672de1e4b03bfa9a0762f49598b519f9d9b676',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -139,7 +139,7 @@
         'tmsplugins/wpdatatables' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9a9689de2b6ff017206340b2ea69297fa3d1b442',
+            'reference' => '2f672de1e4b03bfa9a0762f49598b519f9d9b676',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -65,7 +65,7 @@ var duplicate_table_id = '';
                 $('.wdt-duplicate-manual-table').hide();
             }
 
-            $('input.wdt-duplicate-table-name').val($(this).data('table_name')+ '_' + wpdatatables_browse_strings.copy.toLowerCase());
+            $('input.wdt-duplicate-table-name').val($(this).data('table_name')+ '_' + wpdatatables_browse_strings.copyBrowser.toLowerCase());
 
             $('#wdt-duplicate-table-modal').modal('show');
         });
@@ -110,7 +110,7 @@ var duplicate_table_id = '';
 
             duplicate_chart_id = $(this).data('chart_id');
 
-            $('input.wdt-duplicate-chart-name').val($(this).data('chart_name')+ '_' + wpdatatables_browse_strings.copy.toLowerCase());
+            $('input.wdt-duplicate-chart-name').val($(this).data('chart_name')+ '_' + wpdatatables_browse_strings.copyBrowser.toLowerCase());
 
             $('#wdt-duplicate-chart-modal').modal('show');
         });
@@ -157,9 +157,9 @@ var duplicate_table_id = '';
             }
             var numOfCheckedTR = $('#wdt-datatables-browse-table table tr.checked-row');
             if (numOfCheckedTR.length){
-                btnDelete.removeClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteSelected);
+                btnDelete.removeClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteSelectedBrowser);
             } else {
-                btnDelete.addClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.delete);
+                btnDelete.addClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteBrowser);
             }
         });
 
@@ -172,10 +172,10 @@ var duplicate_table_id = '';
 
             if ($(this).is(':checked')) {
                 all_tr.addClass('checked-row');
-                btnDelete.removeClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteSelected);
+                btnDelete.removeClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteSelectedBrowser);
             } else {
                 all_tr.removeClass('checked-row');
-                btnDelete.addClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.delete);
+                btnDelete.addClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteBrowser);
             }
         });
     });

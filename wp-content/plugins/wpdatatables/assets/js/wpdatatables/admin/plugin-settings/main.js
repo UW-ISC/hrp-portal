@@ -441,7 +441,7 @@
                 var mapsKey = wdt_current_config.wdtGoogleApiMaps;
             }
             if(mapsKey == ''){
-                wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.empty_api_google_key, 'danger');
+                wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.empty_api_google_key_main, 'danger');
             } else if (wdt_current_config.wdtGoogleApiMapsValidated == 0) {
                 validateGoogleMapsApiKey(mapsKey);
             } else {
@@ -710,7 +710,7 @@
                         }
                         // Show success message
                         wdtNotify(
-                            wpdatatables_settings_strings.success,
+                            wpdatatables_settings_strings.success_main,
                             successMessage,
                             'success'
                         );
@@ -791,21 +791,21 @@
                     wdtNonce: $('#wdtNonce').val()
                 },
                 success: function (data) {
-                    if (!data.includes(wpdatatables_settings_strings.api_google_key_contains)) {
-                        wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.api_google_maps_not_ok + data + '', 'danger');
+                    if (!data.includes(wpdatatables_settings_strings.api_google_key_contains_main)) {
+                        wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.api_google_maps_not_ok_main + data + '', 'danger');
                         $('.wdt-preload-layer').animateFadeOut();
                         $('#wdt-googlechart-mapkey').val('');
                     } else {
-                        wdtNotify(wpdatatables_settings_strings.success, wpdatatables_settings_strings.api_google_maps_ok , 'success');
+                        wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_ok_main , 'success');
                         wdt_current_config.wdtGoogleApiMapsValidated = 1;
                         wdt_current_config.wdtGoogleApiMaps = $('#wdt-googlechart-mapkey').val();
                         jQuery('#wdt-googlechart-mapkey').hide();
                         jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').removeClass('hidden');
-                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-primary').addClass('btn-danger').html(wpdatatables_settings_strings.remove_api);
+                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-primary').addClass('btn-danger').html(wpdatatables_settings_strings.remove_api_main);
                     }
                 },
                 error: function () {
-                    wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.api_google_maps_not_ok + data + '', 'danger');
+                    wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.api_google_maps_not_ok_main + data + '', 'danger');
                     $('.wdt-preload-layer').animateFadeOut();
                 }
             });
@@ -821,15 +821,15 @@
                 },
 
                 success: function (data) {
-                    wdtNotify(wpdatatables_settings_strings.success, wpdatatables_settings_strings.api_google_maps_removed , 'success');
+                    wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_removed_main , 'success');
                         wdt_current_config.wdtGoogleApiMapsValidated = 0;
                         wdt_current_config.wdtGoogleApiMaps = '';
                         jQuery('#wdt-googlechart-mapkey').show();
                         jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').addClass('hidden');
-                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html(wpdatatables_settings_strings.validate_api);
+                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html(wpdatatables_settings_strings.validate_api_main);
                 },
                 error: function () {
-                    wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.api_google_maps_not_ok + data + '', 'danger');
+                    wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.api_google_maps_not_ok_main + data + '', 'danger');
                     $('.wdt-preload-layer').animateFadeOut();
                 }
             });
@@ -851,7 +851,7 @@
                     } else {
                         $('.wdt-preload-layer').animateFadeOut();
                         wdtNotify(
-                            wpdatatables_settings_strings.success,
+                            wpdatatables_settings_strings.success_main,
                             'Deleted errors log from cache table!',
                             'success'
                         );
@@ -888,8 +888,8 @@
                 success: function () {
                     $('.wdt-preload-layer').animateFadeOut();
                     wdtNotify(
-                        wpdatatables_settings_strings.success,
-                        wpdatatables_settings_strings.settings_saved_successful,
+                        wpdatatables_settings_strings.success_main,
+                        wpdatatables_settings_strings.settings_saved_successful_main,
                         'success'
                     );
                     wdt_current_config = wdt_temp_config;
@@ -897,8 +897,8 @@
                 error: function () {
                     $('.wdt-preload-layer').animateFadeOut();
                     wdtNotify(
-                        wpdatatables_settings_strings.error,
-                        wpdatatables_settings_strings.settings_saved_error,
+                        wpdatatables_settings_strings.error_main,
+                        wpdatatables_settings_strings.settings_saved_error_main,
                         'danger'
                     );
                     wdt_current_config = wdt_temp_config;
@@ -930,23 +930,23 @@
                     if (valid === true && domainRegistered === true) {
                         wdt_current_config.wdtActivated = 1;
                         wdt_current_config.wdtPurchaseCodeStore = 1;
-                        wdtNotify(wpdatatables_settings_strings.success, wpdatatables_settings_strings.pluginActivated, 'success');
+                        wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.pluginActivated_main, 'success');
                         $('#wdt-purchase-code-store').val('');
                         $('.wdt-purchase-code-store-wrapper').hide();
                         $('.wdt-purchase-code .wdt-security-massage-wrapper').removeClass('hidden');
                         $('#wdt-activate-plugin').removeClass('btn-primary').addClass('btn-danger').html('<i class="wpdt-icon-times-circle-full"></i>Deactivate');
                         $('.wdt-envato-activation-wpdatatables').hide()
                     } else if (valid === false) {
-                        wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.purchaseCodeInvalid, 'danger');
+                        wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.purchaseCodeInvalid_main, 'danger');
                         $('#wdt-activate-plugin').html('<i class="wpdt-icon-check-circle-full"></i>Activate');
                     } else {
-                        wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.activation_domains_limit, 'danger');
+                        wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.activation_domains_limit_main, 'danger');
                         $('#wdt-activate-plugin').html('<i class="wpdt-icon-check-circle-full"></i>Activate');
                     }
                 },
                 error: function () {
                     wdt_current_config.wdtActivated = 0;
-                    wdtNotify(wpdatatables_settings_strings.error, 'Unable to activate the plugin. Please try again.', 'danger');
+                    wdtNotify(wpdatatables_settings_strings.error_main, 'Unable to activate the plugin. Please try again.', 'danger');
                     $('#wdt-activate-plugin').html('<i class="wpdt-icon-check-circle-full"></i>Activate');
                 }
             });
@@ -991,12 +991,12 @@
                         $('#wdt-activate-plugin').removeClass('btn-danger').addClass('btn-primary').html('<i class="wpdt-icon-check-circle-full"></i>Activate');
                         $('.wdt-envato-activation-wpdatatables').show()
                         $('.wdt-preload-layer').animateFadeOut();
-                        $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.activateWithEnvato);
+                        $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.activateWithEnvato_main);
                         $('#wdt-envato-activation-wpdatatables').prop('disabled', '');
                         $('#wdt-envato-deactivation-wpdatatables').html('<i class="wpdt-icon-times-circle-full"></i>Deactivate').hide();
                         $('.wdt-purchase-code').show();
                     } else {
-                        wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.unable_to_deactivate_plugin, 'danger');
+                        wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.unable_to_deactivate_plugin_main, 'danger');
                         $('#wdt-activate-plugin').html('<i class="wpdt-icon-times-circle-full"></i>Deactivate');
                         $('#wdt-envato-deactivation-wpdatatables').html('<i class="wpdt-icon-times-circle-full"></i>Deactivate');
                     }
@@ -1051,7 +1051,7 @@
                     wdt_current_config.wdtActivated = 1;
 
                     // Change button text and disable it
-                    $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.envato_api_activated);
+                    $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.envato_api_activated_main);
                     $('#wdt-envato-activation-wpdatatables').prop('disabled', 'disabled');
                     $('.wdt-purchase-code').hide();
                     $('#wdt-envato-deactivation-wpdatatables').show();
@@ -1068,15 +1068,15 @@
                         },
                         success: function () {
                             $('.wdt-preload-layer').animateFadeOut();
-                            wdtNotify(wpdatatables_settings_strings.success, wpdatatables_settings_strings.pluginActivated, 'success');
+                            wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.pluginActivated_main, 'success');
                         }
                     });
 
                     redirectURL = this.removeURLParameter(redirectURL, 'envatoTokenEmail')
                 } else if (valid === 'false') {
-                    wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.activation_envato_failed, 'danger');
+                    wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.activation_envato_failed_main, 'danger');
                 } else if (domainRegistered === 'false') {
-                    wdtNotify(wpdatatables_settings_strings.error, wpdatatables_settings_strings.activation_domains_limit, 'danger');
+                    wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.activation_domains_limit_main, 'danger');
                 }
 
                 window.history.pushState(null, null, redirectURL)
@@ -1103,7 +1103,7 @@
             if (wdt_current_config.wdtActivated == 1) {
                 if (wdt_current_config.wdtEnvatoTokenEmail) {
                     // Change button text and disable it
-                    $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.envato_api_activated);
+                    $('#wdt-envato-activation-wpdatatables span').text(wpdatatables_settings_strings.envato_api_activated_main);
                     $('#wdt-envato-activation-wpdatatables').prop('disabled', 'disabled');
                     $('#wdt-envato-deactivation-wpdatatables').show()
                     $('.wdt-purchase-code').hide()

@@ -219,6 +219,14 @@ var wpDataTablesGoogleChart = function () {
                 if (this.renderCallback !== null) {
                     this.renderCallback(this);
                 }
+                var chartID = this.chart.container.id.replace(/.*_(\d+)/, '$1');
+                if (jQuery(this.chart.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
+                    jQuery(this.chart.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                        if (jQuery(this).attr('data-id') === chartID) {
+                            jQuery(this).hide();
+                        }
+                    });
+                }
                 this.chart.draw(this.googleDataTable, this.options);
             }
         },

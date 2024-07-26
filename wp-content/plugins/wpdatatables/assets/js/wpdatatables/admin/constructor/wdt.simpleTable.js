@@ -29,41 +29,41 @@
                 contextMenu: {
                     items: {
                         'row_above': {
-                            name: wpdatatables_admin_simple_table_strings.insert_row_above
+                            name: wpdatatables_admin_simple_table_strings.insert_row_above_simple_table
                         },
                         'row_below': {
-                            name: wpdatatables_admin_simple_table_strings.insert_row_below
+                            name: wpdatatables_admin_simple_table_strings.insert_row_below_simple_table
                         },
                         'remove_row': {
-                            name: wpdatatables_admin_simple_table_strings.remove_row
+                            name: wpdatatables_admin_simple_table_strings.remove_row_simple_table
                         },
                         'separator': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'col_left': {
-                            name: wpdatatables_admin_simple_table_strings.insert_col_left
+                            name: wpdatatables_admin_simple_table_strings.insert_col_left_simple_table
                         },
                         'col_right': {
-                            name: wpdatatables_admin_simple_table_strings.insert_col_right
+                            name: wpdatatables_admin_simple_table_strings.insert_col_right_simple_table
                         },
                         'remove_col': {
-                            name: wpdatatables_admin_simple_table_strings.remove_column
+                            name: wpdatatables_admin_simple_table_strings.remove_column_simple_table
                         },
                         'separator2': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'undo': {
-                            name: wpdatatables_admin_simple_table_strings.undo
+                            name: wpdatatables_admin_simple_table_strings.undo_simple_table
                         },
                         'redo': {
-                            name: wpdatatables_admin_simple_table_strings.redo
+                            name: wpdatatables_admin_simple_table_strings.redo_simple_table
                         },
                         'separator3': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'alignment': {
-                            name: wpdatatables_admin_simple_table_strings.alignment,
+                            name: wpdatatables_admin_simple_table_strings.alignment_simple_table,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
 
                                     {
                                         key: 'alignment:left',
-                                        name: wpdatatables_admin_simple_table_strings.left,
+                                        name: wpdatatables_admin_simple_table_strings.left_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[5].click()
@@ -72,7 +72,7 @@
                                     },
                                     {
                                         key: 'alignment:center',
-                                        name: wpdatatables_admin_simple_table_strings.center,
+                                        name: wpdatatables_admin_simple_table_strings.center_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[6].click()
@@ -81,7 +81,7 @@
                                     },
                                     {
                                         key: 'alignment:right',
-                                        name: wpdatatables_admin_simple_table_strings.right,
+                                        name: wpdatatables_admin_simple_table_strings.right_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[7].click()
@@ -90,7 +90,7 @@
                                     },
                                     {
                                         key: 'alignment:justify',
-                                        name: wpdatatables_admin_simple_table_strings.justify,
+                                        name: wpdatatables_admin_simple_table_strings.justify_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[8].click()
@@ -102,7 +102,7 @@
                                     },
                                     {
                                         key: 'alignment:top',
-                                        name: wpdatatables_admin_simple_table_strings.top,
+                                        name: wpdatatables_admin_simple_table_strings.top_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[10].click()
@@ -111,7 +111,7 @@
                                     },
                                     {
                                         key: 'alignment:middle',
-                                        name: wpdatatables_admin_simple_table_strings.middle,
+                                        name: wpdatatables_admin_simple_table_strings.middle_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[9].click()
@@ -120,7 +120,7 @@
                                     },
                                     {
                                         key: 'alignment:bottom',
-                                        name: wpdatatables_admin_simple_table_strings.bottom,
+                                        name: wpdatatables_admin_simple_table_strings.bottom_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[11].click()
@@ -132,13 +132,13 @@
                         },
                         'separator4': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'wrapping': {
-                            name: wpdatatables_admin_simple_table_strings.text_wrapping,
+                            name: wpdatatables_admin_simple_table_strings.text_wrapping_simple_table,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
                                     {
                                         key: 'wrapping:wrap',
-                                        name: wpdatatables_admin_simple_table_strings.wrap,
+                                        name: wpdatatables_admin_simple_table_strings.wrap_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[12].click()
@@ -147,7 +147,7 @@
                                     },
                                     {
                                         key: 'wrapping:overflow',
-                                        name: wpdatatables_admin_simple_table_strings.overflow,
+                                        name: wpdatatables_admin_simple_table_strings.overflow_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[13].click()
@@ -156,7 +156,7 @@
                                     },
                                     {
                                         key: 'wrapping:clip',
-                                        name: wpdatatables_admin_simple_table_strings.clip,
+                                        name: wpdatatables_admin_simple_table_strings.clip_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[14].click()
@@ -169,20 +169,20 @@
                         },
                         'separator5': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'cut': {
-                            name: wpdatatables_admin_simple_table_strings.cut
+                            name: wpdatatables_admin_simple_table_strings.cut_simple_table
                         },
                         'copy': {
-                            name: wpdatatables_admin_simple_table_strings.copy
+                            name: wpdatatables_admin_simple_table_strings.copy_simple_table
                         },
                         'separator6': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'add': {
-                            name: wpdatatables_admin_simple_table_strings.insert_custom,
+                            name: wpdatatables_admin_simple_table_strings.insert_custom_simple_table,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
                                     {
                                         key: 'add:link',
-                                        name: wpdatatables_admin_simple_table_strings.link,
+                                        name: wpdatatables_admin_simple_table_strings.link_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-link').click()
@@ -191,7 +191,7 @@
                                     },
                                     {
                                         key: 'add:media',
-                                        name: wpdatatables_admin_simple_table_strings.media,
+                                        name: wpdatatables_admin_simple_table_strings.media_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-media').click()
@@ -200,7 +200,7 @@
                                     },
                                     {
                                         key: 'add:html',
-                                        name: wpdatatables_admin_simple_table_strings.html_code,
+                                        name: wpdatatables_admin_simple_table_strings.html_code_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-html').click()
@@ -209,7 +209,7 @@
                                     },
                                     {
                                         key: 'add:shortcode',
-                                        name: wpdatatables_admin_simple_table_strings.shortcode,
+                                        name: wpdatatables_admin_simple_table_strings.shortcode_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-do-shortcode').click()
@@ -218,7 +218,7 @@
                                     },
                                     {
                                         key: 'add:star',
-                                        name: wpdatatables_admin_simple_table_strings.star_rating,
+                                        name: wpdatatables_admin_simple_table_strings.star_rating_simple_table,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-star-rating').click()
@@ -230,7 +230,7 @@
                         },
                         'separator7': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'clear': {
-                            name: wpdatatables_admin_simple_table_strings.clear_table_data,
+                            name: wpdatatables_admin_simple_table_strings.clear_table_data_simple_table,
                             callback: function (key, selection, clickEvent) {
                                 setTimeout(function () {
                                     $('#wpdt-clear').click()
@@ -239,7 +239,7 @@
                         },
                         'separator8': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'mergeCells': {
-                            name: wpdatatables_admin_simple_table_strings.merge_cells,
+                            name: wpdatatables_admin_simple_table_strings.merge_cells_simple_table,
                             callback: function (key, selection, clickEvent) {
                                 setTimeout(function () {
                                     $('#wpdt-merge').click()
@@ -470,8 +470,8 @@
                             $('#wpdt-views ul li:first-child a').click();
                         }
                         wdtNotify(
-                            wpdatatables_admin_simple_table_strings.success,
-                            wpdatatables_admin_simple_table_strings.tableSaved,
+                            wpdatatables_admin_simple_table_strings.success_simple_table,
+                            wpdatatables_admin_simple_table_strings.tableSaved_simple_table,
                             'success'
                         );
 

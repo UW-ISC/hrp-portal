@@ -1890,7 +1890,7 @@ wpdt-c button#wdt-add-data-browse-button {
 #google_text_geo_chart_option .card.disabled{
     pointer-events: none;
 }
-
+.wdt-deactivation-backdrop,
 .wdt-update-backdrop {
     display: none;
     position: fixed;
@@ -1903,6 +1903,7 @@ wpdt-c button#wdt-add-data-browse-button {
 }
 
 /* Style for the modal */
+#wdt-deactivation-modal,
 #wdt-update-modal {
     display: none;
     position: fixed;
@@ -1918,7 +1919,13 @@ wpdt-c button#wdt-add-data-browse-button {
     overflow: hidden;
     border-radius: 5px;
 }
-
+#wdt-deactivation-modal .wdt-deactivation-modal-close{
+    position: absolute;
+    top: 10px;
+    right: 21px;
+    cursor: pointer;
+    font-size: 18px;
+}
 /* Style for the close button */
 .wdt-update-modal-close {
     position: absolute;
@@ -1926,11 +1933,15 @@ wpdt-c button#wdt-add-data-browse-button {
     right: 10px;
     cursor: pointer;
 }
-
+#wdt-deactivation-modal .wdt-deactivation-modal-close i,
 .wdt-update-modal-close i {
     font-size: 20px;
 }
-
+#wdt-deactivation-modal .wdt-deactivation-modal-title{
+    text-align: start;
+    font-size: 15px;
+    color: #103282;
+}
 .wdt-update-modal-title{
     text-align: center;
     margin-top: 0 !important;
@@ -1996,6 +2007,15 @@ wpdt-c button#wdt-add-data-browse-button {
 .wdt-update-modal-next:hover i:before {
    right: 10px;
 }
+#wdt-deactivation-modal .wpdt-deactivation-modal-logo{
+    background-image: url(../../img/logo-large.png);
+    background-repeat: no-repeat;
+    height: 50px;
+    background-size: 40px 38px;
+    background-position: left;
+    width: 50px;
+}
+
 .wpdt-update-modal-logo{
     width: 300px;
     background-image: url(../../img/logo.svg);
@@ -2019,6 +2039,148 @@ wpdt-c button#wdt-add-data-browse-button {
 }
 .wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss{
     top : -5px;
+}
+.wdt-deactivation-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+#wdt-deactivate-feedback-dialog-form-body {
+    padding-block-start: 30px;
+    padding-block-end: 15px;
+}
+#wdt-deactivation-modal {
+    display: none;
+    background-color: #fff;
+    padding: 22px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    max-width: 475px;
+    width: 100%;
+}
+
+#wdt-deactivation-modal .wdt-deactivation-modal-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#wdt-deactivation-modal .wdt-deactivation-feedback-dialog-form-caption {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+#wdt-deactivation-modal textarea.wdt-textarea {
+    width: 100%;
+    margin-bottom: 5px;
+    height: 60px;
+    resize: none;
+    border-radius: 0px;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.wdt-deactivation-modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wdt-deactivation-modal-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+}
+
+#wdt-deactivation-modal .wdt-submit {
+    background: #008CFF;
+}
+
+#wdt-deactivation-modal .wdt-close {
+    background: #F0F1F2 !important;
+    color: #1A2C37!important;
+}
+#wdt-deactivation-modal-header{
+    display: inline-flex;
+    border-bottom: 1px solid #F0F1F2;
+    width: 100%;
+    margin-top: -6px;
+}
+#wdt-deactivation-modal .btn-primary {
+    background: #008CFF;
+    border: none;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-family: var(--wpdt-inter-google-font, inherit);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+}
+
+#wdt-deactivation-modal .btn-primary:focus, .wpdt-c #wdt-deactivation-modal .btn-primary.focus {
+    color: #fff;
+    background-color: #0c7cd5;
+    border-color: #064475;
+}
+
+#wdt-deactivation-modal .btn-primary:hover {
+    color: #fff;
+    background-color: #0c7cd5;
+    border-color: #0a68b4;
+    cursor: default;
+}
+
+#wdt-deactivation-modal .btn-primary:active,#wdt-deactivation-modal .btn-primary.active {
+    color: #fff;
+    background-color: #0c7cd5;
+    border-color: #0a68b4;
+}
+
+#wdt-deactivation-modal .btn-primary:active:hover, #wdt-deactivation-modal .btn-primary.active:hover {
+    color: #fff;
+    background-color: #0a68b4;
+    border-color: #064475;
+}
+
+#wdt-deactivation-modal .btn-primary:active, .wpdt-c #wdt-deactivation-modal .btn-primary.active {
+    background-image: none;
+}
+#wdt-deactivation-modal-footer{
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    padding-top: 20px;
+}
+#wdt-deactivation-modal .wdt-deactivation-modal-options{
+    padding: 6px;
+}
+#wdt-deactivation-modal .wdt-textarea-description{
+    margin-bottom: 5px;
+}
+#wdt-deactivation-modal .wdt-ticksy-description{
+    background: #fcdcdc;
+    font-size: 14px;
+    font-weight: bold;
+}
+#wdt-deactivation-modal .wdt-deactivation-feedback-dialog-form-caption-error{
+    background: #fcdcdc;
+    font-size: 14px;
+    font-weight: bold;
+}
+#wdt-deactivation-modal .wdt-submit-ticket{
+    margin-left: 5px;
+    text-decoration: unset;
 }
 .wpdt-c .wdt-upgrade-btn {
     background: #091D70 !important;

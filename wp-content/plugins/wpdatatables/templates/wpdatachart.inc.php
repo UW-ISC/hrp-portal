@@ -1,5 +1,5 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
-
+<?php include WDT_TEMPLATE_PATH . 'admin/common/loader_for_chart.inc.php'; ?>
     <script type="text/javascript">
         if (typeof (wpDataCharts) == 'undefined') wpDataCharts = {};
         wpDataCharts[<?php echo (int)$id; ?>] = {

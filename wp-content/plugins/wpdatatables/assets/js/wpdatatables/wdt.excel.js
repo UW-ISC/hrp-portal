@@ -482,9 +482,9 @@
         ExcelAttachmentEditor.prototype.init = function() {
             //this is wordpress media library for handling file uploads.
             this.wdtCustomUploader = wp.media({
-                title: wpdatatables_excel_strings.select_upload_file,
+                title: wpdatatables_excel_strings.select_upload_file_excel,
                 button: {
-                    text: wpdatatables_excel_strings.choose_file
+                    text: wpdatatables_excel_strings.choose_file_excel
                 },
                 multiple: false
             });
@@ -518,7 +518,7 @@
                 htInstance.setDataAtCell( editor.row, editor.col, value );
             });
 
-            $browseButton = $('<button class="button-primary">' + wpdatatables_excel_strings.browse_file + '</button>');
+            $browseButton = $('<button class="button-primary">' + wpdatatables_excel_strings.browse_file_excel + '</button>');
             $($browseButton).click(function (e) {
                 e.preventDefault();
 
@@ -565,7 +565,7 @@
                     uploaded_file = newValue.split('/').pop();
                 }
 
-                uploaded_file += '<span class="delete_file">[<a href="#">' + wpdatatables_excel_strings.detach_file + '</a>]</span>';
+                uploaded_file += '<span class="delete_file">[<a href="#">' + wpdatatables_excel_strings.detach_file_excel + '</a>]</span>';
             }
 
             $(this.UPLOADED_FILES_ELEMENTS).html( uploaded_file );

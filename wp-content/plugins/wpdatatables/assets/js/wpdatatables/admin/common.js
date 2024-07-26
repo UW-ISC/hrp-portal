@@ -214,8 +214,8 @@ jQuery.fn.extend({
             document.execCommand("copy");
             $temp.remove();
             wdtNotify(
-                wpdatatables_edit_strings.success,
-                wpdatatables_edit_strings.shortcodeSaved,
+                wpdatatables_edit_strings.success_common,
+                wpdatatables_edit_strings.shortcodeSaved_common,
                 'success'
             );
         });
@@ -275,8 +275,8 @@ jQuery.fn.extend({
             document.execCommand("copy");
             $temp.remove();
             wdtNotify(
-                wpdatatables_edit_strings.success,
-                wpdatatables_edit_strings.shortcodeSaved,
+                wpdatatables_edit_strings.success_common,
+                wpdatatables_edit_strings.shortcodeSaved_common,
                 'success'
             );
         });
@@ -439,7 +439,7 @@ function wdtNotify(title, message, type) {
         },
         icon_type: 'class',
         template: '<div data-growl="container" class="wpdt-c alert" role="alert">' +
-            '<span class="sr-only">' + wpdatatables_edit_strings.close + '</span>' +
+            '<span class="sr-only">' + wpdatatables_edit_strings.close_common + '</span>' +
             '</button>' +
             '<span data-growl="icon"></span>' +
             '<span data-growl="title"></span>' +
@@ -465,9 +465,9 @@ function openCustomMediaUploader(customUploader = null) {
         }
 
         customUploader = wp.media.frames.file_frame = wp.media({
-            title: wpdatatables_edit_strings.selectExcelCsv,
+            title: wpdatatables_edit_strings.selectExcelCsv_common,
             button: {
-                text: wpdatatables_edit_strings.chooseFile
+                text: wpdatatables_edit_strings.chooseFile_common
             },
             multiple: false,
             library: {

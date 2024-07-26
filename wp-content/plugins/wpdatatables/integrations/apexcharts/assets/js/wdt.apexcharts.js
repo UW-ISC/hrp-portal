@@ -224,9 +224,7 @@ var wpDataTablesApexChart = function () {
                 this.options.xaxis.title.position = "bottom";
             if (!(['pie', 'donut', 'radialBar', 'radar', 'bar'].includes(this.options.chart.type))
                 || Array.isArray(this.options.yaxis)
-                || chartConfig.type === 'apexcharts_column_chart'
-                || chartConfig.type === 'apexcharts_stacked_column_chart'
-                || chartConfig.type === 'apexcharts_100_stacked_column_chart') {
+                || chartConfig.type === 'apexcharts_column_chart') {
                 this.setSeriesOptions(chartConfig);
                 this.setMultiYaxisOptions(chartConfig);
             } else if (this.options.chart.type === 'bar' || this.options.chart.type === 'radar')
@@ -494,11 +492,19 @@ var wpDataTablesApexChart = function () {
 
             this.setStrokeWidth(this.options.stroke.width);
             this.setDecimalsInFloat();
-
             this.chart = new ApexCharts(
                 document.querySelector(container),
                 this.options
             );
+
+            var chartID = this.container.replace(/.*_(\d+)/, '$1');
+            if (jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
+                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                    if (jQuery(this).attr('data-id') === chartID) {
+                        jQuery(this).hide();
+                    }
+                });
+            }
             this.chart.render();
 
         },
@@ -614,9 +620,7 @@ var wpDataTablesApexChart = function () {
 
             // Series
             if (!(['pie', 'donut', 'radar', 'radialBar', 'bar'].includes(this.options.chart.type))
-                || chartConfig.type === 'apexcharts_column_chart'
-                || chartConfig.type === 'apexcharts_stacked_column_chart'
-                || chartConfig.type === 'apexcharts_100_stacked_column_chart') {
+                || chartConfig.type === 'apexcharts_column_chart') {
                 var j = 0;
                 this.options.fill.type = this.options.fill.type === 'image' ? 'image' : [];
 

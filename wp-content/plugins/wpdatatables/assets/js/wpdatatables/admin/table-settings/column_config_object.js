@@ -1067,7 +1067,7 @@ WDTColumn.prototype.renderConditionalFormattingBlock = function (formattingRule)
 
     $block.find('select.formatting-rule-if-clause').selectpicker('refresh');
 
-    if(jQuery.inArray($block.find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) !== -1){
+    if (jQuery.inArray($block.find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) !== -1) {
         $block.find('.formatting-rule-if-clause').prop('disabled', true).selectpicker('val','');
     }
 };
