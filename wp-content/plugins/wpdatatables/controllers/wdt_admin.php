@@ -149,10 +149,10 @@ function wdtAdminEnqueue($hook)
         wp_enqueue_script('media-upload');
         wp_enqueue_media();
 
-        if (!in_array($hook, array('toplevel_page_wpdatareports', 'report-builder_page_wpdatareports-wizard')))
+        if (!in_array($hook, array('toplevel_page_wpdatareports', 'report-builder_page_wpdatareports-wizard'))) {
             wdtUpdateNoticeModal();
+        }
     }
-
     wp_register_style('wdt-dragula', WDT_CSS_PATH . 'dragula/dragula.min.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-browse-css', WDT_CSS_PATH . 'admin/browse.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-wpdatatables', WDT_CSS_PATH . 'wpdatatables.min.css', array(), WDT_CURRENT_VERSION);

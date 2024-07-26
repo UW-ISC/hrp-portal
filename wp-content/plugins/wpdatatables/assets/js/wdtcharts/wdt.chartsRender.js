@@ -10,6 +10,9 @@
 
                 for (var id in wpDataCharts) {
 
+                    if (wpDataCharts[id].engine == 'chartjs') wdtChart_selector = 'chartJSContainer_' + id;
+                    else wdtChart_selector = wpDataCharts[id].container;
+
                     if (wpDataCharts[id].engine == 'google') {
                         var wdtChart = new wpDataTablesGoogleChart();
                         wdtChart.setType(wpDataCharts[id].render_data.type);

@@ -1056,7 +1056,7 @@ class WdtApexchartsChart extends WPDataChart
         $this->_apexcharts_render_data['options']['chart']['dropShadow']['left'] = $this->getDropshadowLeft();
 
         // Axes
-        $this->_apexcharts_render_data['options']['grid']['show'] = !!$this->_show_grid;
+        $this->_apexcharts_render_data['options']['grid']['show'] = !!$this->isShowGrid();
         $this->_apexcharts_render_data['options']['grid']['borderColor'] = $this->getGridColor() == '' ? '#000000' : $this->getGridColor();
         $this->_apexcharts_render_data['options']['grid']['strokeDashArray'] = $this->getGridStroke();
         $this->_apexcharts_render_data['options']['grid']['position'] = $this->getGridPosition();
@@ -1075,6 +1075,8 @@ class WdtApexchartsChart extends WPDataChart
                 'apexcharts_grouped_bar_chart',
                 'apexcharts_100_stacked_bar_chart',
                 'apexcharts_stacked_bar_chart',
+                'apexcharts_100_stacked_column_chart',
+                'apexcharts_stacked_column_chart',
                 'apexcharts_radar_chart',
                 'apexcharts_pie_chart',
                 'apexcharts_pie_with_gradient_chart',
@@ -1220,7 +1222,8 @@ class WdtApexchartsChart extends WPDataChart
         }
         $this->setGridAxes($gridAxes);
         $this->setMajorAxisLabel(isset($renderData['apexcharts_render_data']['options']['xaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['xaxis']['title']['text'] : '');
-        if (strpos($renderData['apexcharts_render_data']['type'], 'bar')) {
+        if (in_array($this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
             $this->setMinorAxisLabel(isset($renderData['apexcharts_render_data']['options']['yaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['yaxis']['title']['text'] : '');
             $this->setVerticalAxisMin(isset($renderData['apexcharts_render_data']['options']['yaxis']['min']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['min'] : '');
             $this->setVerticalAxisMax(isset($renderData['apexcharts_render_data']['options']['yaxis']['max']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['max'] : '');

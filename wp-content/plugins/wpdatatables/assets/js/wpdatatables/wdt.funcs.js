@@ -9,19 +9,19 @@ jQuery(document).ready(function ($) {
     jQuery('.wdt-preload-layer').animateFadeOut();
 
     if (typeof wpdatatables_functions_strings !== 'undefined') {
-        $.fn.DataTable.defaults.oLanguage.sInfo = wpdatatables_functions_strings.sInfo;
-        $.fn.DataTable.defaults.oLanguage.sSearch = wpdatatables_functions_strings.sSearch;
-        $.fn.DataTable.defaults.oLanguage.lengthMenu = wpdatatables_functions_strings.lengthMenu;
-        $.fn.DataTable.defaults.oLanguage.sEmptyTable = wpdatatables_functions_strings.sEmptyTable;
-        $.fn.DataTable.defaults.oLanguage.sInfoEmpty = wpdatatables_functions_strings.sInfoEmpty;
-        $.fn.DataTable.defaults.oLanguage.sInfoFiltered = wpdatatables_functions_strings.sInfoFiltered;
-        $.fn.DataTable.defaults.oLanguage.sInfoPostFix = wpdatatables_functions_strings.sInfoPostFix;
-        $.fn.DataTable.defaults.oLanguage.sInfoThousands = wpdatatables_functions_strings.sInfoThousands;
-        $.fn.DataTable.defaults.oLanguage.sLengthMenu = wpdatatables_functions_strings.sLengthMenu;
-        $.fn.DataTable.defaults.oLanguage.sProcessing = wpdatatables_functions_strings.sProcessing;
-        $.fn.DataTable.defaults.oLanguage.sZeroRecords = wpdatatables_functions_strings.sZeroRecords;
-        $.fn.DataTable.defaults.oLanguage.oPaginate = wpdatatables_functions_strings.oPaginate;
-        $.fn.DataTable.defaults.oLanguage.oAria = wpdatatables_functions_strings.oAria;
+        $.fn.DataTable.defaults.oLanguage.sInfo = wpdatatables_functions_strings.sInfo_functions;
+        $.fn.DataTable.defaults.oLanguage.sSearch = wpdatatables_functions_strings.sSearch_functions;
+        $.fn.DataTable.defaults.oLanguage.lengthMenu = wpdatatables_functions_strings.lengthMenu_functions;
+        $.fn.DataTable.defaults.oLanguage.sEmptyTable = wpdatatables_functions_strings.sEmptyTable_functions;
+        $.fn.DataTable.defaults.oLanguage.sInfoEmpty = wpdatatables_functions_strings.sInfoEmpty_functions;
+        $.fn.DataTable.defaults.oLanguage.sInfoFiltered = wpdatatables_functions_strings.sInfoFiltered_functions;
+        $.fn.DataTable.defaults.oLanguage.sInfoPostFix = wpdatatables_functions_strings.sInfoPostFix_functions;
+        $.fn.DataTable.defaults.oLanguage.sInfoThousands = wpdatatables_functions_strings.sInfoThousands_functions;
+        $.fn.DataTable.defaults.oLanguage.sLengthMenu = wpdatatables_functions_strings.sLengthMenu_functions;
+        $.fn.DataTable.defaults.oLanguage.sProcessing = wpdatatables_functions_strings.sProcessing_functions;
+        $.fn.DataTable.defaults.oLanguage.sZeroRecords = wpdatatables_functions_strings.sZeroRecords_functions;
+        $.fn.DataTable.defaults.oLanguage.oPaginate = wpdatatables_functions_strings.oPaginate_functions;
+        $.fn.DataTable.defaults.oLanguage.oAria = wpdatatables_functions_strings.oAria_functions;
     }
 
 
@@ -279,6 +279,7 @@ function wdtValidateURL(textval) {
 
 function wdtPrepareDate(date, wdtDateFormat, wdtTimeFormat) {
     var format = wdtDateFormat + ' ' + wdtTimeFormat;
+    if (date == "") return '';
     return moment(date, format).valueOf();
 }
 

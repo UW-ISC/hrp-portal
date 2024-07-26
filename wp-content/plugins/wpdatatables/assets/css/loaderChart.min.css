@@ -1,0 +1,117 @@
+.wdt-wrapper-chart-loader {
+    background-color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+}
+.wdt-main-item {
+    padding: 10px;
+    background-color: #fff;
+    width: 100%;
+}
+
+.wdt-background-masker {
+    background-color: #fff;
+    position: absolute;
+}
+
+.wdt-background-masker.wdt-btn-divide-left {
+    top: 0;
+    left: 7.5%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left.wdt-chart-one {
+    left: 0%;
+    width: 20%;
+}
+.wdt-background-masker.wdt-btn-divide-left-4.wdt-chart-three {
+    left: 35%;
+    width: 65%;
+}
+.wdt-background-masker.wdt-btn-divide-left-5.wdt-chart-four {
+    left: 45%;
+    width: 55%;
+}
+
+.wdt-background-masker.wdt-btn-divide-left-2 {
+    top: 0;
+    left: 20%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-2.wdt-chart-two {
+    left: 10%;
+    width: 15%;
+}
+
+.wdt-background-masker.wdt-btn-divide-left-3 {
+    top: 0;
+    left: 32.5%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-4 {
+    top: 0;
+    left: 45%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-5 {
+    top: 0;
+    left: 57.5%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-6 {
+    top: 0;
+    left: 70%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-6.wdt-chart-five{
+    left: 60%;
+    width: 25%;
+}
+.wdt-background-masker.wdt-btn-divide-left-7 {
+    top: 0;
+    left: 82.5%;
+    height: 100%;
+    width: 5%;
+}
+.wdt-background-masker.wdt-btn-divide-left-8 {
+    top: 0;
+    left: 95%;
+    height: 100%;
+    width: 6%;
+}
+
+@keyframes wdtChartplaceHolderShimmer {
+    0% {
+        background-position: -800px 0
+    }
+    100% {
+        background-position: 800px 0
+    }
+}
+
+.wdt-chart-animated-background {
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: wdtChartplaceHolderShimmer;
+    animation-timing-function: linear;
+    background-color: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #bbbbbb 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    position: relative;
+
+}
+
+.wdt-static-background {
+    background-color: #f6f7f8;
+    background-size: 800px 104px;
+    height: 10px;
+    position: relative;
+}

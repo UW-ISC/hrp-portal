@@ -835,6 +835,7 @@ div.wdt-checkbox-modal-wrap div.wdt-checkbox-option label {
 .google_waterfall_chart g.google-visualization-tooltip g:nth-child(3) text:first-child{
     display:none !important;
 }
+.wpdt-visually-hidden,
 .wpdt-c.wpdt-visually-hidden{
     position: absolute !important;
     width: 1px !important;
@@ -852,4 +853,161 @@ div.wdt-checkbox-modal-wrap div.wdt-checkbox-option label {
 .wpdt-c .wpTableWCAG .bgm-gray{
     background-color: #727272;
 }
+.wpdt-c .wdt-filter-all-tables input{
+    border-radius: 6px;
+    border: solid 1px #dcdfe6 !important;
+}
+.wpdt-c .wdt-filter-all-tables input[type="search"]{
+    font-family: var(--wpdt-inter-google-font, inherit);
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.08;
+    letter-spacing: normal;
+    color: #6B7280;
+    opacity: 1;
+    padding: 21px 0 21px 36px !important;
+    width: 100%;
+    min-width: 208px;
+}
+.wpdt-c .wdt-filter-all-tables .wdt-search-icon:before{
+    font-family: wpDataTablesIcons, sans-serif;
+    content: '\e901';
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    font-size: 22px;
+    color: #d3dce6;
+    font-weight: normal;
+    line-height: 1em;
+    text-align: center;
+}
+.wpdt-c .wdt-filter-all-tables .wdt-search-icon{
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+.wpdt-c .wdt-filter-all-tables .button-search-all-tables {
+    margin-left: 12px;
+    min-width: 100px;
+}
+.wdt-filter-all-tables{
+    display: flex;
+}
+span.wdt-deleteicon {
+    position: relative;
+    width: 100%;
+}
+span.wdt-deleteicon span {
+    position: absolute;
+    right: 6px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    color: #000000;
+    font: 13px monospace;
+    text-align: center;
+    line-height: 1em;
+    cursor: pointer;
+    top: 14px;
+}
+.wpdt-c .wdt-filter-all-tables .button-search-all-tables.wpdt-custom-button{
+    border-radius: 6px;
+    box-shadow: 0 2px 4px 0 rgba(245, 221, 239, 0.07);
+    border: 1px solid #D1D5DB;
+    background-color: #e1e1e1;
+    font-family: var(--wpdt-inter-google-font, inherit);
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    color: #333;
+    text-decoration: none;
+    align-items: center;
+    min-height: 43px;
+    margin-right: 12px;
+    margin-bottom: 10px;
+    line-height: normal !important;
+    letter-spacing: normal;
+    outline: none;
+    padding: 6px;
+}
 
+/**
+* main style
+*/
+.wdt-timeline-item {
+    background-color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+    padding: 12px;
+    display: none;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.wdt-table-loader {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.wdt-table-loader-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.wdt-table-loader-row.wdt-table-loader-header {
+    font-weight: bold;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #fff;
+}
+
+.wdt-table-loader-row.wdt-table-loader-header .animated-background {
+    background: linear-gradient(to right, #f5f5f5 8%, #e0e0e0 18%, #f5f5f5 33%);
+}
+
+.wdt-table-loader-header-cell {
+    flex: 1;
+    position: relative;
+    height: 34px;
+    margin-right: 10px;
+}
+
+.wdt-table-loader-cell {
+    flex: 1;
+    position: relative;
+    height: 28px;
+    margin-right: 10px;
+}
+
+.wdt-table-loader-header-cell {
+    background-color: #e0e0e0; /* Match the header row background */
+}
+.wdt-table-loader-header-cell:last-child, .wdt-table-loader-cell:last-child {
+    margin-right: 0;
+}
+
+.wdt-animated-background {
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: wdtplaceHolderShimmer;
+    animation-timing-function: linear;
+    background: linear-gradient(to right, #eeeeee 8%, #bbbbbb 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    background-color: #f6f7f8;
+    position: relative;
+}
+
+@keyframes wdtplaceHolderShimmer {
+    0% {
+        background-position: -800px 0;
+    }
+    100% {
+        background-position: 800px 0;
+    }
+}
