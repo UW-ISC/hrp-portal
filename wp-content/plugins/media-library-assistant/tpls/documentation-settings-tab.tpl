@@ -8328,9 +8328,11 @@ Check this box if you want the field to appear in the Media/Assistant submenu Bu
 </dd>
 <dt>Existing Text dropdown</dt>
 <dd>
-If the custom field already has values for one or more items, you can use "Keep" to retain them or "Replace" to delete them. For options other than "Multi", "Keep" means that an item with a non-blank value in the field will be unchanged, and new values will be stored only in those items that do not have an existing value. For the "Multi" option, the existing value(s) will be retained and any new values will be added as separate instances. 
+If the custom field already has values for one or more items, you can use "Keep" to retain them. For options other than "Multi", "Keep" means that an item with a non-blank value in the field will be unchanged, and new values will be stored only in those items that do not have an existing value. For the "Multi" option, the existing value(s) will be retained and any new values will be added as separate instances. 
 <br />&nbsp;<br />
 You can combine "Keep" and "Multi" in useful ways. For example, you might enter some values manually or source them from another plugin or application. Then, map the same field using an MLA data source with the "Keep" and "Multi" parameters. That will add the MLA values to the values you already entered, giving you a single column with both results.
+<br />&nbsp;<br />
+If you want to delete the existing values you can use "Replace" to replace the existing values when the new value is not empty, or "Replace All" to unconditionally replace the existing value even if the new value is empty (effectively deleting the existing value). 
 </dd>
 <dt>Format dropdown</dt>
 <dd>
@@ -8642,7 +8644,9 @@ Two special exif "pseudo-values" are available; <strong>ALL_IPTC</strong> and <s
 <dd>If both the IPTC Value and the EXIF Value are non-blank for a particular image, you can select which of the values will be used for the mapping.
 </dd>
 <dt>Existing Text</dt>
-<dd>Images already in the Media Library will have non-blank values in many fields and may have existing terms in a taxonomy. You can select "Keep" to retain these values or "Replace" to always map a metadata value into the field. For a taxonomy, "Keep" will retain any terms already assigned to the item and "Replace" will delete any existing terms before assigning metadata values as terms.
+<dd>Images already in the Media Library will have non-blank values in many fields and may have existing terms assigned in a taxonomy. You can select "Keep" to retain these values and term assignments.
+<br />&nbsp;<br />
+If you want to delete the existing values you can use "Replace" to replace the existing values when the new value is not empty, or "Replace All" to unconditionally replace the existing value even if the new value is empty (effectively deleting the existing value). For a taxonomy, "Replace" will delete existing term assignments if the new value contains one or more terms, while "Replace All" will delete existing term assignments even if the new value is empty, i.e., contains no term assignments.
 </dd>
 <dt>Status</dt>
 <dd>The "Status" dropdown lets you turn rules on or off for most mapping purposes. If you select "Active" the rule will always be applied during a mapping operation. If you select "Inactive" the rule will NOT be applied except when explicitly included in a Bulk Action "Execute" or "Execute" rollover action. 
@@ -8854,7 +8858,7 @@ In fact, WordPress contains its own rules for composing a Title from IPTC/Exif m
 </p>
 <h4>WordPress default title, slug and description mapping</h4>
 <p>
-When WordPress uploads a new image file the default title is derived from the file name. If the file contains IPTC and/or EXIF metadata WordPress automatically maps metadata values to the title (post_title), name/slug (post_name) and description (post_content) fields. This happens before the MLA mapping rules are applied, so if you want to override the default mapping you must select "Replace" in the "Existing Text" column.
+When WordPress uploads a new image file the default title is derived from the file name. If the file contains IPTC and/or EXIF metadata WordPress automatically maps metadata values to the title (post_title), name/slug (post_name) and description (post_content) fields. This happens before the MLA mapping rules are applied, so if you want to override the default mapping you must select "Replace" or "Replace All"in the "Existing Text" column.
 </p>
 <p>
 The WordPress rules are somewhat complex; consult the source code if you need exact details. Here are some functions to example:

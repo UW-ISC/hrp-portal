@@ -60,4 +60,5 @@ if ( empty( $supported_taxonomies ) ) {
 <input name="mla_search_connector" type="radio" <?php echo ( 'OR' === $search_connector ) ? '' : 'checked="checked"'; ?> value="AND" /><?php esc_html_e( 'and', 'media-library-assistant' ); ?>&nbsp;
 <input name="mla_search_connector" type="radio" <?php echo ( 'OR' === $search_connector ) ? 'checked="checked"' : ''; ?> value="OR" /><?php esc_html_e( 'or', 'media-library-assistant' ); ?>
 </span>
+<input type="hidden" name="mla_debug_data" value="none" id="mla-debug-data"/>
 </p>

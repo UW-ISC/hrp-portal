@@ -424,9 +424,14 @@
 
                         return;
                     }
-
                     // pressing enter on a parent link
                     if ( active_link.parent().is(items_with_submenus) ) {
+
+                        // when clicking on the parent of a hidden submenu, follow the link
+                        if ( plugin.isMobileView() && active_link.parent().is(".mega-hide-sub-menu-on-mobile") ) {
+                            return;
+                        }
+
                         // when the arrow has been moved (i.e. it is clickable and visible, don't show the sub menu - just follow the link)
                         if ( active_link.is("[href]") && active_link.siblings(".mega-indicator[tabindex]:visible").length !== 0 ) {
                             return;
@@ -512,11 +517,11 @@
         };
 
         plugin.unbindHoverEvents = function() {
-            items_with_submenus.unbind("mouseenter.megamenu mouseleave.megamenu");
+            items_with_submenus.off("mouseenter.megamenu mouseleave.megamenu");
         };
 
         plugin.unbindHoverIntentEvents = function() {
-            items_with_submenus.unbind("mouseenter mouseleave").removeProp("hoverIntent_t").removeProp("hoverIntent_s"); // hoverintent does not allow namespaced events
+            items_with_submenus.off("mouseenter mouseleave").removeProp("hoverIntent_t").removeProp("hoverIntent_s"); // hoverintent does not allow namespaced events
         };
 
         plugin.unbindKeyboardEvents = function() {

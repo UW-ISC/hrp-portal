@@ -2988,8 +2988,13 @@ class MLAData {
 			return $string;
 		}
 
+		/* utf8_encode() is deprecated in PHP 8.2
 		if (function_exists('utf8_encode')) {
 			return utf8_encode( $string );
+		} // */
+
+		if (function_exists('mb_convert_encoding')) {
+			return mb_convert_encoding( $string, 'UTF-8', 'ISO-8859-1' );
 		}
 
 		$output = '';
@@ -4605,6 +4610,7 @@ class MLAData {
 				unset( $value[0x80000000] );
 				unset( $value[0x80000001] );
 				unset( $value[0x80000002] );
+				unset( $value[0x80000003] );
 
 				if ( 1 == count( $value ) ) {
 					foreach ( $value as $single_key => $single_value ) {
@@ -4708,6 +4714,11 @@ class MLAData {
 			if ( $no_null = isset( $meta_value[0x80000002] ) ) {
 				$no_null = (boolean) $meta_value[0x80000002];
 				unset( $meta_value[0x80000002] );
+			}
+
+			if ( $replace_all = isset( $meta_value[0x80000003] ) ) {
+				$replace_all = (boolean) $meta_value[0x80000003];
+				unset( $meta_value[0x80000003] );
 			}
 
 			// mla_fetch_attachment_metadata doesn't return "hidden" fields
