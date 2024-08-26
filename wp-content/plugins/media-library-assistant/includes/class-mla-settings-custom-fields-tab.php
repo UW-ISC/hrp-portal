@@ -56,7 +56,7 @@ class MLASettings_CustomFields {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'bulkChunkSize' => MLACore::mla_get_option( MLACoreOptions::MLA_BULK_CHUNK_SIZE ),
 			'bulkWaiting' => __( 'Waiting', 'media-library-assistant' ),
 			'bulkRunning' => __( 'Running', 'media-library-assistant' ),
@@ -89,7 +89,7 @@ class MLASettings_CustomFields {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'tab' => 'custom_field',
 			'fields' => array( 'name', 'rule_name', 'data_source', 'meta_name', 'format', 'option', 'keep_existing', 'active' ),
 			'checkboxes' => array( 'no_null', 'mla_column', 'quick_edit', 'bulk_edit' ),
@@ -232,6 +232,7 @@ class MLASettings_CustomFields {
 			'format' => '',
 			'option' => '',
 			'keep_existing' => false,
+			'replace_all' => false,
 			'no_null' => false,
 			'mla_column' => false,
 			'quick_edit' => false,
@@ -262,7 +263,16 @@ class MLASettings_CustomFields {
 		$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
 		$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
 		$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['option'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['option'] ) : 'text' );
-		$new_rule['keep_existing'] = isset( $_REQUEST['mla_custom_field']['keep_existing'] ) && '1' === $_REQUEST['mla_custom_field']['keep_existing'];
+
+		if ( isset( $_REQUEST['mla_custom_field']['keep_existing'] ) ) {
+			$keep_existing = absint( $_REQUEST['mla_custom_field']['keep_existing'] );
+			if ( 2 === $keep_existing ) {
+				$new_rule['replace_all'] = true;
+			} else {
+				$new_rule['keep_existing'] = 1 === $keep_existing;
+			}
+		}
+
 		$new_rule['no_null'] = isset( $_REQUEST['mla_custom_field']['no_null'] );
 		$new_rule['mla_column'] = isset( $_REQUEST['mla_custom_field']['mla_column'] );
 		$new_rule['quick_edit'] = isset( $_REQUEST['mla_custom_field']['quick_edit'] );
@@ -297,6 +307,7 @@ class MLASettings_CustomFields {
 			'format' => '',
 			'option' => '',
 			'keep_existing' => false,
+			'replace_all' => false,
 			'no_null' => false,
 			'mla_column' => false,
 			'quick_edit' => false,
@@ -334,7 +345,16 @@ class MLASettings_CustomFields {
 			$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
 			$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
 			$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['option'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['option'] ) : 'text' );
-			$new_rule['keep_existing'] = isset( $_REQUEST['mla_custom_field']['keep_existing'] ) && '1' === $_REQUEST['mla_custom_field']['keep_existing'];
+
+			if ( isset( $_REQUEST['mla_custom_field']['keep_existing'] ) ) {
+				$keep_existing = absint( $_REQUEST['mla_custom_field']['keep_existing'] );
+				if ( 2 === $keep_existing ) {
+					$new_rule['replace_all'] = true;
+				} else {
+					$new_rule['keep_existing'] = 1 === $keep_existing;
+				}
+			}
+
 			$new_rule['no_null'] = isset( $_REQUEST['mla_custom_field']['no_null'] );
 			$new_rule['mla_column'] = isset( $_REQUEST['mla_custom_field']['mla_column'] );
 			$new_rule['quick_edit'] = isset( $_REQUEST['mla_custom_field']['quick_edit'] );
@@ -394,42 +414,52 @@ class MLASettings_CustomFields {
 		// Sanitize and convert dropdown controls to field values
 		$field = sanitize_text_field( isset( $_REQUEST['format'] ) ? wp_unslash( $_REQUEST['format'] ) : '-1' );
 		if ( '-1' !== $field ) {
-			$rule['format'] = $field;
+			if ( in_array( $field, array( 'native', 'commas', 'raw' ) ) ) {
+				$rule['format'] = $field;
+			}
 		}
 
 		$field = sanitize_text_field( isset( $_REQUEST['option'] ) ? wp_unslash( $_REQUEST['option'] ) : '-1' );
 		if ( '-1' !== $field ) {
-			$rule['option'] = $field;
+			if ( in_array( $field, array( 'text', 'single', 'export', 'array', 'multi' ) ) ) {
+				$rule['option'] = $field;
+			}
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['keep_existing'] ) ? wp_unslash( $_REQUEST['keep_existing'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['keep_existing'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['keep_existing'] ) ? wp_unslash( $_REQUEST['keep_existing'] ) : '-1' );
+		if ( -1 !== $field ) {
+			if ( 2 === $field ) {
+				$rule['keep_existing'] = false;
+				$rule['replace_all'] = true;
+			} else {
+				$rule['keep_existing'] = 1 === $field;
+				$rule['replace_all'] = false;
+			}
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['no_null'] ) ? wp_unslash( $_REQUEST['no_null'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['no_null'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['no_null'] ) ? wp_unslash( $_REQUEST['no_null'] ) : '-1' );
+		if ( -1 !== $field ) {
+			$rule['no_null'] = 1 === $field;
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['mla_column'] ) ? wp_unslash( $_REQUEST['mla_column'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['mla_column'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['mla_column'] ) ? wp_unslash( $_REQUEST['mla_column'] ) : '-1' );
+		if ( -1 !== $field ) {
+			$rule['mla_column'] = 1 === $field;
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['quick_edit'] ) ? wp_unslash( $_REQUEST['quick_edit'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['quick_edit'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['quick_edit'] ) ? wp_unslash( $_REQUEST['quick_edit'] ) : '-1' );
+		if ( -1 !== $field ) {
+			$rule['quick_edit'] = 1 === $field;
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['bulk_edit'] ) ? wp_unslash( $_REQUEST['bulk_edit'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['bulk_edit'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['bulk_edit'] ) ? wp_unslash( $_REQUEST['bulk_edit'] ) : '-1' );
+		if ( -1 !== $field ) {
+			$rule['bulk_edit'] = 1 === $field;
 		}
 
-		$field = sanitize_text_field( isset( $_REQUEST['active'] ) ? wp_unslash( $_REQUEST['active'] ) : '-1' );
-		if ( '-1' !== $field ) {
-			$rule['active'] = '1' === $field;
+		$field = intval( isset( $_REQUEST['active'] ) ? wp_unslash( $_REQUEST['active'] ) : '-1' );
+		if ( -1 !== $field ) {
+			$rule['active'] = 1 === $field;
 		}
 
 		$rule['changed'] = true;
@@ -493,10 +523,12 @@ class MLASettings_CustomFields {
 			'Bulk Edit' => __( 'Bulk Edit', 'media-library-assistant' ),
 			'Check Bulk Edit' => __( 'Add to Media/Assistant Bulk Edit area', 'media-library-assistant' ),
 			'Existing Text' => __( 'Existing Text', 'media-library-assistant' ),
-			'keep_selected' => $item['keep_existing'] ? 'selected=selected' : '',
+			'keep_selected' => '', // Set below
 			'Keep' => __( 'Keep', 'media-library-assistant' ),
-			'replace_selected' => $item['keep_existing'] ? '' : 'selected=selected',
+			'replace_selected' => '', // Set below
 			'Replace' => __( 'Replace', 'media-library-assistant' ),
+			'replace_all_selected' => '', // Set below
+			'Replace All' => __( 'Replace All', 'media-library-assistant' ),
 			'Format' => __( 'Format', 'media-library-assistant' ),
 			'native_format' => ( 'native' === $item['format'] ) ? 'selected=selected' : '',
 			'Native' => __( 'Native', 'media-library-assistant' ),
@@ -528,6 +560,14 @@ class MLASettings_CustomFields {
 			'submit' => 'mla-edit-custom-field-submit',
 			'Update' => __( 'Update', 'media-library-assistant' ),
 		);
+
+		if ( $item['keep_existing'] ) {
+			$page_values['keep_selected'] = 'selected="selected"';
+		} elseif ( $item['replace_all'] ) {
+			$page_values['replace_all_selected'] = 'selected="selected"';
+		} else {
+			$page_values['replace_selected'] = 'selected="selected"';
+		}
 
 		return array(
 			'message' => '',
@@ -807,6 +847,8 @@ class MLASettings_CustomFields {
 			'Keep' => __( 'Keep', 'media-library-assistant' ),
 			'replace_selected' => '',
 			'Replace' => __( 'Replace', 'media-library-assistant' ),
+			'replace_all_selected' => '',
+			'Replace All' => __( 'Replace All', 'media-library-assistant' ),
 			'Format' => __( 'Format', 'media-library-assistant' ),
 			'native_format' => '',
 			'Native' => __( 'Native', 'media-library-assistant' ),
@@ -868,7 +910,7 @@ class MLASettings_CustomFields {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
-		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		// Find the current chunk
 		$offset = isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0;
@@ -960,7 +1002,7 @@ class MLASettings_CustomFields {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
-		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		$error_message = '';
 		if ( !empty( $_REQUEST['post_ID'] ) ) {
@@ -981,7 +1023,18 @@ class MLASettings_CustomFields {
 		$rule['meta_name'] = wp_kses( isset( $_REQUEST['meta_name'] ) ? wp_unslash( $_REQUEST['meta_name'] ) : '', 'post' );
 		$rule['format'] = sanitize_text_field( isset( $_REQUEST['format'] ) ? wp_unslash( $_REQUEST['format'] ) : 'native' );
 		$rule['option'] = sanitize_text_field( isset( $_REQUEST['option'] ) ? wp_unslash( $_REQUEST['option'] ) : 'text' );
-		$rule['keep_existing'] = isset( $_REQUEST['keep_existing'] ) && '1' === $_REQUEST['keep_existing'];
+
+		if ( isset( $_REQUEST['keep_existing'] ) ) {
+			$keep_existing = absint( $_REQUEST['keep_existing'] );
+			if ( 2 === $keep_existing ) {
+				$rule['keep_existing'] = false;
+				$rule['replace_all'] = true;
+			} else {
+				$rule['keep_existing'] = 1 === $keep_existing;
+				$rule['replace_all'] = false;
+			}
+		}
+
 		$rule['no_null'] = isset( $_REQUEST['no_null'] ) && '1' === $_REQUEST['no_null'];
 		$rule['mla_column'] = isset( $_REQUEST['mla_column'] ) && '1' === $_REQUEST['mla_column'];
 		$rule['quick_edit'] = isset( $_REQUEST['quick_edit'] ) && '1' === $_REQUEST['quick_edit'];
@@ -1420,7 +1473,15 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 		$inline_data .= '	<div class="meta_name">' . esc_attr( $item->meta_name ) . "</div>\r\n";
 		$inline_data .= '	<div class="format">' . esc_attr( $item->format ) . "</div>\r\n";
 		$inline_data .= '	<div class="option">' . esc_attr( $item->option ) . "</div>\r\n";
-		$inline_data .= '	<div class="keep_existing">' . esc_attr( $item->keep_existing ) . "</div>\r\n";
+
+		if ( $item->keep_existing ) {
+			$inline_data .= '	<div class="keep_existing">1' . "</div>\r\n";
+		} elseif ( $item->replace_all ) {
+			$inline_data .= '	<div class="keep_existing">2' . "</div>\r\n";
+		} else {
+			$inline_data .= '	<div class="keep_existing">0' . "</div>\r\n";
+		}
+
 		$inline_data .= '	<div class="no_null">' . esc_attr( $item->no_null ) . "</div>\r\n";
 		$inline_data .= '	<div class="mla_column">' . esc_attr( $item->mla_column ) . "</div>\r\n";
 		$inline_data .= '	<div class="quick_edit">' . esc_attr( $item->quick_edit ) . "</div>\r\n";
@@ -1542,6 +1603,8 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	function column_existing_text( $item ) {
 		if ( $item->keep_existing ) {
 			return __( 'Keep', 'media-library-assistant' );
+		} elseif ( $item->replace_all ) {
+			return __( 'Replace All', 'media-library-assistant' );
 		} else {
 			return __( 'Replace', 'media-library-assistant' );
 		}
@@ -1993,6 +2056,8 @@ class MLA_Custom_Field_Query {
 					'format' => $current_value['format'],
 					'option' => $current_value['option'],
 					'keep_existing' => $current_value['keep_existing'],
+					// replace_all added in v3.19
+					'replace_all' => isset( $current_value['replace_all'] ) ? $current_value['replace_all'] : false,
 					'no_null' => $current_value['no_null'],
 					'mla_column' => $current_value['mla_column'],
 					'quick_edit' => $current_value['quick_edit'],
@@ -2039,6 +2104,7 @@ class MLA_Custom_Field_Query {
 				'format' => $current_value['format'],
 				'option' => $current_value['option'],
 				'keep_existing' => $current_value['keep_existing'],
+				'replace_all' => $current_value['replace_all'],
 				'no_null' => $current_value['no_null'],
 				'mla_column' => $current_value['mla_column'],
 				'quick_edit' => $current_value['quick_edit'],

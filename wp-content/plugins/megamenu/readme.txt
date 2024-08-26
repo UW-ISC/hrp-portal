@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
-Tested up to: 6.4
-Stable tag: 3.3
+Tested up to: 6.6
+Stable tag: 3.3.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,14 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.3.2 =
+
+* Fix: CSS validation error (move @charset rule to first line)
+* Fix: jQuery migrate warnings (change unbind to off)
+* Accessibility Fix: On mobile, when pressing enter on the parent of a hidden submenu, follow the link
+* Fix: PHP warning when activating plugin for first time using PHP 8.2
+* Fix: When CSS Output has been set to 'Disabled', do not automatically set it back to 'Output in Head' if generation of the CSS file fails
 
 = 3.3.1 =
 

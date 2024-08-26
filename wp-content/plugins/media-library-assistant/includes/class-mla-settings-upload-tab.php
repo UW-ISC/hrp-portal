@@ -45,7 +45,7 @@ class MLASettings_Upload {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => false,
-			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'tab' => 'upload',
 			'fields' => array( 'original_slug', 'slug', 'mime_type', 'icon_type', 'core_type', 'mla_type', 'source', 'standard_source' ),
 			'checkboxes' => array( 'disabled' ),
@@ -591,9 +591,14 @@ class MLASettings_Upload {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
-		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['original_slug'] ) ) {
+			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' );
+			die();
+		}
+
+		if ( false === MLAMime::mla_get_upload_mime( $_REQUEST['original_slug'] ) ) {
 			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' );
 			die();
 		}

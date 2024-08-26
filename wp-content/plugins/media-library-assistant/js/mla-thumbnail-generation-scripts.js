@@ -1,6 +1,7 @@
 /* global ajaxurl */
 
 var jQuery,
+	mla,
 	mla_thumbnail_support_vars,
 	mlaThumbnail = {
 		// Properties
@@ -49,10 +50,12 @@ var jQuery,
 				return mlaThumbnail.inlineThumbnail.revert();
 			});
 
-			$( '#doaction, #doaction2' ).on( 'click', function( e ){
-				var n = $( this ).attr( 'id' ).substr( 2 );
+//			$( '#doaction, #doaction2' ).on( 'click', function( e ){
+			$( '#mla-filter #doaction, #mla-filter #doaction2' ).on( 'click', function( e ){
+				var n = $( this ).attr( 'id' ).substr( 2 ), action = $( 'select[name="'+n+'"]' ).val();
+				mla.utility.debugAdd( 'mla-thumbnail-generation-scripts action click n = ' + n + ', action = ' + action );
 
-				if ( $( 'select[name="'+n+'"]' ).val() == 'mla-generate-featured-image' ) {
+				if ( action === 'mla-generate-featured-image' ) {
 					e.preventDefault();
 					t.openBulkGenerate();
 				}
