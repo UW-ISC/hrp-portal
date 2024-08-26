@@ -31,6 +31,14 @@ var jQuery,
 
 		// Utility functions
 		utility: {
+			debugAdd : function( data ) {
+				var debug;
+				debug = jQuery( '#mla-debug-data' ).val();
+
+				debug += ',' + data;
+				jQuery( '#mla-debug-data' ).val( debug );
+			},
+
 			getId : function( o ) {
 				var id = jQuery( o ).closest( 'tr' ).attr( 'id' ),
 					parts = id.split( '-' );
@@ -230,10 +238,12 @@ var jQuery,
 
 			$('select[name="_status"] option[value="future"]', bulkRow).remove();
 
-			$('#doaction, #doaction2').on( 'click', function(e){
-				var n = $(this).attr('id').substr(2);
+//			$('#doaction, #doaction2').on( 'click', function(e){
+			$( '#mla-filter #doaction, #mla-filter #doaction2' ).on( 'click', function( e ){
+				var n = $(this).attr('id').substr(2), action = $( 'select[name="'+n+'"]' ).val();
+				mla.utility.debugAdd( 'mla-inline-edit-scripts action click n = ' + n + ', action = ' + action );
 
-				if ( $('select[name="'+n+'"]').val() == 'edit' ) {
+				if ( action === 'edit' ) {
 					e.preventDefault();
 					t.bulkEdit();
 				} else if ( $('form#posts-filter tr.inline-editor').length > 0 ) {
@@ -403,6 +413,7 @@ var jQuery,
 			mla.bulkEdit.running = chunk.length;
 
 			params = {
+				mla_debug_data: $( '#mla-debug-data' ).val(),
 				action: mla.settings.ajax_action,
 				mla_admin_nonce: mla.settings.ajax_nonce,
 				bulk_action: mla.bulkEdit.targetName,
@@ -813,9 +824,6 @@ var jQuery,
 		},
 
 		doExport : function(){
-//console.log( 'TODO: doExport' );
-//return false;
-
 			var post = {
 					action: mla.settings.exportPresetsAction,
 					mla_preset_values: $( '#bulk-edit :input' ).serialize(),

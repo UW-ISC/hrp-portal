@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.18';
+	const CURRENT_MLA_VERSION = '3.19';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
