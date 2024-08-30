@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 6.5
-Stable tag: 2.25.2
+Tested up to: 6.6
+Stable tag: 2.26.0
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,23 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.26.0 =
+* New feature: New filter hook `relevanssi_forbidden_post_types` filters the list of post types excluded from Relevanssi indexing.
+* New feature: New filter hook `relevanssi_forbidden_taxonomies` filters the list of taxonomies excluded from Relevanssi indexing.
+* New feature: New filter hook `relevanssi_show_password_protected` controls whether password protected posts are shown in the search results.
+* New feature: The Relevanssi metabox has new CSS classes and added HTML tags to allow better styling and to make it easier to hide sections of the metabox.
+* New feature: Relevanssi settings tabs have more CSS ids to help hide individual settings.
+* New feature: Support for `post_mime_type` query parameter.
+* Changed behaviour: The `pre_relevanssi_related` and `post_relevanssi_related` action hooks get the post ID as a parameter, as it's not always available otherwise.
+* Changed behaviour: Password protected posts are excluded from the search results by default to protect their contents.
+* Minor fix: Click-tracking front end JS code now uses `wp_print_inline_script_tag()`.
+* Minor fix: Related posts template CSS now uses `wp_add_inline_style()`.
+* Minor fix: An array `_rt` tag won't cause a fatal error anymore.
+* Minor fix: The Relevanssi network options blog list is reduced to 50 blogs to avoid crashes.
+* Minor fix: The settings tab query parameter was renamed to avoid collisions with other plugins.
+* Minor fix: The `post_id` parameter in the `[relevanssi_related_posts]` shortcode didn't work.
+* Minor fix: In rare cases, the search results would not be in relevance order if the throttle wasn't used.
+
 = 2.25.2 =
 * Security fix: Prevent CSV injection attack in log export.
 * Security fix: Restrict access to doc count updates.
@@ -336,58 +353,10 @@ Each document database is full of useless words. All the little words that appea
 * New feature: Logging now includes a session ID (based on user ID for logged-in users, HTTP user agent for others, and current time, stable for 10 minutes per user). This is used to remove duplicate searches from live searches, keeping only the final search query.
 * Minor fix: The pin weights did not appear in the classic editor Relevanssi metabox, despite being stored in the database.
 
-= 2.21.0 =
-* New feature: You can now add weights to pinned terms to control the order of the pinned posts.
-* New feature: New filter hook `relevanssi_add_attachment_scripts` lets you add the attachment javascripts to other post types than `attachment`.
-* New feature: New filter hook `relevanssi_highlight_query` lets you modify the search query for highlighting.
-* Changed behavior: Relevanssi no longer searches in feed searches by default.
-* Minor fix: The filter `relevanssi_get_attachment_url` is now also used when adding the attachment metabox.
-* Minor fix: No more crashes from Polylang forced plugin updates.
-* Minor fix: PHP 8.1 deprecated FILTER_SANITIZE_STRING, those are now replaced.
-
-= 2.20.4 =
-* New feature: New filter hook `relevanssi_blocked_field_types` can be used to control which ACF field types are excluded from the index. By default, this includes 'repeater', 'flexible_content', and 'group'.
-* New feature: New filter hook `relevanssi_acf_field_object` can be used to filter the ACF field object before Relevanssi indexes it. Return false to have Relevanssi ignore the field type.
-* Minor fix: ACF field exclusion is now recursive. If a parent field is excluded, all sub fields will also be excluded.
-* Minor fix: The indexing settings tab now checks if the wp_relevanssi database table exists and will create the table if it doesn't.
-* Minor fix: Pinning code has been foolproofed to cover some situations that would lead to errors.
-* Minor fix: Handling of data attributes in in-document highlighting had a bug that caused problems with third-party plugins.
-
-= 2.20.3 =
-* New feature: Relevanssi now has a debug mode that will help troubleshooting and support.
-* Minor fix: Using the_permalink() caused problems with search result links. That is now fixed. Relevanssi no longer hooks onto `the_permalink` hook and instead uses `post_link` and other similar hooks.
-* Minor fix: Click tracking parameters have more control to avoid problems from malformed click tracking data.
-
-= 2.20.2 =
-* Fixes the persistent update nag.
-
-= 2.20.1 =
-* New feature: New filter hook `relevanssi_add_highlight_and_tracking` can be used to force Relevanssi to add the `highlight` and tracking parameters to permalinks.
-* Changed behaviour: Exclusions now override pinning. If a post is pinned for 'foo' and excluded for 'foo bar', it will now be excluded when someone searches for 'foo bar'. Previously pinning overrode the exclusion.
-* Changed behaviour: The 'relevanssi_wpml_filter' filter function now runs on priority 9 instead of 10 to avoid problems with custom filters on relevanssi_hits_filter.
-* Minor fix: Page links didn't get the click tracking tags. This is fixed now.
-* Minor fix: Including posts in the Related posts could cause duplicates. Now Relevanssi excludes the included posts from the search so that there won't be duplicates.
-* Minor fix: Handle cases of missing posts better; relevanssi_get_post() now returns a WP_Error if no post is found.
-* Minor fix: Avoid a slow query on the searching tab when the throttle is not enabled.
-* Minor fix: Search queries that contain apostrophes and quotes can now be deleted from the log.
-
-= 2.20.0 =
-* New feature: Relevanssi now shows the MySQL `max_allowed_packet` size on the debug tab.
-* New feature: Relevanssi now shows the indexing query on the debug tab.
-* New feature: You can now edit pinning and exclusions from Quick Edit.
-* New feature: You can now remove queries from the search log from the query insights page.
-* New feature: ACF field settings now include a 'Exclude from Relevanssi index' setting. You can use that to exclude ACF fields from the Relevanssi index.
-* Changed behaviour: Click tracking is disabled in multisite searches. It causes problems with wrong links and isn't very reliable in the best case.
-* Changed behaviour: Plugin translation updates are disabled, unless explicitly enabled either from the Overview settings or with the `relevanssi_update_translations` filter hook.
-* Minor fix: Relevanssi was adding extra quotes around search terms in the `highlight` parameter.
-* Minor fix: Metabox fields look nicer on Firefox.
-* Minor fix: Adds the `relevanssi_related_posts_cache_id` filter to the relevanssi_related_posts() function.
-* Minor fix: Yet another update to data attributes in highlighting. Thanks to Faeddur.
-* Minor fix: Taxonomy query handling was improved. This should help in particular Polylang users who've had problems with Relevanssi ignoring Polylang language restrictions.
-* Minor fix: Negative search terms in AND searches caused problems, but now work better.
-* Minor fix: Pinning phrases that had the same word more than once (e.g. 'word by word') didn't work. Now it works better.
-
 == Upgrade notice ==
+= 2.26.0 =
+* Improvements to related posts, bug fixes.
+
 = 2.25.2 =
 * Security hardening, improved WooCommerce, TablePress and Ninja Table compatibility.
 
@@ -417,21 +386,3 @@ Each document database is full of useless words. All the little words that appea
 
 = 2.22.0 =
 * Logs now include a session ID.
-
-= 2.21.0 =
-* You can now assign weights to pinned keywords.
-
-= 2.20.4 =
-* Better ACF field controls, bug fixes.
-
-= 2.20.3 =
-* Fixes a bug with broken permalinks.
-
-= 2.20.2 =
-* Fixes the persistent update nag.
-
-= 2.20.1 =
-* Bug fixes and small improvements.
-
-= 2.20.0 =
-* New features, performance improvements, bug fixes.
