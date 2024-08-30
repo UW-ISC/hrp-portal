@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: https://gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.8.14
+Version: 2.8.17
 Requires at least: 4.0
 Requires PHP: 5.6
 Author: Gravity Forms
@@ -31,6 +31,7 @@ along with this program.  If not, see http://www.gnu.org/licenses.
 
 use Gravity_Forms\Gravity_Forms\TranslationsPress_Updater;
 use Gravity_Forms\Gravity_Forms\Libraries\Dom_Parser;
+use Gravity_Forms\Gravity_Forms\License\GF_License_Statuses;
 
 //------------------------------------------------------------------------------------------------------------------
 //---------- Gravity Forms License Key -----------------------------------------------------------------------------
@@ -121,7 +122,7 @@ define( 'GF_SUPPORTED_WP_VERSION', version_compare( get_bloginfo( 'version' ), G
  *
  * @var string GF_MIN_WP_VERSION_SUPPORT_TERMS The version number
  */
-define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '6.4' );
+define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '6.5' );
 
 /**
  * The filesystem path of the directory that contains the plugin, includes trailing slash.
@@ -244,7 +245,7 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.8.14';
+	public static $version = '2.8.17';
 
 	/**
 	 * Handles background upgrade tasks.
@@ -252,6 +253,13 @@ class GFForms {
 	 * @var GF_Background_Upgrader
 	 */
 	public static $background_upgrader = null;
+
+	/**
+	 * The option name used to store the license key.
+	 *
+	 * @since 2.8.17
+	 */
+	const LICENSE_KEY_OPT = 'rg_gforms_key';
 
 	/**
 	 * Runs after Gravity Forms is loaded.
@@ -1931,26 +1939,209 @@ class GFForms {
 	 */
 	public static function modify_admin_title( $admin_title, $title ) {
 
-		$subview = rgget( 'subview' );
-		$form_id = rgget( 'id' );
+		$page = GFForms::get_page();
 
-		if ( ! $form_id || rgget( 'page' ) != 'gf_edit_forms' || rgget( 'view' ) != 'settings' ) {
+		if ( $page === '' ) {
 			return $admin_title;
 		}
 
-		require_once( GFCommon::get_base_path() . '/form_settings.php' );
-
-		$setting_tabs = GFFormSettings::get_tabs( $form_id );
-		$page_title   = '';
-
-		foreach ( $setting_tabs as $tab ) {
-			if ( $tab['name'] == $subview ) {
-				$page_title = $tab['label'];
-			}
+		$form_id = rgget( 'id' );
+		if ( ! $form_id ) {
+			$forms   = RGFormsModel::get_forms( null, 'title' );
+			$form_id = ( ! empty( $forms ) ) ? $forms[0]->id : '';
 		}
 
-		if ( $page_title ) {
-			$admin_title = sprintf( __( '%1$s &lsaquo; %2$s &#8212; WordPress', 'gravityforms' ), esc_html( $page_title ), $admin_title );
+		$form       = GFAPI::get_form( $form_id );
+		$form_title = rgar( $form, 'title', __( 'Form Not Found', 'gravityforms' ) );
+
+		switch ( $page ) {
+			case 'new_form':
+			case 'form_list':
+				$filter_title = '';
+				$filter      = rgget( 'filter' );
+
+				if ( $filter === 'inactive' ) {
+					$filter_title = __( 'Inactive', 'gravityforms' );
+				}
+
+				if ( $filter === 'active' ) {
+					$filter_title =__( 'Active', 'gravityforms' );
+				}
+
+				if ( $filter === 'trash' ) {
+					$filter_title = __( 'Trash', 'gravityforms' );
+				}
+
+				$search = rgget( 's' );
+				if ( ! rgblank( $search ) ) {
+					/* translators: Search entries page title. 1. Search value */
+					$filter_title = sprintf( __( 'Search Forms: %1$s', 'gravityforms' ), esc_html( $search ) );
+				}
+
+				if ( ! rgblank( $filter_title ) ) {
+					$admin_title = sprintf( '%1$s &#8212; %2$s', esc_html( $filter_title ), esc_html( $admin_title ) );
+				}
+				break;
+
+			case 'form_editor':
+				$admin_title = sprintf( '%1$s &lsaquo; %2$s', esc_html( $form_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'confirmation':
+				$page_title      = __( 'Confirmations', 'gravityforms' );
+				$confirmation_id = rgget( 'cid' );
+
+				if ( $confirmation_id !== ''  ) {
+					$confirmation_name = rgars( $form, "confirmations/{$confirmation_id}/name", __( 'New Confirmation', 'gravityforms' ) );
+					$page_title        = sprintf( '%1$s &lsaquo; %2$s', esc_html( $confirmation_name ), esc_html( $page_title ) );
+				}
+
+				$admin_title = sprintf( '%1$s &lsaquo; %2$s &lsaquo; %3$s', esc_html( $page_title ), esc_html( $form_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'entry_list':
+				$filter = rgget( 'filter' );
+
+				if ( $filter === 'star' ) {
+					/* translators: Starred entry list page title. 1. form title */
+					$form_title = sprintf( __( 'Starred &#8212; %1$s', 'gravityforms' ), esc_html( $form_title ) );
+				}
+
+				if ( $filter === 'unread' ) {
+					/* translators: Unread entry list page title. 1. form title */
+					$form_title = sprintf( __( 'Unread &#8212; %1$s', 'gravityforms' ), esc_html( $form_title ) );
+				}
+
+				if ( $filter === 'spam' ) {
+					/* translators: Active entry list page title. 1. form title */
+					$form_title = sprintf( __( 'Spam &#8212; %1$s', 'gravityforms' ), esc_html( $form_title ) );
+				}
+
+				if ( $filter === 'trash' ) {
+					/* translators: Trash entry list page title. 1. form title */
+					$form_title = sprintf( __( 'Trash &#8212; %1$s', 'gravityforms' ), esc_html( $form_title ) );
+				}
+
+				$search = rgget( 's' );
+				if ( ! rgblank( $search ) ) {
+					/* translators: Search entries page title. 1. Search value, 2. Form title. */
+					$form_title = sprintf( __( 'Search Entries: %1$s &#8212; %2$s', 'gravityforms' ), esc_html( $search ),  esc_html( $form_title ) );
+				}
+
+				$admin_title = sprintf( '%1$s &lsaquo; %2$s', esc_html( $form_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'entry_detail':
+			case 'entry_detail_edit':
+				require_once( GFCommon::get_base_path() . '/entry_detail.php' );
+
+				$entry = GFEntryDetail::get_current_entry();
+
+				if ( ! is_wp_error( $entry ) && isset( $entry['id'] ) ) {
+					/* translators: Single entry page title. 1: entry ID, 2: form title, 3: admin title. */
+					$admin_title = sprintf( __( 'Entry # %1$d &lsaquo; %2$s &lsaquo; %3$s', 'gravityforms' ), esc_html( $entry['id'] ), esc_html( $form_title ), esc_html( $admin_title ) );
+				} else {
+					/* translators: Entry not found page title. 1: form title, 2: admin title. */
+					$admin_title = sprintf( __( 'Entry not found &lsaquo; %1$s &lsaquo; %2$s', 'gravityforms' ), esc_html( $form_title ), esc_html( $admin_title ) );
+				}
+				break;
+
+			case 'notification_list':
+				/* translators: Notifications list page title. 1: form title, 2: admin title. */
+				$admin_title = sprintf( __( 'Notifications &lsaquo; %1$s &lsaquo; %2$s' ), esc_html( $form_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'notification_new':
+			case 'notification_edit':
+				$notification_id   = rgget( 'nid' );
+				$notification_name = rgar( $form, "notifications/{$notification_id}/name", __( 'New Notification', 'gravityforms' ) );
+				$page_title        = __( 'Notifications', 'gravityforms' );
+				$admin_title       = sprintf( '%1$s &lsaquo; %2$s &lsaquo; %3$s &lsaquo; %4$s', esc_html( $notification_name ), esc_html( $page_title ), esc_html( $form_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'settings':
+				$page_title = __( 'Settings', 'gravityforms' );
+				$subview    = rgget( 'subview' );
+
+				if ( $subview === 'recaptcha' ) {
+					$page_title = __( 'reCAPTCHA', 'gravityforms' );
+				}
+
+				if ( $subview === 'uninstall' ) {
+					$page_title = __( 'Uninstall', 'gravityforms' );
+				}
+				if ( $page_title === 'Settings' ) {
+					$addon_page = GFSettings::$addon_pages;
+					if ( isset( $addon_page[ $subview ] ) ) {
+						$page_title = rgar( $addon_page[ $subview ], 'tab_label' );
+					}
+				}
+
+				/* Translators: Settings page title. 1. Page Title. */
+				$admin_title = sprintf( '%1$s &lsaquo; %2$s', esc_html( $page_title ), esc_html( $admin_title ) );
+				break;
+
+			case 'addons':
+				break;
+
+			case 'export_form':
+				/* Translators: Export Form page title. 1: Admin title. */
+				$admin_title = sprintf( __( 'Export Forms &lsaquo; %1$s', 'gravityforms' ), esc_html( $admin_title ) );
+				break;
+
+			case 'import_form':
+				/* Translators: Import form page title. 1: Admin title. */
+				$admin_title = sprintf( __( 'Import Forms &lsaquo; %1$s', 'gravityforms' ), esc_html( $admin_title ) );
+				break;
+
+			case 'export_entry':
+				/* Translators: Export Entry page title. 1: Admin title. */
+				$admin_title = sprintf( __( 'Export Entries &lsaquo; %1$s', 'gravityforms' ), esc_html( $admin_title ) );
+				break;
+
+			case 'updates':
+				/* Translators: Updates page title. 1: Admin title. */
+				$admin_title = sprintf( __( 'Updates &lsaquo; %1$s', 'gravityforms' ), esc_html( $admin_title ) );
+				break;
+
+			case 'system_status':
+				$subview    = rgget( 'subview' );
+				$page_title = __( 'System Status', 'gravityforms' );
+
+				if ( rgblank( $subview ) ) {
+					/* Translators: System report page title. 1: Admin title. */
+					$admin_title = sprintf( __( 'System Report &lsaquo; %1$s &lsaquo; Gravity Forms &#8212; WordPress', 'gravityforms' ), esc_html( $page_title ) );
+				}
+
+				break;
+
+			case 'form_settings':
+			case 'personal_data':
+			default:
+				if ( rgget( 'view' ) === 'settings' ) {
+					require_once( GFCommon::get_base_path() . '/form_settings.php' );
+
+					$form_id      = rgget( 'id' );
+					$setting_tabs = GFFormSettings::get_tabs( $form_id );
+					$page_title   = '';
+					$subview      = rgget( 'subview' );
+
+					if ( ! $subview || $subview === '' && ! empty( $setting_tabs ) ) {
+						$subview = rgar( $setting_tabs[0], 'name', 'settings' );
+					}
+
+					foreach ( $setting_tabs as $tab ) {
+						if ( $tab['name'] === $subview || ( $subview === 'gf_theme_layers' && rgget( 'theme_layer' ) === $tab['name'] ) ) {
+							$page_title = $tab['label'];
+						}
+					}
+
+					if ( $page_title ) {
+						$admin_title = sprintf( '%1$s &lsaquo; %2$s &lsaquo; %3$s', esc_html( $page_title ), esc_html( $form_title ), esc_html( $admin_title ) );
+					}
+				}
+				break;
+
 		}
 
 		return $admin_title;
@@ -2335,8 +2526,13 @@ class GFForms {
 		}
 
 		$valid_key = rgar( GFCommon::get_version_info(), 'is_valid_key' );
+		$status    = rgar( GFCommon::get_version_info(), 'status' );
+		if ( 'valid_key' === $status ) {
+			$status = '';
+		}
 
-		$message       = '';
+		$message = '';
+
 		// Display the message only for a multisite network. A single site install doesn't need it (WP handles it).
 		if ( ( is_multisite() && ! is_network_admin() ) && version_compare( $version, rgar( $version_info, 'version' ), '<' ) ) {
 			$changelog_url = wp_nonce_url( self_admin_url( 'admin-ajax.php?action=gf_get_changelog&plugin=' . $slug . '&TB_iframe=true&width=640&height=808' ) );
@@ -2388,7 +2584,25 @@ class GFForms {
 			if ( $unregistered_license_message_env ) {
 				$message .= $unregistered_license_message_env;
 			} else {
-				$message .= sprintf( esc_html__( '%sRegister%s your copy of Gravity Forms to receive access to automatic upgrades and support. Need a license key? %sPurchase one now%s.', 'gravityforms' ), '<a href="' . admin_url() . 'admin.php?page=gf_settings">', '</a>', '<a href="https://www.gravityforms.com">', '</a>' );
+				// If the status is blank, then the license doesn't exists.
+				$status   = ( ! rgblank( $status ) ) ? $status : GF_License_Statuses::NO_LICENSE_KEY;
+				$message .= \Gravity_Forms\Gravity_Forms\License\GF_License_Statuses::get_message_for_code( $status );
+			}
+		} else {
+			// A key can be valid but still return a code for the site being revoked or the license being exired.
+			if ( ! rgblank( $status ) ) {
+				$message .= \Gravity_Forms\Gravity_Forms\License\GF_License_Statuses::get_message_for_code( $status );
+			}
+
+			// Adds message for add-ons that are not available for the current license level.
+			if ( false === rgar( $version_info, 'is_available' ) ) {
+				$message .= sprintf( 
+							/* translators: %1$s Plugin name %2$s and %3$s are link tag markup */ 
+							__( 'The %1$s is not available with the configured license; please visit the %2$sGravity Forms website%3$s to verify your license. ', 'gravityforms' ),
+								esc_html( $plugin_data['Name'] ),
+								'<a href="https://www.gravityforms.com/my-account/licenses/?utm_source=gf-admin&utm_medium=purchase-link&utm_campaign=license-enforcement" target="_blank">',
+								'</a>' 
+							);
 			}
 		}
 
@@ -2732,7 +2946,6 @@ class GFForms {
 		wp_register_script( 'gform_chosen', $base_url . "/js/chosen.jquery.min.js", array( 'jquery' ), $version );
 		wp_register_script( 'gform_selectwoo', $base_url . "/js/vendor/selectWoo.full.js", array( 'jquery' ), $version );
 		wp_register_script( 'gform_simplebar', $base_url . "/js/vendor/simplebar.js", array( 'jquery' ), $version );
-		wp_register_script( 'gform_promises_polyfill', 'https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js', array(), $version );
 		wp_register_script( 'gform_conditional_logic', $base_url . "/js/conditional_logic{$min}.js", array(
 			'jquery',
 			'gform_gravityforms'
@@ -2750,7 +2963,6 @@ class GFForms {
 		), $version, true );
 		wp_register_script( 'gform_form_editor_conditional_flyout', $base_url . "/js/components/form_editor/conditional_flyout/conditional_flyout{$min}.js", array(
 			'jquery',
-			'gform_promises_polyfill',
 			'gform_gravityforms',
 		), $version );
 		wp_register_script( 'gform_form_admin', $base_url . "/js/form_admin{$min}.js", array(
@@ -3307,15 +3519,15 @@ class GFForms {
 			return 'results';
 		}
 
-		if ( rgget( 'page' ) == 'gf_export' && ( rgget( 'view' ) == 'export_entry' || ! isset( $_GET['view'] ) ) ) {
+		if ( rgget( 'page' ) == 'gf_export' && ( rgget( 'subview' ) == 'export_entry' || ! isset( $_GET['subview'] ) ) ) {
 			return 'export_entry';
 		}
 
-		if ( rgget( 'page' ) == 'gf_export' && rgget( 'view' ) == 'export_form' ) {
+		if ( rgget( 'page' ) == 'gf_export' && rgget( 'subview' ) == 'export_form' ) {
 			return 'export_form';
 		}
 
-		if ( rgget( 'page' ) == 'gf_export' && rgget( 'view' ) == 'import_form' ) {
+		if ( rgget( 'page' ) == 'gf_export' && rgget( 'subview' ) == 'import_form' ) {
 			return 'import_form';
 		}
 
@@ -6335,11 +6547,9 @@ class GFForms {
 		GFCommon::record_cron_event( 'gravityforms_cron' );
 
 		self::add_security_files();
-
 		self::delete_old_export_files();
-
 		self::delete_old_log_files();
-
+		self::delete_old_tmp_uploads();
 		self::do_self_healing();
 
 		if ( ! get_option( 'gform_enable_logging' ) ) {
@@ -6352,6 +6562,46 @@ class GFForms {
 		do_action( \Gravity_Forms\Gravity_Forms\Telemetry\GF_Telemetry_Service_Provider::TELEMETRY_SCHEDULED_TASK );
 
 		GFCommon::log_debug( __METHOD__ . '(): Done.' );
+	}
+
+	/**
+	 * Deletes old tmp files from the form-specific upload folders.
+	 *
+	 * @since 2.8.15
+ 	 *
+ 	 * @return void
+	 */
+	public static function delete_old_tmp_uploads() {
+		GFCommon::log_debug( __METHOD__ . '(): Starting.' );
+		$uploads_folder = GFFormsModel::get_upload_root();
+		if ( ! is_dir( $uploads_folder ) || is_link( $uploads_folder ) ) {
+			GFCommon::log_debug( __METHOD__ . '(): No upload root - bailing.' );
+			return;
+		}
+
+		$exclude = array( '.', '..', 'logs', 'export', 'index.html', '.htaccess' );
+		$folders = array_diff( scandir( $uploads_folder ), $exclude );
+		if ( empty( $folders ) ) {
+			GFCommon::log_debug( __METHOD__ . '(): No form folders found - bailing.' );
+			return;
+		}
+
+		require_once GFCommon::get_base_path() . '/form_display.php';
+
+		foreach ( $folders as $folder ) {
+			$parts = explode( '-', $folder );
+			if ( ! is_numeric( $parts[0] ) ) {
+				continue;
+			}
+
+			$form = GFAPI::get_form( $parts[0] );
+			if ( ! $form ) {
+				continue;
+			}
+
+			GFCommon::log_debug( __METHOD__ . '(): Deleting old tmp files for form #' . $form['id'] );
+			GFFormDisplay::clean_up_files( $form, false );
+		}
 	}
 
 	/**
