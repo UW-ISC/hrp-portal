@@ -30,7 +30,7 @@ function relevanssi_log_click() {
 		return;
 	}
 
-	if ( ! isset( $_REQUEST['_rt'] ) ) {
+	if ( ! isset( $_REQUEST['_rt'] ) || ! is_string( $_REQUEST['_rt'] ) ) {
 		return;
 	}
 
@@ -418,7 +418,7 @@ function relevanssi_show_insights( string $query ) {
 	global $wpdb, $relevanssi_variables;
 
 	?>
-	<a href="<?php echo get_admin_url( null, '?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
+	<a href="<?php echo get_admin_url( null, '?page=relevanssi_user_searches' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
 	><?php esc_html_e( 'Back to the User Searches page', 'relevanssi' ); ?></a>
 	<?php
 
@@ -565,7 +565,7 @@ function relevanssi_get_insights_url( $target ): string {
 	$parameter = is_int( $target ) ? 'post_insights' : 'insights';
 
 	return admin_url(
-		'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] )
+		'admin.php?page=relevanssi_user_searches'
 	) . '&' . $parameter . '=' . rawurlencode( $target );
 }
 
@@ -584,7 +584,7 @@ function relevanssi_show_post_insights( string $post_id_string ) {
 	$title   = get_the_title( $post_id );
 
 	?>
-	<a href="<?php echo get_admin_url( null, '?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
+	<a href="<?php echo get_admin_url( null, '?page=relevanssi_user_searches' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
 	><?php esc_html_e( 'Back to the User Searches page', 'relevanssi' ); ?></a>
 	<?php
 
@@ -934,13 +934,17 @@ function relevanssi_remove_clicktracking() {
 	if ( 'on' !== get_option( 'relevanssi_click_tracking', 'off' ) ) {
 		return;
 	}
-	?>
-	<script type="text/javascript">
+	$script = <<<EOJS
 	var relevanssi_rt_regex = /(&|\?)_(rt|rt_nonce)=(\w+)/g
 	var newUrl = window.location.search.replace(relevanssi_rt_regex, '')
 	history.replaceState(null, null, window.location.pathname + newUrl + window.location.hash)
-	</script>
-	<?php
+EOJS;
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		// Introduced in 5.7.0.
+		wp_print_inline_script_tag( $script );
+	} else {
+		echo '<script>' . $script . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
 }
 
 /**
@@ -953,7 +957,7 @@ function relevanssi_remove_clicktracking() {
  */
 function relevanssi_insights_link( $query ): string {
 	global $relevanssi_variables;
-	$insights_url = admin_url( 'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) )
+	$insights_url = admin_url( 'admin.php?page=relevanssi_user_searches' )
 		. '&insights=' . rawurlencode( $query->query );
 	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), esc_html( relevanssi_hyphenate( $query->query ) ) );
 	return $insights;
