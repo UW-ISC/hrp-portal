@@ -470,7 +470,9 @@ function wdtAddDatePlaceholders(input) {
             '</div>';
 
         jQuery('.datepicker').closest("ul.list-unstyled").append(datePlaceholders);
-        jQuery('.wdt-date-placeholder').tooltip();
+        if (typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+            jQuery('.wdt-date-placeholder').wdtBootstrapTooltip();
+        }
 
         // Set %TODAY% as conditional formatting rule value
         jQuery('.wdt-today-placeholder').click(function () {
