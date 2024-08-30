@@ -1604,7 +1604,9 @@ var wpdatatable_config = {
                 wpdatatable_config.showColumn(columnIndex);
             });
         });
-        $table.find('thead th button[data-toggle="tooltip"]').tooltip();
+        if (typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+            $table.find('thead th button[data-toggle="tooltip"]').wdtBootstrapTooltip();
+        }
         jQuery(document).off('click', 'span.columnTitle button.wdt-column-settings').on('click', 'span.columnTitle button.wdt-column-settings', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -1678,7 +1680,9 @@ var wpdatatable_config = {
         jQuery('#wdt-user-id-column').selectpicker('val', wpdatatable_config.userid_column_id);
 
         // Apply new tooltips
-        jQuery('#wdt-columns-list-modal [data-toggle="tooltip"]').tooltip();
+        if (typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+            jQuery('#wdt-columns-list-modal [data-toggle="tooltip"]').wdtBootstrapTooltip();
+        }
     },
     /**
      * Helper method to generate a formula name, checking that same name wouldn't already exist in the table

@@ -13763,3 +13763,6 @@ h2.wpdt-c{
 .wpdt-c.wpTableWCAG .dropdown-header {
     color: #727272;
 }
+.wpdt-c .wdt-no-display{
+    display: none;
+}

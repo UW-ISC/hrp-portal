@@ -22,7 +22,6 @@ var singleClick = false;
 
 (function ($) {
     $(function () {
-        $('.wdt-timeline-item').show();
         /**
          * Helper function to render a DataTable
          *
@@ -30,7 +29,6 @@ var singleClick = false;
          * @param tableDescription JSON with the table description
          */
         wdtRenderDataTable = function ($table, tableDescription) {
-
             // Parse the DataTable init options
             var dataTableOptions = tableDescription.dataTableParams;
 
@@ -788,24 +786,21 @@ var singleClick = false;
                 }
             }
 
-            /**
-             * Init the DataTable itself
-             */
-            $(document).on('preInit.dt', function (e, settings) {
-                $(tableDescription.selector).hide();
-                $(tableDescription.selector).closest('.dataTables_wrapper').hide();
-            });
+            var wdtFirstDraw = false;
+
             $(document).on('draw.dt', function (e, settings) {
-                var tableID = tableDescription.tableWpId;
-                if ($('.wdt-timeline-item').length != 0) {
-                    $('.wdt-timeline-item').each(function() {
-                        if (parseInt($(this).attr('data-id')) === tableID) {
-                            $(this).hide();
-                        }
-                    });
+                if (!wdtFirstDraw) {
+                    var tableID = tableDescription.tableId;
+                    var tableLoaderId = $('.wdt-timeline-' + tableID);
+                    if (tableLoaderId.length != 0) {
+                        tableLoaderId.hide();
+                    }
+
+                    $(tableDescription.selector).removeClass('wdt-no-display');
+                    $(tableDescription.selector + '_wrapper').removeClass('wdt-no-display');
+
+                    wdtFirstDraw = true;
                 }
-                $(tableDescription.selector).show();
-                $(tableDescription.selector).closest('.dataTables_wrapper').show();
             });
             wpDataTables[tableDescription.tableId] = $(tableDescription.selector).dataTable(dataTableOptions);
 
@@ -816,7 +811,7 @@ var singleClick = false;
                 $('#' + tableDescription.tableId + '_paginate').hide();
             }
 
-            $(tableDescription.selector + '_wrapper').addClass('wpDataTables wpDataTablesWrapper wpDataTableID-' + tableDescription.tableWpId)
+            $(tableDescription.selector + '_wrapper').addClass('wpDataTableID-' + tableDescription.tableWpId)
 
             /**
              * Set pagination alignment classes
@@ -1190,7 +1185,6 @@ var singleClick = false;
                 }
             }
             //[<--/ Full version -->]//
-
             /**
              * Add the draw callback
              * @param callback
@@ -2297,6 +2291,9 @@ var singleClick = false;
          */
         $('table.wpDataTable:not(.wpdtSimpleTable)').each(function () {
             var tableDescription = JSON.parse($('#' + $(this).data('described-by')).val());
+            if (!tableDescription.hideTableBeforeFiltering) {
+                $('.wdt-timeline-' + tableDescription.tableId).show();
+            }
             wdtRenderDataTable($(this), tableDescription);
         });
 
@@ -2647,6 +2644,6 @@ function toggleDeleteIcon(input) {
         deleteIcon.hide();
     }
 }
-// jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";
+jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper datatables_wrapper wdt-no-display";
 jQuery.fn.dataTable.ext.classes.sLengthSelect = 'wdt-selectpicker length_menu';
 jQuery.fn.dataTable.ext.classes.sFilterInput = 'form-control';

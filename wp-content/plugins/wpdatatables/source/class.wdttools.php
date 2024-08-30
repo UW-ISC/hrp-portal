@@ -710,52 +710,28 @@ class WDTTools
         return array(
             'version'  => get_option('wdtVersion'),
             'features' => [
-                0 => [
-                    'text' => 'Added global search function for searching multiple tables on one page using a shortcode.',
-                    'link' => 'https://wpdatatables.com/documentation/table-features/global-page-search-shortcode/'
-                ]
+//                0 => [
+//                    'text' => 'Added global search function for searching multiple tables on one page using a shortcode.',
+//                    'link' => 'https://wpdatatables.com/documentation/table-features/global-page-search-shortcode/'
+//                ]
             ],
             'improvements' => [
-                0 => [
-                    'text' => 'Implemented placeholders (loaders) during table loading.',
-                    'link' => ''
-                ],
-                1 => [
-                    'text' => 'Implemented placeholders (loaders) during chart loading.',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Changed all string names so that they are unique for PO Edit.',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => ' Updated ApexCharts library.',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Updated HighCharts library.',
-                    'link' => ''
-                ],
+//                0 => [
+//                    'text' => 'Implemented placeholders (loaders) during table loading.',
+//                    'link' => ''
+//                ],
             ],
             'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed issue with sorting date columns for non-SS tables.',
+                    'text' => 'Fixed issue with tabs on Elementor cloud.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue preventing the removal of empty values from select boxes.',
+                    'text' => 'Fixed issue with Powerful filters and hide table before filtering.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with HighCharts Stock not showing the time zoom toolbar when the stable version option is turned on.',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => 'Fixed issue with grouping not working properly on charts with float columns.',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Other small bug fixes.',
+                    'text' => 'Fixed issue with incorrect data display after clearing and reapplying filters.',
                     'link' => ''
                 ],
             ]

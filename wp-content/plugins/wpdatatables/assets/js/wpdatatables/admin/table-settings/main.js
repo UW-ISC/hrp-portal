@@ -1774,10 +1774,30 @@
         });
 
         /**
-         * Switch tabs in table and column settings
+         * Switch tabs in table settings
          */
-        $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-nav a, .wdt-datatables-admin-wrap .column-settings-panel .tab-nav a').click(function (e) {
-            $(this).tab('show');
+        $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-nav a').on('click', function (e) {
+            e.preventDefault()
+            if (!$(this).closest('ul').hasClass('customize-table-settings-ul')){
+                $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .tab-pane,' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .customize-table-settings-ul li').removeClass(' fade active in')
+                $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .tab-pane.main-customize-table-settings,' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .customize-table-settings-ul .main-customize-table-settings-tab').addClass('active')
+                $($(this)[0].hash).addClass('active')
+            } else {
+                if (!$(this)[0].hash == '#customize-table-settings'){
+                    $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content.wdt-main-child .tab-pane').removeClass(' fade active in')
+                }
+                $($(this)[0].hash).addClass('active in')
+            }
+        });
+        /**
+         * Switch tabs in column settings
+         */
+        $(' .wdt-datatables-admin-wrap .column-settings-panel .tab-nav a').on('click', function (e) {
+            e.preventDefault()
+                $('.wdt-datatables-admin-wrap .column-settings-panel .tab-content .tab-pane:not(.main-customize-table-settings)').removeClass(' fade active in')
+                $($(this)[0].hash).addClass('active in')
         });
 
         /**

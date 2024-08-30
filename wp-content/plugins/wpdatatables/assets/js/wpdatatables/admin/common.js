@@ -9,11 +9,9 @@
  * Hide tooltip on button click or on mouseout event
  */
 var wdtHideTooltip = function () {
-    jQuery('[data-toggle="tooltip"]').click(function () {
+    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').on('click', function () {
         jQuery(this).wdtBootstrapTooltip('hide');
-    });
-
-    jQuery('[data-toggle="tooltip"]').mouseout(function (event) {
+    }).on('mouseout', function (event) {
         var e = event.toElement || event.relatedTarget;
         if (e != null && (e.parentNode == this || e == this)) {
             return;
@@ -26,6 +24,17 @@ var wdtHideTooltip = function () {
  * Extend jQuery to use our custom function for tooltip
  */
 jQuery.fn.wdtBootstrapTooltip = jQuery.fn.tooltip;
+
+/**
+ * Extend jQuery to use our custom function for popover
+ */
+jQuery.fn.wdtBootstrapPopover = jQuery.fn.popover;
+/**
+ * Extend jQuery to use our custom function for tabs
+ */
+jQuery.fn.wdtBootstrapTabs = jQuery.fn.tab;
+
+
 /**
 
  /**
@@ -144,29 +153,33 @@ jQuery.fn.extend({
         /**
          * Attach tooltips
          */
-        $('[data-toggle="tooltip"]').tooltip();
-
-        wdtHideTooltip();
+        if ($('.wdt-datatables-admin-wrap') && typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+            $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').wdtBootstrapTooltip();
+            wdtHideTooltip();
+        }
 
         /**
          * Attach HTML Popovers (Hints with images)
          */
-        $('[data-toggle="html-popover"]').popover({
-            html: true,
-            content: function () {
-                var content = $(this).attr("data-popover-content");
-                return $(content).children(".popover-body").html();
-            },
-            title: function () {
-                var title = $(this).attr("data-popover-content");
-                return $(title).children(".popover-heading").html();
-            }
-        });
+        if ($('.wdt-datatables-admin-wrap') &&  typeof jQuery.fn.wdtBootstrapPopover !== 'undefined') {
+            $('[data-toggle="html-popover"]').wdtBootstrapPopover({
+                html: true,
+                content: function () {
+                    var content = $(this).attr("data-popover-content");
+                    return $(content).children(".popover-body").html();
+                },
+                title: function () {
+                    var title = $(this).attr("data-popover-content");
+                    return $(title).children(".popover-heading").html();
+                }
+            });
+        }
 
         /**
          * Apply selectpicker
          */
-        $('select.selectpicker').selectpicker();
+        $('.wpdt-c select.selectpicker').selectpicker();
+
 
         /**
          * Hide modal dialog on Esc button
