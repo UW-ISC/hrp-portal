@@ -2008,16 +2008,31 @@ class GFFormDisplay {
 		GFAPI::add_note( $entry_id, 0, $filter_name, $note );
 	}
 
-	public static function clean_up_files( $form ) {
-		$unique_form_id = rgpost( 'gform_unique_id' );
-		if ( ! ctype_alnum( $unique_form_id ) ) {
-			return false;
-		}
-		$target_path = RGFormsModel::get_upload_path( $form['id'] ) . '/tmp/';
-		$filename    = $unique_form_id . '_input_*';
-		$files       = GFCommon::glob( $filename, $target_path );
-		if ( is_array( $files ) ) {
-			array_map( 'unlink', $files );
+	/**
+	 * Deletes tmp files for the given form.
+	 *
+	 * @since Unknown
+	 * @since 2.8.15 Added the $is_submission param.
+	 *
+	 * @param array $form          The form the tmp files are to be deleted for.
+	 * @param bool  $is_submission Indicates if tmp files for the current form submission should be deletes as well.
+	 *
+	 * @return false|void
+	 */
+	public static function clean_up_files( $form, $is_submission = true ) {
+		if ( $is_submission ) {
+			$unique_form_id = rgpost( 'gform_unique_id' );
+			if ( ! ctype_alnum( $unique_form_id ) ) {
+				return false;
+			}
+			$target_path = GFFormsModel::get_upload_path( $form['id'] ) . '/tmp/';
+			$filename    = $unique_form_id . '_input_*';
+			$files       = GFCommon::glob( $filename, $target_path );
+			if ( is_array( $files ) ) {
+				array_map( 'unlink', $files );
+			}
+		} else {
+			$target_path = GFFormsModel::get_upload_path( $form['id'] ) . '/tmp/';
 		}
 
 		// clean up files from abandoned submissions older than 48 hours (30 days if Save and Continue is enabled)
@@ -4528,7 +4543,7 @@ class GFFormDisplay {
 		if ( $entry_count >= $limit ) {
 			$error = empty( $form['limitEntriesMessage'] ) ? "<div class='gf_submission_limit_message'><p>" . esc_html__( 'Sorry. This form is no longer accepting new submissions.', 'gravityforms' ) . '</p></div>' : '<p>' . GFCommon::gform_do_shortcode( $form['limitEntriesMessage'] ) . '</p>';
 			self::set_submission_if_null( $form_id, 'form_restriction_error', $error );
-			GFCommon::log_debug( __METHOD__ . sprintf( '(): Entry limit reached. Limit: %d; Count: %d.', $limit, $entry_count ) );
+			GFCommon::log_debug( __METHOD__ . sprintf( '(): Form (#%d) entry limit reached. Limit: %d; Count: %d.', $form_id, $limit, $entry_count ) );
 
 			return $error;
 		}
@@ -4549,13 +4564,13 @@ class GFFormDisplay {
 			if ( ! empty( $form['scheduleStart'] ) && $now < $timestamp_start ) {
 				$error = empty( $form['schedulePendingMessage'] ) ? '<p>' . esc_html__( 'This form is not yet available.', 'gravityforms' ) . '</p>' : '<p>' . GFCommon::gform_do_shortcode( $form['schedulePendingMessage'] ) . '</p>';
 				self::set_submission_if_null( $form['id'], 'form_restriction_error', $error );
-				GFCommon::log_debug( __METHOD__ . sprintf( '(): The form is not yet available. Scheduled for: %d; Now: %d.', $timestamp_start, $now ) );
+				GFCommon::log_debug( __METHOD__ . sprintf( '(): The form (#%d) is not yet available. Scheduled for: %d; Now: %d.', rgar( $form, 'id' ), $timestamp_start, $now ) );
 
 				return $error;
 			} elseif ( ! empty( $form['scheduleEnd'] ) && $now > $timestamp_end ) {
 				$error = empty( $form['scheduleMessage'] ) ? '<p>' . esc_html__( 'Sorry. This form is no longer available.', 'gravityforms' ) . '</p>' : '<p>' . GFCommon::gform_do_shortcode( $form['scheduleMessage'] ) . '</p>';
 				self::set_submission_if_null( $form['id'], 'form_restriction_error', $error );
-				GFCommon::log_debug( __METHOD__ . sprintf( '(): The form is no longer available. Ended: %d; Now: %d.', $timestamp_end, $now ) );
+				GFCommon::log_debug( __METHOD__ . sprintf( '(): The form (#%d) is no longer available. Ended: %d; Now: %d.', rgar( $form, 'id' ), $timestamp_end, $now ) );
 
 				return $error;
 			}
