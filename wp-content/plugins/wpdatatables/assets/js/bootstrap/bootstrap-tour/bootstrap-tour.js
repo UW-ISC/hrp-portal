@@ -274,7 +274,7 @@
                     if (!($element.data('bs.popover') || $element.data('popover'))) {
                         $element = $('body');
                     }
-                    $element.popover('destroy').removeClass("tour-" + _this._options.name + "-element tour-" + _this._options.name + "-" + i + "-element").removeData('bs.popover').focus();
+                    $element.wdtBootstrapPopover('destroy').removeClass("tour-" + _this._options.name + "-element tour-" + _this._options.name + "-" + i + "-element").removeData('bs.popover').focus();
                     if (step.reflex) {
                         $(step.reflexElement).removeClass('tour-step-element-reflex').off("" + (_this._reflexEvent(step.reflex)) + ".tour-" + _this._options.name);
                     }
@@ -580,7 +580,7 @@
                 })(this));
             }
             shouldAddSmart = step.smartPlacement === true && step.placement.search(/auto/i) === -1;
-            $element.popover({
+            $element.wdtBootstrapPopover({
                 placement: shouldAddSmart ? "auto " + step.placement : step.placement,
                 trigger: 'manual',
                 title: step.title,
@@ -590,7 +590,7 @@
                 container: step.container,
                 template: step.template,
                 selector: step.element
-            }).popover('show');
+            }).wdtBootstrapPopover('show');
             $tip = $element.data('bs.popover') ? $element.data('bs.popover').tip() : $element.data('popover').tip();
             $tip.attr('id', step.id);
             this._focus($tip, $element, step.next < 0);

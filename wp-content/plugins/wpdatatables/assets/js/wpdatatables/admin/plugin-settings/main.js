@@ -359,19 +359,27 @@
         });
 
         var hash = window.location.hash;
-        hash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + hash + '"]').tab('show');
-
-        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) a').click(function (e) {
-            $(this).tab('show');
+        if (typeof jQuery.fn.wdtBootstrapTabs !== 'undefined') {
+            hash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + hash + '"]').wdtBootstrapTabs('show');
+        }
+        /**
+         * Switch tabs in plugin settings and add hash
+         */
+        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) [data-toggle="tab"]').on('click', function (e) {
+            e.preventDefault()
+            $('.wdt-datatables-admin-wrap .tab-content .tab-pane').removeClass('active in')
+            $($(this)[0].hash).addClass('active in')
             var scrollmem = $('body').scrollTop();
             window.location.hash = this.hash;
             $('html,body').scrollTop(scrollmem);
-        });
+        })
 
         // Change tab on hashchange
         window.addEventListener('hashchange', function () {
             var changedHash = window.location.hash;
-            changedHash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + changedHash + '"]').tab('show');
+            if (typeof jQuery.fn.wdtBootstrapTabs !== 'undefined') {
+                changedHash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + changedHash + '"]').wdtBootstrapTabs('show');
+            }
         }, false);
 
         /**
@@ -405,12 +413,6 @@
             ], null);
         });
 
-        /**
-         * Switch tabs in plugin settings
-         */
-        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) a').click(function (e) {
-            $(this).tab('show');
-        });
 
         /**
          * Save settings on Apply button
@@ -617,14 +619,15 @@
                     defaultPort = '5432';
 
                 $(element).find("input[name='wdt-my-sql-port']").val(defaultPort);
+                if (typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+                    $(element).find('.wpdt-icon-info-circle-thin.connection-port').attr('title', 'Port for the connection' + (defaultPort ? ' (default: ' + defaultPort + ')' : '')).wdtBootstrapTooltip('fixTitle');
 
-                $(element).find('.wpdt-icon-info-circle-thin.connection-port').attr('title', 'Port for the connection' + (defaultPort ? ' (default: ' + defaultPort + ')' : '')).tooltip('fixTitle');
-
-                setTimeout(function () {
-                    $(element).tooltip({
-                        selector: '[data-toggle="tooltip"]'
-                    });
-                }, 500);
+                    setTimeout(function () {
+                        $(element).wdtBootstrapTooltip({
+                            selector: '[data-toggle="tooltip"]'
+                        });
+                    }, 500);
+                }
             });
         }
 
@@ -1041,8 +1044,9 @@
                 let redirectURL = this.removeURLParameter(window.location.href, 'valid');
                 redirectURL = this.removeURLParameter(redirectURL, 'slug');
                 redirectURL = this.removeURLParameter(redirectURL, 'domainRegistered');
-
-                $('.tab-nav a[href="#wdt-activation"]').tab('show');
+                if (typeof jQuery.fn.wdtBootstrapTabs !== 'undefined') {
+                    $('.tab-nav a[href="#wdt-activation"]').wdtBootstrapTabs('show');
+                }
 
                 if (valid === 'true' && domainRegistered === 'true' && searchQueryString('envatoTokenEmail')) {
                     // Set refresh token
@@ -1097,7 +1101,9 @@
             }
 
             if (activeTab === 'activation') {
-                $('.tab-nav a[href="#wdt-activation"]').tab('show');
+                if (typeof jQuery.fn.wdtBootstrapTabs !== 'undefined') {
+                    $('.tab-nav a[href="#wdt-activation"]').wdtBootstrapTabs('show');
+                }
             }
 
             if (wdt_current_config.wdtActivated == 1) {

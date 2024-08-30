@@ -1504,6 +1504,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         useAndLogic = aoColumn.andLogic && !serverSide;
 
         var checkedValue = jQuery(this).val();
+        if (checkedInputs.length <= 1 ) orderCheckbox = [];
         if (!jQuery(this).is(':checked')) {
             orderCheckbox = orderCheckbox.filter(function (value) {
                 return value !== checkedValue;

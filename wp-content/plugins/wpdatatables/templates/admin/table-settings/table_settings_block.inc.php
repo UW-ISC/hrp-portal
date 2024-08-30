@@ -133,7 +133,7 @@ defined('ABSPATH') or die('Access denied.');
             </ul>
             <!-- /ul .tab-nav -->
 
-            <div class="tab-content">
+            <div class="tab-content wdt-main">
                 <!-- Main table settings -->
                 <div role="tabpanel" class="tab-pane active" id="main-table-settings">
 
@@ -1400,7 +1400,7 @@ defined('ABSPATH') or die('Access denied.');
 
                     <div role="tabpanel">
                         <p style="font-size: 15px"><?php esc_html_e( 'Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables' ); ?></p>
-                        <ul class="tab-nav" role="tablist">
+                        <ul class="tab-nav customize-table-settings-ul" role="tablist">
                             <li class="active main-customize-table-settings-tab">
                                 <a href="#main-customize-table-settings" aria-controls="main-customize-table-settings"
                                    role="tab"
@@ -1441,7 +1441,7 @@ defined('ABSPATH') or die('Access denied.');
                         </ul>
                         <!-- /ul .tab-nav -->
 
-                        <div class="tab-content">
+                        <div class="tab-content wdt-main-child">
                             <!-- Main table settings -->
                             <div role="tabpanel" class="tab-pane active main-customize-table-settings" id="main-customize-table-settings">
 
