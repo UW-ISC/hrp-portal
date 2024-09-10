@@ -424,7 +424,7 @@ var jQuery,
 
 			mla.bulkEdit.offset += mla.bulkEdit.chunkSize;
 
-			params = $.param( params ) + '&' + mla.bulkEdit.fields;
+			params = mla.bulkEdit.fields + '&' + $.param( params );
 			//console.log( params );
 
 			// make ajax request

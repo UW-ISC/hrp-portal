@@ -106,7 +106,7 @@ class MLAImageProcessor {
 
 			if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3) ) ) {
 				if ( ! empty( $explicit_path ) ) {
-					$ghostscript_path = exec( 'dir /o:n/s/b "' . $explicit_path . '"' );
+					$ghostscript_path = exec( 'dir /o:n/s/b ' . escapeshellarg( $explicit_path ) );
 					if ( ! empty( $ghostscript_path ) ) {
 						break;
 					} else {
@@ -139,7 +139,7 @@ class MLAImageProcessor {
 			} // Windows platform
 
 			if ( ! empty( $explicit_path ) ) {
-				exec( 'test -e ' . $explicit_path, $dummy, $ghostscript_path );
+				exec( 'test -e ' . escapeshellarg( $explicit_path ), $dummy, $ghostscript_path );
 				if ( $explicit_path !== $ghostscript_path ) {
 					$ghostscript_path = NULL;
 				}
@@ -153,7 +153,7 @@ class MLAImageProcessor {
 			}
 
 			$test_path = '/usr/bin/gs';
-			exec('test -e ' . $test_path, $dummy, $ghostscript_path);
+			exec('test -e ' . escapeshellarg( $test_path ), $dummy, $ghostscript_path);
 
 			if ( $test_path !== $ghostscript_path ) {
 				$ghostscript_path = NULL;
