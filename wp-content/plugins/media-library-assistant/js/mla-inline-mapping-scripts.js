@@ -228,7 +228,7 @@ var jQuery,
 				length: chunk
 			};
 
-			params = $.param( params ) + '&' + mla.bulkMap.fields;
+			params =  mla.bulkMap.fields + '&' + $.param( params );
 
 			// make ajax request
 			mla.bulkMap.inProcess = true;

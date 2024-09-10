@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
 Tested up to: 6.6.1
-Stable tag: 3.19
+Stable tag: 3.20
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,12 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.20 =
+* Fix: **IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated.**
+* Fix: For mapping rules, an AJAX nonce problem in the "Execute" rollover action has been corrected.
+* Fix: For the `[mla_gallery]` shortcode, a defect in processing `mla_link_href` parameters containing multiple query string parameters has been corrected.
+* Fix: For the `[mla_gallery]` shortcode when `mla_viewer=true`, a "PHP Warning: Undefined array key..." issue has been eliminated.
+
 = 3.19 =
 * New: For mapping rules, a new "Replace All" option for the "Keep Existing" setting will replace Standard Fields with an empty value and delete Taxonomy term assignments if the mapping rule evaluates to an empty value. 
 * Fix: **IMPORTANT: A security risk that allowed authenticated non-administrator (Author+) users to add file extensions to the Uploads list has been mitigated.**
@@ -357,8 +363,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.19 =
-IMPORTANT: A security risk in the Settings/Media Library Assistant Uploads tab has been mitigated. Mapping rule fixes and enhancement. Media/Assistant bulk action fix. One enhancement, six fixes in all.
+= 3.20 =
+IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated. Mapping rule and shortcode fixes. Four fixes in all.
 
 == Acknowledgements ==
 
