@@ -83,7 +83,7 @@ class MLAShortcode_Support {
 
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3) ) ) {
 			if ( ! empty( $explicit_path ) ) {
-				$return = exec( 'dir /o:n/s/b "' . $explicit_path . '"' );
+				$return = exec( 'dir /o:n/s/b ' . escapeshellarg( $explicit_path ) );
 				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN explicit path = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 				if ( ! empty( $return ) ) {
 					return $ghostscript_present = true;
@@ -121,7 +121,7 @@ class MLAShortcode_Support {
 		} // Windows platform
 
 		if ( ! empty( $explicit_path ) ) {
-			exec( 'test -e ' . $explicit_path, $dummy, $ghostscript_path );
+			exec( 'test -e ' . escapeshellarg( $explicit_path ), $dummy, $ghostscript_path );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, explicit path = ' . var_export( $explicit_path, true ) . ', ghostscript_path = ' . var_export( $ghostscript_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			return ( $explicit_path === $ghostscript_path );
 		}
@@ -135,7 +135,7 @@ class MLAShortcode_Support {
 		$test_path = '/usr/bin/gs';
 		$output = array();
 		$return_arg = -1;
-		$return = exec( 'test -e ' . $test_path, $output, $return_arg );
+		$return = exec( 'test -e ' . escapeshellarg( $test_path ), $output, $return_arg );
 		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, test_path = ' . var_export( $test_path, true ) . ', return_arg = ' . var_export( $return_arg, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, return = ' . var_export( $return, true ) . ', output = ' . var_export( $output, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		return $ghostscript_present = ( $test_path === $return_arg );
@@ -1461,11 +1461,13 @@ class MLAShortcode_Support {
 			 * caption with 'aria-describedby'. The caption has a matching 'id' attribute
 			 * "$selector-#id". See below for the MLA equivalent processing.
 			 */
-			if ( 'attachment' == $attachment->post_type ) {
+			if ( 'attachment' === $attachment->post_type ) {
 				// Avoid native PDF thumbnails, if specified
 				if ( $mla_viewer_required && in_array( $attachment->post_mime_type, array( 'application/pdf' ) ) ) {
 					$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $attachment->post_title );
 					$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $attachment->post_title );
+					$item_values['icon_pagelink'] = '';
+					$item_values['icon_filelink'] = '';
 				} else {
 					add_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_image_src', 10, 4 );
 
@@ -2203,7 +2205,7 @@ class MLAShortcode_Support {
 
 		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ' : '';
 
-		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? esc_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) : $markup_values['new_url'];
+		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) : $markup_values['new_url'];
 
 		// Build the array of page links
 		$page_links = array();
