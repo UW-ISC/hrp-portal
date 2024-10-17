@@ -57,12 +57,14 @@ $options = get_option( 'artiss_code_embed' );
 <form method="post" action="<?php echo esc_url( get_bloginfo( 'wpurl' ) ) . '/wp-admin/options-general.php?page=ce-options'; ?>">
 
 <table class="form-table">
+
 <tr>
 <th scope="row"><label for="code_embed_excerpt"><?php echo esc_html( ucwords( __( 'Allow in excerpts', 'simple-embed-code' ) ) ); ?></label></th>
 <td><input type="checkbox" name="code_embed_excerpt" value="1"
 <?php checked( '1', $options['excerpt'] ); ?>
 /><?php esc_html_e( 'Allow embedded code to be shown in excerpts', 'simple-embed-code' ); ?></td>
 </tr>
+
 </table>
 
 <?php echo '<h3>' . esc_html( ucwords( __( 'Identifier format', 'simple-embed-code' ) ) ) . '</h3>' . esc_html__( 'Specify the format that will be used to define the way the code is embedded in your post. The formats are case insensitive and characters &lt; &gt [ ] are invalid.', 'simple-embed-code' ); ?>
