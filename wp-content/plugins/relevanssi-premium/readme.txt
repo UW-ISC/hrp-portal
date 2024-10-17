@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.6
-Stable tag: 2.26.0
+Stable tag: 2.26.1
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,10 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.26.1 =
+* Security fix: Prevent an XSS attack by a malicious contributor.
+* Minor fix: 'Hide Relevanssi on edit pages' didn't affect the block editor sidebar visibility. It does now.
+
 = 2.26.0 =
 * New feature: New filter hook `relevanssi_forbidden_post_types` filters the list of post types excluded from Relevanssi indexing.
 * New feature: New filter hook `relevanssi_forbidden_taxonomies` filters the list of taxonomies excluded from Relevanssi indexing.
@@ -354,6 +358,9 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: The pin weights did not appear in the classic editor Relevanssi metabox, despite being stored in the database.
 
 == Upgrade notice ==
+= 2.26.1 =
+* Security hardening.
+
 = 2.26.0 =
 * Improvements to related posts, bug fixes.
 
