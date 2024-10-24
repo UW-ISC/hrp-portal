@@ -20,6 +20,7 @@
                         wdtChart.setRows(wpDataCharts[id].render_data.rows);
                         wdtChart.setOptions(wpDataCharts[id].render_data.options);
                         wdtChart.setGrouping(wpDataCharts[id].group_chart);
+                        wdtChart.setLoader(wpDataCharts[id].loader);
                         wdtChart.setContainer(wpDataCharts[id].container);
                         wdtChart.setColumnIndexes(wpDataCharts[id].render_data.column_indexes);
                         if (typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[id] !== 'undefined') {
@@ -36,6 +37,7 @@
                         wdtChart.setHeight(wpDataCharts[id].render_data.height);
                         wdtChart.setColumnIndexes(wpDataCharts[id].render_data.column_indexes);
                         wdtChart.setGrouping(wpDataCharts[id].group_chart);
+                        wdtChart.setLoader(wpDataCharts[id].loader);
                         wdtChart.setContainer('#' + wpDataCharts[id].container);
                         if (typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[id] !== 'undefined') {
                             wdtChart.setRenderCallback(wpDataChartsCallbacks[id]);
@@ -51,6 +53,7 @@
                         wdtChart.setType(wpDataCharts[id].render_data.configurations.type);
                         wdtChart.setColumnIndexes(wpDataCharts[id].render_data.column_indexes);
                         wdtChart.setGrouping(wpDataCharts[id].group_chart);
+                        wdtChart.setLoader(wpDataCharts[id].loader);
                         wdtChart.setContainer(document.getElementById("chartJSContainer_" + id));
                         wdtChart.setCanvas(document.getElementById("chartJSCanvas_" + id));
                         wdtChart.setContainerOptions(wpDataCharts[id].render_data.configurations);
@@ -72,6 +75,7 @@
                         wdtChart.setNumberFormat(wpDataCharts[id].render_data.wdtNumberFormat);
                         wdtChart.setDecimalPlaces(wpDataCharts[id].render_data.wdtDecimalPlaces);
                         wdtChart.setGrouping(wpDataCharts[id].group_chart);
+                        wdtChart.setLoader(wpDataCharts[id].loader);
                         if (typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[id] !== 'undefined') {
                             wdtChart.setRenderCallback(wpDataChartsCallbacks[id]);
                         }

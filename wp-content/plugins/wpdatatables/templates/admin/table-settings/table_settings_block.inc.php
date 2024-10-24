@@ -1399,7 +1399,7 @@ defined('ABSPATH') or die('Access denied.');
                 <div role="tabpanel" class="tab-pane fade" id="customize-table-settings">
 
                     <div role="tabpanel">
-                        <p style="font-size: 15px"><?php esc_html_e( 'Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables' ); ?></p>
+<!--                        <small>--><?php //esc_html_e( 'Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables' ); ?><!--</small>-->
                         <ul class="tab-nav customize-table-settings-ul" role="tablist">
                             <li class="active main-customize-table-settings-tab">
                                 <a href="#main-customize-table-settings" aria-controls="main-customize-table-settings"
@@ -1434,7 +1434,11 @@ defined('ABSPATH') or die('Access denied.');
                                 <a href="#custom-css-settings" aria-controls="custom-css-settings" role="tab"
                                    data-toggle="tab"><?php esc_html_e( 'Custom CSS', 'wpdatatables' ); ?></a>
                             </li>
-
+                            <li class="loader-settings-tab">
+                                <a href="#loader-settings" aria-controls="loader-settings"
+                                   role="tab"
+                                   data-toggle="tab"><?php esc_html_e( 'Loader', 'wpdatatables' ); ?></a>
+                            </li>
                             <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tab' ); ?>
                             <?php do_action( 'wpdatatables_add_customize_table_configuration_tab' ); ?>
 
@@ -2086,6 +2090,74 @@ defined('ABSPATH') or die('Access denied.');
                             </div>
                             <!-- /Custom CSS settings -->
 
+                            <!-- Loader settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="loader-settings">
+
+                                <div class="row">
+                                    <div class="col-sm-4 wdt-table-loader">
+                                        <h4 class="c-title-color m-b-2">
+                                            <?php esc_html_e( 'Loader visibility', 'wpdatatables' ); ?>
+                                            <i class=" wpdt-icon-info-circle-thin"
+                                               data-placement="right"  data-popover-content="#loader-hint"  data-toggle="html-popover" data-trigger="hover"></i>
+                                        </h4>
+
+                                        <div class="hidden" id="loader-hint">
+                                            <div class="popover-heading">
+                                                <?php esc_html_e('Manage loader visibility while tables load', 'wpdatatables'); ?>
+                                            </div>
+
+                                            <div class="popover-body">
+                                                <?php esc_html_e('Enable this option to ensure loader is visible.', 'wpdatatables'); ?>
+                                            </div>
+                                        </div>
+                                        <div class="toggle-switch" data-ts-color="blue">
+                                            <input id="wdt-loader-visibility" type="checkbox" checked>
+                                            <label for="wdt-loader-visibility"
+                                                   class="ts-label"><?php esc_html_e( 'Enable table loader', 'wpdatatables' ); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 opacity-5 wdt-loader-color">
+                                        <h5 class="c-title-color m-b-2">
+                                            <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
+                                            <?php esc_html_e( 'Loader Color', 'wpdatatables' ); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php esc_attr_e( 'This color is used for loader.', 'wpdatatables' ); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-loader-color"
+                                                               data-name="wdtLoaderColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               disabled
+                                                               value=""/
+                                                                placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>">
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 opacity-5 wdt-loader-style">
+                                        <h5 class="c-title-color m-b-2">
+                                            <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
+                                            <?php esc_html_e( 'Loader Style', 'wpdatatables' ); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php esc_attr_e( 'Custom style for loader.', 'wpdatatables' ); ?>"></i>
+                                        </h5>
+                                        <div class="fg-line form-group m-b-0">
+                                            <input type="text" class="form-control input-sm" disabled
+                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Loader settings -->
                             <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tabpanel' ); ?>
                             <?php do_action( 'wpdatatables_add_customize_table_configuration_tabpanel' ); ?>
 

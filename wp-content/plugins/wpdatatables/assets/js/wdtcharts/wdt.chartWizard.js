@@ -1488,6 +1488,17 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         constructedChartData.datalessRegionColor = $('input.geochart_color').val();
         constructedChartData.colors = $('input.geochart-color-region').val() == '' ? '#267114' : $('input.geochart-color-region').val();
         constructedChartData.region = $('#sub-continents-geo-chart').val() === 'world' || $('#region-google-charts').val() === 'world' ? $('#region-google-charts').val() : ($('#sub-continents-geo-chart').val() && $('#countries-geo-chart').val() === 'world' ? $('#sub-continents-geo-chart').val() : $('#countries-geo-chart').val());
+
+        constructedChartData.loader = $('#loader-row').is(':checked') ? 1 : 0;
+        if (constructedChartData.loader) {
+            $('#loader-row').prop('checked', 'checked');
+            $('#loader-color-container').show();
+            $('#loader-style-row').show();
+        } else {
+            $('#loader-row').prop('checked', '');
+            $('#loader-color-container').hide();
+            $('#loader-style-row').hide();
+        }
     }
 
     /**
@@ -2100,7 +2111,6 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             } else {
                 $('#group-chart').prop('checked', '');
             }
-
             // Axes
             if (editing_chart_data.render_data.show_grid == null) {
                 $('#show-grid').prop('checked', 'checked');
@@ -2119,6 +2129,16 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                 $('#show-chart-title').prop('checked', 'checked');
             } else {
                 $('#show-chart-title').prop('checked', '');
+            }
+
+            if (editing_chart_data.render_data.loader == null || editing_chart_data.render_data.loader) {
+                $('#loader-row').prop('checked', 'checked');
+                $('#loader-color-container').show();
+                $('#loader-style-row').show();
+            } else {
+                $('#loader-row').prop('checked', '');
+                $('#loader-color-container').hide();
+                $('#loader-style-row').hide();
             }
 
             if (editing_chart_data.engine == 'google') {

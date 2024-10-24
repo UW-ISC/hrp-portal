@@ -121,6 +121,9 @@ var wpDataTablesGoogleChart = function () {
         setGrouping: function (group_chart) {
             this.group_chart = group_chart;
         },
+        setLoader: function (loader) {
+            this.loader = loader;
+        },
         setRegion : function (region_chart) {
           this.region = region_chart;
         },

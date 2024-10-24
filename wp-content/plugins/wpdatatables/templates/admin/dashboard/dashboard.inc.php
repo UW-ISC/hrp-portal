@@ -263,14 +263,14 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update:
+                            New update with bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with tabs on Elementor cloud. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Powerful filters and hide table before filtering. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with incorrect data display after clearing and reapplying filters. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with table loader.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with ApexChart loader.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with saving ChartJS charts without Series Tab.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

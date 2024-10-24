@@ -238,6 +238,7 @@ class WDTConfigController
             $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
             $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin) ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
             $table->table_wcag = isset($table->table_wcag) || isset($advancedSettings->table_wcag) ? $advancedSettings->table_wcag : 0;
+            $table->loader = isset($table->loader) || isset($advancedSettings->loader) ? $advancedSettings->loader : 1;
             $table->simple_template_id = isset($table->simple_template_id) || isset($advancedSettings->simple_template_id) ? $advancedSettings->simple_template_id : 0;
             $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval) ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
             $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader) ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
@@ -457,6 +458,7 @@ class WDTConfigController
                     'fixed_header_offset' => $table->fixed_header_offset,
                     'simple_template_id' =>  $table->simple_template_id,
                     'customRowDisplay' => $table->customRowDisplay,
+                    'loader' =>  $table->loader,
                 )
             ),
         );
@@ -559,6 +561,7 @@ class WDTConfigController
         $table->fixed_right_columns_number = isset($table->fixed_right_columns_number) ? (int)$table->fixed_right_columns_number : 0;
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
+        $table->loader = (int)($table->loader);
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -1724,6 +1727,7 @@ class WDTConfigController
         $table->fixed_header = 0;
         $table->fixed_header_offset = 0;
         $table->table_wcag = 0;
+        $table->loader = 1;
         $table->simple_template_id = 0;
         $table->customRowDisplay = '';
         return $table;

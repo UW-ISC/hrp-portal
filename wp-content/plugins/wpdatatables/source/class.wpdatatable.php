@@ -135,6 +135,7 @@ class WPDataTable
     private $_aggregateFuncsRes = array();
     private $_ajaxReturn = false;
     private $_clearFilters = false;
+    private $_loader = 1;
     public $column_id;
 
     public $connection;
@@ -1244,7 +1245,15 @@ class WPDataTable
     {
         $this->_table_wcag = $tableWCAG;
     }
+    public function isLoaderVisible()
+    {
+        return $this->_loader;
+    }
 
+    public function setLoader($loader)
+    {
+        $this->_loader = $loader;
+    }
     public function getSimpleTemplateId()
     {
         return $this->_simple_template_id;
@@ -4523,6 +4532,7 @@ class WPDataTable
             isset($advancedSettings->fixed_header) ? $this->setFixedHeaders($advancedSettings->fixed_header) : $this->setFixedHeaders(false);
             isset($advancedSettings->fixed_header_offset) ? $this->setFixedHeadersOffset($advancedSettings->fixed_header_offset) : $this->setFixedHeadersOffset(0);
             isset($advancedSettings->customRowDisplay) ? $this->setCustomDisplayLength($advancedSettings->customRowDisplay) : $this->setCustomDisplayLength('');
+            isset($advancedSettings->loader) ? $this->setLoader($advancedSettings->loader) : $this->setLoader(1);
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -4563,6 +4573,7 @@ class WPDataTable
             $this->setFixedHeaders(false);
             $this->setFixedHeadersOffset(0);
             $this->setCustomDisplayLength('');
+            $this->setLoader(1);
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -4867,6 +4878,7 @@ class WPDataTable
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
         $obj->popoverTools = $this->popoverToolsEnabled();
+        $obj->loader = $this->isLoaderVisible();
         //[<--/ Full version -->]//
         $obj->hideBeforeLoad = $this->doHideBeforeLoad();
         $obj->number_format = (int)(get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1);
@@ -5215,7 +5227,7 @@ class WPDataTable
         if ($this->isEditable()) {
             if (($currentSkin == 'mojito' || $currentSkin == 'dark-mojito') && $this->TTEnabled()) {
                 $obj->dataTableParams->buttons[] = [
-                    'text' => '',
+                    'text' => 'Spacer',
                     'className' => 'DTTT_button DTTT_button_spacer'
                 ];
             }
@@ -5302,6 +5314,7 @@ class WPDataTable
                     $obj->dataTableParams->buttons[] = array(
                         'buttons' => ['pageLength'],
                         'className' => 'DTTT_button DTTT_button_spacer',
+                        'text' => 'Spacer',
                     );
                 }
             }

@@ -101,6 +101,7 @@ var wpdatatable_config = {
     table_wcag: 0,
     simple_template_id: 0,
     customRowDisplay: '',
+    loader: 1,
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, nested_json, serialized, csv, excel
@@ -1294,6 +1295,17 @@ var wpdatatable_config = {
         wpdatatable_config.table_wcag = tableWCAG;
         jQuery('#wdt-wcag').prop('checked', tableWCAG);
     },
+    setLoaderVisibility: function (loader) {
+        wpdatatable_config.loader = loader;
+        jQuery('#wdt-loader-visibility').prop('checked', loader);
+        if (wpdatatable_config.loader) {
+            jQuery('.wdt-loader-color').show();
+            jQuery('.wdt-loader-style').show();
+        } else {
+            jQuery('.wdt-loader-color').hide();
+            jQuery('.wdt-loader-style').hide();
+        }
+    },
     setSimpleTemplateId: function (simple_template_id) {
         wpdatatable_config.simple_template_id = simple_template_id;
     },
@@ -1569,6 +1581,7 @@ var wpdatatable_config = {
         wpdatatable_config.setTableBorderRemoval(tableJSON.tableBorderRemoval);
         wpdatatable_config.setTableBorderRemovalHeader(tableJSON.tableBorderRemovalHeader);
         wpdatatable_config.setTableCustomCss(tableJSON.tableCustomCss);
+        wpdatatable_config.setLoaderVisibility(tableJSON.loader);
 
         for (var value in tableJSON.tableFontColorSettings) {
             wpdatatable_config.setTableFontColorSettings(value, tableJSON.tableFontColorSettings[value]);
