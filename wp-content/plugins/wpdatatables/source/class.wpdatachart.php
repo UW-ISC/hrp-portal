@@ -44,6 +44,7 @@ class WPDataChart
     protected $_tooltip_enabled = true;
     // Render data
     protected $_json_chart_render_data = null;
+    protected $_loader = true;
 
     public function setId($id)
     {
@@ -420,7 +421,21 @@ class WPDataChart
     {
         $this->_json_chart_render_data = $json_chart_render_data;
     }
+    /**
+     * @return bool
+     */
+    public function isLoaderVisible()
+    {
+        return $this->_loader;
+    }
 
+    /**
+     * @param bool $loader
+     */
+    public function setLoaderChart($loader)
+    {
+        $this->_loader = (bool)$loader;
+    }
     /**
      * @param $constructedChartData
      * @param bool $loadFromDB
@@ -467,6 +482,7 @@ class WPDataChart
         $this->setVerticalAxisMin(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min')));
         $this->setVerticalAxisMax(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max')));
         $this->setTooltipEnabled((bool)(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_enabled', true)));
+        $this->setLoaderChart((bool)(WDTTools::defineDefaultValue($constructedChartData, 'loader', true)));
     }
 
     /**
@@ -645,6 +661,12 @@ class WPDataChart
             $this->_render_data['group_chart'] = true;
         } else {
             $this->_render_data['group_chart'] = false;
+        }
+
+        if ($this->isLoaderVisible()) {
+            $this->_render_data['loader'] = true;
+        } else {
+            $this->_render_data['loader'] = false;
         }
 
         // Define grid settings
@@ -1254,11 +1276,13 @@ class WPDataChart
         if (!empty($renderData['series_type'])) {
             $this->setSeriesType($renderData['series_type']);
         }
+        $renderData['loader'] = isset($renderData['loader']) ? $renderData['loader'] : true;
         $this->setSelectedColumns($renderData['selected_columns']);
         $this->setFollowFiltering($renderData['follow_filtering']);
         $this->setRangeType($renderData['range_type']);
         $this->setRowRange($renderData['row_range']);
         $this->setShowGrid($renderData['show_grid'] ?: false);
+        $this->setLoaderChart($renderData['loader'] ?: false);
         $this->setShowTitle($renderData['show_title'] ?: false);
         $this->setResponsiveWidth(isset($renderData['render_data']['options']['responsive_width']) ? (bool)$renderData['render_data']['options']['responsive_width'] : false);
         if (!empty($renderData['render_data']['options']['width'])) {
@@ -1276,10 +1300,17 @@ class WPDataChart
             $seriesIndex = 0;
             foreach ($this->_user_defined_series_data as $series_data) {
                 if (!empty($series_data['color']) || !empty($series_data['type']) || !empty($series_data['label'])) {
-                    $this->_render_data['options']['series'][$seriesIndex] = array(
-                        'color' => $series_data['color'],
-                        'label' => $series_data['label']
-                    );
+
+                    if (!empty($series_data['color'])) {
+                        $this->_render_data['options']['series'][$seriesIndex] = array(
+                            'color' => $series_data['color'],
+                        );
+                    }
+                    if (!empty($series_data['label'])) {
+                        $this->_render_data['options']['series'][$seriesIndex] = array(
+                            'label' => $series_data['label']
+                        );
+                    }
                 }
                 $seriesIndex++;
             }
@@ -1336,7 +1367,8 @@ class WPDataChart
             'render_data' => $this->_render_data,
             'show_grid' => $this->_show_grid,
             'show_title' => $this->_show_title,
-            'series_type' => $this->getSeriesType()
+            'series_type' => $this->getSeriesType(),
+            'loader' => $this->isLoaderVisible()
         );
     }
 

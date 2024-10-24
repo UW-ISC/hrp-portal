@@ -356,6 +356,9 @@ function wdtActivationCreateTables()
     if (!get_option('wdtGoogleApiMapsValidated')) {
         update_option('wdtGoogleApiMapsValidated', 0);
     }
+    if (!get_option('wdtActivationSimpleTableTemplates')) {
+        update_option('wdtActivationSimpleTableTemplates', 'no');
+    }
 
     update_option('wdtHideUpdateModal', 0);
 
@@ -464,6 +467,18 @@ function wdtUninstallDelete()
     }
 }
 
+function wdtCheckSimpleTemplatesActivation ($rowCount, $tableName) {
+    global $wpdb;
+
+    if (get_option('wdtActivationSimpleTableTemplates') !== 'yes') {
+        if ((int)$rowCount !== 0) {
+            $wpdb->query("TRUNCATE TABLE {$tableName}");
+        }
+        wdtActivationInsertTemplates();
+        update_option('wdtActivationSimpleTableTemplates', 'yes');
+    }
+}
+
 /**
  * Activation hook
  * @param $networkWide
@@ -471,7 +486,6 @@ function wdtUninstallDelete()
 function wdtActivation($networkWide)
 {
     global $wpdb;
-
 
 
     if (function_exists('is_multisite') && is_multisite()) {
@@ -488,9 +502,7 @@ function wdtActivation($networkWide)
                 //Insert standard templates if not exists
                 $tableName = $wpdb->prefix . 'wpdatatables_templates';
                 $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-                if ($rowCount == 0) {
-                    wdtActivationInsertTemplates();
-                }
+                wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
             }
             switch_to_blog($oldBlog);
 
@@ -502,9 +514,7 @@ function wdtActivation($networkWide)
     //Insert standard templates if not exists
     $tableName = $wpdb->prefix . 'wpdatatables_templates';
     $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-    if ($rowCount == 0) {
-        wdtActivationInsertTemplates();
-    }
+    wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
 }
 
 /**
@@ -801,9 +811,7 @@ function wdtOnCreateSiteOnMultisiteNetwork($blogId)
         //Insert standard templates if not exists
         $tableName = $wpdb->prefix . 'wpdatatables_templates';
         $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-        if ($rowCount == 0) {
-            wdtActivationInsertTemplates();
-        }
+        wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
         restore_current_blog();
     }
 }

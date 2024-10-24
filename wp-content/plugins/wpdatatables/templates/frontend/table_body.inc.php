@@ -4,9 +4,9 @@
 /** @var WDTColumn $dataColumn */
 ?>
 <tbody>
-<!-- Table footer -->
+<!-- Table body -->
 <?php include WDT_TEMPLATE_PATH . 'admin/common/loader_for_table.inc.php'; ?>
-<!-- /Table footer -->
+<!-- /Table body -->
 <?php do_action('wpdatatables_before_first_row', $this->getWpId()); ?>
 <?php if(!$this->serverSide() || ($this->serverSide() && ($this->getDisplayLength() !== -1 || count($this->getDataRows()) < 2000))) {?>
 <?php foreach ($this->getDataRows() as $wdtRowIndex => $wdtRowDataArr) { ?>

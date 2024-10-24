@@ -13,109 +13,112 @@ class WDTIntegrationsLoader
     {
 
         // Include page builders
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/gutenberg/GutenbergBlock.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/gutenberg/WpDataTablesGutenbergBlock.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/gutenberg/WpDataChartsGutenbergBlock.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/elementor/class.wdtelementorblock.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/divi-wpdt/divi-wpdt.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/avada/class.wdtavadaelements.php');
-        require_once(WDT_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtBakeryBlock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/gutenberg/GutenbergBlock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/gutenberg/WpDataTablesGutenbergBlock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/gutenberg/WpDataChartsGutenbergBlock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/elementor/class.wdtelementorblock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/divi-wpdt/divi-wpdt.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/avada/class.wdtavadaelements.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtBakeryBlock.php');
+
+        // Include Global Page Search
+        if (is_file(WDT_STARTER_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php')) {
+            require_once(WDT_STARTER_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php');
+        }
 
         // Include Separate DB connection
-        if (is_file(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.pgsql.connection.php'))
-            require_once(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.pgsql.connection.php');
-        if (is_file(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.php'))
-            require_once(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.php');
-        if (is_file(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.pdo.php'))
-            require_once(WDT_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.pdo.php');
-        if (is_file(WDT_INTEGRATIONS_PATH . 'separate-db-connection/wdt-separate-connection-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'separate-db-connection/wdt-separate-connection-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.pgsql.connection.php'))
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.pgsql.connection.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.php'))
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.pdo.php'))
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/source/class.sql.pdo.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/wdt-separate-connection-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'separate-db-connection/wdt-separate-connection-integration.php');
         }
 
         // Include HighStock
-        if (is_file(WDT_INTEGRATIONS_PATH . 'highstock/wdt-highstock-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'highstock/wdt-highstock-integration.php');
+        if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'highstock/wdt-highstock-integration.php')) {
+            require_once(WDT_PRO_INTEGRATIONS_PATH . 'highstock/wdt-highstock-integration.php');
         }
 
         // Include HighCharts
-        if (is_file(WDT_INTEGRATIONS_PATH . 'highcharts/wdt-highcharts-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'highcharts/wdt-highcharts-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'highcharts/wdt-highcharts-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'highcharts/wdt-highcharts-integration.php');
         }
 
         // Include ApexCharts
-        if (is_file(WDT_INTEGRATIONS_PATH . 'apexcharts/wdt-apexcharts-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'apexcharts/wdt-apexcharts-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'apexcharts/wdt-apexcharts-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'apexcharts/wdt-apexcharts-integration.php');
         }
 
         // Include Placeholders
-        if (is_file(WDT_INTEGRATIONS_PATH . 'placeholders/wdt-placeholders-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'placeholders/wdt-placeholders-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'placeholders/wdt-placeholders-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'placeholders/wdt-placeholders-integration.php');
         }
 
         // Include SQL Query
-        if (is_file(WDT_INTEGRATIONS_PATH . 'sql-query/wdt-sql-query-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'sql-query/wdt-sql-query-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-query/wdt-sql-query-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-query/wdt-sql-query-integration.php');
         }
 
         // Include Fixed Columns and Headers
-        if (is_file(WDT_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php');
         }
 
         // Include Hidden Column
-        if (is_file(WDT_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php');
         }
 
         // Include Formula Column
-        if (is_file(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'formula-column/wdt-formula-column-integration.php');
         }
 
         // Include Table Editing
-        if (is_file(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php');
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'editing/wdt-editing-integration.php');
         }
-        if (is_file(WDT_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php')) {
-            require_once(WDT_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php');
-        }
+
 
         if (is_admin()) {
 
             // Include SQL Constructor
-            if (is_file(WDT_INTEGRATIONS_PATH . 'sql-constructor/wdt-sql-constructor-integration.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'sql-constructor/wdt-sql-constructor-integration.php');
+            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-constructor/wdt-sql-constructor-integration.php')) {
+                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-constructor/wdt-sql-constructor-integration.php');
             }
-            if (is_file(WDT_INTEGRATIONS_PATH . 'sql-constructor/source/class.sql.constructor.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'sql-constructor/source/class.sql.constructor.php');
+            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-constructor/source/class.sql.constructor.php')) {
+                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'sql-constructor/source/class.sql.constructor.php');
             }
 
             // Include Google Sheet API settings
-            if (is_file(WDT_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php');
+            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php')) {
+                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php');
             }
 
             // Include Foreign Key
-            if (is_file(WDT_INTEGRATIONS_PATH . 'foreign-key/wdt-foreign-key-integration.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'foreign-key/wdt-foreign-key-integration.php');
+            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'foreign-key/wdt-foreign-key-integration.php')) {
+                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'foreign-key/wdt-foreign-key-integration.php');
             }
 
             // Include Update manual tables
-            if (is_file(WDT_INTEGRATIONS_PATH . 'update-manual-from-file/wdt-update-manual-from-file-integration.php')) {
-                require_once(WDT_INTEGRATIONS_PATH . 'update-manual-from-file/wdt-update-manual-from-file-integration.php');
+            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'update-manual-from-file/wdt-update-manual-from-file-integration.php')) {
+                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'update-manual-from-file/wdt-update-manual-from-file-integration.php');
             }
 
             // Include Folders
-            if (is_file(WDT_INTEGRATIONS_PATH . 'folders/source/class.wpdatafolders.php'))
-                require_once(WDT_INTEGRATIONS_PATH . 'folders/source/class.wpdatafolders.php');
-            if (is_file(WDT_INTEGRATIONS_PATH . 'folders/source/class.factory.wpdatafolders.php'))
-                require_once(WDT_INTEGRATIONS_PATH . 'folders/source/class.factory.wpdatafolders.php');
-            if (is_file(WDT_INTEGRATIONS_PATH . 'folders/source/class.tables.wpdatafolders.php'))
-                require_once(WDT_INTEGRATIONS_PATH . 'folders/source/class.tables.wpdatafolders.php');
-            if (is_file(WDT_INTEGRATIONS_PATH . 'folders/source/class.charts.wpdatafolders.php'))
-                require_once(WDT_INTEGRATIONS_PATH . 'folders/source/class.charts.wpdatafolders.php');
-            if (is_file(WDT_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php'))
-                require_once(WDT_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php');
+            if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.wpdatafolders.php'))
+                require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.wpdatafolders.php');
+            if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.factory.wpdatafolders.php'))
+                require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.factory.wpdatafolders.php');
+            if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.tables.wpdatafolders.php'))
+                require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.tables.wpdatafolders.php');
+            if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.charts.wpdatafolders.php'))
+                require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.charts.wpdatafolders.php');
+            if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php'))
+                require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php');
 
             add_action('wpdatatables_add_chart_picker', array('WDTIntegration\WDTIntegrationsLoader', 'addChartPickerStepNotice'));
 

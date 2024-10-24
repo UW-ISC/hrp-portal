@@ -789,11 +789,14 @@ var singleClick = false;
             var wdtFirstDraw = false;
 
             $(document).on('draw.dt', function (e, settings) {
+                if (!tableDescription.loader) wdtFirstDraw = false;
                 if (!wdtFirstDraw) {
-                    var tableID = tableDescription.tableId;
-                    var tableLoaderId = $('.wdt-timeline-' + tableID);
-                    if (tableLoaderId.length != 0) {
-                        tableLoaderId.hide();
+                    if(tableDescription.loader) {
+                        var tableID = tableDescription.tableId;
+                        var tableLoaderId = $('.wdt-timeline-' + tableID);
+                        if (tableLoaderId.length != 0) {
+                            tableLoaderId.hide();
+                        }
                     }
 
                     $(tableDescription.selector).removeClass('wdt-no-display');
@@ -886,6 +889,7 @@ var singleClick = false;
                         $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.master_detail').attr('aria-label', wpdatatables_frontend_strings.masterDetailWCAG_wpdatatables).attr('role', 'button');
                     }
                 }
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_spacer span').addClass('wpdt-visually-hidden');
             }
             /**
              * Show "Show X entries" dropdown
@@ -1088,18 +1092,18 @@ var singleClick = false;
                                 oSettings.oLanguage.sInfo += wpdatatables_frontend_strings.andforWCAG_wpdatatables + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[i]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG_wpdatatables;
                                 oSettings.oLanguage.sInfo += selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
                                     thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[i]].sSearch + ' ' :
-                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
-                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ';
-                                oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforWCAG + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[i]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG;
+                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG_wpdatatables + selector.attr('data-value-from') : '')
+                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG_wpdatatables + selector.attr('data-value-to') : '') + ' ';
+                                oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforWCAG_wpdatatables + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[i]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG_wpdatatables;
                                 oSettings.oLanguage.sInfoEmpty += selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
                                     thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[i]].sSearch + ' ' :
-                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
-                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ';
+                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG_wpdatatables + selector.attr('data-value-from') : '')
+                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG_wpdatatables + selector.attr('data-value-to') : '') + ' ';
                             }
                         }
                         if ($('.dataTables_filter input[type="search"]').val() != '') {
-                            oSettings.oLanguage.sInfo += wpdatatables_frontend_strings.andforGloablWCAG + $('.dataTables_filter input[type="search"]').val();
-                            oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforGloablWCAG + $('.dataTables_filter input[type="search"]').val();
+                            oSettings.oLanguage.sInfo += wpdatatables_frontend_strings.andforGloablWCAG_wpdatatables + $('.dataTables_filter input[type="search"]').val();
+                            oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforGloablWCAG_wpdatatables + $('.dataTables_filter input[type="search"]').val();
                         }
                     }
                 }
@@ -1718,9 +1722,9 @@ var singleClick = false;
                         var attachment = null;
                         // Extend the wp.media object
                         wdtCustomUploader = wp.media({
-                            title: wpdatatables_frontend_strings.select_upload_file,
+                            title: wpdatatables_frontend_strings.select_upload_file_wpdatatables,
                             button: {
-                                text: wpdatatables_frontend_strings.choose_file
+                                text: wpdatatables_frontend_strings.choose_file_wpdatatables
                             },
                             multiple: false
                         });
@@ -1734,9 +1738,9 @@ var singleClick = false;
                             $(document).off('focusin.modal');
 
                             wdtCustomUploader = wp.media({
-                                title: wpdatatables_frontend_strings.select_upload_file,
+                                title: wpdatatables_frontend_strings.select_upload_file_wpdatatables,
                                 button: {
-                                    text: wpdatatables_frontend_strings.choose_file
+                                    text: wpdatatables_frontend_strings.choose_file_wpdatatables
                                 },
                                 multiple: false,
                                 library: {
@@ -1794,7 +1798,7 @@ var singleClick = false;
                     if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
-                    modal.find('.modal-title').html(wpdatatables_frontend_strings.edit_entry);
+                    modal.find('.modal-title').html(wpdatatables_frontend_strings.edit_entry_wpdatatables);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
 
@@ -1883,7 +1887,7 @@ var singleClick = false;
                     if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
-                    modal.find('.modal-title').html(wpdatatables_frontend_strings.add_new_entry);
+                    modal.find('.modal-title').html(wpdatatables_frontend_strings.add_new_entry_wpdatatables);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
 
@@ -1980,7 +1984,7 @@ var singleClick = false;
                     if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
-                    modal.find('.modal-title').html(wpdatatables_frontend_strings.duplicate_entry);
+                    modal.find('.modal-title').html(wpdatatables_frontend_strings.duplicate_entry_wpdatatables);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
 
@@ -2243,9 +2247,14 @@ var singleClick = false;
             /**
              * Correct fixed header focus for non server side tables
              */
+            var wdtScrollTop = $(window).scrollTop();
             if (tableDescription.dataTableParams.fixedHeader.header && !tableDescription.serverSide) {
-                $(window).on("scroll",function() {
-                    wpDataTables[tableDescription.tableId].fnDraw(false);
+                $(window).on('scroll', function() {
+                    var wdtCurrentScrollTop = $(this).scrollTop();
+                    if (wdtCurrentScrollTop > wdtScrollTop) {
+                        wpDataTables[tableDescription.tableId].fnDraw(false);
+                    }
+                    wdtScrollTop = wdtCurrentScrollTop;
                 });
             }
 
@@ -2271,7 +2280,7 @@ var singleClick = false;
                 if (JSON.parse($('#' + $('#' + tableSelector).data('described-by')).val()).pagination_top) {
                     function paginateScroll() {
                         $('html, body').animate({
-                            scrollTop: $('#' + tableSelector + "_wrapper.dataTables_wrapper").offset().top
+                            scrollTop: $('#' + tableSelector + "_wrapper").offset().top
                         }, 100);
                     }
 
@@ -2279,6 +2288,31 @@ var singleClick = false;
 
                     $(this).closest(tableDescription.selector + "_paginate.paginate_button").off('click').on('click', paginateScroll);
                 }
+            });
+
+            // Divi integration fix for tables with fixed headers in tabs
+            $('.et_pb_tabs_controls li,.et_pb_tabs_controls li a').on("click", function (e) {
+                    e.preventDefault();
+
+                    var tabClass = $(this).parent()[0].classList.value;
+                    if (tabClass.includes('controls clearfix')) {
+                        return;
+                    }
+                    var selector = 'div.' + tabClass;
+                    var table = $(selector).find('table');
+                    var tblDesc = JSON.parse($('#' + $(table).data('described-by')).val());
+                    var oSettingsTBL = wpDataTables[tableDescription.tableId].fnSettings();
+
+                    if (tblDesc.dataTableParams.fixedHeader) {
+                        setTimeout(function () {
+                            if ($.fn.dataTable.isDataTable(table)) {
+                                if (oSettingsTBL.oInstance.api().settings()[0]._fixedHeader !== undefined) {
+                                    oSettingsTBL.oInstance.api().fixedHeader.enable();
+                                    oSettingsTBL.oInstance.api().fixedHeader.adjust();
+                                }
+                            }
+                        }, 1000);
+                    }
             });
             //[<--/ Full version -->]//
 
@@ -2291,8 +2325,10 @@ var singleClick = false;
          */
         $('table.wpDataTable:not(.wpdtSimpleTable)').each(function () {
             var tableDescription = JSON.parse($('#' + $(this).data('described-by')).val());
-            if (!tableDescription.hideTableBeforeFiltering) {
-                $('.wdt-timeline-' + tableDescription.tableId).show();
+            if (tableDescription.loader) {
+                if (!tableDescription.hideTableBeforeFiltering) {
+                    $('.wdt-timeline-' + tableDescription.tableId).show();
+                }
             }
             wdtRenderDataTable($(this), tableDescription);
         });

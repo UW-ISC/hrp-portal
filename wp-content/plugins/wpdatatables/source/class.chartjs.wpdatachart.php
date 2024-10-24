@@ -553,9 +553,9 @@ class WdtChartjsChart extends WPDataChart
                             'label' => $this->_render_data['series'][$i - 1]['label'],
                             'orig_header' => $this->_render_data['series'][$i - 1]['orig_header'],
                             'backgroundColor' => isset($this->_render_data['options']['series'][$i - 1]) ?
-                                WDTTools::hex2rgba($this->_render_data['options']['series'][$i - 1]['color'], 0.2) : WDTTools::hex2rgba($colors[($i - 1) % 10], 0.2),
+                                WDTTools::hex2rgba((isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[($i - 1) % 10]), 0.2) : WDTTools::hex2rgba($colors[($i - 1) % 10], 0.2),
                             'borderColor' => isset($this->_render_data['options']['series'][$i - 1]) ?
-                                $this->_render_data['options']['series'][$i - 1]['color'] : $colors[($i - 1) % 10],
+                                (isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[($i - 1) % 10]) : $colors[($i - 1) % 10],
                             'borderWidth' => 1,
                             'data' => array(),
                             'lineTension' => ($this->getCurveType()) ? 0.4 : 0,
@@ -589,7 +589,7 @@ class WdtChartjsChart extends WPDataChart
                         $seriesEntry = array(
                             'label' => $this->_render_data['series'][$i - 1]['label'],
                             'backgroundColor' => isset($this->_render_data['options']['series'][$i - 1]) ?
-                                $this->_render_data['options']['series'][$i - 1]['color'] : $colors,
+                                (isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors) : $colors,
                             'borderWidth' => 1,
                             'data' => array()
                         );

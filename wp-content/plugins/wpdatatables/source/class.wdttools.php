@@ -327,6 +327,8 @@ class WDTTools
             'settings_saved_error_common' => __('Unable to save settings of plugin. Please try again or contact us over Support page.', 'wpdatatables'),
             'close_common' => __('Close', 'wpdatatables'),
             'tableNameEmpty_common' => __('Table name can not be empty! Please provide a name for your table.', 'wpdatatables'),
+            'masterdetail_error_common' => __('For the selected master-detail option, the following fields cannot be empty: Parent Table Column Name and Child Table Column Name. Additionally, the tables must be connected through a common unique ID column.', 'wpdatatables'),
+            'masterdetailParentId_error_common' => __('For the selected master-detail option, the following field cannot be empty: Parent Table Column Name.', 'wpdatatables'),
             'tableSaved_common' => __('Table saved successfully!', 'wpdatatables'),
             'selectExcelCsv_common' => __('Select an Excel or CSV file', 'wpdatatables'),
             'choose_file_common' => __('Use selected file', 'wpdatatables'),
@@ -709,29 +711,34 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
+            'release_date' => '25.09.2024.',
             'features' => [
 //                0 => [
-//                    'text' => 'Added global search function for searching multiple tables on one page using a shortcode.',
-//                    'link' => 'https://wpdatatables.com/documentation/table-features/global-page-search-shortcode/'
+//                    'text' => 'Added option for disabling and enabling table loader.',
+//                    'link' => ''
 //                ]
             ],
             'improvements' => [
 //                0 => [
-//                    'text' => 'Implemented placeholders (loaders) during table loading.',
+//                    'text' => 'WCAG compliance adaptation for Simple table templates.',
+//                    'link' => ''
+//                ],
+//                1 => [
+//                    'text' => 'Clear filter button has been improved to reset the search text in the table search.',
 //                    'link' => ''
 //                ],
             ],
             'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed issue with tabs on Elementor cloud.',
+                    'text' => 'Fixed issue with table loader.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with Powerful filters and hide table before filtering.',
+                    'text' => 'Fixed issue with ApexChart loader.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with incorrect data display after clearing and reapplying filters.',
+                    'text' => 'Fixed issue with saving ChartJS charts without Series Tab.',
                     'link' => ''
                 ],
             ]
