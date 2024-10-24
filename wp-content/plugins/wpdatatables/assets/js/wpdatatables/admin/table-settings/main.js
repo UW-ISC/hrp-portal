@@ -607,6 +607,9 @@
         $('#wdt-wcag').change(function (e) {
             wpdatatable_config.setWCAG($(this).is(':checked') ? 1 : 0);
         });
+        $('#wdt-loader-visibility').change(function (e) {
+            wpdatatable_config.setLoaderVisibility($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Change table font
          */
@@ -1633,7 +1636,20 @@
                 wdtNotify(wpdatatables_edit_strings.error_common, wpdatatables_edit_strings.tableNameEmpty_common, 'danger');
                 return;
             }
-
+            if (wpdatatable_config.masterDetail && wpdatatable_config.masterDetailSender == 'get') {
+                if ($.inArray(wpdatatable_config.masterDetailSendTableType, ['childTable', 'childTableRender']) !== -1) {
+                    if (wpdatatable_config.masterDetailSendChildTableColumnIDName == '' || wpdatatable_config.masterDetailSendParentTableColumnIDName == '') {
+                        wdtNotify(wpdatatables_edit_strings.error_common, wpdatatables_edit_strings.masterdetail_error_common, 'danger');
+                        return;
+                    }
+                }
+                if (wpdatatable_config.masterDetailSendTableType == 'existingTable') {
+                    if (wpdatatable_config.masterDetailSendParentTableColumnIDName == '') {
+                        wdtNotify(wpdatatables_edit_strings.error_common, wpdatatables_edit_strings.masterdetailParentId_error_common, 'danger');
+                        return;
+                    }
+                }
+            }
             if (wpdatatable_config.editable) {
                 if ($('#wdt-mysql-table-name').val() == '') {
                     $('#wdt-error-modal .modal-body').html('MySQL table name for front-end editing is not set!');

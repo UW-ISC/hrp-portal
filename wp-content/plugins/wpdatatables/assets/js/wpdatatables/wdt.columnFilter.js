@@ -991,7 +991,6 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
                     if (aoColumn.possibleValuesAddEmpty === true) {
                         data.unshift({value: 'possibleValuesAddEmpty', text: ' '});
                     }
-                    data.unshift({value: ''});
                     return data
                 },
                 preserveSelected: true,
@@ -1720,7 +1719,8 @@ function wdtClearFilters() {
             });
 
             for (var i in wpDataTables) {
-                wpDataTables[i].api().columns().search('').draw();
+                wpDataTables[i].api().columns().search('');
+                wpDataTables[i].api().search('').draw();
             }
 
             jQuery('.filter_column select').find('.filter_column').eq(0).change();
@@ -1731,6 +1731,7 @@ function wdtClearFilters() {
             wpDataTableSelecter.find('.filter_column select').val('').trigger('change');
             wpDataTableSelecter.find('.filter_column select').selectpicker('val', '');
             wpDataTableSelecter.find('.filter_column input:checkbox').removeAttr('checked');
+            wpDataTableSelecter.find('.dataTables_filter input').val('');
 
             wpDataTableSelecter.find('.noUi-target').each(function (columnIndex) {
                 var columnMin = wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.options.range['min'];
@@ -1745,7 +1746,8 @@ function wdtClearFilters() {
                 tableId = jQuery(this).closest('.wpDataTablesWrapper').find('table.wpDataTable').prop('id');
             }
 
-            wpDataTables[tableId].api().columns().search('').draw();
+            wpDataTables[tableId].api().columns().search('');
+            wpDataTables[tableId].api().search('').draw();
 
             wpDataTableSelecter.find('.wdt-filter-control').eq(0).change();
         }

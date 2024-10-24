@@ -2,15 +2,22 @@
 <?php
 /** @var $this WPDataTable */
 $displayLengthHelper = $this->getDisplayLength() > count($this->getDataRows());
-$displayLength = $this->getDisplayLength();
-
-$tableIDcounter = WPDataTable::$wdt_internal_idcount;
+$displayLength = $this->getDisplayLength() + 1;
 
 if ($this->getDisplayLength() == -1 || $displayLengthHelper) {
-    $displayLength = count($this->getDataRows());
+    $displayLength = count($this->getDataRows()) + 1;
+}
+
+$isLoaderVisible = $this->isLoaderVisible();
+$isHideBeforeFiltering = $this->hideTableBeforeFiltering;
+
+$style = '';
+
+if (!$isLoaderVisible || $isHideBeforeFiltering) {
+    $style = "display: none;";
 }
 ?>
-<div data-id="<?php echo esc_attr($this->getWpId())?>" class="wdt-timeline-item wdt-timeline-table_<?php echo esc_attr($tableIDcounter); ?>">
+<div data-id="<?php echo esc_attr($this->getWpId())?>" class="wdt-timeline-item wdt-timeline-<?php echo esc_attr($this->getId()); ?>" style="<?php echo esc_attr($style); ?>">
     <div class="wdt-table-loader">
         <div class="wdt-table-loader-row wdt-table-loader-header">
             <div class="wdt-table-loader-header-cell wdt-animated-background"></div>

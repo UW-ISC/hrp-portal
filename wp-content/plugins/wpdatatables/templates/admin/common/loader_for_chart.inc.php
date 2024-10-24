@@ -1,6 +1,16 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
-<div class="wdt-wrapper-chart-loader"  data-id="<?php echo esc_attr($this->getId());?>" style="height: <?php echo esc_attr($this->getHeight()) ?>px">
+<?php
+$height = esc_attr($this->getHeight());
+$isLoaderVisible = esc_attr($this->isLoaderVisible());
+
+$style = "height: {$height}px;";
+
+if (!$isLoaderVisible) {
+    $style .= " display: none;";
+}
+?>
+<div class="wdt-wrapper-chart-loader"  data-id="<?php echo esc_attr($this->getId());?>" style="<?php echo esc_attr($style); ?>">
     <div class="wdt-main-item">
         <?php
         $roundedHeight = floor($this->getHeight() / 4);

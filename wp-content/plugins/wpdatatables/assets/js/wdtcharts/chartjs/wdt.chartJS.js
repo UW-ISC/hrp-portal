@@ -190,6 +190,9 @@ var wpDataTablesChartJS = function () {
         setGrouping: function (group_chart) {
             this.group_chart = group_chart;
         },
+        setLoader: function (loader) {
+            this.loader = loader;
+        },
         setChartConfig: function (chartConfig) {
             // Chart
             if (chartConfig.responsive_width == 1) {

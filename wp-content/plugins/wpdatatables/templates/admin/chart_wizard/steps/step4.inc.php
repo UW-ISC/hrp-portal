@@ -28,6 +28,9 @@
                                                               class=""><?php esc_html_e('Credits', 'wpdatatables'); ?></a></li>
                     <li class="chart-container apex-toolbar-container"><a href="#chart-container-tabs-9" data-toggle="tab"
                                                               class=""><?php esc_html_e('Toolbar', 'wpdatatables'); ?></a></li>
+                    <li class="chart-container loader"><a href="#chart-container-tabs-11"
+                                                          data-toggle="tab"><?php esc_html_e('Loader', 'wpdatatables'); ?></a>
+                    </li>
                 </ul>
             </div>
 
@@ -2027,6 +2030,62 @@
                                         <input type="text" id="geochart_color" value=""
                                                class="form-control cp-value wdt-add-picker geochart_color"/>
                                         <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="chart-container-tabs-11"
+                     class="col-sm-9 col-md-9 col-lg-8 chart-container chart-options-container tab-pane">
+                    <div class="inside">
+                        <div id="loader">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Manage loader visibility while charts load', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch p-b-16" data-ts-color="blue">
+                                <input id="loader-row" type="checkbox" checked>
+                                <label for="loader-row"><?php esc_html_e('Enable this option to ensure loader is visible.', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+                        <div class="loader-color-style" id="loader-color-container">
+                            <h4 class="c-title-color m-b-2">
+                                <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
+                                <?php esc_html_e('Loader Color', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This color is used for loader.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="cp-container">
+                                <div class="form-group">
+                                    <div class="fg-line dropdown">
+                                        <div id="cp"
+                                             class="input-group wdt-color-picker">
+                                            <input type="text" id="loader-color" value="" disabled
+                                                   class="form-control cp-value wdt-add-picker"
+                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>"/>
+                                            <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="loader-style-row">
+                            <h4 class="c-title-color m-b-2">
+                                <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
+                                <?php esc_html_e('Loader Style', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Custom style for loader.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <input type="text" id="loader-style-label" value="" disabled
+                                                   class="form-control input-sm"
+                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
