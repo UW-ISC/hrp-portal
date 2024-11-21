@@ -9,7 +9,7 @@
  * https://wordpress.org/support/topic/bulk-delete-unattached-imagesmedia/
  *
  * @package Unattached Fixit
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -17,7 +17,7 @@ Plugin Name: MLA Unattached Fixit
 Plugin URI: http://davidlingren.com/
 Description: Removes Unattached items from the Media Library
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
@@ -54,7 +54,7 @@ class Unattached_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.03';
+	const CURRENT_VERSION = '1.04';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -66,15 +66,6 @@ class Unattached_Fixit {
 	const SLUG_PREFIX = 'unattachfixit-';
 
 	/**
-	 * WordPress version test for $wpdb->esc_like() Vs esc_sql()
-	 *
-	 * @since 1.00
-	 *
-	 * @var	boolean
-	 */
-	private static $wp_4dot0_plus = true;
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 1.00
@@ -82,8 +73,6 @@ class Unattached_Fixit {
 	 * @return	void
 	 */
 	public static function initialize() {
-		self::$wp_4dot0_plus = version_compare( get_bloginfo('version'), '4.0', '>=' );
-		
 		//add_action( 'admin_init', 'Unattached_Fixit::admin_init_action' );
 		add_action( 'admin_menu', 'Unattached_Fixit::admin_menu_action' );
 	}

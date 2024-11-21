@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
-Tested up to: 6.6
-Stable tag: 3.3.1
+Tested up to: 6.7
+Stable tag: 3.3.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,20 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.4.1 =
+
+* Fix: PHP 5.6 compatibility
+
+= 3.4 =
+
+* New: Allow off canvas menus to be 100% wide
+* New: Add option to Theme Editor to add a Close icon to off canvas mobile menus
+* Accessibility Fix: Remove 'aria-haspopup' attribute
+* Fix: Dynamic sub menu width calculation bug
+* Accessibility Improvement: Escape key now closes sub menus sequentially
+* Improvement: Small refactor of maxmegamenu.js
+* Improvement: Set default mobile menu type to Off Canvas
 
 = 3.3.2 =
 

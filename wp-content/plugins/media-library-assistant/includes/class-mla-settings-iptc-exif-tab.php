@@ -444,6 +444,7 @@ class MLASettings_IPTCEXIF {
 		}
 
 		MLA_IPTC_EXIF_Query::mla_update_iptc_exif_rule( $post_id, 'deleted', true );
+		/* translators: 1: rule name */
 		return sprintf( __( 'Custom Field Rule "%1$s" deleted.', 'media-library-assistant' ), $rule['rule_name'] );
 	} // _delete_iptc_exif_rule
 
@@ -727,6 +728,7 @@ class MLASettings_IPTCEXIF {
 				$result = MLASettings::mla_delete_custom_field( $rule );
 			}
 
+			/* translators: 1: rule name */
 			$message .=  sprintf( __( 'Custom Field Rule "%1$s": %2$s', 'media-library-assistant' ), $rule['name'], $result );
 		}
 
@@ -778,6 +780,7 @@ class MLASettings_IPTCEXIF {
 				if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 					$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
 					if ( 'execute' === $bulk_action ) {
+						/* translators: 1: bulk action value */
 						$page_content['message'] = sprintf( __( 'Unknown bulk action %1$s', 'media-library-assistant' ), $bulk_action );
 					} elseif ( 'purge' === $bulk_action ) {
 						$page_content['message'] = MLASettings_IPTCEXIF::_purge_custom_field_values( $post_ids );
@@ -830,6 +833,7 @@ class MLASettings_IPTCEXIF {
 					MLA_IPTC_EXIF_Query::mla_put_iptc_exif_rules();
 					break;
 				default:
+					/* translators: 1: admin action value */
 					$page_content['message'] = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) ) );
 					break;
 			} // switch ($_REQUEST['mla_admin_action'])
@@ -2903,24 +2907,24 @@ class MLA_IPTC_EXIF_Query {
 
 		$template_items = array(
 			'all' => array(
-				'singular' => _x( 'All', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'All', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'All', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'All', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'standard' => array(
-				'singular' => _x( 'Standard', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Standard', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Standard', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Standard', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'taxonomy' => array(
-				'singular' => _x( 'Taxonomy', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Taxonomy', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Taxonomy', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Taxonomy', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'custom' => array(
-				'singular' => _x( 'Custom', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Custom', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Custom', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Custom', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'read_only' => array(
-				'singular' => _x( 'Read Only', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Read Only', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Read Only', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Read Only', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 		);
 

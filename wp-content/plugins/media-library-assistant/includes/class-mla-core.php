@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.20';
+	const CURRENT_MLA_VERSION = '3.22';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -428,6 +428,23 @@ class MLACore {
 	public static function initialize( ) {
 		//error_log( __LINE__ . ' DEBUG: MLACore::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		//if ( isset( $_SERVER['REQUEST_URI'] ) ) error_log( __LINE__ . ' DEBUG: MLACore::initialize $_SERVER[REQUEST_URI] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
+		$text_domain = 'media-library-assistant';
+		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
+
+		if ( is_admin() && 'en_US' === $locale ) {
+			$result = unload_textdomain( $text_domain );
+		}
+
+		/*
+		 * To override the plugin's translation files for one, some or all strings,
+		 * create a sub-directory named 'media-library-assistant' in the WordPress
+		 * WP_LANG_DIR (e.g., /wp-content/languages) directory.
+		 */
+		load_textdomain( $text_domain, trailingslashit( WP_LANG_DIR ) . $text_domain . '/' . $text_domain . '-' . $locale . '.mo' );
+		load_plugin_textdomain( $text_domain, false, MLA_PLUGIN_BASENAME . '/languages/' );
+		MLACoreOptions::mla_localize_option_definitions_array();
+
 		if ( 'disabled' == MLACore::mla_get_option( MLACoreOptions::MLA_FEATURED_IN_TUNING ) ) {
 			MLACore::$process_featured_in = false;
 		}
@@ -655,7 +672,7 @@ class MLACore {
 	 * @return	void
 	 */
 	public static function mla_plugins_loaded_action(){
-		$text_domain = 'media-library-assistant';
+	/*	$text_domain = 'media-library-assistant';
 		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
 
@@ -667,7 +684,7 @@ class MLACore {
 		 * To override the plugin's translation files for one, some or all strings,
 		 * create a sub-directory named 'media-library-assistant' in the WordPress
 		 * WP_LANG_DIR (e.g., /wp-content/languages) directory.
-		 */
+		 * /
 		load_textdomain( $text_domain, trailingslashit( WP_LANG_DIR ) . $text_domain . '/' . $text_domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $text_domain, false, MLA_PLUGIN_BASENAME . '/languages/' );
 
@@ -675,17 +692,17 @@ class MLACore {
 		MLACoreOptions::mla_localize_option_definitions_array();
 
 		MLACore::$original_php_log = ini_get( 'error_log' );
-		MLACore::$original_php_reporting = sprintf( '0x%1$04X', error_reporting() );
+		MLACore::$original_php_reporting = sprintf( '0x%1$04X', error_reporting() ); // */
 
 		// Do not process debug options unless MLA_DEBUG_LEVEL is set in wp-config.php
 		if ( MLA_DEBUG_LEVEL & 1 ) {
 			// Set up alternate MLA debug log file
-			$error_log_name = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_FILE ); 
+			$error_log_name = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_FILE, false, false, MLACoreOptions::$mla_prelocalize_option_definitions ); 
 			if ( ! empty( $error_log_name ) ) {
 				MLACore::mla_debug_file( $error_log_name );
 
 				// Override PHP error_log file
-				if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_LOG ) ) {
+				if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_LOG, false, false, MLACoreOptions::$mla_prelocalize_option_definitions ) ) {
 					$result = ini_set('error_log', WP_CONTENT_DIR . self::$mla_debug_file );
 				}
 			}
@@ -695,7 +712,7 @@ class MLACore {
 			 * Override MLA debug levels
 			 */
 			MLACore::$mla_debug_level = 0; // MLA_DEBUG_LEVEL;
-			$mla_reporting = trim( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_LEVEL ) );
+			$mla_reporting = trim( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_LEVEL, false, false, MLACoreOptions::$mla_prelocalize_option_definitions ) );
 			if ( strlen( $mla_reporting ) ) {
 				if ( ctype_digit( $mla_reporting ) ) {
 					$mla_reporting = (int) $mla_reporting; 
@@ -838,7 +855,7 @@ class MLACore {
 	 * @return	mixed	Value(s) for the option or false if the option is not a defined MLA option
 	 */
 	public static function mla_get_option( $option, $get_default = false, $get_stored = false, &$option_table = NULL ) {
-		if ( NULL == $option_table ) {
+		if ( NULL === $option_table ) {
 			if ( empty( MLACoreOptions::$mla_option_definitions ) ) {
 				MLACoreOptions::mla_localize_option_definitions_array();
 			}
@@ -1173,6 +1190,7 @@ class MLACore {
 	 */
 	public static function mla_supported_taxonomies( $support_type = 'support' ) {
 		$tax_options =  MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
+
 		switch ( $support_type ) {
 			case 'support': 
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {

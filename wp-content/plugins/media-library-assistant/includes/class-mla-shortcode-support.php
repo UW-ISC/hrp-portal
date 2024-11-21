@@ -2962,6 +2962,7 @@ class MLAShortcode_Support {
 			'meta_value' => '',
 			'meta_value_num' => NULL,
 			'meta_compare' => '',
+			'meta_value_delimiter' => ',',
 			'meta_query' => '',
 			// Terms Search
 			'mla_terms_phrases' => '',
@@ -3676,6 +3677,7 @@ class MLAShortcode_Support {
 			case 'tag':
 			case 'meta_key':
 			case 'meta_compare':
+			case 'meta_value_delimiter':
 				$children_ok = false;
 				// fallthru
 			case 'post_type':
@@ -3694,13 +3696,7 @@ class MLAShortcode_Support {
 				break;
 			case 'meta_value':
 				if ( ! empty( $value ) ) {
-					if ( false !== strpos( $value, ',' ) ) {
-						// WP_Query expects a real array for multiple values
-						$query_arguments[ $key ] = explode( ',', $value );
-					} else {
-						$query_arguments[ $key ] = $value;
-					}
-
+					$query_arguments[ $key ] = $value;
 					$use_children = false;
 				}
 
@@ -3814,8 +3810,18 @@ class MLAShortcode_Support {
 			} // switch $key
 		} // foreach $arguments 
 
-		// Process the ignore/no/any values assigned queries TODO
 		if ( ! ( empty( $query_arguments['meta_key'] ) || empty( $query_arguments['meta_value'] ) ) ) {
+			// Separate multiple values, if allowed and present
+			if ( isset( $query_arguments['meta_compare'] ) && in_array( $query_arguments['meta_compare'], array( 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN' ) ) ) {
+				$meta_value = $query_arguments['meta_value'];
+				$delimiter = $query_arguments['meta_value_delimiter'][0];
+				if ( is_string( $meta_value) && ( false !== strpos( $meta_value, $delimiter ) ) ) {
+					// WP_Query expects a real array for multiple values
+					$query_arguments['meta_value'] = explode( $delimiter, $meta_value );  // TODO - add delimiter option
+				}
+			}
+
+			// Process the ignore/no/any values assigned queries
 			$special_key = '';
 			foreach ( array( 'ignore.values.assigned', 'no.values.assigned', 'any.values.assigned' ) as $value ) {
 				if ( is_array( $query_arguments['meta_value'] ) ) {

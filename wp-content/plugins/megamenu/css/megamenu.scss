@@ -22,7 +22,8 @@
 #{$wrap} #{$menu} li.mega-menu-row,
 #{$wrap} #{$menu} li.mega-menu-column,
 #{$wrap} #{$menu} a.mega-menu-link,
-#{$wrap} #{$menu} span.mega-menu-badge {
+#{$wrap} #{$menu} span.mega-menu-badge,
+#{$wrap} #{$menu} + button.mega-close {
     transition: none;
     @include border-radius(0, 0, 0, 0);
     @include box-shadow(none);
@@ -87,7 +88,8 @@
         #{$menu} span:focus,
         #{$menu} input:focus,
         #{$menu} li.mega-menu-item a.mega-menu-link:focus,
-        #{$menu} form.mega-search-open:has(input[type=text]:focus) {
+        #{$menu} form.mega-search-open:has(input[type=text]:focus),
+        #{$menu} + button.mega-close:focus {
             outline-style: solid;
             outline-width: $keyboard_highlight_width;
             outline-color: $keyboard_highlight_color;
@@ -892,18 +894,16 @@
                     color: $flyout_link_color_hover;
                 }
 
-                ul.mega-sub-menu {
-                    position: absolute;
-                    left: 100%;
-                    top: 0;
+                @include desktop {
+                    ul.mega-sub-menu {
+                        position: absolute;
+                        left: 100%;
+                        top: 0;
+                    }
                 }
 
                 @include mobile {
                     ul.mega-sub-menu {
-                        position: static;
-                        left: 0;
-                        width: 100%;
-
                         a.mega-menu-link {
                             padding-left: 20px;
                         }
@@ -1090,7 +1090,69 @@
             display: table;
             clear: both;
         }
+    }
 
+
+    #{$menu} {
+
+        + button.mega-close {
+            visibility: hidden;
+            transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out, visibility $effect_speed_mobile ease-in-out;
+        }
+
+        &[data-effect-mobile^="slide_left"] + button.mega-close {
+            right: 0;
+            left: 100%;
+        }
+
+        &[data-effect-mobile^="slide_right"] + button.mega-close {
+            right: 100%;
+            left: 0;
+        }
+    }
+
+    @include mobile {
+        &:has(.mega-menu-open) #{$menu}[data-effect-mobile^="slide_"] + button.mega-close {
+            display: flex;
+            position: fixed;
+            top: 0;
+            z-index: 99999999999;
+            cursor: pointer;
+            visibility: visible;
+
+            &:before {
+                display: flex;
+                content: $close_icon;
+                font-family: $close_icon_font;
+                font-weight: $close_icon_font_weight;
+                color: $close_icon_color;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                font-size: $close_icon_font_size;
+            }
+        }
+
+        &:has(.mega-menu-open) #{$menu}[data-effect-mobile^="slide_left"] + button.mega-close {
+            @if $mobile_menu_off_canvas_width == '100%' {
+                right: auto;
+                left: 0;
+            } @else {
+                right: $mobile_menu_off_canvas_width;
+                left: auto;
+            }
+        }
+
+        &:has(.mega-menu-open) #{$menu}[data-effect-mobile^="slide_right"] + button.mega-close {
+            @if $mobile_menu_off_canvas_width == '100%' {
+                left: auto;
+                right: 0;
+            } @else {
+                left: $mobile_menu_off_canvas_width;
+                right: auto;
+            }
+        }
     }
 
     .mega-menu-toggle {
@@ -1228,22 +1290,19 @@
             }
 
             @if ( ( $effect_mobile == slide_right or $effect_mobile == slide_left ) and $disable_mobile_toggle == off ) {
-
-                @if unit( $mobile_menu_off_canvas_width ) == '%' {
-                    $mobile_menu_off_canvas_width: 300px;
-                }
-
+                position: relative;
                 + #{$menu} {
                     position: fixed;
                     display: block;
                     width: $mobile_menu_off_canvas_width;
-                    max-width: 90%;
+                    max-width: 100%;
                     height: 100vh;
                     max-height: 100vh;
                     top: 0;
                     box-sizing: border-box;
                     transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out, visibility $effect_speed_mobile ease-in-out;
-                    overflow: auto;
+                    overflow-y: auto;
+                    overflow-x: hidden;
                     z-index: 9999999999;
                     overscroll-behavior: contain;
                     visibility: hidden;

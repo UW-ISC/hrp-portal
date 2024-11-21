@@ -55,22 +55,11 @@ class MLAQuery {
 	const MLA_TABLE_VIEW_SUBQUERY = 'use_postmeta_view'; // see mla-custom-field-search-example.php
 
 	/**
-	 * WordPress version test for $wpdb->esc_like() Vs esc_sql()
-	 *
-	 * @since 2.13
-	 *
-	 * @var	boolean
-	 */
-	public static $wp_4dot0_plus = true;
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 0.1
 	 */
 	public static function initialize() {
-		self::$wp_4dot0_plus = version_compare( get_bloginfo('version'), '4.0', '>=' );
-
 		self::_localize_default_columns_array();
 
 		// Set up the Media/Assistant submenu table column definitions
@@ -557,6 +546,11 @@ class MLAQuery {
 					if ( stripos( $post_meta_key, '_wp_attached_file' ) === 0 ) {
 						$key = 'mla_wp_attached_file';
 						$attached_file = $post_meta_value[0];
+
+						// multiple values are not valid
+						if ( 1 < count( $post_meta_value ) ) {
+							$post_meta_value = array( $attached_file );
+						}
 					} elseif ( stripos( $post_meta_key, '_wp_attachment_metadata' ) === 0 ) {
 						$key = 'mla_wp_attachment_metadata';
 					} elseif ( stripos( $post_meta_key, '_wp_attachment_image_alt' ) === 0 ) {
@@ -1907,22 +1901,14 @@ class MLAQuery {
 				foreach ( $keyword_array as $phrase ) {
 					if ( $is_wildcard_search ) {
 						// Escape any % in the source string
-						if ( self::$wp_4dot0_plus ) {
-							$sql_phrase = $wpdb->esc_like( $phrase );
-							$sql_phrase = $wpdb->prepare( '%s', $sql_phrase );
-						} else {
-							$sql_phrase = "'" . esc_sql( like_escape( $phrase ) ) . "'";
-						}
+						$sql_phrase = $wpdb->esc_like( $phrase );
+						$sql_phrase = $wpdb->prepare( '%s', $sql_phrase );
 
 						// Convert wildcard * to SQL %
 						$sql_phrase = str_replace( '*', '%', $sql_phrase );
 					} else {
-						if ( self::$wp_4dot0_plus ) {
-							$sql_phrase = $percent . $wpdb->esc_like( $phrase ) . $percent;
-							$sql_phrase = $wpdb->prepare( '%s', $sql_phrase );
-						} else {
-							$sql_phrase = "'" . $percent . esc_sql( like_escape( $phrase ) ) . $percent . "'";
-						}
+						$sql_phrase = $percent . $wpdb->esc_like( $phrase ) . $percent;
+						$sql_phrase = $wpdb->prepare( '%s', $sql_phrase );
 					}
 
 					$inner_connector = '';
@@ -2320,12 +2306,8 @@ class MLAQuery {
 		$term = $args['name__like'];
 
 		// Escape any % in the source string
-		if ( self::$wp_4dot0_plus ) {
-			$sql_term = $wpdb->esc_like( $term );
-			$sql_term = $wpdb->prepare( '%s', $sql_term );
-		} else {
-			$sql_term = "'" . esc_sql( like_escape( $term ) ) . "'";
-		}
+		$sql_term = $wpdb->esc_like( $term );
+		$sql_term = $wpdb->prepare( '%s', $sql_term );
 
 		// Convert wildcard * to SQL %
 		$sql_term = str_replace( '*', '%', $sql_term );

@@ -2382,18 +2382,21 @@ class MLA_WPML_Table {
 				if ( isset( $translations[ $language['code'] ] ) && $translations[ $language['code'] ]->element_id == $item->ID ) {
 					// The item's own language
 					$img = 'yes.png';
+					/* translators: 1: language display name */
 					$alt = sprintf( __( 'Edit the %s translation', 'sitepress' ), $language['display_name'] );
 
 					$link = 'post.php?action=edit&amp;mla_source=edit&amp;post=' . $translations[ $language['code'] ]->element_id . '&amp;lang=' . $language['code'];
 				} elseif ( isset( $translations[ $language['code'] ] ) && $translations[ $language['code'] ]->element_id ) {
 					// Translation exists
 					$img = 'edit_translation.png';
+					/* translators: 1: language display name */
 					$alt = sprintf( __( 'Edit the %s translation', 'sitepress' ), $language['display_name'] );
 
 					$link = 'post.php?action=edit&amp;mla_source=edit&amp;post=' . $translations[ $language['code'] ]->element_id . '&amp;lang=' . $language['code'];
 				} else {
 					// Translation does not exist
 					$img = 'add_translation.png';
+					/* translators: 1: language display name */
 					$alt = sprintf( __( 'Add translation to %s', 'sitepress' ), $language['display_name'] );
 					$src_lang = $current_language;
 

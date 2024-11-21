@@ -208,6 +208,7 @@ class MLASettings {
 					}
 				}
 			} else {
+				/* translators: 1: ERROR, 2: function name, 3: file path */
 				MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s: "%3$s" not a directory', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'mla_copy_custom_icons', $custom_icon_path ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			}
 		} // !empty path
@@ -932,7 +933,7 @@ class MLASettings {
 						'text' => $value['texts'][$optid]
 					);
 
-					if ( $option == MLACore::mla_get_option( $key, false, false, $option_table ) ) {
+					if ( $option === MLACore::mla_get_option( $key, false, false, $option_table ) ) {
 						$option_values['selected'] = 'selected="selected"';
 					}
 
@@ -960,7 +961,7 @@ class MLASettings {
 					$option_values['size'] = $value['size'];
 				}
 
-				$option_values['text'] = MLACore::mla_get_option( $key, false, false, $option_table );
+				$option_values['text'] = esc_attr( MLACore::mla_get_option( $key, false, false, $option_table ) );
 
 				return MLAData::mla_parse_template( self::$page_template_array['text'], $option_values );
 			case 'textarea':

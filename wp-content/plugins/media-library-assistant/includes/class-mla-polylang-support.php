@@ -1861,7 +1861,7 @@ class MLA_Polylang {
 		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::mla_list_table_bulk_action( {$bulk_action}, {$post_id} )", MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
 		// Language dropdown in Bulk Edit area
-		if ( isset( $_POST['inline_lang_choice'] ) && ( '-1' != $_POST['inline_lang_choice'] ) ) {
+		if ( isset( $_POST['inline_lang_choice'] ) && ( '-1' !== $_POST['inline_lang_choice'] ) ) {
 			if ( self::$polylang_1dot8_plus ) {
 				$lang = PLL()->model->get_language( sanitize_text_field( wp_unslash( $_POST['inline_lang_choice'] ) ) );
 				PLL()->model->post->update_language( $post_id, $lang );
@@ -2458,7 +2458,7 @@ class MLA_Polylang {
 			$old_lang = '';
 		}
 
-		$translations = json_encode( $translations );
+		$translations = wp_json_encode( $translations );
 		if ( isset( $_REQUEST['quick_current_language'] ) ) {
 			$current_language = sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) );
 		} elseif ( $polylang->curlang ) {

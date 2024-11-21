@@ -598,7 +598,7 @@ class MLASettings_Upload {
 			die();
 		}
 
-		if ( false === MLAMime::mla_get_upload_mime( $_REQUEST['original_slug'] ) ) {
+		if ( false === MLAMime::mla_get_upload_mime( sanitize_text_field( wp_unslash( $_REQUEST['original_slug'] ) ) ) ) {
 			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' );
 			die();
 		}
