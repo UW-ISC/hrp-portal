@@ -27,10 +27,8 @@ defined('ABSPATH') or die('Access denied.');
                     <p class="m-b-0 m-t-5"><?php esc_html_e('The formula column feature in tables allows users to dynamically compute values based on other columns\' cell data, enabling tasks like calculating VAT tax or performing custom calculations.', 'wpdatatables'); ?></p>
                     <p class="m-b-5"><?php esc_html_e('It\'s particularly useful when datasets lack certain information or when complex computations are needed to derive specific insights within wpDataTables.', 'wpdatatables'); ?></p>
                     <p class="m-b-5">
-                        <button class="btn btn-primary wdt-upgrade-btn">
-                            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=formula-column&campaign=formula-column-upgrade"
-                               rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-                        </button>
+                        <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=formula-column&utm_campaign=wpdt&utm_content=wpdt"
+                           rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
                     </p>
                 </div>
                 <div class="row notice-images">

@@ -14,10 +14,8 @@
                 </h4>
                 <span class="opacity-6"><?php esc_html_e('Create a SQL-query-based data table by generating a query to any custom SQL database with a GUI tool.', 'wpdatatables'); ?></span>
             </div>
-            <button class="btn btn-primary wdt-upgrade-btn">
-                <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=generate-query-to-mysql-database&campaign=mysql-query"
-                   rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-            </button>
+            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=generate-query-to-mysql-database&utm_campaign=wpdt&utm_content=wpdt"
+               rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </div>
     </div>
     <div class="wdt-constructor-type-selecter-block col-sm-6">
@@ -34,10 +32,8 @@
                 </h4>
                 <span class="opacity-6"><?php esc_html_e('Create a MySQL-query-based data table by generating a query to the WordPress database (posts, taxonomies, postmeta) with a GUI tool.', 'wpdatatables'); ?></span>
             </div>
-            <button class="btn btn-primary wdt-upgrade-btn">
-                <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=generate-query-to-wordpress-database&campaign=wp-query"
-                   rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-            </button>
+            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=generate-query-to-wordpress-database&utm_campaign=wpdt&utm_content=wpdt"
+               rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </div>
     </div>
 </div>

@@ -143,7 +143,7 @@ class HiddenColumn
         global $wpdb;
         $alterDBColumnTypeQuery = "ALTER TABLE {$wpdb->prefix}wpdatatables_columns 
                                 MODIFY COLUMN column_type 
-                                    enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail','hidden'),
+                                    enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail','hidden','select','cart'),
                                 MODIFY COLUMN input_type 
                                     enum('none','text','textarea','mce-editor','date','datetime','time','link','email','selectbox','multi-selectbox','attachment','hidden')";
         $wpdb->query($alterDBColumnTypeQuery);

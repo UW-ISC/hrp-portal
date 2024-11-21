@@ -126,6 +126,20 @@
                 {value: 'excel-like', label: 'Excel-like wpDataTable'}
             ];
 
+            function fetchTableType(tableID) {
+                jQuery.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'get_table_type_by_id',
+                        table_id: tableID,
+                    },
+                    success: function (response) {
+                        props.setAttributes({tableView: response.tableType});
+                    }
+                });
+            }
+
             function getOptions(data) {
                 var options = [];
                 data = Object.keys(data).map(function (key) {
@@ -220,8 +234,9 @@
                     label: 'Select wpdatatable:',
                     value: attributes.tableID,
                     options: options.tables,
-                    onChange: function (selectControl) {
-                        return props.setAttributes({tableID: selectControl})
+                    onChange: function (newTableID) {
+                        props.setAttributes({tableID: newTableID});
+                        fetchTableType(newTableID);
                     }
                 }));
 
@@ -232,8 +247,8 @@
                     label: 'Choose table view:',
                     value: attributes.tableView,
                     options: options.tableViews,
-                    onChange: function (selectControl) {
-                        return props.setAttributes({tableView: selectControl})
+                    onChange: function (newTableView) {
+                        props.setAttributes({tableView: newTableView});
                     }
                 }));
 

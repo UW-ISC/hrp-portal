@@ -322,7 +322,7 @@
     left: 0;
 }
 
-.wpdt-c #wdt-constructor-preview-wp-query {
+.wpdt-c #wdt-constructor-preview-wp-query{
     height: 300px;
 }
 .wpdt-c .wdt-constructor-step {
@@ -356,7 +356,9 @@
 .wpdt-c #wdt-constructor-delete-mysql-condition,
 .wpdt-c #wdt-constructor-delete-grouping-rule-mysql,
 .wpdt-c #wdt-constructor-create-table,
-.wpdt-c #wdt-constructor-create-table-excel {
+.wpdt-c #wdt-constructor-delete-tax-clause,
+.wpdt-c #wdt-constructor-create-table-excel,
+.wpdt-c #wdt-constructor-create-tax-clause {
     cursor: pointer;
 }
 .wpdt-c .wdt-constructor-remove-column {
@@ -509,7 +511,7 @@
 }
 .wpdt-c .wdt-table-constructor .wdt-constructor-mysql-block .toggle-switch label,
 .wpdt-c .wdt-table-constructor .wdt-constructor-post-block .toggle-switch label {
-   padding: 10px 25px 10px 12px;
+    padding: 10px 25px 10px 12px;
 }
 
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card {
@@ -640,7 +642,7 @@
 .wpdt-c .wdt-table-constructor #wdt-constructor-add-post-condition:hover,
 .wpdt-c .wdt-table-constructor #wdt-constructor-add-mysql-condition:hover,
 .wpdt-c .wdt-table-constructor #wdt-constructor-mysql-add-grouping-rule:hover {
-     color: #1572BF;
+    color: #1572BF;
 }
 .wpdt-c .wdt-table-constructor .wdt-constructor-post-block,
 .wpdt-c .wdt-table-constructor .wdt-constructor-mysql-block,
@@ -690,7 +692,8 @@
 .wpdt-c .wdt-table-constructor #wdt-constructor-delete-post-condition a:hover .wpdt-icon-trash,
 .wpdt-c .wdt-table-constructor #wdt-constructor-delete-grouping-rule-post a:hover .wpdt-icon-trash,
 .wpdt-c .wdt-table-constructor #wdt-constructor-delete-mysql-condition a:hover .wpdt-icon-trash,
-.wpdt-c .wdt-table-constructor #wdt-constructor-delete-grouping-rule-mysql a:hover .wpdt-icon-trash {
+.wpdt-c .wdt-table-constructor #wdt-constructor-delete-grouping-rule-mysql a:hover .wpdt-icon-trash,
+.wpdt-c .wdt-table-constructor #wdt-constructor-delete-tax-clause a:hover .wpdt-icon-trash {
     color: #F44336;
 }
 
@@ -848,7 +851,7 @@
 .wpdt-c .wdt-simple-table-template {
     margin-left: 21px;
     position: relative;
-   min-width: 22%;
+    min-width: 22%;
     width: 22%;
     left: 49px;
     top: 12px;
@@ -1043,4 +1046,16 @@
     .wpdt-c .wdt-simple-table-template .f-14 {
         bottom: -5px;
     }
+}
+
+.wpdt-c .wdt-coming-soon-notice {
+    font-size: 13px;
+    line-height: 20px;
+    color: #061938;
+    padding: 10px 12px;
+    background: #FFFFFF;
+    border: 1px solid #D7D9E2;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
+    border-radius: 3px;
 }

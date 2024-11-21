@@ -188,7 +188,8 @@
                     </div>
                 </div>
             </div>
-            <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
+            {{if ~isMultipleSeries(#data)}}
+                <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
                     <h4 class="c-title-color m-b-4">
                     <?php esc_html_e('Type', 'wpdatatables'); ?>
                     </h4>
@@ -206,7 +207,8 @@
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
+            {{/if}}
             <div class="apexcharts chart-series-image doNotTriggerChange" id="series-image-{{:#index}}-container">
                 <h4 class="c-title-color m-b-4">
                     <?php esc_html_e('Chart line/area image', 'wpdatatables'); ?>

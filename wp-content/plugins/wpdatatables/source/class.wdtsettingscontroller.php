@@ -64,8 +64,10 @@ class WDTSettingsController
     {
         $settings = self::sanitizeSettings(stripslashes_deep($settings));
         $autoUpdateOption = (int)$settings['wdtAutoUpdateOption'];
+        $globalTableLoader = (int)$settings['wdtGlobalTableLoader'];
+        $globalChartLoader = (int)$settings['wdtGlobalChartLoader'];
 
-        if (!$autoUpdateOption){
+        if (!$autoUpdateOption) {
             global $wpdb;
             $wpdb->query(
                 $wpdb->prepare(
@@ -85,7 +87,59 @@ class WDTSettingsController
         }
 
         foreach ($settings as $key => $value) {
+            if ($key == 'wdtGlobalChartLoader') {
+                $updatedValueChart = get_option($key);
+            }
+            if ($key == 'wdtGlobalTableLoader') {
+                $updatedValueTable = get_option($key);
+            }
             update_option($key, $value);
+            if ($key == 'wdtGlobalChartLoader') {
+                if($globalChartLoader == $updatedValueChart) $checkValueChart = false;
+                else $checkValueChart = true;
+            }
+            if ($key == 'wdtGlobalTableLoader') {
+                if($globalTableLoader == $updatedValueTable) $checkValueTable = false;
+                else $checkValueTable = true;
+            }
+        }
+
+        if ($checkValueChart) {
+            global $wpdb;
+            $charts = $wpdb->get_results("SELECT id, json_render_data FROM " . $wpdb->prefix . "wpdatacharts");
+            foreach ($charts as $chart) {
+
+                $settings = json_decode($chart->json_render_data, true);
+
+                $settings['render_data']['loader'] = $globalChartLoader;
+
+                $updated_settings = json_encode($settings);
+
+                $wpdb->update(
+                    $wpdb->prefix . "wpdatacharts",
+                    ['json_render_data' => $updated_settings],
+                    ['id' => $chart->id]
+                );
+            }
+        }
+
+        if ($checkValueTable) {
+            global $wpdb;
+            $tables = $wpdb->get_results("SELECT id, advanced_settings FROM " . $wpdb->prefix . "wpdatatables");
+            foreach ($tables as $table) {
+
+                $settings = json_decode($table->advanced_settings, true);
+
+                $settings['loader'] = $globalTableLoader;
+
+                $updated_settings = json_encode($settings);
+
+                $wpdb->update(
+                    $wpdb->prefix . "wpdatatables",
+                    ['advanced_settings' => $updated_settings],
+                    ['id' => $table->id]
+                );
+            }
         }
 
         do_action('wpdatatables_after_save_settings');
@@ -114,6 +168,8 @@ class WDTSettingsController
             'wdtPreventDeletingTables' => get_option('wdtPreventDeletingTables'),
             'wdtParseShortcodes' => get_option('wdtParseShortcodes'),
             'wdtNumbersAlign' => get_option('wdtNumbersAlign'),
+            'wdtGlobalTableLoader' => get_option('wdtGlobalTableLoader'),
+            'wdtGlobalChartLoader' => get_option('wdtGlobalChartLoader'),
             'wdtBorderRemoval' => get_option('wdtBorderRemoval'),
             'wdtBorderRemovalHeader' => get_option('wdtBorderRemovalHeader'),
             'wdtUseSeparateCon' => get_option('wdtUseSeparateCon'),

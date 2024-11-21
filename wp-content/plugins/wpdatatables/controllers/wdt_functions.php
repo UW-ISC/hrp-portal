@@ -88,7 +88,7 @@ function wdtActivationCreateTables()
 						orig_header varchar(255) NOT NULL,
 						display_header varchar(255) NOT NULL,
 						filter_type enum('none','null_str','text','number','number-range','date-range','datetime-range','time-range','select','multiselect','checkbox') NOT NULL,
-						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail') NOT NULL,
+						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail', 'select', 'cart') NOT NULL,
 						input_type enum('none','text','textarea','mce-editor','date','datetime','time','link','email','selectbox','multi-selectbox','attachment') NOT NULL default 'text',
 						input_mandatory tinyint(1) NOT NULL default '0',
                         id_column tinyint(1) NOT NULL default '0',
@@ -359,6 +359,12 @@ function wdtActivationCreateTables()
     if (!get_option('wdtActivationSimpleTableTemplates')) {
         update_option('wdtActivationSimpleTableTemplates', 'no');
     }
+    if (!get_option('wdtGlobalTableLoader')) {
+        update_option('wdtGlobalTableLoader', 1);
+    }
+    if (!get_option('wdtGlobalChartLoader')) {
+        update_option('wdtGlobalChartLoader', 1);
+    }
 
     update_option('wdtHideUpdateModal', 0);
 
@@ -453,6 +459,8 @@ function wdtUninstallDelete()
         delete_option('wdtGoogleApiMapsValidated');
         delete_option('wdtHideUpdateModal');
         delete_option('wdtBootstrapUpdateNotice');
+        delete_option('wdtGlobalTableLoader');
+        delete_option('wdtGlobalChartLoader');
 
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_columns");
@@ -1024,7 +1032,7 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null)
                 if (!isset($wpDataTable->getWdtColumnTypes()[$columnID]))
                     return esc_html__('Column ID for provided table ID not found!', 'wpdatatables');
 
-                if (in_array($wpDataTable->getWdtColumnTypes()[$columnID], ['date', 'datetime', 'time', 'float', 'formula']))
+                if (in_array($wpDataTable->getWdtColumnTypes()[$columnID], ['date', 'datetime', 'time', 'float', 'formula', 'select']))
                     return esc_html__('At the moment float, formula, date, datetime and time columns can not be used as column_id. Please use other column that contains unique identifiers.', 'wpdatatables');
 
                 if ($columnKey == $columnID)
@@ -1441,7 +1449,7 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
     } else {
         try {
             /** @var mixed $table_view */
-            if ($table_view == 'excel') {
+            if ($table_view == 'excel' && $tableData->table_type !== 'woo_commerce') {
                 $wpDataTable = new WPExcelDataTable($tableData->connection);
             } else {
                 $wpDataTable = new WPDataTable($tableData->connection);

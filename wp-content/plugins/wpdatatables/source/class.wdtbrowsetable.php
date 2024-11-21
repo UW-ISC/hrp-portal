@@ -280,7 +280,6 @@ class WDTBrowseTable extends WP_List_Table
         switch ($column_name) {
             case 'shortcode':
                 return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatatable id=' . esc_attr($item['id']) . ']" data-placement="top"  title="' . esc_attr__('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatatable id=' . (int)$item['id'] . ']</span>';
-                break;
             case 'functions':
                 $return_string = '';
                 $simpleTableType = ($item['table_type'] == 'simple') ? '&simple' : '';
@@ -322,7 +321,6 @@ class WDTBrowseTable extends WP_List_Table
                                        data-toggle="tooltip" title="' . esc_attr__('Delete', 'wpdatatables') . '" 
                                        href="' . wp_nonce_url('admin.php?page=wpdatatables-administration&action=delete&table_id=' . (int)$item['id'] . '', 'wdtDeleteTableNonce', 'wdtNonce') . '" rel="' . esc_attr($item['id']) . '"><i class="wpdt-icon-trash"></i></a></div>';
                 return $return_string;
-                break;
             case 'id':
             case 'title':
             case 'table_description':
@@ -335,8 +333,6 @@ class WDTBrowseTable extends WP_List_Table
                 } else {
                     return $item[$column_name];
                 }
-
-                break;
         }
     }
 
@@ -368,49 +364,38 @@ class WDTBrowseTable extends WP_List_Table
     function column_table_type($item)
     {
         switch ($item['table_type']) {
+            case 'mssql':
+            case 'postgresql':
             case 'mysql':
                 return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
-                break;
-            case 'mssql':
-                return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
-                break;
-            case 'postgresql':
-                return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
-                break;
             case 'manual':
                 return '<span class="wpdt-type-column">' . esc_html__('Manual', 'wpdatatables') . '</span>';
-                break;
             case 'xls':
                 return '<span class="wpdt-type-column">' . esc_html__('Excel', 'wpdatatables') . '</span>';
-                break;
             case 'csv':
                 return '<span class="wpdt-type-column">' . esc_html__('CSV', 'wpdatatables') . '</span>';
-                break;
             case 'xml':
                 return '<span class="wpdt-type-column">' . esc_html__('XML', 'wpdatatables') . '</span>';
-                break;
             case 'json':
                 return '<span class="wpdt-type-column">' . esc_html__('JSON', 'wpdatatables') . '</span>';
-                break;
             case 'nested_json':
                 return '<span class="wpdt-type-column">' . esc_html__('Nested JSON', 'wpdatatables') . '</span>';
-                break;
             case 'serialized':
                 return '<span class="wpdt-type-column">' . esc_html__('Serialized PHP array', 'wpdatatables') . '</span>';
-                break;
             case 'google_spreadsheet':
                 return '<span class="wpdt-type-column">' . esc_html__('Google spreadsheet', 'wpdatatables') . '</span>';
-                break;
             case 'simple':
                 return '<span class="wpdt-type-column">' . esc_html__('Simple', 'wpdatatables') . '</span>';
-                break;
+            case 'wp_posts_query':
+                return '<span class="wpdt-type-column">' . esc_html__('WP Posts', 'wpdatatables') . '</span>';
+            case 'woo_commerce':
+                return '<span class="wpdt-type-column">' . esc_html__('WooCommerce', 'wpdatatables') . '</span>';
             default:
                 if (in_array($item['table_type'], WPDataTable::$allowedTableTypes)) {
                     return '<span class="wpdt-type-column">' . ucfirst($item['table_type']) . '</span>';
                 }
 
                 return '<span class="wpdt-type-column">' . esc_attr__('Unknown', 'wpdatatables') . '</span>';
-                break;
         }
     }
 

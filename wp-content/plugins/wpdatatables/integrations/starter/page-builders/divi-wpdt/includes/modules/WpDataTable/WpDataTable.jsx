@@ -118,7 +118,7 @@ class WpDataTable extends Component {
 
 }
 function isNumeric(str) {
-  if (typeof str != "string") return false
+  if (typeof str !== "string") return false
   return !isNaN(str) && !isNaN(parseFloat(str))
 }
 

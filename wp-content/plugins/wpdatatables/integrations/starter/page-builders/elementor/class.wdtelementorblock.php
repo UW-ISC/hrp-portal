@@ -26,6 +26,9 @@ final class WPDataTables_Elementor_Widgets {
         add_action('elementor/editor/before_enqueue_scripts', [$this, 'widget_styles']);
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'widget_styles']);
         add_action('elementor/elements/categories_registered', [$this, 'register_widget_categories']);
+        if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
+            add_action('wp_enqueue_scripts', array('WPDataTables_Elementor_Widgets','enqueueCustomElementorJs'));
+        }
     }
 
     public function is_compatible() {
@@ -75,6 +78,15 @@ final class WPDataTables_Elementor_Widgets {
                 'title' => 'wpDataTables',
                 'icon' => 'wpdt-table-logo',
             ], 1);
+    }
+
+    public static function enqueueCustomElementorJs()
+    {
+        wp_enqueue_script('wdt-custom-elementor-js', plugin_dir_url(__FILE__) . 'js/wdt-custom-elementor-js.js', array('jquery'), WDT_CURRENT_VERSION, true);
+
+        wp_localize_script('wdt-custom-elementor-js', 'wdt_ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
     }
 
 }

@@ -474,7 +474,7 @@ function wdtCreateSimpleTable()
         exit();
     }
     $tableTemplateID = 0;
-    if ($_POST['templateId']){
+    if ($_POST['templateId']) {
         $tableTemplateID = (int)$_POST['templateId'];
     }
     $tableData = apply_filters(
@@ -485,7 +485,7 @@ function wdtCreateSimpleTable()
             )
         )
     );
-    if ($tableTemplateID){
+    if ($tableTemplateID) {
         $wpDataTableRowsAll = WDTConfigController::loadRowsDataFromDBTemplateAll($tableTemplateID);
         $tableData->content = $wpDataTableRowsAll[0]->content;
         $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
@@ -495,7 +495,7 @@ function wdtCreateSimpleTable()
     $wpDataTableRows = new WPDataTableRows($tableData);
 
     // Generate new id and save settings in wpdatatables table in DB
-    if($tableTemplateID){
+    if ($tableTemplateID) {
         $newTableId = generateSimpleTableID($wpDataTableRows, $wpDataTableRowsAll[0]->settings, $tableTemplateID);
         for ($i = 0; $i < count($wpDataTableRowsAll); $i++) {
             WDTConfigController::saveRowData($wpDataTableRowsAll[$i]->data, $newTableId);
@@ -546,7 +546,7 @@ function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null
     $tableContent->colHeaders = $wpDataTableRows->getColHeaders();
     $tableContent->reloadCounter = $wpDataTableRows->getReloadCounter();
     $tableContent->mergedCells = $wpDataTableRows->getMergeCells();
-    if($wpDataTableRowsSettings !== null) {
+    if ($wpDataTableRowsSettings !== null) {
         $tableContent->settings = $wpDataTableRowsSettings;
     }
     // Create the wpDataTable metadata
@@ -593,6 +593,7 @@ function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null
     // Store the new table metadata ID
     return $wpdb->insert_id;
 }
+
 /**
  * Save data in database for Simple table
  */
@@ -769,7 +770,7 @@ function wdtConstructorReadFileData()
 
     try {
         $constructor->readFileData($tableData);
-        if ($constructor->getTableId() != false) {
+        if ($constructor->getTableId() != 0) {
             $result['res'] = 'success';
             $result['link'] = get_admin_url() . "admin.php?page=wpdatatables-constructor&source&table_id=" . $constructor->getTableId();
         } else {
@@ -1197,3 +1198,19 @@ function wdtParseServerName()
 }
 
 add_action('wp_ajax_wpdatatables_parse_server_name', 'wdtParseServerName');
+
+/**
+ * Helper function to get table type by ID
+ * Added for page builder blocks to only render certain parameters for certain types
+ * @throws Exception
+ */
+function get_table_type_by_id_ajax() {
+    $table_id = isset($_POST['table_id']) ? (int)($_POST['table_id']) : '';
+    $table_type = WDTConfigController::loadTableFromDB($table_id)->table_type;
+
+    // Return the table type
+    echo json_encode(array('tableType' => $table_type));
+    exit();
+}
+add_action('wp_ajax_get_table_type_by_id', 'get_table_type_by_id_ajax');
+add_action('wp_ajax_nopriv_get_table_type_by_id', 'get_table_type_by_id_ajax');

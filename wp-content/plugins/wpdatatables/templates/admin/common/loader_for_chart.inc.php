@@ -2,7 +2,7 @@
 
 <?php
 $height = esc_attr($this->getHeight());
-$isLoaderVisible = esc_attr($this->isLoaderVisible());
+$isLoaderVisible = (int)($this->getRenderData()['loader']);
 
 $style = "height: {$height}px;";
 

@@ -9,7 +9,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Ods;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-
 defined('ABSPATH') or die('Access denied.');
 
 
@@ -136,6 +135,7 @@ class WPDataTable
     private $_ajaxReturn = false;
     private $_clearFilters = false;
     private $_loader = 1;
+    private $_showCartInformation = 1;
     public $column_id;
 
     public $connection;
@@ -149,7 +149,9 @@ class WPDataTable
         'google_spreadsheet',
         'xml',
         'serialized',
-        'simple'
+        'simple',
+        'wp_posts_query',
+        'woo_commerce',
     );
     private $_editButtonsDisplayed = array('all');
     private $_enableDuplicateButton = false;
@@ -809,6 +811,7 @@ class WPDataTable
     {
         return $this->_infoBlock;
     }
+
     public function setUserColumnKey($key)
     {
         $this->_userColumnKey = $key;
@@ -816,8 +819,9 @@ class WPDataTable
 
     public function getUserColumnKey()
     {
-        return $this->_userColumnKey ;
+        return $this->_userColumnKey;
     }
+
     public function setUserEditColumnKey($key)
     {
         $this->_userEditColumnKey = $key;
@@ -825,8 +829,9 @@ class WPDataTable
 
     public function getUserEditColumnKey()
     {
-        return $this->_userEditColumnKey ;
+        return $this->_userEditColumnKey;
     }
+
     public function setDatecreatedColumnKey($key)
     {
         $this->_datecreatedColumnKey = $key;
@@ -834,8 +839,9 @@ class WPDataTable
 
     public function getDatecreatedColumnKey()
     {
-        return $this->_datecreatedColumnKey ;
+        return $this->_datecreatedColumnKey;
     }
+
     public function setDatecreatedEditColumnKey($key)
     {
         $this->_datecreatedEditColumnKey = $key;
@@ -843,8 +849,9 @@ class WPDataTable
 
     public function getDatecreatedEditColumnKey()
     {
-        return $this->_datecreatedEditColumnKey ;
+        return $this->_datecreatedEditColumnKey;
     }
+
     /**
      * @param boolean $infoBlock
      */
@@ -1262,6 +1269,16 @@ class WPDataTable
     public function setSimpleTemplateId($simple_template_id)
     {
         $this->_simple_template_id = $simple_template_id;
+    }
+
+    public function getShowCartInformation(): int
+    {
+        return $this->_showCartInformation;
+    }
+
+    public function setShowCartInformation(int $showCartInformation): void
+    {
+        $this->_showCartInformation = $showCartInformation;
     }
 
     public function __construct($connection = null)
@@ -1682,6 +1699,9 @@ class WPDataTable
                     } else {
                         $dataColumn->setFormula('');
                     }
+                } elseif ($wdtColumnTypes[$key] === 'select' || $wdtColumnTypes[$key] === 'cart') {
+                    $dataColumn->setSorting(false);
+                    $dataColumn->setSearchable(false);
                 }
 
                 do_action('wpdatatables_columns_from_arr', $this, $dataColumn, $wdtColumnTypes, $key);
@@ -3880,6 +3900,10 @@ class WPDataTable
 
             if (WDT_INCLUDE_DATATABLES_CORE) {
                 wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
+
+                if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
+                    wp_enqueue_script('wdt-select', WDT_JS_PATH . 'jquery-datatables/dataTables.select.min.js', array(), WDT_CURRENT_VERSION, true);
+                }
             }
             if ($this->filterEnabled() && $this->advancedFilterEnabled()) {
                 WDTTools::wdtUIKitEnqueue();
@@ -4032,6 +4056,24 @@ class WPDataTable
 
 
         if ($tableData) {
+            if (!empty($tableData->columns)) {
+                $positions = [];
+                $duplicateColumns = [];
+
+                foreach ($tableData->columns as $columnPosCheck) {
+                    $pos = $columnPosCheck->pos;
+
+                    if (isset($positions[$pos])) {
+                        $duplicateColumns[] = $columnPosCheck;
+                    } else {
+                        $positions[$pos] = $columnPosCheck;
+                    }
+                }
+
+                if (!empty($duplicateColumns)) {
+                     $this->wdtReoderColumnPositions($duplicateColumns, $positions, $tableData->id);
+                }
+            }
             foreach ($tableData->columns as $column) {
                 $returnArray['columnOrder'][(int)$column->pos] = $column->orig_header;
                 if ($column->display_header != '') {
@@ -4200,6 +4242,7 @@ class WPDataTable
         if (empty($tableData->table_type)) {
             return;
         }
+
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         // Set placeholders
@@ -4532,7 +4575,8 @@ class WPDataTable
             isset($advancedSettings->fixed_header) ? $this->setFixedHeaders($advancedSettings->fixed_header) : $this->setFixedHeaders(false);
             isset($advancedSettings->fixed_header_offset) ? $this->setFixedHeadersOffset($advancedSettings->fixed_header_offset) : $this->setFixedHeadersOffset(0);
             isset($advancedSettings->customRowDisplay) ? $this->setCustomDisplayLength($advancedSettings->customRowDisplay) : $this->setCustomDisplayLength('');
-            isset($advancedSettings->loader) ? $this->setLoader($advancedSettings->loader) : $this->setLoader(1);
+            isset($advancedSettings->loader) ? $this->setLoader($advancedSettings->loader) : $this->setLoader(get_option('wdtGlobalTableLoader'));
+            isset($advancedSettings->showCartInformation) ? $this->setshowCartInformation($advancedSettings->showCartInformation) : $this->setshowCartInformation(1);
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -4573,9 +4617,8 @@ class WPDataTable
             $this->setFixedHeaders(false);
             $this->setFixedHeadersOffset(0);
             $this->setCustomDisplayLength('');
-            $this->setLoader(1);
+            $this->setLoader(get_option('wdtGlobalTableLoader'));
         }
-
         if (!empty($columnData['columnOrder'])) {
             $this->reorderColumns($columnData['columnOrder']);
         }
@@ -4879,6 +4922,7 @@ class WPDataTable
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
         $obj->popoverTools = $this->popoverToolsEnabled();
         $obj->loader = $this->isLoaderVisible();
+        $obj->showCartInformation = $this->getShowCartInformation();
         //[<--/ Full version -->]//
         $obj->hideBeforeLoad = $this->doHideBeforeLoad();
         $obj->number_format = (int)(get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1);
@@ -5586,7 +5630,7 @@ class WPDataTable
                 }
             }
         }
-        $tableId =(int)$tableId;
+        $tableId = (int)$tableId;
 
         $wpdb->delete("{$wpdb->prefix}wpdatatables", array('id' => $tableId));
         $wpdb->delete("{$wpdb->prefix}wpdatatables_columns", array('table_id' => $tableId));
@@ -5657,6 +5701,64 @@ class WPDataTable
         $wpDataTable->fillFromData($tableData, $columnDataPrepared);
 
         return $wpDataTable;
+    }
+
+    public static function wdtReoderColumnPositions($duplicateColumns, $positions, $tableId){
+
+        global $wpdb;
+
+        foreach ($duplicateColumns as $duplicateColumn) {
+            $index = 0;
+            $posMissing = -1;
+            foreach ($positions as $pos) {
+                if (((int)($pos->pos)) == $index) {
+                    $index++;
+                } else {
+                    $posMissing = $index;
+                    $index++;
+                    break;
+                }
+            }
+
+            if ($posMissing == -1) {
+                $posMissing = count($positions);
+
+                $duplicateColumn->pos = $posMissing;
+                $update_statement = "UPDATE " . $wpdb->prefix . "wpdatatables_columns 
+                                      SET pos = {$posMissing}
+                                      WHERE table_id = {$tableId} and id = {$duplicateColumn->id}";
+
+                $wpdb->query($update_statement);
+
+                $columnData['columnOrder'][$posMissing] = $duplicateColumn->display_header;
+                $positions[$posMissing] = $duplicateColumn;
+                $indexedPositions = [];
+                foreach ($positions as $index => $object) {
+                    $indexedPositions[$index] = $object;
+                }
+
+                ksort($indexedPositions);
+                $positions = $indexedPositions;
+            } else {
+                $duplicateColumn->pos = $posMissing;
+
+                $update_statement = "UPDATE " . $wpdb->prefix . "wpdatatables_columns 
+                                      SET pos = {$posMissing}
+                                      WHERE table_id = {$tableId} and id = {$duplicateColumn->id}";
+
+                $wpdb->query($update_statement);
+                $columnData['columnOrder'][$posMissing] = $duplicateColumn->display_header;
+                $positions[$posMissing] = $duplicateColumn;
+                $indexedPositions = [];
+                foreach ($positions as $index => $object) {
+                    $indexedPositions[$index] = $object;
+                }
+
+                ksort($indexedPositions);
+                $positions = $indexedPositions;
+            }
+        }
+        return $columnData;
     }
 
 }

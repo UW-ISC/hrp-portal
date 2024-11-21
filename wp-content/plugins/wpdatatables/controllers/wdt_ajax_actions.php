@@ -1100,6 +1100,9 @@ function wdtGetColumnPossibleValues() {
 
     $values = $wpDataColumn->getPossibleValues();
 
+    $isPostType = in_array($wpDataTable->getTableType(), ['wp_posts_query', 'woo_commerce']);
+
+    // Filter logic for searching
     if (!empty($_POST['q'])) {
         if ($wpDataColumn->getForeignKeyRule()) {
             if ($wpDataColumn->getParentTable()->serverSide()){
@@ -1125,11 +1128,17 @@ function wdtGetColumnPossibleValues() {
     }
 
     foreach ($values as $key => $value) {
-        if (is_array($value)) {
-            $result[$key]['value'] = $value['value'];
-            $result[$key]['text'] = $value['text'];
-        } else {
+        if ($isPostType) {
             $result[$key]['value'] = $value;
+            $result[$key]['text'] = strip_tags($value);
+        } else {
+            if (is_array($value)) {
+                $result[$key]['value'] = $value['value'];
+                $result[$key]['text'] = $value['text'];
+            } else {
+                $result[$key]['value'] = $value;
+                $result[$key]['text'] = $value;
+            }
         }
     }
 

@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.7.1
+ * @version 7.0.1
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.7.1
+Version: 7.0.1
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -36,7 +36,7 @@ if (!defined('WDT_BASENAME')) {
 require_once(WDT_ROOT_PATH . 'config/config.inc.php');
 
 // Check PHP version
-if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' ) ) {
+if (version_compare(WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<')) {
 
     if (!function_exists('is_plugin_active')) {
         require_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -45,9 +45,8 @@ if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' ) ) 
     if ( is_plugin_active( WDT_BASENAME ) ) {
         deactivate_plugins(WDT_BASENAME);
     }
-    add_action( 'admin_notices',
-        function ()
-        {
+    add_action('admin_notices',
+        function () {
             $message = sprintf(
                 esc_attr__('Our plugin requires %1$s PHP Version or higher. Your Version: %2$s. See %3$s for details.', 'wpdatatables'),
                 WDT_REQUIRED_PHP_VERSION,
@@ -57,17 +56,17 @@ if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' ) ) 
             ?>
             <div class="notice notice-error">
                 <p>
-                    <strong> <?php esc_html_e( 'Warning:', 'wpdatatables' ) ?></strong>
+                    <strong> <?php esc_html_e('Warning:', 'wpdatatables') ?></strong>
                     <?php
-                    esc_html_e( 'Your site is running an insecure version of PHP that is no longer supported.', 'wpdatatables' )
+                    esc_html_e('Your site is running an insecure version of PHP that is no longer supported.', 'wpdatatables')
                     ?>
                     <br><br>
                     <?php
                     echo $message;
                     ?>
-                    <br><br><strong> <?php esc_html_e( 'Note:', 'wpdatatables' ) ?></strong>
+                    <br><br><strong> <?php esc_html_e('Note:', 'wpdatatables') ?></strong>
                     <?php
-                    esc_html_e( 'The wpDataTables plugin is disabled on your site until you fix the issue.', 'wpdatatables' )
+                    esc_html_e('The wpDataTables plugin is disabled on your site until you fix the issue.', 'wpdatatables')
                     ?>
                 </p>
             </div>

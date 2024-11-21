@@ -11,10 +11,9 @@
             It allows you to display results of SQL query in a table, you can use MySQL server to do searches/filters/sorting/pagination for large datasets,
              it allows front-end (and back-end) editing of MySQL tables, creating MySQL tables from back-end, and much more.', 'wpdatatables'); ?></p>
             <p class="p-t-10">
-                <button class="btn btn-primary wdt-upgrade-btn">
-                    <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=sql-query&campaign=sql-query-upgrade"
-                       rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-                </button>
+                <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=sql-query&utm_campaign=wpdt&utm_content=wpdt" rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn">
+                    <?php esc_html_e('Upgrade', 'wpdatatables'); ?>
+                </a>
             </p>
         </div>
     </div>

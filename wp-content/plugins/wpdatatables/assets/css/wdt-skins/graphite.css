@@ -686,3 +686,25 @@
 .wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper .filter_column button{
     color: #747474;
 }
+.wpdt-c.wdt-skin-graphite .wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-graphite .single_add_to_cart_button {
+    background: linear-gradient(0deg,#4c4c4c,#313131);
+    background-repeat: repeat-x;
+    border-color: #000000;
+    border-left-color: #545454;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 7px 10px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+    width: fit-content;
+}
+
+.wpdt-c.wdt-skin-graphite a.basket-link {
+    color: #3e4249;
+}
+.wpdt-c.wdt-skin-graphite .wdt-woo-variable-product select {
+    color: #3e4249;
+}

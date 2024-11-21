@@ -19,7 +19,8 @@ class wpDataTableConstructor
     protected $_table_data ;
 
     protected $_column_headers;
-    private $_id = false;
+
+    private $_id = 0;
 
 
     /**
@@ -43,10 +44,11 @@ class wpDataTableConstructor
     {
         $this->_id = $id;
     }
+
     /**
      * Gets table ID
      */
-    public function getTableId()
+    public function getTableId(): int
     {
         return $this->_id;
     }
@@ -79,16 +81,16 @@ class wpDataTableConstructor
      *
      * @return array
      */
-    public static function defineColumnProperties($column_header, $column, $connection = null)
+    public static function defineColumnProperties($column_header, $column, $connection = null): array
     {
         $columnPropertiesConstruct = new stdClass();
 
         $allowed_types = array("VARCHAR", "INT", "BIGINT", "TINYINT", "SMALLINT", "MEDIUMINT", "DECIMAL", "TEXT", "DATE", "DATETIME", "TIME");
-        if(!isset($column['predefined_type_in_db']) || !in_array($column['predefined_type_in_db'], $allowed_types)){
+        if (!isset($column['predefined_type_in_db']) || !in_array($column['predefined_type_in_db'], $allowed_types)) {
             $column['predefined_type_in_db'] = 'VARCHAR';
             $column['predefined_type_value_in_db'] = 255;
         }
-        if (!preg_match('/^[\d,]+$/', $column['predefined_type_value_in_db']) && $column['predefined_type_value_in_db'] !== ''){
+        if (!preg_match('/^[\d,]+$/', $column['predefined_type_value_in_db']) && $column['predefined_type_value_in_db'] !== '') {
             $column['predefined_type_in_db'] = 'VARCHAR';
             $column['predefined_type_value_in_db'] = 255;
         }
@@ -96,42 +98,42 @@ class wpDataTableConstructor
         $column['predefined_type_value_in_db'] = sanitize_text_field($column['predefined_type_value_in_db']);
 
         $columnPropertiesConstruct->vendor = Connection::getVendor($connection);
-        $columnPropertiesConstruct->isMySql =  $columnPropertiesConstruct->vendor === Connection::$MYSQL;
-        $columnPropertiesConstruct->isMSSql =  $columnPropertiesConstruct->vendor === Connection::$MSSQL;
-        $columnPropertiesConstruct->isPostgreSql =  $columnPropertiesConstruct->vendor === Connection::$POSTGRESQL;
+        $columnPropertiesConstruct->isMySql = $columnPropertiesConstruct->vendor === Connection::$MYSQL;
+        $columnPropertiesConstruct->isMSSql = $columnPropertiesConstruct->vendor === Connection::$MSSQL;
+        $columnPropertiesConstruct->isPostgreSql = $columnPropertiesConstruct->vendor === Connection::$POSTGRESQL;
 
         $columnPropertiesConstruct->columnQuoteStart = Connection::getLeftColumnQuote($columnPropertiesConstruct->vendor);
         $columnPropertiesConstruct->columnQuoteEnd = Connection::getRightColumnQuote($columnPropertiesConstruct->vendor);
         $columnPropertiesConstruct->nullable = '';
         $columnPropertiesConstruct->columnCollate = '';
         $columnPropertiesConstruct->columnTextType = 'TEXT';
-        $columnPropertiesConstruct->columnPredefinedType =  $column['predefined_type_in_db'];
+        $columnPropertiesConstruct->columnPredefinedType = $column['predefined_type_in_db'];
         $columnPropertiesConstruct->columnPredefinedTypeValue = $column['predefined_type_value_in_db'];
         $columnPropertiesConstruct->ValueForDB = $columnPropertiesConstruct->columnPredefinedType . '(' . $columnPropertiesConstruct->columnPredefinedTypeValue . ')';
         if ($columnPropertiesConstruct->isMySql) {
             $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->ValueForDB;
             $columnPropertiesConstruct->columnDateTimeType = 'DATETIME';
         }
-        if ( $columnPropertiesConstruct->isMSSql) {
+        if ($columnPropertiesConstruct->isMSSql) {
             $columnPropertiesConstruct->columnCollate = 'COLLATE Latin1_General_CS_AI';
-            $columnPropertiesConstruct->columnTextType =  $column['predefined_type_in_db'];
-            $columnPropertiesConstruct->columnIntType =$columnPropertiesConstruct->columnPredefinedType;
+            $columnPropertiesConstruct->columnTextType = $column['predefined_type_in_db'];
+            $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->columnPredefinedType;
             $columnPropertiesConstruct->columnDateTimeType = 'DATETIME';
             $columnPropertiesConstruct->nullable = 'NULL';
         }
-        if ($columnPropertiesConstruct->isPostgreSql ) {
+        if ($columnPropertiesConstruct->isPostgreSql) {
             $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->columnPredefinedType;
             $columnPropertiesConstruct->columnDateTimeType = 'TIMESTAMP';
-            if($columnPropertiesConstruct->columnPredefinedType == 'DATETIME'){
+            if ($columnPropertiesConstruct->columnPredefinedType == 'DATETIME') {
                 $columnPropertiesConstruct->columnPredefinedType = 'TIMESTAMP';
             }
         }
 
-        $column_header = $columnPropertiesConstruct->columnQuoteStart . $column_header. $columnPropertiesConstruct->columnQuoteEnd;
+        $column_header = $columnPropertiesConstruct->columnQuoteStart . $column_header . $columnPropertiesConstruct->columnQuoteEnd;
         if ($columnPropertiesConstruct->columnPredefinedType == 'VARCHAR') {
-            $columnProperties = self::columnPropertiesMapper( $columnPropertiesConstruct, $column_header )['VARCHAR'][$column['type']];
+            $columnProperties = self::columnPropertiesMapper($columnPropertiesConstruct, $column_header)['VARCHAR'][$column['type']];
         } else {
-            $columnProperties = self::columnPropertiesMapper( $columnPropertiesConstruct, $column_header )[$column['predefined_type_in_db']];
+            $columnProperties = self::columnPropertiesMapper($columnPropertiesConstruct, $column_header)[$column['predefined_type_in_db']];
         }
         $editingDefaultValue = '';
         if ($column['type'] === 'multiselect'){
@@ -170,7 +172,8 @@ class wpDataTableConstructor
 
     }
 
-    public static function columnPropertiesMapper($columnPropertiesConstruct, $column_header){
+    public static function columnPropertiesMapper($columnPropertiesConstruct, $column_header): array
+    {
         $columnPropertiesMapper = [
             'VARCHAR' => [
                 'string' => [
@@ -191,11 +194,11 @@ class wpDataTableConstructor
                     'column_type' => 'string',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
-                'memo' =>[
+                'memo' => [
                     'editor_type' => 'textarea',
                     'filter_type' => 'text',
                     'column_type' => 'string',
-                    'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
+                    'create_block' => "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
                 ],
                 'multiselect' => [
                     'editor_type' => 'multi-selectbox',
@@ -239,19 +242,19 @@ class wpDataTableConstructor
                     'column_type' => 'string',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
-                'date'=> [
+                'date' => [
                     'editor_type' => 'text',
                     'filter_type' => 'text',
                     'column_type' => 'string',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
-                'datetime'=> [
+                'datetime' => [
                     'editor_type' => 'text',
                     'filter_type' => 'text',
                     'column_type' => 'string',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
-                'time'=> [
+                'time' => [
                     'editor_type' => 'text',
                     'filter_type' => 'text',
                     'column_type' => 'string',
@@ -292,31 +295,31 @@ class wpDataTableConstructor
                 'editor_type' => 'text',
                 'filter_type' => 'number',
                 'column_type' => 'float',
-                'create_block' =>  "{$column_header} $columnPropertiesConstruct->ValueForDB "
+                'create_block' => "{$column_header} $columnPropertiesConstruct->ValueForDB "
             ],
             'TEXT' => [
                 'editor_type' => 'textarea',
                 'filter_type' => 'text',
                 'column_type' => 'string',
-                'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
             ],
             'DATE' => [
                 'editor_type' => 'date',
                 'filter_type' => 'date-range',
                 'column_type' => 'date',
-                'create_block' =>  "{$column_header} DATE "
+                'create_block' => "{$column_header} DATE "
             ],
             'DATETIME' => [
                 'editor_type' => 'datetime',
                 'filter_type' => 'datetime-range',
                 'column_type' => 'datetime',
-                'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnDateTimeType "
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnDateTimeType "
             ],
             'TIME' => [
                 'editor_type' => 'time',
                 'filter_type' => 'time-range',
                 'column_type' => 'time',
-                'create_block' =>  "{$column_header} TIME "
+                'create_block' => "{$column_header} TIME "
             ],
             'default' => [
                 'editor_type' => 'text',
@@ -347,7 +350,7 @@ class wpDataTableConstructor
         $connection = $tableData['connection'];
 
         // Generate the MySQL table name
-        $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1')+1;
+        $id = $wpdb->get_var('SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1') + 1;
         if (trim($tableData['name_in_database']) != "") {
             if ((int)$tableData['is_used_prefix_for_db_name']) {
                 $this->_name = $wpdb->prefix . sanitize_text_field($tableData['name_in_database']);
@@ -364,7 +367,6 @@ class wpDataTableConstructor
         } else {
             $this->generateTableName($connection, $id);
         }
-
         // Create the wpDataTable metadata
         $wpdb->insert(
             $wpdb->prefix . "wpdatatables",
@@ -384,8 +386,8 @@ class wpDataTableConstructor
                     'pdf' => 0
                 )),
                 'advanced_settings' => json_encode(array(
-	                'show_table_description' => false,
-	                'table_description' => sanitize_textarea_field($this->_table_data['table_description']),
+                    'show_table_description' => false,
+                    'table_description' => sanitize_textarea_field($this->_table_data['table_description']),
                     'fixed_columns' => false,
                     'fixed_left_columns_number' => 0,
                     'fixed_right_columns_number' => 0,
@@ -409,23 +411,23 @@ class wpDataTableConstructor
                     });
                 }
             }
-            $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1');
-            $newName = 'wpdatatable_' . $id ;
+            $id = $wpdb->get_var('SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1');
+            $newName = 'wpdatatable_' . $id;
             $checkTableQuery = "SHOW TABLES LIKE '{$wpdb->prefix}{$newName}'";
             if (!(Connection::isSeparate($connection))) {
                 $res = $wpdb->get_results($checkTableQuery);
                 if (!empty($res)) {
                     $newName = 'wpdatatable_' . $id . '_' . $cnt;
-                    $wpdatatable_id = $id . '_' .$cnt;
+                    $wpdatatable_id = $id . '_' . $cnt;
                     $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                 }
                 $res = $wpdb->get_results($checkTableQuery);
             } else {
                 $sql = Connection::getInstance($connection);
                 $res = $sql->getRow($checkTableQuery);
-                if (!empty($res)){
+                if (!empty($res)) {
                     $newName = $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
-                    $wpdatatable_id = $id . '_' .$cnt;
+                    $wpdatatable_id = $id . '_' . $cnt;
                     $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                 }
                 $res = $sql->getRow($checkTableQuery);
@@ -436,11 +438,11 @@ class wpDataTableConstructor
                 $newNameGenerated = true;
             }
         }
-        if(strpos($wpdatatable_id, '_') !== false ){
+        if (strpos($wpdatatable_id, '_') !== false) {
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
-                    'mysql_table_name' =>$wpdb->prefix . 'wpdatatable_' . $wpdatatable_id,
+                    'mysql_table_name' => $wpdb->prefix . 'wpdatatable_' . $wpdatatable_id,
                 ),
                 array(
                     'mysql_table_name' => $this->_name,
@@ -457,7 +459,7 @@ class wpDataTableConstructor
                     'mysql_table_name' => $this->_name,
                 )
             );
-        }else if($wpdatatable_id - $id >= 1){
+        } else if ($wpdatatable_id - $id >= 1) {
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
@@ -676,7 +678,7 @@ class wpDataTableConstructor
      *
      * @return array
      */
-    public static function listMySQLTables($connection)
+    public static function listMySQLTables($connection): array
     {
 
         $tables = array();
@@ -725,7 +727,7 @@ class wpDataTableConstructor
     /**
      * Return a list of columns for the selected tables
      */
-    public static function listMySQLColumns($tables, $connection)
+    public static function listMySQLColumns($tables, $connection): array
     {
         $columns = array('allColumns' => array(), 'sortedColumns' => array());
         if (!empty($tables)) {
@@ -798,7 +800,7 @@ class wpDataTableConstructor
      * @return array
      * @throws WDTException
      */
-    public function previewFileTable($tableData)
+    public function previewFileTable($tableData): array
     {
         try {
             if (!($file = self::isUploadedFileEmpty($tableData['file']))) {
@@ -968,14 +970,14 @@ class wpDataTableConstructor
         foreach ($existing_columns as $existing_column) {
             $advancedSettings = json_decode($existing_column->advanced_settings);
             if (isset($advancedSettings->transformValueText) && $advancedSettings->transformValueText !== "") {
-                    $advancedSettings->transformValueText = str_ireplace("{" . $delete_column_header . '.value}', "", $advancedSettings->transformValueText);
+                $advancedSettings->transformValueText = str_ireplace("{" . $delete_column_header . '.value}', "", $advancedSettings->transformValueText);
 
-                    $updated_data = json_encode($advancedSettings);
-                    $wpdb->update(
-                        $wpdb->prefix . 'wpdatatables_columns',
-                        array('advanced_settings' => $updated_data),
-                        array('table_id' => $tableId, 'id' => $existing_column->id)
-                    );
+                $updated_data = json_encode($advancedSettings);
+                $wpdb->update(
+                    $wpdb->prefix . 'wpdatatables_columns',
+                    array('advanced_settings' => $updated_data),
+                    array('table_id' => $tableId, 'id' => $existing_column->id)
+                );
             }
         }
 

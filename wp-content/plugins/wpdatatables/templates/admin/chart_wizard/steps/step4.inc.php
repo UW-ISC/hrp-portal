@@ -2046,7 +2046,7 @@
                                    title="<?php esc_attr_e('Manage loader visibility while charts load', 'wpdatatables'); ?>"></i>
                             </h4>
                             <div class="toggle-switch p-b-16" data-ts-color="blue">
-                                <input id="loader-row" type="checkbox" checked>
+                                <input id="loader-row" type="checkbox">
                                 <label for="loader-row"><?php esc_html_e('Enable this option to ensure loader is visible.', 'wpdatatables'); ?></label>
                             </div>
                         </div>

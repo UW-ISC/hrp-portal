@@ -1025,3 +1025,6 @@
 .wpdt-icon-folder-close2:before {
   content: "\e930";
 }
+.wpdt-icon-cart:before {
+  content: "\e93a";
+}

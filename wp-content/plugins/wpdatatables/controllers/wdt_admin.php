@@ -283,6 +283,7 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-skin-dark-mojito', WDT_ASSETS_PATH . 'css/wdt-skins/dark-mojito.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-select', WDT_JS_PATH . 'jquery-datatables/dataTables.select.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-row-grouping', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.rowGrouping.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-buttons', WDT_JS_PATH . 'export-tools/dataTables.buttons.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
@@ -303,6 +304,9 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-column-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/column_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-table-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/table_config_object.js', array(), WDT_CURRENT_VERSION, true);
+    if (defined('WDT_WP_QUERY_INTEGRATION')) {
+        wp_enqueue_script('wdt-wp-post-config', WDT_WP_QUERY_ASSETS_PATH . 'wp_posts_table_config.js', array('wdt-table-config'), WDT_CURRENT_VERSION, true);
+    }
     wp_enqueue_script('wdt-edit-main-js', WDT_JS_PATH . 'wpdatatables/admin/table-settings/main.js', array(), WDT_CURRENT_VERSION, true);
     if (isset($_GET['table_id']) && isset($_GET['simple'])) {
         wp_enqueue_style('wdt-star-rating-css', WDT_CSS_PATH . 'admin/starRating.min.css', array(), WDT_CURRENT_VERSION);
@@ -319,6 +323,7 @@ function wdtEditEnqueue()
         wp_register_script('handsontable', WDT_JS_PATH . 'handsontable/handsontable.full' . $jsExt, array('jquery'), WDT_CURRENT_VERSION);
         wp_enqueue_script('handsontable');
     }
+    wp_enqueue_script('wdt-jsrender');
     wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-add-remove-column', WDT_JS_PATH . 'wpdatatables/wdt.addRemoveColumn.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('jquery-effects-core');
@@ -358,6 +363,7 @@ function wdtConstructorEnqueue()
     wp_enqueue_script('wdt-doc-js');
 
     wp_localize_script('wdt-constructor-main-js', 'wpdatatables_constructor_strings', WDTTools::getTranslationStringsConstructor());
+    do_action('wpdatatables_enqueue_constructor_scripts');
 }
 
 /**
