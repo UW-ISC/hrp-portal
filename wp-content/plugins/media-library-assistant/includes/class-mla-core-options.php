@@ -450,6 +450,61 @@ class MLACoreOptions {
 	public static $mla_option_definitions = array ();
 
 	/**
+	 * Option definitions required in the MLACore::mla_plugins_loaded_action() function,
+	 * which cannot contain i18n or text domain function calls.
+	 *
+	 * @since 3.21
+	 *
+	 * @var array See above documentation of array elements
+	 */
+	public static $mla_prelocalize_option_definitions = array (
+			self::MLA_MEDIA_GRID_TOOLBAR =>
+				array('tab' => 'general',
+					'name' => 'Enable Media Grid Enhancements',
+					'type' => 'checkbox',
+					'std' => 'checked',
+					'help' => 'Check/uncheck this option to enable/disable Media Library Grid View Enhancements.' ),
+
+			self::MLA_MEDIA_MODAL_TOOLBAR =>
+				array('tab' => 'general',
+					'name' => 'Enable Media Manager Enhancements',
+					'type' => 'checkbox',
+					'std' => 'checked',
+					'help' => 'Check/uncheck this option to enable/disable Media Manager Modal Window Enhancements.' ),
+
+			self::MLA_DEBUG_FILE =>
+				array('tab' => 'debug',
+					'name' => 'Debug File',
+					'type' => 'text',
+					'std' => '',
+					'size' => 60,
+					'help' => 'Enter the name of an alternate, MLA-specific debug log file; leave blank to use the PHP error_log.<br>&nbsp;&nbsp;The WP_CONTENT_DIR value (below) will be prepended to the value here, e.g., enter something like "/uploads/mla.log".'),
+
+			self::MLA_DEBUG_REPLACE_PHP_LOG =>
+				array('tab' => 'debug',
+					'name' => 'Replace PHP error_log file',
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => 'Check this option to replace the PHP error_log file with the MLA Debug File.<br>&nbsp;&nbsp;allows capture of PHP messages in the MLA Debug File.', 'media-library-assistant' ),
+
+			self::MLA_DEBUG_REPLACE_PHP_REPORTING =>
+				array('tab' => 'debug',
+					'name' => 'PHP Reporting',
+					'type' => 'text',
+					'std' => '',
+					'size' => 10,
+					'help' => 'Enter a numeric error_reporting value, e.g., 0x7FFF or 32767; leave blank to use the existing PHP error_reporting value.'),
+
+			self::MLA_DEBUG_REPLACE_LEVEL =>
+				array('tab' => 'debug',
+					'name' => 'MLA Reporting',
+					'type' => 'text',
+					'std' => '',
+					'size' => 10,
+					'help' => 'Enter a numeric MLA_DEBUG_LEVEL value, e.g., 0x0003 or 3; leave blank to use the existing MLA_DEBUG_LEVEL value.'),
+		);
+
+	/**
 	 * Localize $mla_option_definitions array
 	 *
 	 * Localization must be done at runtime; these calls cannot be placed in the
@@ -1610,6 +1665,7 @@ class MLACoreOptions {
 					'help' => __( 'Enter the text area...'),
 			*/
 		);
+		MLACore::mla_initialize_tax_checked_on_top();
 	}
 } // class MLACoreOptions
 ?>

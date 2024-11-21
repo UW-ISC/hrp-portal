@@ -241,6 +241,7 @@ class MLAOptions {
 	public static function mla_taxonomy_option_handler( $action, $key, $value, $args = NULL ) {
 		MLAOptions::_load_option_templates();
 
+
 		switch ( $action ) {
 			case 'render':
 				$taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'objects' );

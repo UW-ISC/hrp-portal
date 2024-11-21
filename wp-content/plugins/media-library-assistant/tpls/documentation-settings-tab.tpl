@@ -76,7 +76,7 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#mla_term_list_examples">MLA Term List Examples</a></li>
 <li><a href="#mla_term_list_hooks">MLA Term List Filters (Hooks)</a></li>
 </ul></div>
-<div  id="mla-doc-cf-list-shortcode" style="display:inline"><a href="#mla_cf_list"><strong>MLA Custom Field List Shortcode</strong></a>
+<div  id="mla-doc-cf-list-shortcode" style="display:inline-block"><a href="#mla_cf_list"><strong>MLA Custom Field List Shortcode</strong></a>
 <ul class="mla-doc-toc-list">
 <li><a href="#cf_list_output">Custom Field List Output Formats</a></li>
 <li><a href="#cf_list_items">Custom Field List Item Parameters</a></li>
@@ -96,6 +96,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#mla_cf_list_hooks">MLA Custom Field List Filters (Hooks)</a></li>
 </ul></div>
 <ul style="list-style-position:inside; list-style:disc; line-height: 18px; clear:both">
+<li>
+<a href="#shortcode_api"><strong>Calling shortcode functions from PHP code; the MLA shortcode API</strong></a>
+</li>
 <li>
 <a href="#gallery_examples"><strong>MLA Gallery Examples</strong></a>
 </li>
@@ -1233,21 +1236,32 @@ The <code>[mla_gallery]</code> shortcode supports the simple custom field parame
 <td>Custom field value; numeric comparison.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">meta_value_delimiter&nbsp;(single&nbsp;character)</td>
+<td>Delimiter between two or more Custom field values.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">meta_compare&nbsp;(string)</td>
 <td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
 </tr>
 </table>
 <p>
-<strong>IMPORTANT:</strong> Beginning with version 4.0, WordPress changed the way it handles shortcode parameters. Using angle brackets, e.g., the <code>>=</code> characters in a shortcode will often return "Invalid mla_gallery tax_query" errors. To prevent this: 1) add "&lt;code&gt;&lt;/code&gt;" tags around your shortcode, 2) use an escape sequence like "&amp;gt;=" in your query or 3) use the enclosing shortcode syntax.
+<strong>IMPORTANT:</strong> Beginning with version 4.0, WordPress changed the way it handles shortcode parameters. Using angle brackets, e.g., the <code>>=</code> characters in a shortcode will often return "Invalid mla_gallery tax_query" errors. To prevent this: 1) add "&lt;code&gt;&lt;/code&gt;" tags around your shortcode, 2) use an escape sequence like "&amp;gt;" in your query or 3) use the enclosing shortcode syntax.
 You can find more information in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section.
 </p>
+<p>
 For simple queries, enter the custom field name and the value(s) that must be matched, e.g.:
 </p>
 <ul class="mla_settings">
 <li><code>[mla_gallery meta_key=camera meta_value='SP510UZ,NIKON D300E' meta_compare=IN]</code></li>
 </ul>
 <p>
-Note that multiple custom field values are separated by commas and can contain spaces. Multiple values are only allowed with the 'IN', 'NOT IN', 'BETWEEN' and 'NOT BETWEEN' compare operators. Three special values let you find all items, items that have no valuess in the custom field or any (one or more) values in the field. For example, to find all items, items that have no values or any values you can code:
+Note that, by default, multiple custom field values are separated by commas and can contain spaces. Multiple values are only allowed with the 'IN', 'NOT IN', 'BETWEEN' and 'NOT BETWEEN' compare operators. If your values contain a comma you can specify a different delimiter, e.g.:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery meta_key=camera meta_value='SP510UZ^NIKON D300E' meta_value_delimiter='^' meta_compare=IN]</code></li>
+</ul>
+<p>
+Three special values let you find all items, items that have no valuess in the custom field or any (one or more) values in the field. For example, to find all items, items that have no values or any values you can code:
 </p>
 <ul class="mla_settings">
 <li><code>[mla_gallery meta_key=camera meta_value=ignore.values.assigned]</code></li>
@@ -4683,8 +4697,15 @@ The example code documents each hook with comments in the filter/action function
 </tr>
 </table>
 </div>
+<a name="shortcode_api"></a>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Calling shortcode functions from PHP code; the MLA shortcode API</h3>
+<p>
+You can always use the WordPress <code>do_shortcode()</code> function to execute MLA shortcodes, but you can also call several of the MLA shortcode support functions directly from your PHP code. You can find the available API functions and parameter documentation in the <code>/media-library-assistant/includes/class-mla-shortcode.php</code> file.
 <a name="gallery_examples"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>

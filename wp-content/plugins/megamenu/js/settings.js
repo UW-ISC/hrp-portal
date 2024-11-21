@@ -30,6 +30,20 @@ jQuery(function ($) {
         }
     });
 
+    $('select[name$="[effect_mobile]').each(function(index) {
+        if ($(this).val() == ( 'slide_left' ) || $(this).val() == ( 'slide_right' ) ) {
+            $(this).closest('tr.mega-effect_mobile').addClass('mega-is-offcanvas');
+        }
+    });
+
+    $('select[name$="[effect_mobile]"]').on("change", function() {
+        if ( this.value == 'slide_left' || this.value == 'slide_right') {
+            $(this).closest('tr.mega-effect_mobile').addClass('mega-is-offcanvas');
+        } else {
+            $(this).closest('tr.mega-effect_mobile').removeClass('mega-is-offcanvas');
+        }
+    });
+
     $('.menu_settings_menu_locations .mega-enabled input[type="checkbox"]').on("change", function() {
         if ( $(this).is(":checked")) {
             $(this).closest('.mega-location').removeClass('mega-location-disabled').addClass('mega-location-enabled');

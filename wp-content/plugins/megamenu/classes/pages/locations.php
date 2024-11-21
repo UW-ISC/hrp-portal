@@ -685,7 +685,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 									'effect'        => array(
 										'priority'    => 30,
 										'title'       => __( 'Effect', 'megamenu' ),
-										'description' => __( 'Select the sub menu animation type', 'megamenu' ),
+										'description' => __( 'Select the desktop sub menu animation type', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'type'  => 'effect',
@@ -703,14 +703,20 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 									),
 									'effect_mobile' => array(
 										'priority'    => 40,
-										'title'       => __( 'Effect (Mobile)', 'megamenu' ),
+										'title'       => __( 'Mobile Menu', 'megamenu' ),
 										'description' => __( 'Choose a style for your mobile menu', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'type'  => 'effect_mobile',
 												'key'   => 'effect_mobile',
-												'value' => isset( $location_settings['effect_mobile'] ) ? $location_settings['effect_mobile'] : 'none',
-												'title' => __( 'Style', 'megamenu' ),
+												'value' => isset( $location_settings['effect_mobile'] ) ? $location_settings['effect_mobile'] : 'slide_right',
+												'title' => __( 'Type', 'megamenu' ),
+											),
+											array(
+												'type'  => 'effect_mobile_direction',
+												'key'   => 'effect_mobile_direction',
+												'value' => isset( $location_settings['effect_mobile_direction'] ) ? $location_settings['effect_mobile_direction'] : 'vertical',
+												'title' => __( 'Submenu Style', 'megamenu' ),
 											),
 											array(
 												'type'  => 'effect_speed_mobile',
@@ -1008,6 +1014,9 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 									case 'effect_mobile':
 										$this->print_location_effect_mobile_option( $location, $setting['key'], $setting['value'] );
 										break;
+									case 'effect_mobile_direction':
+										$this->print_location_effect_mobile_direction_option( $location, $setting['key'], $setting['value'] );
+										break;
 									case 'effect_speed_mobile':
 										$this->print_location_effect_speed_mobile_option( $location, $setting['key'], $setting['value'] );
 										break;
@@ -1287,7 +1296,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 					<option value='close' <?php echo selected( $second_click == 'close' ); ?>><?php _e( 'First click will open the sub menu, second click will close the sub menu.', 'megamenu' ); ?></option>
 					<option value='go' <?php echo selected( $second_click == 'go' ); ?>><?php _e( 'First click will open the sub menu, second click will follow the link.', 'megamenu' ); ?></option>
 					<option value='disabled' <?php echo selected( $second_click == 'disabled' ); ?>><?php _e( 'First click will follow the link (the arrow must be used to toggle sub menu visiblity).', 'megamenu' ); ?></option>
-				<select>
+				</select>
 			<?php
 		}
 
@@ -1312,7 +1321,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 				<select name='megamenu_meta[<?php echo esc_attr( $location ); ?>][mobile_behaviour]'>
 					<option value='standard' <?php echo selected( $mobile_behaviour == 'standard' ); ?>><?php _e( 'Standard - Open sub menus will remain open until closed by the user.', 'megamenu' ); ?></option>
 					<option value='accordion' <?php echo selected( $mobile_behaviour == 'accordion' ); ?>><?php _e( 'Accordion - Open sub menus will automatically close when another one is opened.', 'megamenu' ); ?></option>
-				<select>
+				</select>
 			<?php
 		}
 
@@ -1335,7 +1344,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 					<option value='collapse_all' <?php echo selected( $mobile_state == 'collapse_all' ); ?>><?php _e( 'Collapse all', 'megamenu' ); ?></option>
 					<option value='expand_all' <?php echo selected( $mobile_state == 'expand_all' ); ?>><?php _e( 'Expand all', 'megamenu' ); ?></option>
 					<option value='expand_active' <?php echo selected( $mobile_state == 'expand_active' ); ?>><?php _e( 'Expand active parents', 'megamenu' ); ?></option>
-				<select>
+				</select>
 			<?php
 		}
 
@@ -1358,7 +1367,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 				<select name='megamenu_meta[<?php echo esc_attr( $location ); ?>][container]'>
 					<option value='div' <?php echo selected( $container == 'div' ); ?>>&lt;div&gt;</option>
 					<option value='nav' <?php echo selected( $container == 'nav' ); ?>>&lt;nav&gt;</option>
-				<select>
+				</select>
 			<?php
 		}
 
@@ -1508,7 +1517,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 			);
 
 			foreach ( $options as $key => $value ) {
-				echo "<option value='" . esc_attr( $key ) . "' " . selected( $value['selected'] ) . '>' . esc_html( $value['label'] ) . '</option>';
+				echo "<option value='" . esc_attr( $key ) . "' " . selected( $value['selected'], true, false ) . '>' . esc_html( $value['label'] ) . '</option>';
 			}
 
 			echo '</select>';
@@ -1543,7 +1552,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 			ksort( $options );
 
 			foreach ( $options as $key => $value ) {
-				echo "<option value='" . esc_attr( $key ) . "' " . selected( $selected, $key ) . '>' . esc_html( $value ) . '</option>';
+				echo "<option value='" . esc_attr( $key ) . "' " . selected( $selected, $key, false ) . '>' . esc_html( $value ) . '</option>';
 			}
 
 			echo '</select>';
@@ -1563,7 +1572,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 			<select name='megamenu_meta[<?php echo esc_attr( $location ); ?>][<?php echo esc_attr( $key ); ?>]'>
 			<?php
 
-			$selected = strlen( $value ) ? $value : 'disabled';
+			$selected = strlen( $value ) ? $value : 'slide_right';
 
 			$options = apply_filters(
 				'megamenu_transition_effects_mobile',
@@ -1577,11 +1586,11 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 						'selected' => $selected == 'slide',
 					),
 					'slide_left'  => array(
-						'label'    => __( 'Slide Left (Off Canvas)', 'megamenu' ),
+						'label'    => __( 'Off Canvas ←', 'megamenu' ),
 						'selected' => $selected == 'slide_left',
 					),
 					'slide_right' => array(
-						'label'    => __( 'Slide Right (Off Canvas)', 'megamenu' ),
+						'label'    => __( 'Off Canvas →', 'megamenu' ),
 						'selected' => $selected == 'slide_right',
 					),
 				),
@@ -1589,7 +1598,47 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 			);
 
 			foreach ( $options as $key => $value ) {
-				echo "<option value='" . esc_attr( $key ) . "' " . selected( $value['selected'] ) . '>' . esc_html( $value['label'] ) . '</option>';
+				echo "<option value='" . esc_attr( $key ) . "' " . selected( $value['selected'], true, false ) . '>' . esc_html( $value['label'] ) . '</option>';
+			}
+
+			echo '</select>';
+
+		}
+
+		/**
+		 * Print the textbox containing the various mobile menu options
+		 *
+		 * @since 2.8
+		 * @param string $key
+		 * @param string $value
+		 */
+		public function print_location_effect_mobile_direction_option( $location, $key, $value ) {
+			?>
+			<select name='megamenu_meta[<?php echo esc_attr( $location ); ?>][<?php echo esc_attr( $key ); ?>]'>
+			<?php
+
+			$selected = strlen( $value ) ? $value : 'vertical';
+
+			$options = apply_filters(
+				'megamenu_mobile_direction_options',
+				array(
+					'vertical'    => array(
+						'label'    => __( 'Up / Down ↕', 'megamenu' ),
+						'selected' => $selected == 'vertical',
+						'disabled' => '',
+					),
+					/*'horizontal'       => array(
+						'label'    => __( 'Left / Right ↔ (Pro)', 'megamenu' ),
+						'selected' => $selected == 'horizontal',
+						'disabled' => 'disabled',
+					),*/
+				),
+				$selected
+			);
+
+			foreach ( $options as $key => $value ) {
+				$disabled = isset($value['disabled']) && $value['disabled'] == 'disabled' ? 'disabled="disabled"' : '';
+				echo "<option {$disabled} value='" . esc_attr( $key ) . "'" . selected( $value['selected'], true, false ) . ">" . esc_html( $value['label'] ) . "</option>";
 			}
 
 			echo '</select>';
@@ -1624,7 +1673,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 			ksort( $options );
 
 			foreach ( $options as $key => $value ) {
-				echo "<option value='" . esc_attr( $key ) . "' " . selected( $selected, $key ) . '>' . esc_html( $value ) . '</option>';
+				echo "<option value='" . esc_attr( $key ) . "' " . selected( $selected, $key, false ) . '>' . esc_html( $value ) . '</option>';
 			}
 
 			echo '</select>';
@@ -1659,7 +1708,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 					)
 				);
 
-				echo "<option data-url='" . esc_attr($edit_theme_url) . "' value='" . esc_attr( $key ) . "' " . selected( $selected_theme, $key ) . '>' . esc_html( $theme['title'] ) . '</option>';
+				echo "<option data-url='" . esc_attr($edit_theme_url) . "' value='" . esc_attr( $key ) . "' " . selected( $selected_theme, $key, false ) . '>' . esc_html( $theme['title'] ) . '</option>';
 			}
 
 			echo '</select>';

@@ -243,6 +243,7 @@ class MLAEdit {
 			'ajaxFailError' => __( 'An ajax.fail error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
 			'ajaxDoneError' => __( 'An ajax.done error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
 			'setParentAction' => MLACore::JAVASCRIPT_FIND_POSTS_SLUG,
+			/* translators: 1: placeholder in WorfdPress string */
 			'uploadLabel' => sprintf( __( 'Uploaded on: %s' ), '' ),
 			'modifyLabel' => __( 'Last modified', 'media-library-assistant' ) . ': ',
 			'useDashicons' => false,

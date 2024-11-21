@@ -502,12 +502,12 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 				</td>
 			</tr>
 			<tr>
-				<td><?php esc_html_e( 'Effect (Mobile)', 'megamenu' ); ?></td>
+				<td><?php esc_html_e( 'Mobile Menu', 'megamenu' ); ?></td>
 				<td>
 					<select class='megamenu_effect_mobile' name='megamenu_meta[<?php echo $location; ?>][effect_mobile]'>
 					<?php
 
-						$selected = isset( $settings[ $location ]['effect_mobile'] ) ? $settings[ $location ]['effect_mobile'] : 'disabled';
+						$selected = isset( $settings[ $location ]['effect_mobile'] ) ? $settings[ $location ]['effect_mobile'] : 'slide_right';
 
 						$options = apply_filters(
 							'megamenu_transition_effects_mobile',
@@ -521,11 +521,11 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 									'selected' => $selected == 'slide',
 								),
 								'slide_left'  => array(
-									'label'    => __( 'Slide Left (Off Canvas)', 'megamenu' ),
+									'label'    => __( 'Off Canvas ←', 'megamenu' ),
 									'selected' => $selected == 'slide_left',
 								),
 								'slide_right' => array(
-									'label'    => __( 'Slide Right (Off Canvas)', 'megamenu' ),
+									'label'    => __( 'Off Canvas →', 'megamenu' ),
 									'selected' => $selected == 'slide_right',
 								),
 							),

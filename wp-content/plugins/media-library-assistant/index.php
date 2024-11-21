@@ -9,14 +9,14 @@
  * @author    David Lingren
  * @copyright 2024 David Lingren
  * @license   GPL-2.0-or-later
- * @version   3.20
+ * @version   3.22
  */
 
 /*
 Plugin Name: Media Library Assistant
 Plugin URI: http://davidlingren.com/#two
 Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
-Version: 3.20
+Version: 3.22
 Requires at least: 4.1
 Requires PHP: 5.3
 Author: David Lingren
@@ -164,6 +164,7 @@ $mla_name_conflict_candidates =
 		'MLA_WPML_Table' => 'class',
 		'MLATest' => 'class',
 		//'MLA_BACKUP_DIR' => 'constant'
+		//'MLA_AJAX_EXCEPTIONS' => 'constant' // for test purposes only
 	);
 
 // Check for conflicting names, i.e., already defined by some other plugin or theme
@@ -194,7 +195,7 @@ function mla_name_conflict_reporting_action () {
 	global $mla_name_conflict_error_messages;
 
 	echo '<div class="error"><p><strong>The Media Library Assistant cannot load.</strong> Another plugin or theme has declared conflicting class, function or constant names:</p>'."\r\n";
-	echo "<ul>{$mla_name_conflict_error_messages}</ul>\r\n";
+	echo wp_kses( "<ul>{$mla_name_conflict_error_messages}</ul>\r\n", 'post' );
 	echo '<p>You must resolve these conflicts before this plugin can safely load.</p></div>'."\r\n";
 }
 

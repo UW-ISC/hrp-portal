@@ -126,9 +126,9 @@ class MLA {
 			add_action( 'admin_menu', 'MLA::mla_admin_menu_action' );
 		}
 		
-		add_filter( 'set-screen-option', 'MLA::mla_set_screen_option_filter', 10, 3 ); // $status, $option, $value
+		//add_filter( 'set-screen-option', 'MLA::mla_set_screen_option_filter', 10, 3 ); // $status, $option, $value
 		add_filter( 'set_screen_option_' . MLA_OPTION_PREFIX . 'entries_per_page', 'MLA::mla_set_screen_option_filter', 10, 3 );
-		add_filter( 'screen_options_show_screen', 'MLA::mla_screen_options_show_screen_filter', 10, 2 ); // $show_screen, $this
+		//add_filter( 'screen_options_show_screen', 'MLA::mla_screen_options_show_screen_filter', 10, 2 ); // $show_screen, $this
 	}
 
 	/**
@@ -605,7 +605,8 @@ class MLA {
 
 			// Compose a message if returning from the Edit Media screen
 			if ( ! empty( $_GET['deleted'] ) && $deleted = absint( $_GET['deleted'] ) ) {
-				$query_args .= '&mla_admin_message=' . urlencode( sprintf( _n( 'Item permanently deleted.', '%d items permanently deleted.', $deleted, 'media-library-assistant' ), number_format_i18n( $deleted ) ) );
+				/* translators: 1: number of deleted items */
+				$query_args .= '&mla_admin_message=' . urlencode( sprintf( _n( '%d item permanently deleted.', '%d items permanently deleted.', $deleted, 'media-library-assistant' ), number_format_i18n( $deleted ) ) );
 			}
 
 			if ( ! empty( $_GET['trashed'] ) && absint( $_GET['trashed'] ) ) {
@@ -635,6 +636,49 @@ class MLA {
 		);
 
 		add_screen_option( $option, $args );
+		add_filter( 'screen_settings', 'MLA::mla_screen_settings_filter', 10, 1 );
+	}
+
+	/**
+	 * Add the filter taxonomy dropdown option to the Screen Options tab
+	 *
+	 * @since 3.21
+	 *
+     * @param string $html
+     *
+	 * @return	string
+	 */
+	public static function mla_screen_settings_filter( $html ) {
+		$screen = get_current_screen();
+		// Is this Media/Assistant?
+		if ( !array_key_exists( $screen->id, self::$page_hooks ) ) {
+			return;
+		}
+
+		if ( 'edit-tags' === $screen->base && 'attachment' !== $screen->post_type ) {
+			return;
+		}
+
+		$html .= '
+		<fieldset class="mla-screen-options">
+			<legend>' . __( 'Media Library Assistant', 'media-library-assistant' ) . '</legend>
+			<div class="mla-so-container">
+				<label name="mla_so_filter_taxonomy" id="mla_so_filter_taxonomy">' . __( 'List Filter', 'media-library-assistant' ) . ': <select name="mla_so_filter_taxonomy" id="mla_so_filter_taxonomy_dropdown">';
+
+		$tax_filter =  MLACore::mla_taxonomy_support('', 'filter');
+		foreach( get_object_taxonomies( 'attachment', 'objects' ) as $taxonomy ) {
+			if ( MLACore::mla_taxonomy_support( $taxonomy->name, 'support' ) ) {
+				$selected = ( $taxonomy->name === $tax_filter ) ? ' selected="selected" ' : ' ';
+				$html .= "\n" . '					<option' . $selected . ' value="' . $taxonomy->name . '">' . $taxonomy->label . '</option>';
+			}
+		}
+
+		$html .= '
+				</select></label>
+			</div>
+		</fieldset>';
+
+        return $html;
 	}
 
 	/**
@@ -757,8 +801,19 @@ class MLA {
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) wp_filter = " . MLACore::mla_decode_wp_filter('set-screen-option'), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
-		if ( ( MLA_OPTION_PREFIX . 'entries_per_page' ) == $option ) {
-		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) return value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		if ( ( MLA_OPTION_PREFIX . 'entries_per_page' ) === $option ) {
+			if ( isset( $_REQUEST['mla_so_filter_taxonomy'] ) ) {
+				$old_filter =  MLACore::mla_taxonomy_support('', 'filter');
+				$new_filter = sanitize_text_field( wp_unslash( $_REQUEST['mla_so_filter_taxonomy'] ) );
+
+				if ( $new_filter !== $old_filter ) {
+					$option_values = MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
+					$option_values['tax_filter'] = $new_filter;
+					MLACore::mla_update_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT, $option_values );
+				}
+			}
+			
+			MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) return value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			return absint( $value );
 		}
 
@@ -1445,6 +1500,7 @@ class MLA {
 				// Custom action can set $prevent_default, so test again.
 				if ( ! $prevent_default ) {
 					if ( ! empty( $custom_message ) ) {
+						/* translators: 1: post ID of item */
 						$no_changes = sprintf( __( 'Item %1$d, no changes detected.', 'media-library-assistant' ), $post_id );
 						if ( $no_changes == $item_content['message'] ) {
 							$item_content['message'] = $custom_message;
@@ -1570,11 +1626,11 @@ class MLA {
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) {
-			$_GET['order'] = ( 'desc' === strtolower( wp_unslash( $_REQUEST['order'] ) ) ) ? 'desc' : 'asc';
+			$_GET['order'] = ( 'desc' === strtolower( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			$_GET['orderby'] = esc_attr( wp_unslash( $_REQUEST['orderby'] ) );
+			$_GET['orderby'] = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) );
 		}
 
 		// bulk_refresh simply refreshes the page, ignoring other bulk actions
@@ -2229,8 +2285,10 @@ class MLA {
 		$minute = '<label><span class="screen-reader-text">' . __( 'Minute' ) . '</span><input type="text" name="mn" value="' . $mn . '" size="2" maxlength="2" autocomplete="off" /></label>';
 
 		$time_edit_form  = '<fieldset class="inline-edit-date">' . "\n";
+		/* translators: 1: uploaded date and time */
 		$time_edit_form .= '<legend><span class="title">' . sprintf( __( 'Uploaded on: %s' ), '' ) . '</span></legend>' . "\n";
 		$time_edit_form .= '<div class="timestamp-wrap">' . "\n";
+		/* translators: 1: month, 2: day, 3:year, 4:hour, 5: minute */
 		$time_edit_form .= sprintf( __( '%1$s %2$s, %3$s @ %4$s:%5$s' ), $month, $day, $year, $hour, $minute );
 
 		$time_edit_form .= "</div>\n";

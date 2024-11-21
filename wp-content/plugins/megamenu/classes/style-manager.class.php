@@ -124,6 +124,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 					'arrow_down'                           => 'dash-f140',
 					'arrow_left'                           => 'dash-f141',
 					'arrow_right'                          => 'dash-f139',
+					'close_icon'                           => 'dash-f158',
+					'close_icon_font_size'                 => '16px',
+					'close_icon_color'                     => '#fff',
+					'close_icon_label'                     => 'Close',
 					'font_size'                            => '14px', // deprecated
 					'font_color'                           => '#666', // deprecated
 					'font_family'                          => 'inherit', // deprecated
@@ -819,6 +823,8 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$vars['elementor_pro_active'] = 'false';
 			$vars['arrow_font']           = 'dashicons';
 			$vars['arrow_font_weight']    = 'normal';
+			$vars['close_icon_font']      = 'dashicons';
+			$vars['close_icon_font_weight'] = 'normal';
 			$vars['arrow_combinator']     = "'>'";
 
 			if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
@@ -870,7 +876,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			foreach ( $theme as $name => $value ) {
 
-				if ( in_array( $name, array( 'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right' ) ) ) {
+				if ( in_array( $name, array( 'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right', 'close_icon' ) ) ) {
 
 					$parts = explode( '-', $value );
 					$code  = end( $parts );
@@ -1040,17 +1046,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			wp_enqueue_script( $handle, $js_path, $dependencies, MEGAMENU_VERSION, $scripts_in_footer );
 
-			// @todo: remove the following code in future update. Only here to prevent JS errors for users with
-			// cached versions of maxmegamenu.js
-			$params = apply_filters(
-				'megamenu_javascript_localisation',
-				array(
-					'timeout'  => 300,
-					'interval' => 100,
-				)
-			);
+			$params = apply_filters( 'megamenu_javascript_localisation', array() );
 
-			wp_localize_script( $handle, 'megamenu', $params );
+			if ( count( $params) ) {
+				wp_localize_script( $handle, 'megamenu', $params );
+			}
 		}
 
 
