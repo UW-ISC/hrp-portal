@@ -57,7 +57,7 @@
  * https://wordpress.org/support/topic/insert-fixit-tool-no-clobber-option/
  *
  * @package Insert Fixit
- * @version 1.27
+ * @version 1.28
  */
 
 /*
@@ -65,7 +65,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.27
+Version: 1.28
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2023 David Lingren
@@ -98,7 +98,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.27';
+	const CURRENT_VERSION = '1.28';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -149,15 +149,6 @@ class Insert_Fixit {
 	const INPUT_FIRST_ITEM = 'first-item';
 
 	/**
-	 * WordPress version test for $wpdb->esc_like() Vs esc_sql()
-	 *
-	 * @since 1.00
-	 *
-	 * @var	boolean
-	 */
-	private static $wp_4dot0_plus = true;
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 1.00
@@ -165,8 +156,6 @@ class Insert_Fixit {
 	 * @return	void
 	 */
 	public static function initialize() {
-		self::$wp_4dot0_plus = version_compare( get_bloginfo('version'), '4.0', '>=' );
-
 		add_action( 'admin_menu', 'Insert_Fixit::admin_menu_action' );
 		add_filter( 'mla_evaluate_custom_data_source', 'Insert_Fixit::mla_evaluate_custom_data_source', 10, 5 );
 	}

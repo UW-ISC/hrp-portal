@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2023-11-12 17:59-0800\n"
+"POT-Creation-Date: 2024-10-27 17:03-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -1743,13 +1743,16 @@ msgid "CANCELED"
 msgstr ""
 
 #, php-format
-msgid "Item permanently deleted."
+msgid "%d item permanently deleted."
 msgid_plural "%d items permanently deleted."
 msgstr[0] ""
 msgstr[1] ""
 
 #, php-format
 msgid "Item %1$d moved to Trash."
+msgstr ""
+
+msgid "List Filter"
 msgstr ""
 
 msgid "download path out of bounds."
@@ -2246,9 +2249,6 @@ msgstr ""
 msgid "Inline Add Term"
 msgstr ""
 
-msgid "List Filter"
-msgstr ""
-
 msgid "Taxonomy"
 msgstr ""
 
@@ -2363,31 +2363,6 @@ msgid "Option"
 msgstr ""
 
 msgid "Delete NULL values"
-msgstr ""
-
-#, php-format
-msgid "%1$s: No old values for %2$s."
-msgstr ""
-
-msgid "Field Title"
-msgstr ""
-
-msgid "IPTC Value"
-msgstr ""
-
-msgid "EXIF Value"
-msgstr ""
-
-msgid "EXIF to IPTC"
-msgstr ""
-
-msgid "IPTC to EXIF"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Delimiter(s)"
 msgstr ""
 
 msgid "ERROR: No post ID found"
@@ -2635,6 +2610,9 @@ msgid "Add to Media/Assistant Bulk Edit area"
 msgstr ""
 
 msgid "Keep"
+msgstr ""
+
+msgid "Replace All"
 msgstr ""
 
 msgid "Native"
@@ -2983,6 +2961,9 @@ msgstr ""
 msgid "Notes for the IPTC/EXIF/WP tab submenu table."
 msgstr ""
 
+msgid "IPTC Value"
+msgstr ""
+
 msgid "EXIF/Template Value"
 msgstr ""
 
@@ -2990,6 +2971,9 @@ msgid "EXIF element name or Content Template"
 msgstr ""
 
 msgid " (starting with \"template:\")"
+msgstr ""
+
+msgid "Priority"
 msgstr ""
 
 msgid "IPTC"
@@ -3607,9 +3591,8 @@ msgid ""
 "<br />&nbsp;<br />\n"
 "If you find the Media Library Assistant plugin useful and would like to "
 "support a great cause, consider a %1$s to our Chateau Seaview Fund at the "
-"Golden West Chapter of the ALS Association. Every dollar of the fund goes to "
-"make the lives of people with ALS, their families and caregivers easier. "
-"Thank you!"
+"ALS Network. Every dollar of the fund goes to make the lives of people with "
+"ALS, their families and caregivers easier. Thank you!"
 msgstr ""
 
 msgid "tax-deductible donation"
@@ -3624,6 +3607,11 @@ msgstr ""
 msgid ""
 "provides flat or hierarchical lists, dropdown controls and checkbox lists of "
 "taxonomy terms."
+msgstr ""
+
+msgid ""
+"provides flat lists, dropdown controls and checkbox lists of custom field "
+"values."
 msgstr ""
 
 msgid "Shortcodes made available by this plugin"

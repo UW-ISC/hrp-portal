@@ -1717,28 +1717,28 @@ class MLAMime {
 
 		$upload_items = array(
 			'all' => array(
-				'singular' => _x( 'All', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'All', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'All', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'All', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'active' => array(
-				'singular' => _x( 'Active', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Active', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Active', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Active', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'inactive' => array(
-				'singular' => _x( 'Inactive', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Inactive', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Inactive', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Inactive', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'core' => array(
-				'singular' => _x( 'WordPress', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'WordPress', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'WordPress', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'WordPress', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'mla' => array(
-				'singular' => _x( 'MLA', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'MLA', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'MLA', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'MLA', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'custom' => array(
-				'singular' => _x( 'Custom', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Custom', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Custom', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Custom', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 		);
 

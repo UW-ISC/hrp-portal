@@ -3,7 +3,7 @@
  * Updates custom field(s) "where-used" inserted-in and featured-image when an item is edited
  *
  * @package MLA Dynamic References Example
- * @version 1.04
+ * @version 1.05
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: MLA Dynamic References Example
 Plugin URI: http://davidlingren.com/
 Description: Updates custom field(s) "where-used" inserted-in and featured-image when an item is edited
 Author: David Lingren
-Version: 1.04
+Version: 1.05
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
@@ -30,10 +30,6 @@ Copyright 2014 - 2015 David Lingren
 	Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-/*
- * 
- */
- 
 /**
  * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
  * else inside a class means this is the only name you have to worry about.
@@ -67,15 +63,6 @@ class MLADynamicReferencesExample {
 	);
 
 	/**
-	 * WordPress version test for $wpdb->esc_like() Vs esc_sql()
-	 *
-	 * @since 1.00
-	 *
-	 * @var	boolean
-	 */
-	private static $wp_4dot0_plus = true;
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 1.00
@@ -90,8 +77,6 @@ class MLADynamicReferencesExample {
 			return;
 		}
 
-		self::$wp_4dot0_plus = version_compare( get_bloginfo('version'), '4.0', '>=' );
-		
 		/*
 		 * Defined in media-library-assistant/includes/class-mla-media-modal.php
 		 * function mla_media_view_settings_filter
@@ -614,11 +599,7 @@ class MLADynamicReferencesExample {
 
 			$query[] = 'OR ( POST_CONTENT LIKE %s)';
 
-			if ( self::$wp_4dot0_plus ) {
-				$query_parameters[] = '%' . $wpdb->esc_like( $file ) . '%';
-			} else {
-				$query_parameters[] = '%' . like_escape( $file ) . '%';
-			}
+			$query_parameters[] = '%' . $wpdb->esc_like( $file ) . '%';
 		}
 
 		$query[] = ')';

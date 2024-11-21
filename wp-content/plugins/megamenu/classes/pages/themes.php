@@ -829,8 +829,8 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									),
 									'arrow'       => array(
 										'priority'    => 20,
-										'title'       => __( 'Arrow', 'megamenu' ),
-										'description' => __( 'Select the arrow styles.', 'megamenu' ),
+										'title'       => __( 'Arrows', 'megamenu' ),
+										'description' => __( 'Select the arrow icons used within the menu.', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'title' => __( 'Up', 'megamenu' ),
@@ -851,7 +851,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 												'title' => __( 'Right', 'megamenu' ),
 												'type'  => 'arrow',
 												'key'   => 'arrow_right',
-											),
+											)
 										),
 									),
 									'line_height' => array(
@@ -2517,8 +2517,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 											),
 										),
 									),
-
-									'mobile_top_level_menu_items' => array(
+									'mobile_submenu_header' => array(
 										'priority'    => 33,
 										'title'       => __( 'Mobile Sub Menu', 'megamenu' ),
 										'description' => '',
@@ -2526,7 +2525,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									'mobile_menu_overlay' => array(
 										'priority'    => 34,
 										'title'       => __( 'Overlay Content', 'megamenu' ),
-										'description' => __( 'If enabled, the mobile sub menu will overlay the page content (instead of pushing the page content down)', 'megamenu' ),
+										'description' => __( 'If enabled, the mobile sub menu will overlay the page content (instead of pushing the page content down). This will only work if the menu/header is not sticky.', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'title' => '',
@@ -2538,7 +2537,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									'mobile_menu_force_width' => array(
 										'priority'    => 35,
 										'title'       => __( 'Force Full Width', 'megamenu' ),
-										'description' => __( "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'.", 'megamenu' ),
+										'description' => __( "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'. This setting does not apply to Off Canvas menus (see below).", 'megamenu' ),
 										'settings'    => array(
 											array(
 												'title' => __( 'Enabled', 'megamenu' ),
@@ -2549,19 +2548,6 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 												'title' => __( 'Selector', 'megamenu' ),
 												'type'  => 'freetext',
 												'key'   => 'mobile_menu_force_width_selector',
-											),
-										),
-									),
-									'mobile_menu_off_canvas_width' => array(
-										'priority'    => 36,
-										'title'       => __( 'Off Canvas Width', 'megamenu' ),
-										'description' => __( "The width of the sub menu if the Mobile Effect is set to 'Slide Left' or 'Slide Right'. Must be specified in px.", 'megamenu' ),
-										'settings'    => array(
-											array(
-												'title' => '',
-												'type'  => 'freetext',
-												'key'   => 'mobile_menu_off_canvas_width',
-												'validation' => 'px',
 											),
 										),
 									),
@@ -2687,13 +2673,59 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 											),
 										),
 									),
-									'mobile_mega_menus'   => array(
+									'off_canvas_header' => array(
 										'priority'    => 60,
+										'title'       => __( 'Off Canvas Settings', 'megamenu' ),
+										'description' => '',
+									),
+									'mobile_menu_off_canvas_width' => array(
+										'priority'    => 65,
+										'title'       => __( 'Off Canvas Width', 'megamenu' ),
+										'description' => __( "The width of the sub menu if the Mobile Effect is set to 'Off Canvas'.", 'megamenu' ),
+										'settings'    => array(
+											array(
+												'title' => '',
+												'type'  => 'freetext',
+												'key'   => 'mobile_menu_off_canvas_width',
+												'validation' => 'px',
+											),
+										),
+									),
+									'mobile_menu_off_canvas_close_button' => array(
+										'priority'    => 70,
+										'title'       => __( 'Close Button', 'megamenu' ),
+										'description' => __( "Style of the 'close' button when the Mobile Menu option is set to 'Off Canvas'.", 'megamenu' ),
+										'settings'    => array(
+											array(
+												'title' => __( 'Icon', 'megamenu' ),
+												'type'  => 'close',
+												'key'   => 'close_icon',
+											),
+											array(
+												'title' => __( 'Icon Size', 'megamenu' ),
+												'type'  => 'freetext',
+												'key'   => 'close_icon_font_size',
+												'validation' => 'px',
+											),
+											array(
+												'title' => __( 'Icon Color', 'megamenu' ),
+												'type'  => 'color',
+												'key'   => 'close_icon_color',
+											),
+											array(
+												'title' => __( 'Aria-label', 'megamenu' ),
+												'type'  => 'freetext',
+												'key'   => 'close_icon_label'
+											),
+										),
+									),
+									'mega_menus_header'   => array(
+										'priority'    => 75,
 										'title'       => __( 'Mega Menus', 'megamenu' ),
 										'description' => '',
 									),
 									'mobile_columns'      => array(
-										'priority'    => 65,
+										'priority'    => 80,
 										'title'       => __( 'Mega Menu Columns', 'megamenu' ),
 										'description' => __( 'Collapse mega menu content into this many columns on mobile.', 'megamenu' ),
 										'settings'    => array(
@@ -2795,6 +2827,9 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 										break;
 									case 'arrow':
 										$this->print_theme_arrow_option( $setting['key'] );
+										break;
+									case 'close':
+										$this->print_theme_close_option( $setting['key'] );
 										break;
 									case 'color':
 										$this->print_theme_color_option( $setting['key'] );
@@ -3085,6 +3120,38 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		}
 
 
+		/**
+		 * Print an arrow dropdown selection box
+		 *
+		 * @since 1.0
+		 * @param string $key
+		 * @param string $value
+		 */
+		public function print_theme_close_option( $key ) {
+
+			$value = $this->active_theme[ $key ];
+
+			$arrow_icons = $this->close_icons();
+
+			?>
+			<select class='icon_dropdown' name='settings[<?php echo $key; ?>]'>
+				<?php
+
+					echo "<option value='disabled'>" . __( 'Disabled', 'megamenu' ) . '</option>';
+
+				foreach ( $arrow_icons as $code => $class ) {
+					$name = str_replace( 'dashicons-', '', $class );
+					$name = ucwords( str_replace( array( '-', 'arrow' ), ' ', $name ) );
+					echo "<option data-class='{$class}' value='{$code}' " . selected( $value, $code, false ) . '>' . esc_html( $name ) . '</option>';
+				}
+
+				?>
+			</select>
+
+			<?php
+		}
+
+
 
 		/**
 		 * Print a colorpicker
@@ -3331,6 +3398,35 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 			);
 
 			$icons = apply_filters( 'megamenu_arrow_icons', $icons );
+
+			return $icons;
+
+		}
+
+		/**
+		 * List of all available arrow DashIcon classes.
+		 *
+		 * @since 1.0
+		 * @return array - Sorted list of icon classes
+		 */
+		private function close_icons() {
+
+			$icons = array(
+				'dash-f171' => 'dashicons-undo',
+				'dash-f518' => 'dashicons-controls-back',
+				'dash-f14f' => 'dashicons-remove',
+				'dash-f340' => 'dashicons-arrow-left-alt',
+				'dash-f341' => 'dashicons-arrow-left-alt2',
+				'dash-f460' => 'dashicons-minus',
+				'dash-f158' => 'dashicons-no',
+				'dash-f335' => 'dashicons-no-alt',
+				'dash-f148' => 'dashicons-admin-collapse',
+				'dash-f158' => 'dashicons-no',
+				'dash-f335' => 'dashicons-no-alt',
+
+			);
+
+			$icons = apply_filters( 'megamenu_close_icons', $icons );
 
 			return $icons;
 

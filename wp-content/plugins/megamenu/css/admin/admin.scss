@@ -2207,6 +2207,7 @@ body.toplevel_page_maxmegamenu {
 							opacity: 0.6;
 							line-height: 26px;
 							margin-left: 5px;
+							cursor: pointer;
 
 							&:hover {
 								opacity: 1;
@@ -2225,6 +2226,16 @@ body.toplevel_page_maxmegamenu {
 							width: 100%;
 							box-sizing: border-box;
 						}
+
+						tr.mega-effect_mobile {
+							.mega-effect_mobile_direction {
+								display: none;
+							}
+							&.mega-is-offcanvas .mega-effect_mobile_direction {
+								display: block;
+							}
+						}
+
 					}
 				}
 

@@ -1534,28 +1534,28 @@ class MLA_Example_List_Table extends WP_List_Table {
 
 		$example_items = array(
 			'all' => array(
-				'singular' => _x( 'All', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'All', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'All', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'All', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'installed' => array(
-				'singular' => _x( 'Installed', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Installed', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Installed', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Installed', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'active' => array(
-				'singular' => _x( 'Active', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Active', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Active', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Active', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'inactive' => array(
-				'singular' => _x( 'Inactive', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Inactive', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Inactive', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Inactive', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'network' => array(
-				'singular' => _x( 'Network', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Network', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Network', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Network', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'uninstalled' => array(
-				'singular' => _x( 'Uninstalled', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Uninstalled', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Uninstalled', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Uninstalled', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 		);
 

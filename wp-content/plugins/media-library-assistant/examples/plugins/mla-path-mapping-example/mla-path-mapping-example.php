@@ -19,7 +19,7 @@
  * https://wordpress.org/support/topic/taxonomy-in-the-assistant-listing/
  *
  * @package MLA Path Mapping Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
@@ -27,10 +27,10 @@ Plugin Name: MLA Path Mapping Example
 Plugin URI: http://davidlingren.com/
 Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features, and has tools to copy term definitions and assignments between taxonomies.
 Author: David Lingren
-Version: 1.10
+Version: 1.11
 Author URI: http://davidlingren.com/
 
-Copyright 2018-2023 David Lingren
+Copyright 2018-2024 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.10';
+	const PLUGIN_VERSION = '1.11';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -503,12 +503,12 @@ class MLAPathMappingExample {
 
 		$destination_terms = array();
 		foreach ( $current_terms as $index => $term ) {
-			if ( isset( self::$source_terms[ $term->term_id ]['destination_ttid'] ) ) {
-				$destination_terms[] = self::$source_terms[ $term->term_id ]['destination_ttid'];
+			if ( isset( self::$source_terms[ $term->term_id ]['destination_term'] ) ) {
+				$destination_terms[] = self::$source_terms[ $term->term_id ]['destination_term'];
 			} else {
 				$new_term = self::_maybe_insert_destination_term( $destination_taxonomy, $term->term_id, true );
-				self::$source_terms[ $term->term_id ]['destination_ttid'] = $new_term['term_taxonomy_id'];
-				$destination_terms[] = (integer) $new_term['term_taxonomy_id'];
+				self::$source_terms[ $term->term_id ]['destination_term'] = $new_term['term_id'];
+				$destination_terms[] = (integer) $new_term['term_id'];
 			}
 		}
 
@@ -832,8 +832,6 @@ class MLAPathMappingExample {
 	} // mla_mapping_updates_filter
 } //MLAPathMappingExample
 
-/*
- * Install the filters at an early opportunity
- */
-add_action('init', 'MLAPathMappingExample::initialize');
+// Install the filters after plugins like Enhanced Media Library are initialized
+add_action('wp_loaded', 'MLAPathMappingExample::initialize', 11);
 ?>

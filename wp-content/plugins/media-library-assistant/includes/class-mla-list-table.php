@@ -414,7 +414,7 @@ class MLA_List_Table extends WP_List_Table {
 
 		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$field = strtolower( wp_unslash( $_REQUEST['order'] ) );
+			$field = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
 			$submenu_arguments['order'] = ( 'desc' === $field ) ? 'desc' : 'asc';
 		}
 
@@ -1542,13 +1542,18 @@ class MLA_List_Table extends WP_List_Table {
 	 */
 	function column_base_file( $item ) {
 		$base_file = isset( $item->mla_wp_attached_file ) ? $item->mla_wp_attached_file : '';
-
-		return sprintf( '<a href="%1$s" title="' . __( 'Filter by', 'media-library-assistant' ) . ' &#8220;%2$s&#8221;">%2$s</a>', esc_url( add_query_arg( array_merge( array(
-			'page' => MLACore::ADMIN_PAGE_SLUG,
-			'mla-metakey' => urlencode( '_wp_attached_file' ),
-			'mla-metavalue' => urlencode( $base_file ),
-			'heading_suffix' => urlencode( __( 'Base File', 'media-library-assistant' ) . ': ' . $base_file ) 
-		), self::mla_submenu_arguments( false ) ), 'upload.php' ) ), esc_html( $base_file ) );
+		
+		if ( is_string( $base_file ) ) {
+			return sprintf( '<a href="%1$s" title="' . __( 'Filter by', 'media-library-assistant' ) . ' &#8220;%2$s&#8221;">%2$s</a>', esc_url( add_query_arg( array_merge( array(
+				'page' => MLACore::ADMIN_PAGE_SLUG,
+				'mla-metakey' => urlencode( '_wp_attached_file' ),
+				'mla-metavalue' => urlencode( $base_file ),
+				'heading_suffix' => urlencode( __( 'Base File', 'media-library-assistant' ) . ': ' . $base_file ) 
+			), self::mla_submenu_arguments( false ) ), 'upload.php' ) ), esc_html( $base_file ) );
+		} else {
+			error_log( __LINE__ . " class-mla-list-table.php WARNING: _wp_attached_file is not a string for Item {$item->ID}. Value = " . var_export( $base_file, true ), 0 );
+			return " WARNING: _wp_attached_file is not a string for Item {$item->ID}. Value = " . var_export( $base_file, true );
+		}
 	}
 
 	/**
@@ -1603,8 +1608,10 @@ class MLA_List_Table extends WP_List_Table {
 
 			if ( ( abs( $t_diff = time() - $time ) ) < 86400 ) {
 				if ( $t_diff < 0 ) {
+					/* translators: 1: future time difference */
 					$h_time = sprintf( __( '%1$s from now', 'media-library-assistant' ), human_time_diff( $time ) );
 				} else {
+					/* translators: 1: past time difference */
 					$h_time = sprintf( __( '%1$s ago', 'media-library-assistant' ), human_time_diff( $time ) );
 				}
 			} else {
@@ -1846,8 +1853,8 @@ class MLA_List_Table extends WP_List_Table {
 					$orderby = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
 					if ( 'rml' === $orderby ) {
 						if ( isset( $_REQUEST['order'] ) ) {
-							$field = strtolower( wp_unslash( $_REQUEST['order'] ) );
-							$order['order'] = ( 'desc' === $field ) ? 'desc' : 'asc';
+							$field = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+							$order = ( 'desc' === $field ) ? 'desc' : 'asc';
 						} else {
 							$order = 'asc';
 						}
@@ -1946,7 +1953,7 @@ class MLA_List_Table extends WP_List_Table {
 
 			if ( isset( $query['meta_query'] ) ) {
 				$query['meta_slug'] = $view_slug;
-				$query['meta_query'] = urlencode( json_encode( $query['meta_query'] ) );
+				$query['meta_query'] = urlencode( wp_json_encode( $query['meta_query'] ) );
 			}
 
 			return "<a href='" . add_query_arg( $query, $base_url ) . "'$class>" . sprintf( translate_nooped_plural( $nooped_plural, $total_items, 'media-library-assistant' ), number_format_i18n( $total_items ) ) . '</a>';
@@ -2053,7 +2060,7 @@ class MLA_List_Table extends WP_List_Table {
 		?>
 
 	<div class="tablenav <?php echo esc_attr( $which ); ?>">
-		<?php if ( 'top' === $which && MLAQuery::$wp_4dot0_plus && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_SWITCHER ) )): ?>
+		<?php if ( 'top' === $which && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_SWITCHER ) )): ?>
 		<div class="view-switch media-grid-view-switch" style="float: left"> <a class="view-list current" href="<?php echo esc_url( admin_url( 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG ) ); ?>"> <span class="screen-reader-text">List View</span> </a> <a class="view-grid" href="<?php echo esc_url( admin_url( 'upload.php?mode=grid' ) ); ?>"> <span class="screen-reader-text">Grid View</span> </a> </div>
 		<?php endif; ?>
 

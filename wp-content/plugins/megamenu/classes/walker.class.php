@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // disable direct access
 }
 
+
 if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 	/**
@@ -13,6 +14,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 	 */
 	class Mega_Menu_Walker extends Walker_Nav_Menu {
 
+		private $currentItem;
 
 		/**
 		 * Starts the list before the elements are added.
@@ -26,7 +28,10 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 		 * @param array  $args   An array of arguments. @see wp_nav_menu()
 		 */
 		function start_lvl( &$output, $depth = 0, $args = array() ) {
+			$id = $this->currentItem->ID;
 
+			$id_attribute = ' id="mega-sub-menu-' . esc_attr($id) . '"';
+			
 			$indent = str_repeat( "\t", $depth );
 
 			$output .= "\n$indent<ul class=\"mega-sub-menu\">\n";
@@ -62,6 +67,8 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 		 * @param int    $id     Current item ID.
 		 */
 		function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+
+			$this->currentItem = $item;
 
 			$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 
@@ -135,7 +142,6 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
 
 					if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-						$atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
 						$atts['aria-expanded'] = 'false';
 
 						if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
@@ -145,6 +151,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 						$atts['role'] = 'button';
+						//$atts['aria-controls'] = 'mega-sub-menu-' . $item->ID;
 					}
 				}
 

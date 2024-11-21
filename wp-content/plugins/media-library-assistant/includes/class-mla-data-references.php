@@ -104,7 +104,12 @@ class MLAReferences {
 		}
 
 		$references['base_file'] = get_post_meta( $ID, '_wp_attached_file', true );
-		$pathinfo = pathinfo($references['base_file']);
+		if ( !is_string( $references['base_file'] ) ) {
+			error_log( __LINE__ . " class-mla-data-references.php WARNING: _wp_attached_file is not a string for Item {$ID}. Value = " . var_export( $references['base_file'], true ), 0 );
+			$references['base_file'] = 'invalid-wp-attached-file';
+		}
+
+		$pathinfo = pathinfo( $references['base_file'] );
 		$references['file'] = $pathinfo['basename'];
 		if ( ( ! isset( $pathinfo['dirname'] ) ) || '.' == $pathinfo['dirname'] ) {
 			$references['path'] = '/';
@@ -193,12 +198,7 @@ class MLAReferences {
 					}
 
 					$query[] = 'OR ( POST_CONTENT LIKE %s)';
-
-					if ( MLAQuery::$wp_4dot0_plus ) {
-						$query_parameters[] = '%' . $wpdb->esc_like( $file ) . '%';
-					} else {
-						$query_parameters[] = '%' . like_escape( $file ) . '%';
-					}
+					$query_parameters[] = '%' . $wpdb->esc_like( $file ) . '%';
 				}
 
 				$query[] = ')';
@@ -226,11 +226,7 @@ class MLAReferences {
 						continue;
 					}
 
-					if ( MLAQuery::$wp_4dot0_plus ) {
-						$like = $wpdb->esc_like( $file );
-					} else {
-						$like = like_escape( $file );
-					}
+					$like = $wpdb->esc_like( $file );
 
 					MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$file}, {$like} ) inserts enabled", MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
 					
@@ -391,6 +387,7 @@ class MLAReferences {
 				$references['base_file'] = '';
 			}
 
+//			$pathinfo = pathinfo( array() );
 			$pathinfo = pathinfo($references['base_file']);
 			if ( ( ! isset( $pathinfo['dirname'] ) ) || '.' == $pathinfo['dirname'] ) {
 				$references['path'] = '/';
@@ -471,12 +468,7 @@ class MLAReferences {
 			foreach ( $files as $file ) {
 				foreach ( $file['files'] as $base_name => $file_data ) {
 					$query[] = 'OR ( POST_CONTENT LIKE %s)';
-
-					if ( MLAQuery::$wp_4dot0_plus ) {
-						$query_parameters[] = '%' . $wpdb->esc_like( $base_name ) . '%';
-					} else {
-						$query_parameters[] = '%' . like_escape( $base_name ) . '%';
-					}
+					$query_parameters[] = '%' . $wpdb->esc_like( $base_name ) . '%';
 				}
 			}
 
@@ -766,11 +758,7 @@ class MLAReferences {
 			$exclude_revisions = '';
 		}
 
-		if ( MLAQuery::$wp_4dot0_plus ) {
-			$like = $wpdb->esc_like( $shortcode );
-		} else {
-			$like = like_escape( $shortcode );
-		}
+		$like = $wpdb->esc_like( $shortcode );
 
 		// phpcs:disable
 		$results = $wpdb->get_results(

@@ -18,8 +18,9 @@ class MLATemplate_Support {
 	 * $mla_template_definitions defines the structure of the style and markup templates
 	 * and the labels, etc. required to render them in the Settings/Shortcodes tab.
 	 *
-	 * The array must be populated at runtime in MLATemplate_Support::mla_localize_template_definitions();
-	 * localization calls cannot be placed in the "public static" array definition itself.
+	 * The array must be localized at runtime in MLATemplate_Support::mla_localize_template_definitions();
+	 * localization calls cannot be placed in the "public static" array definition itself. The array definitions
+	 * are initialized with English labels.
 	 *
 	 * @since 2.30
 	 * @access public
@@ -51,7 +52,282 @@ class MLATemplate_Support {
 	 * }
 	 */
 	 
-	public static $mla_template_definitions = array ();
+	public static $mla_template_definitions = array (
+				'style' => array(
+				'gallery' => array(
+					'label' => 'Gallery',
+					'default_names' => array( 'default' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'styles' => array(
+							'label' => 'Styles',
+							'rows' => 10,
+							'help' => 'List of substitution parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 1,
+						),
+					),
+				),
+				'tag-cloud' => array(
+					'label' => 'Tag Cloud',
+					'default_names' => array( 'tag-cloud' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'styles' => array(
+							'label' => 'Styles',
+							'rows' => 10,
+							'help' => 'List of substitution parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 1,
+						),
+					),
+				),
+				'term-list' => array(
+					'label' => 'Term List',
+					'default_names' => array( 'term-list' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'styles' => array(
+							'label' => 'Styles',
+							'rows' => 10,
+							'help' => 'List of substitution parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 1,
+						),
+					),
+				),
+				'custom-list' => array(
+					'label' => 'Custom Field List',
+					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-checklist-div' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'styles' => array(
+							'label' => 'Styles',
+							'rows' => 10,
+							'help' => 'List of substitution parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 1,
+						),
+					),
+				),
+			),
+			'markup' => array(
+				'gallery' => array(
+					'label' => 'Gallery',
+					'default_names' => array( 'default' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'arguments' => array(
+							'label' => 'Arguments',
+							'rows' => 3,
+							'help' => 'Default shortcode parameter values.',
+							'order' => 2,
+						),
+						'row-open' => array(
+							'label' => 'Row&nbsp;Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of each row in the gallery.',
+							'order' => 4,
+						),
+						'open' => array(
+							'label' => 'Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of the gallery. List of parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 3,
+						),
+						'item' => array(
+							'label' => 'Item',
+							'rows' => 6,
+							'help' => 'Markup for each item/cell of the gallery.',
+							'order' => 5,
+						),
+						'row-close' => array(
+							'label' => 'Row&nbsp;Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of each row in the gallery.',
+							'order' => 9,
+						),
+						'close' => array(
+							'label' => 'Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of the gallery.',
+							'order' => 10,
+						),
+					),
+				),
+				'tag-cloud' => array(
+					'label' => 'Tag Cloud',
+					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'arguments' => array(
+							'label' => 'Arguments',
+							'rows' => 3,
+							'help' =>  'Default shortcode parameter values.',
+							'order' => 2,
+						),
+						'row-open' => array(
+							'label' => 'Row&nbsp;Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of each row in the cloud; grid format only.',
+							'order' => 4,
+						),
+						'open' => array(
+							'label' => 'Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of the cloud. List of parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 3,
+						),
+						'item' => array(
+							'label' => 'Item',
+							'rows' => 6,
+							'help' => 'Markup for each item/cell of the cloud.',
+							'order' => 5,
+						),
+						'row-close' => array(
+							'label' => 'Row&nbsp;Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of each row in the cloud; grid format only.',
+							'order' => 9,
+						),
+						'close' => array(
+							'label' => 'Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of the cloud.',
+							'order' => 10,
+						),
+					),
+				),
+				'term-list' => array(
+					'label' => 'Term List',
+					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'arguments' => array(
+							'label' => 'Arguments',
+							'rows' => 3,
+							'help' =>  'Default shortcode parameter values.',
+							'order' => 1,
+						),
+						'child-open' => array(
+							'label' => 'Child&nbsp;Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of each level in the hierarchy; list format only.',
+							'order' => 6,
+						),
+						'child-item' => array(
+							'label' => 'Child&nbsp;Item',
+							'rows' => 6,
+							'help' => 'Markup for each lower-level item in the hierarchy; list format only.',
+							'order' => 7,
+						),
+						'child-close' => array(
+							'label' => 'Child&nbsp;Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of each level in the hierarchy; list format only.',
+							'order' => 8,
+						),
+						'open' => array(
+							'label' => 'Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of the list. List of parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 3,
+						),
+						'item' => array(
+							'label' => 'Item',
+							'rows' => 6,
+							'help' => 'Markup for each item/cell in the list.',
+							'order' => 5,
+						),
+						'close' => array(
+							'label' => 'Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of the list.',
+							'order' => 10,
+						),
+					),
+				),
+				'custom-list' => array(
+					'label' => 'Custom Field List',
+					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
+					'sections' => array(
+						'description' => array(
+							'label' => 'Description',
+							'rows' => 3,
+							'help' => 'Notes for the Shortcodes tab submenu table.',
+							'order' => 0,
+						),
+						'arguments' => array(
+							'label' => 'Arguments',
+							'rows' => 3,
+							'help' =>  'Default shortcode parameter values.',
+							'order' => 2,
+						),
+						'row-open' => array(
+							'label' => 'Row&nbsp;Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of each row in the list; grid format only.',
+							'order' => 4,
+						),
+						'open' => array(
+							'label' => 'Open',
+							'rows' => 3,
+							'help' => 'Markup for the beginning of the list. List of parameters, e.g., [+selector+], on Documentation tab.',
+							'order' => 3,
+						),
+						'item' => array(
+							'label' => 'Item',
+							'rows' => 6,
+							'help' => 'Markup for each item/cell of the list.',
+							'order' => 5,
+						),
+						'row-close' => array(
+							'label' => 'Row&nbsp;Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of each row in the list; grid format only.',
+							'order' => 9,
+						),
+						'close' => array(
+							'label' => 'Close',
+							'rows' => 3,
+							'help' => 'Markup for the end of the list.',
+							'order' => 10,
+						),
+					),
+				),
+			),
+		);
 
 	/**
 	 * Localize $mla_option_definitions array.
@@ -67,7 +343,7 @@ class MLATemplate_Support {
 		self::$mla_template_definitions = array (
 			'style' => array(
 				'gallery' => array(
-					'label' => _x( 'Gallery', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Gallery', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'default' ),
 					'sections' => array(
 						'description' => array(
@@ -85,7 +361,7 @@ class MLATemplate_Support {
 					),
 				),
 				'tag-cloud' => array(
-					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'tag-cloud' ),
 					'sections' => array(
 						'description' => array(
@@ -103,7 +379,7 @@ class MLATemplate_Support {
 					),
 				),
 				'term-list' => array(
-					'label' => _x( 'Term List', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Term List', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'term-list' ),
 					'sections' => array(
 						'description' => array(
@@ -121,7 +397,7 @@ class MLATemplate_Support {
 					),
 				),
 				'custom-list' => array(
-					'label' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
@@ -141,7 +417,7 @@ class MLATemplate_Support {
 			),
 			'markup' => array(
 				'gallery' => array(
-					'label' => _x( 'Gallery', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Gallery', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'default' ),
 					'sections' => array(
 						'description' => array(
@@ -189,7 +465,7 @@ class MLATemplate_Support {
 					),
 				),
 				'tag-cloud' => array(
-					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl' ),
 					'sections' => array(
 						'description' => array(
@@ -237,7 +513,7 @@ class MLATemplate_Support {
 					),
 				),
 				'term-list' => array(
-					'label' => _x( 'Term List', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Term List', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist' ),
 					'sections' => array(
 						'description' => array(
@@ -291,7 +567,7 @@ class MLATemplate_Support {
 					),
 				),
 				'custom-list' => array(
-					'label' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
+					'label' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
 					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
@@ -376,9 +652,9 @@ class MLATemplate_Support {
 	 * @return null
 	 */
 	public static function mla_load_custom_templates() {
-		if ( empty( MLATemplate_Support::$mla_template_definitions ) ) {
+		/* if ( empty( MLATemplate_Support::$mla_template_definitions ) ) {
 			MLATemplate_Support::mla_localize_template_definitions();
-		}
+		} // */
 
 		MLATemplate_Support::$mla_custom_templates = NULL;
 		$default_templates = MLACore::mla_load_template( 'mla-custom-templates.tpl' );
@@ -772,5 +1048,6 @@ class MLATemplate_Support {
 	}
 } // Class MLATemplate_Support
 
+add_action( 'init', 'MLATemplate_Support::mla_localize_template_definitions', 10 );
 MLATemplate_Support::mla_load_custom_templates();
 ?>

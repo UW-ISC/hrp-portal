@@ -30,6 +30,13 @@ div.mla_errors {
 }
 
 /*
+ * MLA List Table Search box
+ */
+#mla-filter p.search-box {
+	display: block;
+}
+
+/*
  * MLA List Table Filter, Terms Search, Empty Trash and Clear Filter-by buttons
  */
 .actions #post-query-submit,
@@ -144,6 +151,10 @@ div.mla_errors {
 .quick-edit-row-attachment fieldset.inline-edit-col-right label.inline-edit-tags span.title,
 .bulk-edit-row-attachment fieldset.inline-edit-col-right label.inline-edit-tags span.title {
 	width: 99%
+}
+
+.inline-edit-row .inline-edit-save {
+	display: block
 }
 
 .inline-edit-save #bulk_map,

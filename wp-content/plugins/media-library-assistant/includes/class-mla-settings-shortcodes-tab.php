@@ -608,6 +608,7 @@ class MLASettings_Shortcodes {
 					MLA_Template_Query::mla_put_shortcode_template_items();
 					break;
 				default:
+					/* translators: 1: admin action value */
 					$page_content['message'] = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $mla_admin_action );
 					break;
 			} // switch ($_REQUEST['mla_admin_action'])
@@ -1127,7 +1128,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @return	string	HTML markup to be placed inside the column
 	 */
 	function column_type( $item ) {
-		return esc_attr( 'style' === $item->type ? _x( 'Style', 'table_view_singular', 'media_library-assistant' ) : _x( 'Markup', 'table_view_singular', 'media_library-assistant' ) );
+		return esc_attr( 'style' === $item->type ? _x( 'Style', 'table_view_singular', 'media-library-assistant' ) : _x( 'Markup', 'table_view_singular', 'media-library-assistant' ) );
 	}
 
 	/**
@@ -1982,32 +1983,32 @@ class MLA_Template_Query {
 
 		$template_items = array(
 			'all' => array(
-				'singular' => _x( 'All', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'All', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'All', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'All', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'style' => array(
-				'singular' => _x( 'Style', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Style', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Style', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Style', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'markup' => array(
-				'singular' => _x( 'Markup', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Markup', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Markup', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Markup', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'gallery' => array(
-				'singular' => _x( 'Gallery', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Gallery', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Gallery', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Gallery', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'tag-cloud' => array(
-				'singular' => _x( 'Tag Cloud', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Tag Cloud', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Tag Cloud', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Tag Cloud', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'term-list' => array(
-				'singular' => _x( 'Term List', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Term List', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Term List', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Term List', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 			'custom-list' => array(
-				'singular' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
-				'plural' => _x( 'Custom Field List', 'table_view_plural', 'media_library-assistant' ),
+				'singular' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Custom Field List', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
 		);
 

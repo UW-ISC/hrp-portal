@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.3.2
+ * Version:     3.4.1
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.1.2';
+		public $version = '3.4.1';
 
 
 		/**
@@ -76,6 +76,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			add_filter( 'wp_nav_menu_args', array( $this, 'modify_nav_menu_args' ), 99999 );
 			add_filter( 'wp_nav_menu', array( $this, 'add_responsive_toggle' ), 10, 2 );
+			add_filter( 'wp_nav_menu', array( $this, 'add_mobile_close_button' ), 11, 2 );
 
 			add_filter( 'wp_nav_menu_objects', array( $this, 'add_widgets_to_menu' ), apply_filters( 'megamenu_wp_nav_menu_objects_priority', 10 ), 2 );
 			add_filter( 'megamenu_nav_menu_objects_before', array( $this, 'apply_depth_to_menu_items' ), 5, 2 );
@@ -532,6 +533,49 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			$replace = '<div class="mega-menu-toggle">' . $content . '</div>' . $find;
 
 			return str_replace( $find, $replace, $nav_menu );
+		}
+
+		/**
+		 * Add the html for mobile menu close button
+		 *
+		 * @param  string $nav_menu HTML markup of menu.
+		 * @param  object $args wp_nav_menu arguments.
+		 * @return string
+		 * @since  3.4
+		 */
+		public function add_mobile_close_button( $nav_menu, $args ) {
+		    // Cast $args to object if it is an array
+		    $args = (object) $args;
+
+		    // Retrieve CSS version
+		    $css_version = get_transient( 'megamenu_css_version' );
+
+		    // Only proceed if CSS version is 3.4 or higher
+		    if ( ! $css_version || version_compare( $css_version, '3.3.3', '<' ) ) {
+		        return $nav_menu;
+		    }
+
+		    // Ensure we're working with a Mega Menu walker
+		    if ( empty( $args->walker ) || ! is_a( $args->walker, 'Mega_Menu_Walker' ) ) {
+		        return $nav_menu;
+		    }
+
+		    // Retrieve theme location and mega menu settings
+		    $location = $args->theme_location;
+		    $settings = get_option( 'megamenu_settings', [] );
+
+		    // Check if mobile effect is set and is either 'slide_left' or 'slide_right'
+		    if ( isset( $settings[ $location ]['effect_mobile'] ) && in_array( $settings[ $location ]['effect_mobile'], ['slide_left', 'slide_right'], true ) ) {
+
+		    	$menu_theme = mmm_get_theme_for_location( $location );
+		    	$label = esc_attr( do_shortcode( $menu_theme['close_icon_label'] ) );
+
+		        // Append close button before the closing </ul> tag (last 6 characters of $nav_menu)
+		        $button = apply_filters("megamenu_close_button", "<button class='mega-close' aria-label='" . $label . "'></button>", $nav_menu, $args, $location, $settings);
+		        return substr_replace( $nav_menu, $button, -6, 0 );
+		    }
+
+		    return $nav_menu;
 		}
 
 
@@ -1221,6 +1265,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 						'data-breakpoint'            => absint( $menu_theme['responsive_breakpoint'] ),
 						'data-unbind'                => 'disabled' === $unbind ? 'false' : 'true',
 						'data-mobile-state'          => $mobile_state,
+						'data-mobile-direction'      => 'vertical',
 						'data-hover-intent-timeout'  => absint( $hover_intent_params['timeout'] ),
 						'data-hover-intent-interval' => absint( $hover_intent_params['interval'] )
 					),

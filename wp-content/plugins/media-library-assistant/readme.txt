@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.6.1
-Stable tag: 3.20
+Tested up to: 6.7.1
+Stable tag: 3.22
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,25 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.22 =
+* Fix: IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`.
+* Fix: Delay localization of built-in style and markup templates until `init` action.
+
+= 3.21 =
+* New: For the Media/Assistant admin page, a new entry in the "Screen Options" pulldown menu lets you change the "List Taxonomy" that populates the dropdown at the top of the submenu table.
+* New: For the `[mla_gallery]` shortcode, Simple Custom Field Parameters now include `meta_value_delimiter` to change the delimiter between multiple custom field values.
+* New: A brief reference to calling MLA's shortcode support functions has been added to the Settings/Media Library Assistant Documentation tab.
+* Fix: Removed i18n function calls from the `plugins_loaded` action to resolve WP 6.7 PHP Notice "Function _load_textdomain_just_in_time was called incorrectly". 
+* Fix: **IMPORTANT: A Cross-Site Scripting (XSS) security risk in the Settings/Media Library Assistant page, various tabs, has been mitigated.**
+* Fix: Various i18n cleanup touches to improve Plugin Check/Plugin Repo results
+* Fix: Code cleanup to remove calls to deprecated `like_escape()` function.
+* Fix: For the Media/Assistant admin page, fixed layout of the Search Media box and associated controls, the Bulk Edit area and the Quick Edit Area.
+* Fix: For EXIF metadata extraction, some PHP fatal errors caused by unusual values in the data have been corrected.
+* Fix: When the Real Media Library plugin is active, an array to string conversion defect on the Media/Assistant screen has been corrected.
+* Fix: For the "MLA Path Mapping Example" plugin, corrected term assignment copying when destination Term ID is not equal to Term Taxonomy ID.
+* Fix: For the "MLA Path Mapping Example" plugin, delayed initialization for compatibility with Enhanced Media Library.
+* Fix: Added logic to avoid errors in items with corrupted `_wp_attached_file` (array) values.
+
 = 3.20 =
 * Fix: **IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated.**
 * Fix: For mapping rules, an AJAX nonce problem in the "Execute" rollover action has been corrected.
@@ -202,28 +221,10 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: For IPTC/EXIF/WP custom field rules, the "Delete NULL Values" setting is now respected. A defect in previous MLA versions always deleted NULL values.
 * Fix: The `utf8_encode()` function has been replaced by `mb_convert_encoding()` to eliminate a PHP 8.2 "Deprecated" warning.
 
-= 3.18 =
-* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Assistant page when `orderby=rml` is used has been mitigated.**
-* Fix: Another problem with formatting the `order=DESC` portion of the SQL orderby clause from shortcode parameters has been corrected.
-
-= 3.17 =
-* Fix: **IMPORTANT: An Unauthenticated SQL Injection security risk in the `[mla_tag_cloud]` and `[mla_term_list]` shortcodes has been mitigated.**
-* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Assistant page has been mitigated.**
-* Fix: A problem with formatting the `order=` portion of the SQL orderby clause from shortcode parameters has been corrected.
-* Fix: When the "Real Media Library" plugin (Pro version) is active, `orderby=rml` is propegated to the Media/Assistant pagination controls.
-* Fix: For the `[mla_gallery]` shortcode, handling of brace-delimited array values in the `,str_replace(s,r)` format code has been corrected.
-* Fix: For the Media Manager Modal (popup) Window, the Enter key now triggers the MLA Enhanced Search Media function.
-* Fix: When the Elementor page editor is active, buttons on the "Insert Media" popup window are now sized correctly.
-* Fix: Some references in the Documentation tab to IPTC standards have been updated to newer versions of those standards.
-
-= 3.16 =
-* New: The "MLA Multi-search Example" plugin now includes a special `custom:*` feature that will perform a "Simple Custom Field" query on all custom fields that have values for one or more items.
-* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Edit Media page has been mitigated.**
-* Fix: **IMPORTANT: An SQL Injection security risk in the `[mla_custom_list]` shortcode has been mitigated.**
-* Fix: For the `[mla_gallery]` shortcode, a defect in processsing blacklist parameters when using `mla_gallery` as an alternate shortcode, i.e., `mla_alt_shortcode=yes`,  has been corrected.
-* Fix: For the `[mla_custom_list]` shortcode, a defect that caused the `ids=` and `include=` parameters to fail when used together has been corrected.
-
-= 3.00 - 3.15 =
+= 3.00 - 3.18 =
+* 3.18 - IMPORTANT: A security risk in the Media/Edit Media screen has been mitigated. A defect in formatting the order=DESC shortcode parameter has been corrected. Two fixes in all.
+* 3.17 - IMPORTANT: Security risks in the Media/Edit Media screen and shortcodes have been mitigated. Elementor fix for the Media Manager Modal (popup) Window. Eight fixes in all.
+* 3.16 - IMPORTANT: Security risks in the Media/Edit Media screen and [mla_custom_list] shortcode have been mitigated. Shortcode bug fixes and a new feature in the MLA Multi-search Example plugin. One enhancement, four fixes in all.
 * 3.15 - IMPORTANT: Eliminate PHP Fatal Error when accessing Example Plugins from the Settings/Media Library Assistant Documentation tab.
 * 3.14 - IMPORTANT: WordPress 6.5 updates and two security fixes. New and enhanced example plugins. Shortcode enhancements. Seven enhancements in all, eleven fixes.
 * 3.13 - IMPORTANT: `[mla_gallery]` parameters containing HTML are once again processed correctly. New "MLA Custom Field List" shortcode. Code refactor reduces load time and memory required for the `[mla_gallery]` shortcode. Four enhancements in all, six fixes.
@@ -363,8 +364,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.20 =
-IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated. Mapping rule and shortcode fixes. Four fixes in all.
+= 3.22 =
+IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`. Delay localization of built-in style and markup templates until `init` action.
 
 == Acknowledgements ==
 

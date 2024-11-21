@@ -2903,6 +2903,27 @@ class MLAData {
 	}
 
 	/**
+	 * Parse an array of ASCII integer values to a string
+	 * 
+	 * @since 3.21
+	 *
+	 * @param	array	integer representation of ASCII characters
+	 *
+	 * @return	string	ASCII string
+	 */
+	private static function _parse_ASCII_array( &$source_array ) {
+		$output = '';
+		foreach ( $source_array as $index => $value ) {
+			$value = absint( $value );
+			if ( ( 0 < $value ) && ( 128 > $value ) ) {
+				$output .= chr( $value );
+			}
+		}
+		
+		return $output;
+	}
+
+	/**
 	 * Parse a Windows Unicode (16-bit Little Endian) string to UTF-8
 	 * From https://stackoverflow.com/questions/1805802/php-convert-unicode-codepoint-to-utf-8
 	 * 
@@ -4243,9 +4264,14 @@ class MLAData {
 								$element_value = (string) ord( $element_value );
 							}
 
-							// Problem with Unicode values edited through Windows right-click properties. 
-							if ( in_array( $element_name, array( 'Title', 'Keywords', 'Subject', 'Comments', 'Author' ) ) ) {
-								$element_value =  self::_parse_UTF16LE( $element_value );
+							if ( in_array( $element_name, array( 'Title', 'Keywords', 'Subject', 'Comments', 'Author', 'DateTimeOriginal' ) ) ) {
+								if ( is_string( $element_value ) ) {
+									// Problem with Unicode values edited through Windows right-click properties. 
+									$element_value =  self::_parse_UTF16LE( $element_value );
+								} elseif ( is_array( $element_value ) ) {
+									// Problem with image submitted by Thomas Buchhorn 20240912. 
+									$element_value =  self::_parse_ASCII_array( $element_value );
+								}
 							}
 						}
 
@@ -4279,7 +4305,7 @@ class MLAData {
 					}
 				}
 			} // image/webp
-			
+
 			$results['mla_xmp_metadata'] = self::mla_parse_xmp_metadata( $path, 0 );
 			if ( NULL === $results['mla_xmp_metadata'] ) {
 				$results['mla_xmp_metadata'] = array();
@@ -4297,7 +4323,7 @@ class MLAData {
 			}
 
 			// experimental damage repair for Elsie Gilmore (earthnutvt)
-			if ( isset( $exif_data['Keywords'] ) && ( '????' == substr( $exif_data['Keywords'], 0, 4 ) ) ) {
+			if ( isset( $exif_data['Keywords'] ) && is_string( $exif_data['Keywords'] ) && ( '????' == substr( $exif_data['Keywords'], 0, 4 ) ) ) {
 				if ( isset( $results['mla_xmp_metadata']['Keywords'] ) ) {
 					$exif_data['Keywords'] = $results['mla_xmp_metadata']['Keywords'];
 					$results['mla_exif_metadata']['Keywords'] = $results['mla_xmp_metadata']['Keywords'];
@@ -4335,7 +4361,7 @@ class MLAData {
 				$denominator = $fragments[1];
 
 				// Clean up some common format issues, e.g. 4/6, 2/4
-				while ( ( 0 == ( $numerator & 0x1 ) ) && ( 0 == ( $denominator & 0x1 ) ) ) {
+				while ( ( ( 0 !== $numerator ) || ( 0 !== $denominator ) ) && ( 0 === ( $numerator & 0x1 ) ) && ( 0 === ( $denominator & 0x1 ) ) ) {
 					$numerator = ( $numerator >> 1 );
 					$denominator = ( $denominator >> 1 );
 				}
