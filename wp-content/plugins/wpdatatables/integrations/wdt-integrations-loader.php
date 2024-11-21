@@ -20,6 +20,7 @@ class WDTIntegrationsLoader
         require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/divi-wpdt/divi-wpdt.php');
         require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/avada/class.wdtavadaelements.php');
         require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtBakeryBlock.php');
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtCustomBakery.php');
 
         // Include Global Page Search
         if (is_file(WDT_STARTER_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php')) {
@@ -161,6 +162,16 @@ class WDTIntegrationsLoader
             add_action('wpdatatables_after_constructor_column_block_preview', array('WDTIntegration\WDTIntegrationsLoader', 'addHiddenColumnConstructorNotice'));
         }
 
+        // Include WP Posts Builder
+        if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'query-builder/source/wdt-query-builder.php')) {
+            require_once(WDT_PRO_INTEGRATIONS_PATH . 'query-builder/source/wdt-query-builder.php');
+        }
+
+        // Include WooCommerce Integration
+        if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'woo-commerce/source/wdt-woo-commerce.php')) {
+            require_once(WDT_PRO_INTEGRATIONS_PATH . 'woo-commerce/source/wdt-woo-commerce.php');
+        }
+
     }
 
     public static function addChartPickerStepNotice()
@@ -201,6 +212,7 @@ class WDTIntegrationsLoader
             echo $placeholdersNotice;
         }
     }
+
     public static function addChartsStableTagNotice()
     {
         if (!defined('WDT_HC_INTEGRATION') || !defined('WDT_AC_INTEGRATION')) {
@@ -247,7 +259,7 @@ class WDTIntegrationsLoader
     {
         if (!defined('WDT_HCOL_INTEGRATION')) {
             $newColVal =
-                array('hidden' =>__('Hidden (Dynamic) - Available from Standard Licence', 'wpdatatables'));
+                array('hidden' => __('Hidden (Dynamic) - Available from Standard Licence', 'wpdatatables'));
 
             return array_merge(
                 array_slice($possibleColumnTypes, 0, 4),
@@ -321,6 +333,14 @@ class WDTIntegrationsLoader
             $sqlConstructorNotice = ob_get_contents();
             ob_end_clean();
             echo $sqlConstructorNotice;
+        }
+
+        if (!defined('WDT_WP_QUERY_INTEGRATION')) {
+            ob_start();
+            include WDT_ROOT_PATH . 'templates/admin/table-settings/wp_posts_integration_notice_block.inc.php';
+            $wpPostsConstructorNotice = ob_get_contents();
+            ob_end_clean();
+            echo $wpPostsConstructorNotice;
         }
     }
 

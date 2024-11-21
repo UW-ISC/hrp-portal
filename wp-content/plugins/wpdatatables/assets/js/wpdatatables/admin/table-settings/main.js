@@ -1030,6 +1030,22 @@
                 }
                 $('div.wdt-link-button-attribute-block').show();
                 $('div.wdt-number-range-slider').hide();
+            } else if ($(this).val() == 'select'|| $(this).val() == 'cart') {
+                $('div.wdt-possible-values-type-block').hide();
+                $('div.wdt-possible-values-options-block').hide();
+                $('div.wdt-formula-column-block').hide();
+                $('div.wdt-skip-thousands-separator-block').hide();
+                $('div.wdt-numeric-column-block').hide();
+                $('div.wdt-float-column-block').hide();
+                $('div.wdt-date-input-format-block').hide();
+                $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
+                $('div.wdt-link-noreferrer-attribute-block').hide();
+                $('div.wdt-link-sponsored-attribute-block').hide();
+                $('div.wdt-link-button-attribute-block').hide();
+                $('div.wdt-link-button-label-block').hide();
+                $('div.wdt-link-button-class-block').hide();
+                $('div.wdt-numeric-column-block.wdt-skip-thousands-separator-block').hide();
             } else {
                 $('div.wdt-possible-values-type-block').hide();
                 $('div.wdt-possible-values-options-block').hide();
@@ -1626,6 +1642,19 @@
             if (wpdatatable_config.table_type == 'gravity' ||
                 wpdatatable_config.table_type == 'formidable') return;
 
+            if (wpdatatable_config.table_type === 'wp_posts_query' || wpdatatable_config.table_type === 'woo_commerce' ) {
+                wpdatatable_config.updatePostQueryParameters();
+                let taxField = document.querySelector('.wdt-wp-query-tax-field');
+                let taxTerms = document.querySelector('.wdt-wp-query-tax-terms');
+                let taxonomy = document.querySelector('.wdt-wp-query-taxonomy');
+
+                if(taxField || taxTerms || taxonomy) {
+                    if (taxField.value.trim() === '' || taxTerms.value.trim() === '' || taxonomy.value.trim() === '') {
+                        wdtNotify(wpdatatables_frontend_strings.error_wpdatatables, wpdatatables_frontend_strings.emtyfields_woo_front, 'danger');
+                        return;
+                    }
+                }
+            }
             // Validation for valid URL link of Google spreadsheet
             if (wpdatatable_config.table_type == 'google_spreadsheet' && wpdatatable_config.content.indexOf("2PACX") != -1) {
                 $('#wdt-error-modal .modal-body').html('URL from Google spreadsheet publish modal(popup) is not valid for wpDataTables. Please provide a valid URL link that you get from the browser address bar. More info in our documentation on this <a href="https://wpdatatables.com/documentation/creating-wpdatatables/creating-wpdatatables-from-google-spreadsheets/" target="_blank">link</a>.');
@@ -1793,27 +1822,49 @@
          * Switch tabs in table settings
          */
         $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-nav a').on('click', function (e) {
-            e.preventDefault()
-            if (!$(this).closest('ul').hasClass('customize-table-settings-ul')){
+            e.preventDefault();
+
+            // Logic for the main tab switching, excluding Customize and Data Source
+            if (!$(this).closest('ul').hasClass('customize-table-settings-ul') &&
+                !$(this).closest('ul').hasClass('main-wp-posts-settings-ul') &&
+                !$(this).closest('ul').hasClass('main-wdt-woo-settings-ul')) {
                 $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .tab-pane,' +
-                    '.wdt-datatables-admin-wrap .wdt-table-settings .customize-table-settings-ul li').removeClass(' fade active in')
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .customize-table-settings-ul li,' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .main-wp-posts-settings-ul li' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .main-wdt-woo-settings-ul li').removeClass(' fade active in');
                 $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .tab-pane.main-customize-table-settings,' +
-                    '.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .customize-table-settings-ul .main-customize-table-settings-tab').addClass('active')
-                $($(this)[0].hash).addClass('active')
-            } else {
-                if (!$(this)[0].hash == '#customize-table-settings'){
-                    $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content.wdt-main-child .tab-pane').removeClass(' fade active in')
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .customize-table-settings-ul .main-customize-table-settings-tab,' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .main-wp-posts-settings-ul .general-settings-tab' +
+                    '.wdt-datatables-admin-wrap .wdt-table-settings .tab-content .main-wdt-woo-settings-ul .general-settings-tab').addClass('active');
+                $($(this)[0].hash).addClass('active');
+                if ($(this).closest('ul').hasClass('wdt-main-menu'))
+                    $('#general-settings-tab').addClass('active in');
+            }
+
+            // Logic for the Customize tab switching
+            else if ($(this).closest('ul').hasClass('customize-table-settings-ul')) {
+                if (!$(this)[0].hash === '#customize-table-settings') {
+                    $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content.wdt-main-child .tab-pane').removeClass(' fade active in');
                 }
-                $($(this)[0].hash).addClass('active in')
+                $($(this)[0].hash).addClass('active in');
+            }
+
+            // Logic for the WP Posts and WooCommerce Data Source tab switching
+            else if ($(this).closest('ul').hasClass('main-wp-posts-settings-ul') || $(this).closest('ul').hasClass('main-wdt-woo-settings-ul')) {
+                if (!$(this)[0].hash === '#main-table-settings') {
+                    $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-content.wdt-main-child .tab-pane').removeClass(' fade active in');
+                }
+                $($(this)[0].hash).addClass('active in');
             }
         });
+
         /**
          * Switch tabs in column settings
          */
-        $(' .wdt-datatables-admin-wrap .column-settings-panel .tab-nav a').on('click', function (e) {
-            e.preventDefault()
-                $('.wdt-datatables-admin-wrap .column-settings-panel .tab-content .tab-pane:not(.main-customize-table-settings)').removeClass(' fade active in')
-                $($(this)[0].hash).addClass('active in')
+        $('.wdt-datatables-admin-wrap .column-settings-panel .tab-nav a').on('click', function (e) {
+            e.preventDefault();
+            $('.wdt-datatables-admin-wrap .column-settings-panel .tab-content .tab-pane:not(.main-customize-table-settings)').removeClass(' fade active in');
+            $($(this)[0].hash).addClass('active in');
         });
 
         /**

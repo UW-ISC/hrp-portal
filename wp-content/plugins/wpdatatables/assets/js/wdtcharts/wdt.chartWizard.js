@@ -15,6 +15,13 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
     var previousStepButton = $('#wdt-chart-wizard-previous-step');
     let chartSourcePicker = $('#wpdatatables-chart-source');
 
+    // Helper function for ApexCharts series to determine if series type should be rendered
+    $.views.helpers({
+        isMultipleSeries: function(series) {
+            return series.length > 1;
+        }
+    });
+
     $('.wdt-chart-wizard-chart-selecter-block .card').on('click', function () {
         $('.wdt-chart-wizard-chart-selecter-block .card').removeClass('selected').addClass('not-selected');
         $(this).addClass('selected').removeClass('not-selected');
@@ -32,6 +39,17 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             }
         }
     });
+    if (!$('#loader-row').hasClass('firstLoaderGlobal')) {
+        if (parseInt(wpdatatables_mapsapikey.wdtGlobalChartLoader)) {
+            $('#loader-row').prop('checked', 'checked');
+            $('#loader-color-container').show();
+            $('#loader-style-row').show();
+        } else {
+            $('#loader-row').prop('checked', '');
+            $('#loader-color-container').hide();
+            $('#loader-style-row').hide();
+        }
+    }
     /**
      * Steps switcher (Next)
      */
@@ -2133,10 +2151,12 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
 
             if (editing_chart_data.render_data.loader == null || editing_chart_data.render_data.loader) {
                 $('#loader-row').prop('checked', 'checked');
+                $('#loader-row').addClass('firstLoaderGlobal');
                 $('#loader-color-container').show();
                 $('#loader-style-row').show();
             } else {
                 $('#loader-row').prop('checked', '');
+                $('#loader-row').addClass('firstLoaderGlobal');
                 $('#loader-color-container').hide();
                 $('#loader-style-row').hide();
             }

@@ -53,6 +53,17 @@
                     class="btn m-l-15 btn-primary wdt-validate-googlegeochart-mapkey"><?php esc_html_e('Validate & Save', 'wpdatatables'); ?></button>
         </div>
         </div>
+        <div class="col-sm-4 wdt-global-loder">
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>
+                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php esc_attr_e('Enable this option to display a loader for all charts while they are loading.', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="toggle-switch" data-ts-color="blue">
+                <input type="checkbox" name="wdt-global-chart-loader" id="wdt-global-chart-loader" checked="checked"/>
+                <label for="wdt-global-chart-loader" class="ts-label"><?php esc_html_e('Enable chart loaders','wpdatatables'); ?></label>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-12" style="margin-top: 12px;">

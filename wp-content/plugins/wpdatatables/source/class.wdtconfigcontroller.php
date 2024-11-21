@@ -254,6 +254,7 @@ class WDTConfigController
             $table->fixed_header = isset($advancedSettings->fixed_header) ? $advancedSettings->fixed_header : false;
             $table->fixed_header_offset = isset($advancedSettings->fixed_header_offset) ? $advancedSettings->fixed_header_offset : 0;
             $table->customRowDisplay = isset($advancedSettings->customRowDisplay) ? $advancedSettings->customRowDisplay : '';
+            $table->showCartInformation = isset($advancedSettings->showCartInformation) ? $advancedSettings->showCartInformation : 1;
 
             $table = self::sanitizeTableConfig($table);
 
@@ -459,6 +460,7 @@ class WDTConfigController
                     'simple_template_id' =>  $table->simple_template_id,
                     'customRowDisplay' => $table->customRowDisplay,
                     'loader' =>  $table->loader,
+                    'showCartInformation' =>  $table->showCartInformation,
                 )
             ),
         );
@@ -562,6 +564,7 @@ class WDTConfigController
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
         $table->loader = (int)($table->loader);
+        $table->showCartInformation = (int)($table->showCartInformation);
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -1106,7 +1109,7 @@ class WDTConfigController
         );
 
         $columnsTypes = $wpdb->get_col($existingColumnsTypesQuery);
-        $columnsTypesArray = array_diff(array_combine($columnsNotInSource, $columnsTypes), ['formula']);
+        $columnsTypesArray = array_diff(array_combine($columnsNotInSource, $columnsTypes), ['formula', 'select']);
         $columnsTypesArray = apply_filters('wpdatatables_columns_types_array', $columnsTypesArray, $columnsNotInSource, $columnsTypes);
         // Getting columns returned by the data source
         $dataSourceColumns = $table->getColumns();
@@ -1727,9 +1730,10 @@ class WDTConfigController
         $table->fixed_header = 0;
         $table->fixed_header_offset = 0;
         $table->table_wcag = 0;
-        $table->loader = 1;
+        $table->loader = get_option('wdtGlobalTableLoader');
         $table->simple_template_id = 0;
         $table->customRowDisplay = '';
+        $table->showCartInformation = 1;
         return $table;
     }
 

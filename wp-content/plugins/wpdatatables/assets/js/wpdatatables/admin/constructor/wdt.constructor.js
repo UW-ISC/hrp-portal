@@ -7,7 +7,7 @@ var constructedTableData = {
     connection: '',
     connection_type: '',
     name_in_database: '',
-    is_used_prefix_for_db_name : 0,
+    is_used_prefix_for_db_name: 0,
 };
 
 var defaultPostColumns = [
@@ -202,12 +202,12 @@ var aceEditor = null;
 
         var elementsPicker = document.querySelectorAll('select.wdt-constructor-default-column-db-type');
         var divPicker = document.querySelectorAll('.wdt-constructor-default-column-db-type div.open li a span.text');
-        if(constructedTableData.connection_type == 'postgresql'){
-            for(var i=0; i< elementsPicker.length; i++) {
+        if (constructedTableData.connection_type == 'postgresql') {
+            for (var i = 0; i < elementsPicker.length; i++) {
                 elementsPicker[i][9].innerHTML = elementsPicker[i][9].innerHTML.replace('DATETIME', 'TIMESTAMP');
                 elementsPicker[i][9].innerText = elementsPicker[i][9].innerText.replace('DATETIME', 'TIMESTAMP');
             }
-            for(var i=0; i< divPicker.length; i++){
+            for (var i = 0; i < divPicker.length; i++) {
                 divPicker[i].innerHTML = divPicker[i].innerHTML.replace('DATETIME', 'TIMESTAMP');
                 divPicker[i].innerText = divPicker[i].innerText.replace('DATETIME', 'TIMESTAMP');
             }
@@ -216,7 +216,7 @@ var aceEditor = null;
             $("select.wdt-constructor-default-column-db-type option[value='MEDIUMINT']").hide();
             $('.wdt-constructor-default-column-db-type div.open li[data-original-index="5"]').hide();
         }
-        if(constructedTableData.connection_type == 'mssql'){
+        if (constructedTableData.connection_type == 'mssql') {
             $("select.wdt-constructor-default-column-db-type option[value='TEXT']").hide();
             $('.wdt-constructor-default-column-db-type div.open li[data-original-index="1"]').hide();
             $("select.wdt-constructor-default-column-db-type option[value='MEDIUMINT']").hide();
@@ -278,12 +278,11 @@ var aceEditor = null;
                         previousStepButton.animateFadeIn();
                         break;
                     case 'wp':
-
-                        $('#wdt-constructor-table-connection').find("option:selected").each(function() {
+                        $('#wdt-constructor-table-connection').find("option:selected").each(function () {
                             // remove data for selected 'wp' option if connection is not WP
                             if ($(this).attr("data-vendor")) {
                                 // remove data for selected 'mysql' option
-                                $('#wdt-constructor-post-types-selected-table').find('tr').each(function(index, element) {
+                                $('#wdt-constructor-post-types-selected-table').find('tr').each(function (index, element) {
                                     $(element).addClass('selected');
                                 });
 
@@ -305,6 +304,41 @@ var aceEditor = null;
                         wdtApplyMySqlTablesDragging();
                         wdtApplyMySqlColumnsDragging();
                         break;
+                    case 'wp_posts_query':
+                        $('div.wdt-constructor-step[data-step="1-5"]').animateFadeIn();
+                        $('#wdt-constructor-wp-posts-table-name').change();
+                        $('#wdt-constructor-wp-posts-table-description').change();
+                        previousStepButton.animateFadeIn();
+                        break;
+                    case 'woo_commerce':
+                        //Check if WooCommerce is installed
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: {
+                                action: 'wpdatatables_check_woo_commerce',
+                                wdtNonce: wdtNonce
+                            },
+                            success: function (result) {
+                                let data = JSON.parse(result)
+                                if (data.wooExists) {
+                                    $('div.wdt-constructor-step[data-step="1-6"]').animateFadeIn();
+                                    $('#wdt-constructor-wp-woo-table-name').change();
+                                    $('#wdt-constructor-woo-commerce-table-description').change();
+                                    previousStepButton.animateFadeIn();
+                                } else {
+                                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.responseText );
+                                    $('#wdt-error-modal').modal('show');
+                                    $curStepBlock.show();
+                                }
+                            },
+                            error: function (data) {
+                                $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.responseText);
+                                $('#wdt-error-modal').modal('show');
+                                $curStepBlock.show();
+                            }
+                        })
+                        break;
                 }
                 break;
             case '1-2':
@@ -316,7 +350,7 @@ var aceEditor = null;
                 constructedTableData.file = $('#wdt-constructor-input-url').val();
 
                 // Validation for valid URL link of Google spreadsheet
-                if (constructedTableData.file.indexOf("docs.google.com") != -1 && constructedTableData.file.indexOf("2PACX") != -1 ) {
+                if (constructedTableData.file.indexOf("docs.google.com") != -1 && constructedTableData.file.indexOf("2PACX") != -1) {
                     $('#wdt-error-modal .modal-body').html('URL from Google spreadsheet publish modal(popup) is not valid for wpDataTables. Please provide a valid URL link that you get from the browser address bar. More info in our documentation on this <a href="https://wpdatatables.com/documentation/creating-wpdatatables/creating-wpdatatables-from-google-spreadsheets/" target="_blank">link</a>. ');
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
@@ -365,6 +399,33 @@ var aceEditor = null;
                 nextStepButton.hide();
                 wdtGenerateAndPreviewMySQLQuery();
                 break;
+            case '1-5':
+            case '1-6':
+                let postType = curStep === '1-5' ? 'PostQuery' : 'WooCommerce';
+                let nameSelector = postType === 'PostQuery' ? '#wdt-constructor-wp-posts-table-name' : '#wdt-constructor-wp-woo-table-name';
+                $(nameSelector).change();
+
+                if (!$(nameSelector).val()) {
+                    wdtNotify(wpdatatables_constructor_strings.error, wpdatatables_constructor_strings.tableNameEmpty, 'danger');
+                    return;
+                }
+                let taxField = document.querySelector('.wdt-wp-query-tax-field');
+                let taxTerms = document.querySelector('.wdt-wp-query-tax-terms');
+                let taxonomy = document.querySelector('.wdt-wp-query-taxonomy');
+
+                if(taxField || taxTerms || taxonomy) {
+                    if (taxField.value.trim() === '' || taxTerms.value.trim() === '' || taxonomy.value.trim() === '') {
+                        wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.emtyfields_woo, 'danger');
+                        $('.wdt-preload-layer').hide();
+                        return;
+                    }
+                }
+                $curStepBlock.hide();
+                previousStepButton.animateFadeIn();
+                nextStepButton.hide();
+                wdtGenerateAndPreviewPostsQuery(postType);
+                $(aceEditor.container.parentElement).closest('.card').hide();
+                break;
         }
     });
 
@@ -404,6 +465,8 @@ var aceEditor = null;
                 break;
             case '1-3':
             case '1-4':
+            case '1-5':
+            case '1-6':
                 previousStepButton.prop('disabled', 'disabled');
                 previousStepButton.hide();
                 nextStepButton.animateFadeIn();
@@ -422,8 +485,13 @@ var aceEditor = null;
                     $('div.wdt-constructor-step[data-step="1-3"]').animateFadeIn();
                 } else if (constructedTableData.method == 'mysql') {
                     $('div.wdt-constructor-step[data-step="1-4"]').animateFadeIn();
+                } else if (constructedTableData.method == 'wp_posts_query') {
+                    $('div.wdt-constructor-step[data-step="1-5"]').animateFadeIn();
+                } else if (constructedTableData.method == 'woo_commerce') {
+                    $('div.wdt-constructor-step[data-step="1-6"]').animateFadeIn();
                 }
                 $('.wdt-constructor-create-buttons').hide();
+                $('.wdt-woo-constructor-create-button').hide();
                 nextStepButton.prop('disabled', false);
                 nextStepButton.animateFadeIn();
                 break;
@@ -460,7 +528,7 @@ var aceEditor = null;
     $('#wdt-simple-table-constructor').click(function (e) {
         e.preventDefault();
         $('.wdt-preload-layer').animateFadeIn();
-        if (constructedTableData.method == 'simple'){
+        if (constructedTableData.method == 'simple') {
 
             var columns = $('#wdt-simple-table-number-of-columns').val(),
                 rows = $('#wdt-simple-table-number-of-rows').val(),
@@ -472,7 +540,7 @@ var aceEditor = null;
                 return;
             }
 
-            if ( rows == "" || rows == 0) {
+            if (rows == "" || rows == 0) {
                 wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.numberOfRowsError_constructor, 'danger');
                 $('.wdt-preload-layer').animateFadeOut();
                 return;
@@ -494,7 +562,7 @@ var aceEditor = null;
             constructedTableData.content.colHeaders = [];
             constructedTableData.content.mergedCells = [];
             constructedTableData.content.reloadCounter = 0;
-            constructedTableData.content.colWidths = colWidths.fill(100,0,parseInt(columns));
+            constructedTableData.content.colWidths = colWidths.fill(100, 0, parseInt(columns));
 
             $.ajax({
                 url: ajaxurl,
@@ -502,7 +570,7 @@ var aceEditor = null;
                 data: {
                     action: 'wpdatatables_create_simple_table',
                     tableData: JSON.stringify(constructedTableData),
-                    templateId : 0,
+                    templateId: 0,
                     wdtNonce: wdtNonce
                 },
                 success: function (link) {
@@ -525,7 +593,7 @@ var aceEditor = null;
     $('.wdt-simple-table-template .wdt-simple-table-constructor').click(function (e) {
         e.preventDefault();
         $('.wdt-preload-layer').animateFadeIn();
-        if (constructedTableData.method == 'simple'){
+        if (constructedTableData.method == 'simple') {
 
             $('#wdt-constructor-simple-table-name').change();
             $('#wdt-constructor-simple-table-description').change();
@@ -564,7 +632,7 @@ var aceEditor = null;
     /**
      * Change column count for manual tables
      */
-    $('#wdt-constructor-number-of-columns').bind('change keyup',function (e) {
+    $('#wdt-constructor-number-of-columns').bind('change keyup', function (e) {
         e.preventDefault();
 
         var newColumnCount = parseInt($(this).val());
@@ -592,7 +660,7 @@ var aceEditor = null;
     /**
      * Change table name for manual, wp-query and mysql-query based tables
      */
-    $(document).on('change','#wdt-constructor-manual-table-name, #wdt-constructor-wp-query-table-name, #wdt-constructor-mysql-query-table-name', function (e) {
+    $(document).on('change', '#wdt-constructor-manual-table-name, #wdt-constructor-wp-query-table-name, #wdt-constructor-mysql-query-table-name, #wdt-constructor-wp-posts-table-name, #wdt-constructor-wp-woo-table-name', function (e) {
         e.preventDefault();
         constructedTableData.name = $(this).val();
     });
@@ -600,20 +668,21 @@ var aceEditor = null;
     /**
      * Change table description for manual, wp-query and mysql-query based tables
      */
-    $(document).on('change','#wdt-constructor-manual-table-description, #wdt-constructor-wp-query-table-description, #wdt-constructor-mysql-query-table-description', function (e) {
+    $(document).on('change', '#wdt-constructor-manual-table-description, #wdt-constructor-wp-query-table-description, #wdt-constructor-mysql-query-table-description, #wdt-constructor-wp-posts-table-description, #wdt-constructor-wp-woo-table-description', function (e) {
         e.preventDefault();
         constructedTableData.table_description = $(this).val();
     });
-    $(document).on('change','#wdt-constructor-manual-table-name-in-database, #wdt-constructor-file-table-name-in-database', function (e) {
+    $(document).on('change', '#wdt-constructor-manual-table-name-in-database, #wdt-constructor-file-table-name-in-database', function (e) {
         e.preventDefault();
         constructedTableData.name_in_database = $(this).val();
     });
-    $(document).on('change','#wdt-prefix-db-name', function (e) {
+    $(document).on('change', '#wdt-prefix-db-name', function (e) {
         e.preventDefault();
         constructedTableData.is_used_prefix_for_db_name = $(this).is(':checked') ? 1 : 0;
     });
-    function disableGroupingOptions (select) {
-        $(select).find("option:selected").each(function() {
+
+    function disableGroupingOptions(select) {
+        $(select).find("option:selected").each(function () {
             if ($(this).attr("data-vendor") === 'mssql' || $(this).attr("data-vendor") === 'postgresql') {
                 $('.wdt-constructor-mysql-grouping-rules-block').css('visibility', 'hidden');
             } else {
@@ -631,7 +700,7 @@ var aceEditor = null;
         e.preventDefault();
 
         // remove data for selected 'mysql' option
-        $('#wdt-constructor-mysql-tables-selected-table').find('tr').each(function(index, element) {
+        $('#wdt-constructor-mysql-tables-selected-table').find('tr').each(function (index, element) {
             $(element).addClass('selected');
         });
 
@@ -708,17 +777,14 @@ var aceEditor = null;
         var $dateInputBlock = $columnBlock.find('.wdt-constructor-date-input-format-block');
         var $possibleValuesBlock = $columnBlock.find('.wdt-constructor-possible-values-block');
 
-        if($.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT' ,'TINYINT','MEDIUMINT' ,'VARCHAR']) != -1){
+        if ($.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT', 'VARCHAR']) != -1) {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'number';
         } else {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
         }
 
-        if ($.inArray($(this).val(),['DATE', 'DATETIME']) != -1 && $.inArray($(this).val(),['DATE', 'DATETIME']) != -1) {
+        if ($.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME']) != -1 && $.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME']) != -1) {
             $dateInputBlock.show();
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
         } else {
             $dateInputBlock.hide();
         }
@@ -730,7 +796,7 @@ var aceEditor = null;
         $columnBlock.find('.wdt-constructor-default-value')
             .attr('type', 'text');
 
-        if ($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1) {
+        if ($.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME']) != -1) {
             $columnBlock.find('.wdt-constructor-default-value')
                 .addClass('wdt-' + $(this).val().toLowerCase() + 'picker');
         } else {
@@ -738,8 +804,8 @@ var aceEditor = null;
                 .removeClass('wdt-datepicker wdt-datetimepicker wdt-timepicker');
         }
 
-        if($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1 || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
-            $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1) ){
+        if ($.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1 || ($.inArray(constructedTableData.connection_type, ['mssql', 'postgresql']) != -1 &&
+            $.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
         } else {
@@ -879,9 +945,9 @@ var aceEditor = null;
         $possibleValuesBlock.show()
         $defaultValuesBlock.show()
         $dataPreviewBlock.show()
-        $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled','')
+        $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled', '')
 
-        if($(this).val() == 'float'){
+        if ($(this).val() == 'float') {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
         } else {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'number';
@@ -894,16 +960,14 @@ var aceEditor = null;
             $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('val', $typeInDatabase);
             $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
             $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
-            if($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
+            if ($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
                 $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
                 $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
-            } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
-                || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1)  || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
-                    $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+            } else if (($.inArray($typeInDatabase, ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1) ||
+                ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray(constructedTableData.connection_type, ['mssql', 'postgresql']) != -1 &&
+                    $.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
                 $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
                 $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
-                $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
-                $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
             } else {
                 $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
                 $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
@@ -941,11 +1005,8 @@ var aceEditor = null;
                 $columnBlock.find('.wdt-constructor-default-value').selectpicker('refresh');
             });
         } else {
-            if ($(this).val() == 'date' || $(this).val() == 'datetime' || $.inArray($typeInDatabase,['DATE', 'DATETIME']) != -1 ) {
+            if ($(this).val() == 'date' || $(this).val() == 'datetime' || $.inArray($typeInDatabase, ['DATE', 'DATETIME', 'TIME']) != -1) {
                 $dateInputBlock.show();
-                $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
-                $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
-                $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
             } else {
                 $dateInputBlock.hide();
             }
@@ -957,12 +1018,12 @@ var aceEditor = null;
             $columnBlock.find('.wdt-constructor-default-value')
                 .attr('type', 'text');
 
-            if ($(this).val() == 'hidden'){
+            if ($(this).val() == 'hidden') {
                 $hiddenDefaultValuesBlock.show()
                 $possibleValuesBlock.hide()
                 $defaultValuesBlock.hide()
                 $dataPreviewBlock.hide()
-                $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled','disabled')
+                $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled', 'disabled')
             }
 
             if ($.inArray($(this).val(), ['date', 'datetime', 'time']) != -1) {
@@ -983,17 +1044,14 @@ var aceEditor = null;
         $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('val', $typeInDatabase);
         $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
         $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
-        if($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
+        if ($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
-        } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
-            || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
-                $.inArray($typeInDatabase,['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+        } else if (($.inArray($typeInDatabase, ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1) ||
+            ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray(constructedTableData.connection_type, ['mssql', 'postgresql']) != -1 &&
+                $.inArray($typeInDatabase, ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
-            $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
         } else {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
@@ -1088,7 +1146,7 @@ var aceEditor = null;
     /**
      * Handler which creates the table for manual and file method
      */
-    $('#wdt-constructor-create-table, #wdt-constructor-create-table-excel').click(function (e) {
+    $('#wdt-constructor-create-table, #wdt-constructor-create-table-excel, .wdt-woo-constructor-create-button').click(function (e) {
         e.preventDefault();
 
         var tableView = '';
@@ -1123,20 +1181,20 @@ var aceEditor = null;
             $('div.wdt-constructor-column-block').each(function () {
                 var hiddenDefaultValue = '';
                 var columnType = $(this).find('.wdt-constructor-column-type').selectpicker('val');
-                var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR'?
+                var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val') == 'VARCHAR' ?
                     $(this).find('.wdt-constructor-default-value').selectpicker('val') :
                     $(this).find('.wdt-constructor-default-value').val();
-                if ($(this).find('.wdt-constructor-hidden-default-value').length){
-                    hiddenDefaultValue =  $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val')
-                    if ($.inArray( hiddenDefaultValue, ['query-param','post-meta', 'acf-data']) != -1){
+                if ($(this).find('.wdt-constructor-hidden-default-value').length) {
+                    hiddenDefaultValue = $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val')
+                    if ($.inArray(hiddenDefaultValue, ['query-param', 'post-meta', 'acf-data']) != -1) {
                         hiddenDefaultValue += ":" + $(this).find('.wdt-constructor-hidden-' + hiddenDefaultValue + '-value').val();
                     }
                 }
-                if (columnType == 'hidden' && !$(this).find('.wdt-constructor-hidden-default-value').length){
+                if (columnType == 'hidden' && !$(this).find('.wdt-constructor-hidden-default-value').length) {
                     hiddenDefaultValueNotAllowed = true;
                     return;
                 }
-                if (defaultValue != null && columnType == 'multiselect' && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR') {
+                if (defaultValue != null && columnType == 'multiselect' && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val') == 'VARCHAR') {
                     defaultValue.join('|');
                 }
 
@@ -1145,12 +1203,12 @@ var aceEditor = null;
                     type: columnType,
                     possible_values: $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|'),
                     predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
-                    predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
+                    predefined_type_value_in_db: $(this).find('.wdt-constructor-default-column-db-type-value').val(),
                     default_value: defaultValue,
                     hidden_default_value: hiddenDefaultValue
                 });
             });
-            if (hiddenDefaultValueNotAllowed){
+            if (hiddenDefaultValueNotAllowed) {
                 wdtNotify(wpdatatables_constructor_strings.error, wpdatatables_constructor_strings.hiddenColumnNotAllowed, 'danger');
                 return;
             }
@@ -1173,17 +1231,17 @@ var aceEditor = null;
                     }
                 },
                 error: function (data) {
-                    if(typeof data !== 'undefined' && data.responseText.includes('Display width')){
-                        if(constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
-                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
-                                + data.statusText);
-                        }else{
-                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: br> <strong>VARCHAR </strong><br>'
-                                + data.statusText);
+                    if (typeof data !== 'undefined' && data.responseText.includes('Display width')) {
+                        if (constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type == "") {
+                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>' +
+                                data.statusText);
+                        } else {
+                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: br> <strong>VARCHAR </strong><br>' +
+                                data.statusText);
                         }
-                    } else if(data.responseText.includes('error in your SQL syntax')){
-                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> Error in your SQL syntax! Empty type value or special characters are not allowed!<br>'
-                            + data.statusText);
+                    } else if (data.responseText.includes('error in your SQL syntax')) {
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> Error in your SQL syntax! Empty type value or special characters are not allowed!<br>' +
+                            data.statusText);
                     } else {
                         $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
                     }
@@ -1231,12 +1289,12 @@ var aceEditor = null;
                 $('.wdt-constructor-column-block').each(function () {
                     var hiddenDefaultValue = '';
                     if ($(this).find('.wdt-constructor-hidden-default-value').length) {
-                         hiddenDefaultValue = $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val')
+                        hiddenDefaultValue = $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val')
                         if ($.inArray(hiddenDefaultValue, ['query-param', 'post-meta', 'acf-data']) != -1) {
                             hiddenDefaultValue += ":" + $(this).find('.wdt-constructor-hidden-' + hiddenDefaultValue + '-value').val();
                         }
                     }
-                    if ($(this).find('.wdt-constructor-column-type').selectpicker('val') == 'hidden' && !$(this).find('.wdt-constructor-hidden-default-value').length){
+                    if ($(this).find('.wdt-constructor-column-type').selectpicker('val') == 'hidden' && !$(this).find('.wdt-constructor-hidden-default-value').length) {
                         hiddenDefaultValueNotAllowed = true;
                         return;
                     }
@@ -1245,8 +1303,8 @@ var aceEditor = null;
                         name: $(this).find('.wdt-constructor-column-name').val(),
                         type: $(this).find('.wdt-constructor-column-type').selectpicker('val'),
                         predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
-                        predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
-                        possible_values: $.inArray($(this).find('select.wdt-constructor-default-column-db-type').val(),['TIME', 'DATETIME']) != -1 && $(this).find('.wdt-constructor-possible-values').val() != '' ? $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|') : null,
+                        predefined_type_value_in_db: $(this).find('.wdt-constructor-default-column-db-type-value').val(),
+                        possible_values: $.inArray($(this).find('select.wdt-constructor-default-column-db-type').val(), ['TIME', 'DATETIME']) != -1 && $(this).find('.wdt-constructor-possible-values').val() != '' ? $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|') : null,
                         default_value: null,
                         hidden_default_value: $(this).find('.wdt-constructor-column-type').selectpicker('val') == 'hidden' ?
                             hiddenDefaultValue : '',
@@ -1254,7 +1312,7 @@ var aceEditor = null;
                             $(this).find('.wdt-constructor-date-input-format').selectpicker('val') : ''
                     });
                 });
-                if (hiddenDefaultValueNotAllowed){
+                if (hiddenDefaultValueNotAllowed) {
                     $('.wdt-preload-layer').hide();
                     $('div.wdt-constructor-step[data-step="2-2"]').show();
                     wdtNotify(wpdatatables_constructor_strings.error, wpdatatables_constructor_strings.hiddenColumnNotAllowed, 'danger');
@@ -1266,13 +1324,13 @@ var aceEditor = null;
                 wdtReadFileDataAndEditTable(tableView);
             } else {
                 let index = emptyHeader > 0 ? emptyHeader - 1 : emptyHeader;
-                if(typeof data !== 'undefined' && data.responseText.includes('Display width')){
-                    if (constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
-                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
-                            + data.statusText);
-                    }else{
-                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>VARCHAR</strong><br>'
-                            + data.statusText);
+                if (typeof data !== 'undefined' && data.responseText.includes('Display width')) {
+                    if (constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type == "") {
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>' +
+                            data.statusText);
+                    } else {
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>VARCHAR</strong><br>' +
+                            data.statusText);
                     }
                 } else {
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! The column header at position ' + emptyHeader + ' is empty. Please edit your source file so none of your column headers are empty and try again.');
@@ -1281,6 +1339,66 @@ var aceEditor = null;
                 $('.wdt-preload-layer').animateFadeOut();
                 $('.wdt-constructor-column-name:eq(' + index + ')').css('cssText', 'background: red!important');
             }
+        } else if ( constructedTableData.method === 'wp_posts_query') {
+            if (!$('#wdt-constructor-wp-posts-table-name').val()) {
+                wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.tableNameEmpty_constructor, 'danger');
+                return;
+            }
+
+            $.ajax({
+                url: ajaxurl,
+                data: {
+                    action: 'wpdatatables_constructor_generate_wp_query_wdt',
+                    tableData: constructedTableData,
+                    queryData: constructedPostQueryData,
+                    wdtNonce: wdtNonce
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (typeof data.error == 'undefined') {
+                        window.location = data.link + tableView;
+                    } else {
+                        $('.wdt-preload-layer').hide();
+                        wdtNotify(wpdatatables_constructor_strings.error_constructor, data.error, 'danger');
+                    }
+                },
+                error: function (data) {
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            })
+        } else if (constructedTableData.method === 'woo_commerce') {
+            if (!$('#wdt-constructor-wp-woo-table-name').val()) {
+                wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.tableNameEmpty_constructor, 'danger');
+                return;
+            }
+
+            $.ajax({
+                url: ajaxurl,
+                data: {
+                    action: 'wpdatatables_constructor_generate_woo_wdt',
+                    tableData: constructedTableData,
+                    queryData: constructedWooCommerceData,
+                    wdtNonce: wdtNonce
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (typeof data.error == 'undefined') {
+                        window.location = data.link + tableView;
+                    } else {
+                        $('.wdt-preload-layer').hide();
+                        wdtNotify(wpdatatables_constructor_strings.sql_error, data.error, 'danger');
+                    }
+                },
+                error: function (data) {
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            })
         } else {
             $.ajax({
                 url: ajaxurl,
@@ -1309,7 +1427,7 @@ var aceEditor = null;
 
     });
     $(document).on('change', 'select.wdt-constructor-hidden-default-value', function (e) {
-        if($(this).val() == 'query-param') {
+        if ($(this).val() == 'query-param') {
             $(this).closest('div.wdt-constructor-column-block')
                 .find('.wdt-constructor-hidden-query-param-value-block')
                 .show()
@@ -1319,7 +1437,7 @@ var aceEditor = null;
                 .closest('div.wdt-constructor-column-block')
                 .find('.wdt-constructor-hidden-acf-data-value-block')
                 .hide()
-        } else if($(this).val() == 'post-meta'){
+        } else if ($(this).val() == 'post-meta') {
             $(this).closest('div.wdt-constructor-column-block')
                 .find('.wdt-constructor-hidden-query-param-value-block')
                 .hide()
@@ -1329,7 +1447,7 @@ var aceEditor = null;
                 .closest('div.wdt-constructor-column-block')
                 .find('.wdt-constructor-hidden-acf-data-value-block')
                 .hide()
-        } else if($(this).val() == 'acf-data'){
+        } else if ($(this).val() == 'acf-data') {
             $(this).closest('div.wdt-constructor-column-block')
                 .find('.wdt-constructor-hidden-query-param-value-block')
                 .hide()
@@ -1417,14 +1535,14 @@ var aceEditor = null;
         });
 
         if ($('.wdt-constructor-post-types-all button').hasClass('deselect-all-columns') ||
-            ($('.wdt-constructor-post-types-all button').hasClass('select-all-columns')
-                && $('#wdt-constructor-post-types-all-table tr').length === 0)) {
+            ($('.wdt-constructor-post-types-all button').hasClass('select-all-columns') &&
+                $('#wdt-constructor-post-types-all-table tr').length === 0)) {
             $('#wdt-constructor-post-types-all-table tr').removeClass('selected');
             $('.wdt-constructor-post-types-all button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-post-types-all button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-constructor-post-types-all button.select-all-columns').removeClass('disabled').removeAttr('disabled');
 
-            if($('#wdt-constructor-post-types-all-table tr').length === 0 ) {
+            if ($('#wdt-constructor-post-types-all-table tr').length === 0) {
                 $('.wdt-constructor-post-types-all button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
                 $('.wdt-constructor-post-types-all button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
             }
@@ -1492,8 +1610,8 @@ var aceEditor = null;
         });
 
         if ($('.wdt-constructor-post-columns-all button').hasClass('deselect-all-columns') ||
-            ($('.wdt-constructor-post-columns-all button').hasClass('select-all-columns')
-                && $('#wdt-constructor-post-columns-all-table tr').length === 0)) {
+            ($('.wdt-constructor-post-columns-all button').hasClass('select-all-columns') &&
+                $('#wdt-constructor-post-columns-all-table tr').length === 0)) {
             $('#wdt-constructor-post-columns-all-table tr').removeClass('selected');
             $('.wdt-constructor-post-columns-all button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-post-columns-all button').toggleClass('select-all-columns deselect-all-columns');
@@ -1523,8 +1641,8 @@ var aceEditor = null;
             $(this).appendTo('.wdt-constructor-post-columns-all .card .card-body table tbody').removeClass('selected');
         });
 
-        if ($('.wdt-constructor-post-columns-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-post-columns-selected button').hasClass('select-all-columns')
-            && $('#wdt-constructor-post-columns-selected-table tr').length === 0)) {
+        if ($('.wdt-constructor-post-columns-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-post-columns-selected button').hasClass('select-all-columns') &&
+            $('#wdt-constructor-post-columns-selected-table tr').length === 0)) {
             $('#wdt-constructor-post-columns-selected-table tr').removeClass('selected');
             $('.wdt-constructor-post-columns-selected button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-post-columns-selected button').toggleClass('select-all-columns deselect-all-columns');
@@ -1676,7 +1794,9 @@ var aceEditor = null;
         }
 
         var postColumnTemplate = $.templates("#wdt-constructor-post-column-template");
-        var postColumnsHtml = postColumnTemplate.render({availablePostColumns: availablePostColumns});
+        var postColumnsHtml = postColumnTemplate.render({
+            availablePostColumns: availablePostColumns
+        });
         $('#wdt-constructor-post-columns-all-table').html(postColumnsHtml);
     }
 
@@ -1753,7 +1873,9 @@ var aceEditor = null;
     $('#wdt-constructor-add-post-condition').click(function (e) {
         e.preventDefault();
 
-        var whereBlock = {postTypeColumns: []};
+        var whereBlock = {
+            postTypeColumns: []
+        };
         for (var i in constructedTableData.postTypes) {
             whereBlock.postTypeColumns = whereBlock.postTypeColumns.concat(wdtGetColumnsByPostType(constructedTableData.postTypes[i], true));
         }
@@ -1779,7 +1901,9 @@ var aceEditor = null;
     $('#wdt-constructor-post-add-grouping-rule').click(function (e) {
         e.preventDefault();
 
-        var groupingRuleBlock = {postTypeColumns: []};
+        var groupingRuleBlock = {
+            postTypeColumns: []
+        };
 
         $('#wdt-constructor-post-columns-selected-table tr').each(function () {
             groupingRuleBlock.postTypeColumns = groupingRuleBlock.postTypeColumns.concat($(this).find('td').html());
@@ -1874,15 +1998,15 @@ var aceEditor = null;
             $(this).appendTo('.wdt-constructor-mysql-tables-selected .card .card-body table tbody').removeClass('selected');
         });
 
-        if ($('.wdt-constructor-mysql-tables-all button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-tables-all button').hasClass('select-all-columns')
-            && $('#wdt-constructor-mysql-tables-all-table tr').length === 0)) {
+        if ($('.wdt-constructor-mysql-tables-all button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-tables-all button').hasClass('select-all-columns') &&
+            $('#wdt-constructor-mysql-tables-all-table tr').length === 0)) {
             $('#wdt-constructor-mysql-tables-all-table tr').removeClass('selected');
             $('.wdt-constructor-mysql-tables-all button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-mysql-tables-all button').toggleClass('select-all-columns deselect-all-columns');
             $('.wdt-constructor-mysql-tables-all button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-constructor-mysql-tables-all button.select-all-columns').removeClass('disabled').removeAttr('disabled');
 
-            if($('#wdt-constructor-mysql-tables-all-table tr').length === 0 ){
+            if ($('#wdt-constructor-mysql-tables-all-table tr').length === 0) {
                 $('.wdt-constructor-mysql-tables-all button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
                 $('.wdt-constructor-mysql-tables-all button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
             }
@@ -1916,8 +2040,8 @@ var aceEditor = null;
             });
         });
 
-        if ($('.wdt-constructor-mysql-tables-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-tables-selected button').hasClass('select-all-columns')
-            && $('#wdt-constructor-mysql-tables-selected-table tr').length === 0)) {
+        if ($('.wdt-constructor-mysql-tables-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-tables-selected button').hasClass('select-all-columns') &&
+            $('#wdt-constructor-mysql-tables-selected-table tr').length === 0)) {
             $('#wdt-constructor-mysql-tables-selected-table tr').removeClass('selected');
             $('.wdt-constructor-mysql-tables-selected button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-mysql-tables-selected button').toggleClass('select-all-columns deselect-all-columns');
@@ -1952,8 +2076,8 @@ var aceEditor = null;
             $(this).appendTo('.wdt-constructor-mysql-columns-selected .card .card-body table tbody').removeClass('selected');
         });
 
-        if ($('.wdt-constructor-mysql-columns-all button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-columns-all button').hasClass('select-all-columns')
-            && $('#wdt-constructor-mysql-columns-all-table tr').length === 0)) {
+        if ($('.wdt-constructor-mysql-columns-all button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-columns-all button').hasClass('select-all-columns') &&
+            $('#wdt-constructor-mysql-columns-all-table tr').length === 0)) {
             $('#wdt-constructor-mysql-columns-all-table tr').removeClass('selected');
             $('.wdt-constructor-mysql-columns-all button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-mysql-columns-all button').toggleClass('select-all-columns deselect-all-columns');
@@ -1983,8 +2107,8 @@ var aceEditor = null;
             $(this).appendTo('.wdt-constructor-mysql-columns-all .card .card-body table tbody').removeClass('selected');
         });
 
-        if ($('.wdt-constructor-mysql-columns-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-columns-selected button').hasClass('select-all-columns')
-            && $('#wdt-constructor-mysql-columns-selected-table tr').length === 0)) {
+        if ($('.wdt-constructor-mysql-columns-selected button').hasClass('deselect-all-columns') || ($('.wdt-constructor-mysql-columns-selected button').hasClass('select-all-columns') &&
+            $('#wdt-constructor-mysql-columns-selected-table tr').length === 0)) {
             $('#wdt-constructor-mysql-columns-selected-table tr').removeClass('selected');
             $('.wdt-constructor-mysql-columns-selected button.deselect-all-columns').text(wpdatatables_constructor_strings.selectAll_constructor);
             $('.wdt-constructor-mysql-columns-selected button').toggleClass('select-all-columns deselect-all-columns');
@@ -2055,7 +2179,9 @@ var aceEditor = null;
             success: function (availableMySqlColumns) {
 
                 var mySqlColumnTemplate = $.templates("#wdt-constructor-mysql-column-template");
-                var mySqlColumnHtml = mySqlColumnTemplate.render({availableMySqlColumns: availableMySqlColumns.allColumns});
+                var mySqlColumnHtml = mySqlColumnTemplate.render({
+                    availableMySqlColumns: availableMySqlColumns.allColumns
+                });
                 $('#wdt-constructor-mysql-columns-all-table').html(mySqlColumnHtml);
                 constructedTableData.allMySqlColumns = availableMySqlColumns.allColumns;
 
@@ -2236,12 +2362,51 @@ var aceEditor = null;
 
     }
 
-    function wdtDeselectSelectAllPostTable(target){
+    function wdtGenerateAndPreviewPostsQuery(postType) {
+        $('.wdt-preload-layer').show();
+
+        let constructedQueryData;
+        if (postType === 'PostQuery') {
+            constructedQueryData = constructedPostQueryData;
+        } else if (postType === 'WooCommerce') {
+            constructedQueryData = constructedWooCommerceData;
+        }
+
+        $.ajax({
+            url: ajaxurl,
+            type: 'post',
+            dataType: 'json',
+            data: {
+                action: 'wpdatatables_generate_wp_posts_query_preview',
+                tableData: constructedTableData,
+                queryData: constructedQueryData,
+                wdtNonce: wdtNonce
+            },
+            success: function (data) {
+                $('div.wdt-constructor-preview-wp-table').html(data.preview);
+                $('div.wdt-constructor-step[data-step="2-3"]').animateFadeIn();
+                nextStepButton.prop('disabled', 'disabled');
+                if (postType === 'PostQuery') {
+                    $('.wdt-constructor-create-buttons').show();
+                } else if (postType === 'WooCommerce') {
+                    $('.wdt-woo-constructor-create-button').show();
+                }
+                $('.wdt-preload-layer').hide();
+            },
+            error: function (data) {
+                $('#wdt-error-modal .modal-body').html('There was an error while trying to save the table! ' + data.statusText + ' ' + data.responseText);
+                $('#wdt-error-modal').modal('show');
+                $('.wdt-preload-layer').animateFadeOut();
+            }
+        })
+    }
+
+    function wdtDeselectSelectAllPostTable(target) {
         $(target).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-types-all button').removeClass('disabled').removeAttr('disabled');
         $(target).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-types-selected button').removeClass('disabled').removeAttr('disabled');
         $(target).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-columns-all button').removeClass('disabled').removeAttr('disabled');
 
-        if($('#wdt-constructor-post-types-all-table tr').length === 0 ){
+        if ($('#wdt-constructor-post-types-all-table tr').length === 0) {
             $(target).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-types-all button').addClass('disabled').attr('disabled', 'disabled');
         }
 
@@ -2251,7 +2416,8 @@ var aceEditor = null;
             $(target).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-columns-selected button').addClass('disabled').attr('disabled', 'disabled');
         }
     }
-    function wdtDeselectSelectAllPostColumns(el){
+
+    function wdtDeselectSelectAllPostColumns(el) {
         $(el).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-columns-all button').removeClass('disabled').removeAttr('disabled');
         if ($('#wdt-constructor-post-columns-all-table tr').length === 0 || $('#wdt-constructor-post-types-selected-table tr').length === 0) {
             $(el).closest('.wdt-constructor-post-types-block').find('.wdt-constructor-post-columns-all button').addClass('disabled').attr('disabled', 'disabled');
@@ -2262,12 +2428,12 @@ var aceEditor = null;
         }
     }
 
-    function wdtDeselectSelectAllMySQLTable(target){
+    function wdtDeselectSelectAllMySQLTable(target) {
         $(target).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-tables-all button').removeClass('disabled').removeAttr('disabled');
         $(target).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-tables-selected button').removeClass('disabled').removeAttr('disabled');
         $(target).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-all button').removeClass('disabled').removeAttr('disabled');
 
-        if($('#wdt-constructor-mysql-tables-all-table tr').length === 0 ){
+        if ($('#wdt-constructor-mysql-tables-all-table tr').length === 0) {
             $(target).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-tables-all button').addClass('disabled').attr('disabled', 'disabled');
         }
 
@@ -2278,12 +2444,12 @@ var aceEditor = null;
         }
     }
 
-    function wdtDeselectSelectAllMySQLColumns(el){
-        if (($('#wdt-constructor-mysql-columns-all-table tr').length === 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length === 0)
-            || $('#wdt-constructor-mysql-tables-selected-table tr').length === 0) {
+    function wdtDeselectSelectAllMySQLColumns(el) {
+        if (($('#wdt-constructor-mysql-columns-all-table tr').length === 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length === 0) ||
+            $('#wdt-constructor-mysql-tables-selected-table tr').length === 0) {
             $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-all button').addClass('disabled').attr('disabled', 'disabled');
-        } else if(($('#wdt-constructor-mysql-columns-all-table tr').length === 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length != 0)
-            || $('#wdt-constructor-mysql-columns-all-table tr').length != 0) {
+        } else if (($('#wdt-constructor-mysql-columns-all-table tr').length === 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length != 0) ||
+            $('#wdt-constructor-mysql-columns-all-table tr').length != 0) {
             $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-all button').removeClass('disabled').removeAttr('disabled');
         }
         $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-selected button').removeClass('disabled').removeAttr('disabled');
@@ -2292,8 +2458,8 @@ var aceEditor = null;
             $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-selected button').addClass('disabled').attr('disabled', 'disabled');
             $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-selected button').addClass('disabled').attr('disabled', 'disabled');
         }
-        if ($('#wdt-constructor-mysql-columns-selected-table tr').length != 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length != 0
-            && $('#wdt-constructor-mysql-columns-all-table tr').length === 0 ) {
+        if ($('#wdt-constructor-mysql-columns-selected-table tr').length != 0 && $('#wdt-constructor-mysql-tables-selected-table tr').length != 0 &&
+            $('#wdt-constructor-mysql-columns-all-table tr').length === 0) {
             $(el).closest('#wdt-constructor-mysql-tables-block').find('.wdt-constructor-mysql-columns-all button').addClass('disabled').attr('disabled', 'disabled');
         }
     }

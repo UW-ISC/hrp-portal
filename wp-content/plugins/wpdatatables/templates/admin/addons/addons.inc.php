@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_MD_ROOT_PATH')) { ?>
-                                        <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                        <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
                                            target="_blank"
                                            rel="nofollow"
                                            class="wdt-addons-find-out-more"
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_PF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                    <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
                                        target="_blank"
                                        class="wdt-addons-find-out-more"
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
@@ -203,7 +203,7 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_FF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                    <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
                                        target="_blank"
                                        rel="nofollow"
                                        class="wdt-addons-find-out-more"
@@ -238,7 +238,7 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_GF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                    <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
                                        target="_blank"
                                        rel="nofollow"
                                        class="wdt-addons-find-out-more"

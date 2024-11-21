@@ -208,7 +208,18 @@ var wpdatatable_plugin_config = {
             jQuery('#wdt-numbers-align').prop('checked', alignNumber);
         }
     },
-
+    setGlobalTableLoaders: function (globalLoader) {
+        wdt_current_config.wdtGlobalTableLoader = globalLoader;
+        if (jQuery('#wdt-global-table-loader').val() != globalLoader) {
+            jQuery('#wdt-global-table-loader').prop('checked', globalLoader);
+        }
+    },
+    setGlobalChartLoaders: function (globalLoader) {
+        wdt_current_config.wdtGlobalChartLoader = globalLoader;
+        if (jQuery('#wdt-global-chart-loader').val() != globalLoader) {
+            jQuery('#wdt-global-chart-loader').prop('checked', globalLoader);
+        }
+    },
     setColorFontSetting: function (settingName, settingValue) {
         if (typeof wdt_current_config.wdtFontColorSettings != 'object') {
             wdt_current_config.wdtFontColorSettings = {};

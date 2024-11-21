@@ -1551,6 +1551,30 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     margin-left: 16px;
     color: #ffffff;
 }
+
+.wpdt-c.wdt-skin-dark .wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-dark .single_add_to_cart_button {
+    border: 1px solid #606fc7;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
+    background-color: #606fc7;
+    margin-left: 16px;
+    color: #ffffff;
+    width: fit-content;
+}
+
+.wpdt-c.wdt-skin-dark a.basket-link {
+    color: #606fc7;
+}
+.wpdt-c.wdt-skin-dark .wdt-woo-variable-product select {
+    color: #606fc7;
+}
+.wpdt-c.wdt-skin-dark .wdt-woo-quantity-field input.wdt-woo-input-text {
+    background-color: transparent;
+}
+
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-dark .modal-content .modal-footer button.wdt-cancel-delete-button {
     width: 105px;
     border: none;

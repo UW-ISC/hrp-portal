@@ -561,3 +561,20 @@
 .wpdt-c.wdt-skin-light.wpTableWCAG .wpDataTablesWrapper .filter_column button{
     color: #747474;
 }
+
+.wpdt-c.wdt-skin-light .wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-light .single_add_to_cart_button {
+    cursor: pointer;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    display: block;
+    width: fit-content;
+}
+
+.wpdt-c.wdt-skin-light a.basket-link {
+    color: #3e4249;
+}
+.wpdt-c.wdt-skin-light .wdt-woo-variable-product select {
+    color: #3e4249;
+}

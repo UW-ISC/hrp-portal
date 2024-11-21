@@ -423,6 +423,8 @@ function wdtNotify(title, message, type) {
             break;
     }
 
+    let closeString = typeof(wpdatatables_edit_strings) !== 'undefined' ? wpdatatables_edit_strings.close_common : wpdatatables_frontend_strings.close_common_wpdatatables;
+
     jQuery.growl({
         icon: icon,
         title: ' ' + title + ' ',
@@ -452,7 +454,7 @@ function wdtNotify(title, message, type) {
         },
         icon_type: 'class',
         template: '<div data-growl="container" class="wpdt-c alert" role="alert">' +
-            '<span class="sr-only">' + wpdatatables_edit_strings.close_common + '</span>' +
+            '<span class="sr-only">' + closeString  + '</span>' +
             '</button>' +
             '<span data-growl="icon"></span>' +
             '<span data-growl="title"></span>' +

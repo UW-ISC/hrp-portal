@@ -1059,14 +1059,19 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
     function selectboxSearch() {
         if (jQuery(this).val() !== null) {
             var search = '';
+            var value = jQuery(this).val();
+            value = value.replaceAll('\n', ' ');
+            if (value.endsWith(' ')) {
+                value = value.slice(0, -1);
+            }
             if (jQuery(this).val() === 'possibleValuesAddEmpty' && !serverSide) {
                 oTable.api().column(columnIndex).search('^$', true, false);
             } else {
                 if (aoColumn.exactFiltering) {
-                    search = serverSide ? decodeURIComponent(jQuery(this).val()) : '^' + decodeURIComponent(jQuery(this).val()) + '$';
-                    oTable.api().column(columnIndex).search(jQuery(this).val() ? search : '', true, false);
+                    search = serverSide ? decodeURIComponent(value) : '^' + decodeURIComponent(value) + '$';
+                    oTable.api().column(columnIndex).search(value ? search : '', true, false);
                 } else {
-                    oTable.api().column(columnIndex).search(decodeURIComponent(jQuery(this).val()), true, false);
+                    oTable.api().column(columnIndex).search(decodeURIComponent(value), true, false);
                 }
             }
 
@@ -1282,6 +1287,13 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
         var columnType = tableDescription.dataTableParams.columnDefs[columnIndex].wdtType;
         var search = '', selectedOptions;
         selectedOptions = jQuery(this).selectpicker('val');
+
+        for (var i = 0; i < selectedOptions.length; i++) {
+            selectedOptions[i] = selectedOptions[i].replaceAll('\n', ' ');
+            if (selectedOptions[i].endsWith(' ')) {
+                selectedOptions[i] = selectedOptions[i].slice(0, -1);
+            }
+        }
 
         if (aoColumn.andLogic && !serverSide) {
             jQuery.each(selectedOptions, function (index, value) {
@@ -1502,7 +1514,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         checkedInputs = jQuery(this).closest('#' + checkboxesDivId).find('input:checkbox:checked');
         useAndLogic = aoColumn.andLogic && !serverSide;
 
-        var checkedValue = jQuery(this).val();
+        var checkedValue = jQuery(this).val().replaceAll('%0A', ' ');
         if (checkedInputs.length <= 1 ) orderCheckbox = [];
         if (!jQuery(this).is(':checked')) {
             orderCheckbox = orderCheckbox.filter(function (value) {

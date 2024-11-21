@@ -367,6 +367,7 @@ class WDTTools
             'customDatabaseNameLengthError_constructor' =>  __('The database name must be less than 64 characters.', 'wpdatatables'),
             'customDatabaseNameTypeError_constructor' =>  __('The database name can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
             'wpPrefixForDatabase_constructor' => $wpdb->prefix,
+            'emtyfields_woo' => __('All of the following fields must be filled out: Taxonomy, Tax Field and Tax Terms.', 'wpdatatables'),
         );
     }
     public static function getTranslationStringsSimpleTable()
@@ -536,7 +537,13 @@ class WDTTools
             'lenghtMenuWCAG_wpdatatables' => __( 'Length menu:', 'wpdatatables'),
             'searchTableWCAG_wpdatatables' => __( 'Search table:', 'wpdatatables'),
             'all_wpdatatables' => __( 'All', 'wpdatatables'),
-            'customDisplayError_wpdatatables' => __( 'Invalid format of custom rows per page. Please enter a valid format like "1,2,3,4". If you use the number 0, it must be in the format 0 without any preceding zeros.', 'wpdatatables')
+            'customDisplayError_wpdatatables' => __( 'Invalid format of custom rows per page. Please enter a valid format like "1,2,3,4". If you use the number 0, it must be in the format 0 without any preceding zeros.', 'wpdatatables'),
+            'close_common_wpdatatables' => __('Close', 'wpdatatables'),
+            'error_adding_to_cart_wpdatatables' => __('Error adding products to cart.', 'wpdatatables'),
+            'select_products_for_cart_wpdatatables' => __('Please select products to add to the cart.', 'wpdatatables'),
+            'error_fetching_cart_info_wpdatatables' => __('Error fetching cart info.', 'wpdatatables'),
+            'could_not_add_to_cart_wpdatatables' => __( 'Could not add this product to cart - the stock of this product could be limited.' , 'wpdatatables' ),
+            'emtyfields_woo_front' => __('All of the following fields must be filled out: Taxonomy, Tax Field and Tax Terms.', 'wpdatatables'),
         );
     }
     public static function getTranslationStringsColumnFilter()
@@ -711,36 +718,45 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '25.09.2024.',
+            'release_date' => '14.11.2024.',
             'features' => [
-//                0 => [
-//                    'text' => 'Added option for disabling and enabling table loader.',
-//                    'link' => ''
-//                ]
+                0 => [
+                    'text' => 'WooCommerce Integration!',
+                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/woocommerce-integration'
+                ],
+                1 => [
+                    'text' => 'WP Posts Builder - New Table Type.',
+                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/wp-post-builder-integration'
+                ],
             ],
             'improvements' => [
-//                0 => [
-//                    'text' => 'WCAG compliance adaptation for Simple table templates.',
-//                    'link' => ''
-//                ],
-//                1 => [
-//                    'text' => 'Clear filter button has been improved to reset the search text in the table search.',
-//                    'link' => ''
-//                ],
-            ],
-            'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed issue with table loader.',
+                    'text' => 'Implemented Error Handling Mechanism for Resolving Column Position Conflicts.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with ApexChart loader.',
+                    'text' => 'Added Option to Enable/Disable Loaders Globally for Tables and Charts.',
+                    'link' => ''
+                ],
+            ],
+            'bugfixes'=> [
+                0 => [
+                    'text' => 'Fixed Issue with Filtering Multiline Columns from Google Spreadsheets.',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Fixed Issue with Date Display and Highcharts when Using Range Picker.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with saving ChartJS charts without Series Tab.',
+                    'text' => 'Fixed Issue with Unable to Change Series Colors in Charts.',
                     'link' => ''
                 ],
+                3 => [
+                    'text' => 'Fixed Issue with Rendering Embedded Child Table in Parent Table.',
+                    'link' => ''
+                ],
+
             ]
         );
     }
@@ -830,7 +846,8 @@ class WDTTools
         return array(
             'wdtDateFormat'   => get_option('wdtDateFormat'),
             'wdtTimeFormat'   => get_option('wdtTimeFormat'),
-            'wdtNumberFormat' => get_option('wdtNumberFormat')
+            'wdtNumberFormat' => get_option('wdtNumberFormat'),
+            'wdtGlobalTableLoader' => get_option('wdtGlobalTableLoader'),
         );
     }
 
@@ -839,6 +856,7 @@ class WDTTools
         return array(
             'wdtGoogleApiMaps'   => get_option('wdtGoogleApiMaps'),
             'wdtGoogleApiMapsValidated'   => get_option('wdtGoogleApiMapsValidated'),
+            'wdtGlobalChartLoader' => get_option('wdtGlobalChartLoader'),
         );
     }
 
@@ -1426,6 +1444,10 @@ class WDTTools
             if (self::_detect($values, 'preg_match', WDT_URL_REGEX)) {
                 return 'link';
             }
+            if (self::_detect($values, 'WDTTools::wdtIsSelect'))
+                return 'select';
+            if (self::_detect($values, 'WDTTools::wdtIsAddToCart'))
+                return 'cart';
             return 'string';
         }
     }
@@ -1498,6 +1520,26 @@ class WDTTools
                 call_user_func('preg_match', WDT_TIME_24H_REGEX, substr($input, strpos($input, ':') - 2, 5)) ||
                 call_user_func('preg_match', WDT_AM_PM_TIME_REGEX, substr($input, strpos($input, ':') - 2))
             );
+    }
+
+    /**
+     * Function that checks if the passed values match a Woo Table Select Column
+     * @param $input
+     * @return bool
+     */
+    private static function wdtIsSelect($input): bool
+    {
+        return $input == '<input type="checkbox" class="select-checkbox">';
+    }
+
+    /**
+     * Function that checks if the passed values match a Woo Table Add To Cart Column
+     * @param $input
+     * @return bool
+     */
+    private static function wdtIsAddToCart($input): bool
+    {
+        return strpos($input, 'class="single_add_to_cart_button button alt ajax_add_to_cart"') !== false;
     }
 
     /**
@@ -2225,37 +2267,31 @@ class WDTTools
             case 'mssql':
             case 'postgresql':
                 return 'SQL';
-                break;
             case 'manual':
                 return 'Manual';
-                break;
             case 'xls':
                 return 'Excel';
-                break;
             case 'csv':
                 return 'CSV';
-                break;
             case 'xml':
                 return 'XML';
-                break;
+            case 'wp_posts_query':
+                return 'WP Posts';
+            case 'woo_commerce':
+                return 'WooCommerce';
             case 'json':
                 return 'JSON';
-                break;
             case 'nested_json':
                 return 'Nested JSON';
-                break;
             case 'serialized':
                 return 'Serialized PHP array';
-                break;
             case 'google_spreadsheet':
                 return 'Google sheet';
-                break;
             default:
                 if (in_array($tableType, WPDataTable::$allowedTableTypes)) {
                     return ucfirst($tableType);
                 }
                 return 'Unknown';
-                break;
         }
 
     }

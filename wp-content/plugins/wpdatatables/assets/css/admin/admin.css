@@ -525,6 +525,7 @@ div.mce-widget button i.mce-i-wpdatachart {
 #wdt-constructor-manual-table-description,
 #wdt-constructor-file-table-description,
 #wdt-constructor-wp-query-table-description,
+#wdt-constructor-wp-woo-table-description,
 #wdt-constructor-mysql-query-table-description {
     min-height: 30px;
     font: inherit;
@@ -658,8 +659,11 @@ div.mce-widget button i.mce-i-wpdatachart {
 .wpdt-c .wdt-constructor-post-types-block,
 .wpdt-c .wdt-constructor-mysql-query-table-name-block,
 .wpdt-c .wdt-constructor-wp-query-table-name-block,
+.wpdt-c .wdt-constructor-wp-posts-table-name-block,
+.wpdt-c .wdt-constructor-wp-woo-table-name-block,
 .wpdt-c .wdt-constructor-mysql-query-table-description-block,
 .wpdt-c .wdt-constructor-wp-query-table-description-block,
+.wpdt-c .wdt-constructor-woo-commerce-table-description-block,
 .wpdt-c .wdt-constructor-columns-container,
 .wpdt-c .wdt-constructor-table-name-and-columns,
 .wpdt-c .wdt-constructor-post-conditions-block,
@@ -1865,6 +1869,7 @@ wpdt-c button#wdt-add-data-browse-button {
     margin-left: 10px;
 }
 
+.wpdt-c p.wdt-advanced-filters.wdt-beta-feature,
 .wpdt-c p.wdt-fixedcolumns.wdt-beta-feature,
 .wpdt-c p.wdt-fixedheaders.wdt-beta-feature {
     color: #B46118;
@@ -2040,6 +2045,35 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss{
     top : -5px;
 }
+.wpdt-c .wdt-upgrade-btn {
+    background: #091D70 !important;
+}
+
+.wpdt-c .wdt-upgrade-img {
+    width: 100%;
+}
+.wpdt-c .wdt-upgrade-btn a {
+    color: #FFFFFF !important;
+}
+.wpdt-c .wdt-upgrade-btn a:hover {
+    opacity: .8;
+}
+
+.wpdt-c .opacity-5 {
+    opacity: .5;
+}
+
+.wpdt-c .opacity-6 {
+    opacity: .6;
+}
+.wpdt-c .row-notice {
+    padding: 5px;
+    border:1px solid #091D70 !important;
+}
+
+.wpdt-c #column-editing-settings .notice-images {
+    display: none;
+}
 .wdt-deactivation-backdrop {
     display: none;
     position: fixed;
@@ -2182,6 +2216,9 @@ wpdt-c button#wdt-add-data-browse-button {
     margin-left: 5px;
     text-decoration: unset;
 }
+.wdt-advanced-filters-option {
+    display: inline-block;
+}
 .wpdt-c .wdt-upgrade-btn {
     background: #091D70 !important;
 }
@@ -2194,20 +2231,4 @@ wpdt-c button#wdt-add-data-browse-button {
 }
 .wpdt-c .wdt-upgrade-btn a:hover {
     opacity: .8;
-}
-
-.wpdt-c .opacity-5 {
-    opacity: .5;
-}
-
-.wpdt-c .opacity-6 {
-    opacity: .6;
-}
-.wpdt-c .row-notice {
-    padding: 5px;
-    border:1px solid #091D70 !important;
-}
-
-.wpdt-c #column-editing-settings .notice-images {
-    display: none;
 }

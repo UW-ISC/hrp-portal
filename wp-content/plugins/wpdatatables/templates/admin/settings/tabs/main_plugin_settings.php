@@ -71,8 +71,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-4 time-format">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Time format', 'wpdatatables'); ?>
@@ -91,6 +89,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-sm-4 wdt-parse-shortcodes">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Parse shortcodes', 'wpdatatables'); ?>
@@ -102,8 +102,6 @@
                 <label for="wdt-parse-shortcodes" class="ts-label"><?php esc_html_e('Parse shortcodes in strings', 'wpdatatables'); ?></label>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-4 base-skin">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Base skin', 'wpdatatables'); ?>
@@ -188,8 +186,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-4 csv-delimiter">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('CSV delimiter', 'wpdatatables'); ?>
@@ -211,6 +207,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-sm-4 sorting-browse-tables">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Tables sorting direction in admin page', 'wpdatatables'); ?>
@@ -228,8 +226,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-4 tablet-width">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Tablet width', 'wpdatatables'); ?>
@@ -309,10 +305,6 @@
                 <label for="wdt-numbers-align" class="ts-label"><?php esc_html_e('Align numbers to the right','wpdatatables'); ?></label>
             </div>
         </div>
-    </div>
-    <!-- SUM and AVG label settings -->
-    <div class="row">
-
         <div class="col-sm-4 wdt-sum-function-label-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Sum functions label', 'wpdatatables'); ?>
@@ -331,7 +323,9 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <!-- SUM and AVG label settings -->
+    <div class="row">
         <div class="col-sm-4 wdt-avg-function-label-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Average functions label', 'wpdatatables'); ?>
@@ -350,12 +344,8 @@
                 </div>
             </div>
         </div>
-
-    </div>
     <!-- /.row -->
     <!-- MIN and MAX label settings -->
-    <div class="row">
-
         <div class="col-sm-4 wdt-min-function-label-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Minimum functions label', 'wpdatatables'); ?>
@@ -374,7 +364,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-sm-4 wdt-max-function-label-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Maximum functions label', 'wpdatatables'); ?>
@@ -393,7 +382,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <!-- /.row -->
     <!-- Include bootstrap on front and back settings -->
@@ -420,10 +408,6 @@
                 <label for="wdt-include-bootstrap-back-end" class="ts-label"><?php esc_html_e('Include full bootstrap.js on the back-end', 'wpdatatables'); ?></label>
             </div>
         </div>
-    </div>
-    <!-- /.row -->
-    <!-- Prevent deleting tables -->
-    <div class="row">
         <div class="col-sm-4 wdt-prevent-deleting-tables-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Prevent deleting tables in database', 'wpdatatables'); ?>
@@ -435,6 +419,10 @@
                 <label for="wdt-prevent-deleting-tables" class="ts-label"><?php esc_html_e('Prevent deleting tables in database after deleting plugin from Plugins page', 'wpdatatables'); ?></label>
             </div>
         </div>
+    </div>
+    <!-- /.row -->
+    <!-- Prevent deleting tables -->
+    <div class="row">
         <div class="col-sm-4 wdt-getting-started-page-status-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Remove Getting Started page', 'wpdatatables'); ?>
@@ -446,10 +434,6 @@
                 <label for="wdt-getting-started-page-status" class="ts-label"><?php esc_html_e('Remove "Getting Started" page from admin menu.', 'wpdatatables'); ?></label>
             </div>
         </div>
-    </div>
-    <!-- /.row -->
-
-    <div class="row">
         <div class="col-sm-4 wdt-lite-vs-premium-page-status-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Remove Lite vs Premium page', 'wpdatatables'); ?>
@@ -470,6 +454,20 @@
             <div class="toggle-switch" data-ts-color="blue">
                 <input type="checkbox" name="wdt-include-google-fonts" id="wdt-include-google-fonts"/>
                 <label for="wdt-include-google-fonts" class="ts-label"><?php esc_html_e('Include Google fonts.', 'wpdatatables'); ?></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4 wdt-global-loder">
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>
+                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php esc_attr_e('Enable this option to display a loader for all tables while they are loading.', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="toggle-switch" data-ts-color="blue">
+                <input type="checkbox" name="wdt-global-table-loader" id="wdt-global-table-loader" checked="checked"/>
+                <label for="wdt-global-table-loader" class="ts-label"><?php esc_html_e('Enable table loaders','wpdatatables'); ?></label>
             </div>
         </div>
     </div>

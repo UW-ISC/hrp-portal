@@ -263,15 +263,20 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with bug fixes:
+                            New major update with integrations, improvements, and bugfixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with table loader.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with ApexChart loader.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with saving ChartJS charts without Series Tab.</li>
-                                <li>Other small bug fixes</li>
+                                <li><strong>Feature:</strong> WooCommerce Integration - Create Product Tables!</li>
+                                <li><strong>Feature:</strong> WP Posts Builder - New Table Type.</li>
+                                <li><strong>Improvement:</strong> Implemented Error Handling Mechanism for Resolving Column Position Conflicts.</li>
+                                <li><strong>Improvement:</strong> Added Option to Enable/Disable Loaders Globally for Tables and Charts.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Filtering Multiline Columns from Google Spreadsheets.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Date Display and Highcharts when Using Range Picker.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Unable to Change Series Colors in Charts.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Rendering Embedded Child Table in Parent Table.</li>
+                                <li>Other small bug fixes.</li>
                             </ul>
                         </div>
 
@@ -512,7 +517,7 @@
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
-                                <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&amp;medium=addons&amp;campaign=addons"
+                                <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/?utm_source=wpdt-admin&amp;utm_medium=addons&amp;utm_campaign=wpdt&amp;utm_content=wpdt"
                                    target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
@@ -554,7 +559,7 @@
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
-                                <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&amp;utm_medium=addons&amp;utm_campaign=wpdt&amp;utm_content=wpdt"
                                    target="_blank" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
@@ -637,7 +642,7 @@
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
-                                <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&amp;utm_medium=addons&amp;utm_campaign=wpdt&amp;utm_content=wpdt"
                                    target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>
@@ -678,7 +683,7 @@
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
-                                <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&medium=addons&campaign=addons"
+                                <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&amp;utm_medium=addons&amp;utm_campaign=wpdt&amp;utm_content=wpdt"
                                    target="_blank" rel="nofollow" class="wdt-addons-find-out-more" role="button">
                                     <?php esc_html_e('Learn more', 'wpdatatables'); ?>
                                 </a>

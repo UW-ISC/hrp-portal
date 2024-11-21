@@ -229,6 +229,15 @@ class WPDataTables_Fusion_Elements
 
         return $content;
     }
+
+    public static function enqueueCustomAvadaJs()
+    {
+        wp_enqueue_script('wdt-custom-avada-js', plugin_dir_url(__FILE__) . 'assets/js/wdt-custom-avada-js.js', array('jquery'), WDT_CURRENT_VERSION, true);
+
+        wp_localize_script('wdt-custom-avada-js', 'wdt_ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
 }
 
 /**
@@ -244,6 +253,9 @@ function is_fusion_builder_active()
         class_exists('Fusion_Element'))
     {
         new WPDataTables_Fusion_Elements;
+    }
+    if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
+            add_action('wp_enqueue_scripts', array('WPDataTables_Fusion_Elements', 'enqueueCustomAvadaJs'));
     }
 }
 add_action('init', 'is_fusion_builder_active');

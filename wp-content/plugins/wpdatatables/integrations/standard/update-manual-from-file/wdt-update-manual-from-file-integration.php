@@ -80,7 +80,7 @@ class UpdateManualFromFile
 
         $columnHeaders = array();
         foreach ($objSourceFile->getTableData()->columns as $column) {
-            if (!in_array($column->type, array('formula', 'masterdetail'))) {
+            if (!in_array($column->type, array('formula', 'masterdetail', 'select'))) {
                 $columnHeaders[] = preg_replace('/\s*/', '', strtolower($column->orig_header));
             }
         }
