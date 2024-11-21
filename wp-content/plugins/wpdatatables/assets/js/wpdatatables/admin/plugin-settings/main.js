@@ -247,6 +247,19 @@
         $('#wdt-remove-borders-header').change(function (e) {
             wpdatatable_plugin_config.setBorderRemovalHeader($(this).is(':checked') ? 1 : 0);
         });
+
+        /**
+         * Toggle table loaders
+         */
+        $('#wdt-global-table-loader').change(function (e) {
+            wpdatatable_plugin_config.setGlobalTableLoaders($(this).is(':checked') ? 1 : 0);
+        });
+        /**
+         * Toggle chart loaders
+         */
+        $('#wdt-global-chart-loader').change(function (e) {
+            wpdatatable_plugin_config.setGlobalChartLoaders($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Set Custom Js - "Custom wpDataTables JS"
          */
@@ -327,6 +340,8 @@
         wpdatatable_plugin_config.setPreventDeletingTables(wdt_current_config.wdtPreventDeletingTables == 1 ? 1 : 0);
         wpdatatable_plugin_config.setParseShortcodes(wdt_current_config.wdtParseShortcodes == 1 ? 1 : 0);
         wpdatatable_plugin_config.setAlignNumber(wdt_current_config.wdtNumbersAlign == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setGlobalTableLoaders(wdt_current_config.wdtGlobalTableLoader == 1 ? 1: 0);
+        wpdatatable_plugin_config.setGlobalChartLoaders(wdt_current_config.wdtGlobalChartLoader == 1 ? 1: 0);
         wpdatatable_plugin_config.setCustomCss(wdt_current_config.wdtCustomCss);
         wpdatatable_plugin_config.setCustomJs(wdt_current_config.wdtCustomJs);
         wpdatatable_plugin_config.setMinifiedJs(wdt_current_config.wdtMinifiedJs == 1 ? 1 : 0);

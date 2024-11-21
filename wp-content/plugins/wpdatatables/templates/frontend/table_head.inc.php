@@ -12,7 +12,11 @@
 /** @var WDTColumn $dataColumn */
 global $is_safari;
 $dataRows = $this->getDataRows();
+$type = $this->getTableType();
 ?>
+<?php if ($type == 'woo_commerce') {
+    include WDT_WOO_COMMERCE_PATH . 'source/templates/add_to_cart_block.inc.php';
+} ?>
 <thead>
 <?php if ($advancedFilterPosition === 'header' && !empty($dataRows) && !$this->getFilteringForm() && $this->advancedFilterEnabled()) { ?>
     <tr>

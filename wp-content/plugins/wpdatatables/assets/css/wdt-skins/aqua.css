@@ -2520,3 +2520,24 @@ div.dt-button-collection.wdt-skin-aqua button.dt-button.buttons-columnVisibility
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-aqua.wpTableWCAG .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button{
     background-color: #007cb8 !important;
 }
+
+.wpdt-c.wdt-skin-aqua .single_add_to_cart_button,
+.wpdt-c.wdt-skin-aqua .wdt-add-to-cart-button {
+    color: #2271b1;
+    border-color: #2271b1;
+    background: #f6f7f7;
+    display: inline-block;
+    text-decoration: none;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 16px 10px;
+    padding: 0 10px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-appearance: none;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    width: fit-content;
+}

@@ -1164,29 +1164,32 @@ WDTColumn.prototype.fillInputs = function () {
 
     jQuery('#wdt-column-decimal-places').val('');
 
-    if (this.type == 'hidden') {
-        jQuery('#wdt-column-type option[value="hidden"]').prop('disabled', '');
-        jQuery('#wdt-column-type').prop('disabled', 'disabled');
-        jQuery('.wdt-hidden-column-block').show();
-    } else {
-        jQuery('#wdt-column-type option[value="hidden"]').prop('disabled', 'disabled');
-        jQuery('#wdt-column-type').prop('disabled', '');
-        jQuery('.wdt-hidden-column-block').hide();
+    let specialColumnTypes = ['hidden', 'formula','index', 'select', 'cart'];
+    switch (this.type) {
+        case 'hidden':
+            this.toggleColumnOption('hidden', true, '.wdt-hidden-column-block');
+            break;
+        case 'select':
+            this.toggleColumnOption('select', true);
+            break;
+        case 'cart':
+            this.toggleColumnOption('cart', true);
+            break;
+        case 'index':
+            this.toggleColumnOption('index', true);
+            break;
+        case 'formula':
+            this.toggleColumnOption('formula', true);
+            if (this.decimalPlaces !== -1) {
+                jQuery('#wdt-column-decimal-places').val(this.decimalPlaces);
+            }
+            break;
+        default:
+            specialColumnTypes.forEach(type => this.toggleColumnOption(type, false));
     }
-
-    if (this.type == 'formula') {
-        jQuery('#wdt-column-type option[value="formula"]').prop('disabled', '');
+    // Keep column type disabled for specific types
+    if (specialColumnTypes.includes(this.type)) {
         jQuery('#wdt-column-type').prop('disabled', 'disabled');
-        if (this.decimalPlaces != -1) {
-            jQuery('#wdt-column-decimal-places').val(this.decimalPlaces);
-        }
-    } else {
-        jQuery('#wdt-column-type option[value="formula"]').prop('disabled', 'disabled');
-        if (this.type == 'hidden') {
-            jQuery('#wdt-column-type').prop('disabled', 'disabled');
-        } else {
-            jQuery('#wdt-column-type').prop('disabled', '');
-        }
     }
 
     jQuery('#wdt-column-type').selectpicker('val', this.type).change();
@@ -1248,7 +1251,8 @@ WDTColumn.prototype.fillInputs = function () {
 
     let filteringOptionEnabled = this.parent_table.filtering;
     let globalOptionEnabled = this.parent_table.global_search;
-    if (!(filteringOptionEnabled || globalOptionEnabled) || this.type == 'formula') {
+    if (!(filteringOptionEnabled || globalOptionEnabled) ||
+        this.type == 'formula' || this.type == 'select' || this.type == 'cart') {
         jQuery('li.column-filtering-settings-tab').hide();
     } else {
         if(!globalOptionEnabled){
@@ -1455,7 +1459,7 @@ WDTColumn.prototype.show = function () {
     jQuery('div.column-settings-panel .tab-content').find('.active').removeClass('active');
     jQuery('div#column-display-settings').addClass('active');
 
-    wpdatatable_config.sorting == 0 || this.type == 'formula' ?
+    wpdatatable_config.sorting == 0 || this.type == 'formula' || this.type == 'select'  || this.type == 'cart' ?
         jQuery('.column-sorting-settings-tab').hide() :
         jQuery('.column-sorting-settings-tab').show();
 
@@ -2070,4 +2074,20 @@ WDTColumn.prototype.populateUserIdColumn = function () {
     var $selecter = jQuery('#editing-settings #wdt-user-id-column');
 
     jQuery('<option value="' + this.id + '">' + this.orig_header + '</option>').appendTo($selecter);
+};
+
+/**
+ * Helper function to enable/disable option and field
+ */
+WDTColumn.prototype.toggleColumnOption = function (type, isEnabled, showBlockSelector = '') {
+    const optionSelector = `#wdt-column-type option[value="${type}"]`;
+    const fieldSelector = '#wdt-column-type';
+
+    jQuery(optionSelector).prop('disabled', isEnabled ? '' : 'disabled');
+
+    jQuery(fieldSelector).prop('disabled', isEnabled ? 'disabled' : '');
+
+    if (showBlockSelector) {
+        jQuery(showBlockSelector).toggle(isEnabled);
+    }
 };

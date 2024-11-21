@@ -234,6 +234,17 @@
     margin-left: 10px;
     vertical-align: bottom;
 }
+
+.wdt-lite-premium-features{
+    color: #7f54b3;
+}
+.wdt-lite-premium-red-row{
+    background-color: #f6f0ff;
+}
+.wdt-lite-premium-woo-button{
+    background-color: #7f54b3 !important;
+}
+
 @media (max-width: 768px) {
     .wpdt-c .card .card-header .actions {
         top: 12px !important;

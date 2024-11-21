@@ -9795,7 +9795,7 @@ select.input-group-lg > .input-group-btn > .btn {
     padding: 0;
     white-space: nowrap;
     margin: 0;
-    overflow: auto;
+    overflow: hidden;
     box-shadow: inset 0 -1px 0 #D7D9E2;
     width: 100%;
 }
@@ -13755,6 +13755,17 @@ h2.wpdt-c{
 .wpdt-c .filter_column .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     width: 75% !important;
     text-overflow: ellipsis !important;
+}
+
+.wpdt-c select.selectpicker.wdt_wp_query_meta_parameter,
+.wpdt-c select.selectpicker.wdt_wp_query_date_parameter {
+    height: 40px !important;
+    display: inline-block !important;
+    width: 100%;
+    padding: 3px 24px 3px 8px !important;
+    border-radius: 3px;
+    border: 1px solid #D7D9E2;
+    outline: none !important;
 }
 
 .wpDataTableFilterSection .filter_column .text_filter{

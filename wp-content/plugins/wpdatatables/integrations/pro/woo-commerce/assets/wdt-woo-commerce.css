@@ -1,0 +1,85 @@
+.wpdt-c .wpdt-icon-cart:before {
+    content: "\e93a";
+    font-family: 'wpDataTablesIcons';
+}
+
+.wpdt-c .wdt-woo-basket-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.wpdt-c .wdt-woo-basket-icon {
+    padding: 0 10px;
+}
+
+.wpdt-c .input-text.qty.text {
+    width: 60px;
+}
+
+.wpdt-c .wdt-woo-quantity-field {
+    /*height: 36px;*/
+    margin: 10px 0;
+}
+
+.wpdt-c .single_add_to_cart_button,
+.wpdt-c .wdt-add-to-cart-button {
+    display: inline-block;
+    text-decoration: none;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 16px 10px;
+    padding: 0 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.wpdt-c .single_add_to_cart_button[disabled] {
+    color: #999;
+    border-color: #d0d0d0;
+    background: #f6f7f7;
+}
+
+.wpdt-c .wdt-woo-variable-product select {
+    color: #2271b1;
+    background: #f6f7f7;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.wpdt-c td .wdt-woo-mini-cart {
+    margin: 10px;
+}
+
+.wpdt-c input.wdt-woo-input-text {
+    max-width: 100px;
+}
+
+.wpdt-c .wdt_woo_select_column input[type="checkbox"],
+.wpdt-c .wpDataTablesWrapper table.wpDataTable thead th input.wdt-get-all-checkbox {
+    width: fit-content;
+}
+
+.wpdt-c .wdt-coming-soon-notice {
+    font-size: 13px;
+    line-height: 20px;
+    color: #061938;
+    padding: 10px 12px;
+    background: #FFFFFF;
+    border: 1px solid #D7D9E2;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
+    border-radius: 3px;
+}
+
+.wpdt-c .wdt-no-display{
+    display: none;
+}

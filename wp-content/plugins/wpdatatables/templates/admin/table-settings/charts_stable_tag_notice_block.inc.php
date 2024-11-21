@@ -47,9 +47,7 @@
         <i style="line-height: 20px;"></i>
     </h4>
     <div class="fg-line">
-        <button class="btn btn-primary wdt-upgrade-btn w-100">
-            <a class="di-block w-100" href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=charts-stable-tag&campaign=charts-stable-tag-upgrade"
-               rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-        </button>
+        <a class="btn btn-primary wdt-upgrade-btn di-block w-100" href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=charts-stable-tag&utm_campaign=wpdt&utm_content=wpdt"
+           rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
     </div>
 </div>

@@ -6,13 +6,12 @@
            style="color: #091D70;"></i><strong><?php esc_html_e('Available from Standard license', 'wpdatatables'); ?></strong>
 
         <p class="m-b-5"><?php esc_html_e('Organize Tables and Charts Using Folders/Categories. More info in our docs on this ', 'wpdatatables'); ?>
-            <a rel="nofollow" href="https://wpdatatables.com/documentation/table-features/folders-for-tables-and-charts/">link.</a>
+            <a rel="nofollow"
+               href="https://wpdatatables.com/documentation/table-features/folders-for-tables-and-charts/">link.</a>
         </p>
         <p class="m-b-5">
-            <button class="btn btn-primary wdt-upgrade-btn m-l-5">
-                <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=folders&campaign=folders-upgrade"
-                   rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-            </button>
+            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=folders&utm_campaign=wpdt&utm_content=wpdt"
+               rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn m-l-5"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </p>
     </div>
 </div>

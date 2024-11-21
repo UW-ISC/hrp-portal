@@ -1098,7 +1098,7 @@ class WDTColumn {
         $parentTable = $this->getParentTable();
         $values = array();
 
-        if (empty($this->_formula) && $this->getDataType() !== '' && !in_array($this->getDataType(), array('date', 'datetime', 'time', 'formula'), true)) {
+        if (empty($this->_formula) && $this->getDataType() !== '' && !in_array($this->getDataType(), array('date', 'datetime', 'time', 'formula', 'select'), true)) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
                     $values = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);

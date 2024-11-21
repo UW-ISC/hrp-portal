@@ -1010,3 +1010,6 @@ span.wdt-deleteicon span {
         background-position: 800px 0;
     }
 }
+.wpdt-c .wdt-no-display{
+    display: none;
+}

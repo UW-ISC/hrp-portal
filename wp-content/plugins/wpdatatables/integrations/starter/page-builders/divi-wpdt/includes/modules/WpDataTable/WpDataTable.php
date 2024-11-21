@@ -35,6 +35,18 @@ class DIVI_wpDataTable extends ET_Builder_Module
     {
         $this->name = esc_html__('wpDataTable', 'wpdatatables');
         $this->setAllTables(WDTConfigController::getAllTablesAndChartsForPageBuilders('divi', 'tables'));
+        if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
+            add_action('wp_enqueue_scripts', array('DIVI_wpDataTable','enqueueCustomDiviJs'));
+        }
+    }
+
+    public static function enqueueCustomDiviJs()
+    {
+        wp_enqueue_script('wdt-custom-divi-js', plugin_dir_url(__FILE__) . 'wdt-custom-divi-js.js', array('jquery'), WDT_CURRENT_VERSION, true);
+
+        wp_localize_script('wdt-custom-divi-js', 'wdt_ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
     }
 
     /**
@@ -57,13 +69,22 @@ class DIVI_wpDataTable extends ET_Builder_Module
                 'label' => __('Choose a wpDataTable', 'wpdatatables'),
                 'type' => 'select',
                 'default_on_front' => $this->getAllTables()[0],
-                'options' => $this->getAllTables()
+                'options' => $this->getAllTables(),
+                'toggle_slug' => 'main_content',
+                'computed_affects' => array(
+                    '__view' => array(),
+                ),
             ),
             'view' => array(
                 'label' => __('Choose table view', 'wpdatatables'),
                 'type' => 'select',
                 'default_on_front' => __('regular', 'wpdatatables'),
-                'options' => ['regular', 'excel-like']
+                'options' => array(
+                    'regular' => __('Regular', 'wpdatatables'),
+                    'excel-like' => __('Excel-like', 'wpdatatables'),
+                ),
+                'toggle_slug' => 'main_content',
+                'custom_class' => 'wpdt-view-dropdown-field'
             ),
             'var1' => array(
                 'label' => __('Insert the %VAR1% placeholder', 'wpdatatables'),
@@ -123,6 +144,13 @@ class DIVI_wpDataTable extends ET_Builder_Module
                 )
             )
         );
+    }
+
+    protected function is_not_woocommerce_table() {
+        $wooCommerceTableIds = array('330', '331'); // WooCommerce table IDs
+        $selectedTableId = $this->props['id'] ?? null;
+
+        return !in_array($selectedTableId, $wooCommerceTableIds);
     }
 
     public function render($attrs, $content = null, $render_slug = null)

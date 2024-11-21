@@ -1507,7 +1507,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button {
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button,
+.wpdt-c.wdt-skin-raspberry-cream .wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-raspberry-cream .single_add_to_cart_button {
     width: 171px;
     border: 1px solid #A8157F;
     background-color: #ffffff;
@@ -1515,6 +1517,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
     margin-left: 16px;
     color: #A8157F;
+}
+
+.wpdt-c.wdt-skin-raspberry-cream a.basket-link {
+    color: #A8157F;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wdt-woo-variable-product select {
+    color: #6B7280;
 }
 
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-content .modal-footer button.wdt-cancel-delete-button {

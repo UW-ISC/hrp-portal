@@ -10,10 +10,8 @@
     <p class="m-b-0"><?php esc_html_e('Ensure data security by restricting access to only the user\'s own data', 'wpdatatables'); ?></p>
     <p class="m-b-0"><?php esc_html_e(' through robust authentication mechanisms, maintaining a seamless editing experience.', 'wpdatatables'); ?></p>
     <p class="p-t-10">
-        <button class="btn btn-primary wdt-upgrade-btn">
-            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=editing&campaign=editing-upgrade"
-               rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-        </button>
+        <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=editing&utm_campaign=wpdt&utm_content=wpdt"
+           rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
     </p>
 </div>
 <div class="row notice-images">

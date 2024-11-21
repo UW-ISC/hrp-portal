@@ -28,9 +28,7 @@
     </h4>
     <div class="fg-line">
         <input type="text" class="hidden" hidden id="wdt-add-data-source-input" value="">
-        <button class="btn btn-primary wdt-upgrade-btn w-100">
-            <a class="di-block w-100" href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=update-manual&campaign=update-manual-upgrade"
-               rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-        </button>
+        <a class="di-block btn btn-primary wdt-upgrade-btn w-100" href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=update-manual&utm_campaign=wpdt&utm_content=wpdt"
+           rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
     </div>
 </div>

@@ -9,10 +9,8 @@
         <p class="m-b-0 m-t-10"><?php esc_html_e('Fixed headers and columns enhance user experience by ensuring that column and row labels remain visible while scrolling, facilitating easier data interpretation and reference. ', 'wpdatatables'); ?></p>
         <p><?php esc_html_e('This features improves usability, especially for large datasets, by providing constant navigation points without the need for manual scrolling back to the top or side of the table.', 'wpdatatables'); ?></p>
         <p class="p-t-10">
-            <button class="btn btn-primary wdt-upgrade-btn">
-                <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=fixed-column-and-headers&campaign=fixed-column-and-headers-upgrade"
-                   rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-            </button>
+            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=fixed-column-and-headers&utm_campaign=wpdt&utm_content=wpdt"
+               rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </p>
     </div>
     <div class="row">

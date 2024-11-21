@@ -10,10 +10,8 @@
     </p><p class="m-b-0"><?php esc_html_e(' commonly utilized in MySQL queries but extendable to filtering and editing manual tables, 
     and exclusively for filtering in tables derived from XML, JSON, Excel, CSV, Google Spreadsheet, and PHP Serialized array.', 'wpdatatables'); ?></p>
     <p class="p-t-10">
-        <button class="btn btn-primary wdt-upgrade-btn">
-            <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&medium=placeholders&campaign=placeholders-upgrade"
-               rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-        </button>
+        <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=placeholders&utm_campaign=wpdt&utm_content=wpdt"
+           rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
     </p>
 </div>
 <div class="row notice-images">

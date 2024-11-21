@@ -36,6 +36,14 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
             array('editor_script' => 'wpdatatables-gutenberg-block')
         );
 
+        if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
+            wp_enqueue_script('wdt-custom-gutenberg-js', plugin_dir_url(__FILE__) . 'js/wdt-custom-gutenberg-js.js', array('jquery'), WDT_CURRENT_VERSION, true);
+
+            wp_localize_script('wdt-custom-gutenberg-js', 'wdt_ajax_object', array(
+                'ajaxurl' => admin_url('admin-ajax.php')
+            ));
+        }
+
     }
 
 }

@@ -20,7 +20,7 @@
                     <img id="wpdt-inline-logo"
                          src="<?php echo WDT_ROOT_URL; ?>assets/img/logo.svg"/>
                     <h2>
-                    <span style="display: none"><?php esc_html_e('Create a Table', 'wpdatatables'); ?></span>
+                        <span style="display: none"><?php esc_html_e('Create a Table', 'wpdatatables'); ?></span>
                         <?php esc_html_e('Create a Table', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions p-t-5">
@@ -47,6 +47,10 @@
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_2_3.inc.php'; ?>
 
+                    <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_5.inc.php'; ?>
+
+                    <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_6.inc.php'; ?>
+
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/constructor_column_block.inc.php'; ?>
 
                     <?php do_action( 'wpdatatables_add_constructor_step_in_wizard' ); ?>
@@ -67,6 +71,11 @@
                                 <li id="wdt-constructor-create-table-excel">
                                     <a><?php esc_html_e('Open in Excel-like editor', 'wpdatatables'); ?></a></li>
                             </ul>
+                        </div>
+                        <div class="btn-group wdt-woo-constructor-create-button pull-right m-l-5" style="display: none;">
+                            <button type="button" class="btn btn-primary">
+                                <?php esc_html_e('Create the table', 'wpdatatables'); ?>
+                            </button>
                         </div>
                         <button class="btn btn-primary pull-right m-l-5"
                                 disabled="disabled"

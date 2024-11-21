@@ -7,19 +7,19 @@
 
     <?php if (Connection::enabledSeparate()) { ?>
         <?php do_action( 'wpdatatables_add_separate_connection_element_in_wizard' ); ?>
-    <?php } else { ?>
+                            <?php }  else {
+        ?>
         <input type="hidden" id="wdt-constructor-table-connection" value="">
-    <?php } ?>
+        <?php } ?>
 
     <div class="col-sm-12 p-0">
 
         <div class="row wpdt-flex wdt-first-row">
             <div class="wdt-constructor-type-selecter-block col-sm-6">
                 <div class="card" data-value="simple">
-                    <div class="ribbon"><span>NEW</span></div>
                     <div class="card-header">
                         <img class="img-responsive"
-                             src="<?php echo WDT_ASSETS_PATH ?>img/constructor/create-simple-table.svg">
+                             src="<?php echo WDT_ASSETS_PATH ?>img/constructor/create-simple-table.png">
                     </div>
                     <div class="card-body p-b-20 p-r-20 p-t-20">
                         <h4 class="m-t-0 m-b-8 f-14"><?php esc_html_e('Create a simple table from scratch', 'wpdatatables'); ?>.</h4>

@@ -44,7 +44,7 @@ class WPDataChart
     protected $_tooltip_enabled = true;
     // Render data
     protected $_json_chart_render_data = null;
-    protected $_loader = true;
+    protected $_loader;
 
     public function setId($id)
     {
@@ -482,7 +482,7 @@ class WPDataChart
         $this->setVerticalAxisMin(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min')));
         $this->setVerticalAxisMax(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max')));
         $this->setTooltipEnabled((bool)(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_enabled', true)));
-        $this->setLoaderChart((bool)(WDTTools::defineDefaultValue($constructedChartData, 'loader', true)));
+        $this->setLoaderChart((bool)(WDTTools::defineDefaultValue($constructedChartData, 'loader', (bool)get_option('wdtGlobalChartLoader'))));
     }
 
     /**
@@ -829,8 +829,8 @@ class WPDataChart
                         $decimalPlaces = $this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
                         switch ($dataType) {
                             case 'date':
-                                $timestamp = is_int($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
-                                    $this->_wpdatatable->getCell($columnKey, $rowIndex)
+                                $timestamp = is_numeric($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
+                                    (int)$this->_wpdatatable->getCell($columnKey, $rowIndex)
                                     : strtotime(str_replace('/', '-', $this->_wpdatatable->getCell($columnKey, $rowIndex)));
                                 $return_data_row[] = date(
                                     $dateFormat,
@@ -838,8 +838,8 @@ class WPDataChart
                                 );
                                 break;
                             case 'datetime':
-                                $timestamp = is_int($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
-                                    $this->_wpdatatable->getCell($columnKey, $rowIndex) : strtotime(str_replace('/', '-', $this->_wpdatatable->getCell($columnKey, $rowIndex)));
+                                $timestamp = is_numeric($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
+                                    (int)$this->_wpdatatable->getCell($columnKey, $rowIndex) : strtotime(str_replace('/', '-', $this->_wpdatatable->getCell($columnKey, $rowIndex)));
                                 if ($this->getEngine() == 'google') {
                                     $return_data_row[] = date(
                                         $dateFormat,
@@ -1276,13 +1276,13 @@ class WPDataChart
         if (!empty($renderData['series_type'])) {
             $this->setSeriesType($renderData['series_type']);
         }
-        $renderData['loader'] = isset($renderData['loader']) ? $renderData['loader'] : true;
+        $renderData['loader'] = isset($renderData['loader']) ? $renderData['loader'] : get_option('wdtGlobalChartLoader');
         $this->setSelectedColumns($renderData['selected_columns']);
         $this->setFollowFiltering($renderData['follow_filtering']);
         $this->setRangeType($renderData['range_type']);
         $this->setRowRange($renderData['row_range']);
         $this->setShowGrid($renderData['show_grid'] ?: false);
-        $this->setLoaderChart($renderData['loader'] ?: false);
+        $this->setLoaderChart($renderData['loader'] ?: get_option('wdtGlobalChartLoader'));
         $this->setShowTitle($renderData['show_title'] ?: false);
         $this->setResponsiveWidth(isset($renderData['render_data']['options']['responsive_width']) ? (bool)$renderData['render_data']['options']['responsive_width'] : false);
         if (!empty($renderData['render_data']['options']['width'])) {
@@ -1302,14 +1302,10 @@ class WPDataChart
                 if (!empty($series_data['color']) || !empty($series_data['type']) || !empty($series_data['label'])) {
 
                     if (!empty($series_data['color'])) {
-                        $this->_render_data['options']['series'][$seriesIndex] = array(
-                            'color' => $series_data['color'],
-                        );
+                        $this->_render_data['options']['series'][$seriesIndex]['color'] = $series_data['color'];
                     }
                     if (!empty($series_data['label'])) {
-                        $this->_render_data['options']['series'][$seriesIndex] = array(
-                            'label' => $series_data['label']
-                        );
+                        $this->_render_data['options']['series'][$seriesIndex]['label'] =  $series_data['label'];
                     }
                 }
                 $seriesIndex++;
