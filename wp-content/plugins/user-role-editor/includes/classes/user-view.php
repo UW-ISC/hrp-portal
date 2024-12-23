@@ -56,7 +56,7 @@ class URE_User_View extends URE_View {
             $anchor_end = '</a>';
             if (class_exists('user_switching') && current_user_can('switch_to_user', $this->user_to_edit->ID)) {
                 $switch_to_user_link = user_switching::switch_to_url($this->user_to_edit);
-                $switch_to_user = '<a href="' . esc_url($switch_to_user_link) . '">' . esc_html__('Switch&nbsp;To', 'user-switching') . '</a>';
+                $switch_to_user = '<a href="' . esc_url($switch_to_user_link) . '">' . esc_html__('Switch&nbsp;To', 'user-role-editor') . '</a>';
             }
         } else {
             $anchor_start = '';
@@ -93,7 +93,7 @@ class URE_User_View extends URE_View {
 
         // print the 'no role' option. Make it selected if the user has no role yet.        
         $selected = ( empty($user_primary_role) ) ? 'selected="selected"' : '';
-        echo '<option value="" '. $selected.'>' . esc_html__('&mdash; No role for this site &mdash;') . '</option>';
+        echo '<option value="" '. $selected.'>' . esc_html__('&mdash; No role for this site &mdash;', 'user-role-editor') . '</option>';
 ?>
         </select>
 <?php        
@@ -105,17 +105,22 @@ class URE_User_View extends URE_View {
         $show_admin_role = $this->lib->show_admin_role_allowed();
         $values = array_values($this->user_to_edit->roles);
         $primary_role = array_shift($values);  // get 1st element from roles array
+        
+        // Is PolyLang plugin active?
+        $use_pll = function_exists('pll__');    
+        
         $roles = $this->editor->get('roles');
         foreach ($roles as $role_id => $role) {
             if (($show_admin_role || $role_id != 'administrator') && ($role_id !== $primary_role)) {
-                if ($this->editor->user_can($role_id)) {
+                if ( $this->editor->user_can( $role_id ) ) {
                     $checked = 'checked="checked"';
                 } else {
                     $checked = '';
                 }
+                $role_name = $use_pll ? pll__( $role['name'] ) : $role['name'];
                 echo '<label for="wp_role_' . $role_id . '"><input type="checkbox"	id="wp_role_' . $role_id .
                      '" name="wp_role_' . $role_id . '" value="' . $role_id . '"' . $checked . ' />&nbsp;' .
-                esc_html__($role['name'], 'user-role-editor') . '</label><br />';
+                esc_html( $role_name ) . '</label><br />';
             }
         }
     }

@@ -116,9 +116,7 @@ class User_Role_Editor {
         }
         
         add_action( 'admin_init', array($this, 'plugin_init'), 1 );
-
-        // Add the translation function after the plugins loaded hook.
-        add_action('plugins_loaded', array($this, 'load_translation'));
+        add_action('init', array($this, 'load_translation'));
 
         // add own submenu 
         add_action('admin_menu', array($this, 'plugin_menu'));
@@ -481,7 +479,7 @@ class User_Role_Editor {
     
 
     /**
-     * Load plugin translation files - linked to the 'plugins_loaded' action
+     * Load plugin translation files - linked to the 'init' action
      * 
      */
     function load_translation() {
@@ -944,26 +942,28 @@ class User_Role_Editor {
      *  Translate user role names, inluding custom roles added by user
      * 
      */
-    function translate_custom_roles( $roles ) {                
-        
+    function translate_custom_roles( $roles ) {
+
+        $use_pll = function_exists('pll__');
+
         foreach ($roles as $key => $value) {
-            $translated_name = esc_html__( $value['name'], 'user-role-editor' );  // get translation from URE language file, if exists
-            if ( $translated_name === $value['name'] ) { 
-                if ( $this->lib->is_wp_built_in_role( $key ) ) {
-                    // get WordPress internal translation
-                    $translated_name = translate_user_role( $translated_name );
-                } elseif ( function_exists('pll_register_string') ) {   
-                    // Integration with PolyLang plugin (https://wordpress.org/plugins/polylang/)                        
-                    $translated_name = pll__( $translated_name );
-                }
+            $role_name = $value['name'];
+            if ($this->lib->is_wp_built_in_role($key)) {
+                // get WordPress internal translation
+                $translated_name = translate_user_role( $role_name );
+            } elseif ($use_pll) {
+                // Integration with PolyLang plugin (https://wordpress.org/plugins/polylang/)                        
+                $translated_name = pll__($role_name);
+            } else {    // translation is not available
+                $translated_name = $role_name;
             }
-            $roles[$key]['name'] = $translated_name;
+            $roles[$key]['name'] = esc_html( $translated_name );
         }
-        
+
         $roles = apply_filters('ure_editable_roles', $roles );
-        
+
         return $roles;
-    } 
+    }
     // end of translate_custom_roles()
     
     

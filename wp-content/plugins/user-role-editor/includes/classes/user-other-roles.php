@@ -215,12 +215,14 @@ class URE_User_Other_Roles {
         
         $output = '';
         foreach ($user->caps as $cap => $value) {
-            if (!$wp_roles->is_role($cap)) {
-                if ('' != $output) {
-                    $output .= ', ';
-                }
-                $output .= $value ? $cap : sprintf(__('Denied: %s'), $cap);
+            if ( $wp_roles->is_role( $cap ) ) {
+                continue;
             }
+            if ('' !== $output) {
+                $output .= ', ';
+            }
+            // translators: placeholder %s is replaced by denied user capability id string value
+            $output .= $value ? $cap : sprintf(__('Denied: %s', 'user-role-editor'), $cap);
         }
         
         return $output;

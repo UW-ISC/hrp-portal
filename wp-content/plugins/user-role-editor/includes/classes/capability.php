@@ -107,8 +107,10 @@ class URE_Capability {
             $wp_roles->add_cap( $admin_role, $cap_id );
             $wp_roles->use_db = $use_db;
             $response['result'] = 'success';
+            // translators: placeholder %s is replaced by added user capability id string value
             $response['message'] = sprintf( esc_html__( 'Capability %s was added successfully', 'user-role-editor' ), $cap_id );
         } else {
+            // translators: placeholder %s is replaced by existed user capability id string value
             $response['message']  = sprintf( esc_html__( 'Capability %s exists already', 'user-role-editor' ), $cap_id );
         }
         
@@ -219,6 +221,7 @@ class URE_Capability {
         self::revoke_caps( $caps );
         
         if ( count( $caps )==1 ) {
+            // translators: placeholder %s is replaced by removed user capability id string value
             $mess = sprintf( esc_html__( 'Capability %s was removed successfully', 'user-role-editor' ), $caps[0] );
         } else {
             $lib = URE_Lib::get_instance();

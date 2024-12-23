@@ -10,6 +10,19 @@ jQuery(function() {
     jQuery('#ure_grant_roles_2').click(function() {
         ure_prepare_grant_roles_dialog();
     });
+    jQuery('#ure_add_role_button').click(function() {
+        ure_add_role( 1 );
+    });
+    jQuery('#ure_add_role_button_2').click(function() {
+        ure_add_role( 2 );
+    });
+    jQuery('#ure_revoke_role_button').click(function() {
+        ure_revoke_role( 1 );
+    });
+    jQuery('#ure_revoke_role_button_2').click(function() {
+        ure_revoke_role( 2 );
+    });
+
     
     if (ure_users_grant_roles_data.show_wp_change_role!=1) {        
         jQuery('#new_role').hide();
@@ -123,7 +136,64 @@ function ure_grant_roles() {
         'users': users, 
         'primary_role': primary_role,
         'other_roles': other_roles,
-        'wp_nonce': ure_users_grant_roles_data.wp_nonce};
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
+    jQuery.post(ajaxurl, data, ure_page_reload, 'json');
+    
+    return true;
+}
+
+
+function ure_add_role( control_number ) {    
+    var users = ure_get_selected_checkboxes('users');
+    if ( users.length===0 ) {
+        alert( ure_users_grant_roles_data.select_users_to_add_role );
+        return;
+    }
+    
+    var modifier = ( control_number===2 ) ? '_2' : '';
+    var role = jQuery('#ure_add_role'+ modifier).val();
+    if ( role.length===0 ) {
+         alert( ure_users_grant_roles_data.select_role_first );
+         return;
+    }
+    
+    jQuery('#ure_task_status').show();    
+    var data = {
+        'action': 'ure_ajax',
+        'sub_action':'add_role_to_user',
+        'users': users, 
+        'role': role,
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
+    jQuery.post(ajaxurl, data, ure_page_reload, 'json');
+    
+    return true;
+}
+
+
+function ure_revoke_role( control_number ) {    
+    var users = ure_get_selected_checkboxes('users');
+    if ( users.length===0 ) {
+        alert( ure_users_grant_roles_data.select_users_to_revoke_role );
+        return;
+    }
+    
+    var modifier = ( control_number===2 ) ? '_2' : '';
+    var role = jQuery('#ure_revoke_role'+ modifier).val();
+    if ( role.length===0 ) {
+         alert( ure_users_grant_roles_data.select_role_first );
+         return;
+    }
+    
+    jQuery('#ure_task_status').show();    
+    var data = {
+        'action': 'ure_ajax',
+        'sub_action':'revoke_role_from_user',
+        'users': users, 
+        'role': role,
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
     jQuery.post(ajaxurl, data, ure_page_reload, 'json');
     
     return true;
@@ -163,4 +233,5 @@ function ure_page_reload(response) {
     
     var url = ure_set_url_arg('update', 'promote');
     document.location = url;
+    
 }
