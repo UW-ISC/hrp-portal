@@ -2,8 +2,8 @@
 Contributors: shinephp
 Tags: user, role, editor, security, access
 Requires at least: 4.4
-Tested up to: 6.4.3
-Stable tag: 4.64.2
+Tested up to: 6.7.1
+Stable tag: 4.64.4
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,24 +81,13 @@ https://translate.wordpress.org/projects/wp-plugins/user-role-editor/
 
 
 == Changelog =
+= [4.64.4] 15.12.2024 =
+* Security Fix: Users - "Add Role", "Revoke Role" buttons: Cross-Site request forgery to privilege escalation was possible due to missed nonce validation. This issue was discovered and responsibly reported by vgo0.
 
-= [4.64.2] 19.02.2024 =
-* Update: Marked as compatible with WordPress 6.4.3
-* Update: URE_Advertisement: rand() is replaced with wp_rand().
-* Update: URE_Ajax_Proccessor: json_encode() is replaced with wp_json_encode().
-* Update: User_Role_Editor::load_translation(): load_plugin_textdomain() is called with the 2nd parameter value false, instead of deprecated ''.
-* Update: URE_Lib::is_right_admin_path(): parse_url() is replaced with wp_parse_url().
-* Update: URE_Lib::user_is_admin() does not call WP_User::has_cap() to enhance performance.
-* Update: Plugin version was added to CSS loaded to the "Users", "Users->User Role Editor", "Settings->User Role Editor" pages.
-* Update: All JavaScript files are loaded in footer now.
-* Fix: "Users->Add New Users". Unneeded extra '<table></table>' HTML tags was removed (thanks to Alejandro A. for this bug report). 
-
-= [4.64.1] 24.10.2023 =
-* Update: Marked as compatible with WordPress 6.4
-* Fix: Notice shown by PHP 8.3 is removed: PHP Deprecated: Creation of dynamic property URE_Editor::$hide_pro_banner is deprecated in /wp-content/plugins/user-role-editor/includes/classes/editor.php on line 166
-* Fix: Notice shown by PHP 8.3 is removed: PHP Deprecated: Creation of dynamic property URE_Role_View::$caps_to_remove is deprecated in /wp-content/plugins/user-role-editor/includes/classes/role-view.php on line 23
-* Fix: Notice shown by PHP 8.3 is removed: PHP Deprecated: Function utf8_decode() is deprecated in /wp-content/plugins/user-role-editor-pro/includes/classes/editor.php on line 984
-
+= [4.64.3] 03.12.2024 =
+* Update: Marked as compatible with WordPress 6.7.1
+* Fix: PHP Notice:  "Function _load_textdomain_just_in_time was called incorrectly. Translation loading for the <code>user-role-editor</code> domain was triggered too early." was fixed (shown only for those who used own .mo translation file installed).
+* Fix: Miscellaneous translation functionality (l18n) usage enhancements were applied.
 
 File changelog.txt contains the full list of changes.
 
@@ -110,12 +99,5 @@ I am ready to answer on your questions about plugin usage. Use [plugin page comm
 
 == Upgrade Notice ==
 
-= [4.64.2] 19.02.2023 =
-* Update: URE_Advertisement: rand() is replaced with wp_rand().
-* Update: URE_Ajax_Proccessor: json_encode() is replaced with wp_json_encode().
-* Update: User_Role_Editor::load_translation(): load_plugin_textdomain() is called with the 2nd parameter value false, instead of deprecated ''.
-* Update: URE_Lib::is_right_admin_path(): parse_url() is replaced with wp_parse_url().
-* Update: URE_Lib::user_is_admin() does not call WP_User::has_cap() to enhance performance.
-* Update: Plugin version was added to CSS loaded to the "Users", "Users->User Role Editor", "Settings->User Role Editor" pages.
-* Update: All JavaScript files are loaded in footer now.
-* Fix: "Users->Add New Users". Unneeded extra '<table></table>' HTML tags was removed (thanks to Alejandro A. for this bug report). 
+= [4.64.4] 15.12.2024 =
+* Security Fix: Users - "Add Role", "Revoke Role" buttons: Cross-Site request forgery to privilege escalation was possible due to missed nonce validation. This issue was discovered and responsibly reported by vgo0.

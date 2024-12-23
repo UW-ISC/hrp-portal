@@ -3677,9 +3677,9 @@ class MLAShortcode_Support {
 			case 'tag':
 			case 'meta_key':
 			case 'meta_compare':
-			case 'meta_value_delimiter':
 				$children_ok = false;
 				// fallthru
+			case 'meta_value_delimiter':
 			case 'post_type':
 			case 'post_status':
 			case 'post_mime_type':

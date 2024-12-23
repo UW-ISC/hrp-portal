@@ -34,7 +34,7 @@ class Red_Permalinks {
 	 * @return void
 	 */
 	public function migrate( WP_Query $query ) {
-		global $wp;
+		global $wp, $wp_query;
 
 		if ( count( $this->permalinks ) === 0 ) {
 			return;
@@ -45,6 +45,8 @@ class Red_Permalinks {
 		}
 
 		$this->intercept_permalinks();
+
+		$query_copy = clone $query;
 
 		foreach ( $this->permalinks as $old ) {
 			// Set the current permalink
@@ -72,6 +74,9 @@ class Red_Permalinks {
 					}
 				}
 
+				// Reset the query back to the original
+				// phpcs:ignore
+				$wp_query = $query_copy;
 				break;
 			}
 		}

@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
 Tested up to: 6.7.1
-Stable tag: 3.22
+Stable tag: 3.23
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,9 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.23 =
+* Fix: For the `[mla_gallery]` shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
+
 = 3.22 =
 * Fix: IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`.
 * Fix: Delay localization of built-in style and markup templates until `init` action.
@@ -364,8 +367,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.22 =
-IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`. Delay localization of built-in style and markup templates until `init` action.
+= 3.23 =
+For the [mla_gallery] shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
 
 == Acknowledgements ==
 
