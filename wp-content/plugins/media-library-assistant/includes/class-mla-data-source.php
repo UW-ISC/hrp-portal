@@ -79,6 +79,16 @@ class MLAData_Source {
 		'size_pixels[size]',
 		'size_dimensions[size]',
 
+		'original_absolute_file_name',
+		'original_base_file',
+		'original_file_name',
+		'original_name_only',
+		'original_file_size',
+		'original_dimensions',
+		'original_pixels',
+		'original_width',
+		'original_height',
+
 		'parent_date',
 		'parent_type',
 		'parent_title',
@@ -180,6 +190,47 @@ class MLAData_Source {
 	} // mla_get_data_source
 
 	/**
+	 * Intercept filesize() warnings and errors
+	 * 
+	 * @since 3.24
+	 *
+	 * @param	int		the level of the error raised
+	 * @param	string	the error message
+	 * @param	string	the filename that the error was raised in
+	 * @param	int		the line number the error was raised at
+	 *
+	 * @return	boolean	true, to bypass PHP error handler
+	 */
+	public static function filesize_error_handler( $type, $string, $file, $line ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAData_Source::filesize_error_handler( $type, $string, $file, $line )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+		// Don't execute PHP internal error handler
+		return true;
+	}
+
+	/**
+	 * Silent PHP filesize() wrapped with warning and error handlers
+	 * 
+	 * @since 3.24
+	 *
+	 * @param	string	the absolute path and filename
+	 *
+	 * @return	mixed	integer file size or false if failure
+	 */
+	private static function _get_filesize( $file ) {
+		set_error_handler( 'MLAData_Source::filesize_error_handler' );
+		try {
+			$filesize = @filesize( $file );
+		} catch ( Throwable $e ) { // PHP 7
+			$filesize = false;
+		} catch ( Exception $e ) { // PHP 5
+			$filesize = false;
+		}
+		restore_error_handler();
+
+		return $filesize;
+	}
+
+	/**
 	 * Evaluate file information for custom field mapping
  	 *
 	 * @since 2.20
@@ -207,7 +258,15 @@ class MLAData_Source {
 			'orientation' => '',
 			'hwstring_small' => '',
 			'filesize' => '',
-			'sizes' => array()
+			'sizes' => array(),
+			'original_absolute_file_name_raw' => '',
+			'original_absolute_file_name' => '',
+			'original_base_file' => '',
+			'original_file_name' => '',
+			'original_name_only' => '',
+			'original_width' => '',
+			'original_height' => '',
+			'original_file_size' => '',
 		);
 
 		$base_file = isset( $wp_attached_files[ $post_id ]->meta_value ) ? $wp_attached_files[ $post_id ]->meta_value : '';
@@ -255,32 +314,62 @@ class MLAData_Source {
 			$results['hwstring_small'] = isset( $attachment_metadata['hwstring_small'] ) ? $attachment_metadata['hwstring_small'] : '';
 		}
 
-		// Removed wptexturize() in MLA 3.00
 		if ( ! empty( $base_file ) ) {
 			$pathinfo = pathinfo( $base_file );
 			$results['base_file'] = $base_file;
-			if ( '.' == $pathinfo['dirname'] ) {
+			if ( '.' === $pathinfo['dirname'] ) {
 				$results['absolute_path_raw'] = $upload_dir;
-//				$results['absolute_path'] = wptexturize( str_replace( '\\', '/', $upload_dir ) );
 				$results['absolute_path'] = str_replace( '\\', '/', $upload_dir );
 				$results['path'] = '';
 			} else {
 				$results['absolute_path_raw'] = $upload_dir . $pathinfo['dirname'] . '/';
-//				$results['absolute_path'] = wptexturize(  str_replace( '\\', '/', $results['absolute_path_raw'] ) );
 				$results['absolute_path'] = str_replace( '\\', '/', $results['absolute_path_raw'] );
-//				$results['path'] = wptexturize(  $pathinfo['dirname'] . '/' );
 				$results['path'] = $pathinfo['dirname'] . '/';
 			}
 
 			$results['absolute_file_name_raw'] = $results['absolute_path_raw'] . $pathinfo['basename'];
-//			$results['absolute_file_name'] = wptexturize(  str_replace( '\\', '/', $results['absolute_file_name_raw'] ) );
 			$results['absolute_file_name'] = str_replace( '\\', '/', $results['absolute_file_name_raw'] );
-//			$results['file_name'] = wptexturize(  $pathinfo['basename'] );
 			$results['file_name'] = $pathinfo['basename'];
-//			$results['name_only'] = wptexturize(  $pathinfo['filename'] );
 			$results['name_only'] = $pathinfo['filename'];
-//			$results['extension'] = wptexturize(  $pathinfo['extension'] );
 			$results['extension'] = $pathinfo['extension'];
+
+			if ( isset( $attachment_metadata['original_image'] ) ) {
+				$original_file_name = $attachment_metadata['original_image'];
+				$results['original_absolute_file_name_raw'] = $results['absolute_path_raw'] . $original_file_name;
+				$results['original_absolute_file_name'] = str_replace( '\\', '/', $results['original_absolute_file_name_raw'] );
+				$results['original_base_file'] = $results['path'] . $original_file_name;
+				$results['original_file_name'] = $original_file_name;
+				$results['original_name_only'] = pathinfo( $original_file_name, PATHINFO_FILENAME );
+
+				$size = getimagesize( $results['original_absolute_file_name_raw'] );
+				if ( false !== $size ) {
+					$results['original_width'] = $size[0];
+					$results['original_height'] = $size[1];
+				}
+
+				$filesize = self::_get_filesize( $results['original_absolute_file_name_raw'] );
+				if ( false !== $filesize ) {
+					$results['original_file_size'] = $filesize;
+				}
+			} else {
+				// Default to original values for unscaled images
+				$results['original_absolute_file_name_raw'] = $results['absolute_file_name_raw'];
+				$results['original_absolute_file_name'] = $results['absolute_file_name_raw'];
+				$results['original_base_file'] = $results['base_file'];
+				$results['original_file_name'] = $results['file_name'];
+				$results['original_name_only'] = $results['name_only'];
+				$results['original_width'] = $results['width'];
+				$results['original_height'] = $results['height'];
+
+				if ( !empty( $results['filesize'] ) ) {
+					$results['original_file_size'] = $results['filesize'];
+				} else {
+					$filesize = self::_get_filesize( $results['absolute_file_name_raw'] );
+					if ( false !== $filesize ) {
+						$results['original_file_size'] = $filesize;
+					}
+				}
+			}
 		}
 
 		$results['sizes'] = $sizes;
@@ -375,9 +464,7 @@ class MLAData_Source {
 			}
 		}
 
-		/*
-		 * $option = array returns the array
-		 */
+		// $option = array returns the array
 		return $value;
 	} // _evaluate_array_result
 
@@ -397,8 +484,7 @@ class MLAData_Source {
 		global $wpdb;
 		static $upload_dir_array, $upload_dir, $intermediate_sizes = NULL, $wp_attached_files = NULL, $wp_attachment_metadata = NULL;
 		static $current_id = 0, $file_info = NULL, $parent_info = NULL, $references = NULL, $alt_text = NULL;
-
-		if ( 'none' == $data_value['data_source'] ) {
+		if ( 'none' === $data_value['data_source'] ) {
 			return '';
 		}
 
@@ -406,12 +492,12 @@ class MLAData_Source {
 		$qualifier = isset( $data_value['qualifier'] ) && ( 0 < strlen( $data_value['qualifier'] ) ) ? $data_value['qualifier'] : '';
 
 		// Do this once per page load; cache attachment metadata if mapping all attachments
-		if ( NULL == $intermediate_sizes ) {
+		if ( NULL === $intermediate_sizes ) {
 			$upload_dir_array = wp_upload_dir();
 			$upload_dir = $upload_dir_array['basedir'] . '/';
 			$intermediate_sizes = get_intermediate_image_sizes();
 
-			if ( 'custom_field_mapping' == $category ) {
+			if ( 'custom_field_mapping' === $category ) {
 				if ( ! $table = _get_meta_table('post') ) {
 					$wp_attached_files = array();
 					$wp_attachment_metadata = array();
@@ -423,14 +509,14 @@ class MLAData_Source {
 		} // first call after page load
 
 		// Do this once per post. Simulate SQL results for $wp_attached_files and $wp_attachment_metadata.
-		if ( $current_id != $post_id ) {
+		if ( $current_id !== $post_id ) {
 			$current_id = $post_id;
 			$parent_info = NULL;
 			$references = NULL;
 			$alt_text = NULL;
 			MLAData::mla_reset_regex_matches( $post_id );
 
-			if ( 'single_attachment_mapping' == $category ) {
+			if ( 'single_attachment_mapping' === $category ) {
 				$metadata = get_metadata( 'post', $post_id, '_wp_attached_file' );
 				if ( isset( $metadata[0] ) ) {
 					$wp_attached_files = array( $post_id => (object) array( 'post_id' => $post_id, 'meta_value' =>  $metadata[0] ) );
@@ -438,7 +524,7 @@ class MLAData_Source {
 					$wp_attached_files = array();
 				}
 
-				if ( NULL == $attachment_metadata ) {
+				if ( NULL === $attachment_metadata ) {
 					$metadata = get_metadata( 'post', $post_id, '_wp_attachment_metadata' );
 					if ( isset( $metadata[0] ) ) {
 						$attachment_metadata = $metadata[0];
@@ -457,7 +543,7 @@ class MLAData_Source {
 
 		$size_info = array( 'file' => '', 'width' => '', 'height' => '' );
 		$match_count = preg_match( '/(.+)\[(.+)\]/', $data_source, $matches );
-		if ( 1 == $match_count ) {
+		if ( 1 === $match_count ) {
 			$data_source = $matches[1] . '[size]';
 			if ( isset( $file_info['sizes'][ $matches[2] ] ) ) {
 				$size_info = $file_info['sizes'][ $matches[2] ];
@@ -617,15 +703,22 @@ class MLAData_Source {
 				break;
 			case 'absolute_path':
 			case 'absolute_file_name':
+			case 'original_absolute_file_name':
 			case 'base_file':
+			case 'original_base_file':
 			case 'path':
 			case 'file_name':
+			case 'original_file_name':
 			case 'name_only':
+			case 'original_name_only':
 			case 'extension':
 			case 'width':
+			case 'original_width':
 			case 'height':
+			case 'original_height':
 			case 'orientation':
 			case 'hwstring_small':
+			case 'original_file_size':
 			case 'aperture':
 			case 'credit':
 			case 'camera':
@@ -646,8 +739,8 @@ class MLAData_Source {
 					break;
 				}
 
-				$filesize = @ filesize( $file_info['absolute_file_name_raw'] );
-				if ( ! (false === $filesize ) ) {
+				$filesize = self::_get_filesize( $results['absolute_file_name_raw'] );
+				if ( false !== $filesize ) {
 					$result = $filesize;
 				}
 				break;
@@ -656,12 +749,26 @@ class MLAData_Source {
 				break;
 			case 'dimensions':
 				$result = $file_info['width'] . 'x' . $file_info['height'];
-				if ( 'x' == $result ) {
+				if ( 'x' === $result ) {
+					$result = '';
+				}
+				break;
+			case 'original_dimensions':
+				$result = $file_info['original_width'] . 'x' . $file_info['original_height'];
+				if ( 'x' === $result ) {
 					$result = '';
 				}
 				break;
 			case 'pixels':
 				$result = absint( (int) $file_info['width'] * (int) $file_info['height'] );
+				if ( 0 == $result ) {
+					$result = '';
+				} else {
+					$result = (string) $result;
+				}
+				break;
+			case 'original_pixels':
+				$result = absint( (int) $file_info['original_width'] * (int) $file_info['original_height'] );
 				if ( 0 == $result ) {
 					$result = '';
 				} else {
@@ -688,7 +795,7 @@ class MLAData_Source {
 					if ( !empty( $value['filesize'] ) ) {
 						$filesize = $value['filesize'];
 					} else {
-						$filesize = @ filesize( $file_info['absolute_path_raw'] . $value['file'] );
+						$filesize = self::_get_filesize( $file_info['absolute_path_raw'] . $value['file'] );
 					}
 
 					if ( false === $filesize ) {
@@ -743,7 +850,7 @@ class MLAData_Source {
 				if ( !empty( $size_info['filesize'] ) ) {
 					$result = $size_info['filesize'];
 				} else {
-					$result = @ filesize( $file_info['absolute_path_raw'] . $size_info['file'] );
+					$result = self::_get_filesize( $file_info['absolute_path_raw'] . $size_info['file'] );
 				}
 				
 				if ( false === $result ) {

@@ -14,7 +14,7 @@
  * Plugin Name: Smart Media Categories
  * Plugin URI:  http://davidlingren.com/
  * Description: Assigns taxonomy terms to Media Library items based on the terms of their parent post/page.
- * Version:     1.1.7
+ * Version:     1.1.8
  * Author:      David Lingren
  * Author URI:  http://davidlingren.com/
  * Text Domain: smart-media-categories
@@ -29,6 +29,9 @@
  * Enhanced for support topic "assign taxonomies to attachments for a standard WP gallery"
  * opened on  8/24/2017 by "maxgx".
  * https://wordpress.org/support/topic/assign-taxonomies-to-attachments-for-a-standard-wp-gallery/
+ *
+ * Enhanced (Reflected Cross-Site Scripting security fix) for Wordfence CVE ID: CVE-2024-11974 report
+ * opened on 12/03/2024 by "vgo0":
  *
  * Based on Tom McFarlin's "WordPress Plugin Boilerplate", v2.6.1
  *  - http://tommcfarlin.com/wordpress-plugin-boilerplate/

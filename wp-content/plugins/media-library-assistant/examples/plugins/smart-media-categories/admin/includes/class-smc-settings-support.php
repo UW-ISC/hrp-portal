@@ -158,7 +158,7 @@ class SMC_Settings_Support {
 	 */
 	public static function get_active_tab( $active_tab = NULL ) {
 		if ( isset( $_REQUEST[ 'smc_settings_tab' ] ) ) {
-			$active_tab = $_REQUEST[ 'smc_settings_tab' ];
+			$active_tab = trim( wp_kses( wp_unslash( $_REQUEST['smc_settings_tab'] ), 'post' ) );
 		} elseif ( is_null( $active_tab ) ) {
 			$active_tab = 'smc_automatic_options';
 		} elseif ( ! in_array( $active_tab, array( 'smc_automatic_options', 'smc_manual_options' ) ) ) {

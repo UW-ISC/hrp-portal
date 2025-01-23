@@ -437,7 +437,7 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -453,7 +453,7 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_image_attributes</td>
-<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_image_class</td>
@@ -1692,7 +1692,7 @@ Nine parameters provide an easy way to control the contents of tag cloud items w
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -2761,7 +2761,7 @@ Nine parameters provide an easy way to control the contents of list items withou
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -3739,7 +3739,7 @@ Ten parameters provide an easy way to control the contents of tag cloud items wi
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -6378,6 +6378,10 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <tr>
 <td class="mla-doc-table-label" style="width: 12em">size_dimensions[size]</td>
 <td style="padding-bottom: 2em;">image dimensions for a specific thumbnail version, e.g., size_dimensions[medium] = "300x225"; set to empty string if the specified size does not exist. There will be a [size] choice for every thumbnail version registered with WordPress for the site.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="padding-bottom: 2em;">original_absolute_file_name,<br />original_base_file,<br />original_file_name,<br />original_name_only,<br />original_file_size,<br />original_dimensions,<br />original_pixels,<br />original_width,<br />original_height</td>
+<td valign="top">values for the original image associated with large, scaled images. For unscaled images these values are the same as the corresponding data source without the "original_" prefix, so they will work for all images.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">parent_date</td>
