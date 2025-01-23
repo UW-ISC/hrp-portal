@@ -1062,7 +1062,7 @@ class Settings {
 
 				// Get field type.
 				$dependency_field                         = $this->get_field( $_field['field'] );
-				$dependency['fields'][ $f ]['field_type'] = $dependency_field->type;
+				$dependency['fields'][ $f ]['field_type'] = rgobj( $dependency_field, 'type' );
 
 				// If field is a checkbox, check options.
 				if ( rgar( $dependency_field, 'type' ) === 'checkbox' ) {
@@ -1151,7 +1151,7 @@ class Settings {
 
 				// Get field type.
 				$dependency_field                         = $this->get_field( $_field['field'] );
-				$dependency['fields'][ $f ]['field_type'] = $dependency_field->type;
+				$dependency['fields'][ $f ]['field_type'] = rgobj( $dependency_field, 'type' );
 
 				// If field is a checkbox, check options.
 				if ( rgar( $dependency_field, 'type' ) === 'checkbox' ) {

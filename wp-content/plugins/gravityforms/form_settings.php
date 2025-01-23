@@ -649,18 +649,12 @@ class GFFormSettings {
 	 * @return bool
 	 */
 	public static function legacy_is_in_use() {
-		$legacy_is_in_use = GFCache::get( 'legacy_is_in_use' );
-		if ( empty( $legacy_is_in_use ) ) {
-			$legacy_is_in_use = false;
-			$forms            = GFAPI::get_forms( null, false, 'date_created', 'ASC' );
-			foreach ( $forms as $form ) {
-				if ( rgar( $form, 'markupVersion' ) && $form['markupVersion'] == 1 ) {
-					$legacy_is_in_use = true;
-					break;
-				}
-			}
+		$legacy_is_in_use = GFCache::get( 'legacy_is_in_use', $found_in_cache );
 
-			GFCache::set( 'legacy_is_in_use', $legacy_is_in_use, true, 2 * WEEK_IN_SECONDS );
+		if ( ! $found_in_cache ) {
+			$legacy_is_in_use = GFFormsModel::has_legacy_markup();
+
+			GFCache::set( 'legacy_is_in_use', $legacy_is_in_use, true,  DAY_IN_SECONDS );
 		}
 
 		return $legacy_is_in_use;
@@ -849,6 +843,9 @@ class GFFormSettings {
 
 		// Get all of the current values.
 		foreach ( $form as $key => $value ) {
+			if ( in_array( $key, array( 'fields', 'notifications', 'confirmations' ) ) ) {
+				continue;
+			}
 			if ( is_array( $value ) ) {
 				foreach ( $value as $sub_key => $sub_value ) {
 					if ( is_array( $sub_value ) ) {
@@ -861,9 +858,8 @@ class GFFormSettings {
 
 					}
 				}
-			} else {
-				$initial_values[ $key ] = $value;
 			}
+			$initial_values[ $key ] = $value;
 		}
 
 		// Start and end times are formatted differently than other fields.
