@@ -818,7 +818,7 @@ class GF_System_Report {
 
 		$is_writable = wp_is_writable( $upload_path );
 
-		$disable_css      = apply_filters( 'gform_disable_css', get_option( 'rg_gforms_disable_css' ) );
+		$disable_css      = GFCommon::is_frontend_default_css_disabled();
 		$enable_html5     = get_option( 'rg_gforms_enable_html5', false );
 		$no_conflict_mode = get_option( 'gform_enable_noconflict' );
 		$updates          = get_option( 'gform_enable_background_updates' );
