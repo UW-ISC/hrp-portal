@@ -1614,34 +1614,44 @@ class MLAShortcode_Support {
 				}
 			}
 
-			if ( false !== strpos( $item_values['pagelink'], '<img ' ) ) {
-				if ( ! empty( $image_attributes ) ) {
-					$item_values['pagelink'] = str_replace( '<img ', '<img ' . $image_attributes, $item_values['pagelink'] );
-					$item_values['filelink'] = str_replace( '<img ', '<img ' . $image_attributes, $item_values['filelink'] );
-				}
+			// Isolate the IGM tag inside the link, which may contain other attribute instances
+			$match_count = preg_match( '#<img[^\>]+\>#', $item_values['pagelink'], $matches );
+			if ( ! ( ( $match_count === false ) || ( $match_count === 0 ) ) ) {
+				$img_tag = $matches[0];
+				$img_changed = false;
 
+				if ( ! empty( $image_attributes ) ) {
+					$img_tag = str_replace( '<img ', '<img ' . $image_attributes, $img_tag );
+					$img_changed = true;
+				}
+																																																																								
 				// Extract existing class values and add to them
 				if ( ! empty( $image_class ) ) {
-					$match_count = preg_match_all( '# class=\"([^\"]+)\" #', $item_values['pagelink'], $matches, PREG_OFFSET_CAPTURE );
-					if ( ! ( $class_replace || ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+					$match_count = preg_match_all( '# class=\"([^\"]+)\" #', $img_tag, $matches, PREG_OFFSET_CAPTURE );
+					if ( ! ( $class_replace || ( $match_count === false ) || ( $match_count === 0 ) ) ) {
 						$class = $matches[1][0][0] . ' ' . $image_class;
 					} else {
 						$class = $image_class;
 					}
 
-					$item_values['pagelink'] = preg_replace('# class=\"([^\"]*)\"#', " class=\"{$class}\"", $item_values['pagelink'] );
-					$item_values['filelink'] = preg_replace('# class=\"([^\"]*)\"#', " class=\"{$class}\"", $item_values['filelink'] );
+					$img_tag = preg_replace( '# class=\"([^\"]*)\"#', " class=\"{$class}\"", $img_tag );
+					$img_changed = true;
 				}
 
 				if ( ! empty( $image_alt ) ) {
-					$item_values['pagelink'] = preg_replace('# alt=\"([^\"]*)\"#', " alt=\"{$image_alt}\"", $item_values['pagelink'] );
-					$item_values['filelink'] = preg_replace('# alt=\"([^\"]*)\"#', " alt=\"{$image_alt}\"", $item_values['filelink'] );
+					$img_tag = preg_replace( '# alt=\"([^\"]*)\"#', " alt=\"{$image_alt}\"", $img_tag );
+					$img_changed = true;
+				}
+
+				if ( $img_changed ) {
+					$item_values['pagelink'] = preg_replace( '#<img[^\>]+\>#', $img_tag, $item_values['pagelink'] );
+					$item_values['filelink'] = preg_replace( '#<img[^\>]+\>#', $img_tag, $item_values['filelink'] );
 				}
 			} // process <img> tag
 
 			// Create download and named transfer links with all Content Parameters
 			$match_count = preg_match( '#href=\'([^\']+)\'#', $item_values['filelink'], $matches, PREG_OFFSET_CAPTURE );
-			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+			if ( ! ( ( $match_count === false ) || ( $match_count === 0 ) ) ) {
 				/*/ Forced download link - NO LONGER ALLOWED, SEE BELOW
 				$args = array(
 					'mla_download_file' => urlencode( $item_values['base_dir'] . '/' . $item_values['base_file'] ),

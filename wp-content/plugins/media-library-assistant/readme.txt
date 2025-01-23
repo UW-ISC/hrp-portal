@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
 Tested up to: 6.7.1
-Stable tag: 3.23
+Stable tag: 3.24
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,12 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.24 =
+* New: Field-level data sources for accessing information about the original, unscaled files for very large images.
+* New: Extend REST support to the Att. Categories and Att. Tags taxonomies.
+* Fix: **IMPORTANT: Reflected Cross-Site Scripting security risks in the Smart Media Categories, MLA Unattached Fixit, and WooCommerce Fixit example plugins have been mitigated.**
+* Fix: For the `[mla_gallery]` shortcode, improved processing of the `mla_image_class` and `mla_image_alt` parameters when the attachment link contains other HTML tags.
+
 = 3.23 =
 * Fix: For the `[mla_gallery]` shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
 
@@ -367,8 +373,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.23 =
-For the [mla_gallery] shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
+= 3.24 =
+IMPORTANT: Reflected Cross-Site Scripting security risks in three example plugins mitigated. Field-level data sources for very large images. REST support for Att. Categories and Att. Tags. Improved processing of the `mla_image_class` and `mla_image_alt` parameters. Two enhancements, two fixes in all.
 
 == Acknowledgements ==
 

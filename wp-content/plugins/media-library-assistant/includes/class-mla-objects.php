@@ -59,7 +59,10 @@ class MLAObjects {
 				'show_admin_column' => true,
 				'query_var' => true,
 				'rewrite' => true,
-				'update_count_callback' => '_update_generic_term_count'
+				'update_count_callback' => '_update_generic_term_count',
+				'show_in_rest'          => true,
+				'rest_base'             => 'attachment_category',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
 			) );
 
 			register_taxonomy( 'attachment_category', $object_type, $args );
@@ -92,7 +95,10 @@ class MLAObjects {
 				'show_admin_column' => true,
 				'query_var' => true,
 				'rewrite' => true,
-				'update_count_callback' => '_update_generic_term_count'
+				'update_count_callback' => '_update_generic_term_count',
+				'show_in_rest'          => true,
+				'rest_base'             => 'attachment_tag',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
 			) );
 
 			register_taxonomy( 'attachment_tag', $object_type, $args );

@@ -103,8 +103,11 @@
  * opened on 2/25/2021 by "fireskyresale".
  * https://wordpress.org/support/topic/adding-images-to-product/
  *
+ * Enhanced (Reflected Cross-Site Scripting security fix) for Wordfence CVE ID: CVE-2024-11974 report
+ * opened on 12/03/2024 by "vgo0":
+ *
  * @package WooCommerce Fixit
- * @version 2.11
+ * @version 2.12
  */
 
 /*
@@ -112,7 +115,7 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.11
+Version: 2.12
 Author URI: http://davidlingren.com/
 
 Copyright 2014-2021 David Lingren
@@ -145,7 +148,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.11';
+	const CURRENT_VERSION = '2.12';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -554,12 +557,12 @@ class Woo_Fixit {
 		$new_settings[self::POPULATE_PI_PG_ON_UPLOAD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_UPLOAD ] ) ? true : false;
 		$new_settings[self::POPULATE_PI_PG_ON_MMMW] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_MMMW ] ) ? true : false;
 
-		$new_settings[self::NAME_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) );
-		$new_settings[self::DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) );
-		$new_settings[self::SHORT_DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) );
-		$new_settings[self::CATEGORIES_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) );
-		$new_settings[self::TAGS_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) );
-		$new_settings[self::SKU_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) );
+		$new_settings[self::NAME_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ), 'post' ) );
+		$new_settings[self::DESCRIPTION_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ), 'post' ) );
+		$new_settings[self::SHORT_DESCRIPTION_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ), 'post' ) );
+		$new_settings[self::CATEGORIES_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ), 'post' ) );
+		$new_settings[self::TAGS_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ), 'post' ) );
+		$new_settings[self::SKU_TEMPLATE] = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ), 'post' ) );
 		$new_settings[self::POPULATE_ON_ADD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_ADD ] ) ? true : false;
 		$new_settings[self::POPULATE_ON_UPDATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_UPDATE ] ) ? true : false;
 
@@ -1320,7 +1323,7 @@ class Woo_Fixit {
 		self::$populate_pi_pg_on_mmmw_attr = self::$settings[self::POPULATE_PI_PG_ON_MMMW] ? ' checked="checked" ' : ' ';
 
 		// Apply Template to Product Image/Product Gallery Images
-		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ) : self::$content_template;
+		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ), 'post' ) ) : self::$content_template;
 
 		// Term Assignments for Media Library Items
 		self::$process_category = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_PROCESS_CATEGORY ] ) ? true : false;
@@ -1333,12 +1336,12 @@ class Woo_Fixit {
 		self::$chunk_size = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) : self::$chunk_size;
 
 		// Populate Product from Product Image
-		self::$settings[self::NAME_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ) : self::$settings[self::NAME_TEMPLATE];
-		self::$settings[self::DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::DESCRIPTION_TEMPLATE];
-		self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::SHORT_DESCRIPTION_TEMPLATE];
-		self::$settings[self::CATEGORIES_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ) : self::$settings[self::CATEGORIES_TEMPLATE];
-		self::$settings[self::TAGS_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ) : self::$settings[self::TAGS_TEMPLATE];
-		self::$settings[self::SKU_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ) : self::$settings[self::SKU_TEMPLATE];
+		self::$settings[self::NAME_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ), 'post' ) ) : self::$settings[self::NAME_TEMPLATE];
+		self::$settings[self::DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ), 'post' ) ) : self::$settings[self::DESCRIPTION_TEMPLATE];
+		self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ), 'post' ) ) : self::$settings[self::SHORT_DESCRIPTION_TEMPLATE];
+		self::$settings[self::CATEGORIES_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ), 'post' ) ) : self::$settings[self::CATEGORIES_TEMPLATE];
+		self::$settings[self::TAGS_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ), 'post' ) ) : self::$settings[self::TAGS_TEMPLATE];
+		self::$settings[self::SKU_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ), 'post' ) ) : self::$settings[self::SKU_TEMPLATE];
 
 		// No checkbox settings on initial page load
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
@@ -1355,7 +1358,7 @@ class Woo_Fixit {
 
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
 			$setting_actions = self::_compose_settings_actions();
-			$label = $_REQUEST[ self::SLUG_PREFIX . 'action' ];
+			$label = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ), 'post' ) );
 			if( isset( $setting_actions[ $label ] ) ) {
 				$action = $setting_actions[ $label ]['handler'];
 				if ( ! empty( $action ) ) {

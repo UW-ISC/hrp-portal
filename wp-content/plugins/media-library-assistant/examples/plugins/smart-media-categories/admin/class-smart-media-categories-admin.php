@@ -94,14 +94,14 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 
 		// Determine Post Type, if possible
 		if ( isset( $_REQUEST['post_type'] ) ) {		
-			$this->current_edit_type = $_REQUEST['post_type'];
+			$this->current_edit_type = trim( wp_kses( wp_unslash( $_REQUEST['post_type'] ), 'post' ) );
 		}
 		
 		// Handle Ajax requests
 		if ( defined('DOING_AJAX') && DOING_AJAX ) {
 			add_action( 'wp_ajax_' . 'smc_find_posts', array( $this, 'action_wp_ajax_smc_find_posts' ) );
 
-			if ( isset( $_REQUEST['screen'] ) && ( 'edit-post' == $_REQUEST['screen'] ) && isset( $_REQUEST['action'] ) && ( 'inline-save' == $_REQUEST['action'] ) ) {
+			if ( isset( $_REQUEST['screen'] ) && ( 'edit-post' === $_REQUEST['screen'] ) && isset( $_REQUEST['action'] ) && ( 'inline-save' === $_REQUEST['action'] ) ) {
 				add_filter( "manage_posts_columns", array( $this, 'filter_manage_posts_columns' ), 10, 1 );
 				add_action( "manage_posts_custom_column", array( $this, 'action_manage_posts_custom_column' ), 10, 2 );
 			}
@@ -121,9 +121,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 			}
 		}
 		
-		/*
-		 * Intercept Posts/All Posts and Pages/All Pages submenus
-		 */
+		// Intercept Posts/All Posts and Pages/All Pages submenus
 		add_action( "load-edit.php", array( $this, 'action_load_edit_php' ) );
 	}
 
@@ -292,7 +290,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 	 * @since    1.0.0
 	 */
 	public function render_plugin_admin_page() {
-		if ( isset( $_REQUEST['action'] ) && 'update' == $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['action'] ) && 'update' === $_REQUEST['action'] ) {
 			$active_tab =  SMC_Settings_Support::get_active_tab();
 			$options = isset( $_REQUEST[ $active_tab ] ) ? $_REQUEST[ $active_tab ] : array();
 			
@@ -388,9 +386,9 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 		global $wpdb;
 //error_log( __LINE__ . ' Smart_Media_Categories_Admin::filter_posts_clauses $clauses = ' . var_export( $clauses, true ), 0 );
 //error_log( __LINE__ . ' Smart_Media_Categories_Admin::filter_posts_clauses query_type = ' . var_export( $wp_query->query_vars['post_type'], true ), 0 );
-		if ( isset( $_REQUEST['smc_status'] ) && ( $wp_query->query_vars['post_type'] == $this->current_edit_type ) ) {
+		if ( isset( $_REQUEST['smc_status'] ) && ( $wp_query->query_vars['post_type'] === $this->current_edit_type ) ) {
 //error_log( __LINE__ . ' Smart_Media_Categories_Admin::filter_posts_clauses $this->current_edit_type = ' . var_export( $this->current_edit_type, true ), 0 );
-			$posts = implode( ',', SMC_Sync_support::get_posts_per_view( array( 'post_type' => $this->current_edit_type, 'smc_status' => $_REQUEST['smc_status'] ) ) );
+			$posts = implode( ',', SMC_Sync_support::get_posts_per_view( array( 'post_type' => $this->current_edit_type, 'smc_status' => trim( wp_kses( wp_unslash( $_REQUEST['smc_status'] ), 'post' ) ) ) ) );
 			if ( empty( $posts ) ) {
 				$posts = '0';
 			}
@@ -636,8 +634,8 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 //error_log( __LINE__ . ' Smart_Media_Categories_Admin::action_manage_posts_custom_column post = ' . var_export( $post, true ), 0 );
 
 		// Retain the view when the Year/Month or Categories are set and "Filter" is clicked.
-		if ( NULL == $smc_status && isset( $_REQUEST['smc_status'] ) ) {
-			$smc_status = $_REQUEST['smc_status'];
+		if ( NULL === $smc_status && isset( $_REQUEST['smc_status'] ) ) {
+			$smc_status = trim( wp_kses( wp_unslash( $_REQUEST['smc_status'] ), 'post' ) );
 			echo '<input type="hidden" name="smc_status" class="smc_status_page" value="' . $smc_status . '" />';
 		}
 
@@ -747,7 +745,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 				$message_type = 'post';
 			}
 			
-			$smc_message = explode( ',', $_REQUEST['smc_message'] );
+			$smc_message = explode( ',', trim( wp_kses( wp_unslash( $_REQUEST['smc_message'] ), 'post' ) ) );
 			switch ( $smc_message[0] ) {
 				case '101':
 					$messages[ $message_type ]['updated'] = _n( '%s parent updated.', '%s parents updated.', $counts['updated'], 'smart-media-categories' );
@@ -834,7 +832,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 		
 		$location = 'edit.php';
 		if ( !empty( $_REQUEST['post_type'] ) ) {
-			$location .= '?post_type=' . $_REQUEST['post_type'];
+			$location .= '?post_type=' . esc_url( $_REQUEST['post_type'] );
 		}
 
 		if ( $referer = wp_get_referer() ) {
@@ -1076,12 +1074,12 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 		unset( $post_types['attachment'] );
 	
-		$s = stripslashes( $_REQUEST['smc_set_parent_search_text'] );
+		$s = trim( wp_kses( wp_unslash( $_REQUEST['smc_set_parent_search_text'] ), 'post' ) );
 		$count = isset( $_REQUEST['smc_set_parent_count'] ) ? $_REQUEST['smc_set_parent_count'] : self::POSTS_PER_PAGE;
 		$paged = isset( $_REQUEST['smc_set_parent_paged'] ) ? $_REQUEST['smc_set_parent_paged'] : '1';
 
 		$args = array(
-			'post_type' => ( 'all' == $_REQUEST['smc_set_parent_post_type'] ) ? array_keys( $post_types ) : $_REQUEST['smc_set_parent_post_type'],
+			'post_type' => ( 'all' === $_REQUEST['smc_set_parent_post_type'] ) ? array_keys( $post_types ) : $_REQUEST['smc_set_parent_post_type'],
 			'post_status' => 'any',
 			'posts_per_page' => $count,
 			'paged' => $paged,

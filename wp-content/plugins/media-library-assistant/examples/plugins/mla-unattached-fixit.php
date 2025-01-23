@@ -8,8 +8,11 @@
  * opened on 11/24/2015 by "lododicesimo":
  * https://wordpress.org/support/topic/bulk-delete-unattached-imagesmedia/
  *
+ * Enhanced (Reflected Cross-Site Scripting security fix) for Wordfence CVE ID: CVE-2024-11974 report
+ * opened on 12/03/2024 by "vgo0":
+ *
  * @package Unattached Fixit
- * @version 1.04
+ * @version 1.05
  */
 
 /*
@@ -17,7 +20,7 @@ Plugin Name: MLA Unattached Fixit
 Plugin URI: http://davidlingren.com/
 Description: Removes Unattached items from the Media Library
 Author: David Lingren
-Version: 1.04
+Version: 1.05
 Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
@@ -54,7 +57,7 @@ class Unattached_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.04';
+	const CURRENT_VERSION = '1.05';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -144,9 +147,7 @@ class Unattached_Fixit {
 				'comment' => 'Permanently delete unattached items.' ),
  		);
 
-		/*
-		 * Conditional display of the "Trash" action
-		 */
+		// Conditional display of the "Trash" action
 		if ( ! ( defined('MEDIA_TRASH') && MEDIA_TRASH ) ) {
 			unset( $setting_actions['Trash Unattached'] );
 		}
@@ -161,7 +162,7 @@ class Unattached_Fixit {
 		}
 
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
-			$label = $_REQUEST[ self::SLUG_PREFIX . 'action' ];
+			$label = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ), 'post' ) );
 			if( isset( $setting_actions[ $label ] ) ) {
 				$action = $setting_actions[ $label ]['handler'];
 				if ( ! empty( $action ) ) {
