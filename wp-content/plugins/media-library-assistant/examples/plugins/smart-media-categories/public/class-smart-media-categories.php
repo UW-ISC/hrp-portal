@@ -25,7 +25,7 @@ class Smart_Media_Categories {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.1.7';
+	const VERSION = '1.1.8';
 
 	/**
 	 * Unique identifier for your plugin.
