@@ -60,23 +60,42 @@ class GFCommon {
 
 	public static function is_numeric( $value, $number_format = '' ) {
 
-		if ( $number_format == 'currency' ) {
-			$number_format = self::is_currency_decimal_dot() ? 'decimal_dot' : 'decimal_comma';
-			$value         = self::remove_currency_symbol( $value );
+		// Keep support for a blank $number_format for backwards compatibility.
+		if ( empty( $number_format ) ) {
+			return preg_match( "/^(-?[0-9]{0,3}(?:,?[0-9]{3})*(?:\.[0-9]{1,2})?)$/", $value ) || preg_match( "/^(-?[0-9]{0,3}(?:\.?[0-9]{3})*(?:,[0-9]{2})?)$/", $value );
 		}
 
-		switch ( $number_format ) {
-			case 'decimal_dot':
-				return preg_match( "/^(-?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]+)?)$/", $value );
-				break;
+		// Removing currency symbol for currency format.
+		if ( $number_format == 'currency' ) {
+			$value = self::remove_currency_symbol( $value );
+		}
 
+		// Getting separators.
+		$separators    = self::get_number_separators( $number_format );
+		$thousands_sep = $separators['thousand'] === '.' ? '\.' : $separators['thousand'];
+		$decimal_sep   = $separators['decimal'] === '.' ? '\.' : $separators['decimal'];
+
+		return rgblank( $value ) ? false : preg_match( "/^(-?[0-9]{1,3}(?:{$thousands_sep}?[0-9]{3})*(?:{$decimal_sep}[0-9]+)?)$/", $value );
+	}
+
+	/**
+	 * Returns the decimal and thousands separators for the specified number format.
+	 *
+	 * @since 2.9.3
+	 *
+	 * @param string $number_format The number format to get the separators for.
+	 *
+	 * @return array Returns an array containing the decimal and thousands separators.
+	 */
+	public static function get_number_separators( $number_format ) {
+		switch( $number_format ) {
+			case 'currency':
+				$currency = RGCurrency::get_currency( self::get_currency() );
+				return array( 'decimal' => rgar( $currency, 'decimal_separator', '.' ), 'thousand' => rgar( $currency, 'thousand_separator', ',' ) );
 			case 'decimal_comma':
-				return preg_match( "/^(-?[0-9]{1,3}(?:\.?[0-9]{3})*(?:,[0-9]+)?)$/", $value );
-				break;
-
+				return array( 'decimal' => ',', 'thousand' => '.' );
 			default:
-				return preg_match( "/^(-?[0-9]{0,3}(?:,?[0-9]{3})*(?:\.[0-9]{1,2})?)$/", $value ) || preg_match( "/^(-?[0-9]{0,3}(?:\.?[0-9]{3})*(?:,[0-9]{2})?)$/", $value );
-
+				return array( 'decimal' => '.', 'thousand' => ',' );
 		}
 	}
 
@@ -131,16 +150,19 @@ class GFCommon {
 			$currency = RGCurrency::get_currency( $code );
 		}
 
+		// Removing left symbol
 		if ( ! empty( $currency['symbol_left'] ) ) {
 			$value = str_replace( $currency['symbol_left'], '', $value );
 		}
 
+		// Removing right symbol
 		if ( ! empty( $currency['symbol_right'] ) ) {
 			$value = str_replace( $currency['symbol_right'], '', $value );
 		}
 
-		// Some symbols can't be easily matched up, so this will catch any of them.
-		$value = preg_replace( '/[^,.\d]/', '', $value );
+		// Some symbols can't be easily matched up, so this will catch any of them. Removes all non-numeric characters (except the decimal separator) from the beginning and end of the string.
+		$ds = rgar( $currency, 'decimal_separator', '.' );
+		$value = preg_replace("/(^[^{$ds}\d]*)|([^{$ds}\d]*$)/", '', $value);
 
 		return $value;
 	}
@@ -226,7 +248,21 @@ class GFCommon {
 		$index_file_path = $dir . '/index.html';
 		GFCommon::log_debug( __METHOD__ . '(): Adding file: ' . $index_file_path );
 
-		if ( $f = fopen( $index_file_path, 'w' ) ) {
+		$check_file_exists = false;
+
+		/*
+		 * Setting this filter to true will check if the empty index file exists before adding it.
+		 *
+		 * @since 2.9.2
+		 *
+		 * @param bool $check_file_exists Whether to check if the empty index file exists before adding it. Default is false.
+		 * @param string $dir The directory path where the empty file is being added.
+		 */
+		if ( true === apply_filters( 'gform_check_empty_index_file_exists', false, $dir ) ) {
+			$check_file_exists = file_exists( $index_file_path );
+		}
+
+		if ( ! $check_file_exists && $f = fopen( $index_file_path, 'w' ) ) {
 			fclose( $f );
 		}
 
@@ -319,7 +355,7 @@ class GFCommon {
 			}
 		}
 
-		//Removing thousand separators but keeping decimal point
+		//Removing thousands separators but keeping decimal point
 		$array = str_split( $clean_number );
 		for ( $i = 0, $count = sizeof( $array ); $i < $count; $i ++ ) {
 			$char = $array[ $i ];
@@ -332,6 +368,13 @@ class GFCommon {
 			}
 		}
 
+		// Adding leading zero if number starts with a decimal char.
+		$starts_with_separator = strpos( $float_number, '.' ) === 0 || strpos( $float_number, ',' ) === 0;
+		if ( $starts_with_separator ) {
+			$float_number = '0' . $float_number;
+		}
+
+		// Adding negative sign if number is negative.
 		if ( $is_negative ) {
 			$float_number = '-' . $float_number;
 		}
@@ -1376,7 +1419,7 @@ class GFCommon {
 
 	public static function replace_variables_prepopulate( $text, $url_encode = false, $entry = false, $esc_html = false, $form = false, $nl2br = false, $format = 'html' ) {
 
-		if ( strpos( $text, '{' ) !== false ) {
+		if ( is_string( $text ) && strpos( $text, '{' ) !== false ) {
 
 			//embed url
 			$current_page_url = empty( $entry ) ? GFFormsModel::get_current_page_url() : rgar( $entry, 'source_url' );
@@ -2977,10 +3020,10 @@ Content-Type: text/html;
 
 		/**
 		 * If a license key doesn't exist, $license_info will be a WP_Error.
-		 * $license_info is potentially loaded from a serialized cache 
-		 * value causing the need to validate it is correct type 
+		 * $license_info is potentially loaded from a serialized cache
+		 * value causing the need to validate it is correct type
 		 * before calling any of its methods.
-		 */  
+		 */
 		$is_valid_license_info = ( ! is_wp_error( $license_info ) && is_a( $license_info, Gravity_Forms\Gravity_Forms\License\GF_License_API_Response::class ) );
 
 		return array(
@@ -2991,6 +3034,7 @@ Content-Type: text/html;
 			'is_error'        => is_wp_error( $license_info ) || $license_info->has_errors(),
 			'offerings'       => $plugins,
 			'status'          => ( $is_valid_license_info ) ? $license_info->get_status() : '',
+			'is_available'    => rgars( $plugins, 'gravityforms/is_available' ),
 		);
 	}
 
@@ -3183,7 +3227,7 @@ Content-Type: text/html;
 			$option->response[ $plugin_path ] = new stdClass();
 		}
 
-		$version = rgar( $version_info, 'version' );
+		$version = rgar( $version_info, 'version', '0' );
 
 		$url    = rgar( $version_info, 'url' );
 		$plugin = array(
@@ -4422,6 +4466,7 @@ Content-Type: text/html;
 	public static function get_total( $products ) {
 
 		$total = 0;
+		$has_product = false;
 		foreach ( $products['products'] as $product ) {
 
 			$price = self::to_number( $product['price'] );
@@ -4431,12 +4476,17 @@ Content-Type: text/html;
 				}
 			}
 			$quantity = self::to_number( $product['quantity'], GFCommon::get_currency() );
+			if ( $quantity !== 0 ) {
+				$has_product = true;
+			}
 			$subtotal = $quantity * $price;
 			$total += $subtotal;
 
 		}
 
-		$total += floatval( $products['shipping']['price'] );
+		if ( $has_product ) {
+			$total += floatval( $products['shipping']['price'] );
+		}
 
 		return $total;
 	}
@@ -4520,8 +4570,9 @@ Content-Type: text/html;
 		if ( self::akismet_enabled( $form_id ) ) {
 			$is_spam = self::is_akismet_spam( $form, $entry );
 			self::log_debug( __METHOD__ . '(): Result from Akismet: ' . json_encode( $is_spam ) );
-
-			self::set_spam_filter( $form_id, __( 'Akismet Spam Filter', 'gravityforms' ), '' );
+			if ( $is_spam ) {
+				self::set_spam_filter( $form_id, __( 'Akismet Spam Filter', 'gravityforms' ), '' );
+			}
 		}
 
 		$gform_entry_is_spam_args = array( 'gform_entry_is_spam', $form_id );
@@ -5308,8 +5359,76 @@ Content-Type: text/html;
 			)
 		);
 
-		return RGFormsModel::matches_operation( $merge_tag, $value, $condition ) ? do_shortcode( $content ) : '';
+		$merge_tag = self::maybe_format_numeric( $merge_tag, $condition );
 
+		return RGFormsModel::matches_conditional_operation( $merge_tag, $value, $condition ) ? do_shortcode( $content ) : '';
+
+	}
+
+	/**
+	 * If the specified conditional logic operation requires a number formatted as numeric, this method will format it and return the result.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param string $text          The text to be formatted.
+	 * @param string $operation     The conditional logic operation to be performed. (i.e. >, <, ...)
+	 * @param string $number_format How the $text parameter is formatted. (i.e. currency, decimal_dot, ...).
+	 * NOTE: This parameter is optional for backwards compatibility, but it is recommended to always specify it. When not specified, the method will "best guess" the format based on the $text parameter and the default currency of the site.
+	 *
+	 * @return int|mixed|string Returns a number formatted as a float.
+	 */
+	public static function maybe_format_numeric( $text, $operation, $number_format = '' ) {
+
+		// If $text is not a string, return it as is.
+		if ( ! is_string( $text ) ) {
+			return $text;
+		}
+
+		// If this is not a numeric operation, return text as is.
+		if ( ! in_array( $operation, array( '>', '<', 'greater_than', 'less_than' ) ) ) {
+			return $text;
+		}
+
+		// For product and option fields with pipe-delimited values, use the first value.
+		if ( strpos( $text, '|' ) !== false ) {
+			$text = explode( '|', $text )[0];
+		}
+
+		// Add leading zero if necessary.
+		$text = GFCommon::maybe_add_leading_zero( $text );
+
+		// If number format is not specified, best guess the format based on $text.
+		if ( ! $number_format ) {
+			// If number format is not specified, set it to currency if $text is numeric for the current currency. Otherwise, use decimal_dot.
+			$number_format = GFCommon::is_numeric( $text, 'currency' ) ? 'currency' : 'decimal_dot';
+		}
+
+		// If the number is numeric for the specified number_format, return the formatted number.
+		if ( GFCommon::is_numeric( $text, $number_format ) ) {
+			return GFCommon::clean_number( $text, $number_format );
+		}
+
+		// If the number is formatted as date or time, return it as is.
+		if ( GFCommon::is_date_time_formatted( $text ) ) {
+			return $text;
+		}
+
+		// Return 0 if the text is not numeric.
+		return 0;
+	}
+
+	/**
+	 * Determines if the specified text is formatted as a date or time.
+	 *
+	 * @since 2.9.3
+	 *
+	 * @param string $text The text to be evaluated.
+	 *
+	 * @return bool Returns true if $text is formatted as a date or time, false otherwise.
+	 */
+	public static function is_date_time_formatted( $text ) {
+		$result = date_parse( $text );
+		return $result['error_count'] === 0 && $result['warning_count'] === 0;
 	}
 
 	public static function is_valid_for_calcuation( $field ) {
@@ -5554,6 +5673,8 @@ Content-Type: text/html;
 		$gf_vars['DeleteFormTitle']    = esc_html__('Confirm', 'gravityforms');
 		$gf_vars['DeleteForm']         = esc_html__("You are about to move this form to the trash. 'Cancel' to abort. 'OK' to delete.", 'gravityforms');
         $gf_vars['DeleteCustomChoice'] = esc_html__("Delete this custom choice list? 'Cancel' to abort. 'OK' to delete.", 'gravityforms');
+
+		$gf_vars['FieldAdded'] = esc_html__( ' field added to form', 'gravityforms' );
 
         if ( ( is_admin() && rgget( 'id' ) ) || ( self::is_form_editor() && rgpost( 'form_id' ) ) ) {
 
@@ -7532,15 +7653,15 @@ Content-Type: text/html;
 	public static function get_dbms_type() {
 		static $type;
 		global $wpdb;
-		
+
 		if ( empty( $type ) ) {
 			$type = strpos( strtolower( self::get_dbms_version() ), 'mariadb' ) ? 'MariaDB' : 'MySQL';
-			
+
 			if ( get_class( $wpdb ) === 'WP_SQLite_DB' ) {
 				$type = 'SQLite';
 			}
 		}
-		
+
 		return $type;
 	}
 
@@ -7901,6 +8022,37 @@ Content-Type: text/html;
 		}
 
 		return $forms[ $form_id ];
+	}
+
+	/**
+	 * Applies the gform_disable_css filter and checks 'disable css global' setting to decide if default css should be output or not.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return bool|null
+	 */
+	public static function is_frontend_default_css_disabled() {
+		/**
+		 * Allows users to disable all CSS files from being loaded on the Front End.
+		 *
+		 * @since 2.8
+		 *
+		 * @param boolean Whether to disable css.
+		 */
+		return apply_filters( 'gform_disable_css', get_option( 'rg_gforms_disable_css' ) );
+	}
+
+	/**
+	 * Decides whether to output the default css or not.
+	 *
+	 * Some admin pages need the default css even if the global setting is disabled or the frontend disable filter is used to disable outputting the css.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return bool
+	 */
+	public static function output_default_css() {
+		return (bool) ( ! GFCommon::is_frontend_default_css_disabled() || GFCommon::is_form_editor() || GFCommon::is_entry_detail() );
 	}
 
 }

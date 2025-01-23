@@ -1044,6 +1044,27 @@ class GFFormsModel {
 	}
 
 	/**
+	 * Query request checking if the site contains any forms with Legacy markup.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @returns bool
+	 */
+	public static function has_legacy_markup() {
+		global $wpdb;
+
+		$table_name             = self::get_meta_table_name();
+		$like                   = '%' . $wpdb->esc_like( '"markupVersion":1' ) . '%';
+		$count_legacy_markup    = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table_name} WHERE display_meta LIKE %s", $like ) );
+
+		if ( $count_legacy_markup > 0 ) {
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
 	 * Recursively checks the highest ID for all the fields in the form and then returns the highest ID + 1.
 	 *
 	 * @since 2.4.6.12
@@ -3787,7 +3808,7 @@ class GFFormsModel {
 			$match_count = 0;
 			foreach ( $field_value as $val ) {
 				$val = GFFormsModel::maybe_trim_input( GFCommon::get_selection_value( $val ), $form_id, $source_field );
-				if ( self::matches_operation( $val, $target_value, $operation ) ) {
+				if ( self::matches_conditional_operation( $val, $target_value, $operation ) ) {
 					$match_count ++;
 				}
 			}
@@ -3797,19 +3818,24 @@ class GFFormsModel {
 			$must_match_all = ( $operation == 'isnot' && ! rgblank( $target_value ) ) || ( $operation == 'is' && rgblank( $target_value ) );
 			$is_match = $must_match_all ? $match_count == count( $field_value ) : $match_count > 0;
 
-		} else if ( self::matches_operation( GFFormsModel::maybe_trim_input( GFCommon::get_selection_value( $field_value ), $form_id, $source_field ), $target_value, $operation ) ) {
+		} else if ( self::matches_conditional_operation( GFFormsModel::maybe_trim_input( GFCommon::get_selection_value( $field_value ), $form_id, $source_field ), $target_value, $operation ) ) {
 			$is_match = true;
 		}
 
 		return apply_filters( 'gform_is_value_match', $is_match, $field_value, $target_value, $operation, $source_field, $rule );
 	}
 
+	/*
+	 * @deprecated 2.9.1.  Use GFCommon::maybe_format_numeric instead.
+	 *
+	 * @remove-in 3.1
+	 */
 	private static function try_convert_float( $text ) {
+		_deprecated_function( __METHOD__, '2.9.1', 'GFCommon::maybe_format_numeric' );
 
 		/*
 		global $wp_locale;
 		$number_format = $wp_locale->number_format['decimal_point'] == ',' ? 'decimal_comma' : 'decimal_dot';
-
 		if ( is_numeric( $text ) && $number_format == 'decimal_comma' ) {
 			return GFCommon::format_number( $text, 'decimal_comma' );
 		} else if ( GFCommon::is_numeric( $text, $number_format ) ) {
@@ -3830,7 +3856,35 @@ class GFFormsModel {
 		return 0;
 	}
 
+	/*
+	 * @deprecated 2.9.1.  Use GFFormsModel::matches_conditional_operation instead.
+	 *
+	 * @remove-in 3.1
+	 */
 	public static function matches_operation( $val1, $val2, $operation ) {
+		_deprecated_function( __METHOD__, '2.9.1', 'GFFormsModel::matches_conditional_operation' );
+
+		if ( in_array( $operation, array( '>', '<', 'greater_than', 'less_than' ) ) ) {
+			$val1 = self::try_convert_float( $val1 );
+			$val2 = self::try_convert_float( $val2 );
+		}
+
+		return self::matches_conditional_operation( $val1, $val2, $operation );
+	}
+
+	/**
+	 * This method will evaluate the specified operation between the two specified values and return the result. If the two values match the operation, the method will return true. Otherwise, it will return false.
+	 * The method supports the following operations: is, isnot, greater_than or >, less_than or <, contains, starts_with, ends_with.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param string $val1      The first value to be compared. Must be formatted as a valid number for greater_than and less_than operations.
+	 * @param string $val2      The second value to be compared. Must be formatted as a valid number for greater_than and less_than operations.
+	 * @param string $operation The operation to be performed with the specified values.
+	 *
+	 * @return bool Returns true if the two values match the specified operation. Otherwise, it will return false.
+	 */
+	public static function matches_conditional_operation( $val1, $val2, $operation ) {
 		$val1 = ! rgblank( $val1 ) ? strtolower( $val1 ) : '';
 		$val2 = ! rgblank( $val2 ) ? strtolower( $val2 ) : '';
 
@@ -3845,18 +3899,12 @@ class GFFormsModel {
 
 			case 'greater_than':
 			case '>' :
-				$val1 = self::try_convert_float( $val1 );
-				$val2 = self::try_convert_float( $val2 );
-
-				return $val1 > $val2;
+				return $val1 > $val2; // Do not cast these to float because this will compare numbers as well as dates.
 				break;
 
 			case 'less_than':
 			case '<' :
-				$val1 = self::try_convert_float( $val1 );
-				$val2 = self::try_convert_float( $val2 );
-
-				return $val1 < $val2;
+				return $val1 < $val2; // Do not cast these to float because this will compare numbers as well as dates.
 				break;
 
 			case 'contains' :
@@ -3884,7 +3932,6 @@ class GFFormsModel {
 				return $val2 == $tail;
 				break;
 		}
-
 
 		return false;
 	}
@@ -8200,6 +8247,10 @@ class GFFormsModel {
 			}
 			$source_field   = RGFormsModel::get_field( $form, $rule['fieldId'] );
 			$source_value   = empty( $entry ) ? self::get_field_value( $source_field, $field_values ) : self::get_lead_field_value( $entry, $source_field );
+
+			// Number format will either be currency or decimal_dot. Numbers formatted with decimal_comma will have their values transformed and stored as decimal_dot.
+			$number_format  = rgobj( $source_field, 'numberFormat' ) == 'currency' ? 'currency' : 'decimal_dot';
+			$source_value = GFCommon::maybe_format_numeric( $source_value, $rule['operator'], $number_format );
 
 			/**
 			 * Filter the source value of a conditional logic rule before it is compared with the target value.
