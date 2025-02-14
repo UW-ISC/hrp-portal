@@ -3,7 +3,7 @@
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
-Version: 2.3.6
+Version: 2.3.7
 Author URI: http://www.cozmoslabs.com
 Text Domain: wck
 Domain Path: /languages
@@ -31,11 +31,14 @@ define( 'WCK_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'WCK_PLUGIN_VERSION', '2.7.1' );
 
 /* ready for localization */
-$current_theme = wp_get_theme();
-if( !empty( $current_theme->stylesheet ) && file_exists( get_theme_root().'/'. $current_theme->stylesheet .'/local_wck_lang' ) )
-    load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ).'/../../themes/'.$current_theme->stylesheet.'/local_wck_lang' );
-else
-    load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ) . '/languages' );
+add_action( 'init', 'wck_load_textdomain' );
+function wck_load_textdomain(){
+	$current_theme = wp_get_theme();
+	if (!empty($current_theme->stylesheet) && file_exists(get_theme_root() . '/' . $current_theme->stylesheet . '/local_wck_lang'))
+		load_plugin_textdomain('wck', false, basename(dirname(__FILE__)) . '/../../themes/' . $current_theme->stylesheet . '/local_wck_lang');
+	else
+		load_plugin_textdomain('wck', false, basename(dirname(__FILE__)) . '/languages');
+}
 
 
 

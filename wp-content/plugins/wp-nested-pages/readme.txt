@@ -5,7 +5,7 @@ Tags: pages, admin, nested, tree view, page tree, sort, quick edit, structure
 Requires at least: 3.8
 Tested up to: 6.7
 Requires PHP: 5.4
-Stable tag: 3.2.9
+Stable tag: 3.2.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,17 @@ No. The menu synchronization currently only works within the pages post type.
 9. The Nested Pages interface can be enabled on a per-post-type basis, with customizable options for each type.
 
 == Changelog ==
+
+= 3.2.13 =
+* Security update addressing XSS code vulnerability
+
+= 3.2.12 =
+* Security update addressing XSS code vulnerability
+
+= 3.2.11 =
+* Security update addressing XSS code vulnerability
+* Addresses deprecation warnings in PHP 8.1 and later (Thanks to Misaki)
+* Adds support for custom post type template selects (Thanks to anthonyivol)
 
 = 3.2.10 =
 * Security update addressing XSS code vulnerability
