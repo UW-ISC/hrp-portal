@@ -632,10 +632,11 @@ input::-webkit-inner-spin-button {
 .wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice .btn a:hover {
     color: #ffffff;
 }
+
 .wpdt-c .charts-type.highstock-charts-type.highstock-not-available-notice .btn a:hover,
 .wpdt-c .charts-type.highcharts-charts-type.highcharts-not-available-notice .btn a:hover,
 .wpdt-c .charts-type.apexcharts-charts-type.apexcharts-not-available-notice .btn a:hover {
-    background-color: #0B86EC!important;
+    background-color: #0B86EC !important;
 }
 
 .wpdt-c .highcharts-img,

@@ -17,7 +17,7 @@ class WpDataChartsGutenbergBlock extends GutenbergBlock
         wp_enqueue_script(
             'wpdatacharts-gutenberg-block',
             WDT_STARTER_INTEGRATIONS_URL . 'page-builders/gutenberg/js/wpdatacharts-gutenberg-block.js',
-            array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
+            array('wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
         wp_localize_script(
@@ -25,7 +25,7 @@ class WpDataChartsGutenbergBlock extends GutenbergBlock
             'wpdatacharts',
             array(
                 'title' => 'wpDataCharts',
-                'description' => __('Choose the chart that you’ve just created in the dropdown below, and the shortcode will be inserted automatically.','wpdatatables'),
+                'description' => __('Choose the chart that you’ve just created in the dropdown below, and the shortcode will be inserted automatically.', 'wpdatatables'),
                 'data' => WDTConfigController::getAllTablesAndChartsForPageBuilders('gutenberg', 'charts')
             )
         );

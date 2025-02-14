@@ -9,12 +9,14 @@
         <a target="_blank" rel="nofollow"
            href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=highstock&&utm_campaign=wpdt&utm_content=wpdt"><?php esc_html_e('pricing plans', 'wpdatatables'); ?></a>
         <?php esc_html_e(' or get even more at a discounted price with our ', 'wpdatatables'); ?>
-        <a target="_blank" href="https://wpdatatables.com/bundles/?utm_source=wpdt-admin&utm_medium=highstock&utm_campaign=wpdt&utm_content=wpdt"><?php esc_html_e('bundles', 'wpdatatables'); ?></a>
+        <a target="_blank"
+           href="https://wpdatatables.com/bundles/?utm_source=wpdt-admin&utm_medium=highstock&utm_campaign=wpdt&utm_content=wpdt"><?php esc_html_e('bundles', 'wpdatatables'); ?></a>
         <?php esc_html_e(' to start using HighStock charts!', 'wpdatatables'); ?>
     </p>
     <a rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn"
        href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=highstock&utm_campaign=wpdt&utm_content=wpdt">
         <?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
-    <img class="wdt-upgrade-img" src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/basic/highstock-preview.png"
+    <img class="wdt-upgrade-img"
+         src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/basic/highstock-preview.png"
          alt="wpDataTables Highstock preview">
 </div>

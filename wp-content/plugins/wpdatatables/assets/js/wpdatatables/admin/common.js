@@ -161,7 +161,7 @@ jQuery.fn.extend({
         /**
          * Attach HTML Popovers (Hints with images)
          */
-        if ($('.wdt-datatables-admin-wrap') &&  typeof jQuery.fn.wdtBootstrapPopover !== 'undefined') {
+        if ($('.wdt-datatables-admin-wrap') && typeof jQuery.fn.wdtBootstrapPopover !== 'undefined') {
             $('[data-toggle="html-popover"]').wdtBootstrapPopover({
                 html: true,
                 content: function () {
@@ -243,7 +243,7 @@ jQuery.fn.extend({
             var type = $(this).attr('data-type');
             var input = $("input[name='" + fieldName + "']");
             var currentVal = parseInt(input.val());
-            var fontSizesArr = ['font-size','wdt-font-size','wdt-table-font-size'];
+            var fontSizesArr = ['font-size', 'wdt-font-size', 'wdt-table-font-size'];
             if (!isNaN(currentVal)) {
                 if (type == 'minus') {
 
@@ -259,7 +259,7 @@ jQuery.fn.extend({
                     $('.wdt-button-minus').attr('disabled', false);
                 }
             } else {
-                if (fontSizesArr.includes(fieldName)){
+                if (fontSizesArr.includes(fieldName)) {
                     input.val(parseInt(input.attr('min')));
                 } else {
                     input.val(1).trigger("change");
@@ -374,7 +374,6 @@ jQuery.fn.extend({
         })
 
 
-
     });
 
 })(jQuery);
@@ -423,7 +422,7 @@ function wdtNotify(title, message, type) {
             break;
     }
 
-    let closeString = typeof(wpdatatables_edit_strings) !== 'undefined' ? wpdatatables_edit_strings.close_common : wpdatatables_frontend_strings.close_common_wpdatatables;
+    let closeString = typeof (wpdatatables_edit_strings) !== 'undefined' ? wpdatatables_edit_strings.close_common : wpdatatables_frontend_strings.close_common_wpdatatables;
 
     jQuery.growl({
         icon: icon,
@@ -454,7 +453,7 @@ function wdtNotify(title, message, type) {
         },
         icon_type: 'class',
         template: '<div data-growl="container" class="wpdt-c alert" role="alert">' +
-            '<span class="sr-only">' + closeString  + '</span>' +
+            '<span class="sr-only">' + closeString + '</span>' +
             '</button>' +
             '<span data-growl="icon"></span>' +
             '<span data-growl="title"></span>' +

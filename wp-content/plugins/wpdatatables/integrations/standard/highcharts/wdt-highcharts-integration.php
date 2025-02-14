@@ -22,12 +22,15 @@ class HighChartsIntegration
     public static function init()
     {
         // Display the Highcharts chart picker in the Chart creation wizard
-        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\HighChartsIntegration', 'addHighChartsChartPicker'));
+        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\HighChartsIntegration',
+            'addHighChartsChartPicker'));
 
-        add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\HighChartsIntegration', 'addHighChartsStableTagOption'));
+        add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\HighChartsIntegration',
+            'addHighChartsStableTagOption'));
 
         // Enqueue scripts
-        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\HighChartsIntegration', 'enqueueScripts'), 10);
+        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\HighChartsIntegration',
+            'enqueueScripts'), 10);
     }
 
     /**

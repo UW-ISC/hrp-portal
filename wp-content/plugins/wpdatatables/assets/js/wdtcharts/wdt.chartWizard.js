@@ -17,7 +17,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
 
     // Helper function for ApexCharts series to determine if series type should be rendered
     $.views.helpers({
-        isMultipleSeries: function(series) {
+        isMultipleSeries: function (series) {
             return series.length > 1;
         }
     });

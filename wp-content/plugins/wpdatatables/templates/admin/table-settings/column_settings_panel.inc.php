@@ -399,7 +399,7 @@ defined('ABSPATH') or die('Access denied.');
                                 </div>
                             </div>
 
-                            <?php do_action_deprecated( 'wdt_add_column_display_settings_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_column_display_settings_element' ); ?>
+                            <?php do_action_deprecated('wdt_add_column_display_settings_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_column_display_settings_element'); ?>
                             <?php do_action('wpdatatables_add_column_display_settings_element'); ?>
                         </div>
 
@@ -442,11 +442,14 @@ defined('ABSPATH') or die('Access denied.');
                             </div>
                             <div class="row wdt-hidden-column-block" hidden="hidden">
                                 <div class="col-sm-12 ">
-                                    <div class="alert alert-info alert-dismissible" role="alert" style="margin-bottom: 0px;width: 97%;margin-left: 15px;">
+                                    <div class="alert alert-info alert-dismissible" role="alert"
+                                         style="margin-bottom: 0px;width: 97%;margin-left: 15px;">
                                         <i class="wpdt-icon-info-circle-full"></i>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
                                         </button>
-                                        <span class="wdt-alert-title f-600" style="font-size: 14px"><?php esc_html_e('A hidden column dynamically generates data. The default editing value is the Current User ID. To change it, navigate to the Editing tab and modify the option under "Dynamic predefined value". ', 'wpdatatables'); ?></span>
+                                        <span class="wdt-alert-title f-600"
+                                              style="font-size: 14px"><?php esc_html_e('A hidden column dynamically generates data. The default editing value is the Current User ID. To change it, navigate to the Editing tab and modify the option under "Dynamic predefined value". ', 'wpdatatables'); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -591,7 +594,7 @@ defined('ABSPATH') or die('Access denied.');
                                 </div>
                             </div>
 
-                            <?php do_action( 'wpdatatables_add_foreign_key_block' ); ?>
+                            <?php do_action('wpdatatables_add_foreign_key_block'); ?>
 
                             <div class="col-sm-6">
                                 <h4 class="c-title-color m-b-2">
@@ -1189,7 +1192,7 @@ defined('ABSPATH') or die('Access denied.');
                     <!-- Column editing settings -->
                     <div role="tabpanel" class="tab-pane" id="column-editing-settings">
 
-                        <?php do_action( 'wpdatatables_add_column_editing_elements' ); ?>
+                        <?php do_action('wpdatatables_add_column_editing_elements'); ?>
 
                     </div>
                     <!--/#column-editing-settings -->

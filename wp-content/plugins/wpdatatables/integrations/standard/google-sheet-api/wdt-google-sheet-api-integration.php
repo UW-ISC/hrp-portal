@@ -23,13 +23,16 @@ class GoogleSheetAPI
     public static function init()
     {
         // Display tab of Google Sheet API
-        add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\GoogleSheetAPI', 'addGoogleSheetAPIConfiguration'));
+        add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\GoogleSheetAPI',
+            'addGoogleSheetAPIConfiguration'));
 
         // Enqueue scripts
-        add_action('wpdatatables_enqueue_on_settings_page', array('WDTIntegration\GoogleSheetAPI', 'adminEnqueueScripts'));
+        add_action('wpdatatables_enqueue_on_settings_page', array('WDTIntegration\GoogleSheetAPI',
+            'adminEnqueueScripts'));
 
-        add_action('wp_ajax_wpdatatables_save_google_settings', array('WDTIntegration\GoogleSheetAPI','saveSettings'));
-        add_action('wp_ajax_wpdatatables_delete_google_settings', array('WDTIntegration\GoogleSheetAPI','deleteSettings'));
+        add_action('wp_ajax_wpdatatables_save_google_settings', array('WDTIntegration\GoogleSheetAPI', 'saveSettings'));
+        add_action('wp_ajax_wpdatatables_delete_google_settings', array('WDTIntegration\GoogleSheetAPI',
+            'deleteSettings'));
     }
 
     /**

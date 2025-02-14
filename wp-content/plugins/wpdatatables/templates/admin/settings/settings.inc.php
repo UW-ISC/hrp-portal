@@ -99,7 +99,7 @@
                             <!-- /Charts tab-->
 
                             <!-- Custom tab-->
-                            <?php do_action( 'wpdatatables_add_tab_in_main_settings' ); ?>
+                            <?php do_action('wpdatatables_add_tab_in_main_settings'); ?>
                             <!-- /Custom tab-->
                         </div>
                     </div>

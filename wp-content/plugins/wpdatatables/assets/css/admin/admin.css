@@ -941,6 +941,7 @@ div.mce-widget button i.mce-i-wpdatachart {
 .wpdt-c .wdt-datatables-admin-wrap .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li a {
     padding-left: 30px !important;
 }
+
 .wpdt-c .wdt-add-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
 .wpdt-c .wdt-editing-hidden-default-value-select.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
 .wpdt-c .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header {
@@ -1453,6 +1454,7 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c #adminmenuback {
     z-index: 100;
 }
+
 .wpdt-c .wpdt-forminator-news,
 .wpdt-c .wpdt-md-news {
     margin: 10px 0 !important;
@@ -1831,12 +1833,14 @@ wpdt-c button#wdt-add-data-browse-button {
     border-radius: 3px;
 }
 
-.form-control.input-sm.wdt-constructor-default-column-db-type-value{
+.form-control.input-sm.wdt-constructor-default-column-db-type-value {
     margin-left: 10px;
 }
-.btn-group.bootstrap-select.wdt-constructor-default-column-db-type{
+
+.btn-group.bootstrap-select.wdt-constructor-default-column-db-type {
     margin-left: -10px;
 }
+
 #wpdt-star-rating-color {
     border: 1px solid #dde0e3;
     box-sizing: border-box;
@@ -1886,15 +1890,17 @@ wpdt-c button#wdt-add-data-browse-button {
     float: right;
     margin-left: 10px;
 }
-.wpdt-c div.dtfh-floatingparent.dtfh-floatingparenthead table.wpFixedHeader.fixedHeader-floating thead tr th button.wdt-column-settings{
+
+.wpdt-c div.dtfh-floatingparent.dtfh-floatingparenthead table.wpFixedHeader.fixedHeader-floating thead tr th button.wdt-column-settings {
     display: none;
 }
 
 #google_geo_chart_option .card.disabled,
 #google_marker_geo_chart_option .card.disabled,
-#google_text_geo_chart_option .card.disabled{
+#google_text_geo_chart_option .card.disabled {
     pointer-events: none;
 }
+
 .wdt-deactivation-backdrop,
 .wdt-update-backdrop {
     display: none;
@@ -1924,13 +1930,15 @@ wpdt-c button#wdt-add-data-browse-button {
     overflow: hidden;
     border-radius: 5px;
 }
-#wdt-deactivation-modal .wdt-deactivation-modal-close{
+
+#wdt-deactivation-modal .wdt-deactivation-modal-close {
     position: absolute;
     top: 10px;
     right: 21px;
     cursor: pointer;
     font-size: 18px;
 }
+
 /* Style for the close button */
 .wdt-update-modal-close {
     position: absolute;
@@ -1938,16 +1946,19 @@ wpdt-c button#wdt-add-data-browse-button {
     right: 10px;
     cursor: pointer;
 }
+
 #wdt-deactivation-modal .wdt-deactivation-modal-close i,
 .wdt-update-modal-close i {
     font-size: 20px;
 }
-#wdt-deactivation-modal .wdt-deactivation-modal-title{
+
+#wdt-deactivation-modal .wdt-deactivation-modal-title {
     text-align: start;
     font-size: 15px;
     color: #103282;
 }
-.wdt-update-modal-title{
+
+.wdt-update-modal-title {
     text-align: center;
     margin-top: 0 !important;
     margin-bottom: 20px !important;
@@ -1958,16 +1969,19 @@ wpdt-c button#wdt-add-data-browse-button {
     text-align: left;
     padding-left: 20px;
 }
-.wdt-update-modal-slides strong{
+
+.wdt-update-modal-slides strong {
     font-size: 18px;
     display: inline-block;
     padding-bottom: 10px;
 }
-.wdt-update-modal-slides ul{
+
+.wdt-update-modal-slides ul {
     margin-top: 5px !important;
     list-style-type: disc;
 }
-.wdt-update-modal-slides li{
+
+.wdt-update-modal-slides li {
     margin-left: 10px;
     font-size: 15px;
     margin-bottom: 10px;
@@ -1988,7 +2002,8 @@ wpdt-c button#wdt-add-data-browse-button {
 .wdt-update-modal-next {
     right: 0;
 }
-.wdt-update-modal-prev{
+
+.wdt-update-modal-prev {
     left: 0;
 }
 
@@ -1999,20 +2014,24 @@ wpdt-c button#wdt-add-data-browse-button {
     position: absolute;
     transition: all .4s;
 }
+
 .wdt-update-modal-prev i:before {
     left: 15px;
 }
+
 .wdt-update-modal-next i:before {
     right: 15px;
 }
+
 .wdt-update-modal-prev:hover i:before {
     left: 10px;
 }
 
 .wdt-update-modal-next:hover i:before {
-   right: 10px;
+    right: 10px;
 }
-#wdt-deactivation-modal .wpdt-deactivation-modal-logo{
+
+#wdt-deactivation-modal .wpdt-deactivation-modal-logo {
     background-image: url(../../img/logo-large.png);
     background-repeat: no-repeat;
     height: 50px;
@@ -2021,7 +2040,7 @@ wpdt-c button#wdt-add-data-browse-button {
     width: 50px;
 }
 
-.wpdt-update-modal-logo{
+.wpdt-update-modal-logo {
     width: 300px;
     background-image: url(../../img/logo.svg);
     background-repeat: no-repeat;
@@ -2030,21 +2049,26 @@ wpdt-c button#wdt-add-data-browse-button {
     background-position: center;
     margin: 0 auto;
 }
+
 .wdt-remove {
     display: none;
 }
-.wpdt-c .wpdt-bootstrap-update{
+
+.wpdt-c .wpdt-bootstrap-update {
     margin: 10px 0 !important;
     font-size: 14px;
 }
+
 .wpdt-c .wpdt-bootstrap-update-notice {
     background: #ec8508;
     color: #ffffff;
     border-left-color: #091D70 !important;
 }
-.wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss{
-    top : -5px;
+
+.wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss {
+    top: -5px;
 }
+
 .wpdt-c .wdt-upgrade-btn {
     background: #091D70 !important;
 }
@@ -2052,9 +2076,11 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .wdt-upgrade-img {
     width: 100%;
 }
+
 .wpdt-c .wdt-upgrade-btn a {
     color: #FFFFFF !important;
 }
+
 .wpdt-c .wdt-upgrade-btn a:hover {
     opacity: .8;
 }
@@ -2066,14 +2092,16 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .opacity-6 {
     opacity: .6;
 }
+
 .wpdt-c .row-notice {
     padding: 5px;
-    border:1px solid #091D70 !important;
+    border: 1px solid #091D70 !important;
 }
 
 .wpdt-c #column-editing-settings .notice-images {
     display: none;
 }
+
 .wdt-deactivation-backdrop {
     display: none;
     position: fixed;
@@ -2086,10 +2114,12 @@ wpdt-c button#wdt-add-data-browse-button {
     align-items: center;
     z-index: 1000;
 }
+
 #wdt-deactivate-feedback-dialog-form-body {
     padding-block-start: 30px;
     padding-block-end: 15px;
 }
+
 #wdt-deactivation-modal {
     display: none;
     background-color: #fff;
@@ -2141,14 +2171,16 @@ wpdt-c button#wdt-add-data-browse-button {
 
 #wdt-deactivation-modal .wdt-close {
     background: #F0F1F2 !important;
-    color: #1A2C37!important;
+    color: #1A2C37 !important;
 }
-#wdt-deactivation-modal-header{
+
+#wdt-deactivation-modal-header {
     display: inline-flex;
     border-bottom: 1px solid #F0F1F2;
     width: 100%;
     margin-top: -6px;
 }
+
 #wdt-deactivation-modal .btn-primary {
     background: #008CFF;
     border: none;
@@ -2175,7 +2207,7 @@ wpdt-c button#wdt-add-data-browse-button {
     cursor: default;
 }
 
-#wdt-deactivation-modal .btn-primary:active,#wdt-deactivation-modal .btn-primary.active {
+#wdt-deactivation-modal .btn-primary:active, #wdt-deactivation-modal .btn-primary.active {
     color: #fff;
     background-color: #0c7cd5;
     border-color: #0a68b4;
@@ -2190,35 +2222,43 @@ wpdt-c button#wdt-add-data-browse-button {
 #wdt-deactivation-modal .btn-primary:active, .wpdt-c #wdt-deactivation-modal .btn-primary.active {
     background-image: none;
 }
-#wdt-deactivation-modal-footer{
+
+#wdt-deactivation-modal-footer {
     width: 100%;
     justify-content: space-between;
     display: flex;
     padding-top: 20px;
 }
-#wdt-deactivation-modal .wdt-deactivation-modal-options{
+
+#wdt-deactivation-modal .wdt-deactivation-modal-options {
     padding: 6px;
 }
-#wdt-deactivation-modal .wdt-textarea-description{
+
+#wdt-deactivation-modal .wdt-textarea-description {
     margin-bottom: 5px;
 }
-#wdt-deactivation-modal .wdt-ticksy-description{
+
+#wdt-deactivation-modal .wdt-ticksy-description {
     background: #fcdcdc;
     font-size: 14px;
     font-weight: bold;
 }
-#wdt-deactivation-modal .wdt-deactivation-feedback-dialog-form-caption-error{
+
+#wdt-deactivation-modal .wdt-deactivation-feedback-dialog-form-caption-error {
     background: #fcdcdc;
     font-size: 14px;
     font-weight: bold;
 }
-#wdt-deactivation-modal .wdt-submit-ticket{
+
+#wdt-deactivation-modal .wdt-submit-ticket {
     margin-left: 5px;
     text-decoration: unset;
 }
+
 .wdt-advanced-filters-option {
     display: inline-block;
 }
+
 .wpdt-c .wdt-upgrade-btn {
     background: #091D70 !important;
 }
@@ -2226,9 +2266,21 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .wdt-upgrade-img {
     width: 100%;
 }
+
 .wpdt-c .wdt-upgrade-btn a {
     color: #FFFFFF !important;
 }
+
 .wpdt-c .wdt-upgrade-btn a:hover {
     opacity: .8;
+}
+
+#adminmenu #toplevel_page_wpdatatables-dashboard a[href="admin.php?page=wpdatatables-upgrade"] {
+    font-weight: 600;
+    background-color: #4c9b35;
+    color: #ffffff;
+    margin: 3px 10px 0;
+    display: block;
+    text-align: center;
+    border-radius: 3px;
 }

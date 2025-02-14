@@ -22,7 +22,6 @@
 })(jQuery);
 
 
-
 /**
  * Replace input with Colorpicker layout
  */
@@ -100,8 +99,8 @@ var wdtApplyColorPicker = function (selecter) {
             var colorRepresentation = pickr.getColorRepresentation();
             colorRepresentationSwitch(colorRepresentation, pickr, inputElement)
         }
-        if (isColumnColor){
-            jQuery('.wpdt-column-settings-card').css('min-height','700px');
+        if (isColumnColor) {
+            jQuery('.wpdt-column-settings-card').css('min-height', '700px');
             jQuery(".column-settings-panel").animate({
                 scrollTop: jQuery(
                     '.column-settings-panel').get(0).scrollHeight
@@ -116,14 +115,14 @@ var wdtApplyColorPicker = function (selecter) {
             jQuery(inputElement).parent().find('.wpcolorpicker-icon i').css("background-color", "none");
         }
         pickr.hide();
-        if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height','auto');
+        if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height', 'auto');
 
     }).on('change', color => {
         var colorRepresentation = pickr.getColorRepresentation()
         colorSwitch(colorRepresentation, color, inputElement)
         jQuery(inputElement).change()
-        if (isColumnColor){
-            jQuery('.wpdt-column-settings-card').css('min-height','700px');
+        if (isColumnColor) {
+            jQuery('.wpdt-column-settings-card').css('min-height', '700px');
             jQuery(".column-settings-panel").animate({
                 scrollTop: jQuery(
                     '.column-settings-panel').get(0).scrollHeight
@@ -134,7 +133,7 @@ var wdtApplyColorPicker = function (selecter) {
         jQuery(inputElement).change();
         jQuery(inputElement).closest('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", 'none');
     }).on('hide', color => {
-         if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height','auto');
+        if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height', 'auto');
     })
 };
 

@@ -1,5 +1,5 @@
 (function ($) {
-    jQuery(window).on('elementor/frontend/init', function () {
+    if (typeof elementor !== 'undefined' && elementor.hasOwnProperty('hooks')) {
         elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
             // Listen for changes on the wpdt-table-id select dropdown
             panel.$el.on('change', 'select[data-setting="wpdt-table-id"]', function () {
@@ -27,5 +27,5 @@
                 }
             });
         });
-    });
+    }
 })(jQuery);

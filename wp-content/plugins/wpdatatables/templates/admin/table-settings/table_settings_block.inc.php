@@ -128,8 +128,8 @@ defined('ABSPATH') or die('Access denied.');
                     </a>
                 </li>
 
-                <?php do_action_deprecated('wdt_add_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_configuration_tab' ); ?>
-                <?php do_action( 'wpdatatables_add_table_configuration_tab' ); ?>
+                <?php do_action_deprecated('wdt_add_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_configuration_tab'); ?>
+                <?php do_action('wpdatatables_add_table_configuration_tab'); ?>
 
             </ul>
             <!-- /ul .tab-nav -->
@@ -162,8 +162,8 @@ defined('ABSPATH') or die('Access denied.');
                                             <option value="json"><?php esc_html_e('JSON file', 'wpdatatables'); ?></option>
                                             <option value="nested_json"><?php esc_html_e('Nested JSON', 'wpdatatables'); ?></option>
                                             <option value="serialized"><?php esc_html_e('Serialized PHP array', 'wpdatatables'); ?></option>
-                                            <?php do_action_deprecated('wdt_add_table_type_option', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_type_option' ); ?>
-                                            <?php do_action( 'wpdatatables_add_table_type_option' ); ?>
+                                            <?php do_action_deprecated('wdt_add_table_type_option', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_type_option'); ?>
+                                            <?php do_action('wpdatatables_add_table_type_option'); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -233,8 +233,8 @@ defined('ABSPATH') or die('Access denied.');
                             <!-- /input JSON URL -->
                         </div>
 
-                        <?php do_action_deprecated('wdt_add_data_source_elements', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_data_source_elements' ); ?>
-                        <?php do_action( 'wpdatatables_add_data_source_elements' ); ?>
+                        <?php do_action_deprecated('wdt_add_data_source_elements', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_data_source_elements'); ?>
+                        <?php do_action('wpdatatables_add_data_source_elements'); ?>
 
                         <div class="col-sm-6 hidden wdt-server-side-processing">
                             <!-- Server side processing toggle -->
@@ -256,7 +256,7 @@ defined('ABSPATH') or die('Access denied.');
 
                     <div class="row">
 
-                        <?php do_action( 'wpdatatables_add_mysql_settings_block', $connection ); ?>
+                        <?php do_action('wpdatatables_add_mysql_settings_block', $connection); ?>
 
                         <div class="col-sm-6 hidden wdt-auto-refresh wdt-add-data-source-change-field">
 
@@ -284,7 +284,7 @@ defined('ABSPATH') or die('Access denied.');
 
                         </div>
 
-                        <?php do_action( 'wpdatatables_add_data_from_source_file_block' ); ?>
+                        <?php do_action('wpdatatables_add_data_from_source_file_block'); ?>
 
                     </div>
 
@@ -646,7 +646,8 @@ defined('ABSPATH') or die('Access denied.');
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control selectpicker" id="wdt-rows-per-page" data-original-data-length="1,5,10,25,50,100,-1">
+                                        <select class="form-control selectpicker" id="wdt-rows-per-page"
+                                                data-original-data-length="1,5,10,25,50,100,-1">
                                             <option value="1">1</option>
                                             <option value="5">5</option>
                                             <option value="10">10</option>
@@ -663,7 +664,7 @@ defined('ABSPATH') or die('Access denied.');
                         </div>
                         <div class="col-sm-3 m-b-16 custom-rows-per-page-block">
                             <h4 class="c-title-color m-b-2">
-                                <?php esc_html_e( 'Custom rows per page', 'wpdatatables' ); ?>
+                                <?php esc_html_e('Custom rows per page', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#custom-rows-per-page-hint"
                                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                             </h4>
@@ -671,39 +672,39 @@ defined('ABSPATH') or die('Access denied.');
                             <!-- Hidden popover with image hint -->
                             <div class="hidden" id="custom-rows-per-page-hint">
                                 <div class="popover-heading">
-                                    <?php esc_html_e( 'Custom rows per page', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Custom rows per page', 'wpdatatables'); ?>
                                 </div>
 
                                 <div class="popover-body">
-                                    <?php esc_html_e( 'Enter number of rows you want to display. To choose the number of rows you want to display in the table, you can input a specific sequence. ' , 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Enter number of rows you want to display. To choose the number of rows you want to display in the table, you can input a specific sequence. ', 'wpdatatables'); ?>
                                     <br>
-                                    <strong> <?php esc_html_e('The format for the sequence should be 1,3,7,15,45,200 - each number followed by a comma.', 'wpdatatables' ); ?></strong>
+                                    <strong> <?php esc_html_e('The format for the sequence should be 1,3,7,15,45,200 - each number followed by a comma.', 'wpdatatables'); ?></strong>
                                     <br>
-                                    <strong> <?php esc_html_e('You need to add -1 to the sequence to display all rows.', 'wpdatatables' ); ?></strong>
+                                    <strong> <?php esc_html_e('You need to add -1 to the sequence to display all rows.', 'wpdatatables'); ?></strong>
                                     <br>
-                                    <?php esc_html_e('This sequence will serve as the options for selecting the number of rows you want to be shown.', 'wpdatatables' ); ?>
-                                    <br>
-                                    <br>
-                                    <strong> <?php esc_html_e('Examples: ', 'wpdatatables' ); ?></strong>
-                                    <br>
-                                    <?php esc_html_e(' 1,3,7,15,45,200', 'wpdatatables' ); ?>
-                                    <br>
-                                    <?php esc_html_e(' 5,12,25,100,-1', 'wpdatatables' ); ?>
-                                    <br>
-                                    <?php esc_html_e(' 1,100,200,300', 'wpdatatables' ); ?>
-                                    <br>
-                                    <?php esc_html_e(' 20,40,60,80,-1', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('This sequence will serve as the options for selecting the number of rows you want to be shown.', 'wpdatatables'); ?>
                                     <br>
                                     <br>
-                                    <?php esc_html_e('After selecting a custom number of rows per page, please make sure to also choose how this selection will appear in the default rows per page option. ', 'wpdatatables' ); ?>
-                                    <strong> <?php esc_html_e('If you don\'t make a choice, the first option from the custom display row will be automatically selected, and you can change it afterwards.', 'wpdatatables' ); ?></strong>
+                                    <strong> <?php esc_html_e('Examples: ', 'wpdatatables'); ?></strong>
+                                    <br>
+                                    <?php esc_html_e(' 1,3,7,15,45,200', 'wpdatatables'); ?>
+                                    <br>
+                                    <?php esc_html_e(' 5,12,25,100,-1', 'wpdatatables'); ?>
+                                    <br>
+                                    <?php esc_html_e(' 1,100,200,300', 'wpdatatables'); ?>
+                                    <br>
+                                    <?php esc_html_e(' 20,40,60,80,-1', 'wpdatatables'); ?>
+                                    <br>
+                                    <br>
+                                    <?php esc_html_e('After selecting a custom number of rows per page, please make sure to also choose how this selection will appear in the default rows per page option. ', 'wpdatatables'); ?>
+                                    <strong> <?php esc_html_e('If you don\'t make a choice, the first option from the custom display row will be automatically selected, and you can change it afterwards.', 'wpdatatables'); ?></strong>
                                 </div>
                             </div>
                             <!-- /Hidden popover with image hint -->
 
                             <div class="fg-line form-group m-b-0">
                                 <input id="wdt-custom-rows-per-page" type="text" class="form-control input-sm"
-                                       placeholder="<?php esc_attr_e( '1,3,7,15,45,200', 'wpdatatables' ); ?>">
+                                       placeholder="<?php esc_attr_e('1,3,7,15,45,200', 'wpdatatables'); ?>">
                             </div>
 
                         </div>
@@ -872,7 +873,7 @@ defined('ABSPATH') or die('Access denied.');
                         <div class="col-sm-3 m-b-16 pagination-on-top">
 
                             <h4 class="c-title-color m-b-2">
-                                <?php esc_html_e( 'Return to table top', 'wpdatatables' ); ?>
+                                <?php esc_html_e('Return to table top', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination-top-hint"
                                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                             </h4>
@@ -880,10 +881,10 @@ defined('ABSPATH') or die('Access denied.');
                             <!-- Hidden popover with image hint -->
                             <div class="hidden" id="pagination-top-hint">
                                 <div class="popover-heading">
-                                    <?php esc_html_e( 'Return to table top', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Return to table top', 'wpdatatables'); ?>
                                 </div>
                                 <div class="popover-body">
-                                    <?php esc_html_e( 'Activate this option to automatically scroll users to the top of the table after the pagination button clicks.', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Activate this option to automatically scroll users to the top of the table after the pagination button clicks.', 'wpdatatables'); ?>
                                 </div>
                             </div>
                             <!-- /Hidden popover with image hint -->
@@ -891,7 +892,7 @@ defined('ABSPATH') or die('Access denied.');
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input id="wdt-pagination-top" type="checkbox">
                                 <label for="wdt-pagination-top"
-                                       class="ts-label"><?php esc_html_e( 'Return to table top after pagination click', 'wpdatatables' ); ?></label>
+                                       class="ts-label"><?php esc_html_e('Return to table top after pagination click', 'wpdatatables'); ?></label>
                             </div>
 
                         </div>
@@ -1205,8 +1206,8 @@ defined('ABSPATH') or die('Access denied.');
 
                         </div>
 
-                        <?php do_action_deprecated('wdt_add_sorting_and_filtering_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_sorting_and_filtering_element' ); ?>
-                        <?php do_action( 'wpdatatables_add_sorting_and_filtering_element' ); ?>
+                        <?php do_action_deprecated('wdt_add_sorting_and_filtering_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_sorting_and_filtering_element'); ?>
+                        <?php do_action('wpdatatables_add_sorting_and_filtering_element'); ?>
 
                     </div>
                     <!-- /.row -->
@@ -1217,7 +1218,7 @@ defined('ABSPATH') or die('Access denied.');
                 <!-- Table editing settings -->
                 <div role="tabpanel" class="tab-pane fade" id="editing-settings">
 
-                    <?php do_action( 'wpdatatables_add_table_editing_elements' ); ?>
+                    <?php do_action('wpdatatables_add_table_editing_elements'); ?>
 
                 </div>
                 <!-- /Table editing settings -->
@@ -1393,7 +1394,7 @@ defined('ABSPATH') or die('Access denied.');
                 <!-- Placeholders settings -->
                 <div role="tabpanel" class="tab-pane fade" id="placeholders-settings">
 
-                    <?php do_action( 'wpdatatables_add_table_placeholders_elements' ); ?>
+                    <?php do_action('wpdatatables_add_table_placeholders_elements'); ?>
 
                 </div>
                 <!-- /Placeholders settings -->
@@ -1402,7 +1403,8 @@ defined('ABSPATH') or die('Access denied.');
                 <div role="tabpanel" class="tab-pane fade" id="customize-table-settings">
 
                     <div role="tabpanel">
-<!--                        <small>--><?php //esc_html_e('Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables'); ?><!--</small>-->
+                        <!--                        <small>-->
+                        <?php //esc_html_e('Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables'); ?><!--</small>-->
                         <ul class="tab-nav customize-table-settings-ul" role="tablist">
                             <li class="active main-customize-table-settings-tab">
                                 <a href="#main-customize-table-settings" aria-controls="main-customize-table-settings"
@@ -1440,9 +1442,9 @@ defined('ABSPATH') or die('Access denied.');
                             <li class="loader-settings-tab">
                                 <a href="#loader-settings" aria-controls="loader-settings"
                                    role="tab"
-                                   data-toggle="tab"><?php esc_html_e( 'Loader', 'wpdatatables' ); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Loader', 'wpdatatables'); ?></a>
                             </li>
-                            <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tab' ); ?>
+                            <?php do_action_deprecated('wdt_add_customize_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tab'); ?>
                             <?php do_action('wpdatatables_add_customize_table_configuration_tab'); ?>
 
                         </ul>
@@ -2101,9 +2103,10 @@ defined('ABSPATH') or die('Access denied.');
                                 <div class="row">
                                     <div class="col-sm-4 wdt-table-loader">
                                         <h4 class="c-title-color m-b-2">
-                                            <?php esc_html_e( 'Loader visibility', 'wpdatatables' ); ?>
+                                            <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>
                                             <i class=" wpdt-icon-info-circle-thin"
-                                               data-placement="right"  data-popover-content="#loader-hint"  data-toggle="html-popover" data-trigger="hover"></i>
+                                               data-placement="right" data-popover-content="#loader-hint"
+                                               data-toggle="html-popover" data-trigger="hover"></i>
                                         </h4>
 
                                         <div class="hidden" id="loader-hint">
@@ -2118,16 +2121,16 @@ defined('ABSPATH') or die('Access denied.');
                                         <div class="toggle-switch" data-ts-color="blue">
                                             <input id="wdt-loader-visibility" type="checkbox">
                                             <label for="wdt-loader-visibility"
-                                                   class="ts-label"><?php esc_html_e( 'Enable table loader', 'wpdatatables' ); ?></label>
+                                                   class="ts-label"><?php esc_html_e('Enable table loader', 'wpdatatables'); ?></label>
                                         </div>
                                     </div>
                                     <div class="col-sm-4 opacity-5 wdt-loader-color">
                                         <h5 class="c-title-color m-b-2">
                                             <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
-                                            <?php esc_html_e( 'Loader Color', 'wpdatatables' ); ?>
+                                            <?php esc_html_e('Loader Color', 'wpdatatables'); ?>
                                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="<?php esc_attr_e( 'This color is used for loader.', 'wpdatatables' ); ?>"></i>
+                                               title="<?php esc_attr_e('This color is used for loader.', 'wpdatatables'); ?>"></i>
                                         </h5>
                                         <div class="cp-container">
                                             <div class="form-group">
@@ -2139,7 +2142,8 @@ defined('ABSPATH') or die('Access denied.');
                                                                class="form-control cp-value wdt-add-picker"
                                                                disabled
                                                                value=""/
-                                                                placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>">
+                                                        placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>
+                                                        ">
                                                         <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                                     </div>
                                                 </div>
@@ -2149,21 +2153,21 @@ defined('ABSPATH') or die('Access denied.');
                                     <div class="col-sm-4 opacity-5 wdt-loader-style">
                                         <h5 class="c-title-color m-b-2">
                                             <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
-                                            <?php esc_html_e( 'Loader Style', 'wpdatatables' ); ?>
+                                            <?php esc_html_e('Loader Style', 'wpdatatables'); ?>
                                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="<?php esc_attr_e( 'Custom style for loader.', 'wpdatatables' ); ?>"></i>
+                                               title="<?php esc_attr_e('Custom style for loader.', 'wpdatatables'); ?>"></i>
                                         </h5>
                                         <div class="fg-line form-group m-b-0">
                                             <input type="text" class="form-control input-sm" disabled
-                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>">
+                                                   placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>">
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
                             <!-- /Loader settings -->
-                            <?php do_action_deprecated( 'wdt_add_customize_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tabpanel' ); ?>
+                            <?php do_action_deprecated('wdt_add_customize_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tabpanel'); ?>
                             <?php do_action('wpdatatables_add_customize_table_configuration_tabpanel'); ?>
 
                         </div>
@@ -2174,7 +2178,7 @@ defined('ABSPATH') or die('Access denied.');
                 </div>
                 <!-- /Customize table settings -->
 
-                <?php do_action_deprecated( 'wdt_add_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_configuration_tabpanel' ); ?>
+                <?php do_action_deprecated('wdt_add_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_table_configuration_tabpanel'); ?>
                 <?php do_action('wpdatatables_add_table_configuration_tabpanel'); ?>
 
             </div>
@@ -2206,8 +2210,11 @@ defined('ABSPATH') or die('Access denied.');
                 <span aria-hidden="true">×</span>
             </button>
             <p><strong><?php esc_html_e('Please note that enabling the "Allow front-end editing" option for tables, along with setting the "Editor roles" to "Everyone", 
-                                grants all users, both authenticated and unauthenticated, the ability to manipulate table data on front-end pages or posts.', 'wpdatatables'); ?></strong></p>
-            <p><strong><?php esc_html_e('It is recommended to selectively designate which Editor roles are permitted to modify table data for enhanced control and security.', 'wpdatatables'); ?></strong></p>
+                                grants all users, both authenticated and unauthenticated, the ability to manipulate table data on front-end pages or posts.', 'wpdatatables'); ?></strong>
+            </p>
+            <p>
+                <strong><?php esc_html_e('It is recommended to selectively designate which Editor roles are permitted to modify table data for enhanced control and security.', 'wpdatatables'); ?></strong>
+            </p>
         </div>
     </div>
 </div>

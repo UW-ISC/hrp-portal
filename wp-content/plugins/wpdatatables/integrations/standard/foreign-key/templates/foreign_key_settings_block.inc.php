@@ -17,11 +17,12 @@
     <div class="col-sm-6 wdt-foreign-rule-display p-r-0">
         <div class="form-group">
             <div class="well">
-                <strong><?php esc_html_e('Table', 'wpdatatables'); ?>:</strong> <span id="wdt-connected-table-name"> -</span>,
+                <strong><?php esc_html_e('Table', 'wpdatatables'); ?>:</strong> <span
+                        id="wdt-connected-table-name"> -</span>,
                 <strong><?php esc_html_e('Show column', 'wpdatatables'); ?>:</strong> <span
-                    id="wdt-connected-table-show-column"> -</span>,
+                        id="wdt-connected-table-show-column"> -</span>,
                 <strong><?php esc_html_e('Value from column', 'wpdatatables'); ?>:</strong> <span
-                    id="wdt-connected-table-value-column"> -</span>
+                        id="wdt-connected-table-value-column"> -</span>
             </div>
         </div>
     </div>

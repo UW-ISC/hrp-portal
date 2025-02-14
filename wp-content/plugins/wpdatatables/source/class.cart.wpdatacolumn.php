@@ -11,6 +11,7 @@ class CartWDTColumn extends WDTColumn
 
     /**
      * CartWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())

@@ -27,12 +27,16 @@
                 <div class="notice notice-info wpdt-bundles-notice">
                     <div id="wpdt-bundles-section">
                         <div id="wpdt-first-section">
-                            <img class="wpdt-promo-logo" src="<?php echo WDT_ROOT_URL ?>assets/img/bundles/bundle_all_pricing.png" alt="">
+                            <img class="wpdt-promo-logo"
+                                 src="<?php echo WDT_ROOT_URL ?>assets/img/bundles/bundle_all_pricing.png" alt="">
                         </div>
                         <div id="wpdt-second-section">
                             <h2><strong>SAVE UP TO 60%</strong>
                                 with our exclusive bundles!<br> Get more value for your money.<br>
-                                <button id="wpdt-grab-it" onclick="window.open('https://wpdatatables.com/bundles/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"> Get discount now!</button>
+                                <button id="wpdt-grab-it"
+                                        onclick="window.open('https://wpdatatables.com/bundles/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')">
+                                    Get discount now!
+                                </button>
                             </h2>
                         </div>
                     </div>
@@ -48,7 +52,8 @@
                                 <div class="ribbon"><span><?php esc_html_e('Free', 'wpdatatables'); ?></span></div>
                                 <div class="wpdt-addons-desc">
                                     <img class="img-responsive"
-                                         src="<?php echo WDT_ASSETS_PATH; ?>img/addons/forminator-forms-logo.png" alt="">
+                                         src="<?php echo WDT_ASSETS_PATH; ?>img/addons/forminator-forms-logo.png"
+                                         alt="">
                                     <h4><?php esc_html_e('Forminator Forms integration for wpDataTables', 'wpdatatables'); ?></h4>
                                 </div>
                                 <div class="caption">
@@ -56,7 +61,8 @@
                                 </div>
                                 <?php if (!defined('WDT_FRF_ROOT_PATH')) { ?>
                                     <div class="wdt-addons-links">
-                                        <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip" class="free-download btn btn-primary">
+                                        <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip"
+                                           class="free-download btn btn-primary">
                                             <?php esc_html_e('Download', 'wpdatatables'); ?>
                                             <i class="wpdt-icon-file-download m-l-5"></i>
                                         </a>
@@ -133,23 +139,23 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_PF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
-                                       target="_blank"
-                                       class="wdt-addons-find-out-more"
-                                       role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
-                                    </a>
-                                    <button id="wdt-powerful-filters"
-                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
-                                        <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <a href="https://wpdatatables.com/powerful-filtering/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
+                                           target="_blank"
+                                           class="wdt-addons-find-out-more"
+                                           role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
+                                        </a>
+                                        <button id="wdt-powerful-filters"
+                                                onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
+                                            <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } else { ?>
-                                    <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
-                                        <i class="wpdt-icon-check-full"></i>
-                                        <?php esc_html_e('Installed', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                            <i class="wpdt-icon-check-full"></i>
+                                            <?php esc_html_e('Installed', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -167,22 +173,22 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_RB_ROOT_PATH')) { ?>
-                                    <a href="http://wpreportbuilder.com?utm_source=wpdt" target="_blank"
-                                       class="wdt-addons-find-out-more"
-                                       role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
-                                    </a>
-                                    <button id="reportbuilder"
-                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
-                                        <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <a href="http://wpreportbuilder.com?utm_source=wpdt" target="_blank"
+                                           class="wdt-addons-find-out-more"
+                                           role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
+                                        </a>
+                                        <button id="reportbuilder"
+                                                onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
+                                            <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } else { ?>
-                                    <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
-                                        <i class="wpdt-icon-check-full"></i>
-                                        <?php esc_html_e('Installed', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                            <i class="wpdt-icon-check-full"></i>
+                                            <?php esc_html_e('Installed', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -203,24 +209,24 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_FF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
-                                       target="_blank"
-                                       rel="nofollow"
-                                       class="wdt-addons-find-out-more"
-                                       role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
-                                    </a>
-                                    <button id="wdt-formidable-integration"
-                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
-                                        <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <a href="https://wpdatatables.com/documentation/addons/formidable-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
+                                           target="_blank"
+                                           rel="nofollow"
+                                           class="wdt-addons-find-out-more"
+                                           role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
+                                        </a>
+                                        <button id="wdt-formidable-integration"
+                                                onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
+                                            <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } else { ?>
-                                    <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
-                                        <i class="wpdt-icon-check-full"></i>
-                                        <?php esc_html_e('Installed', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                            <i class="wpdt-icon-check-full"></i>
+                                            <?php esc_html_e('Installed', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -230,7 +236,8 @@
                         <div class="col-sm-4">
                             <div class="thumbnail">
                                 <div class="wpdt-addons-desc">
-                                    <img class="img-responsive wdt-gravity-img" src="<?php echo WDT_ASSETS_PATH; ?>img/addons/gravity-forms-logo.png" alt="">
+                                    <img class="img-responsive wdt-gravity-img"
+                                         src="<?php echo WDT_ASSETS_PATH; ?>img/addons/gravity-forms-logo.png" alt="">
                                     <h4><?php esc_html_e('Gravity Forms integration for wpDataTables', 'wpdatatables'); ?></h4>
                                 </div>
                                 <div class="caption">
@@ -238,24 +245,24 @@
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_GF_ROOT_PATH')) { ?>
-                                    <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
-                                       target="_blank"
-                                       rel="nofollow"
-                                       class="wdt-addons-find-out-more"
-                                       role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
-                                    </a>
-                                    <button id="wdt-gravity-integration"
-                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
-                                        <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <a href="https://wpdatatables.com/documentation/addons/gravity-forms-integration/?utm_source=wpdt-admin&utm_medium=addons&utm_campaign=wpdt&utm_content=wpdt"
+                                           target="_blank"
+                                           rel="nofollow"
+                                           class="wdt-addons-find-out-more"
+                                           role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
+                                        </a>
+                                        <button id="wdt-gravity-integration"
+                                                onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
+                                            <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } else { ?>
-                                    <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
-                                        <i class="wpdt-icon-check-full"></i>
-                                        <?php esc_html_e('Installed', 'wpdatatables'); ?>
-                                    </button>
-                                    <div class="clear"></div>
+                                        <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                            <i class="wpdt-icon-check-full"></i>
+                                            <?php esc_html_e('Installed', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
                                     <?php } ?>
                                 </div>
                             </div>

@@ -5,6 +5,7 @@
     src: url(../../../../../assets/fonts/wpDataTablesIcons.eot);
     src: url(../../../../../assets/fonts/wpDataTablesIcons.eot?#iefix) format('embedded-opentype'), url(../../../../../assets/fonts/wpDataTablesIcons.woff) format('woff'), url(../../../../../assets/fonts/wpDataTablesIcons.ttf) format('truetype'), url(../../../../../assets/fonts/wpDataTablesIcons.svg#wpDataTablesIcons) format('svg');
 }
+
 .wpdt-c .wpdt-folders-card {
     min-width: 420px !important;
     margin: 0 10px 0 0 !important;
@@ -13,7 +14,8 @@
     border-right: 1px solid #DBDFEA !important;
     padding-right: 10px !important;
 }
-.wpdt-c .wpdt-folders-card .close-folders-card{
+
+.wpdt-c .wpdt-folders-card .close-folders-card {
     position: absolute;
     right: -20px;
     top: 0;
@@ -23,19 +25,23 @@
     background: #008CFF;
     border-radius: 0 5px 5px 0;
 }
-.wpdt-c .wpdt-folders-card.collapsed .close-folders-card{
+
+.wpdt-c .wpdt-folders-card.collapsed .close-folders-card {
     border-radius: 5px 0 0 5px;
     right: 0;
 }
-.wpdt-c .wpdt-folders-card .close-folders-card i{
+
+.wpdt-c .wpdt-folders-card .close-folders-card i {
     position: absolute;
 
 }
+
 .wpdt-c .wpdt-folders-card .close-folders-card .wpdt-icon-angle-right:before,
 .wpdt-c .wpdt-folders-card .close-folders-card .wpdt-icon-angle-left:before {
     position: absolute;
     color: #fff;
 }
+
 .wpdt-c .wpdt-folders-card .close-folders-card .wpdt-icon-angle-right:before {
     right: -14px;
 }
@@ -49,19 +55,22 @@
 }
 
 
-.wpdt-c .wpdt-folders-card .wpdt-folders-search{
+.wpdt-c .wpdt-folders-card .wpdt-folders-search {
     margin-right: 10px;
 }
-.wpdt-c .wpdt-folders-card .wpdt-folders-sparator{
+
+.wpdt-c .wpdt-folders-card .wpdt-folders-sparator {
     padding: 0 10px;
     height: 1px;
     background: #E9E5E5;
     margin: 10px 10px 10px 0;
 }
-.wpdt-c .wpdt-folders-card .card-wrapper{
+
+.wpdt-c .wpdt-folders-card .card-wrapper {
     background: #fff;
 }
-.wpdt-c .wpdt-folders-card .card-body{
+
+.wpdt-c .wpdt-folders-card .card-body {
     padding: 10px 0 10px 10px;
 }
 
@@ -70,9 +79,11 @@
     height: 35px;
     padding-right: 10px;
 }
-.card-header.wdt-admin-card-header{
+
+.card-header.wdt-admin-card-header {
     padding: 35px 0 14px 0 !important;
 }
+
 .card-header.wdt-admin-folders-card-header {
     padding: 0 0 14px 0 !important;
     background: #F1F1F1 !important;
@@ -119,7 +130,7 @@
     pointer-events: none;
 }
 
-.wpdt-c .wpdt-folders-card #wpdt-create-folder-btn{
+.wpdt-c .wpdt-folders-card #wpdt-create-folder-btn {
     padding: 9px 16px;
     width: 51px;
     height: 42px;
@@ -146,13 +157,13 @@
 .wpdt-c .wpdt-folders-card #wpdt-edit-folder-btn:hover,
 .wpdt-c .wpdt-folders-card #wpdt-create-folder-btn:active,
 .wpdt-c .wpdt-folders-card #wpdt-create-folder-btn:focus,
-.wpdt-c .wpdt-folders-card #wpdt-create-folder-btn:hover{
+.wpdt-c .wpdt-folders-card #wpdt-create-folder-btn:hover {
     box-shadow: none;
     background-color: #FFFFFF !important;
 }
 
 
-.wpdt-c .wpdt-folders-card #wpdt-edit-folder-btn{
+.wpdt-c .wpdt-folders-card #wpdt-edit-folder-btn {
     background: #FFFFFF;
     padding: 9px 16px;
     width: 51px;
@@ -161,18 +172,19 @@
     border: solid 1px #ebedf2;
 }
 
-.wpdt-c .wpdt-folders-card #wpdt-delete-folder-btn{
-    border-color: rgba(240,62,62, 0.5);
+.wpdt-c .wpdt-folders-card #wpdt-delete-folder-btn {
+    border-color: rgba(240, 62, 62, 0.5);
     background: #FFFFFF;
     padding: 9px 17px;
     width: 51px;
     height: 42px;
     border-radius: 6px;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn,
 .wpdt-c .wpdt-folders-card #wpdt-sort-folder-btn,
 .wpdt-c .wpdt-folders-card #wpdt-show-columns-btn,
-.wpdt-c .wpdt-folders-card #wpdt-all-open-close-folder-btn{
+.wpdt-c .wpdt-folders-card #wpdt-all-open-close-folder-btn {
     background: #FFFFFF;
     padding: 9px 16px;
     width: 51px;
@@ -181,9 +193,11 @@
     border: solid 1px #ebedf2;
     position: relative;
 }
-.wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn{
+
+.wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn {
     margin-right: 0;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn:before,
 .wpdt-c .wpdt-folders-card #wpdt-all-open-close-folder-btn:before,
 .wpdt-c .wpdt-folders-card #wpdt-sort-folder-btn:before,
@@ -191,8 +205,7 @@
 .wpdt-c .wpdt-folders-card #wpdt-create-folder-btn:before,
 .wpdt-c .wpdt-folders-card #wpdt-edit-folder-btn:before,
 .wpdt-c .wpdt-folders-card #wpdt-delete-folder-btn:before,
-.wpdt-c .wpdt-folders-card #wpdt-show-columns-btn:after
-{
+.wpdt-c .wpdt-folders-card #wpdt-show-columns-btn:after {
     font-family: wpDataTablesIcons !important;
     font-size: 20px;
     font-style: normal;
@@ -213,6 +226,7 @@
     content: '\e910';
     vertical-align: middle;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-all-open-close-folder-btn:before {
     content: '\f054';
     vertical-align: middle;
@@ -222,6 +236,7 @@
     -webkit-transition: .2s linear;
     -moz-transition: .2s linear;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-show-columns-btn:before {
     content: '\f06e';
     vertical-align: middle;
@@ -229,6 +244,7 @@
     left: 10px;
     font-size: 17px;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-show-columns-btn:after {
     content: '\f107';
     vertical-align: middle;
@@ -236,11 +252,13 @@
     right: 4px;
     font-size: 17px;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-sort-folder-btn:before {
     content: '\f883';
     vertical-align: middle;
     color: #606266;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-all-open-close-folder-btn.show-all:before {
     transform: rotate(90deg) !important;
     -webkit-transform: rotate(90deg) !important;
@@ -250,12 +268,14 @@
     -webkit-transition: .2s linear;
     -moz-transition: .2s linear;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn:before {
     content: '\f04e';
     vertical-align: middle;
     position: absolute;
     left: 14px;
 }
+
 .wpdt-c .wpdt-folders-card #wpdt-checkbox-folder-btn.checked:before {
     content: '\f14a';
     vertical-align: middle;
@@ -263,26 +283,30 @@
     left: 14px;
 }
 
-.wpdt-c .wpdt-folders-card #wpdt-delete-folder-btn:before{
+.wpdt-c .wpdt-folders-card #wpdt-delete-folder-btn:before {
     content: '\f1f8';
     color: #f03e3e;
     vertical-align: initial;
     font-size: 16px;
 }
+
 .wpdt-c .wpdt-folders-card li {
     margin-bottom: 5px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-last,
 .wpdt-c .wpdt-folders-card .jstree-container-ul li {
     margin-bottom: 5px;
     position: relative;
     background-image: none !important;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-last,
 .wpdt-c .wpdt-folders-card .jstree-container-ul .jstree-children li,
 .wpdt-c .wpdt-folders-card .jstree-container-ul li.jstree-open {
     margin-bottom: 5px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-children {
     margin-top: 5px;
 }
@@ -293,28 +317,34 @@
     /*overflow-x: hidden;*/
 }
 
-.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i{
+.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i {
     background-position: unset;
     background-image: none !important;
     position: relative;
 }
-.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i.jstree-icon{
+
+.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i.jstree-icon {
     margin-right: 3px;
 }
-.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i:not(.jstree-icon){
+
+.wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-container-ul li i:not(.jstree-icon) {
     margin-right: 2px;
 }
-.wpdt-c .wpdt-folders-card  #wpdt-folder-tree-wrapper .os-scrollbar.os-scrollbar-vertical{
+
+.wpdt-c .wpdt-folders-card #wpdt-folder-tree-wrapper .os-scrollbar.os-scrollbar-vertical {
     visibility: visible;
     opacity: 1;
     right: 4px;
 }
-.wpdt-c .wpdt-folders-card  #wpdt-folder-tree-wrapper .os-scrollbar.os-scrollbar-vertical .os-scrollbar-handle{
+
+.wpdt-c .wpdt-folders-card #wpdt-folder-tree-wrapper .os-scrollbar.os-scrollbar-vertical .os-scrollbar-handle {
     background: #008CFF !important;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-hovered {
     background: #F8F8FA !important;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-inline-edit {
     display: inline-block;
     cursor: pointer;
@@ -339,13 +369,15 @@
     border: 2px solid #008CFF;
     transition: none !important;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-clicked .wpdt-folder-inline-edit {
     width: 26px;
     border: none !important;
     color: #FFF;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-clicked.jstree-hovered .wpdt-folder-inline-edit .wpdt-icon-pen:before,
-.wpdt-c .wpdt-folders-card .jstree-clicked .wpdt-folder-inline-edit .wpdt-icon-pen:before{
+.wpdt-c .wpdt-folders-card .jstree-clicked .wpdt-folder-inline-edit .wpdt-icon-pen:before {
     color: #fff !important;
 }
 
@@ -354,16 +386,18 @@
     background: #008CFF !important;
     color: #FFFFFF !important;
 }
-.wpdt-c .wpdt-folders-card .jstree-anchor.jstree-clicked:hover .wpdt-folder-actions  .wpdt-folder-inline-edit {
+
+.wpdt-c .wpdt-folders-card .jstree-anchor.jstree-clicked:hover .wpdt-folder-actions .wpdt-folder-inline-edit {
     width: 26px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-clicked:hover i,
 .wpdt-c .wpdt-folders-card .jstree-clicked i {
     color: #FFFFFF;
     text-decoration: none;
 }
 
-.wpdt-c .wpdt-folders-card .wpdt-drop-hover{
+.wpdt-c .wpdt-folders-card .wpdt-drop-hover {
     border: 2px dashed #008CFF !important;
     font-size: 16px;
     line-height: 30px;
@@ -371,9 +405,11 @@
     height: 30px;
     width: calc(100% - 25px);
 }
+
 .wpdt-c .wpdt-folders-card i {
     font-size: 18px;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-search-box i {
     position: absolute;
     top: 15px;
@@ -381,6 +417,7 @@
     color: #091E6F;
     font-size: 14px;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-search-box input {
     background: #FFFFFF;
     border: 1px solid #DBDFEA;
@@ -393,6 +430,7 @@
     min-height: 42px;
     font-size: 14px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-anchor {
     font-size: 16px;
     line-height: 30px;
@@ -403,10 +441,12 @@
     color: #3c434a;
     position: unset;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-anchor.wpdt-checked {
     position: relative;
     padding-left: 27px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-anchor:hover {
     background: #dceffd !important;
     color: #606266 !important;
@@ -416,26 +456,29 @@
 .wpdt-c .wpdt-folders-card .jstree-anchor:hover i {
     color: #008CFF !important;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-anchor.jstree-clicked:hover i.wpdt-icon-folder-close1 {
     color: #FFFFFF !important;
 }
 
-.wpdt-c .wpdt-folders-card .wpdt-folders-sum{
+.wpdt-c .wpdt-folders-card .wpdt-folders-sum {
     padding: 0 10px 0 0;
 }
 
-.wpdt-c .wpdt-folders-card .wpdt-folders-sum li a{
+.wpdt-c .wpdt-folders-card .wpdt-folders-sum li a {
     width: 100%;
     cursor: pointer;
 }
 
-.wpdt-c .wpdt-folders-card .wpdt-tree{
+.wpdt-c .wpdt-folders-card .wpdt-tree {
     margin-bottom: 0;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree .wpdt-folder-checkbox {
     display: none;
 
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree .wpdt-folder-checkbox .checkbox {
     margin: 0 5px 0 0;
     border: 2px solid #008CFF;
@@ -445,9 +488,11 @@
     left: 3px;
     bottom: 4px;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree .jstree-clicked .wpdt-folder-checkbox .checkbox {
     border: 2px solid #FFFFFF;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree .wpdt-folder-checkbox .checkbox:before {
     position: absolute;
     content: '\f00c';
@@ -457,23 +502,29 @@
     color: #FFFFFF;
     left: 0;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree .wpdt-folder-checkbox.checked .checkbox:before {
     display: inline-block;
     background: #008CFF;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree.show-checkboxes .wpdt-folder-checkbox {
     display: inline-block;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree.show-checkboxes .wpdt-icon-folder-close1 {
     display: none !important;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree li:before,
 .wpdt-c .wpdt-folders-card .wpdt-folder-tree li:after {
- display: none !important;
+    display: none !important;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default {
     padding: 0 10px 0 0;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default i {
     width: 24px;
     height: 24px;
@@ -482,18 +533,22 @@
     position: relative;
     line-height: 30px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default i:before {
     position: absolute;
     left: 2px;
     bottom: -4px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default i.wpdt-icon-pen:before {
     left: 0;
     bottom: -6px;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folders-sum.jstree-default i {
     text-align: center;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-themeicon {
     font-family: WPDataTablesIcons;
     font-size: 18px;
@@ -505,15 +560,17 @@
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-open > a .jstree-themeicon:before {
     margin-right: 4px;
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-themeicon:before {
     content: "\e92f";
 }
+
 .wpdt-c .wpdt-folders-card .jstree-default .jstree-open > a .jstree-themeicon:before {
     content: "\e92e";
 }
 
-.wpdt-c .wpdt-folders-card .jstree-closed>i.jstree-icon,
-.wpdt-c .wpdt-folders-card .jstree-open>i.jstree-icon {
+.wpdt-c .wpdt-folders-card .jstree-closed > i.jstree-icon,
+.wpdt-c .wpdt-folders-card .jstree-open > i.jstree-icon {
     font-family: WPDataTablesIcons !important;
     font-style: normal;
     font-variant: normal;
@@ -528,36 +585,40 @@
     text-align: center;
     font-weight: 700;
 }
-.wpdt-c .wpdt-folders-card .jstree-closed>i.jstree-icon{
+
+.wpdt-c .wpdt-folders-card .jstree-closed > i.jstree-icon {
     transform: rotate(0) !important;
     -webkit-transform: rotate(0) !important;
     -moz-transform: rotate(0) !important;
     -o-transform: rotate(0) !important;
 }
-.wpdt-c .wpdt-folders-card .jstree-open>i.jstree-icon {
+
+.wpdt-c .wpdt-folders-card .jstree-open > i.jstree-icon {
     transform: rotate(90deg) !important;
     -webkit-transform: rotate(90deg) !important;
     -moz-transform: rotate(90deg) !important;
     -o-transform: rotate(90deg) !important;
 }
 
-.wpdt-c .wpdt-folders-card .jstree-open>i.jstree-icon:after,
-.wpdt-c .wpdt-folders-card .jstree-closed>i.jstree-icon:after{
+.wpdt-c .wpdt-folders-card .jstree-open > i.jstree-icon:after,
+.wpdt-c .wpdt-folders-card .jstree-closed > i.jstree-icon:after {
     display: inline-block;
-    padding-top:5px;
+    padding-top: 5px;
     color: #008CFF;
 }
-.wpdt-c .wpdt-folders-card .jstree-open>i.jstree-icon:after,
-.wpdt-c .wpdt-folders-card .jstree-closed>i.jstree-icon:after{
+
+.wpdt-c .wpdt-folders-card .jstree-open > i.jstree-icon:after,
+.wpdt-c .wpdt-folders-card .jstree-closed > i.jstree-icon:after {
     content: "\f054";
     position: absolute;
 }
-.wpdt-c .wpdt-folders-card .jstree-closed>i.jstree-icon:after{
+
+.wpdt-c .wpdt-folders-card .jstree-closed > i.jstree-icon:after {
     top: 2px;
     right: 6px;
 }
 
-.wpdt-c .wpdt-folders-card .jstree-open>i.jstree-icon:after {
+.wpdt-c .wpdt-folders-card .jstree-open > i.jstree-icon:after {
     top: -2px;
     right: 6px;
 }
@@ -565,6 +626,7 @@
 .wpdt-c .wpdt-folders-card .jstree-open > a i.wpdt-icon-folder-close1:before {
     content: "\e931";
 }
+
 .wpdt-c .wpdt-folders-card .jstree-checkbox {
     font-family: WPDataTablesIcons !important;
     font-style: normal;
@@ -581,6 +643,7 @@
 .wpdt-c .wpdt-folders-card .jstree-checkbox:before {
     content: "\f04d";
 }
+
 .wpdt-c .wpdt-folders-card .jstree-node .wpdt-folder-actions {
     padding: 0 10px;
     background: #fff;
@@ -588,36 +651,42 @@
     top: 0;
     color: #3c434a;
 }
+
 .wpdt-c .wpdt-unassigned-folder {
     margin-bottom: 0 !important;
 }
+
 .wpdt-c .wpdt-root-folder .wpdt-folder-actions,
 .wpdt-c .wpdt-unassigned-folder .wpdt-folder-actions {
     right: 16px !important;
 }
 
 .wpdt-c .wpdt-folders-card .wpdt-folders-sum .wpdt-count,
-.wpdt-c .wpdt-folders-card .jstree-node .wpdt-folder-actions{
+.wpdt-c .wpdt-folders-card .jstree-node .wpdt-folder-actions {
     position: absolute;
 }
+
 .wpdt-c .wpdt-folders-card .wpdt-folders-sum .wpdt-count {
     right: -8px;
 }
 
-.wpdt-c .wpdt-folders-card .jstree-node .wpdt-folder-actions i{
+.wpdt-c .wpdt-folders-card .jstree-node .wpdt-folder-actions i {
     font-size: 14px;
 }
+
 #wpdt-folder-modal .modal-header,
 #wpdt-folder-modal .modal-body {
     padding: 24px 24px 0 24px;
 }
-#wpdt-folder-modal .modal-title{
+
+#wpdt-folder-modal .modal-title {
     font-size: 20px;
     line-height: 20px;
     color: #061938;
     font-weight: normal;
 }
-#wpdt-folder-modal .modal-header button{
+
+#wpdt-folder-modal .modal-header button {
     font-size: 25px;
     line-height: 20px;
     color: #8796AF;
@@ -628,18 +697,22 @@
     border: 0;
     -webkit-appearance: none;
 }
+
 #wpdt-folder-modal .modal-footer {
     padding: 12px 24px 16px 24px;
 
 }
+
 #wpdt-folder-modal hr {
     margin-top: 0;
 }
+
 .wpdt-folder-delete-notice,
 .wpdt-folder-remove-notice {
     margin: 0 !important;
 }
-#wpdt-folder-modal .btn{
+
+#wpdt-folder-modal .btn {
     border: 1px solid #DFE1E6;
     box-sizing: border-box;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
@@ -656,7 +729,8 @@
     color: #253858;
     background: #ffffff;
 }
-#wpdt-cancel-folder-modal:hover{
+
+#wpdt-cancel-folder-modal:hover {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), #FFFFFF;
     border: 1px solid #DFE1E6;
     box-sizing: border-box;
@@ -667,6 +741,7 @@
     color: #FFFFFF;
     background: #008CFF;
 }
+
 #wpdt-remove-folder-modal:hover,
 #wpdt-delete-folder-modal:hover {
     background: #E03131;
@@ -693,28 +768,34 @@ CONTEXTMENU
     background-clip: padding-box;
     position: absolute;
 }
-.wpdt-c .buttons .columns-menu{
+
+.wpdt-c .buttons .columns-menu {
     top: 45px;
     right: -40px;
 }
-.wpdt-c .wpdt-folders-card[data-type='report'] .buttons .columns-menu{
+
+.wpdt-c .wpdt-folders-card[data-type='report'] .buttons .columns-menu {
     right: -15px;
 }
-.wpdt-c .buttons .sort-menu{
+
+.wpdt-c .buttons .sort-menu {
     top: 45px;
     right: -3px;
 }
+
 .wpdt-c .buttons .columns-menu li,
 .wpdt-c .buttons .sort-menu li,
 .wpdt-c .vakata-context li {
     margin-bottom: 0;
 }
+
 .wpdt-c .buttons .sort-menu li.active {
     color: #008CFF !important;
 }
-.wpdt-c .buttons .columns-menu li>a,
-.wpdt-c .buttons .sort-menu li>a,
-.wpdt-c .vakata-context li>a{
+
+.wpdt-c .buttons .columns-menu li > a,
+.wpdt-c .buttons .sort-menu li > a,
+.wpdt-c .vakata-context li > a {
     font-size: 15px;
     text-shadow: none;
     color: #3c434a !important;
@@ -726,29 +807,35 @@ CONTEXTMENU
     line-height: 2.4em;
     border-radius: 1px;
 }
+
 .wpdt-c .buttons .sort-menu li.active a,
 .wpdt-c .buttons .columns-menu li.active a {
     color: #008CFF !important;
 }
-.wpdt-c .vakata-context li>a>i {
+
+.wpdt-c .vakata-context li > a > i {
     font-size: 15px;
     text-shadow: none;
     color: #3c434a !important;
 }
-.wpdt-c .buttons .columns-menu li>a,
-.wpdt-c .buttons .sort-menu li>a {
+
+.wpdt-c .buttons .columns-menu li > a,
+.wpdt-c .buttons .sort-menu li > a {
     padding: 0 2em 0 .5em !important;
 }
-.wpdt-c .buttons .columns-menu li.active>a,
-.wpdt-c .buttons .sort-menu li.active>a {
+
+.wpdt-c .buttons .columns-menu li.active > a,
+.wpdt-c .buttons .sort-menu li.active > a {
     padding: 0 2em 0 .5em !important;
     position: relative;
 }
-.wpdt-c .buttons .columns-menu li.active>a {
+
+.wpdt-c .buttons .columns-menu li.active > a {
     color: #008CFF;
 }
-.wpdt-c .buttons .sort-menu li.active>a:before,
-.wpdt-c .buttons .columns-menu li.active>a:before {
+
+.wpdt-c .buttons .sort-menu li.active > a:before,
+.wpdt-c .buttons .columns-menu li.active > a:before {
     position: absolute;
     font-family: WPDataTablesIcons !important;
     font-style: normal;
@@ -764,43 +851,48 @@ CONTEXTMENU
     right: 5px;
     top: 10px;
 }
-.wpdt-c .buttons .columns-menu li>a:hover,
-.wpdt-c .buttons .sort-menu li>a:hover,
-.wpdt-c .vakata-context li>a:hover {
+
+.wpdt-c .buttons .columns-menu li > a:hover,
+.wpdt-c .buttons .sort-menu li > a:hover,
+.wpdt-c .vakata-context li > a:hover {
     background: #dceffd !important;
     box-shadow: none !important;
     color: #3c434a !important;
 }
-.wpdt-c .buttons .columns-menu li.active>a:hover,
-.wpdt-c .buttons .sort-menu li.active>a:hover{
+
+.wpdt-c .buttons .columns-menu li.active > a:hover,
+.wpdt-c .buttons .sort-menu li.active > a:hover {
     background: #dceffd !important;
     box-shadow: none !important;
     color: #008CFF !important;
 }
 
-.wpdt-c .vakata-context li>a:hover i {
+.wpdt-c .vakata-context li > a:hover i {
     color: #008CFF !important;
 }
-.wpdt-c .vakata-context .vakata-context-hover>a {
-     background-color: unset !important;
-     box-shadow: none !important;
+
+.wpdt-c .vakata-context .vakata-context-hover > a {
+    background-color: unset !important;
+    box-shadow: none !important;
 }
-.wpdt-c .vakata-context .vakata-context-separator>a,
-.wpdt-c .vakata-context .vakata-context-separator>a:hover {
+
+.wpdt-c .vakata-context .vakata-context-separator > a,
+.wpdt-c .vakata-context .vakata-context-separator > a:hover {
     margin: 0 !important;
 }
-.wpdt-c .vakata-context li>a .vakata-contextmenu-sep {
+
+.wpdt-c .vakata-context li > a .vakata-contextmenu-sep {
     display: none !important;
 }
 
-.wpdt-c .vakata-context li:last-child>a:hover {
-    background: rgba(255, 191,191, 50%) !important;
+.wpdt-c .vakata-context li:last-child > a:hover {
+    background: rgba(255, 191, 191, 50%) !important;
 }
 
 .wpdt-c .vakata-context li:last-child,
 .wpdt-c .vakata-context li:last-child a,
-.wpdt-c .vakata-context li:last-child>a:hover,
-.wpdt-c .vakata-context li:last-child>a:hover i,
+.wpdt-c .vakata-context li:last-child > a:hover,
+.wpdt-c .vakata-context li:last-child > a:hover i,
 .wpdt-c .vakata-context li:last-child i {
     margin-bottom: 0;
     color: #f03e3e !important;
@@ -813,21 +905,25 @@ Browse table customization
 .wdt-datatables-admin-wrap .card.wdt-browse-table table .wpdt-icon-move {
     position: relative;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table td .wpdt-icon-move:before {
     position: absolute;
     top: -10px;
     right: -20px;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table th .wpdt-icon-move:before {
     position: absolute;
     top: -12px;
     right: -20px;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table tr .wpdt-move-table,
 .wdt-datatables-admin-wrap .card.wdt-browse-table table tr .wpdt-move-report,
 .wdt-datatables-admin-wrap .card.wdt-browse-table table tr .wpdt-move-chart {
     cursor: move;
 }
+
 /*.wdt-datatables-admin-wrap .ui-droppable-active {*/
 /*    width: 100% !important;*/
 /*}*/
@@ -846,14 +942,17 @@ Browse table customization
     color: #FFFFFF;
     z-index: 999;
 }
+
 .wdt-datatables-admin-wrap .wpdt-move-report.ui-draggable-dragging {
     padding: 15px 5px;
 }
+
 .wdt-datatables-admin-wrap .wpdt-move-table.ui-draggable-dragging .wpdt-icon-move,
 .wdt-datatables-admin-wrap .wpdt-move-chart.ui-draggable-dragging .wpdt-icon-move,
 .wdt-datatables-admin-wrap .wpdt-move-report.ui-draggable-dragging .wpdt-icon-move {
     display: none;
 }
+
 .wdt-datatables-admin-wrap .wpdt-move-table.ui-draggable-dragging i,
 .wdt-datatables-admin-wrap .wpdt-move-chart.ui-draggable-dragging i,
 .wdt-datatables-admin-wrap .wpdt-move-report.ui-draggable-dragging i {
@@ -865,21 +964,25 @@ Browse table customization
     font-size: 15px;
     color: #ffffff;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table tr.checked-row .column-move i {
     color: transparent;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table tr th.column-move i,
-.wdt-datatables-admin-wrap .card.wdt-browse-table table tr:hover > td.column-move  i {
+.wdt-datatables-admin-wrap .card.wdt-browse-table table tr:hover > td.column-move i {
     color: #304463;
 }
 
 .wdt-datatables-admin-wrap .card.wdt-browse-table table th#move {
     width: 30px;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table .check-column .checkbox,
 .wdt-datatables-admin-wrap .card.wdt-browse-table table #cb .checkbox {
     margin: -2px 0 0 15px !important;
 }
+
 .wdt-datatables-admin-wrap .card.wdt-browse-table table .wpdt-chart-info,
 .wdt-datatables-admin-wrap .card.wdt-browse-table table .wpdt-report-info,
 .wdt-datatables-admin-wrap .card.wdt-browse-table table .wpdt-table-info {
@@ -891,6 +994,7 @@ Browse table customization
 .ui-draggable-dragging.wpdt-move-report .wpdt-report-info {
     display: block !important;
 }
+
 #wpdt-folder-empty-error,
 #wpdt-folder-unique-error {
     margin-top: 5px;
@@ -906,23 +1010,28 @@ Browse table customization
     font-size: 12px;
     margin-left: 4px;
 }
+
 .wpdt-folder-tag-link {
     margin-left: 5px;
     color: #5A6C89 !important;
 }
+
 .wpdt-folder-tag-link:hover {
     color: #008CFF !important;
 }
+
 .wpdt-reassign-folder {
     margin-left: 8px;
     margin-right: 5px;
     cursor: pointer;
 }
+
 .wpdt-reassign-folder:after {
     content: "x";
     padding: 0px 2px;
     color: #5A6C89 !important;
 }
+
 .wpdt-reassign-folder:hover:after {
     color: #F44336 !important;
 }

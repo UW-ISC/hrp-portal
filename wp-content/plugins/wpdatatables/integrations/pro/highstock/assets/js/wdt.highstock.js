@@ -158,7 +158,7 @@ var wpDataTablesHighStock = function () {
             }
             var chartID = this.container.replace(/.*_(\d+)/, '$1');
             if (jQuery('#' + this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                jQuery('#' + this.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                jQuery('#' + this.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                     if (jQuery(this).attr('data-id') === chartID) {
                         jQuery(this).hide();
                     }
@@ -250,7 +250,7 @@ var wpDataTablesHighStock = function () {
             this.columnIndexes = columnIndexes;
         },
         setMultipleYaxis: function (chartConfig) {
-            if (!['hlc', 'ohlc', 'candlestick', 'arearange','areasplinerange','columnrange'].includes(this.options.chart.type)) {
+            if (!['hlc', 'ohlc', 'candlestick', 'arearange', 'areasplinerange', 'columnrange'].includes(this.options.chart.type)) {
                 var j = 0;
                 if (chartConfig.options.yAxis.title) {
                     this.options.yAxis.title = {
@@ -477,7 +477,7 @@ var wpDataTablesHighStock = function () {
                                     }
                                 }
                                 obj.options.series[0].data = seriesDataEntry
-                            }else if (['arearange', 'areasplinerange', 'columnrange'].includes(obj.options.chart.type)) {
+                            } else if (['arearange', 'areasplinerange', 'columnrange'].includes(obj.options.chart.type)) {
                                 for (var i in filteredData) {
                                     if (obj.getNumberFormat() === 1) {
                                         seriesDataEntry.push([
@@ -528,7 +528,7 @@ var wpDataTablesHighStock = function () {
                     }
                     var chartID = obj.container.replace(/.*_(\d+)/, '$1');
                     if (jQuery('#' + obj.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                        jQuery('#' + obj.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                        jQuery('#' + obj.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                             if (jQuery(this).attr('data-id') === chartID) {
                                 jQuery(this).hide();
                             }

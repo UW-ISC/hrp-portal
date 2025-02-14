@@ -4,7 +4,7 @@
 class DIVI_wpDataChart extends ET_Builder_Module
 {
 
-    public $slug       = 'DIVI_wpDataChart';
+    public $slug = 'DIVI_wpDataChart';
     public $vb_support = 'on';
 
     private $_allCharts;
@@ -26,10 +26,9 @@ class DIVI_wpDataChart extends ET_Builder_Module
     }
 
 
-
     protected $module_credits = array(
         'module_uri' => '',
-        'author'     => '',
+        'author' => '',
         'author_uri' => '',
     );
 
@@ -74,16 +73,16 @@ class DIVI_wpDataChart extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $shortcode = '[wpdatachart ';
-        $chartId =  $this->props['id'];
+        $chartId = $this->props['id'];
 
         //Fix for Divi not recognizing chart ID as an int when only one chart is created
         if (!is_numeric($chartId)) {
             $chartId = substr($chartId, strrpos($chartId, "(id:") + 4);
-            $chartId = substr($chartId, 0,strrpos($chartId, ')') );
+            $chartId = substr($chartId, 0, strrpos($chartId, ')'));
             $chartId = (int)$chartId;
         }
 
-        if(count($this->getAllCharts()) == 1) {
+        if (count($this->getAllCharts()) == 1) {
             return __(WDTConfigController::wdt_create_chart_notice());
         }
 

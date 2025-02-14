@@ -88,14 +88,6 @@ function wdtAdminMenu()
         'wdtSupport'
     );
     add_submenu_page(
-        get_option('wdtLiteVSPremiumPageStatus') ? '' : 'wpdatatables-dashboard',
-        __('Lite vs Premium', 'wpdatatables'),
-        __('Lite vs Premium', 'wpdatatables'),
-        'manage_options',
-        'wpdatatables-lite-vs-premium',
-        'wdtLiteVSPremium'
-    );
-    add_submenu_page(
         'wpdatatables-dashboard',
         __('Add-ons', 'wpdatatables'),
         '<span style="color: #ff8c00">' . __('Addons', 'wpdatatables') . '</span>',
@@ -103,6 +95,19 @@ function wdtAdminMenu()
         'wpdatatables-add-ons',
         'wdtAddOns'
     );
+
+    $folderPathDev = WDT_DEVELOPER_INTEGRATIONS_PATH;
+
+    if (!is_dir($folderPathDev)) {
+        add_submenu_page(
+            'wpdatatables-dashboard',
+            __('Upgrade', 'wpdatatables'),
+            '<span style="color: #ffffff; font-weight: bold;">' . __('Upgrade', 'wpdatatables') . '</span>',
+            'manage_options',
+            'wpdatatables-upgrade',
+            'wdtLiteVSPremium'
+        );
+    }
     add_submenu_page(
         'wpdatatables-welcome-page',
         __('Welcome page', 'wpdatatables'),
@@ -137,8 +142,8 @@ function wdtAdminEnqueue($hook)
         'admin_page_wpdatatables-getting-started',
         'wpdatatables_page_wpdatatables-getting-started',
         'admin_page_wpdatatables-welcome-page',
-        'admin_page_wpdatatables-lite-vs-premium',
-        'wpdatatables_page_wpdatatables-lite-vs-premium',
+        'admin_page_wpdatatables-upgrade',
+        'wpdatatables_page_wpdatatables-upgrade',
         'wpdatatables_page_wpdatatables-add-ons'
     ))) {
 
@@ -215,8 +220,8 @@ function wdtAdminEnqueue($hook)
         case 'admin_page_wpdatatables-welcome-page':
             wdtWelcomePageEnqueue();
             break;
-        case 'admin_page_wpdatatables-lite-vs-premium':
-        case 'wpdatatables_page_wpdatatables-lite-vs-premium':
+        case 'admin_page_wpdatatables-upgrade':
+        case 'wpdatatables_page_wpdatatables-upgrade':
             wdtLiteVSPremiumEnqueue();
             break;
         case 'wpdatatables_page_wpdatatables-add-ons':
@@ -285,14 +290,22 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-select', WDT_JS_PATH . 'jquery-datatables/dataTables.select.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-row-grouping', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.rowGrouping.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-buttons', WDT_JS_PATH . 'export-tools/dataTables.buttons.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-buttons-html5', WDT_JS_PATH . 'export-tools/buttons.html5.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-js-zip', WDT_JS_PATH . 'export-tools/jszip.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-pdf-make', WDT_JS_PATH . 'export-tools/pdfmake.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-vfs-fonts', WDT_JS_PATH . 'export-tools/vfs_fonts.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-button-print', WDT_JS_PATH . 'export-tools/buttons.print.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-button-vis', WDT_JS_PATH . 'export-tools/buttons.colVis.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-row-grouping', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.rowGrouping.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-buttons', WDT_JS_PATH . 'export-tools/dataTables.buttons.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-buttons-html5', WDT_JS_PATH . 'export-tools/buttons.html5.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-js-zip', WDT_JS_PATH . 'export-tools/jszip.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-pdf-make', WDT_JS_PATH . 'export-tools/pdfmake.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-vfs-fonts', WDT_JS_PATH . 'export-tools/vfs_fonts.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-button-print', WDT_JS_PATH . 'export-tools/buttons.print.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-button-vis', WDT_JS_PATH . 'export-tools/buttons.colVis.min.js', array('jquery',
+        'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-funcs-js');
     wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array(
         'jquery',
@@ -337,7 +350,7 @@ function wdtEditEnqueue()
     wp_localize_script('wdt-wpdatatables', 'wpdatatables_functions_strings', WDTTools::getTranslationStringsFunctions());
     wp_localize_script('wdt-advanced-filter', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
 
-    do_action_deprecated( 'wdt_enqueue_on_edit_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_edit_page' );
+    do_action_deprecated('wdt_enqueue_on_edit_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_edit_page');
     do_action('wpdatatables_enqueue_on_edit_page');
 }
 
@@ -443,7 +456,7 @@ function wdtSettingsEnqueue()
 
     wp_localize_script('wdt-settings-main-js', 'wpdatatables_settings_strings', WDTTools::getTranslationStringsTableSettingsMain());
 
-    do_action_deprecated( 'wdt_enqueue_on_settings_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_settings_page' );
+    do_action_deprecated('wdt_enqueue_on_settings_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_settings_page');
     do_action('wpdatatables_enqueue_on_settings_page');
 }
 
@@ -458,7 +471,7 @@ function wdtDashboardEnqueue()
     wp_enqueue_script('wdt-doc-js');
     wp_enqueue_script('wdt-dashboard-psl', WDT_ROOT_URL . 'assets/js/psl/psl.min.js', array(), WDT_CURRENT_VERSION, true);
 
-    do_action_deprecated( 'wdt_enqueue_on_dashboard_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_dashboard_page' );
+    do_action_deprecated('wdt_enqueue_on_dashboard_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_dashboard_page');
     do_action('wpdatatables_enqueue_on_dashboard_page');
 }
 
@@ -636,13 +649,14 @@ function wdtEdit()
     }
     echo $editPage;
 }
+
 /**
  * Render Plugin Update details Modal
  */
 function wdtUpdateNoticeModal()
 {
     $hideUpdateModal = get_option('wdtHideUpdateModal');
-    if ($hideUpdateModal === "0"){
+    if ($hideUpdateModal === "0") {
         wp_enqueue_script('wdt-update-info-js', WDT_ROOT_URL . 'assets/js/update/info.js', array(), WDT_CURRENT_VERSION, true);
         wp_localize_script('wdt-update-info-js', 'wpdatatables_update_info', WDTTools::getUpdateInfo());
     }

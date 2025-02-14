@@ -8,7 +8,7 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.0.1');
+define('WDT_CURRENT_VERSION', '7.1');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
@@ -38,13 +38,13 @@ define('WDT_ASSETS_PATH', WDT_ROOT_URL . 'assets/'); // path to wpDataTables ass
 define('WDT_INTEGRATIONS_URL', WDT_ROOT_URL . 'integrations/'); // url to wpDataTables integrations directory.
 define('WDT_INTEGRATIONS_PATH', WDT_ROOT_PATH . 'integrations/'); // path to wpDataTables integrations directory.
 
-define('WDT_STARTER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL .'starter/'); // url to wpDataTables  starter integrations directory.
+define('WDT_STARTER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'starter/'); // url to wpDataTables  starter integrations directory.
 define('WDT_STARTER_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'starter/'); // path to wpDataTables starter integrations directory.
-define('WDT_STANDARD_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL .'standard/'); // url to wpDataTables  standard integrations' directory.
+define('WDT_STANDARD_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'standard/'); // url to wpDataTables  standard integrations' directory.
 define('WDT_STANDARD_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'standard/'); // path to wpDataTables standard integrations' directory.
-define('WDT_PRO_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL .'pro/'); // url to wpDataTables  pro integrations' directory.
+define('WDT_PRO_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'pro/'); // url to wpDataTables  pro integrations' directory.
 define('WDT_PRO_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'pro/'); // path to wpDataTables pro integrations' directory.
-define('WDT_DEVELOPER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL .'developer/'); // url to wpDataTables  developer integrations directory.
+define('WDT_DEVELOPER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'developer/'); // url to wpDataTables  developer integrations directory.
 define('WDT_DEVELOPER_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'developer/'); // path to wpDataTables developer integrations directory.
 
 define('WDT_CSS_PATH', WDT_ROOT_URL . 'assets/css/'); // path to wpDataTables CSS styles. You should not change this setting if you use default CSS
@@ -90,11 +90,11 @@ $wdtAllowTypes = array(
  */
 define('WDT_REQUIRED_PHP_VERSION', '7.4');
 if (defined('PHP_VERSION')) {
-    define('WDT_PHP_SERVER_VERSION', PHP_VERSION) ;
+    define('WDT_PHP_SERVER_VERSION', PHP_VERSION);
 } elseif (function_exists('phpversion')) {
     define('WDT_PHP_SERVER_VERSION', phpversion());
 } else {
-    define('WDT_PHP_SERVER_VERSION', 0) ;
+    define('WDT_PHP_SERVER_VERSION', 0);
 }
 
 

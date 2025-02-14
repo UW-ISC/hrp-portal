@@ -24,7 +24,7 @@
             <button class="btn wdt-delete-custom-headers-row-rule"
                     title="<?php esc_attr_e('Remove row', 'wpdatatables'); ?>"
                     data-toggle="tooltip"><i
-                    class="wpdt-icon-trash"></i>
+                        class="wpdt-icon-trash"></i>
             </button>
         </div>
     </div>

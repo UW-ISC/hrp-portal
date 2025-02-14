@@ -76,7 +76,11 @@
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="number" pattern = "[0-9,]" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 44" class="form-control input-sm wdt-constructor-default-column-db-type-value" value="255" placeholder="<?php esc_attr_e('Enter type value','wpdatatables'); ?>">
+                                <input type="number" pattern="[0-9,]"
+                                       onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 44"
+                                       class="form-control input-sm wdt-constructor-default-column-db-type-value"
+                                       value="255"
+                                       placeholder="<?php esc_attr_e('Enter type value', 'wpdatatables'); ?>">
                             </div>
                         </div>
                     </div>

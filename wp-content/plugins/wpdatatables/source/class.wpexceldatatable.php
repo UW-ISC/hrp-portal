@@ -8,10 +8,12 @@ defined('ABSPATH') or die('Access denied.');
  * Date: 23.2.16.
  * Time: 19.54
  */
-class WPExcelDataTable extends WPDataTable {
+class WPExcelDataTable extends WPDataTable
+{
     protected static $_columnClass = 'WDTExcelColumn';
 
-    protected function renderWithJSAndStyles() {
+    protected function renderWithJSAndStyles()
+    {
         $jsExt = get_option('wdtMinifiedJs') ? '.min.js' : '.js';
 
         WDTTools::wdtUIKitEnqueue();
@@ -27,8 +29,11 @@ class WPExcelDataTable extends WPDataTable {
 
         wp_enqueue_media();
 
-        wp_register_script('wpdatatables_excel', WDT_JS_PATH . 'wpdatatables/wdt.excel' . $jsExt, array('jquery', 'handsontable', 'wpdatatables-urijs'),WDT_CURRENT_VERSION);
-        wp_enqueue_script('wpdatatables_excel_plugin', WDT_JS_PATH . 'wpdatatables/wdt.excelPlugin' . $jsExt, array('jquery', 'handsontable'),WDT_CURRENT_VERSION);
+        wp_register_script('wpdatatables_excel', WDT_JS_PATH . 'wpdatatables/wdt.excel' . $jsExt, array('jquery',
+            'handsontable',
+            'wpdatatables-urijs'), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wpdatatables_excel_plugin', WDT_JS_PATH . 'wpdatatables/wdt.excelPlugin' . $jsExt, array('jquery',
+            'handsontable'), WDT_CURRENT_VERSION);
 
         wp_enqueue_script('wpdatatables_excel');
 
@@ -46,14 +51,15 @@ class WPExcelDataTable extends WPDataTable {
         return $tableContent;
     }
 
-    public function generateTable($connection) {
+    public function generateTable($connection)
+    {
 
         $cssArray = array(
             'wpdatatables-handsontable-min' => WDT_CSS_PATH . 'handsontable.full.min.css',
             'wpdatatables-excel-min' => WDT_CSS_PATH . 'wpdatatables-excel.min.css'
         );
         foreach ($cssArray as $cssKey => $cssFile) {
-            wp_enqueue_style($cssKey, $cssFile,array(),WDT_CURRENT_VERSION);
+            wp_enqueue_style($cssKey, $cssFile, array(), WDT_CURRENT_VERSION);
         }
 
         /** @noinspection PhpUnusedLocalVariableInspection */
@@ -68,7 +74,8 @@ class WPExcelDataTable extends WPDataTable {
         return $returnData;
     }
 
-    public function getColumnDefinitions() {
+    public function getColumnDefinitions()
+    {
         $defs = array();
         foreach ($this->_wdtIndexedColumns as $key => &$dataColumn) {
             $def = $dataColumn->getColumnJSON();
@@ -80,7 +87,8 @@ class WPExcelDataTable extends WPDataTable {
     /**
      * Returns JSON object for table description
      */
-    public function getJsonDescription() {
+    public function getJsonDescription()
+    {
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         $obj = new stdClass();
@@ -191,10 +199,13 @@ class WPExcelDataTable extends WPDataTable {
 
     /**
      * Formatting row data structure for ajax display table
+     *
      * @param $row - key => value pairs as column name and cell value of a row
+     *
      * @return array formatted row
      */
-    protected function formatAjaxQueryResultRow($row) {
+    protected function formatAjaxQueryResultRow($row)
+    {
         return $row;
     }
 

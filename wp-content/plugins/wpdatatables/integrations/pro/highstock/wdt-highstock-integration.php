@@ -23,10 +23,12 @@ class HighStockIntegration
     public static function init()
     {
         // Display the Highstock chart picker in the Chart creation wizard
-        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\HighStockIntegration', 'addHighStockChartPicker'));
+        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\HighStockIntegration',
+            'addHighStockChartPicker'));
 
         // Enqueue scripts
-        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\HighStockIntegration', 'enqueueScripts'), 11);
+        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\HighStockIntegration',
+            'enqueueScripts'), 11);
 
         add_action('wp_enqueue_scripts', array('WDTIntegration\HighStockIntegration', 'enqueueCustomStyles'));
     }
@@ -54,7 +56,8 @@ class HighStockIntegration
         wp_enqueue_script('wdt-wp-highstock', WDT_HS_ASSETS_URL . 'js/wdt.highstock.js', array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
     }
 
-    public static function enqueueCustomStyles() {
+    public static function enqueueCustomStyles()
+    {
         wp_register_style('highcharts-custom-styles', false);
         wp_enqueue_style('highcharts-custom-styles');
         $customCss = "

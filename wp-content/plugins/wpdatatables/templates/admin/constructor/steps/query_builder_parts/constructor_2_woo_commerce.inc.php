@@ -285,11 +285,10 @@
                         <div class="select">
                             <select class="form-control selectpicker wdt-woo-parameter" multiple="multiple"
                                     title="<?php esc_attr_e('Any', 'wpdatatables'); ?>"
-                                    id="wdt-woo-commerce-stock-stats" data-value="_stock_status">
+                                    id="wdt-woo-commerce-stock-status" data-value="_stock_status">
                                 <option value="instock"><?php esc_html_e('In stock', 'wpdatatables'); ?></option>
                                 <option value="outofstock"><?php esc_html_e('Out of stock', 'wpdatatables'); ?></option>
                             </select>
-
                         </div>
                     </div>
 
@@ -443,14 +442,23 @@
 
             <div role="tabpanel" class="tab-pane fade" id="prices-settings-tab">
                 <div class="row">
-                    <div class="col-sm-2-0 m-b-16">
+                    <div class="col-sm-4 m-b-16">
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Price', 'wpdatatables'); ?>
                             <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                title="<?php esc_attr_e('Price', 'wpdatatables'); ?>"></i>
                         </h4>
-                        <div class="form-group">
-                            <div class="fg-line wdt-custom-number-input">
+                        <div class="select">
+                            <select class="form-control selectpicker form-control input-sm wdt-woo-parameter price-comparison-operator"
+                                    data-target="_price" data-value="_price_operator">
+                                <option value="="><?php esc_html_e('Equals (=)', 'wpdatatables'); ?></option>
+                                <option value=">="><?php esc_html_e('Greater Than or Equals (>=)', 'wpdatatables'); ?></option>
+                                <option value=">"><?php esc_html_e('Greater Than (>)', 'wpdatatables'); ?></option>
+                                <option value="<"><?php esc_html_e('Less Than (<)', 'wpdatatables'); ?></option>
+                                <option value="<="><?php esc_html_e('Less Than or Equals (<=)', 'wpdatatables'); ?></option>
+                                <option value="between"><?php esc_html_e('Between', 'wpdatatables'); ?></option>
+                            </select>
+                            <div class="fg-line wdt-custom-number-input m-t-10" data-input="_price">
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
                                         data-type="minus" data-field="wdt-woo-price">
                                     <i class="wpdt-icon-minus"></i>
@@ -465,17 +473,64 @@
                                     <i class="wpdt-icon-plus-full"></i>
                                 </button>
                             </div>
+                            <div class="wdt-woo-price-range-inputs wdt-custom-number-input" data-parent="_price"
+                                 style="display: none;">
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_price_min">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-min wdt-woo-parameter"
+                                               data-value="_price"
+                                               id="wdt_woo_price_min"
+                                               placeholder="<?php esc_attr_e('Min Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_price_min">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_price_max">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-max wdt-woo-parameter"
+                                               data-value="_price"
+                                               id="wdt_woo_price_max"
+                                               placeholder="<?php esc_attr_e('Max Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_price_max">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-2-0 m-b-16">
+                    <div class="col-sm-4 m-b-16">
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Regular Price', 'wpdatatables'); ?>
                             <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                title="<?php esc_attr_e('Regular Price', 'wpdatatables'); ?>"></i>
                         </h4>
-                        <div class="form-group">
-                            <div class="fg-line wdt-custom-number-input">
+                        <div class="select">
+                            <select class="form-control selectpicker form-control input-sm wdt-woo-parameter price-comparison-operator"
+                                    data-target="_regular_price" data-value="_regular_price_operator">
+                                <option value="="><?php esc_html_e('Equals (=)', 'wpdatatables'); ?></option>
+                                <option value=">="><?php esc_html_e('Greater Than or Equals (>=)', 'wpdatatables'); ?></option>
+                                <option value=">"><?php esc_html_e('Greater Than (>)', 'wpdatatables'); ?></option>
+                                <option value="<"><?php esc_html_e('Less Than (<)', 'wpdatatables'); ?></option>
+                                <option value="<="><?php esc_html_e('Less Than or Equals (<=)', 'wpdatatables'); ?></option>
+                                <option value="between"><?php esc_html_e('Between', 'wpdatatables'); ?></option>
+                            </select>
+                            <div class="fg-line wdt-custom-number-input m-t-10" data-input="_regular_price">
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
                                         data-type="minus" data-field="wdt-woo-regular-price">
                                     <i class="wpdt-icon-minus"></i>
@@ -490,17 +545,64 @@
                                     <i class="wpdt-icon-plus-full"></i>
                                 </button>
                             </div>
+                            <div class="wdt-woo-price-range-inputs wdt-custom-number-input" data-parent="_regular_price"
+                                 style="display: none;">
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_regular_price_min">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-min wdt-woo-parameter"
+                                               data-value="_regular_price"
+                                               id="wdt_woo_regular_price_min"
+                                               placeholder="<?php esc_attr_e('Min Regular Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_regular_price_min">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_regular_price_max">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-max wdt-woo-parameter"
+                                               data-value="_regular_price"
+                                               id="wdt_woo_regular_price_max"
+                                               placeholder="<?php esc_attr_e('Max Regular Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_regular_price_max">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-2-0 m-b-16">
+                    <div class="col-sm-4 m-b-16">
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Sale Price', 'wpdatatables'); ?>
                             <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                title="<?php esc_attr_e('Sale Price', 'wpdatatables'); ?>"></i>
                         </h4>
-                        <div class="form-group">
-                            <div class="fg-line wdt-custom-number-input">
+                        <div class="select">
+                            <select class="form-control selectpicker form-control input-sm wdt-woo-parameter price-comparison-operator"
+                                    data-target="_sale_price" data-value="_sale_price_operator">
+                                <option value="="><?php esc_html_e('Equals (=)', 'wpdatatables'); ?></option>
+                                <option value=">="><?php esc_html_e('Greater Than or Equals (>=)', 'wpdatatables'); ?></option>
+                                <option value=">"><?php esc_html_e('Greater Than (>)', 'wpdatatables'); ?></option>
+                                <option value="<"><?php esc_html_e('Less Than (<)', 'wpdatatables'); ?></option>
+                                <option value="<="><?php esc_html_e('Less Than or Equals (<=)', 'wpdatatables'); ?></option>
+                                <option value="between"><?php esc_html_e('Between', 'wpdatatables'); ?></option>
+                            </select>
+                            <div class="fg-line wdt-custom-number-input m-t-10" data-input="_sale_price">
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
                                         data-type="minus" data-field="wdt-woo-sale-price">
                                     <i class="wpdt-icon-minus"></i>
@@ -515,16 +617,45 @@
                                     <i class="wpdt-icon-plus-full"></i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="wdt-woo-price-range-inputs wdt-custom-number-input" data-parent="_sale_price"
+                                 style="display: none;">
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_sale_price_min">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-min wdt-woo-parameter"
+                                               data-value="_sale_price"
+                                               id="wdt_woo_sale_price_min"
+                                               placeholder="<?php esc_attr_e('Min Sale Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_sale_price_min">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
 
-                <div class="row">
-                    <div class="m-b-16 wdt-coming-soon-notice">
-                        <h4 class="f-14">
-                            <i class="wpdt-icon-star-full m-r-5" style="color: #091D70;"></i>
-                            <?php esc_html_e('Coming soon', 'wpdatatables'); ?></h4>
-                        <p class="m-b-0"><?php esc_html_e('Currently, price parameters in the table use the EQUALS operator (=), which means only products with the exact price values you specify will be shown. Soon, you\'ll have the flexibility to choose different operators (like greater than, less than, etc.) for each parameter, giving you much more control over how products are filtered. Stay tuned for this powerful new feature!', 'wpdatatables'); ?></p>
+                                <div class="form-group">
+                                    <div class="fg-line wdt-custom-number-input m-t-10">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="wdt_woo_sale_price_max">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number"
+                                               class="form-control input-sm price-range-max wdt-woo-parameter"
+                                               data-value="_sale_price"
+                                               id="wdt_woo_sale_price_max"
+                                               placeholder="<?php esc_attr_e('Max Sale Price', 'wpdatatables'); ?>">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="wdt_woo_sale_price_max">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

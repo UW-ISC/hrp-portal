@@ -29,7 +29,8 @@
     <div class="chosen_columns m-t-15 m-b-15 card col-sm-5-5">
         <div class="card-header ch-alt">
             <h2><?php esc_html_e('Columns used in the chart', 'wpdatatables'); ?>
-                <button class="btn select-all-columns pull-right disabled" disabled="disabled" ><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
+                <button class="btn select-all-columns pull-right disabled"
+                        disabled="disabled"><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
             </h2>
         </div>
         <div class="wdt-chart-wizard-chosen-columns-container card-body card-padding">
@@ -112,6 +113,7 @@
     {{for columns}}
         <div class="btn btn-default btn-block chart-column-block {{:column_type}} m-t-5" data-column_id="{{:id}}" data-orig_header="{{:orig_header}}"><strong>{{:display_header}}</strong> ({{:column_type}})</div>
     {{/for}}
+
 
 
 </script>

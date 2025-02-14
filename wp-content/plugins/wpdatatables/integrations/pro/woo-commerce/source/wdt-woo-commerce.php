@@ -29,35 +29,52 @@ class WooCommerceIntegration extends WPQueryIntegration
      */
     public static function init()
     {
-        add_action('wpdatatables_enqueue_constructor_scripts', array('WDTIntegration\WooCommerceIntegration', 'enqueueWooCommerceIntegrationConstructorScripts'));
+        add_action('wpdatatables_enqueue_constructor_scripts', array('WDTIntegration\WooCommerceIntegration',
+            'enqueueWooCommerceIntegrationConstructorScripts'));
 
-        add_action('wp_ajax_wpdatatables_constructor_generate_woo_wdt', array('WDTIntegration\WPQueryIntegration', 'wdtGenerateWpQueryTable'));
+        add_action('wp_ajax_wpdatatables_constructor_generate_woo_wdt', array('WDTIntegration\WPQueryIntegration',
+            'wdtGenerateWpQueryTable'));
 
-        add_action('wpdatatables_generate_woo_commerce', array('WDTIntegration\WooCommerceIntegration', 'wooCommerceBasedConstruct'), 10, 3);
+        add_action('wpdatatables_generate_woo_commerce', array('WDTIntegration\WooCommerceIntegration',
+            'wooCommerceBasedConstruct'), 10, 3);
 
-        add_action('wp_ajax_wpdatatables_add_multiple_products_to_cart', array('WDTIntegration\WooCommerceIntegration', 'addProductsToCart'));
-        add_action('wp_ajax_nopriv_wpdatatables_add_multiple_products_to_cart', array('WDTIntegration\WooCommerceIntegration', 'addProductsToCart'));
+        add_action('wp_ajax_wpdatatables_add_multiple_products_to_cart', array('WDTIntegration\WooCommerceIntegration',
+            'addProductsToCart'));
+        add_action('wp_ajax_nopriv_wpdatatables_add_multiple_products_to_cart', array('WDTIntegration\WooCommerceIntegration',
+            'addProductsToCart'));
 
-        add_action('wp_ajax_wpdatatables_add_single_product_to_cart', array('WDTIntegration\WooCommerceIntegration', 'addSingleProductToCart'));
-        add_action('wp_ajax_nopriv_wpdatatables_add_single_product_to_cart', array('WDTIntegration\WooCommerceIntegration', 'addSingleProductToCart'));
+        add_action('wp_ajax_wpdatatables_add_single_product_to_cart', array('WDTIntegration\WooCommerceIntegration',
+            'addSingleProductToCart'));
+        add_action('wp_ajax_nopriv_wpdatatables_add_single_product_to_cart', array('WDTIntegration\WooCommerceIntegration',
+            'addSingleProductToCart'));
 
-        add_action('wpdatatables_enqueue_on_frontend', array('WDTIntegration\WooCommerceIntegration', 'wdtEnqueueWooScripts'));
-        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\WooCommerceIntegration', 'wdtEnqueueWooScripts'));
+        add_action('wpdatatables_enqueue_on_frontend', array('WDTIntegration\WooCommerceIntegration',
+            'wdtEnqueueWooScripts'));
+        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\WooCommerceIntegration',
+            'wdtEnqueueWooScripts'));
 
-        add_action('wp_ajax_wpdatatables_check_woo_commerce', array('WDTIntegration\WooCommerceIntegration', 'wdtCheckIfWooIsInstalled'));
-        add_action('wp_ajax_nopriv_wpdatatables_check_woo_commerce', array('WDTIntegration\WooCommerceIntegration', 'wdtCheckIfWooIsInstalled'));
+        add_action('wp_ajax_wpdatatables_check_woo_commerce', array('WDTIntegration\WooCommerceIntegration',
+            'wdtCheckIfWooIsInstalled'));
+        add_action('wp_ajax_nopriv_wpdatatables_check_woo_commerce', array('WDTIntegration\WooCommerceIntegration',
+            'wdtCheckIfWooIsInstalled'));
 
         add_action('wp_ajax_wpdatatables_get_cart_info', array('WDTIntegration\WooCommerceIntegration', 'getCartInfo'));
-        add_action('wp_ajax_nopriv_wpdatatables_get_cart_info', array('WDTIntegration\WooCommerceIntegration', 'getCartInfo'));
+        add_action('wp_ajax_nopriv_wpdatatables_get_cart_info', array('WDTIntegration\WooCommerceIntegration',
+            'getCartInfo'));
 
-        add_action('wpdatatables_add_custom_column_type_option', array('WDTIntegration\WooCommerceIntegration', 'addWooColumnTypes'));
+        add_action('wpdatatables_add_custom_column_type_option', array('WDTIntegration\WooCommerceIntegration',
+            'addWooColumnTypes'));
 
-        add_filter('wpdatatables_filter_cell_output', array('WDTIntegration\WooCommerceIntegration', 'allowHtmlInColumn'), 10, 3);
+        add_filter('wpdatatables_filter_cell_output', array('WDTIntegration\WooCommerceIntegration',
+            'allowHtmlInColumn'), 10, 3);
 
-        add_action('wpdatatables_add_table_configuration_tab', array('WDTIntegration\WooCommerceIntegration', 'addWooOptionsTab'));
-        add_action('wpdatatables_add_table_configuration_tabpanel', array('WDTIntegration\WooCommerceIntegration', 'addWooOptionsTabpanel'));
+        add_action('wpdatatables_add_table_configuration_tab', array('WDTIntegration\WooCommerceIntegration',
+            'addWooOptionsTab'));
+        add_action('wpdatatables_add_table_configuration_tabpanel', array('WDTIntegration\WooCommerceIntegration',
+            'addWooOptionsTabpanel'));
 
-        add_filter('wpdatatables_possible_values_woo_commerce', array('WDTIntegration\WooCommerceIntegration', 'getPossibleWooCommerceValuesRead'), 10, 3);
+        add_filter('wpdatatables_possible_values_woo_commerce', array('WDTIntegration\WooCommerceIntegration',
+            'getPossibleWooCommerceValuesRead'), 10, 3);
     }
 
     /**
@@ -122,6 +139,7 @@ class WooCommerceIntegration extends WPQueryIntegration
 
     /**
      * @param $query
+     *
      * @return string
      */
     public static function buildQueryPreview($query): string
@@ -129,8 +147,20 @@ class WooCommerceIntegration extends WPQueryIntegration
         if ($query->have_posts()) {
             $preview = '<table class="table table-condensed"><thead><tr>';
             $columns = [
-                'Product ID', 'Product Name', 'SKU', 'Price', 'Stock Status', 'Total Sales', 'Categories', 'Tags',
-                'Dimensions', 'Average Rating', 'Review Count', 'Featured Image', 'Date Published', 'Short Description'
+                'Product ID',
+                'Product Name',
+                'SKU',
+                'Price',
+                'Stock Status',
+                'Total Sales',
+                'Categories',
+                'Tags',
+                'Dimensions',
+                'Average Rating',
+                'Review Count',
+                'Featured Image',
+                'Date Published',
+                'Short Description'
             ];
 
             foreach ($columns as $column) {
@@ -174,6 +204,7 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $wpDataTable
      * @param $content
      * @param $wdtParameters
+     *
      * @return true
      */
     public static function wooCommerceBasedConstruct($wpDataTable, $content, $wdtParameters): bool
@@ -205,6 +236,7 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $queryData
      * @param $wpDataTable
      * @param $wdtParameters
+     *
      * @return void
      */
     public static function ajaxReturnConstruct($queryData, $wpDataTable, $wdtParameters)
@@ -462,8 +494,9 @@ class WooCommerceIntegration extends WPQueryIntegration
                                 } else {
                                     $queryData->meta_query[] = array(
                                         'key' => '_wc_average_rating',
-                                        'value' => array($specificRating, ceil($specificRating) == $specificRating ?
-                                            floor($specificRating + 1) : ceil($specificRating)),
+                                        'value' => array($specificRating,
+                                            ceil($specificRating) == $specificRating ?
+                                                floor($specificRating + 1) : ceil($specificRating)),
                                         'type' => 'DECIMAL',
                                         'compare' => 'BETWEEN',
                                     );
@@ -590,6 +623,7 @@ class WooCommerceIntegration extends WPQueryIntegration
 
     /**
      * @param WP_Query $query
+     *
      * @return array|void
      */
     public static function getWooCommerceTableColumns(WP_Query $query)
@@ -742,6 +776,7 @@ class WooCommerceIntegration extends WPQueryIntegration
 
     /**
      * @param $product
+     *
      * @return string
      */
     public static function getProductPrice($product): string
@@ -794,13 +829,14 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $product
      * @param $productId
      * @param $productName
+     *
      * @return string
      */
     public static function getAddToCartButton($product, $productId, $productName): string
     {
         if ($product->is_type('variable')) {
             $attributes = $product->get_variation_attributes();
-            $addToCartButton = '<div class="wdt-woo-variable-product">';
+            $addToCartButton = '<div class="wdt-woo-variable-product wdt-woo-product">';
 
             foreach ($attributes as $attributeName => $options) {
                 $addToCartButton .= '<select class="wdt-woo-product-attribute" data-attribute_name="' . esc_attr($attributeName) . '">';
@@ -835,6 +871,7 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $cellOutput
      * @param $tableId
      * @param $columnName
+     *
      * @return mixed|string
      * @throws Exception
      */
@@ -849,10 +886,10 @@ class WooCommerceIntegration extends WPQueryIntegration
             if ($productId) {
                 $product = wc_get_product($productId);
 
-                // Initialize HTML output
-                $htmlOutput = '<div class="wdt-woo-variable-product">';
-
                 if ($product->is_type('variable')) {
+                    // Initialize HTML output
+                    $htmlOutput = '<div class="wdt-woo-variable-product wdt-woo-product">';
+
                     // Variable product: Get available attributes
                     $attributes = $product->get_variation_attributes();
                     // Get default attribute values
@@ -887,6 +924,9 @@ class WooCommerceIntegration extends WPQueryIntegration
                     // Disabled Add to Cart button (will be enabled once all variations are selected)
                     $htmlOutput .= '<button disabled class="single_add_to_cart_button button alt ajax_add_to_cart" data-product_id="' . esc_attr($productId) . '" data-value="' . esc_attr($tableId) . '">' . __('Add to cart', 'wpdatatables') . '</button>';
                 } else {
+                    // Initialize HTML output
+                    $htmlOutput = '<div class="wdt-woo-single-product wdt-woo-product">';
+
                     // Single product: Add quantity input and enabled Add to Cart button
                     $htmlOutput .= '<div class="wdt-woo-quantity-field">
                                 <label for="quantity_' . $productId . '">' . __('Quantity', 'wpdatatables') . '</label>
@@ -906,6 +946,7 @@ class WooCommerceIntegration extends WPQueryIntegration
 
     /**
      * @param $cellOutput
+     *
      * @return false|string
      */
     public static function extractProductId($cellOutput)
@@ -921,6 +962,7 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $column
      * @param $filterByUserId
      * @param $tableData
+     *
      * @return array
      */
     public static function getPossibleWooCommerceValuesRead($column, $filterByUserId, $tableData = null): array

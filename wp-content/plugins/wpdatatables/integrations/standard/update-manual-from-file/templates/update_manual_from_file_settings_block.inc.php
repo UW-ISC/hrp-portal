@@ -11,11 +11,11 @@
         <div class="select">
             <select class="form-control selectpicker" id="wdt-source-file-data"
                     autocomplete="off"
-                <option selected
-                        value><?php esc_html_e('Select an option', 'wpdatatables'); ?></option>
-                <option value="replaceTableData"><?php esc_html_e('Replace rows with source data', 'wpdatatables'); ?></option>
-                <option value="addDataToTable"><?php esc_html_e('Add rows to the current table data', 'wpdatatables'); ?></option>
-                <option value="replaceTable"><?php esc_html_e('Replace the entire table with the source', 'wpdatatables'); ?></option>
+            <option selected
+                    value><?php esc_html_e('Select an option', 'wpdatatables'); ?></option>
+            <option value="replaceTableData"><?php esc_html_e('Replace rows with source data', 'wpdatatables'); ?></option>
+            <option value="addDataToTable"><?php esc_html_e('Add rows to the current table data', 'wpdatatables'); ?></option>
+            <option value="replaceTable"><?php esc_html_e('Replace the entire table with the source', 'wpdatatables'); ?></option>
             </select>
         </div>
     </div>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-sm-3 wdt-source-browse-container">
             <button class="btn bgm-blue" id="wdt-add-data-browse-button">
-                <?php esc_html_e( 'Browse...', 'wpdatatables' ); ?>
+                <?php esc_html_e('Browse...', 'wpdatatables'); ?>
             </button>
         </div>
     </div>

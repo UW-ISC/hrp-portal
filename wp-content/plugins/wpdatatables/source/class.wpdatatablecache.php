@@ -56,8 +56,10 @@ class WPDataTableCache
             self::_logErrors('Update cache error:', 'Table ID is not set for auto update data.', 1, $tableID);
         }
     }
-    private static function filterUserData ($sourceData, $tableID){
-        $filterSourceData= apply_filters('wpdatatables_filter_source_data_on_auto_update_cache', true, $tableID);
+
+    private static function filterUserData($sourceData, $tableID)
+    {
+        $filterSourceData = apply_filters('wpdatatables_filter_source_data_on_auto_update_cache', true, $tableID);
         if (!current_user_can('unfiltered_html') && $filterSourceData) {
             $tempSourceData = $sourceData;
             $sourceData = [];
@@ -257,7 +259,7 @@ class WPDataTableCache
             ];
         }
         try {
-            if (in_array($source_type, ['xlsx','ods', 'xls', 'csv'])) {
+            if (in_array($source_type, ['xlsx', 'ods', 'xls', 'csv'])) {
                 $tableData = WDTConfigController::loadTableFromDB($table_id);
                 $params = array(
                     'dateInputFormat' => array(),
@@ -287,11 +289,11 @@ class WPDataTableCache
                     $format = substr(strrchr($source, "."), 1);
                     $objReader = WPDataTable::createObjectReader($source);
                     $tempFileName = 'tempfile.txt';
-                    if (isset($tableData) && $tableData->file_location == 'wp_any_url'){
+                    if (isset($tableData) && $tableData->file_location == 'wp_any_url') {
                         $data = WDTTools::curlGetData($source);
                         if ($data == null)
                             throw new WDTException(esc_html__("File from provided URL is empty."));
-                        $tempFileName = 'tempfile' . $tableData->id . '.' .  $format;
+                        $tempFileName = 'tempfile' . $tableData->id . '.' . $format;
                         $fillFileWithData = file_put_contents($tempFileName, $data);
                         if ($fillFileWithData === false)
                             throw new WDTException(esc_html__("File from provided URL is empty."));
@@ -316,7 +318,9 @@ class WPDataTableCache
                                 $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
                                 $dataArray[$r][$dataColumnHeading] = $dataRows[$row][$dataColumnIndex];
                                 $currentDateFormat = isset($params['dateInputFormat'][$dataColumnHeading]) ? $params['dateInputFormat'][$dataColumnHeading] : null;
-                                if (!empty($params['data_types'][$dataColumnHeading]) && in_array($params['data_types'][$dataColumnHeading], array('date', 'datetime', 'time'))) {
+                                if (!empty($params['data_types'][$dataColumnHeading]) && in_array($params['data_types'][$dataColumnHeading], array('date',
+                                        'datetime',
+                                        'time'))) {
                                     if ($format === 'xls' || $format === 'ods') {
                                         $cell = $objPHPExcel->getActiveSheet()->getCell($dataColumnIndex . '' . $row);
                                         if (Date::isDateTime($cell) && $cell->getValue() !== null) {
@@ -380,4 +384,5 @@ class WPDataTableCache
         ];
     }
 }
+
 WPDataTableCache::addAutoUpdateHooks();

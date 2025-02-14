@@ -6,7 +6,8 @@ defined('ABSPATH') or die('Access denied.');
  * PDO abstract layer for the WPDataTables module
  *
  * */
-class PDOSql {
+class PDOSql
+{
 
     private $vendor;
     private $link;
@@ -14,26 +15,30 @@ class PDOSql {
 
     /**
      * Constructor
+     *
      * @param string $dsn
      * @param string $user
      * @param string $password
+     *
      * @throws \Exception
      */
-    public function __construct( $vendor, $dsn, $user, $password ) {
+    public function __construct($vendor, $dsn, $user, $password)
+    {
         $this->vendor = $vendor;
         $dsn = apply_filters('wpdatatables_filter_pdo_connection_dsn', $dsn, $this->vendor, $_POST);
         try {
-            $this->link = new PDO ($dsn,"$user","$password");
+            $this->link = new PDO ($dsn, "$user", "$password");
         } catch (PDOException $e) {
-            throw new Exception('There was a problem with your SQL connection - ' .((is_admin()) ? $e->getMessage() : 'Please contact the administrator'));
+            throw new Exception('There was a problem with your SQL connection - ' . ((is_admin()) ? $e->getMessage() : 'Please contact the administrator'));
         }
     }
 
     /**
      * Determines if the connection is established
      */
-    public function isConnected(){
-        return !empty( $this->link );
+    public function isConnected()
+    {
+        return !empty($this->link);
     }
 
     /**
@@ -41,7 +46,8 @@ class PDOSql {
      * separated by comma
      * @return boolean
      */
-    public function doQuery() {
+    public function doQuery()
+    {
         if ($result = $this->prepare(func_get_args())) {
             return true;
         }
@@ -54,7 +60,8 @@ class PDOSql {
      * separated by comma
      * @return boolean Get
      */
-    public function getField() {
+    public function getField()
+    {
         if ($stmt = $this->prepare(func_get_args())) {
             $row = $stmt->fetch(PDO::FETCH_NUM);
 
@@ -69,7 +76,8 @@ class PDOSql {
      * separated by comma
      * @return boolean
      */
-    public function getRow() {
+    public function getRow()
+    {
         if ($stmt = $this->prepare(func_get_args())) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row;
@@ -83,7 +91,8 @@ class PDOSql {
      *
      * @return array|bool
      */
-    public function getArray() {
+    public function getArray()
+    {
         $tmp = null;
 
         if ($stmt = $this->prepare(func_get_args())) {
@@ -98,7 +107,8 @@ class PDOSql {
      * separated by comma
      * @return array|bool
      */
-    public function getAssoc() {
+    public function getAssoc()
+    {
         if ($stmt = $this->prepare(func_get_args())) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -109,20 +119,22 @@ class PDOSql {
     /**
      * Returns the last PDO error
      */
-    public function getLastError(){
+    public function getLastError()
+    {
         return $this->error;
     }
 
     /**
      * Prepares the query and the parameters passed
      */
-    private function prepare($properties) {
+    private function prepare($properties)
+    {
         $this->error = '';
         $stmt = null;
 
         try {
             $stmt = $this->link->query($properties[0]);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             $this->error = $e->getMessage();
             return false;
         }
@@ -130,7 +142,8 @@ class PDOSql {
         return $stmt;
     }
 
-    public function getLastInsertId(){
+    public function getLastInsertId()
+    {
         return $this->link->lastInsertId();
     }
 

@@ -6,11 +6,11 @@
     </h4>
 
     <?php if (Connection::enabledSeparate()) { ?>
-        <?php do_action( 'wpdatatables_add_separate_connection_element_in_wizard' ); ?>
-                            <?php }  else {
+        <?php do_action('wpdatatables_add_separate_connection_element_in_wizard'); ?>
+    <?php } else {
         ?>
         <input type="hidden" id="wdt-constructor-table-connection" value="">
-        <?php } ?>
+    <?php } ?>
 
     <div class="col-sm-12 p-0">
 
@@ -71,7 +71,7 @@
 
         </div>
 
-        <?php do_action( 'wpdatatables_add_table_constructor_type_in_wizard' ); ?>
+        <?php do_action('wpdatatables_add_table_constructor_type_in_wizard'); ?>
 
     </div>
 

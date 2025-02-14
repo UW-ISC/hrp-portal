@@ -6,7 +6,7 @@ class WPDataTableRows
 {
     protected $_tableID;
     protected $_tableName = 'New wpDataTable';
-	protected $_table_description = '';
+    protected $_table_description = '';
     protected $_tableType = 'simple';
     protected $_colHeaders = [];
     protected $_colWidths = [];
@@ -24,7 +24,7 @@ class WPDataTableRows
     public function __construct(stdClass $tableData)
     {
         $this->setTableName($tableData->title);
-	    $this->setTableDescription($tableData->table_description);
+        $this->setTableDescription($tableData->table_description);
         $this->setTableType($tableData->table_type);
         $this->setColNumber($tableData->content->colNumber);
         $this->setRowNumber($tableData->content->rowNumber);
@@ -67,18 +67,18 @@ class WPDataTableRows
         $this->_tableName = $tableName;
     }
 
-	/**
-	 * @param string $tableName
-	 */
-	public function setTableDescription($descriptionName)
-	{
-		$this->_table_description = $descriptionName;
-	}
+    /**
+     * @param string $tableName
+     */
+    public function setTableDescription($descriptionName)
+    {
+        $this->_table_description = $descriptionName;
+    }
 
-	public function getTableDescription()
-	{
-		return $this->_table_description;
-	}
+    public function getTableDescription()
+    {
+        return $this->_table_description;
+    }
 
     /**
      * @return string
@@ -180,6 +180,7 @@ class WPDataTableRows
      * @param $rowData
      * @param $colIndex
      * @param $rowIndex
+     *
      * @return mixed
      */
     public function getCellDataByIndexes($rowData, $rowIndex, $colIndex)
@@ -191,6 +192,7 @@ class WPDataTableRows
      * @param $rowData
      * @param $colIndex
      * @param $rowIndex
+     *
      * @return string
      */
     public function getCellTypeByIndexes($rowData, $rowIndex, $colIndex)
@@ -202,6 +204,7 @@ class WPDataTableRows
      * @param $rowData
      * @param $colIndex
      * @param $rowIndex
+     *
      * @return bool
      */
     public function getHiddenCellByIndexes($rowData, $rowIndex, $colIndex)
@@ -213,6 +216,7 @@ class WPDataTableRows
      * @param $rowData
      * @param $colIndex
      * @param $rowIndex
+     *
      * @return mixed
      */
     public function getCellClassesByIndexes($rowData, $rowIndex, $colIndex)
@@ -344,14 +348,16 @@ class WPDataTableRows
     /**
      * Helper method that load wpDataTableRows object by given table ID
      * and return array with $wpDataTableRows object and $tableData object
+     *
      * @param $tableId
+     *
      * @return WPDataTableRows
      * @throws Exception
      */
     public static function loadWpDataTableRows($tableId)
     {
         $tableData = WDTConfigController::loadTableFromDB($tableId, false);
-        $advancedSettings =  json_decode($tableData->advanced_settings);
+        $advancedSettings = json_decode($tableData->advanced_settings);
         $tableData->content = json_decode($tableData->content);
         $tableData->simpleResponsive = $advancedSettings->simpleResponsive;
         $tableData->simpleHeader = $advancedSettings->simpleHeader;
@@ -372,8 +378,10 @@ class WPDataTableRows
 
         return $wpDataTableRows;
     }
+
     /**
      * Save rows data from init Simple table with empty data in database
+     *
      * @param int $tableID
      */
     public function saveTableWithEmptyData($tableID)
@@ -390,8 +398,10 @@ class WPDataTableRows
 
     /**
      * Set cell info data
+     *
      * @param $rowArray
      * @param $colIndex
+     *
      * @return mixed
      */
     public function setCellInfo($rowArray, $colIndex)
@@ -406,6 +416,7 @@ class WPDataTableRows
 
     /**
      * Delete rows data from Simple table in database
+     *
      * @param int $tableID
      */
     public function deleteRowsData($tableID)
@@ -423,6 +434,7 @@ class WPDataTableRows
 
     /**
      * Check is table ID exist in wpdatatable_rows table
+     *
      * @param int $tableID
      */
     public function checkIsExistTableID($tableID)
@@ -476,7 +488,9 @@ class WPDataTableRows
     /**
      * Helper method which populates the wpDaTatablesRows object
      * with passed in parameters and data (stored in DB)
+     *
      * @param $rowsDataPrepared
+     *
      * @throws Exception
      */
     private function fillFromData($rowsDataPrepared)
@@ -528,7 +542,9 @@ class WPDataTableRows
 
     /**
      * Get dynamic classes for colors and fonts in simple table
+     *
      * @param array $cellClasses
+     *
      * @return string
      */
     public static function getDynamicCellClasses($cellClasses)
@@ -551,10 +567,10 @@ class WPDataTableRows
                 $fontSize = $fontSizeIndex == "0" ? '10' : $fontSizeIndex;
                 $returnData .= "." . $cellClass . " { font-size: " . $fontSize . "px !important;}\n";
             } else if (strpos($cellClass, 'wpdt-sc-') !== false) {
-	            $starColor = str_replace('wpdt-sc-', '', $cellClass);
-	            $returnData .= "." . $cellClass . " .rating > span.full.rated:after { color: #" . $starColor . " !important;}\n";
-	            $returnData .= "." . $cellClass . " .rating > .half:before { color: #" . $starColor . " !important;}\n";
-			}
+                $starColor = str_replace('wpdt-sc-', '', $cellClass);
+                $returnData .= "." . $cellClass . " .rating > span.full.rated:after { color: #" . $starColor . " !important;}\n";
+                $returnData .= "." . $cellClass . " .rating > .half:before { color: #" . $starColor . " !important;}\n";
+            }
         }
 
         return $returnData;
@@ -564,13 +580,14 @@ class WPDataTableRows
      * Helper method that prepare cell data output for single cell shortcode
      * @return string
      */
-    public static function prepareCellDataOutput($cellData, $cellMetaClasses, $rowID, $columnKey, $tableID){
+    public static function prepareCellDataOutput($cellData, $cellMetaClasses, $rowID, $columnKey, $tableID)
+    {
         $emptyClasses = true;
         $includeFormatting = apply_filters('wpdatatable_cell_include_formatting', true, $columnKey, $rowID, $tableID);
-        if ($cellMetaClasses != [] && $includeFormatting){
+        if ($cellMetaClasses != [] && $includeFormatting) {
             $emptyClasses = false;
             $cellClasses = '';
-            foreach ($cellMetaClasses as $class){
+            foreach ($cellMetaClasses as $class) {
                 $cellClasses .= $class . ' ';
             }
             $cellDataFormatted = '<div class="wpdt-c"><div class="' . $cellClasses . '">' . $cellData . '</div></div>';
@@ -591,7 +608,7 @@ class WPDataTableRows
             $cellData = do_shortcode($cellData);
         } else if (strpos($cellData, 'wpdt-star-rating') !== false ||
             strpos($cellData, 'wpdt-link-content') !== false) {
-            if ($emptyClasses){
+            if ($emptyClasses) {
                 $cellData = '<div class="wpdt-c">' . $cellData . '</div>';
             }
             wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.css', array(), WDT_CURRENT_VERSION);

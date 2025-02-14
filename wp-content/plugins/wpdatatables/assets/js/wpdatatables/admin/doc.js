@@ -10,7 +10,7 @@ var tableSettingsLinks = {
     'table-tools-settings': '#table-settings-tools',
     'placeholders-settings': '#table-settings-placeholders',
     'customize-table-settings': '#customize-table-settings',
-    'advanced-table-settings' : '#advanced-table-settings'
+    'advanced-table-settings': '#advanced-table-settings'
 };
 
 var columnSettingsLinks = {

@@ -46,6 +46,7 @@
     line-height: 20px;
     color: #304463;
 }
+
 .wdt-datatables-admin-wrap .wdt-getting-started-block .wdt-getting-started-img-section {
     min-height: 868px;
     position: absolute;
@@ -54,8 +55,9 @@
     background: url(../../img/dashboard/illustration-editable.svg) no-repeat right !important;
     background-size: contain !important;
 }
+
 .wdt-datatables-admin-wrap .wdt-getting-started-card .m-b-18 {
-   margin-bottom: 18px;
+    margin-bottom: 18px;
 }
 
 .wdt-datatables-admin-wrap .wdt-tutorial-card .card-body {
@@ -70,7 +72,8 @@
     margin-left: 24px;
     margin-right: 160px;
 }
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-desc span{
+
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-desc span {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
@@ -78,7 +81,8 @@
     line-height: 20px;
     color: #061938;
 }
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-desc a{
+
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-desc a {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
@@ -88,11 +92,13 @@
     display: block;
     margin-top: 4px;
 }
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button{
+
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button {
     position: absolute;
     right: 16px;
 }
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button{
+
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button {
     background: #FFFFFF;
     font-family: Inter;
     font-style: normal;
@@ -106,13 +112,15 @@
     border-radius: 5px;
     color: #091D70;
 }
+
 .wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button:focus,
 .wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button:focus:focus,
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button:hover{
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button:hover {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), #FFFFFF !important;
 }
-.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button i{
-   margin-right: 4px;
+
+.wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button button i {
+    margin-right: 4px;
 }
 
 
@@ -126,7 +134,8 @@
 .wdt-datatables-admin-wrap .wpdt-footer-links li a {
     color: #5A6C89;
 }
-.wdt-datatables-admin-wrap  .wdt-footer-title {
+
+.wdt-datatables-admin-wrap .wdt-footer-title {
     font-size: 13px;
     line-height: 20px;
     color: #304463;
@@ -138,23 +147,28 @@
     margin-left: 10px;
     vertical-align: bottom;
 }
+
 @media (max-width: 1024px) {
     .wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-desc {
         margin-right: 0;
         margin-bottom: 25px;
     }
+
     .wdt-datatables-admin-wrap .wdt-tutorial-card .card-body .wdt-tutorial-button {
         left: 86px;
         bottom: 5px;
     }
+
     .wdt-datatables-admin-wrap .wdt-getting-started-card img.getting-started-img {
         display: none;
     }
+
     .wdt-datatables-admin-wrap .wdt-getting-started-card .col-sm-6 {
         width: 100%;
     }
+
     .wdt-datatables-admin-wrap .wdt-getting-started-block .wdt-getting-started-img-section {
-       display: none;
+        display: none;
     }
 }
 

@@ -15,7 +15,8 @@
 
             <!-- .modal-header -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                                class="wpdt-icon-times-full"></i></span>
                 </button>
                 <h4 class="modal-title"><?php esc_html_e('Add Column', 'wpdatatable'); ?></h4>
             </div>
@@ -68,9 +69,9 @@
                                         <select class="wdt-add-column-insert-after selectpicker">
                                             <option value="%%beginning%%"><?php esc_html_e('Beginning of table', 'wpdatatables'); ?></option>
                                             <option value="%%end%%"><?php esc_html_e('End of table', 'wpdatatables'); ?></option>
-                                            <?php if (isset($tableData)){
+                                            <?php if (isset($tableData)) {
                                                 foreach ($tableData->table->columns as $column) { ?>
-                                                <option value="<?php echo esc_attr($column->orig_header); ?>"><?php echo esc_html($column->display_header); ?></option>
+                                                    <option value="<?php echo esc_attr($column->orig_header); ?>"><?php echo esc_html($column->display_header); ?></option>
                                                 <?php } ?>
                                             <?php } ?>
                                         </select>
@@ -109,20 +110,26 @@
                             </h5>
                             <div class="form-group">
                                 <div class="fg-line">
-                                    <input type="number" pattern = '/^[0-9,]+$'  onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 44" class="form-control input-sm wdt-default-add-column-db-type-value" value="255" placeholder="<?php esc_attr_e('Enter type value','wpdatatables'); ?>">
+                                    <input type="number" pattern='/^[0-9,]+$'
+                                           onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 44"
+                                           class="form-control input-sm wdt-default-add-column-db-type-value"
+                                           value="255"
+                                           placeholder="<?php esc_attr_e('Enter type value', 'wpdatatables'); ?>">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xs-12">
-                        <div class="alert alert-info alert-dismissible" role="alert">
-                            <i class="wpdt-icon-info-circle-full"></i>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-                            </button>
-                            <span class="wdt-alert-title f-600"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
-                            <ul class="wdt-alert-subtitle" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
-                                <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
-                            </ul>
-                        </div>
+                            <div class="alert alert-info alert-dismissible" role="alert">
+                                <i class="wpdt-icon-info-circle-full"></i>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">×</span>
+                                </button>
+                                <span class="wdt-alert-title f-600"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
+                                <ul class="wdt-alert-subtitle"
+                                    style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+                                    <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-xs-12 wdt-add-column-possible-values-block" style="display: none;">
                             <h5 class="c-black m-b-10">

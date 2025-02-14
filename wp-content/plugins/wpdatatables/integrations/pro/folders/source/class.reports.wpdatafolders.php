@@ -3,6 +3,7 @@
 use WDTIntegration\WPDataFolders;
 
 defined('ABSPATH') or die('Access denied.');
+
 class WPDataReportsFolders extends WPDataFolders
 {
     private static $parentConstructorCalled = false;

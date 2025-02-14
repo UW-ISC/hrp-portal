@@ -21,9 +21,11 @@ class SeparateDBConnection
     public static function init()
     {
         // Display select-box for separate db connection in wizard
-        add_action('wpdatatables_add_separate_connection_element_in_wizard', array('WDTIntegration\SeparateDBConnection', 'addConnectionElementInWizard'));
+        add_action('wpdatatables_add_separate_connection_element_in_wizard', array('WDTIntegration\SeparateDBConnection',
+            'addConnectionElementInWizard'));
         // Display tab of separate db connection
-        add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\SeparateDBConnection', 'addConnectionConfiguration'));
+        add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\SeparateDBConnection',
+            'addConnectionConfiguration'));
     }
 
     /**

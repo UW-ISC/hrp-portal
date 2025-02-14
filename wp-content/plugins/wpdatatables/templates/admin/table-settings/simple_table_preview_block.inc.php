@@ -1,5 +1,6 @@
 <?php defined('ABSPATH') or die('Access denied.');
-$showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
+$showAlertMessage = get_option('wdtSimpleTableAlert');
+if ($showAlertMessage) {
     ?>
     <div class="alert alert-warning alert-dismissible wdt-simple-table-alert" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -37,7 +38,7 @@ $showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
         <div id="wpdt-views">
             <ul class="nav nav-pills">
                 <li class="nav-item active" data-view="desktop">
-                    <a class="nav-link" ><?php esc_html_e('Desktop', 'wpdatatables'); ?></a>
+                    <a class="nav-link"><?php esc_html_e('Desktop', 'wpdatatables'); ?></a>
                 </li>
                 <li class="nav-item" data-view="tablet">
                     <a class="nav-link"><?php esc_html_e('Tablet', 'wpdatatables'); ?></a>
@@ -48,10 +49,10 @@ $showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
             </ul>
         </div>
         <div id="wpdt-view-container">
-            <?php if(isset($tableData)) {?>
-            <div class="wpdt-c wpDataTablesSimpleWrapper-<?php echo $tableData->tableID;?>">
-                <?php echo $tableData->wdtHtml; ?>
-            </div>
+            <?php if (isset($tableData)) { ?>
+                <div class="wpdt-c wpDataTablesSimpleWrapper-<?php echo $tableData->tableID; ?>">
+                    <?php echo $tableData->wdtHtml; ?>
+                </div>
             <?php } ?>
         </div>
     </div>

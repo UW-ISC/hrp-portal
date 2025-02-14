@@ -38,7 +38,8 @@
             <div class="modal-footer p-t-0">
                 <hr>
 
-                <button type="button" class="btn btn-danger btn-icon-text wdt-backend-close-modal-button " data-dismiss="modal">
+                <button type="button" class="btn btn-danger btn-icon-text wdt-backend-close-modal-button "
+                        data-dismiss="modal">
                     <i class="wpdt-icon-times-full"></i>
                     <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                 </button>

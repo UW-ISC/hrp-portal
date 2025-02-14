@@ -122,13 +122,6 @@
         });
 
         /**
-         * Set Lite vs Premium Page status
-         */
-        $('#wdt-lite-vs-premium-page-status').change(function (e) {
-            wpdatatable_plugin_config.setLiteVSPremiumPageStatus($(this).is(':checked') ? 1 : 0);
-        });
-
-        /**
          * Set Include Google fonts
          */
         $('#wdt-include-google-fonts').change(function (e) {
@@ -333,15 +326,14 @@
         wpdatatable_plugin_config.setTabletWidth(wdt_current_config.wdtTabletWidth);
         wpdatatable_plugin_config.setMobileWidth(wdt_current_config.wdtMobileWidth);
         wpdatatable_plugin_config.setGettingStartedPageStatus(wdt_current_config.wdtGettingStartedPageStatus == 1 ? 1 : 0);
-        wpdatatable_plugin_config.setLiteVSPremiumPageStatus(wdt_current_config.wdtLiteVSPremiumPageStatus == 1 ? 1 : 0);
         wpdatatable_plugin_config.setIncludeGogleFonts(wdt_current_config.wdtIncludeGoogleFonts == 1 ? 1 : 0);
         wpdatatable_plugin_config.setIncludeBootstrap(wdt_current_config.wdtIncludeBootstrap == 1 ? 1 : 0);
         wpdatatable_plugin_config.setIncludeBootstrapBackEnd(wdt_current_config.wdtIncludeBootstrapBackEnd == 1 ? 1 : 0);
         wpdatatable_plugin_config.setPreventDeletingTables(wdt_current_config.wdtPreventDeletingTables == 1 ? 1 : 0);
         wpdatatable_plugin_config.setParseShortcodes(wdt_current_config.wdtParseShortcodes == 1 ? 1 : 0);
         wpdatatable_plugin_config.setAlignNumber(wdt_current_config.wdtNumbersAlign == 1 ? 1 : 0);
-        wpdatatable_plugin_config.setGlobalTableLoaders(wdt_current_config.wdtGlobalTableLoader == 1 ? 1: 0);
-        wpdatatable_plugin_config.setGlobalChartLoaders(wdt_current_config.wdtGlobalChartLoader == 1 ? 1: 0);
+        wpdatatable_plugin_config.setGlobalTableLoaders(wdt_current_config.wdtGlobalTableLoader == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setGlobalChartLoaders(wdt_current_config.wdtGlobalChartLoader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setCustomCss(wdt_current_config.wdtCustomCss);
         wpdatatable_plugin_config.setCustomJs(wdt_current_config.wdtCustomJs);
         wpdatatable_plugin_config.setMinifiedJs(wdt_current_config.wdtMinifiedJs == 1 ? 1 : 0);
@@ -355,7 +347,7 @@
         wpdatatable_plugin_config.setGoogleStableVersion(wdt_current_config.wdtGoogleStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setHighChartStableVersion(wdt_current_config.wdtHighChartStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setApexStableVersion(wdt_current_config.wdtApexStableVersion == 1 ? 1 : 0);
-        wpdatatable_plugin_config.setGoogleApiMaps(wdt_current_config.wdtGoogleApiMapsValidated ==  1 ? 1 : 0);
+        wpdatatable_plugin_config.setGoogleApiMaps(wdt_current_config.wdtGoogleApiMapsValidated == 1 ? 1 : 0);
 
         for (var value in wdt_current_config.wdtFontColorSettings) {
             wpdatatable_plugin_config.setColorFontSetting(value, wdt_current_config.wdtFontColorSettings[value]);
@@ -452,12 +444,12 @@
         });
 
         $('.wdt-validate-googlegeochart-mapkey').on('click', function () {
-            if(wdt_current_config.wdtGoogleApiMapsValidated == 0) {
+            if (wdt_current_config.wdtGoogleApiMapsValidated == 0) {
                 var mapsKey = $('#wdt-googlechart-mapkey').val().trim();
             } else {
                 var mapsKey = wdt_current_config.wdtGoogleApiMaps;
             }
-            if(mapsKey == ''){
+            if (mapsKey == '') {
                 wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.empty_api_google_key_main, 'danger');
             } else if (wdt_current_config.wdtGoogleApiMapsValidated == 0) {
                 validateGoogleMapsApiKey(mapsKey);
@@ -814,7 +806,7 @@
                         $('.wdt-preload-layer').animateFadeOut();
                         $('#wdt-googlechart-mapkey').val('');
                     } else {
-                        wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_ok_main , 'success');
+                        wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_ok_main, 'success');
                         wdt_current_config.wdtGoogleApiMapsValidated = 1;
                         wdt_current_config.wdtGoogleApiMaps = $('#wdt-googlechart-mapkey').val();
                         jQuery('#wdt-googlechart-mapkey').hide();
@@ -828,6 +820,7 @@
                 }
             });
         }
+
         function removeGoogleMapsApiKey() {
             $.ajax({
                 url: ajaxurl,
@@ -839,12 +832,12 @@
                 },
 
                 success: function (data) {
-                    wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_removed_main , 'success');
-                        wdt_current_config.wdtGoogleApiMapsValidated = 0;
-                        wdt_current_config.wdtGoogleApiMaps = '';
-                        jQuery('#wdt-googlechart-mapkey').show();
-                        jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').addClass('hidden');
-                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html(wpdatatables_settings_strings.validate_api_main);
+                    wdtNotify(wpdatatables_settings_strings.success_main, wpdatatables_settings_strings.api_google_maps_removed_main, 'success');
+                    wdt_current_config.wdtGoogleApiMapsValidated = 0;
+                    wdt_current_config.wdtGoogleApiMaps = '';
+                    jQuery('#wdt-googlechart-mapkey').show();
+                    jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').addClass('hidden');
+                    jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html(wpdatatables_settings_strings.validate_api_main);
                 },
                 error: function () {
                     wdtNotify(wpdatatables_settings_strings.error_main, wpdatatables_settings_strings.api_google_maps_not_ok_main + data + '', 'danger');

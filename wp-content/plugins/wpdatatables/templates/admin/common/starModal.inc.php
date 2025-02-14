@@ -62,13 +62,14 @@
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="wpdt-star-rating-color" class="col-sm-12 p-l-0 p-r-0 control-label">
-				            <?php esc_html_e('Choose star color:', 'wpdatatables') ?>
+                            <?php esc_html_e('Choose star color:', 'wpdatatables') ?>
                         </label>
                         <div class="cp-container">
                             <div class="form-group col-sm-16">
                                 <div class="fg-line dropdown">
                                     <div id="cp" class="input-group wdt-color-picker">
-                                        <input type="text" id="wpdt-star-rating-color" value="" class="form-control cp-value cp-inside wdt-add-picker"/>
+                                        <input type="text" id="wpdt-star-rating-color" value=""
+                                               class="form-control cp-value cp-inside wdt-add-picker"/>
                                         <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                     </div>
                                 </div>

@@ -5,7 +5,8 @@ defined('ABSPATH') or die('Access denied.');
 /**
  * Handler which returns the AJAX response
  */
-function wdtGetAjaxData() {
+function wdtGetAjaxData()
+{
     global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
     if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendServerSideNonce' . (int)$_GET['table_id'])) {
@@ -72,12 +73,12 @@ function wdtGetAjaxData() {
     foreach ($columnData as $column) {
         $advancedSettings = json_decode($column->advanced_settings);
 
-        if (isset($advancedSettings->possibleValuesType) && $advancedSettings->possibleValuesType == 'foreignkey' ) {
+        if (isset($advancedSettings->possibleValuesType) && $advancedSettings->possibleValuesType == 'foreignkey') {
             $advancedSettings->possibleValuesAjax = -1;
         }
 
         $columnOrder[(int)$column->pos] = $column->orig_header;
-        if ($column->display_header !='') {
+        if ($column->display_header != '') {
             $columnTitles[$column->orig_header] = $column->display_header;
         } else {
             $columnTitles[$column->orig_header] = $column->orig_header;
@@ -120,21 +121,21 @@ function wdtGetAjaxData() {
         if (isset($column->default_value)) {
             if (isset($_GET['wdt_column_filter'])) {
                 foreach ($_GET['wdt_column_filter'] as $fltColKey => $fltDefVal) {
-                    if (intval($column->pos) === $fltColKey || $column->orig_header === $fltColKey){
+                    if (intval($column->pos) === $fltColKey || $column->orig_header === $fltColKey) {
                         $column->default_value = $fltDefVal;
                     }
                 }
             }
             $column->default_value = apply_filters_deprecated(
                 'wpdt_filter_filtering_default_value',
-                array( $column->default_value , $column->orig_header, $column->table_id ),
+                array($column->default_value, $column->orig_header, $column->table_id),
                 WDT_INITIAL_STARTER_VERSION,
-                'wpdatatables_filter_filtering_default_value' );
-            $column->default_value = apply_filters('wpdatatables_filter_filtering_default_value', $column->default_value , $column->orig_header, $column->table_id);
+                'wpdatatables_filter_filtering_default_value');
+            $column->default_value = apply_filters('wpdatatables_filter_filtering_default_value', $column->default_value, $column->orig_header, $column->table_id);
 
             $filterDefaultValue[] = $column->default_value;
         }
-        if (isset($advancedSettings->rangeSlider) && $advancedSettings->rangeSlider == 1 ) {
+        if (isset($advancedSettings->rangeSlider) && $advancedSettings->rangeSlider == 1) {
             $rangeSlider[] = $column->orig_header;
             if (isset($advancedSettings->rangeMaxValueDisplay)) {
                 $rangeMaxValueDisplay[] = $column->orig_header;
@@ -226,44 +227,44 @@ function wdtGetAjaxData() {
     $tbl->setAjaxReturn(true);
 
     $columnOptions = array(
-        'columnFormulas'      => $columnFormulas,
-        'columnOrder'         => $columnOrder,
-        'columnTitles'        => $columnTitles,
-        'data_types'          => $columnTypes,
-        'decimalPlaces'       => $decimalPlaces,
-        'exactFiltering'      => $exactFiltering,
-        'globalSearchColumn'  => $globalSearchColumn,
-        'searchInSelectBox'   => $searchInSelectBox,
+        'columnFormulas' => $columnFormulas,
+        'columnOrder' => $columnOrder,
+        'columnTitles' => $columnTitles,
+        'data_types' => $columnTypes,
+        'decimalPlaces' => $decimalPlaces,
+        'exactFiltering' => $exactFiltering,
+        'globalSearchColumn' => $globalSearchColumn,
+        'searchInSelectBox' => $searchInSelectBox,
         'searchInSelectBoxEditing' => $searchInSelectBoxEditing,
-        'andLogic'            => $andLogic,
-        'filterTypes'         => $columnFilterTypes,
-        'foreignKeyRule'      => $foreignKeyRule,
-        'idColumn'            => $idColumn,
-        'input_types'         => $columnEditorTypes,
+        'andLogic' => $andLogic,
+        'filterTypes' => $columnFilterTypes,
+        'foreignKeyRule' => $foreignKeyRule,
+        'idColumn' => $idColumn,
+        'input_types' => $columnEditorTypes,
         'linkTargetAttribute' => $linkTargetAttribute,
         'linkNoFollowAttribute' => $linkNoFollowAttribute,
         'linkNoreferrerAttribute' => $linkNoreferrerAttribute,
         'linkSponsoredAttribute' => $linkSponsoredAttribute,
         'linkButtonAttribute' => $linkButtonAttribute,
-        'linkButtonLabel'     => $linkButtonLabel,
-        'linkButtonClass'     => $linkButtonClass,
-        'skip_thousands'      => $skipThousands,
-        'rangeSlider'         => $rangeSlider,
+        'linkButtonLabel' => $linkButtonLabel,
+        'linkButtonClass' => $linkButtonClass,
+        'skip_thousands' => $skipThousands,
+        'rangeSlider' => $rangeSlider,
         'rangeMaxValueDisplay' => $rangeMaxValueDisplay,
-        'customMaxRangeValue'  => $customMaxRangeValue,
-        'filterDefaultValue'  => $filterDefaultValue,
-        'editingDefaultValue'  => $editingDefaultValue
+        'customMaxRangeValue' => $customMaxRangeValue,
+        'filterDefaultValue' => $filterDefaultValue,
+        'editingDefaultValue' => $editingDefaultValue
     );
 
     $columnOptions = apply_filters_deprecated(
         'wpdt_filter_column_options',
-        array( $columnOptions, $columnData, $tbl ),
+        array($columnOptions, $columnData, $tbl),
         WDT_INITIAL_STARTER_VERSION,
         'wpdatatables_filter_column_options'
     );
     $columnOptions = apply_filters('wpdatatables_filter_column_options', $columnOptions, $columnData, $tbl);
 
-    if ( in_array($tbl->getTableType(), ['mysql', 'manual'], true)) {
+    if (in_array($tbl->getTableType(), ['mysql', 'manual'], true)) {
         $json = $tbl->queryBasedConstruct(
             $tbl->getTableContent(),
             array(),
@@ -293,7 +294,8 @@ add_action('wp_ajax_nopriv_get_wdtable', 'wdtGetAjaxData');
 /**
  * Saves the table from frontend
  */
-function wdtSaveTableFrontend() {
+function wdtSaveTableFrontend()
+{
     global $wpdb, $wp_version;
     $formData = $_POST['formdata'];
     $isDuplicate = $_POST['isDuplicate'];
@@ -353,13 +355,13 @@ function wdtSaveTableFrontend() {
             $idVal = $isDuplicate == 'true' ? 0 : (int)$formData[$idKey];
             unset($formData[$idKey]);
         } else if ($column->orig_header == "wdt_created_by") {
-            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? (is_user_logged_in() ? WDTTools::wrapQuotes(sanitize_text_field(wp_get_current_user()->data->user_login),$tableData->connection) : 'anonymous_user') : WDTTools::wrapQuotes(sanitize_text_field($formData[$column->orig_header]), $tableData->connection);
+            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? (is_user_logged_in() ? WDTTools::wrapQuotes(sanitize_text_field(wp_get_current_user()->data->user_login), $tableData->connection) : 'anonymous_user') : WDTTools::wrapQuotes(sanitize_text_field($formData[$column->orig_header]), $tableData->connection);
         } else if ($column->orig_header == "wdt_created_at") {
-            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s'),$tableData->connection) : WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formData[$column->orig_header])->format('Y-m-d H:i:s'),$tableData->connection);
+            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s'), $tableData->connection) : WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formData[$column->orig_header])->format('Y-m-d H:i:s'), $tableData->connection);
         } else if ($column->orig_header == "wdt_last_edited_by") {
             $formData[$column->orig_header] = is_user_logged_in() ? WDTTools::wrapQuotes(sanitize_text_field(wp_get_current_user()->data->user_login), $tableData->connection) : 'anonymous_user';
         } else if ($column->orig_header == "wdt_last_edited_at") {
-            $formData[$column->orig_header] =  WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s'),$tableData->connection);
+            $formData[$column->orig_header] = WDTTools::wrapQuotes(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s'), $tableData->connection);
         } else {
             // Defining the values for User ID columns and for "none" input types
             if ($column->id == $tableData->userid_column_id) {
@@ -447,7 +449,7 @@ function wdtSaveTableFrontend() {
                         }
                         if ($formData[$column->orig_header] === '') {
                             $value = $nullValue;
-                        }else{
+                        } else {
                             $value = WDTTools::prepareStringCell($formData[$column->orig_header], $tableData->connection);
                         }
                         $formData[$column->orig_header] = $value;
@@ -498,7 +500,7 @@ function wdtSaveTableFrontend() {
             if (isset($advancedSettings->editButtonsDisplayed) &&
                 (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
                     in_array('edit', $advancedSettings->editButtonsDisplayed)))
-            ){
+            ) {
                 exit();
             }
             $res = $wpdb->update($mySqlTableName,
@@ -522,7 +524,7 @@ function wdtSaveTableFrontend() {
                 (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
                     in_array('duplicate', $advancedSettings->editButtonsDisplayed) ||
                     in_array('new_entry', $advancedSettings->editButtonsDisplayed)))
-            ){
+            ) {
                 exit();
             }
             $returnResult['is_new'] = true;
@@ -551,7 +553,7 @@ function wdtSaveTableFrontend() {
         if ($idVal != '0') {
             $query = 'UPDATE ' . $mySqlTableName . ' SET ';
             $i = 1;
-            foreach ($formData AS $columnKey => $columnValue) {
+            foreach ($formData as $columnKey => $columnValue) {
                 if ($columnValue == "''") {
                     $columnValue = $nullValue;
                 }
@@ -579,7 +581,7 @@ function wdtSaveTableFrontend() {
             $query = 'INSERT INTO ' . $mySqlTableName . ' ';
             $columns = array();
             $values = array();
-            foreach ($formData AS $columnKey => $columnValue) {
+            foreach ($formData as $columnKey => $columnValue) {
                 if ($columnValue == "''") {
                     $columnValue = $nullValue;
                 }
@@ -611,7 +613,8 @@ add_action('wp_ajax_nopriv_wdt_save_table_frontend', 'wdtSaveTableFrontend');
 /**
  * Save changes on excel table cells
  */
-function wdtSaveTableCellsFrontend() {
+function wdtSaveTableCellsFrontend()
+{
     global $wpdb;
 
     // Permissions check
@@ -697,8 +700,12 @@ function wdtSaveTableCellsFrontend() {
                         );
                     }
                     $cellData[$columnName] = WDTTools::prepareStringCell($cellData[$columnName], $tableData->connection);
-                    if ($cellData[$columnName] == ''){
-                        if (in_array($allColumnsTypes[$columnName], array('int', 'float', 'date', 'time', 'datetime'))) {
+                    if ($cellData[$columnName] == '') {
+                        if (in_array($allColumnsTypes[$columnName], array('int',
+                            'float',
+                            'date',
+                            'time',
+                            'datetime'))) {
                             $cellData[$columnName] = (!$tableData->connection) ? NULL : "NULL";
                         }
                     }
@@ -717,17 +724,17 @@ function wdtSaveTableCellsFrontend() {
                     $isMSSql = $vendor === Connection::$MSSQL;
                     $isPostgreSql = $vendor === Connection::$POSTGRESQL;
 
-                    if($isMSSql) {
+                    if ($isMSSql) {
                         $leftSysIdentifier = '[';
                         $rightSysIdentifier = ']';
                     }
 
-                    if($isPostgreSql){
+                    if ($isPostgreSql) {
                         $leftSysIdentifier = '"';
                         $rightSysIdentifier = '"';
                     }
 
-                    if($isMySql) {
+                    if ($isMySql) {
                         $leftSysIdentifier = '`';
                         $rightSysIdentifier = '`';
                     }
@@ -870,7 +877,8 @@ add_action('wp_ajax_nopriv_wdt_save_table_cells_frontend', 'wdtSaveTableCellsFro
 /**
  * Handle table row delete
  */
-function wdtDeleteTableRow() {
+function wdtDeleteTableRow()
+{
     global $wpdb;
 
     if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendEditTableNonce' . (int)$_POST['table_id'])) {
@@ -891,7 +899,7 @@ function wdtDeleteTableRow() {
     if (isset($advancedSettings->editButtonsDisplayed) &&
         (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
             in_array('delete', $advancedSettings->editButtonsDisplayed)))
-    ){
+    ) {
         exit();
     }
 
@@ -919,11 +927,11 @@ function wdtDeleteTableRow() {
     // If the plugin is using WP DB
     if (!(Connection::isSeparate($tableData->connection))) {
         $res = $wpdb->delete($mySqlTableName, array($idKey => $idVal));
-        if (!$res){
+        if (!$res) {
             if (!empty($wpdb->last_error)) {
                 $returnResult['error'] = __('There was an error trying to delete the row! Error: ', 'wpdatatables') . $wpdb->last_error;
             } else {
-                $returnResult['error'] = __('There was an error in your database when you are trying to delete the row! ', 'wpdatatables') ;
+                $returnResult['error'] = __('There was an error in your database when you are trying to delete the row! ', 'wpdatatables');
             }
         } else {
             $returnResult['success'] = true;
@@ -952,7 +960,8 @@ add_action('wp_ajax_nopriv_wdt_delete_table_row', 'wdtDeleteTableRow');
 /**
  * Handle table multiple rows delete
  */
-function wdtDeleteTableRows() {
+function wdtDeleteTableRows()
+{
     global $wpdb;
 
     if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendEditTableNonce' . (int)$_POST['table_id'])) {
@@ -1089,7 +1098,8 @@ add_action('wp_ajax_nopriv_wdt_delete_table_rows', 'wdtDeleteTableRows');
  *
  * @throws WDTException
  */
-function wdtGetColumnPossibleValues() {
+function wdtGetColumnPossibleValues()
+{
     $result = [];
     $tableId = (int)$_POST['tableId'];
     $originalHeader = sanitize_text_field($_POST['originalHeader']);
@@ -1105,7 +1115,7 @@ function wdtGetColumnPossibleValues() {
     // Filter logic for searching
     if (!empty($_POST['q'])) {
         if ($wpDataColumn->getForeignKeyRule()) {
-            if ($wpDataColumn->getParentTable()->serverSide()){
+            if ($wpDataColumn->getParentTable()->serverSide()) {
                 $values = array_filter($values, function ($value) {
                     return stripos(addslashes($value['text']), $_POST['q']) !== false;
                 });
@@ -1145,5 +1155,6 @@ function wdtGetColumnPossibleValues() {
     echo json_encode($result);
     exit();
 }
+
 add_action('wp_ajax_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');
 add_action('wp_ajax_nopriv_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');

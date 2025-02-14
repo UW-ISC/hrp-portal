@@ -27,7 +27,7 @@
                     jQuery('#wdt-fixed-header-offset').val(wpdatatable_config.fixed_header_offset);
                 }
             },
-            setFixedColumns: function(fixedcolumn){
+            setFixedColumns: function (fixedcolumn) {
                 wpdatatable_config.fixed_columns = fixedcolumn;
                 jQuery('#wdt-fixed-columns').prop('checked', fixedcolumn);
 
@@ -42,23 +42,23 @@
                     wpdatatable_config.setRightFixedColumnNumber(0);
                 }
             },
-            setLeftFixedColumnNumber: function (fixed_left_columns_number){
-                if(jQuery('#wdt-fixed-columns-left-number').val() == '') jQuery('#wdt-fixed-columns-left-number').val(0);
-                if(fixed_left_columns_number === 0 && wpdatatable_config.fixed_right_columns_number === 0 ||  fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number === 0) fixed_left_columns_number = 1;
-                if(fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number !== 0) fixed_left_columns_number = 0;
+            setLeftFixedColumnNumber: function (fixed_left_columns_number) {
+                if (jQuery('#wdt-fixed-columns-left-number').val() == '') jQuery('#wdt-fixed-columns-left-number').val(0);
+                if (fixed_left_columns_number === 0 && wpdatatable_config.fixed_right_columns_number === 0 || fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number === 0) fixed_left_columns_number = 1;
+                if (fixed_left_columns_number < 0 && wpdatatable_config.fixed_right_columns_number !== 0) fixed_left_columns_number = 0;
                 wpdatatable_config.fixed_left_columns_number = fixed_left_columns_number;
-                if( jQuery('#wdt-fixed-columns-left-number').val() != wpdatatable_config.fixed_left_columns_number ){
-                    jQuery('#wdt-fixed-columns-left-number').val( wpdatatable_config.fixed_left_columns_number );
+                if (jQuery('#wdt-fixed-columns-left-number').val() != wpdatatable_config.fixed_left_columns_number) {
+                    jQuery('#wdt-fixed-columns-left-number').val(wpdatatable_config.fixed_left_columns_number);
                 }
             },
 
-            setRightFixedColumnNumber: function (fixed_right_columns_number){
-                if(jQuery('#wdt-fixed-columns-right-number').val() == '') jQuery('#wdt-fixed-columns-right-number').val(0);
-                if(fixed_right_columns_number < 0) fixed_right_columns_number = 0;
+            setRightFixedColumnNumber: function (fixed_right_columns_number) {
+                if (jQuery('#wdt-fixed-columns-right-number').val() == '') jQuery('#wdt-fixed-columns-right-number').val(0);
+                if (fixed_right_columns_number < 0) fixed_right_columns_number = 0;
                 wpdatatable_config.fixed_right_columns_number = fixed_right_columns_number;
-                if(fixed_right_columns_number === 0 && wpdatatable_config.fixed_left_columns_number === 0) wpdatatable_config.setLeftFixedColumnNumber(1);
-                if( jQuery('#wdt-fixed-columns-right-number').val() != wpdatatable_config.fixed_right_columns_number ){
-                    jQuery('#wdt-fixed-columns-right-number').val( wpdatatable_config.fixed_right_columns_number );
+                if (fixed_right_columns_number === 0 && wpdatatable_config.fixed_left_columns_number === 0) wpdatatable_config.setLeftFixedColumnNumber(1);
+                if (jQuery('#wdt-fixed-columns-right-number').val() != wpdatatable_config.fixed_right_columns_number) {
+                    jQuery('#wdt-fixed-columns-right-number').val(wpdatatable_config.fixed_right_columns_number);
                 }
             }
 

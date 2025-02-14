@@ -55,7 +55,7 @@
     <!-- .container -->
 
     <!-- Duplicate chart modal -->
-	<?php include WDT_TEMPLATE_PATH . 'admin/browse/chart/duplicate_chart_modal.inc.php'; ?>
+    <?php include WDT_TEMPLATE_PATH . 'admin/browse/chart/duplicate_chart_modal.inc.php'; ?>
     <!-- /Duplicate chart modal -->
 
     <!-- Delete modal -->

@@ -3,18 +3,20 @@ let constructedPostQueryData = {
     post_type: 'any',
     comment_count: {},
     tax_query: {
-        relation : 'AND'
+        relation: 'AND'
     },
     meta_query: {
-        relation : 'AND'
+        relation: 'AND'
     },
     date_query: {
-        relation : 'AND'
-    }
+        relation: 'AND'
+    },
+    customFieldColumns: {}
 };
 let tax_query_counter = 0;
 let meta_query_counter = 0;
 let date_query_counter = 0;
+let cf_column_counter = 0;
 const queryTypeMap = {
     'wdt_wp_query_tax_parameter': 'tax_query',
     'wdt_wp_query_meta_parameter': 'meta_query',
@@ -109,6 +111,23 @@ const queryCounterMap = {
         renderQueryPreview();
     });
 
+    /**
+     * Change the Custom Field Column parameters
+     */
+    $(document).on('input change', '.wdt_wp_query_cf_parameter', function () {
+        let value = $(this).val();
+        let key = this.dataset.value;
+        let count = this.dataset.count;
+
+        if (!constructedPostQueryData.customFieldColumns[count]) {
+            constructedPostQueryData.customFieldColumns[count] = {};
+        }
+
+        constructedPostQueryData.customFieldColumns[count][key] = value;
+
+        renderQueryPreview();
+    });
+
 
     /**
      * Add new Custom Field
@@ -143,7 +162,7 @@ const queryCounterMap = {
             let index = 0;
 
             for (let key in constructedPostQueryData[queryType]) {
-                if(key != 'relation') {
+                if (key != 'relation') {
                     updatedEntries[index] = constructedPostQueryData[queryType][key];
                     index++;
                 } else {
@@ -197,7 +216,7 @@ const queryCounterMap = {
             let index = 0;
 
             for (let key in constructedPostQueryData[queryType]) {
-                if(key != 'relation') {
+                if (key != 'relation') {
                     updatedEntries[index] = constructedPostQueryData[queryType][key];
                     index++;
                 } else {
@@ -250,7 +269,7 @@ const queryCounterMap = {
             let index = 0;
 
             for (let key in constructedPostQueryData[queryType]) {
-                if(key != 'relation') {
+                if (key != 'relation') {
                     updatedEntries[index] = constructedPostQueryData[queryType][key];
                     index++;
                 } else {
@@ -268,6 +287,44 @@ const queryCounterMap = {
         }
 
         delete constructedPostQueryData['date_query'][date_query_counter];
+        renderQueryPreview();
+    });
+
+    /**
+     * Add new Custom Field Column
+     */
+    $('button.wdt-wp-query-add-cf-column').on('click', function (e) {
+        e.preventDefault();
+        cf_column_counter++;
+
+        let cfBlockTemplate = $.templates("#wdt-wp-query-cf-template");
+        let cfBlockHtml = cfBlockTemplate.render({cfColumnId: cf_column_counter});
+        $(cfBlockHtml).appendTo('div#wdt-wp-query-cf-container').animateFadeIn();
+
+    });
+
+    /**
+     * Remove Custom Field Column
+     */
+    $(document).on('click', '#wdt-constructor-delete-cf-column', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        let cfColumnId = $(this).closest('.wdt-wp-query-cf-template').find('.wdt_wp_query_cf_parameter').data('count') - 1;
+
+        if (constructedPostQueryData['customFieldColumns'] && constructedPostQueryData['customFieldColumns'][cfColumnId]) {
+            delete constructedPostQueryData['customFieldColumns'][cfColumnId];
+        }
+        if (constructedPostQueryData['customFieldColumns']) {
+            let updatedEntries = {};
+
+            for (let key in constructedPostQueryData['customFieldColumns']) {
+                updatedEntries[key] = constructedPostQueryData['customFieldColumns'][key];
+            }
+            constructedPostQueryData['customFieldColumns'] = updatedEntries;
+        }
+        cf_column_counter--;
+        $(this).closest('.wdt-wp-query-cf-template').remove();
+
         renderQueryPreview();
     });
 

@@ -12,7 +12,8 @@
 
             <!-- .modal-header -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                                class="wpdt-icon-times-full"></i></span>
                 </button>
                 <h4 class="modal-title"><?php _e('Are you sure?', 'wpdatatables') ?></h4>
             </div>
@@ -33,7 +34,8 @@
                     <button type="button" class="btn btn-icon-text"
                             id="wdt-backend-save-button"><?php _e('Yes, save table', 'wpdatatables'); ?></button>
                     <button type="button" class="btn btn-danger btn-icon-text" data-dismiss="modal"
-                            id="wdt-backend-cancel-save-button"><i class="wpdt-icon-times-full"></i><?php _e('No, cancel', 'wpdatatables'); ?></button>
+                            id="wdt-backend-cancel-save-button"><i
+                                class="wpdt-icon-times-full"></i><?php _e('No, cancel', 'wpdatatables'); ?></button>
                 </div>
                 <!--/ .modal-footer -->
             </div>

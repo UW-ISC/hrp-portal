@@ -29,7 +29,8 @@ class UpdateManualFromFile
     public static function init()
     {
         // Add Update manual tables from file settings block in table settings
-        add_action('wpdatatables_add_data_from_source_file_block', array('WDTIntegration\UpdateManualFromFile', 'addSettingsBlock'));
+        add_action('wpdatatables_add_data_from_source_file_block', array('WDTIntegration\UpdateManualFromFile',
+            'addSettingsBlock'));
     }
 
     /**
@@ -86,7 +87,11 @@ class UpdateManualFromFile
         }
         //Removes the WPDT table id from the array
         $columnHeaders = array_values(array_filter($columnHeaders, function ($el) {
-            $standardColumnHeaders = ["wdt_id", "wdt_created_by", "wdt_created_at", "wdt_last_edited_by", "wdt_last_edited_at"];
+            $standardColumnHeaders = ["wdt_id",
+                "wdt_created_by",
+                "wdt_created_at",
+                "wdt_last_edited_by",
+                "wdt_last_edited_at"];
             return !in_array($el, $standardColumnHeaders);
         }));
 
