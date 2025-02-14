@@ -17,6 +17,7 @@ class LinkWDTColumn extends WDTColumn
 
     /**
      * LinkWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())
@@ -36,6 +37,7 @@ class LinkWDTColumn extends WDTColumn
 
     /**
      * @param $content
+     *
      * @return mixed|string
      */
     public function prepareCellOutput($content)
@@ -49,7 +51,7 @@ class LinkWDTColumn extends WDTColumn
 
         $content = apply_filters('wpdatatables_filter_link_cell_before_formatting', $content, $this->getParentTable()->getWpId());
 
-        if (is_null($content)){
+        if (is_null($content)) {
             $formattedValue = '';
         } else {
             if (strpos($content, '||') !== false) {

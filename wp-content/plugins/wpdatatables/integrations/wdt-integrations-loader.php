@@ -121,45 +121,65 @@ class WDTIntegrationsLoader
             if (is_file(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php'))
                 require_once(WDT_PRO_INTEGRATIONS_PATH . 'folders/source/class.reports.wpdatafolders.php');
 
-            add_action('wpdatatables_add_chart_picker', array('WDTIntegration\WDTIntegrationsLoader', 'addChartPickerStepNotice'));
+            add_action('wpdatatables_add_chart_picker', array('WDTIntegration\WDTIntegrationsLoader',
+                'addChartPickerStepNotice'));
 
-            add_action('wpdatatables_add_table_configuration_tabpanel', array('WDTIntegration\WDTIntegrationsLoader', 'addNewFixedHeaderAndColumnsOptions'));
+            add_action('wpdatatables_add_table_configuration_tabpanel', array('WDTIntegration\WDTIntegrationsLoader',
+                'addNewFixedHeaderAndColumnsOptions'));
 
-            add_action('wpdatatables_add_table_editing_elements', array('WDTIntegration\WDTIntegrationsLoader', 'addNoticeEditingOptions'));
+            add_action('wpdatatables_add_table_editing_elements', array('WDTIntegration\WDTIntegrationsLoader',
+                'addNoticeEditingOptions'));
 
-            add_action('wpdatatables_add_column_editing_elements', array('WDTIntegration\WDTIntegrationsLoader', 'addNoticeEditingOptions'));
+            add_action('wpdatatables_add_column_editing_elements', array('WDTIntegration\WDTIntegrationsLoader',
+                'addNoticeEditingOptions'));
 
-            add_action('wpdatatables_add_table_placeholders_elements', array('WDTIntegration\WDTIntegrationsLoader', 'addNoticePlaceholdersOptions'));
+            add_action('wpdatatables_add_table_placeholders_elements', array('WDTIntegration\WDTIntegrationsLoader',
+                'addNoticePlaceholdersOptions'));
 
-            add_action('wpdatatables_add_constructor_step_in_wizard', array('WDTIntegration\WDTIntegrationsLoader', 'addNewTableTypesInConstructor'));
+            add_action('wpdatatables_add_constructor_step_in_wizard', array('WDTIntegration\WDTIntegrationsLoader',
+                'addNewTableTypesInConstructor'));
 
-            add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\WDTIntegrationsLoader', 'addSeparateConnectionSettings'));
+            add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\WDTIntegrationsLoader',
+                'addSeparateConnectionSettings'));
 
-            add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\WDTIntegrationsLoader', 'addGoogleSheetAPISettings'));
+            add_action('wpdatatables_add_tab_in_main_settings', array('WDTIntegration\WDTIntegrationsLoader',
+                'addGoogleSheetAPISettings'));
 
-            add_action('wpdatatables_add_foreign_key_block', array('WDTIntegration\WDTIntegrationsLoader', 'addForeignKeySettings'));
+            add_action('wpdatatables_add_foreign_key_block', array('WDTIntegration\WDTIntegrationsLoader',
+                'addForeignKeySettings'));
 
-            add_action('wpdatatables_admin_after_edit', array('WDTIntegration\WDTIntegrationsLoader', 'addFormulaEditorModal'));
+            add_action('wpdatatables_admin_after_edit', array('WDTIntegration\WDTIntegrationsLoader',
+                'addFormulaEditorModal'));
 
-            add_action('wpdatatables_add_mysql_settings_block', array('WDTIntegration\WDTIntegrationsLoader', 'addSQLQueryNotice'));
+            add_action('wpdatatables_add_mysql_settings_block', array('WDTIntegration\WDTIntegrationsLoader',
+                'addSQLQueryNotice'));
 
-            add_action('wpdatatables_add_data_from_source_file_block', array('WDTIntegration\WDTIntegrationsLoader', 'addUpdateManualNoticeBlock'));
+            add_action('wpdatatables_add_data_from_source_file_block', array('WDTIntegration\WDTIntegrationsLoader',
+                'addUpdateManualNoticeBlock'));
 
-            add_action('wpdatatables_add_browse_table_notice_info', array('WDTIntegration\WDTIntegrationsLoader', 'addFolderNotice'));
+            add_action('wpdatatables_add_browse_table_notice_info', array('WDTIntegration\WDTIntegrationsLoader',
+                'addFolderNotice'));
 
-            add_action('wpdatatables_add_browse_chart_notice_info', array('WDTIntegration\WDTIntegrationsLoader', 'addFolderNotice'));
+            add_action('wpdatatables_add_browse_chart_notice_info', array('WDTIntegration\WDTIntegrationsLoader',
+                'addFolderNotice'));
 
-            add_action('wpdatatables_add_custom_column_type_option', array('WDTIntegration\WDTIntegrationsLoader', 'addHiddenColumnTypeNotice'));
+            add_action('wpdatatables_add_custom_column_type_option', array('WDTIntegration\WDTIntegrationsLoader',
+                'addHiddenColumnTypeNotice'));
 
-            add_filter('wpdatatables_filter_possible_column_types', array('WDTIntegration\WDTIntegrationsLoader', 'filterPossibleColumnTypes'));
+            add_filter('wpdatatables_filter_possible_column_types', array('WDTIntegration\WDTIntegrationsLoader',
+                'filterPossibleColumnTypes'));
 
-            add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\WDTIntegrationsLoader', 'addChartsStableTagNotice'));
+            add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\WDTIntegrationsLoader',
+                'addChartsStableTagNotice'));
 
-            add_action('wpdatatables_add_options_in_add_column_modal', array('WDTIntegration\WDTIntegrationsLoader', 'addHiddenColumnAddModalNotice'));
+            add_action('wpdatatables_add_options_in_add_column_modal', array('WDTIntegration\WDTIntegrationsLoader',
+                'addHiddenColumnAddModalNotice'));
 
-            add_action('wpdatatables_after_constructor_column_block', array('WDTIntegration\WDTIntegrationsLoader', 'addHiddenColumnConstructorNotice'));
+            add_action('wpdatatables_after_constructor_column_block', array('WDTIntegration\WDTIntegrationsLoader',
+                'addHiddenColumnConstructorNotice'));
 
-            add_action('wpdatatables_after_constructor_column_block_preview', array('WDTIntegration\WDTIntegrationsLoader', 'addHiddenColumnConstructorNotice'));
+            add_action('wpdatatables_after_constructor_column_block_preview', array('WDTIntegration\WDTIntegrationsLoader',
+                'addHiddenColumnConstructorNotice'));
         }
 
         // Include WP Posts Builder
@@ -234,6 +254,7 @@ class WDTIntegrationsLoader
             echo $hiddenColumnNotice;
         }
     }
+
     public static function addHiddenColumnConstructorNotice()
     {
         if (!defined('WDT_HCOL_INTEGRATION')) {
@@ -244,6 +265,7 @@ class WDTIntegrationsLoader
             echo $hiddenColumnConstructorNotice;
         }
     }
+
     public static function addHiddenColumnAddModalNotice()
     {
         if (!defined('WDT_HCOL_INTEGRATION')) {

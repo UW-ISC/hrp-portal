@@ -1,7 +1,8 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <!-- #wdt-backend-close-modal -->
-<div class="modal fade wpdt-modals" id="wdt-backend-link-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade wpdt-modals" id="wdt-backend-link-modal" data-backdrop="static" data-keyboard="false"
+     tabindex="-1"
      role="dialog" aria-hidden="true">
 
     <!-- .modal-dialog -->
@@ -31,11 +32,13 @@
                         <!-- .col-sm-9 -->
                         <div class="col-sm-12">
                             <div class="fg-line">
-                                <input type="text" id="wpdt-link-url" class="form-control" name="wpdt-link-url" required>
+                                <input type="text" id="wpdt-link-url" class="form-control" name="wpdt-link-url"
+                                       required>
                             </div>
                         </div>
                         <!-- .col-sm-9 -->
-                        <div class="error-msg m-l-15" hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
+                        <div class="error-msg m-l-15"
+                             hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
 
                     </div>
                 </div>
@@ -48,11 +51,13 @@
                         <!-- .col-sm-9 -->
                         <div class="col-sm-12">
                             <div class="fg-line">
-                                <input type="text" id="wpdt-link-text" class="form-control" name="wpdt-link-text" required>
+                                <input type="text" id="wpdt-link-text" class="form-control" name="wpdt-link-text"
+                                       required>
                             </div>
                         </div>
                         <!-- .col-sm-9 -->
-                        <div class="error-msg m-l-15" hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
+                        <div class="error-msg m-l-15"
+                             hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
                     </div>
                 </div>
                 <!--/ .row -->

@@ -38,6 +38,7 @@ class WdtHighstockChart extends WdtHighchartsChart
      *
      * @param array $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct(array $constructedChartData, $loadFromDB = false)
@@ -166,14 +167,22 @@ class WdtHighstockChart extends WdtHighchartsChart
                     $formattedDate = DateTime::createFromFormat(
                         get_option('wdtDateFormat'),
                         $row[0])->format('d-m-Y');
-                    $seriesEntry['data'][] = array(strtotime($formattedDate) * 1000, $row[1], $row[2], $row[3], $row[4]);
+                    $seriesEntry['data'][] = array(strtotime($formattedDate) * 1000,
+                        $row[1],
+                        $row[2],
+                        $row[3],
+                        $row[4]);
                 }
             } else {
                 foreach ($this->_render_data['rows'] as $row) {
                     $formattedDate = DateTime::createFromFormat(
                         get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'),
                         $row[0])->format('d-m-Y');
-                    $seriesEntry['data'][] = array(strtotime($formattedDate) * 1000, $row[1], $row[2], $row[3], $row[4]);
+                    $seriesEntry['data'][] = array(strtotime($formattedDate) * 1000,
+                        $row[1],
+                        $row[2],
+                        $row[3],
+                        $row[4]);
                 }
             }
 
@@ -212,6 +221,7 @@ class WdtHighstockChart extends WdtHighchartsChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -226,10 +236,13 @@ class WdtHighstockChart extends WdtHighchartsChart
         wp_enqueue_script('wdt-highstock', $this->getHighChartStockSource(), array(), WDT_CURRENT_VERSION);
 
         if ($this->isExporting()) {
-            wp_enqueue_script('wdt-exporting', $this->getExportingLibSource(), array('wdt-highcharts', 'wdt-highstock'), WDT_CURRENT_VERSION);
-            wp_enqueue_script('wdt-export-data', $this->getExportingDataLibSource(), array('wdt-highcharts', 'wdt-highstock'), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-exporting', $this->getExportingLibSource(), array('wdt-highcharts',
+                'wdt-highstock'), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-export-data', $this->getExportingDataLibSource(), array('wdt-highcharts',
+                'wdt-highstock'), WDT_CURRENT_VERSION);
         }
-        wp_enqueue_script('wdt-highcharts-accessibility', $this->getAccessibilityLibSource(), array('wdt-highcharts', 'wdt-highstock'), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wdt-highcharts-accessibility', $this->getAccessibilityLibSource(), array('wdt-highcharts',
+            'wdt-highstock'), WDT_CURRENT_VERSION);
 
         wp_enqueue_script('wpdatatables-highstock', WDT_HS_ASSETS_URL . 'js/wdt.highstock' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
         return json_encode($this->_highstock_render_data);
@@ -237,6 +250,7 @@ class WdtHighstockChart extends WdtHighchartsChart
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)

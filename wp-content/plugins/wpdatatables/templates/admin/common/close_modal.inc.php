@@ -12,7 +12,8 @@
 
             <!-- .modal-header -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                                class="wpdt-icon-times-full"></i></span>
                 </button>
                 <h4 class="modal-title"><?php esc_html_e('Are you sure?', 'wpdatatables') ?></h4>
             </div>
@@ -36,7 +37,9 @@
                 <button type="button" class="btn btn-icon-text" data-dismiss="modal"
                         id="wdt-backend-continue-button"><?php esc_html_e('No, Continue', 'wpdatatables'); ?></button>
                 <button type="button" class="btn btn-danger btn-icon-text"
-                        id="wdt-backend-close-button"><i class="wpdt-icon-times-full"></i><?php esc_html_e('Yes, Cancel', 'wpdatatables'); ?></button>
+                        id="wdt-backend-close-button"><i
+                            class="wpdt-icon-times-full"></i><?php esc_html_e('Yes, Cancel', 'wpdatatables'); ?>
+                </button>
             </div>
             <!--/ .modal-footer -->
         </div>

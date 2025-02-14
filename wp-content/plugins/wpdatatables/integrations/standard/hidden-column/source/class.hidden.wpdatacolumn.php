@@ -18,7 +18,7 @@ class HiddenWDTColumn extends WDTColumn
     {
         $content = apply_filters('wpdatatables_filter_hidden_cell_before_formatting', $content, $this->getEditingDefaultValue(), $this->getParentTable()->getWpId());
 
-        if (in_array($this->getEditingDefaultValue(),[ 'date','datetime','time'])){
+        if (in_array($this->getEditingDefaultValue(), ['date', 'datetime', 'time'])) {
             if (!empty($content) && ($content != '0000-00-00')) {
                 $timestamp = is_numeric($content) ? $content : strtotime(str_replace('/', '-', $content));
                 if ($this->getEditingDefaultValue() == 'date')

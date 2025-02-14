@@ -155,7 +155,7 @@ var wpDataTablesHighchart = function () {
             }
             var chartID = this.container.replace(/.*_(\d+)/, '$1');
             if (jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                     if (jQuery(this).attr('data-id') === chartID) {
                         jQuery(this).hide();
                     }
@@ -744,7 +744,7 @@ var wpDataTablesHighchart = function () {
                     obj.chart = new Highcharts.Chart(obj.options);
                     var chartID = obj.container.replace(/.*_(\d+)/, '$1');
                     if (jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                        jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                        jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                             if (jQuery(this).attr('data-id') === chartID) {
                                 jQuery(this).hide();
                             }

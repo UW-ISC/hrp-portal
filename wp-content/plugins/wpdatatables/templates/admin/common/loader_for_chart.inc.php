@@ -2,7 +2,7 @@
 
 <?php
 $height = esc_attr($this->getHeight());
-$isLoaderVisible = (int)($this->getRenderData()['loader']);
+$isLoaderVisible = isset($this->getRenderData()['loader']) ? (int) $this->getRenderData()['loader'] : (int) get_option('wdtGlobalChartLoader');
 
 $style = "height: {$height}px;";
 
@@ -10,7 +10,8 @@ if (!$isLoaderVisible) {
     $style .= " display: none;";
 }
 ?>
-<div class="wdt-wrapper-chart-loader"  data-id="<?php echo esc_attr($this->getId());?>" style="<?php echo esc_attr($style); ?>">
+<div class="wdt-wrapper-chart-loader" data-id="<?php echo esc_attr($this->getId()); ?>"
+     style="<?php echo esc_attr($style); ?>">
     <div class="wdt-main-item">
         <?php
         $roundedHeight = floor($this->getHeight() / 4);

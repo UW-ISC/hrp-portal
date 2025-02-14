@@ -3,12 +3,16 @@
 <div class="notice notice-info is-dismissible wpdt-bundles-notice">
     <div id="wpdt-bundles-section">
         <div id="wpdt-first-section">
-            <img class="wpdt-promo-logo" src="<?php echo WDT_ROOT_URL ?>assets/img/bundles/bundle_all_pricing.png" alt="">
+            <img class="wpdt-promo-logo" src="<?php echo WDT_ROOT_URL ?>assets/img/bundles/bundle_all_pricing.png"
+                 alt="">
         </div>
         <div id="wpdt-second-section">
             <h2><strong>SAVE UP TO 60%</strong>
                 with our exclusive bundles!<br> Get more value for your money.<br>
-                <button id="wpdt-grab-it" onclick="window.open('https://wpdatatables.com/bundles/?utm_source=wpdt-premium&utm_medium=wp-admin&utm_content=wpdt&utm_campaign=wpdt', '_blank')"> Get discount now!</button>
+                <button id="wpdt-grab-it"
+                        onclick="window.open('https://wpdatatables.com/bundles/?utm_source=wpdt-premium&utm_medium=wp-admin&utm_content=wpdt&utm_campaign=wpdt', '_blank')">
+                    Get discount now!
+                </button>
             </h2>
         </div>
         <div class="wpdt-bundles-close">

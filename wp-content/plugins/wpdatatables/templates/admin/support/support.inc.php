@@ -44,21 +44,28 @@
                     <div class="card-body card-padding">
                         <h5 class="m-t-0 card-title"><?php esc_html_e('Documentation', 'wpdatatables'); ?></h5>
                         <p class="card-text"><?php esc_html_e('Get started with detailed explanation of every plugin feature.', 'wpdatatables'); ?></p>
-                        <a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank" class="btn btn-primary"><i class="wpdt-icon-file"></i><?php esc_html_e('View Documentation', 'wpdatatables'); ?></a>
+                        <a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow"
+                           target="_blank" class="btn btn-primary"><i
+                                    class="wpdt-icon-file"></i><?php esc_html_e('View Documentation', 'wpdatatables'); ?>
+                        </a>
                     </div>
                 </div>
                 <div class="card m-b-16">
                     <div class="card-body card-padding">
                         <h5 class="m-t-0 card-title"><?php esc_html_e('FAQ', 'wpdatatables'); ?></h5>
                         <p class="card-text"><?php esc_html_e('Find a list of frequently asked questions about wpDataTables functionality.', 'wpdatatables'); ?></p>
-                        <a href="https://wpdatatables.com/help/faq/" target="_blank" class="btn btn-primary"><i class="wpdt-icon-question"></i><?php esc_html_e('Visit FAQ', 'wpdatatables'); ?></a>
+                        <a href="https://wpdatatables.com/help/faq/" target="_blank" class="btn btn-primary"><i
+                                    class="wpdt-icon-question"></i><?php esc_html_e('Visit FAQ', 'wpdatatables'); ?></a>
                     </div>
                 </div>
                 <div class="card m-b-16">
                     <div class="card-body card-padding">
                         <h5 class="m-t-0 card-title"><?php esc_html_e('Feature suggestion', 'wpdatatables'); ?></h5>
                         <p class="card-text"><?php esc_html_e('Great opportunity to our users to submit ideas for new features.', 'wpdatatables'); ?></p>
-                        <a href="https://wpdatatables.com/documentation/feature-suggestion/" target="_blank" rel="nofollow" class="btn btn-primary"><i class="wpdt-icon-lightbulb"></i><?php esc_html_e('Suggest a Feature', 'wpdatatables'); ?></a>
+                        <a href="https://wpdatatables.com/documentation/feature-suggestion/" target="_blank"
+                           rel="nofollow" class="btn btn-primary"><i
+                                    class="wpdt-icon-lightbulb"></i><?php esc_html_e('Suggest a Feature', 'wpdatatables'); ?>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -67,7 +74,9 @@
                     <div class="card-body card-padding wdt-support-img">
                         <h5 class="wdt-large-title m-t-0 card-title"><?php esc_html_e('Still need help?', 'wpdatatables'); ?></h5>
                         <p class="card-text m-b-28"><?php esc_html_e('We provide proffesional support to all our users via our tiketing system.', 'wpdatatables'); ?></p>
-                        <a href="https://tmsplugins.ticksy.com/" target="_blank" rel=”nofollow” class="btn btn-primary"><i class="wpdt-icon-envelope"></i><?php esc_html_e('Submit a ticket', 'wpdatatables'); ?></a>
+                        <a href="https://tmsplugins.ticksy.com/" target="_blank" rel=”nofollow” class="btn btn-primary"><i
+                                    class="wpdt-icon-envelope"></i><?php esc_html_e('Submit a ticket', 'wpdatatables'); ?>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -76,14 +85,17 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php esc_html_e('Made by', 'wpdatatables'); ?>
-                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
+                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                   target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                       target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
-                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
+                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow"
+                       target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
                 </li>
                 <li>|</li>
                 <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">

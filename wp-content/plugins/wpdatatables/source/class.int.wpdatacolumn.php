@@ -10,6 +10,7 @@ class IntWDTColumn extends WDTColumn
 
     /**
      * IntWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())
@@ -23,6 +24,7 @@ class IntWDTColumn extends WDTColumn
 
     /**
      * @param $content
+     *
      * @return mixed|string
      */
     public function prepareCellOutput($content)

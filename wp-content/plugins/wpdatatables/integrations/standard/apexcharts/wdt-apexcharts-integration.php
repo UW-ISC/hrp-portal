@@ -22,12 +22,15 @@ class ApexChartsIntegration
     public static function init()
     {
         // Display the ApexCharts chart picker in the Chart creation wizard
-        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\ApexChartsIntegration', 'addApexChartsChartPicker'));
+        add_action('wpdatatables_add_chart_picker', array('WDTIntegration\ApexChartsIntegration',
+            'addApexChartsChartPicker'));
 
-        add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\ApexChartsIntegration', 'addApexChartsStableTagOption'));
+        add_action('wpdatatables_add_chart_stable_tag_option', array('WDTIntegration\ApexChartsIntegration',
+            'addApexChartsStableTagOption'));
 
         // Enqueue scripts
-        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\ApexChartsIntegration', 'enqueueScripts'), 10);
+        add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\ApexChartsIntegration',
+            'enqueueScripts'), 10);
     }
 
     /**

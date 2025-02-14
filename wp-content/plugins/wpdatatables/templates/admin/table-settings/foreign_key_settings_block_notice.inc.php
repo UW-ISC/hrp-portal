@@ -10,7 +10,8 @@
         <p class="m-b-5"><?php esc_html_e('wpDataTables similarly employs the concept of foreign keys to establish connections between multiple tables, facilitating streamlined data management.', 'wpdatatables'); ?></p>
         <p class="m-b-5">
             <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=foreign-keys&utm_campaign=wpdt&utm_content=wpdt"
-               rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
+               rel="nofollow" target="_blank"
+               class="btn btn-primary wdt-upgrade-btn"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </p>
     </div>
 

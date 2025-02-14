@@ -9,7 +9,7 @@ defined('ABSPATH') or die('Access denied.');
 ?>
 <!-- div.column-settings -->
 
-<?php do_action_deprecated( 'wdt_above_table_alert', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_above_table_alert' ); ?>
+<?php do_action_deprecated('wdt_above_table_alert', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_above_table_alert'); ?>
 <?php do_action('wpdatatables_above_table_alert'); ?>
 
 <div class="card column-settings hidden">
@@ -26,7 +26,7 @@ defined('ABSPATH') or die('Access denied.');
             <span class="pull-right wdt-view-buttons">
                 <?php if (isset($_GET['table_view']) && $_GET['table_view'] == 'excel') { ?>
                     <button class="btn wdt-standard-view" title="" data-toggle="tooltip"
-                            data-original-title="<?php esc_attr_e('Switch to Standard table view','wpdatatables'); ?>">
+                            data-original-title="<?php esc_attr_e('Switch to Standard table view', 'wpdatatables'); ?>">
                     <a href="<?php echo admin_url(isset($_GET['table_id']) ? 'admin.php?page=wpdatatables-constructor&source&table_id=' . (int)$_GET['table_id'] : ''); ?>">
                        <?php esc_html_e('Standard view', 'wpdatatables'); ?></a></button>
                     <button class="btn pull-right wdt-excel-view-selected" title="">
@@ -35,7 +35,7 @@ defined('ABSPATH') or die('Access denied.');
                     <button class="btn wdt-standard-view-selected " title="">
                     <?php esc_html_e('Standard view', 'wpdatatables'); ?></button>
                     <button class="btn pull-right wdt-excel-view " title="" data-toggle="tooltip"
-                            data-original-title="<?php esc_attr_e('Switch to Excel-like table view','wpdatatables'); ?>">
+                            data-original-title="<?php esc_attr_e('Switch to Excel-like table view', 'wpdatatables'); ?>">
                     <a href="<?php echo admin_url(isset($_GET['table_id']) ? 'admin.php?page=wpdatatables-constructor&source&table_id=' . (int)$_GET['table_id'] . '&table_view=excel' : ''); ?>">
                         <?php esc_html_e('Excel Like', 'wpdatatables'); ?></a></button>
                 <?php } ?>

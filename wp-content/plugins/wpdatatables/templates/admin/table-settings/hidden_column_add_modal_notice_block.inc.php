@@ -6,7 +6,8 @@
         <i style="line-height: 20px;"></i>
     </h4>
     <div class="fg-line m-b-10">
-        <a class="di-block btn btn-primary wdt-upgrade-btn w-100" href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=hidden-column-add-modal&utm_campaign=wpdt&utm_content=wpdt"
+        <a class="di-block btn btn-primary wdt-upgrade-btn w-100"
+           href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=hidden-column-add-modal&utm_campaign=wpdt&utm_content=wpdt"
            rel="nofollow" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
     </div>
 </div>

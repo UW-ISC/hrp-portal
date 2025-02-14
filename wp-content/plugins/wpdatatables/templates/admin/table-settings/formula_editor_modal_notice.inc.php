@@ -28,12 +28,15 @@ defined('ABSPATH') or die('Access denied.');
                     <p class="m-b-5"><?php esc_html_e('It\'s particularly useful when datasets lack certain information or when complex computations are needed to derive specific insights within wpDataTables.', 'wpdatatables'); ?></p>
                     <p class="m-b-5">
                         <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=formula-column&utm_campaign=wpdt&utm_content=wpdt"
-                           rel="nofollow" class="btn btn-primary wdt-upgrade-btn" target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
+                           rel="nofollow" class="btn btn-primary wdt-upgrade-btn"
+                           target="_blank"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
                     </p>
                 </div>
                 <div class="row notice-images">
                     <div class="wpdt-custom-center-flex" style="align-items: center;">
-                        <img style="height: 350px;" src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/formula-column.gif" alt="Edit popover image notice"/>
+                        <img style="height: 350px;"
+                             src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/formula-column.gif"
+                             alt="Edit popover image notice"/>
                     </div>
                 </div>
             </div>

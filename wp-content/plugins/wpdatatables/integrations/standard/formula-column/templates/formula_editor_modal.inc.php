@@ -45,21 +45,21 @@ defined('ABSPATH') or die('Access denied.');
                         </div>
                     </div>
                     <div class="col-md-5 formula-operators">
-                     <p class="title"><?php esc_html_e('Math operators', 'wpdatatables'); ?></p>
-                    <div class="wdt-formula-operators">
-                        <button class="btn formula_plus">+</button>
-                        <button class="btn formula_minus">-</button>
-                        <button class="btn formula_mult">*</button>
-                        <button class="btn formula_mult formula_div">/</button>
-                        <button class="btn formula_mult formula_brackets">()</button>
-                        <button class="btn formula_mult formula_sin">sin()</button>
-                        <button class="btn formula_mult formula_cos">cos()</button>
-                        <button class="btn formula_mult formula_tan">tan()</button>
-                        <button class="btn formula_mult formula_tan">cot()</button>
-                        <button class="btn formula_mult formula_sec">sec()</button>
-                        <button class="btn formula_mult formula_csc">csc()</button>
+                        <p class="title"><?php esc_html_e('Math operators', 'wpdatatables'); ?></p>
+                        <div class="wdt-formula-operators">
+                            <button class="btn formula_plus">+</button>
+                            <button class="btn formula_minus">-</button>
+                            <button class="btn formula_mult">*</button>
+                            <button class="btn formula_mult formula_div">/</button>
+                            <button class="btn formula_mult formula_brackets">()</button>
+                            <button class="btn formula_mult formula_sin">sin()</button>
+                            <button class="btn formula_mult formula_cos">cos()</button>
+                            <button class="btn formula_mult formula_tan">tan()</button>
+                            <button class="btn formula_mult formula_tan">cot()</button>
+                            <button class="btn formula_mult formula_sec">sec()</button>
+                            <button class="btn formula_mult formula_csc">csc()</button>
+                        </div>
                     </div>
-            </div>
                 </div>
                 <!--/.row-->
 

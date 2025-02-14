@@ -25,15 +25,22 @@ class SqlConstructor
     public static function init()
     {
         // Display new table types in table wizard
-        add_action('wpdatatables_add_table_constructor_type_in_wizard', array('WDTIntegration\SqlConstructor', 'addNewTableTypes'));
+        add_action('wpdatatables_add_table_constructor_type_in_wizard', array('WDTIntegration\SqlConstructor',
+            'addNewTableTypes'));
         // Display new constructor steps templates
-        add_action('wpdatatables_add_constructor_step_in_wizard', array('WDTIntegration\SqlConstructor', 'addNewConstructorStep'));
+        add_action('wpdatatables_add_constructor_step_in_wizard', array('WDTIntegration\SqlConstructor',
+            'addNewConstructorStep'));
         // Ajax actions for new SQL Constructor
-        add_action('wp_ajax_wpdatatables_generate_mysql_based_query',  array('WDTIntegration\SqlConstructor','wdtGenerateMySqlBasedQuery'));
-        add_action('wp_ajax_wpdatatables_generate_wp_based_query',  array('WDTIntegration\SqlConstructor','wdtGenerateWPBasedQuery'));
-        add_action('wp_ajax_wpdatatables_refresh_wp_query_preview',  array('WDTIntegration\SqlConstructor','wdtRefreshWPQueryPreview'));
-        add_action('wp_ajax_wpdatatables_constructor_generate_wdt',  array('WDTIntegration\SqlConstructor','wdtConstructorGenerateWDT'));
-        add_action('wp_ajax_wpdatatables_constructor_get_mysql_table_columns',  array('WDTIntegration\SqlConstructor','wdtConstructorGetMySqlTableColumns'));
+        add_action('wp_ajax_wpdatatables_generate_mysql_based_query', array('WDTIntegration\SqlConstructor',
+            'wdtGenerateMySqlBasedQuery'));
+        add_action('wp_ajax_wpdatatables_generate_wp_based_query', array('WDTIntegration\SqlConstructor',
+            'wdtGenerateWPBasedQuery'));
+        add_action('wp_ajax_wpdatatables_refresh_wp_query_preview', array('WDTIntegration\SqlConstructor',
+            'wdtRefreshWPQueryPreview'));
+        add_action('wp_ajax_wpdatatables_constructor_generate_wdt', array('WDTIntegration\SqlConstructor',
+            'wdtConstructorGenerateWDT'));
+        add_action('wp_ajax_wpdatatables_constructor_get_mysql_table_columns', array('WDTIntegration\SqlConstructor',
+            'wdtConstructorGetMySqlTableColumns'));
     }
 
     /**
@@ -62,10 +69,11 @@ class SqlConstructor
         echo $newConstructorStep;
 
     }
+
     /**
      * Action for generating a WP-based MySQL query
      */
-     public static function wdtGenerateWPBasedQuery()
+    public static function wdtGenerateWPBasedQuery()
     {
         if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
             exit();
@@ -89,7 +97,7 @@ class SqlConstructor
     /**
      * Action for refreshing the WP-based query
      */
-     public static function wdtRefreshWPQueryPreview()
+    public static function wdtRefreshWPQueryPreview()
     {
         if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
             exit();
@@ -108,7 +116,7 @@ class SqlConstructor
     /**
      * Action for generating the table from query/constructed table data
      */
-     public static function wdtConstructorGenerateWDT()
+    public static function wdtConstructorGenerateWDT()
     {
         if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
             exit();
@@ -130,7 +138,7 @@ class SqlConstructor
     /**
      * Request the column list for the selected tables
      */
-     public static function wdtConstructorGetMySqlTableColumns()
+    public static function wdtConstructorGetMySqlTableColumns()
     {
         if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
             exit();
@@ -148,7 +156,7 @@ class SqlConstructor
     /**
      * Action for generating a WP-based MySQL query
      */
-     public static function wdtGenerateMySqlBasedQuery()
+    public static function wdtGenerateMySqlBasedQuery()
     {
         if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
             exit();

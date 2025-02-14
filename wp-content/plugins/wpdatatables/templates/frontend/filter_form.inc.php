@@ -11,7 +11,7 @@
 /** @var WDTColumn $dataColumn */
 $insertArray = apply_filters_deprecated(
     'wdt_add_class_to_filter_in_form_element',
-    array( esc_attr($this->getCSSClasses()), $this->getWpId() ),
+    array(esc_attr($this->getCSSClasses()), $this->getWpId()),
     WDT_INITIAL_STARTER_VERSION,
     'wpdatatables_add_class_to_filter_in_form_element'
 );
@@ -26,15 +26,19 @@ $customClasses = apply_filters('wpdatatables_add_class_to_filter_in_form_element
                 /** @var $dataColumn WDTColumn */
                 if ($dataColumn->getFilterType() != 'null') {
                     ?>
-                    <div class="wpDataTableFilterSection" id="<?php echo esc_attr($this->getId() . '_' . $key . '_filter') ?>_sections">
-                        <label><?php echo $dataColumn->getFilterLabel() ? esc_html($dataColumn->getFilterLabel()) : esc_html($dataColumn->getTitle()) ?>:</label>
+                    <div class="wpDataTableFilterSection"
+                         id="<?php echo esc_attr($this->getId() . '_' . $key . '_filter') ?>_sections">
+                        <label><?php echo $dataColumn->getFilterLabel() ? esc_html($dataColumn->getFilterLabel()) : esc_html($dataColumn->getTitle()) ?>
+                            :</label>
                         <div id="<?php echo esc_attr($this->getId() . '_' . $key . '_filter') ?>"></div>
                     </div>
                 <?php } ?>
             <?php }
             if ($this->isClearFilters()) { ?>
                 <div class="wpDataTableFilterSection" id="wdt-clear-filters-button-block">
-                    <button class="button btn wdt-clear-filters-button" aria-label="<?php echo esc_attr('Clear filters') ?>" role="button" data-table_id = <?php echo esc_attr($this->getId()) ?>><?php $this->getTableSkin() === 'mojito' || $this->getTableSkin() === 'dark-mojito' ? '' : esc_html_e('Clear filters', 'wpdatatables'); ?></button>
+                    <button class="button btn wdt-clear-filters-button"
+                            aria-label="<?php echo esc_attr('Clear filters') ?>" role="button"
+                            data-table_id= <?php echo esc_attr($this->getId()) ?>><?php $this->getTableSkin() === 'mojito' || $this->getTableSkin() === 'dark-mojito' ? '' : esc_html_e('Clear filters', 'wpdatatables'); ?></button>
                 </div>
             <?php } ?>
             <?php

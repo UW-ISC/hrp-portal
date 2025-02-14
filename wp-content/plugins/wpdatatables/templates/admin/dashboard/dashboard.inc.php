@@ -62,15 +62,16 @@
                                 <i class="wpdt-icon-chart-line"></i>
                                 <?php esc_html_e('Create a Chart', 'wpdatatables'); ?></a>
 
-                            <?php if (get_option('wdtGettingStartedPageStatus') != 1) {?>
-                            <a href="<?php echo admin_url('admin.php?page=wpdatatables-getting-started'); ?>"
-                               class="wdt-link-tutorials">
-                                <?php esc_html_e('I need help, show me tutorials', 'wpdatatables'); ?></a>
+                            <?php if (get_option('wdtGettingStartedPageStatus') != 1) { ?>
+                                <a href="<?php echo admin_url('admin.php?page=wpdatatables-getting-started'); ?>"
+                                   class="wdt-link-tutorials">
+                                    <?php esc_html_e('I need help, show me tutorials', 'wpdatatables'); ?></a>
                             <?php } ?>
 
                         </div>
                         <div class="col-sm-5 pull-right text-right">
-                            <img class="img-responsive wdt-welcome-img" src="<?php echo WDT_ASSETS_PATH; ?>img/dashboard/dashboard-welcome.svg"
+                            <img class="img-responsive wdt-welcome-img"
+                                 src="<?php echo WDT_ASSETS_PATH; ?>img/dashboard/dashboard-welcome.svg"
                                  alt="Welcome message">
                         </div>
                         <div class="clear"></div>
@@ -105,30 +106,31 @@
                         </ul>
                     </div>
 
-                        <?php if ($tableCount == 0) { ?>
-                            <div class="card-body wpdt-flex card-padding wdt-empty">
+                    <?php if ($tableCount == 0) { ?>
+                        <div class="card-body wpdt-flex card-padding wdt-empty">
                             <div class="wdt-table-count text-center">
                                 <span class="wdt-table-count-number"> <?php echo esc_html($tableCount); ?></span>
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-table-message">
                                 <p><?php esc_html_e('You have no tables created.', 'wpdatatables'); ?></p>
-                                <?php if (get_option('wdtGettingStartedPageStatus') != 1) {?>
+                                <?php if (get_option('wdtGettingStartedPageStatus') != 1) { ?>
                                     <a href="<?php echo admin_url('admin.php?page=wpdatatables-tutorials'); ?>">
                                         <?php esc_html_e('View tutorials', 'wpdatatables'); ?>
                                     </a>
                                 <?php } ?>
                             </div>
                             <div class="clear"></div>
-                    </div>
-                        <?php } else {
-                            $lastTableData = WDTTools::getLastTableData('table');
-                            $tableType = WDTTools::getConvertedTableType($lastTableData->table_type);
-                            $simpleType = $lastTableData->table_type == 'simple' ? '&simple': '';
-                            ?>
-                            <div class="card-body wpdt-flex card-padding">
+                        </div>
+                    <?php } else {
+                        $lastTableData = WDTTools::getLastTableData('table');
+                        $tableType = WDTTools::getConvertedTableType($lastTableData->table_type);
+                        $simpleType = $lastTableData->table_type == 'simple' ? '&simple' : '';
+                        ?>
+                        <div class="card-body wpdt-flex card-padding">
                             <div class="wdt-table-count text-center">
-                                <span class="wdt-table-count-number"><a href="<?php echo admin_url('admin.php?page=wpdatatables-administration'); ?>"> <?php echo $tableCount; ?></a></span>
+                                <span class="wdt-table-count-number"><a
+                                            href="<?php echo admin_url('admin.php?page=wpdatatables-administration'); ?>"> <?php echo $tableCount; ?></a></span>
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-table-last-created">
@@ -148,8 +150,8 @@
                                 <p><?php esc_html_e('Latest table created.', 'wpdatatables'); ?></p>
                                 <div class="clear"></div>
                             </div>
-                    </div>
-                        <?php } ?>
+                        </div>
+                    <?php } ?>
 
                 </div>
                 <div class="card wdt-chart-card">
@@ -177,28 +179,29 @@
                         </ul>
                     </div>
 
-                        <?php if ($tableChartsCount == 0) { ?>
-                    <div class="card-body wpdt-flex card-padding wdt-empty">
+                    <?php if ($tableChartsCount == 0) { ?>
+                        <div class="card-body wpdt-flex card-padding wdt-empty">
                             <div class="wdt-chart-count text-center">
                                 <span class="wdt-chart-count-number"> <?php echo (int)$tableChartsCount; ?></span>
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-chart-message">
                                 <p><?php esc_html_e('You have no charts created.', 'wpdatatables'); ?></p>
-                                <?php if (get_option('wdtGettingStartedPageStatus') != 1) {?>
-                                <a href="<?php echo admin_url('admin.php?page=wpdatatables-tutorials'); ?>">
-                                    <?php esc_html_e('View tutorials', 'wpdatatables'); ?>
-                                </a>
+                                <?php if (get_option('wdtGettingStartedPageStatus') != 1) { ?>
+                                    <a href="<?php echo admin_url('admin.php?page=wpdatatables-tutorials'); ?>">
+                                        <?php esc_html_e('View tutorials', 'wpdatatables'); ?>
+                                    </a>
                                 <?php } ?>
                             </div>
                             <div class="clear"></div>
-                    </div>
-                        <?php } else {
-                            $lastChartData = WDTTools::getLastTableData('chart');
-                            ?>
+                        </div>
+                    <?php } else {
+                        $lastChartData = WDTTools::getLastTableData('chart');
+                        ?>
                         <div class="card-body wpdt-flex card-padding">
                             <div class="wdt-chart-count text-center">
-                                <span class="wdt-chart-count-number"> <a href="<?php echo admin_url('admin.php?page=wpdatatables-charts'); ?>"><?php echo (int)$tableChartsCount; ?></a></span>
+                                <span class="wdt-chart-count-number"> <a
+                                            href="<?php echo admin_url('admin.php?page=wpdatatables-charts'); ?>"><?php echo (int)$tableChartsCount; ?></a></span>
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-chart-last-created">
@@ -219,7 +222,7 @@
                                 <div class="clear"></div>
                             </div>
                         </div>
-                        <?php } ?>
+                    <?php } ?>
 
                 </div>
                 <div class="card wdt-support-card">
@@ -263,19 +266,25 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New major update with integrations, improvements, and bugfixes:
+                            New update with features, improvements, and bugfixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> WooCommerce Integration - Create Product Tables!</li>
-                                <li><strong>Feature:</strong> WP Posts Builder - New Table Type.</li>
-                                <li><strong>Improvement:</strong> Implemented Error Handling Mechanism for Resolving Column Position Conflicts.</li>
-                                <li><strong>Improvement:</strong> Added Option to Enable/Disable Loaders Globally for Tables and Charts.</li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Filtering Multiline Columns from Google Spreadsheets.</li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Date Display and Highcharts when Using Range Picker.</li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Unable to Change Series Colors in Charts.</li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Rendering Embedded Child Table in Parent Table.</li>
+                                <li><strong>Feature:</strong> Custom Fields support for WP Posts Builder tables.</li>
+                                <li><strong>Feature:</strong> Added Price Comparison Operators in WooCommerce Tables.</li>
+                                <li><strong>Improvement:</strong> Updated Highcharts and Highstock Libraries.
+                                </li>
+                                <li><strong>Improvement:</strong> Updated PHP Spreadsheet Library.
+                                </li>
+                                <li><strong>BugFix:</strong> Fixed Issue with custom post id placeholder.
+                                </li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Vertical Axis Label in Highcharts.
+                                </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Elementor builder pages not rendering properly.
+                                </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Mini Cart Rendering After Adding to Cart.
+                                </li>
                                 <li>Other small bug fixes.</li>
                             </ul>
                         </div>
@@ -303,7 +312,8 @@
                         <h5 class="card-title"><?php esc_html_e('Thank you for choosing wpDataTables Premium', 'wpdatatables'); ?></h5>
                         <p class="card-text m-b-0">
                             <?php esc_html_e('Enjoy using our premium features and professional support that we provide through our ', 'wpdatatables'); ?>
-                            <a href="https://tmsplugins.ticksy.com/" target="_blank"><?php esc_html_e(' ticketing system.'); ?></a>
+                            <a href="https://tmsplugins.ticksy.com/"
+                               target="_blank"><?php esc_html_e(' ticketing system.'); ?></a>
                         </p>
                     </div>
                 </div>
@@ -329,7 +339,7 @@
                         </p>
                         <ul class="m-b-0">
                             <li><span><?php esc_html_e('PHP', 'wpdatatables'); ?></span>
-                                <?php if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '>=' ) ) { ?>
+                                <?php if (version_compare(WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '>=')) { ?>
                                     <i class="wpdt-icon-check-circle-full"></i>
                                 <?php } else { ?>
                                     <i class="wpdt-icon-times-circle-full"></i>
@@ -389,7 +399,7 @@
                             if (extension_loaded('xml') && extension_loaded('dom') && ini_get('allow_url_fopen')) {
                                 $rss = new DOMDocument();
                                 @$rss->load('https://wpdatatables.com/feed/');
-                                if($rss){
+                                if ($rss) {
                                     $feed = array();
                                     foreach ($rss->getElementsByTagName('item') as $node) {
                                         $item = array(
@@ -399,31 +409,68 @@
                                         $feed[] = $item;
                                     }
                                     $limit = 4;
-                                    if(!empty($feed)){
+                                    if (!empty($feed)) {
                                         for ($x = 0; $x < $limit; $x++) {
                                             $title = str_replace(' & ', ' &amp; ', $feed[$x]['title']);
                                             $link = $feed[$x]['link'];
                                             echo ' <li> <a href="' . esc_url($link) . '" title="' . esc_attr($title) . '" class="card-link" target="_blank">' . esc_html($title) . '<i class="wpdt-icon-external-link-square-alt"></i></a></li>';
                                         }
                                     } else { ?>
-                                        <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                        <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                        <li> <a href="https://wpdatatables.com/scan-wordpress-database-for-malware/" title="How to Scan The WordPress Database For Malware" class="card-link" target="_blank">How to Scan The WordPress Database For Malware<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                        <li> <a href="https://wpdatatables.com/wordpress-database-cleanup/" title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How to Do a WordPress Database Cleanup<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li><a href="https://wpdatatables.com/how-to-create-the-premier-league-table/"
+                                               title="How to create the Premier League table for your site"
+                                               class="card-link" target="_blank">How to create the Premier League table
+                                                for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li><a href="https://wpdatatables.com/charts-vs-tables/"
+                                               title="Charts Vs Tables or When to Use One Over the Other"
+                                               class="card-link" target="_blank">Charts Vs Tables or When to Use One
+                                                Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a>
+                                        </li>
+                                        <li><a href="https://wpdatatables.com/scan-wordpress-database-for-malware/"
+                                               title="How to Scan The WordPress Database For Malware" class="card-link"
+                                               target="_blank">How to Scan The WordPress Database For Malware<i
+                                                        class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li><a href="https://wpdatatables.com/wordpress-database-cleanup/"
+                                               title="How to Do a WordPress Database Cleanup" class="card-link"
+                                               target="_blank">How to Do a WordPress Database Cleanup<i
+                                                        class="wpdt-icon-external-link-square-alt"></i></a></li>
                                     <?php }
 
                                 } else { ?>
-                                    <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                    <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                    <li> <a href="https://wpdatatables.com/scan-wordpress-database-for-malware/" title="How to Scan The WordPress Database For Malware" class="card-link" target="_blank">How to Scan The WordPress Database For Malware<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                    <li> <a href="https://wpdatatables.com/wordpress-database-cleanup/" title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How to Do a WordPress Database Cleanup<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li><a href="https://wpdatatables.com/how-to-create-the-premier-league-table/"
+                                           title="How to create the Premier League table for your site"
+                                           class="card-link" target="_blank">How to create the Premier League table for
+                                            your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li><a href="https://wpdatatables.com/charts-vs-tables/"
+                                           title="Charts Vs Tables or When to Use One Over the Other" class="card-link"
+                                           target="_blank">Charts Vs Tables or When to Use One Over the Other<i
+                                                    class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li><a href="https://wpdatatables.com/scan-wordpress-database-for-malware/"
+                                           title="How to Scan The WordPress Database For Malware" class="card-link"
+                                           target="_blank">How to Scan The WordPress Database For Malware<i
+                                                    class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li><a href="https://wpdatatables.com/wordpress-database-cleanup/"
+                                           title="How to Do a WordPress Database Cleanup" class="card-link"
+                                           target="_blank">How to Do a WordPress Database Cleanup<i
+                                                    class="wpdt-icon-external-link-square-alt"></i></a></li>
                                 <?php }
 
-                            } else {  ?>
-                                <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                <li> <a href="https://wpdatatables.com/scan-wordpress-database-for-malware/" title="How to Scan The WordPress Database For Malware" class="card-link" target="_blank">How to Scan The WordPress Database For Malware<i class="wpdt-icon-external-link-square-alt"></i></a></li>
-                                <li> <a href="https://wpdatatables.com/wordpress-database-cleanup/" title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How to Do a WordPress Database Cleanup<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                            } else { ?>
+                                <li><a href="https://wpdatatables.com/how-to-create-the-premier-league-table/"
+                                       title="How to create the Premier League table for your site" class="card-link"
+                                       target="_blank">How to create the Premier League table for your site<i
+                                                class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                <li><a href="https://wpdatatables.com/charts-vs-tables/"
+                                       title="Charts Vs Tables or When to Use One Over the Other" class="card-link"
+                                       target="_blank">Charts Vs Tables or When to Use One Over the Other<i
+                                                class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                <li><a href="https://wpdatatables.com/scan-wordpress-database-for-malware/"
+                                       title="How to Scan The WordPress Database For Malware" class="card-link"
+                                       target="_blank">How to Scan The WordPress Database For Malware<i
+                                                class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                <li><a href="https://wpdatatables.com/wordpress-database-cleanup/"
+                                       title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How
+                                        to Do a WordPress Database Cleanup<i
+                                                class="wpdt-icon-external-link-square-alt"></i></a></li>
                             <?php } ?>
                         </ul>
                         <div class="clear"></div>
@@ -436,7 +483,8 @@
                             </div>
                             <div class="wdt-subscribe-form">
                                 <div id="form-acm_31408"></div>
-                                <script type="text/javascript" src="https://acumbamail.com/newform/dynamic/js/ET8rshmNeLvQox6J8U99sSJZ8B1DZo1mhOgs408R0mHYiwgmM/31408/"></script>
+                                <script type="text/javascript"
+                                        src="https://acumbamail.com/newform/dynamic/js/ET8rshmNeLvQox6J8U99sSJZ8B1DZo1mhOgs408R0mHYiwgmM/31408/"></script>
                             </div>
                         </div>
                     </div>
@@ -475,10 +523,14 @@
                         <?php if (!defined('WDT_FRF_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="wdt-forminator-integration" class="btn btn-icon-text btn-primary">
-                                    <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip" class="" role="button">
-                                        <i class="wpdt-icon-file-download m-r-5"></i><?php esc_html_e('Download', 'wpdatatables'); ?></a>
-                                    </button>
-                                <a href="https://wordpress.org/plugins/wpdatatables-forminator/" target="_blank" class="wdt-addons-find-out-more" role="button"><?php esc_html_e('Learn more', 'wpdatatables'); ?></a>
+                                    <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip"
+                                       class="" role="button">
+                                        <i class="wpdt-icon-file-download m-r-5"></i><?php esc_html_e('Download', 'wpdatatables'); ?>
+                                    </a>
+                                </button>
+                                <a href="https://wordpress.org/plugins/wpdatatables-forminator/" target="_blank"
+                                   class="wdt-addons-find-out-more"
+                                   role="button"><?php esc_html_e('Learn more', 'wpdatatables'); ?></a>
                                 <div class="clear"></div>
                             </div>
                         <?php } else { ?>
@@ -716,13 +768,14 @@
                                 <?php esc_html_e('Appointments and Events WordPress Booking Plugin', 'wpdatatables'); ?>
                             </div>
                             <p class="wpdt-text wpdt-font m-b-0">
-                                <?php echo sprintf(esc_html__('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! %s businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage %s appointments and events worldwide each month.', 'wpdatatables') ,AMELIA_NUMBER_OF_ACTIVE_INSTALLS , AMELIA_NUMBER_OF_APPOINTMENTS );?></p>
+                                <?php echo sprintf(esc_html__('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! %s businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage %s appointments and events worldwide each month.', 'wpdatatables'), AMELIA_NUMBER_OF_ACTIVE_INSTALLS, AMELIA_NUMBER_OF_APPOINTMENTS); ?></p>
                             <p>
                                 <span class="wdt-stars-container stars-100">★★★★★</span>
                                 <span class="wdt-rating"> <?php esc_html_e('Rating: 4.8 - ‎123 reviews') ?></span>
 
                             </p>
-                            <a href="https://wpamelia.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank" class="btn btn-primary">
+                            <a href="https://wpamelia.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                               target="_blank" class="btn btn-primary">
                                 <?php esc_html_e('Learn More', 'wpdatatables'); ?>
                                 <i class="wpdt-icon-arrow-right"></i>
                             </a>
@@ -735,14 +788,17 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php esc_html_e('Made by', 'wpdatatables'); ?>
-                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
+                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                   target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                       target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
-                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
+                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow"
+                       target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
                 </li>
                 <li>|</li>
                 <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">

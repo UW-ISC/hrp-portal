@@ -13,12 +13,13 @@
     display: flex;
     flex-direction: column;
 }
-.wdt-addons .wpdt-addons-desc{
+
+.wdt-addons .wpdt-addons-desc {
     min-height: 58px;
     display: flex;
 }
 
-.wdt-addons .wpdt-addons-desc img{
+.wdt-addons .wpdt-addons-desc img {
     display: inline-block !important;
     background: #FFFFFF;
     width: 50px;
@@ -28,12 +29,15 @@
     box-shadow: 0 1px 2px rgba(9, 29, 112, 0.17);
     border-radius: 12px;
 }
+
 .wdt-addons .wpdt-addons-desc img.wdt-gravity-img {
     padding: 4px;
 }
+
 .wdt-addons .wpdt-addons-desc img.wdt-formidable-img {
     padding: 0;
 }
+
 .wdt-addons .wdt-plugin-installed:hover:hover,
 .wdt-addons .wdt-plugin-installed:hover,
 .wdt-addons .wdt-plugin-installed:focus:focus,
@@ -48,26 +52,30 @@
     font-weight: 500;
     border-radius: 5px;
 }
+
 .wdt-addons .wpdt-addons-desc h4,
 .wdt-addons .wdt-checkout-button,
 .wdt-addons .thumbnail .caption,
 .wdt-addons .wdt-addons-find-out-more,
-.wdt-addons .wpdt-addons-intro{
+.wdt-addons .wpdt-addons-intro {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
 }
-.wdt-addons .wpdt-addons-intro{
+
+.wdt-addons .wpdt-addons-intro {
     line-height: 24px;
     color: #5A6C89;
 }
+
 .wdt-addons .thumbnail .caption {
     line-height: 24px;
     color: #5A6C89;
     padding: 16px 0 0 0;
     min-height: 110px;
 }
+
 .wdt-addons .thumbnail .caption {
     line-height: 24px;
     color: #5A6C89;
@@ -75,7 +83,7 @@
     min-height: 93px;
 }
 
-.wdt-addons .wpdt-addons-desc h4{
+.wdt-addons .wpdt-addons-desc h4 {
     display: inline-block;
     line-height: 20px;
     color: #091D70;
@@ -87,6 +95,7 @@
 .wdt-addons .wdt-addons-links {
     padding: 10px 0 0 0;
 }
+
 .wdt-addons .wdt-addons-links .btn {
     float: right;
     font-family: Inter;
@@ -107,6 +116,7 @@
     outline: none;
     box-shadow: none;
 }
+
 .wdt-addons .wdt-checkout-button {
     float: right;
     line-height: 20px;
@@ -115,8 +125,9 @@
     background: #008CFF;
     border-radius: 5px;
 }
+
 .wdt-addons .wdt-checkout-button i {
-   margin-right: 8px;
+    margin-right: 8px;
 }
 
 .wdt-addons .ribbon {
@@ -176,27 +187,32 @@
 .wdt-addons p {
     margin-bottom: 0;
 }
-@media (max-width : 1441px) {
+
+@media (max-width: 1441px) {
     .wdt-addons .thumbnail .caption {
         min-height: 120px;
     }
 }
-@media (max-width : 1025px) {
+
+@media (max-width: 1025px) {
     .wdt-addons .thumbnail {
         min-height: 338px;
     }
+
     .wdt-addons .thumbnail .caption {
         min-height: 170px;
     }
 }
-@media (max-width : 768px) {
-    .wpdt-c  .wdt-addons .col-sm-4 {
+
+@media (max-width: 768px) {
+    .wpdt-c .wdt-addons .col-sm-4 {
         width: 100%;
     }
 
-    .wdt-addons .thumbnail  {
+    .wdt-addons .thumbnail {
         min-height: 238px;
     }
+
     .wdt-addons .thumbnail .caption {
         min-height: 110px;
     }

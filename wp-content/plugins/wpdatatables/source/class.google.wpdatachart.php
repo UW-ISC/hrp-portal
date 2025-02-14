@@ -53,6 +53,7 @@ class WdtGoogleChart extends WPDataChart
     {
         $this->_region = $region;
     }
+
     /**
      * @return string
      */
@@ -68,6 +69,7 @@ class WdtGoogleChart extends WPDataChart
     {
         $this->_colors = $colors;
     }
+
     /**
      * @return string
      */
@@ -377,6 +379,7 @@ class WdtGoogleChart extends WPDataChart
      *
      * @param array $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct(array $constructedChartData, $loadFromDB = false)
@@ -460,8 +463,8 @@ class WdtGoogleChart extends WPDataChart
         if (!$this->_responsiveWidth) {
             $this->_render_data['width'] = $this->getWidth();
         }
-        foreach ($this->_render_data['series'] as $key=>$series){
-            if ($series['color']== '')
+        foreach ($this->_render_data['series'] as $key => $series) {
+            if ($series['color'] == '')
                 $this->_render_data['series'][$key]['color'] = $colors[$key];
         }
         $this->_render_data['options']['backgroundColor']['fill'] = $this->getBackgroundColor();
@@ -477,7 +480,7 @@ class WdtGoogleChart extends WPDataChart
             $this->_render_data['options']['is3D'] = $this->isThreeD();
         }
 
-        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart'){
+        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart') {
             $this->_render_data['options']['region'] = $this->getRegion();
             $this->_render_data['options']['colors'] = $this->getRegionColors();
             $this->_render_data['options']['datalessRegionColor'] = $this->getDatalessRegionColors();
@@ -547,6 +550,7 @@ class WdtGoogleChart extends WPDataChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -560,6 +564,7 @@ class WdtGoogleChart extends WPDataChart
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)
@@ -577,7 +582,7 @@ class WdtGoogleChart extends WPDataChart
         if ($this->_type == 'google_pie_chart') {
             $this->setThreeD(isset($renderData['render_data']['options']['is3D']) ? $renderData['render_data']['options']['is3D'] : false);
         }
-        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart'){
+        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart') {
             $this->setRegion(isset($renderData['render_data']['options']['region']) ? $renderData['render_data']['options']['region'] : 'world');
             $this->setRegionColors(isset($renderData['render_data']['options']['colors']) ? $renderData['render_data']['options']['colors'] : '#267114');
             $this->setDatalessRegionColors(isset($renderData['render_data']['options']['datalessRegionColor']) ? $renderData['render_data']['options']['datalessRegionColor'] : '#F5F5F5');

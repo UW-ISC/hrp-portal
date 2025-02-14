@@ -16,7 +16,8 @@
 
             <!-- .modal-header -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                                class="wpdt-icon-times-full"></i></span>
                 </button>
                 <h4 class="modal-title"><?php esc_html_e('Remove Column', 'wpdatatable'); ?></h4>
             </div>
@@ -37,12 +38,12 @@
                                 <div class="fg-line">
                                     <div class="select">
                                         <select id="wdtDeleteColumnSelect" class="selectpicker">
-                                            <?php if (isset($tableData)){
+                                            <?php if (isset($tableData)) {
                                                 foreach ($tableData->table->columns as $column) { ?>
-                                                <?php if ($column->orig_header == 'wdt_ID' || $column->orig_header == 'wdt_id') {
-                                                    continue;
-                                                } ?>
-                                                <option value="<?php echo esc_attr($column->orig_header); ?>"><?php echo esc_html($column->display_header); ?></option>
+                                                    <?php if ($column->orig_header == 'wdt_ID' || $column->orig_header == 'wdt_id') {
+                                                        continue;
+                                                    } ?>
+                                                    <option value="<?php echo esc_attr($column->orig_header); ?>"><?php echo esc_html($column->display_header); ?></option>
                                                 <?php } ?>
                                             <?php } ?>
                                         </select>

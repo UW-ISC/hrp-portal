@@ -94,7 +94,7 @@
     <?php include WDT_TEMPLATE_PATH . 'admin/common/save_table_modal.inc.php'; ?>
     <!-- /Save table modal -->
 
-    <?php do_action('wpdatatables_admin_after_edit', $connection ?? '')?>
+    <?php do_action('wpdatatables_admin_after_edit', $connection ?? '') ?>
 
     <!-- /Templates -->
 

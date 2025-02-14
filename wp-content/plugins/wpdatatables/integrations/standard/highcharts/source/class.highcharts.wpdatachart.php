@@ -988,6 +988,7 @@ class WdtHighchartsChart extends WPDataChart
      *
      * @param array $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct(array $constructedChartData, $loadFromDB = false)
@@ -1188,12 +1189,12 @@ class WdtHighchartsChart extends WPDataChart
             $this->{$renderData}['options']['xAxis']['title']['text'] = $this->_render_data['options']['hAxis']['title'];
         }
         $this->{$renderData}['options']['xAxis']['crosshair'] = $this->isHorizontalAxisCrosshair();
-        if (!empty($this->_render_data['options']['vAxis']['title'])) {
-            if ($this->getSeriesType() != '') {
-                $this->{$renderData}['options']['yAxis'][0]['title']['text'] = $this->_render_data['options']['vAxis']['title'];
-            } else {
-                $this->{$renderData}['options']['yAxis']['title']['text'] = $this->_render_data['options']['vAxis']['title'];
-            }
+        if ($this->getSeriesType() != '') {
+            $this->{$renderData}['options']['yAxis'][0]['title']['text'] = !empty($this->_render_data['options']['vAxis']['title']) ?
+                $this->_render_data['options']['vAxis']['title'] : "";
+        } else {
+            $this->{$renderData}['options']['yAxis']['title']['text'] = !empty($this->_render_data['options']['vAxis']['title']) ?
+                $this->_render_data['options']['vAxis']['title'] : "";
         }
         if ($this->getSeriesType() != '') {
             $this->{$renderData}['options']['yAxis'][0]['crosshair'] = $this->isVerticalAxisCrosshair();
@@ -1266,8 +1267,15 @@ class WdtHighchartsChart extends WPDataChart
             $this->{$renderData}['options']['exporting']['buttons']['contextButton']['symbolStroke'] = $this->getExportingButtonColor();
         }
         $this->{$renderData}['options']['exporting']['buttons']['contextButton']['text'] = $this->getExportingButtonText();
-        if ($this->isExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
-            $this->{$renderData}['options']['exporting']['buttons']['contextButton']['menuItems'] = ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'];
+        if ($this->isExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart',
+                'highcharts_treemap_chart'])) {
+            $this->{$renderData}['options']['exporting']['buttons']['contextButton']['menuItems'] = ['viewFullscreen',
+                'printChart',
+                'separator',
+                'downloadPNG',
+                'downloadJPEG',
+                'downloadPDF',
+                'downloadSVG'];
         }
 
         // Credits
@@ -1501,6 +1509,7 @@ class WdtHighchartsChart extends WPDataChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -1530,13 +1539,15 @@ class WdtHighchartsChart extends WPDataChart
         }
         wp_enqueue_script('wdt-highcharts-accessibility', $this->getAccessibilityLibSource(), array('wdt-highcharts'), WDT_CURRENT_VERSION);
         // Highchart wpDataTable JS library
-        wp_enqueue_script('wpdatatables-highcharts', WDT_HC_ASSETS_URL . 'js/wdt.highcharts' . $js_ext, array('jquery','wdt-highcharts'), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wpdatatables-highcharts', WDT_HC_ASSETS_URL . 'js/wdt.highcharts' . $js_ext, array('jquery',
+            'wdt-highcharts'), WDT_CURRENT_VERSION);
 
         return json_encode($this->_highcharts_render_data);
     }
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)
@@ -1635,6 +1646,7 @@ class WdtHighchartsChart extends WPDataChart
 
     /**
      * @param $chartData
+     *
      * @return mixed|null
      */
     public function setChartRenderData($chartData)

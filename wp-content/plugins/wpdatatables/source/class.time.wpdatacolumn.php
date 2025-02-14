@@ -18,6 +18,7 @@ class TimeWDTColumn extends WDTColumn
 
     /**
      * TimeWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())
@@ -28,6 +29,7 @@ class TimeWDTColumn extends WDTColumn
 
     /**
      * @param $content
+     *
      * @return false|mixed|string
      */
     public function prepareCellOutput($content)
@@ -43,7 +45,7 @@ class TimeWDTColumn extends WDTColumn
                 $formattedValue = '';
             }
         } else {
-            if (!is_null($content['value'])){
+            if (!is_null($content['value'])) {
                 $content['value'] = str_replace('/', '-', $content['value']);
                 $formattedValue = date(get_option('wdtTimeFormat'), strtotime($content['value']));
             } else {

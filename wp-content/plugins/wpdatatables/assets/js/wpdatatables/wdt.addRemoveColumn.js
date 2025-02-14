@@ -2,12 +2,12 @@
     var elementsPicker = document.querySelectorAll('select.wdt-default-add-column-db-type');
     var divPicker = document.querySelectorAll('.wdt-default-add-column-db-type div.open li a span.text');
     var $connectionTypeDB = $(document).find($('#wdt-table-connection')).data('vendor');
-    if($connectionTypeDB == 'postgresql'){
-        for(var i=0; i< elementsPicker.length; i++) {
+    if ($connectionTypeDB == 'postgresql') {
+        for (var i = 0; i < elementsPicker.length; i++) {
             elementsPicker[i][9].innerHTML = elementsPicker[i][9].innerHTML.replace('DATETIME', 'TIMESTAMP');
             elementsPicker[i][9].innerText = elementsPicker[i][9].innerText.replace('DATETIME', 'TIMESTAMP');
         }
-        for(var i=0; i< divPicker.length; i++){
+        for (var i = 0; i < divPicker.length; i++) {
             divPicker[i].innerHTML = divPicker[i].innerHTML.replace('DATETIME', 'TIMESTAMP');
             divPicker[i].innerText = divPicker[i].innerText.replace('DATETIME', 'TIMESTAMP');
         }
@@ -16,7 +16,7 @@
         $("select.wdt-default-add-column-db-type option[value='MEDIUMINT']").hide();
         $('.wdt-default-add-column-db-type div.open li[data-original-index="5"]').hide();
     }
-    if($connectionTypeDB == 'mssql'){
+    if ($connectionTypeDB == 'mssql') {
         $("select.wdt-default-add-column-db-type option[value='TEXT']").hide();
         $('.wdt-default-add-column-db-type div.open li[data-original-index="1"]').hide();
         $("select.wdt-default-add-column-db-type option[value='MEDIUMINT']").hide();
@@ -33,22 +33,22 @@
         $columnBlock.find('.wdt-add-column-default-value')
             .attr('type', 'text');
         $columnBlock.find('.wdt-default-add-column-db-type-value')[0].type = 'text';
-        if($.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT' ,'TINYINT','MEDIUMINT' ,'VARCHAR']) != -1){
-            if ($(this).val() != 'VARCHAR'){
+        if ($.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT', 'VARCHAR']) != -1) {
+            if ($(this).val() != 'VARCHAR') {
                 $columnBlock.find('.wdt-add-column-default-value')[0].type = 'number';
             }
             $columnBlock.find('.wdt-default-add-column-db-type-value')[0].type = 'number';
         }
 
-        if ($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1) {
+        if ($.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME']) != -1) {
             $columnBlock.find('.wdt-add-column-default-value')
                 .addClass('wdt-' + $(this).val().toLowerCase() + 'picker');
         } else {
             $columnBlock.find('.wdt-add-column-default-value')
                 .removeClass('wdt-datepicker wdt-datetimepicker wdt-timepicker');
         }
-        if($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1 || ($.inArray($connectionTypeDB,['mssql', 'postgresql']) != -1 &&
-            $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1) ){
+        if ($.inArray($(this).val(), ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1 || ($.inArray($connectionTypeDB, ['mssql', 'postgresql']) != -1 &&
+            $.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
             $columnBlock.find('.wdt-default-add-column-db-type-value').addClass('hidden')
             $columnBlock.find('#wdt-add-column-db-type-value').addClass('hidden')
         } else {
@@ -80,7 +80,7 @@
         $defaultValuesBlock.show()
         $addColumnBlock.find('.wdt-default-add-column-db-type').prop('disabled', '');
 
-        if($(this).val() == 'float'){
+        if ($(this).val() == 'float') {
             $addColumnBlock.find('.wdt-default-add-column-db-type-value')[0].type = 'text';
         } else {
             $addColumnBlock.find('.wdt-default-add-column-db-type-value')[0].type = 'number';
@@ -94,12 +94,12 @@
             $addColumnBlock.find('.wdt-default-add-column-db-type').selectpicker('val', $typeInDatabase);
             $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
             $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
-            if($(this).val() == 'memo' && $connectionTypeDB == 'mssql') {
+            if ($(this).val() == 'memo' && $connectionTypeDB == 'mssql') {
                 $addColumnBlock.find('.wdt-default-add-column-db-type-value').removeClass('hidden')
                 $addColumnBlock.find('#wdt-add-column-db-type-value').removeClass('hidden')
-            } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
-                || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1)  || ($.inArray($connectionTypeDB,['mssql', 'postgresql']) != -1 &&
-                    $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+            } else if (($.inArray($typeInDatabase, ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
+                || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray($connectionTypeDB, ['mssql', 'postgresql']) != -1 &&
+                    $.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
                 $addColumnBlock.find('.wdt-default-add-column-db-type-value').addClass('hidden')
                 $addColumnBlock.find('#wdt-add-column-db-type-value').addClass('hidden')
             } else {
@@ -161,12 +161,12 @@
         $addColumnBlock.find('.wdt-default-add-column-db-type').selectpicker('val', $typeInDatabase);
         $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
         $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
-        if($(this).val() == 'memo' && $connectionTypeDB == 'mssql') {
+        if ($(this).val() == 'memo' && $connectionTypeDB == 'mssql') {
             $addColumnBlock.find('.wdt-default-add-column-db-type-value').removeClass('hidden')
             $addColumnBlock.find('#wdt-add-column-db-type-value').removeClass('hidden')
-        } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
-            || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1)  || ($.inArray($connectionTypeDB,['mssql', 'postgresql']) != -1 &&
-                $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+        } else if (($.inArray($typeInDatabase, ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
+            || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray($connectionTypeDB, ['mssql', 'postgresql']) != -1 &&
+                $.inArray($(this).val(), ['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)) {
             $addColumnBlock.find('.wdt-default-add-column-db-type-value').addClass('hidden')
             $addColumnBlock.find('#wdt-add-column-db-type-value').addClass('hidden')
         } else {
@@ -185,7 +185,7 @@
     });
 
     $('.wdt-add-hidden-default-value').on('change', function () {
-        if($(this).val() == 'query-param') {
+        if ($(this).val() == 'query-param') {
             $(this).closest('div.wdt-add-column-modal-block')
                 .find('.wdt-add-hidden-post-meta-value-block')
                 .hide()
@@ -195,7 +195,7 @@
                 .closest('div.wdt-add-column-modal-block')
                 .find('.wdt-add-hidden-query-param-value-block')
                 .show()
-        } else if($(this).val() == 'post-meta'){
+        } else if ($(this).val() == 'post-meta') {
             $(this).closest('div.wdt-add-column-modal-block')
                 .find('.wdt-add-hidden-query-param-value-block')
                 .hide()
@@ -206,7 +206,7 @@
                 .find('.wdt-add-hidden-acf-data-value-block')
                 .hide()
 
-        } else if($(this).val() == 'acf-data'){
+        } else if ($(this).val() == 'acf-data') {
             $(this).closest('div.wdt-add-column-modal-block')
                 .find('.wdt-add-hidden-query-param-value-block')
                 .hide()
@@ -246,7 +246,7 @@
             return false;
         }
 
-        if(!($.inArray($(document).find('.wdt-default-add-column-db-type').selectpicker('val'),['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)) {
+        if (!($.inArray($(document).find('.wdt-default-add-column-db-type').selectpicker('val'), ['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)) {
             if ($(document).find('.wdt-default-add-column-db-type-value').val() == '' || ($(document).find('.wdt-default-add-column-db-type').selectpicker('val') == 'VARCHAR' && parseInt($(document).find('.wdt-default-add-column-db-type-value').val()) > '4294967295')) {
                 wdtNotify(wpdatatables_add_remove_column_strings.errorAddRemoveColumn, wpdatatables_add_remove_column_strings.outOfRangeTypeValueAddRemoveColumn, 'danger');
                 return false;
@@ -254,10 +254,10 @@
         }
 
         var columnType = $addColumnModal.find('.wdt-add-column-column-type').selectpicker('val');
-        var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(document).find('.wdt-default-add-column-db-type').selectpicker('val')=='VARCHAR' ?
+        var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(document).find('.wdt-default-add-column-db-type').selectpicker('val') == 'VARCHAR' ?
             $addColumnModal.find('.wdt-add-column-default-value').selectpicker('val') :
             $addColumnModal.find('.wdt-add-column-default-value').val();
-        if (defaultValue != null && columnType == 'multiselect' && $(document).find('.wdt-default-add-column-db-type').selectpicker('val')=='VARCHAR') {
+        if (defaultValue != null && columnType == 'multiselect' && $(document).find('.wdt-default-add-column-db-type').selectpicker('val') == 'VARCHAR') {
             defaultValue.join('|');
         }
         if (defaultValue != null && (columnType === 'time' || columnType === 'datetime')) {
@@ -266,7 +266,7 @@
                 defaultValue = defaultValue.replace(/:(\d)$/, ':0$1');
             }
         }
-        if (columnType == 'hidden' && !$addColumnModal.find('.wdt-add-hidden-default-value').length){
+        if (columnType == 'hidden' && !$addColumnModal.find('.wdt-add-hidden-default-value').length) {
             wdtNotify(wpdatatables_add_remove_column_strings.error, wpdatatables_add_remove_column_strings.hiddenColumnNotAllowed, 'danger');
             return false;
         }
@@ -301,7 +301,7 @@
             type: 'POST',
             data: {
                 action: 'wpdatatables_add_new_manual_column',
-                table_id: tableWpID ,
+                table_id: tableWpID,
                 wdtNonce: $('#wdtNonceFrontendEdit_' + tableWpID).val(),
                 column_data: newColumnData
             },

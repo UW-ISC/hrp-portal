@@ -8,7 +8,7 @@
 
     var tables = [];
 
-    if (allTables !== null){
+    if (allTables !== null) {
         for (var i = 0; i < allTables.length; i++) {
             tables.push({
                 value: allTables[i].id,
@@ -185,34 +185,34 @@
                 if (attributes.var2) {
                     var2 = ' var2=' + attributes.var2;
                 }
-                if (attributes.var3)  {
+                if (attributes.var3) {
                     var3 = ' var3=' + attributes.var3;
                 }
-                if (attributes.var4)  {
+                if (attributes.var4) {
                     var4 = ' var4=' + attributes.var4;
                 }
-                if (attributes.var5)  {
+                if (attributes.var5) {
                     var5 = ' var5=' + attributes.var5;
                 }
-                if (attributes.var6)  {
+                if (attributes.var6) {
                     var6 = ' var6=' + attributes.var6;
                 }
-                if (attributes.var7)  {
+                if (attributes.var7) {
                     var7 = ' var7=' + attributes.var7;
                 }
-                if (attributes.var8)  {
+                if (attributes.var8) {
                     var8 = ' var8=' + attributes.var8;
                 }
-                if (attributes.var9)  {
+                if (attributes.var9) {
                     var9 = ' var9=' + attributes.var9;
                 }
 
-                if (attributes.export_file_name)  {
+                if (attributes.export_file_name) {
                     export_file_name = ' export_file_name=' + attributes.export_file_name;
                 }
 
                 if (attributes.tableID !== '' && attributes.tableView === 'regular') {
-                    short_code += '[wpdatatable id=' + attributes.tableID  + ' table_view=regular' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
+                    short_code += '[wpdatatable id=' + attributes.tableID + ' table_view=regular' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else if (attributes.tableID !== '' && attributes.tableView === 'excel-like') {
                     short_code += '[wpdatatable id=' + attributes.tableID + ' table_view=excel' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else if (tables.length !== 0 && attributes.tableView === 'regular') {
@@ -228,7 +228,7 @@
                 return short_code
             }
 
-            if (tables.length !== 0){
+            if (tables.length !== 0) {
                 inspectorElements.push(el(components.SelectControl, {
                     id: 'wpdatatables-js-select-table',
                     label: 'Select wpdatatable:',
@@ -363,7 +363,11 @@
                 }));
             } else {
                 inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create wpdatatable first. You can find instructions in our documentation on link below.'));
-                inspectorElements.push(el('a', {href:'https://wpdatatables.com/documentation/general/features-overview/', target:'_blank', style: {'margin-bottom': '1em'}}, 'How to create tables in wpdatatables?'));
+                inspectorElements.push(el('a', {
+                    href: 'https://wpdatatables.com/documentation/general/features-overview/',
+                    target: '_blank',
+                    style: {'margin-bottom': '1em'}
+                }, 'How to create tables in wpdatatables?'));
             }
 
             return [
@@ -378,7 +382,8 @@
                 )
             ]
         },
-        example: () => {},
+        example: () => {
+        },
         save: function (props) {
             return (
                 el('div', {},

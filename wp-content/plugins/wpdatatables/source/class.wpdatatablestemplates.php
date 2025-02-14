@@ -2,7 +2,8 @@
 
 class WPDataTablesTemplates
 {
-    public static function importStandardSimpleTemplates(){
+    public static function importStandardSimpleTemplates()
+    {
         global $wpdb;
 
         $tablesTemplateTableName = $wpdb->prefix . 'wpdatatables_templates';

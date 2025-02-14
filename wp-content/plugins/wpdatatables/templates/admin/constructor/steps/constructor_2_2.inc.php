@@ -8,12 +8,14 @@
         </button>
         <span class="wdt-alert-title f-600 p-l-00"><?php esc_html_e('Please check which columns would you like to import and make sure that the column types were imported correctly.', 'wpdatatables'); ?></span><br><br>
         <span class="wdt-alert-title f-600 p-l-20"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
-        <ul class="wdt-alert-subtitle m-l-20" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+        <ul class="wdt-alert-subtitle m-l-20"
+            style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
             <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
         </ul>
         <br>
         <span class="wdt-alert-title f-600 p-l-20"><?php esc_html_e('Custom table name in database.', 'wpdatatables'); ?><br></span>
-        <ul class="wdt-alert-subtitle m-l-20" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+        <ul class="wdt-alert-subtitle m-l-20"
+            style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
             <li> <?php esc_html_e('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'); ?></li>
         </ul>
     </div>
@@ -50,7 +52,7 @@
         <div class="col-sm-6">
             <div class="col-sm-6">
                 <h4 class="c-title-color m-b-2">
-                    <?php esc_html_e( 'Prefix for custom database name', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Prefix for custom database name', 'wpdatatables'); ?>
                     <i class=" wpdt-icon-info-circle-thin" data-popover-content="#prefix_db_name"
                        data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                 </h4>
@@ -58,11 +60,11 @@
                 <!-- Hidden popover with image hint -->
                 <div class="hidden" id="prefix_db_name">
                     <div class="popover-heading">
-                        <?php esc_html_e( 'Prefix for custom database name', 'wpdatatables' ); ?>
+                        <?php esc_html_e('Prefix for custom database name', 'wpdatatables'); ?>
                     </div>
 
                     <div class="popover-body">
-                        <?php esc_html_e( 'Include prefix for custom database name.', 'wpdatatables' ); ?>
+                        <?php esc_html_e('Include prefix for custom database name.', 'wpdatatables'); ?>
                     </div>
                 </div>
                 <!-- /Hidden popover with image hint -->
@@ -70,7 +72,7 @@
                 <div class="toggle-switch" data-ts-color="blue">
                     <input id="wdt-prefix-db-name" type="checkbox">
                     <label for="wdt-prefix-db-name"
-                           class="ts-label"><?php esc_html_e( 'Include prefix for custom database name.', 'wpdatatables' ); ?></label>
+                           class="ts-label"><?php esc_html_e('Include prefix for custom database name.', 'wpdatatables'); ?></label>
                 </div>
             </div>
         </div>
@@ -79,7 +81,7 @@
 
         <div class="col-sm-6">
             <h4 class="c-title-color m-b-2">
-				<?php esc_html_e('Table description', 'wpdatatables'); ?>
+                <?php esc_html_e('Table description', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                    title="<?php esc_attr_e('What is the description of the table? (optional)', 'wpdatatables'); ?>"></i>
             </h4>

@@ -18,6 +18,7 @@ class DateTimeWDTColumn extends WDTColumn
 
     /**
      * DateTimeWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())
@@ -28,6 +29,7 @@ class DateTimeWDTColumn extends WDTColumn
 
     /**
      * @param $content
+     *
      * @return false|mixed|string
      */
     public function prepareCellOutput($content)

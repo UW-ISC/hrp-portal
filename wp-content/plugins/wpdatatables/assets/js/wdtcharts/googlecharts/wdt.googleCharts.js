@@ -1,4 +1,7 @@
-google.charts.load('current', {packages: ['corechart', 'bar', 'gauge', 'scatter', 'geochart'], mapsApiKey: wpdatatables_mapsapikey.wdtGoogleApiMaps});
+google.charts.load('current', {
+    packages: ['corechart', 'bar', 'gauge', 'scatter', 'geochart'],
+    mapsApiKey: wpdatatables_mapsapikey.wdtGoogleApiMaps
+});
 
 var wpDataTablesGoogleChart = function () {
 
@@ -49,9 +52,9 @@ var wpDataTablesGoogleChart = function () {
                 viewWindow: {}
             },
             region: null,
-            datalessRegionColor : null,
-            colors : null,
-            displayMode : '',
+            datalessRegionColor: null,
+            colors: null,
+            displayMode: '',
         },
         setRows: function (rows) {
             this.rows = rows;
@@ -124,8 +127,8 @@ var wpDataTablesGoogleChart = function () {
         setLoader: function (loader) {
             this.loader = loader;
         },
-        setRegion : function (region_chart) {
-          this.region = region_chart;
+        setRegion: function (region_chart) {
+            this.region = region_chart;
         },
         setContainer: function (containerId) {
             this.containerId = containerId;
@@ -224,7 +227,7 @@ var wpDataTablesGoogleChart = function () {
                 }
                 var chartID = this.chart.container.id.replace(/.*_(\d+)/, '$1');
                 if (jQuery(this.chart.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                    jQuery(this.chart.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                    jQuery(this.chart.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                         if (jQuery(this).attr('data-id') === chartID) {
                             jQuery(this).hide();
                         }
@@ -279,7 +282,7 @@ var wpDataTablesGoogleChart = function () {
             if (chartConfig.type == 'google_pie_chart') {
                 chartConfig.three_d == 1 ? this.options.is3D = true : this.options.is3D = false;
             }
-            if (chartConfig.type == 'google_geo_chart' || chartConfig.type == 'google_marker_geo_chart'  || chartConfig.type == 'google_text_geo_chart' ) {
+            if (chartConfig.type == 'google_geo_chart' || chartConfig.type == 'google_marker_geo_chart' || chartConfig.type == 'google_text_geo_chart') {
                 this.options.region = chartConfig.region;
                 this.options.datalessRegionColor = chartConfig.datalessRegionColor;
                 this.options.colors = chartConfig.colors;

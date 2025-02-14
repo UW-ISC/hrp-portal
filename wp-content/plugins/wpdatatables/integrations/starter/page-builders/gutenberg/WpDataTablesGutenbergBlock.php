@@ -18,7 +18,7 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
         wp_enqueue_script(
             'wpdatatables-gutenberg-block',
             WDT_STARTER_INTEGRATIONS_URL . 'page-builders/gutenberg/js/wpdatatables-gutenberg-block.js',
-            array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
+            array('wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
         wp_localize_script(
@@ -26,7 +26,7 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
             'wpdatatables',
             array(
                 'title' => 'wpDataTables',
-                'description' => __('Choose the table that you’ve just created in the dropdown below, and the shortcode will be inserted automatically. You are able to provide values for placeholders and also for Export file name.','wpdatatables'),
+                'description' => __('Choose the table that you’ve just created in the dropdown below, and the shortcode will be inserted automatically. You are able to provide values for placeholders and also for Export file name.', 'wpdatatables'),
                 'data' => WDTConfigController::getAllTablesAndChartsForPageBuilders('gutenberg', 'tables')
             )
         );

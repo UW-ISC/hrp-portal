@@ -10,13 +10,16 @@
         <p><?php esc_html_e('This features improves usability, especially for large datasets, by providing constant navigation points without the need for manual scrolling back to the top or side of the table.', 'wpdatatables'); ?></p>
         <p class="p-t-10">
             <a href="https://wpdatatables.com/pricing/?utm_source=wpdt-admin&utm_medium=fixed-column-and-headers&utm_campaign=wpdt&utm_content=wpdt"
-               rel="nofollow" target="_blank" class="btn btn-primary wdt-upgrade-btn"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
+               rel="nofollow" target="_blank"
+               class="btn btn-primary wdt-upgrade-btn"><?php esc_html_e('Upgrade', 'wpdatatables'); ?></a>
         </p>
     </div>
     <div class="row">
         <div class="wpdt-custom-center-flex" style="align-items: center;">
-            <img src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/fixed-columns-preview.gif" alt="Fixed columns"/>
-            <img src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/fixed-header-preview.gif" alt="Fixed header"/>
+            <img src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/fixed-columns-preview.gif"
+                 alt="Fixed columns"/>
+            <img src="<?php echo WDT_ASSETS_PATH ?>img/feature-preview-notice/starter/fixed-header-preview.gif"
+                 alt="Fixed header"/>
         </div>
     </div>
 </div>

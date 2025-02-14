@@ -246,8 +246,8 @@ class WDTConfigController
             $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings) ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
             $table->pdfPaperSize = isset($advancedSettings->pdfPaperSize) ? $advancedSettings->pdfPaperSize : 'A4';
             $table->pdfPageOrientation = isset($advancedSettings->pdfPageOrientation) ? $advancedSettings->pdfPageOrientation : 'portrait';
-	        $table->show_table_description = isset($advancedSettings->show_table_description) ? $advancedSettings->show_table_description : false;
-	        $table->table_description = isset($advancedSettings->table_description) ? $advancedSettings->table_description : '';
+            $table->show_table_description = isset($advancedSettings->show_table_description) ? $advancedSettings->show_table_description : false;
+            $table->table_description = isset($advancedSettings->table_description) ? $advancedSettings->table_description : '';
             $table->fixed_columns = isset($advancedSettings->fixed_columns) ? $advancedSettings->fixed_columns : false;
             $table->fixed_left_columns_number = isset($advancedSettings->fixed_left_columns_number) ? $advancedSettings->fixed_left_columns_number : 0;
             $table->fixed_right_columns_number = isset($advancedSettings->fixed_right_columns_number) ? $advancedSettings->fixed_right_columns_number : 0;
@@ -265,6 +265,7 @@ class WDTConfigController
 
         return self::$_tableConfigCache[$tableId];
     }
+
     /**
      * Helper method that load columns config data from DB
      *
@@ -443,7 +444,7 @@ class WDTConfigController
                     'enableDuplicateButton' => $table->enableDuplicateButton,
                     'language' => $table->language,
                     'tableSkin' => $tableSkin,
-                    'table_wcag' =>  $table->table_wcag,
+                    'table_wcag' => $table->table_wcag,
                     'tableBorderRemoval' => $table->tableBorderRemoval,
                     'tableBorderRemovalHeader' => $table->tableBorderRemovalHeader,
                     'tableCustomCss' => $table->tableCustomCss,
@@ -457,10 +458,10 @@ class WDTConfigController
                     'fixed_right_columns_number' => $table->fixed_right_columns_number,
                     'fixed_header' => $table->fixed_header,
                     'fixed_header_offset' => $table->fixed_header_offset,
-                    'simple_template_id' =>  $table->simple_template_id,
+                    'simple_template_id' => $table->simple_template_id,
                     'customRowDisplay' => $table->customRowDisplay,
-                    'loader' =>  $table->loader,
-                    'showCartInformation' =>  $table->showCartInformation,
+                    'loader' => $table->loader,
+                    'showCartInformation' => $table->showCartInformation,
                 )
             ),
         );
@@ -906,16 +907,16 @@ class WDTConfigController
                     $column->editingDefaultValue = sanitize_text_field($column->editingDefaultValue);
                 }
                 if (is_object($column->filterDefaultValue)) {
-                    if (is_null($column->filterDefaultValue->value)){
+                    if (is_null($column->filterDefaultValue->value)) {
                         $column->filterDefaultValue = sanitize_text_field($column->filterDefaultValue->value);
                     } else {
                         $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue->value);
                     }
                 } else {
-                    if ( is_array($column->filterDefaultValue)){
+                    if (is_array($column->filterDefaultValue)) {
                         $column->filterDefaultValue = array_map('wp_kses_post', $column->filterDefaultValue);
                     } else {
-                        if (is_null($column->filterDefaultValue)){
+                        if (is_null($column->filterDefaultValue)) {
                             $column->filterDefaultValue = sanitize_text_field($column->filterDefaultValue);
                         } else {
                             $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue);
@@ -925,7 +926,7 @@ class WDTConfigController
                 }
                 $column->exactFiltering = (int)$column->exactFiltering;
                 $column->globalSearchColumn = (int)($column->globalSearchColumn);
-                if(is_null($column->filterLabel)){
+                if (is_null($column->filterLabel)) {
                     $column->filterLabel = '';
                 } else {
                     $column->filterLabel = wp_kses_post($column->filterLabel);
@@ -958,17 +959,17 @@ class WDTConfigController
                 $column->skip_thousands_separator = (int)$column->skip_thousands_separator;
                 $column->sorting = (int)$column->sorting;
                 if (is_admin() && !current_user_can('unfiltered_html')) {
-                    if (is_null($column->text_after)){
+                    if (is_null($column->text_after)) {
                         $column->text_after = sanitize_text_field($column->text_after);
                     } else {
                         $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
                     }
-                    if (is_null($column->text_before)){
+                    if (is_null($column->text_before)) {
                         $column->text_before = sanitize_text_field($column->text_before);
                     } else {
                         $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
                     }
-                    if (is_null($column->transformValueText)){
+                    if (is_null($column->transformValueText)) {
                         $column->transformValueText = sanitize_textarea_field($column->transformValueText);
                     } else {
                         $column->transformValueText = sanitize_textarea_field(wp_kses_post($column->transformValueText));
@@ -987,12 +988,12 @@ class WDTConfigController
                         $cond->ifClause = sanitize_text_field($cond->ifClause);
                         $cond->action = sanitize_text_field($cond->action);
                         if (is_admin() && !current_user_can('unfiltered_html')) {
-                            if (is_null($cond->cellVal)){
+                            if (is_null($cond->cellVal)) {
                                 $cond->cellVal = sanitize_text_field($cond->cellVal);
                             } else {
                                 $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
                             }
-                            if (is_null($cond->setVal)){
+                            if (is_null($cond->setVal)) {
                                 $cond->setVal = sanitize_text_field($cond->setVal);
                             } else {
                                 $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
@@ -1439,7 +1440,7 @@ class WDTConfigController
 
         $columnConfig = apply_filters_deprecated(
             'wpdt_filter_column_config_object',
-            array( $columnConfig, $feColumn ),
+            array($columnConfig, $feColumn),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_filter_column_config_object'
         );
@@ -1643,7 +1644,7 @@ class WDTConfigController
 
         $feColumn = apply_filters_deprecated(
             'wpdt_filter_column_description_object',
-            array( $feColumn, $dbColumn, $advancedSettings ),
+            array($feColumn, $dbColumn, $advancedSettings),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_filter_column_description_object'
         );
@@ -1722,8 +1723,8 @@ class WDTConfigController
         $table->content = '';
         $table->pdfPaperSize = 'A4';
         $table->pdfPageOrientation = 'portrait';
-	    $table->table_description = '';
-	    $table->show_table_description = 0;
+        $table->table_description = '';
+        $table->show_table_description = 0;
         $table->fixed_columns = 0;
         $table->fixed_left_columns_number = 0;
         $table->fixed_right_columns_number = 0;
@@ -1757,6 +1758,7 @@ class WDTConfigController
 
         return $res;
     }
+
     /**
      * Helper method that load rows config data from DB
      *
@@ -1781,6 +1783,7 @@ class WDTConfigController
 
         return $rows;
     }
+
     /**
      *  Helper method that load rows config data from DB for simple templates (data, content and settings from wpdatatables_templates)
      *
@@ -1803,6 +1806,7 @@ class WDTConfigController
 
         return $rows;
     }
+
     /**
      * Save row data from Simple table in database
      *

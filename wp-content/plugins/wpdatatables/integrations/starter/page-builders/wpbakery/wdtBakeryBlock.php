@@ -14,7 +14,7 @@ if (function_exists('vc_map')) {
             'base' => 'wpdatatable',
             'description' => __('Interactive Responsive Table', 'wpdatatable'),
             'category' => __('Content'),
-            'icon' => plugin_dir_url( dirname(__FILE__) ) . 'wpbakery/assets/img/vc-icon.png',
+            'icon' => plugin_dir_url(dirname(__FILE__)) . 'wpbakery/assets/img/vc-icon.png',
             'params' => array(
                 array(
                     'type' => 'dropdown',
@@ -129,7 +129,7 @@ if (function_exists('vc_map')) {
             'base' => 'wpdatachart',
             'description' => __('Google, Chart.js, Highcharts or Apexcharts chart based on a wpDataTable', 'wpdatatable'),
             'category' => __('Content'),
-            'icon' => plugin_dir_url( dirname(__FILE__) ) . 'wpbakery/assets/img/vc-charts-icon.png',
+            'icon' => plugin_dir_url(dirname(__FILE__)) . 'wpbakery/assets/img/vc-charts-icon.png',
             "params" => array(
                 array(
                     "type" => "dropdown",

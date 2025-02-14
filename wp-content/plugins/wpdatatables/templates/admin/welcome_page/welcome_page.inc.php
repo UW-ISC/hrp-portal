@@ -22,7 +22,8 @@
                         <li class="m-0 p-0">
                             <button class="wdt-go-dashboard"><a
                                         href="<?php echo admin_url('admin.php?page=wpdatatables-dashboard'); ?>">
-                                    <?php esc_html_e('Go to Dashboard', 'wpdatatables'); ?><i class="wpdt-icon-arrow-right"></i>
+                                    <?php esc_html_e('Go to Dashboard', 'wpdatatables'); ?><i
+                                            class="wpdt-icon-arrow-right"></i>
                                 </a>
                             </button>
                         </li>
@@ -97,10 +98,10 @@
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
-                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/manual.png">
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/charts.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php esc_html_e('Create a data table manually', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Create charts with Google Charts, HighCharts and Charts.js', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -110,6 +111,16 @@
 
                         <!-- .wdt-wizard-options-->
                         <div class="row m-l-0 m-r-0 wdt-wizard-options m-b-42">
+                            <div class="col-sm-4 p-0 wdt-wizard-options-details">
+                                <div class="wdt-wizard-options-img pull-left">
+                                    <img class="img-responsive"
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/manual.png">
+                                </div>
+                                <div class="wdt-wizard-options-desc pull-left">
+                                    <span class="text-left"><?php esc_html_e('Create a data table manually', 'wpdatatables'); ?>.</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
@@ -130,6 +141,10 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
+                        </div>
+                        <div class="clear"></div>
+                        <!-- /.wdt-wizard-options-->
+                        <div class="row m-l-0 m-r-0 wdt-wizard-options m-b-42">
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
@@ -140,17 +155,23 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
-                        </div>
-                        <div class="clear"></div>
-                        <!-- /.wdt-wizard-options-->
-                        <div class="row m-l-0 m-r-0 wdt-wizard-options m-b-42">
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
-                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/charts.png">
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/wpPost.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php esc_html_e('Create charts with Google Charts, HighCharts and Charts.js', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><strong style="color: #FD800C;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></strong><?php esc_html_e(' Build tables with custom post types, Meta and ACF', 'wpdatatables'); ?>.</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="col-sm-4 p-0 wdt-wizard-options-details">
+                                <div class="wdt-wizard-options-img pull-left">
+                                    <img class="img-responsive"
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/woo.png">
+                                </div>
+                                <div class="wdt-wizard-options-desc pull-left">
+                                    <span class="text-left"><strong style="color: #FD800C;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></strong><?php esc_html_e(' Create WooCommerce product table', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -350,9 +371,11 @@
             </a>
         </h6>
         <ul class="wpdt-footer-links text-center">
-            <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
+            <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                   target="_blank">wpDataTables.com</a></li>
             <li>|</li>
-            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
+            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" rel="nofollow"
+                   target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
             </li>
             <li>|</li>
             <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">

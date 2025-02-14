@@ -22,7 +22,8 @@
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                <input placeholder="<?php esc_attr_e('Choose criteria', 'wpdatatables'); ?>" type="text" class="form-control input-sm formatting-rule-cell-value" value="">
+                <input placeholder="<?php esc_attr_e('Choose criteria', 'wpdatatables'); ?>" type="text"
+                       class="form-control input-sm formatting-rule-cell-value" value="">
             </div>
         </div>
         <div class="col-sm-3">
@@ -45,7 +46,8 @@
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                <input placeholder="<?php esc_attr_e('Choose criteria', 'wpdatatables'); ?>"  type="text" class="form-control input-sm formatting-rule-set-value cp-inside" value="">
+                <input placeholder="<?php esc_attr_e('Choose criteria', 'wpdatatables'); ?>" type="text"
+                       class="form-control input-sm formatting-rule-set-value cp-inside" value="">
             </div>
         </div>
         <div class="col-sm-2 wdt-last">

@@ -132,7 +132,6 @@ function wdtSavePluginSettings()
 add_action('wp_ajax_wpdatatables_save_plugin_settings', 'wdtSavePluginSettings');
 
 
-
 /**
  * Save Google Maps API settings
  */
@@ -1204,7 +1203,8 @@ add_action('wp_ajax_wpdatatables_parse_server_name', 'wdtParseServerName');
  * Added for page builder blocks to only render certain parameters for certain types
  * @throws Exception
  */
-function get_table_type_by_id_ajax() {
+function get_table_type_by_id_ajax()
+{
     $table_id = isset($_POST['table_id']) ? (int)($_POST['table_id']) : '';
     $table_type = WDTConfigController::loadTableFromDB($table_id)->table_type;
 
@@ -1212,5 +1212,6 @@ function get_table_type_by_id_ajax() {
     echo json_encode(array('tableType' => $table_type));
     exit();
 }
+
 add_action('wp_ajax_get_table_type_by_id', 'get_table_type_by_id_ajax');
 add_action('wp_ajax_nopriv_get_table_type_by_id', 'get_table_type_by_id_ajax');

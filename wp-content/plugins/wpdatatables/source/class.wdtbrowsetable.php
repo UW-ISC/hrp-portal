@@ -17,7 +17,8 @@ class WDTBrowseTable extends WP_List_Table
     private $dbVersion;
     private $dbEngine;
 
-    public function __construct( $args = array() ) {
+    public function __construct($args = array())
+    {
         global $wpdb;
         parent::__construct($args);
         $this->setDBVersion($wpdb->db_version());
@@ -85,9 +86,9 @@ class WDTBrowseTable extends WP_List_Table
             'shortcode' => __('Shortcode', 'wpdatatables'),
             'functions' => ''
         );
-        if (!$this->useNotSupportedMySQLVersion()){
+        if (!$this->useNotSupportedMySQLVersion()) {
             $allColumns = array_slice($allColumns, 0, 3, true) +
-                array("table_description" =>  __('Description', 'wpdatatables')) +
+                array("table_description" => __('Description', 'wpdatatables')) +
                 array_slice($allColumns, 3, count($allColumns) - 1, true);
         }
 
@@ -115,7 +116,7 @@ class WDTBrowseTable extends WP_List_Table
             'table_type' => array('table_type', false),
             'connection' => array('connection', false)
         );
-        if (!$this->useNotSupportedMySQLVersion()){
+        if (!$this->useNotSupportedMySQLVersion()) {
             $sortableColumns = array_slice($sortableColumns, 0, 2, true) +
                 array("table_description" => array('table_description', false)) +
                 array_slice($sortableColumns, 2, count($sortableColumns) - 1, true);
@@ -133,8 +134,7 @@ class WDTBrowseTable extends WP_List_Table
     {
         if (version_compare($this->getDBVersion(), '5.7.8', '<') ||
             (strpos($this->getDBEngine(), "MariaDB") !== false &&
-                version_compare($this->getDBVersion(), '10.6', '<')))
-        {
+                version_compare($this->getDBVersion(), '10.6', '<'))) {
             return true;
         }
         return false;
@@ -148,7 +148,7 @@ class WDTBrowseTable extends WP_List_Table
     function getTableCount()
     {
         global $wpdb;
-        if (!$this->useNotSupportedMySQLVersion()){
+        if (!$this->useNotSupportedMySQLVersion()) {
             $query = "SELECT COUNT(*) FROM (SELECT id, title,  table_type, connection, editable, if(advanced_settings != '', JSON_UNQUOTE(JSON_EXTRACT(advanced_settings, '$.table_description')), '') as table_description FROM {$wpdb->prefix}wpdatatables) as t";
         } else {
             $query = "SELECT COUNT(*) FROM (SELECT id, title,  table_type, connection, editable FROM {$wpdb->prefix}wpdatatables) as t";
@@ -267,14 +267,16 @@ class WDTBrowseTable extends WP_List_Table
 
     /**
      * Set default columns value
+     *
      * @param object $item
      * @param string $column_name
+     *
      * @return string
      */
     function column_default($item, $column_name)
     {
-        if ($this->useNotSupportedMySQLVersion()){
-            if ($column_name =='table_description')
+        if ($this->useNotSupportedMySQLVersion()) {
+            if ($column_name == 'table_description')
                 return '';
         }
         switch ($column_name) {
@@ -338,7 +340,9 @@ class WDTBrowseTable extends WP_List_Table
 
     /**
      * Set columns title
+     *
      * @param $item
+     *
      * @return string
      */
     function column_title($item)
@@ -358,7 +362,9 @@ class WDTBrowseTable extends WP_List_Table
 
     /**
      * Set column type
+     *
      * @param $item
+     *
      * @return string
      */
     function column_table_type($item)
@@ -401,7 +407,9 @@ class WDTBrowseTable extends WP_List_Table
 
     /**
      * Set column connection
+     *
      * @param $item
+     *
      * @return string
      */
     function column_connection($item)
@@ -413,6 +421,7 @@ class WDTBrowseTable extends WP_List_Table
      * Print column headers, accounting for hidden and sortable columns.
      *
      * @param bool $with_id Whether to set the id attribute or not
+     *
      * @since 3.1.0
      * @access public
      *
@@ -505,6 +514,7 @@ class WDTBrowseTable extends WP_List_Table
 
     /**
      * @param object $item
+     *
      * @return string
      */
     function column_cb($item)
@@ -544,6 +554,7 @@ class WDTBrowseTable extends WP_List_Table
      * Display the pagination.
      *
      * @param string $which
+     *
      * @since 3.1.0
      * @access protected
      *
@@ -565,9 +576,9 @@ class WDTBrowseTable extends WP_List_Table
         $current_url = remove_query_arg($removable_query_args, $current_url);
         $current_url = apply_filters('wpdatatables_filter_browse_tables_pagination_page_current_url', $current_url, 'table');
         $search_term = '';
-        if( isset($_REQUEST['s'] ) ){
+        if (isset($_REQUEST['s'])) {
             $search_term = sanitize_text_field($_REQUEST['s']);
-            $current_url = add_query_arg( 's', $search_term, $current_url );
+            $current_url = add_query_arg('s', $search_term, $current_url);
         }
 
         /**    Add current page to the array */
@@ -610,6 +621,7 @@ class WDTBrowseTable extends WP_List_Table
      *
      * @param string $which The location of the bulk actions: 'top' or 'bottom'.
      * This is designated as optional for backward compatibility.
+     *
      * @since 3.1.0
      * @access protected
      *
@@ -627,6 +639,7 @@ class WDTBrowseTable extends WP_List_Table
              * This filter can currently only be used to remove bulk actions.
              *
              * @param array $actions An array of the available bulk actions.
+             *
              * @since 3.5.0
              *
              */
@@ -647,6 +660,7 @@ class WDTBrowseTable extends WP_List_Table
      * Generate the table navigation above or below the table
      *
      * @param string $which
+     *
      * @since 3.1.0
      * @access protected
      */
@@ -664,6 +678,7 @@ class WDTBrowseTable extends WP_List_Table
      *
      * @param string $text The 'submit' button label.
      * @param string $input_id ID attribute value for the search input field.
+     *
      * @since 3.1.0
      * @access public
      *

@@ -6,7 +6,7 @@
 <?php } ?>
 <?php if ($this->getTableSettingsData() && $this->getTableSettingsData()->show_table_description && $this->getTableSettingsData()->table_description) { ?>
     <p class="wpdt-c"
-        id="wdt-table-description-<?php echo (int)$this->getTableID() ?>"><?php echo esc_html($this->getTableSettingsData()->table_description) ?></p>
+       id="wdt-table-description-<?php echo (int)$this->getTableID() ?>"><?php echo esc_html($this->getTableSettingsData()->table_description) ?></p>
 <?php } ?>
 <div class="wpdt-c row wpDataTableContainerSimpleTable wpDataTables wpDataTablesWrapper
 <?php if ($this->getTableSettingsData()->scrollable) echo ' wdtscroll' ?>
@@ -64,10 +64,10 @@
                 $cellMetaClasses = $this->getCellClassesByIndexes($this->getRowsData(), $i, $j) ? implode(" ", $this->getCellClassesByIndexes($this->getRowsData(), $i, $j)) : "";
                 $cellMetaClasses .= $this->getCellDataByIndexes($this->getRowsData(), $i, $j) == "" ? " wpdt-empty-cell " : "";
                 $cellMetaClasses = apply_filters_deprecated(
-                        'wpdt_filter_simple_table_cell_meta',
-                    array(  $cellMetaClasses, $i, $j, $this->getTableID() ),
+                    'wpdt_filter_simple_table_cell_meta',
+                    array($cellMetaClasses, $i, $j, $this->getTableID()),
                     WDT_INITIAL_STARTER_VERSION,
-                        'wpdatatables_filter_simple_table_cell_meta'
+                    'wpdatatables_filter_simple_table_cell_meta'
                 );
                 $cellMetaClasses = apply_filters('wpdatatables_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
 
@@ -84,70 +84,70 @@
                     $hiddenCell = "";
                     $cellMetaClasses .= " wpdt-merged-cell ";
                 }
-                $cellMetaClasses .=  $isRemoveBorders ? ' remove-borders ' : '';
-                $cellMetaClasses .=  $isBorderSeparate ? ' border-separate ' : '';
+                $cellMetaClasses .= $isRemoveBorders ? ' remove-borders ' : '';
+                $cellMetaClasses .= $isBorderSeparate ? ' border-separate ' : '';
                 $cellMetaClasses = apply_filters_deprecated(
                     'wpdt_filter_simple_table_cell_meta',
-                    array(  $cellMetaClasses, $i, $j, $this->getTableID() ),
+                    array($cellMetaClasses, $i, $j, $this->getTableID()),
                     WDT_INITIAL_STARTER_VERSION,
                     'wpdatatables_filter_simple_table_cell_meta'
                 );
                 $cellMetaClasses = apply_filters('wpdatatables_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
 
-                if (($hiddenCell == 'hidden' && $isResponsive) || $hiddenCell != 'hidden'){
-                ?>
-                <<?php echo $tag ?> class="wpdt-cell <?php echo esc_attr($cellMetaClasses) ?>"
-                <?php echo ' ' . $colspanAttr . ' ' . $hiddenCell . ' ' . $rowspanAttr . ' ' ?>
-                data-cell-id="<?php if (isset($this->getColHeaders()[$j])) echo esc_attr($this->getColHeaders()[$j] . ($i + 1)); ?>"
-                data-col-index="<?php echo esc_attr($j) ?>"
-                data-row-index="<?php echo esc_attr($i) ?>"
-                style="<?php if ($i == 0) {
-                    if ($this->getTableSettingsData()->simpleResponsive) {
-                        if ($colspanValue > 1) {
-                            echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100) * $colspanValue) . '%;';
-                        } else if ($hiddenCell == "hidden") {
-                            echo ' width:0%;';
-                        } else {
-                            echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100)) . '%;';
-                        }
+                if (($hiddenCell == 'hidden' && $isResponsive) || $hiddenCell != 'hidden') {
+                    ?>
+                    <<?php echo $tag ?> class="wpdt-cell <?php echo esc_attr($cellMetaClasses) ?>"
+                    <?php echo ' ' . $colspanAttr . ' ' . $hiddenCell . ' ' . $rowspanAttr . ' ' ?>
+                    data-cell-id="<?php if (isset($this->getColHeaders()[$j])) echo esc_attr($this->getColHeaders()[$j] . ($i + 1)); ?>"
+                    data-col-index="<?php echo esc_attr($j) ?>"
+                    data-row-index="<?php echo esc_attr($i) ?>"
+                    style="<?php if ($i == 0) {
+                        if ($this->getTableSettingsData()->simpleResponsive) {
+                            if ($colspanValue > 1) {
+                                echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100) * $colspanValue) . '%;';
+                            } else if ($hiddenCell == "hidden") {
+                                echo ' width:0%;';
+                            } else {
+                                echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100)) . '%;';
+                            }
 
-                    } else if ($this->getTableSettingsData()->scrollable) {
-                        if ($colspanValue > 1) {
-                            echo ' width:' . esc_attr(($this->getColWidths()[$j]) * $colspanValue) . 'px;';
-                        } else if ($hiddenCell == "hidden") {
-                            echo ' width:0px;';
+                        } else if ($this->getTableSettingsData()->scrollable) {
+                            if ($colspanValue > 1) {
+                                echo ' width:' . esc_attr(($this->getColWidths()[$j]) * $colspanValue) . 'px;';
+                            } else if ($hiddenCell == "hidden") {
+                                echo ' width:0px;';
+                            } else {
+                                echo ' width:' . esc_attr(($this->getColWidths()[$j])) . 'px;';
+                            }
                         } else {
-                            echo ' width:' . esc_attr(($this->getColWidths()[$j])) . 'px;';
+                            if ($colspanValue > 1) {
+                                echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100) * $colspanValue) . '%;';
+                            } else if ($hiddenCell == "hidden") {
+                                echo ' width:0%;';
+                            } else {
+                                echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100)) . '%;';
+                            }
                         }
-                    } else {
-                        if ($colspanValue > 1) {
-                            echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100) * $colspanValue) . '%;';
-                        } else if ($hiddenCell == "hidden") {
-                            echo ' width:0%;';
-                        } else {
-                            echo ' width:' . esc_attr((($this->getColWidths()[$j] / array_sum($this->getColWidths())) * 100)) . '%;';
-                        }
+                    } ?>
+                    padding:<?php echo esc_attr($this->getTableSettingsData()->cellPadding); ?>px;
+                    <?php if ($isResponsive && $isBorderSeparate) echo 'margin-bottom: ' . esc_attr($this->getTableSettingsData()->borderSpacing) . 'px;' ?>"
+                    >
+                    <?php
+                    $cellData = $this->getCellDataByIndexes($this->getRowsData(), $i, $j);
+                    if (strpos($cellData, 'wpdt-do-shortcode') !== false) {
+                        $cellData = substr($cellData, strpos($cellData, '>[') + 1, strpos($cellData, ']<') - strpos($cellData, '>['));
+                        $cellData = do_shortcode($cellData);
                     }
-                } ?>
-                padding:<?php echo esc_attr($this->getTableSettingsData()->cellPadding); ?>px;
-                <?php if ($isResponsive && $isBorderSeparate) echo 'margin-bottom: ' .  esc_attr($this->getTableSettingsData()->borderSpacing) .'px;' ?>"
-                >
-                <?php
-                $cellData = $this->getCellDataByIndexes($this->getRowsData(), $i, $j);
-                if (strpos($cellData, 'wpdt-do-shortcode') !== false) {
-                    $cellData = substr($cellData, strpos($cellData, '>[') + 1, strpos($cellData, ']<') - strpos($cellData, '>['));
-                    $cellData = do_shortcode($cellData);
-                }
-                $cellData = apply_filters_deprecated(
+                    $cellData = apply_filters_deprecated(
                         'wpdt_filter_simple_table_cell_data',
-                        array( $cellData, $this->getTableID() ),
-                    WDT_INITIAL_STARTER_VERSION,
+                        array($cellData, $this->getTableID()),
+                        WDT_INITIAL_STARTER_VERSION,
                         'wpdatatables_filter_simple_table_cell_data'
-                );
-                $cellData = apply_filters('wpdatatables_filter_simple_table_cell_data', $cellData, $this->getTableID());
-                ?>
-                <?php echo $cellData ?>
-                </<?php echo $tag ?>>
+                    );
+                    $cellData = apply_filters('wpdatatables_filter_simple_table_cell_data', $cellData, $this->getTableID());
+                    ?>
+                    <?php echo $cellData ?>
+                    </<?php echo $tag ?>>
                 <?php } ?>
             <?php } ?>
             </tr>

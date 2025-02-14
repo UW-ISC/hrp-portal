@@ -883,7 +883,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
 
     // If "Allow empty value" is enabled, add new value for empty in the values array
     if (aoColumn.possibleValuesAddEmpty === true && !serverSide) {
-        aoColumn.values.unshift({ value: 'possibleValuesAddEmpty', label: '' });
+        aoColumn.values.unshift({value: 'possibleValuesAddEmpty', label: ''});
     }
 
     // Get the default value if is set
@@ -1107,7 +1107,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     // If "Allow empty value" is enabled, add new value for empty in the values array
     if (aoColumn.possibleValuesAddEmpty === true && !serverSide) {
-        aoColumn.values.unshift({ value: 'possibleValuesAddEmpty', label: '' });
+        aoColumn.values.unshift({value: 'possibleValuesAddEmpty', label: ''});
     }
 
     // Label of the selectbox if "Filter label" option is set
@@ -1383,7 +1383,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
                 var checked = jQuery.inArray(value.toString(), aoColumn.defaultValue) !== -1 ? 'checked="checked" ' : '';
             }
             var ariaLabel = '', modifyLabel = '';
-            if (tableDesc.table_wcag){
+            if (tableDesc.table_wcag) {
                 ariaLabel = encodeURI(label);
                 ariaLabel = ariaLabel.replace(/["']/g, " ");
                 ariaLabel = ' aria-label="' + wpdatatables_filter_strings.filterCheckbox_columnfilter + ariaLabel + '" ';
@@ -1515,7 +1515,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         useAndLogic = aoColumn.andLogic && !serverSide;
 
         var checkedValue = jQuery(this).val().replaceAll('%0A', ' ');
-        if (checkedInputs.length <= 1 ) orderCheckbox = [];
+        if (checkedInputs.length <= 1) orderCheckbox = [];
         if (!jQuery(this).is(':checked')) {
             orderCheckbox = orderCheckbox.filter(function (value) {
                 return value !== checkedValue;

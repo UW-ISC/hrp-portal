@@ -38,7 +38,8 @@
                     <div class="col-sm-12">
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Duplicate option', 'wpdatatables'); ?>
-                            <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right" data-html="true"
+                            <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               data-html="true"
                                data-original-title="<strong><?php esc_html_e('Unchecked', 'wpdatatables'); ?> -</strong>  <?php _e('will create exact copy of this table which means that all changes made in one table will be reflected in all copies.', 'wpdatatables'); ?><br /><strong><?php _e('Checked', 'wpdatatables'); ?> -</strong>  <?php _e('will create separate database table so changing one table won\'t affect other copies.', 'wpdatatables'); ?>"></i>
                         </h4>
                         <div class="toggle-switch" data-ts-color="blue">

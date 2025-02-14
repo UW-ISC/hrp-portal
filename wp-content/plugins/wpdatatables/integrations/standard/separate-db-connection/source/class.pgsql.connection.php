@@ -2,14 +2,17 @@
 
 defined('ABSPATH') or die('Access denied.');
 
-class PgSqlConnection {
+class PgSqlConnection
+{
     private static $_instance = [];
 
     /**
      * Return only one instance of postgre connection
+     *
      * @param $id
      */
-    public static function getInstance($id = null) {
+    public static function getInstance($id = null)
+    {
 
         if (empty(self::$_instance) || !isset(self::$_instance[$id]))
             self::$_instance[$id] = self::create($id);
@@ -19,6 +22,7 @@ class PgSqlConnection {
 
     /**
      * Create postgre connection
+     *
      * @param $id
      * @param $host
      * @param $database
@@ -26,7 +30,8 @@ class PgSqlConnection {
      * @param $password
      * @param $port
      */
-    public static function create($id = null, $host = null, $database = null, $user = null, $password = null, $port = null) {
+    public static function create($id = null, $host = null, $database = null, $user = null, $password = null, $port = null)
+    {
         if ($id) {
             foreach (Connection::getAll() as $conn) {
                 if ($conn['id'] == $id) {

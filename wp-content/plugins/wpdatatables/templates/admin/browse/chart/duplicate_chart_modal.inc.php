@@ -13,7 +13,8 @@
 
             <!-- .modal-header -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                                class="wpdt-icon-times-full"></i></span>
                 </button>
                 <h4 class="modal-title"><?php esc_html_e('Duplicate chart', 'wpdatatables') ?></h4>
             </div>

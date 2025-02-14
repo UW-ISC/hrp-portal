@@ -22,7 +22,7 @@ foreach (Connection::getAll() as $key => $wdtSeparateConnection) {
                    title="<?php esc_attr_e('If this checkbox is checked, wpDataTables will use its own connection to chosen vendor bases. In other case it will use the main WordPress MySQL connection.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="toggle-switch" data-ts-color="blue">
-                <input id="wdt-separate-connection" name="wdt-separate-connection"  type="checkbox" >
+                <input id="wdt-separate-connection" name="wdt-separate-connection" type="checkbox">
                 <label for="wdt-separate-connection"
                        class="ts-label"><?php esc_html_e('Use separate connection', 'wpdatatables'); ?></label>
             </div>
@@ -36,15 +36,17 @@ foreach (Connection::getAll() as $key => $wdtSeparateConnection) {
                    title="<?php esc_attr_e('Click this button to add new connection.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="fg-line">
-                <button id="wp-my-sql-add" class="btn btn-primary"><?php esc_html_e('Add New Connection', 'wpdatatables'); ?></button>
+                <button id="wp-my-sql-add"
+                        class="btn btn-primary"><?php esc_html_e('Add New Connection', 'wpdatatables'); ?></button>
             </div>
         </div>
     </div>
 
     <ul class="tab-nav mysql-serverside-settings-block" role="tablist">
         <?php foreach (Connection::getAll() as $key => $wdtSeparateConnection) { ?>
-            <li class="<?php if(($isDefault && $allDefaultOptions[$key]) || (!$isDefault && $key== 0)) echo 'active'; ?>">
-                <a href="#connection<?php echo esc_attr($key); ?>" aria-controls="connection<?php echo esc_attr($key); ?>" role="tab"
+            <li class="<?php if (($isDefault && $allDefaultOptions[$key]) || (!$isDefault && $key == 0)) echo 'active'; ?>">
+                <a href="#connection<?php echo esc_attr($key); ?>"
+                   aria-controls="connection<?php echo esc_attr($key); ?>" role="tab"
                    data-toggle="tab" style="text-transform: none;">
                     <?php esc_html_e($wdtSeparateConnection['name'], 'wpdatatables'); ?>
                 </a>

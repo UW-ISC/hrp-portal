@@ -8,7 +8,7 @@
  * @param hotInstance
  * @constructor
  */
-(function($){
+(function ($) {
 
     function wpDataTablesExcelPlugin(hotInstance) {
 
@@ -48,7 +48,7 @@
          * Search field element
          * @type {*|HTMLElement}
          */
-        this.$SEARCH_FIELD = $('#' +this.table_id + '_search_filter input');
+        this.$SEARCH_FIELD = $('#' + this.table_id + '_search_filter input');
 
         /**
          * loading previously defined languages.
@@ -68,7 +68,7 @@
     /**
      * Checks if the plugin is enabled in the settings.
      */
-    wpDataTablesExcelPlugin.prototype.isEnabled = function() {
+    wpDataTablesExcelPlugin.prototype.isEnabled = function () {
         return !!this.hot.getSettings().wpDataTablesExcelPlugin;
     };
 
@@ -77,11 +77,11 @@
      * the hook connections.
      * Note, that this method is run only if the statement in the isEnabled method is true.
      */
-    wpDataTablesExcelPlugin.prototype.enablePlugin = function() {
+    wpDataTablesExcelPlugin.prototype.enablePlugin = function () {
         this.overrideHotFunctions();
 
         //assign loaded languages to numeral plugin so it can be used by handsontable
-        for( var lang in this.languages ) {
+        for (var lang in this.languages) {
             numeral.language(lang, this.languages[lang]);
         }
 
@@ -89,29 +89,29 @@
 
         //if table definition is provided in certain html dom element, load it from there.
         var description_element_id = $(this.hot.rootElement).data('described-by');
-        if( description_element_id && ($descriptionElement = $('#' + description_element_id)) ) {
+        if (description_element_id && ($descriptionElement = $('#' + description_element_id))) {
             tableDescription = JSON.parse($descriptionElement.val());
             this.tableSettings = tableDescription.dataTableParams;
             delete tableDescription.dataTableParams;
         }
 
-        for( var prop in tableDescription ) {
+        for (var prop in tableDescription) {
             this[prop] = tableDescription[prop];
         }
 
         this.tableSettings.language = 'en-' + this.tableSettings.number_format;
 
-        for(var i = 0; i< this.tableSettings.columns.length; i++) {
-            if( this.tableSettings.columns[i].type == 'wdt.date' ) {
+        for (var i = 0; i < this.tableSettings.columns.length; i++) {
+            if (this.tableSettings.columns[i].type == 'wdt.date') {
                 this.tableSettings.columns[i].sortFunction = this.sortDate;
             }
 
-            if( this.serverSide ) {
+            if (this.serverSide) {
                 this.setCellValidator(this.tableSettings.columns[i]);
             }
         }
 
-        if( this.serverSide ) {
+        if (this.serverSide) {
             //TODO: Add conditions here if data is already set
             this.tableSettings.minSpareRows = 1;
 
@@ -119,14 +119,14 @@
             this.addContextMenuItems();
 
             //setting custom search function as a default search function
-            Handsontable.Search.global.setDefaultCallback( this.wdtExcelSearchCallback );
+            Handsontable.Search.global.setDefaultCallback(this.wdtExcelSearchCallback);
 
             //adding hooks
             this.addHook('afterChange', this.onAfterChange.bind(this));
             this.addHook('init', this.onInit.bind(this));
             this.addHook('afterValidate', this.onAfterValidate.bind(this));
         } else {
-            this.tableSettings.data = JSON.parse( $(tableDescription.selector + '_data').val() );
+            this.tableSettings.data = JSON.parse($(tableDescription.selector + '_data').val());
             this.addHook('init', this.onInit.bind(this));
         }
 
@@ -134,42 +134,42 @@
         this.addHook('beforeValidate', this.onBeforeValidate);
         this.addHook('beforeChange', this.onBeforeChange);
 
-        if( typeof wpDtExcelTables[this.table_id] == 'object' ) {
-            $.extend( true, this.tableSettings, wpDtExcelTables[this.table_id] );
+        if (typeof wpDtExcelTables[this.table_id] == 'object') {
+            $.extend(true, this.tableSettings, wpDtExcelTables[this.table_id]);
         }
 
         this._superClass.prototype.enablePlugin.call(this);
     };
 
-    wpDataTablesExcelPlugin.prototype.overrideHotFunctions = function() {
+    wpDataTablesExcelPlugin.prototype.overrideHotFunctions = function () {
         var getCopyableDataOriginal = this.originals.getCopyableData;
 
-        this.hot.getCopyableData = function( row, column ) {
-            var cellMeta = this.getCellMeta( row, column );
-            var value = getCopyableDataOriginal.apply( this, arguments );
+        this.hot.getCopyableData = function (row, column) {
+            var cellMeta = this.getCellMeta(row, column);
+            var value = getCopyableDataOriginal.apply(this, arguments);
 
-            if( cellMeta.type == 'numeric' ) {
-                value = numeral( value ).format( cellMeta.format );
-            } else if( cellMeta.type == 'wdt.date' ) {
-                value = moment( value, cellMeta.dataSourceDateFormat).format(cellMeta.displayDateFormat);
+            if (cellMeta.type == 'numeric') {
+                value = numeral(value).format(cellMeta.format);
+            } else if (cellMeta.type == 'wdt.date') {
+                value = moment(value, cellMeta.dataSourceDateFormat).format(cellMeta.displayDateFormat);
             }
 
             return value;
         };
     };
 
-    wpDataTablesExcelPlugin.prototype.revertOverriddenHotFunctions = function() {
+    wpDataTablesExcelPlugin.prototype.revertOverriddenHotFunctions = function () {
         this.hot.getCopyableData = this.originals.getCopyableData;
     };
 
-    wpDataTablesExcelPlugin.prototype.initTableSettings = function() {
-        this.hot.updateSettings( this.tableSettings );
+    wpDataTablesExcelPlugin.prototype.initTableSettings = function () {
+        this.hot.updateSettings(this.tableSettings);
     };
 
     /**
      * The disablePlugin method is used to disable the plugin. Reset all of your classes properties to their default values here.
      */
-    wpDataTablesExcelPlugin.prototype.disablePlugin = function() {
+    wpDataTablesExcelPlugin.prototype.disablePlugin = function () {
         this.revertOverriddenHotFunctions();
 
         this.tableDrawRequests = 0;
@@ -190,7 +190,7 @@
      * The updatePlugin method is called on the afterUpdateSettings hook (unless the updateSettings method turned the plugin off).
      * It should contain all the stuff your plugin needs to do to work properly after the Handsontable instance settings were modified.
      */
-    wpDataTablesExcelPlugin.prototype.updatePlugin = function() {
+    wpDataTablesExcelPlugin.prototype.updatePlugin = function () {
         // The updatePlugin method needs to contain all the code needed to properly re-enable the plugin. In most cases simply disabling and enabling the plugin should do the trick.
         //this.disablePlugin();
         //this.enablePlugin();
@@ -201,12 +201,12 @@
     /**
      * The destroy method should de-assign all of your properties.
      */
-    wpDataTablesExcelPlugin.prototype.destroy = function() {
+    wpDataTablesExcelPlugin.prototype.destroy = function () {
         // The super method takes care of de-assigning the event callbacks, plugin hooks and clearing all the plugin properties.
         this._superClass.prototype.destroy.call(this);
     };
 
-    wpDataTablesExcelPlugin.prototype.initEvents = function() {
+    wpDataTablesExcelPlugin.prototype.initEvents = function () {
         var hotElement = this.hot.rootElement;
         if (this.serverSide) {
             $(hotElement).on('click.wpExcelTable', 'a.wdt_link_editable', function (e) {
@@ -228,18 +228,18 @@
     /**
      * Initialize DOM events for search DOM element and set up default search value.
      */
-    wpDataTablesExcelPlugin.prototype.initSearch = function() {
+    wpDataTablesExcelPlugin.prototype.initSearch = function () {
         var hotInstance = this.hot;
         var hotSettings = hotInstance.getSettings();
 
-        if ( hotSettings.search ) {
+        if (hotSettings.search) {
             this.$SEARCH_FIELD.on('keyup.wpExcelTable search.wpExcelTable', function (e) {
                 hotInstance.search.query(this.value);
                 hotInstance.render();
             });
 
-            if( hotSettings.searchDefaultValue ) {
-                this.$SEARCH_FIELD.val( hotSettings.searchDefaultValue );
+            if (hotSettings.searchDefaultValue) {
+                this.$SEARCH_FIELD.val(hotSettings.searchDefaultValue);
             }
         }
     };
@@ -247,7 +247,7 @@
     /**
      * Removes all DOM events related to this plugin handsontable instance
      */
-    wpDataTablesExcelPlugin.prototype.removeEvents = function() {
+    wpDataTablesExcelPlugin.prototype.removeEvents = function () {
         var hotElement = this.hot.rootElement;
         $(hotElement).off('click.wpExcelTable', '.wpExcelTable a.wdt_link_editable');
 
@@ -267,9 +267,9 @@
      * @param validator_name
      * @returns {*}
      */
-    wpDataTablesExcelPlugin.prototype.getCellValidatorByName = function( validator_name ) {
-        var validator = validator_name.replace(/(?:(wdt)\.)?(.+)/, function(match, p1, p2){
-            if( !p2 ) {
+    wpDataTablesExcelPlugin.prototype.getCellValidatorByName = function (validator_name) {
+        var validator = validator_name.replace(/(?:(wdt)\.)?(.+)/, function (match, p1, p2) {
+            if (!p2) {
                 return null;
             }
 
@@ -278,17 +278,17 @@
             return p1 + p2.charAt(0).toUpperCase() + p2.slice(1) + 'Validator';
         });
 
-        if( validator && Handsontable[validator] ) {
+        if (validator && Handsontable[validator]) {
             return Handsontable[validator];
         } else {
             return null;
         }
     };
 
-    wpDataTablesExcelPlugin.prototype.setCellValidator = function( cell_options ) {
+    wpDataTablesExcelPlugin.prototype.setCellValidator = function (cell_options) {
         var cell_validator_name = cell_options.validator;
 
-        if( cell_validator_name ) {
+        if (cell_validator_name) {
             var cell_validator = this.getCellValidatorByName(cell_validator_name);
 
             if (cell_validator) {
@@ -306,23 +306,23 @@
     /**
      * Making ajax call for loading data of server side mysql data tables
      */
-    wpDataTablesExcelPlugin.prototype.getRemoteTableData = function() {
+    wpDataTablesExcelPlugin.prototype.getRemoteTableData = function () {
         var excelPlugin = this;
         var hotInstance = this.hot;
         var tableSettings = hotInstance.getSettings();
 
-        if( !tableSettings.serverSide ) {
+        if (!tableSettings.serverSide) {
             return;
         }
 
         var ajaxSettings = tableSettings.ajax;
         var colsSettings = tableSettings.columns;
         var table_sorting = tableSettings.columnSorting;
-        var orderable = Boolean( table_sorting );
+        var orderable = Boolean(table_sorting);
         //var search = tableSettings.search;
 
         var columns = [];
-        for ( var i = 0; i < colsSettings.length; i++ ) {
+        for (var i = 0; i < colsSettings.length; i++) {
             var column = {
                 data: i,
                 name: colsSettings[i].data,
@@ -331,7 +331,7 @@
                 //search: {value: '', regex: false}
             };
 
-            columns.push( column );
+            columns.push(column);
         }
 
         //var search_param = { value: '', regex: false };
@@ -346,14 +346,14 @@
             //search: search_param
         };
 
-        if ( orderable ) {
+        if (orderable) {
             var columns_order = [];
 
             var order_column = table_sorting.column;
-            var order_direction = ( table_sorting.sortOrder )? 'asc': 'desc';
+            var order_direction = (table_sorting.sortOrder) ? 'asc' : 'desc';
             var order = {column: order_column, dir: order_direction};
 
-            columns_order.push( order );
+            columns_order.push(order);
 
             ajax_params.order = columns_order;
         }
@@ -361,38 +361,38 @@
         var ajax = {
             data: ajax_params,
             dataType: 'json',
-            success: function( response ) {
-                if( !response.draw ) {
+            success: function (response) {
+                if (!response.draw) {
                     return;
                 }
 
-                if( response.draw > excelPlugin.tableDrawResponses ) {
+                if (response.draw > excelPlugin.tableDrawResponses) {
                     excelPlugin.tableDrawResponses = response.draw;
-                    hotInstance.loadData( response.data );
+                    hotInstance.loadData(response.data);
                     //hotInstance.render();
                 }
             },
-            error: function( response ) {
-                console.log( response );
+            error: function (response) {
+                console.log(response);
             },
-            beforeSend: function(jqXHR, settings) {
+            beforeSend: function (jqXHR, settings) {
                 excelPlugin.tableDrawRequests++;
                 excelPlugin.toggleTableOverlay('show');
             },
-            complete: function() {
+            complete: function () {
                 excelPlugin.toggleTableOverlay('hide');
             }
         };
 
-        $.extend( ajaxSettings, ajax );
+        $.extend(ajaxSettings, ajax);
 
-        $.ajax( ajaxSettings );
+        $.ajax(ajaxSettings);
     };
 
     /**
      * Loading specially predefined languages for numeral js plugin.
      */
-    wpDataTablesExcelPlugin.prototype.loadLanguages = function() {
+    wpDataTablesExcelPlugin.prototype.loadLanguages = function () {
         var languages = {};
         languages['en'] = {
             delimiters: {
@@ -405,7 +405,7 @@
                 billion: 'b',
                 trillion: 't'
             },
-            ordinal: function(number) {
+            ordinal: function (number) {
                 var b = number % 10;
                 return (~~(number % 100 / 10) === 1) ? 'th' : (b === 1) ? 'st' : (b === 2) ? 'nd' : (b === 3) ? 'rd' : 'th';
             },
@@ -431,12 +431,12 @@
      * @param col
      * @param data
      */
-    wpDataTablesExcelPlugin.prototype.queryDateCell = function(instance, row, col, data) {
+    wpDataTablesExcelPlugin.prototype.queryDateCell = function (instance, row, col, data) {
         var table_settings = instance.getSettings();
         var searchVal = this.$SEARCH_FIELD.val();
         //in order to search properly date needs to be created in display format first.
         var dateToMatch = moment(data, table_settings.dataSourceDateFormat).format(table_settings.displayDateFormat);
-        return Handsontable.Search.DEFAULT_QUERY_METHOD( searchVal, dateToMatch );
+        return Handsontable.Search.DEFAULT_QUERY_METHOD(searchVal, dateToMatch);
     };
 
     /**
@@ -449,11 +449,11 @@
      * @param data
      * @param testResult
      */
-    wpDataTablesExcelPlugin.prototype.wdtExcelSearchCallback = function(instance, row, col, data, testResult) {
+    wpDataTablesExcelPlugin.prototype.wdtExcelSearchCallback = function (instance, row, col, data, testResult) {
         var cellMeta = instance.getCellMeta(row, col);
 
-        if( cellMeta.renderer == 'wdt.date' && !testResult ) {
-            cellMeta.isSearchResult = instance.getPlugin('WpDataTablesExcelPlugin').queryDateCell( instance, row, col, data );
+        if (cellMeta.renderer == 'wdt.date' && !testResult) {
+            cellMeta.isSearchResult = instance.getPlugin('WpDataTablesExcelPlugin').queryDateCell(instance, row, col, data);
         } else {
             Handsontable.Search.DEFAULT_CALLBACK.apply(this, arguments);
         }
@@ -465,21 +465,22 @@
      * @param changes 2D array containing information about each of the edited cells [[row, prop, oldVal, newVal],...
      * @returns {{cells: Array, rows: Array}}
      */
-    wpDataTablesExcelPlugin.prototype.prepareDataToSaveRemote = function( changes ) {
+    wpDataTablesExcelPlugin.prototype.prepareDataToSaveRemote = function (changes) {
         var tableSettings = this.hot.getSettings();
         var id_column_prop = tableSettings.idColumnKey;
 
-        var rows_changed_cells = [], changed_rows = [], changed_rows_data = [], cell_row, cell_prop, cell_old_value, cell_new_value;
+        var rows_changed_cells = [], changed_rows = [], changed_rows_data = [], cell_row, cell_prop, cell_old_value,
+            cell_new_value;
 
-        for( var i = 0; i < changes.length; i++ ) {
+        for (var i = 0; i < changes.length; i++) {
             cell_row = changes[i][0];
             cell_prop = changes[i][1];
             cell_old_value = changes[i][2];
             cell_new_value = changes[i][3];
 
-            if( cell_old_value != cell_new_value ) {
-                if( typeof rows_changed_cells[cell_row] == 'undefined' ) {
-                    var id_column_val = this.hot.getDataAtRowProp( cell_row, id_column_prop );
+            if (cell_old_value != cell_new_value) {
+                if (typeof rows_changed_cells[cell_row] == 'undefined') {
+                    var id_column_val = this.hot.getDataAtRowProp(cell_row, id_column_prop);
 
                     var ajax_cell_data = {};
                     ajax_cell_data[id_column_prop] = id_column_val;
@@ -492,28 +493,28 @@
             }
 
             //adding changed cells rows data for formula columns calculation
-            if( $.inArray( cell_row, changed_rows ) == -1 ) {
-                var row_data = this.hot.getSourceDataAtRow( cell_row );
-                changed_rows_data.push( row_data );
-                changed_rows.push( cell_row );
+            if ($.inArray(cell_row, changed_rows) == -1) {
+                var row_data = this.hot.getSourceDataAtRow(cell_row);
+                changed_rows_data.push(row_data);
+                changed_rows.push(cell_row);
             }
         }
 
         //correct array indexes
-        if( rows_changed_cells.length > 0 ) {
+        if (rows_changed_cells.length > 0) {
             var tmp_rows = [];
 
-            for( var row in rows_changed_cells ) {
-                tmp_rows.push( rows_changed_cells[row] );
+            for (var row in rows_changed_cells) {
+                tmp_rows.push(rows_changed_cells[row]);
             }
 
             rows_changed_cells = tmp_rows;
         }
 
-        return { cells: rows_changed_cells, rows: changed_rows_data };
+        return {cells: rows_changed_cells, rows: changed_rows_data};
     };
 
-    var preventEventPropagation = function(event) {
+    var preventEventPropagation = function (event) {
         event.stopImmediatePropagation();
         event.preventDefault();
     };
@@ -522,13 +523,13 @@
      * Shows/hides overlay over the table and prevents all js events from excecuting when it is shown.
      * @param action
      */
-    wpDataTablesExcelPlugin.prototype.toggleTableOverlay = function( action ) {
+    wpDataTablesExcelPlugin.prototype.toggleTableOverlay = function (action) {
         var hotInstance = this.hot;
 
-        if ( action == 'show' ) {
+        if (action == 'show') {
             $(hotInstance.rootElement).find('table.htCore').addClass('overlayed_elm');
             hotInstance.addHook('beforeKeyDown', preventEventPropagation);
-        } else if ( action == 'hide' ) {
+        } else if (action == 'hide') {
             $(hotInstance.rootElement).find('table.htCore').removeClass('overlayed_elm');
             hotInstance.removeHook('beforeKeyDown', preventEventPropagation);
         }
@@ -538,16 +539,16 @@
      * Sends ajax request for saving changed table data.
      * @param changes
      */
-    wpDataTablesExcelPlugin.prototype.saveChangesRemote = function( changes ) {
+    wpDataTablesExcelPlugin.prototype.saveChangesRemote = function (changes) {
         var tableSettings = this.hot.getSettings();
         var wpdatatable_id = this.tableWpId;
 
-        var formatted_changes = this.prepareDataToSaveRemote( changes );
+        var formatted_changes = this.prepareDataToSaveRemote(changes);
         var changed_cells = formatted_changes.cells;
         var changed_rows = formatted_changes.rows;
         var excelPlugin = this;
 
-        if ( changed_cells.length > 0 ) {
+        if (changed_cells.length > 0) {
             var ajax_data = {
                 action: 'wdt_save_table_cells_frontend',
                 wdtNonce: $('#wdtNonceFrontendEdit_' + wpdatatable_id).val(),
@@ -561,27 +562,27 @@
                 type: 'POST',
                 dataType: 'json',
                 data: ajax_data,
-                success: function ( return_data ) {
+                success: function (return_data) {
                     excelPlugin.toggleTableOverlay('hide');
 
-                    if( return_data.error.length > 0 || return_data.has_new ) {
+                    if (return_data.error.length > 0 || return_data.has_new) {
                         excelPlugin.getRemoteTableData();
                     }
 
-                    if( return_data.error.length > 0 ) {
+                    if (return_data.error.length > 0) {
                         wdtNotify('Error!', return_data.error, 'danger');
-                    } else if( return_data.formula_cells ) {
+                    } else if (return_data.formula_cells) {
                         //do some callback function call
-                        excelPlugin.applyCellsData( return_data.formula_cells, 'updateFormulaValues' );
+                        excelPlugin.applyCellsData(return_data.formula_cells, 'updateFormulaValues');
                     }
                 },
-                error: function ( return_data ) {
+                error: function (return_data) {
                     excelPlugin.toggleTableOverlay('hide');
                     //redraw
                     wdtNotify('Error!', return_data.error, 'danger');
                     excelPlugin.getRemoteTableData();
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     excelPlugin.toggleTableOverlay('show');
                 }
             });
@@ -593,8 +594,8 @@
      * @param rows Array of objects with properties that correspond to column names and values that should be updated. Object should contain id column in order to values can be applied.
      * @param source
      */
-    wpDataTablesExcelPlugin.prototype.applyCellsData = function( rows, source ) {
-        if( rows.length == 0 ) {
+    wpDataTablesExcelPlugin.prototype.applyCellsData = function (rows, source) {
+        if (rows.length == 0) {
             return;
         }
 
@@ -603,36 +604,36 @@
         var idColProp = htInstance.getSettings().idColumnKey;
         var rowsCount = htInstance.countRows();
 
-        for( var iRow = 0; iRow < rowsCount; iRow++ ) {
-            var idColVal = htInstance.getDataAtRowProp( iRow, idColProp );
+        for (var iRow = 0; iRow < rowsCount; iRow++) {
+            var idColVal = htInstance.getDataAtRowProp(iRow, idColProp);
 
-            for( var i = 0; i < rows.length; i++ ) {
+            for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if( row[idColProp] == idColVal ) {
-                    for( var col in row ) {
-                        if( col != idColProp ) {
-                            apply_data.push([ iRow, col, row[col] ]);
+                if (row[idColProp] == idColVal) {
+                    for (var col in row) {
+                        if (col != idColProp) {
+                            apply_data.push([iRow, col, row[col]]);
                         }
                     }
                 }
             }
         }
 
-        if( apply_data.length > 0 ) {
-            htInstance.setDataAtRowProp( apply_data, source );
+        if (apply_data.length > 0) {
+            htInstance.setDataAtRowProp(apply_data, source);
         }
     };
 
-    wpDataTablesExcelPlugin.prototype.onAfterChange = function( changes, source ) {
+    wpDataTablesExcelPlugin.prototype.onAfterChange = function (changes, source) {
         //if changes of data not caused by loading data, save it to db
         if (source !== 'loadData' && source !== 'updateFormulaValues') {
-            this.saveChangesRemote( changes );
+            this.saveChangesRemote(changes);
         }
 
         var hotInstance = this.hot;
 
         //take search value into account
-        if ( hotInstance.getSettings().search ) {
+        if (hotInstance.getSettings().search) {
             hotInstance.search.query(this.$SEARCH_FIELD.val());
             hotInstance.render();
         }
@@ -640,26 +641,26 @@
         //TODO: maybe add reorder as well
     };
 
-    wpDataTablesExcelPlugin.prototype.onInit = function() {
+    wpDataTablesExcelPlugin.prototype.onInit = function () {
         this.initTableSettings();
         this.initEvents();
         this.initSearch();
         this.getRemoteTableData();
     };
 
-    wpDataTablesExcelPlugin.prototype.onAfterValidate = function( isValid, value, row, prop, source ) {
+    wpDataTablesExcelPlugin.prototype.onAfterValidate = function (isValid, value, row, prop, source) {
         var $active_element = $(document.activeElement);
         var $parent_element = void 0;
 
-        if( $active_element.is(':input') ) {
-            $parent_element = $active_element.closest('#' + this.hot.rootElement.id +' > div');
+        if ($active_element.is(':input')) {
+            $parent_element = $active_element.closest('#' + this.hot.rootElement.id + ' > div');
         }
 
-        if( !$parent_element ) {
+        if (!$parent_element) {
             return;
         }
 
-        if( !$parent_element.next('div.tooltip:visible ').length ) {
+        if (!$parent_element.next('div.tooltip:visible ').length) {
             $parent_element.attr('title', '');
             $parent_element.tooltip({
                 title: wpdatatables_excel_strings.invalid_value_excel
@@ -667,7 +668,7 @@
         }
 
         //toggle css class "invalid value" and tooltip for editor
-        if ( !isValid ) {
+        if (!isValid) {
             $parent_element.addClass('invalid_editor_value');
             $parent_element.tooltip('show');
         } else {
@@ -677,9 +678,9 @@
     };
 
     //without this cell value drag would add '0000' for every float number
-    wpDataTablesExcelPlugin.prototype.onBeforeAutofill = function( start, end, data ) {
-        for ( var r = 0; r < data.length; r++ ) {
-            for ( var c = 0; c < data[r].length; c++ ) {
+    wpDataTablesExcelPlugin.prototype.onBeforeAutofill = function (start, end, data) {
+        for (var r = 0; r < data.length; r++) {
+            for (var c = 0; c < data[r].length; c++) {
                 var columnSettings = this.getCellMeta(start.row + r, start.col + c);
 
                 if (columnSettings.type == 'numeric') {
@@ -692,19 +693,19 @@
     };
 
     wpDataTablesExcelPlugin.prototype.onBeforeValidate = function (value, row, prop, source) {
-        return prepareWdtDateColumnValidate.apply( this, arguments );
+        return prepareWdtDateColumnValidate.apply(this, arguments);
     };
 
-    var prepareWdtDateColumnValidate = function (value, row, prop, source){
-        var col_index = this.propToCol( prop );
-        var col_type = this.getDataType( row, col_index, row, col_index );
+    var prepareWdtDateColumnValidate = function (value, row, prop, source) {
+        var col_index = this.propToCol(prop);
+        var col_type = this.getDataType(row, col_index, row, col_index);
 
-        if( col_type == 'wdt.date' ) {
-            if(!value) {
+        if (col_type == 'wdt.date') {
+            if (!value) {
                 return '';
             }
 
-            if( source != 'paste' ) {
+            if (source != 'paste') {
                 var tableSettings = this.getSettings();
                 //values are converted from database format to desired display format in order to be able to validate. Actual data is not changed, just value for validation.
                 value = moment(value, tableSettings.dataSourceDateFormat).format(tableSettings.displayDateFormat);
@@ -713,13 +714,13 @@
         }
     };
 
-    wpDataTablesExcelPlugin.prototype.onBeforeChange = function( changes, source ) {
-        for ( var i =0; i< changes.length; i++ ) {
+    wpDataTablesExcelPlugin.prototype.onBeforeChange = function (changes, source) {
+        for (var i = 0; i < changes.length; i++) {
             var col_index = this.propToCol(changes[i][1]);
-            var cellMeta = this.getCellMeta( changes[i][0], col_index );
+            var cellMeta = this.getCellMeta(changes[i][0], col_index);
 
-            if( cellMeta.type == 'wdt.date' && source == 'paste' ) {
-                changes[i][3] = moment( changes[i][3], cellMeta.displayDateFormat).format(cellMeta.dataSourceDateFormat);
+            if (cellMeta.type == 'wdt.date' && source == 'paste') {
+                changes[i][3] = moment(changes[i][3], cellMeta.displayDateFormat).format(cellMeta.dataSourceDateFormat);
             }
         }
     };
@@ -731,24 +732,24 @@
      * @param itemKey
      * @param opt
      */
-    wpDataTablesExcelPlugin.prototype.addNewTableRow = function( itemKey, opt ) {
+    wpDataTablesExcelPlugin.prototype.addNewTableRow = function (itemKey, opt) {
         var lastSeletedCol = opt.end.col;
-        var emptyRowsBottomCnt = this.countEmptyRows( true );
+        var emptyRowsBottomCnt = this.countEmptyRows(true);
         var rowsCount = this.countRows();
 
         //if las row is empty, select corresponding cell in last row
-        if( emptyRowsBottomCnt > 0 ) {
+        if (emptyRowsBottomCnt > 0) {
             var lastRow = rowsCount - 1;
 
-            this.selectCell( lastRow, lastSeletedCol, lastRow, lastSeletedCol );
+            this.selectCell(lastRow, lastSeletedCol, lastRow, lastSeletedCol);
         } else {
-            var emptyRowsCnt = this.countEmptyRows( false );
+            var emptyRowsCnt = this.countEmptyRows(false);
 
             //if there are empty rows in the table, select first one
-            if( emptyRowsCnt > 0 ) {
-                for( var row = 0; row < rowsCount; row++ ) {
-                    if( this.isEmptyRow( row ) ) {
-                        this.selectCell( row, lastSeletedCol, row, lastSeletedCol );
+            if (emptyRowsCnt > 0) {
+                for (var row = 0; row < rowsCount; row++) {
+                    if (this.isEmptyRow(row)) {
+                        this.selectCell(row, lastSeletedCol, row, lastSeletedCol);
                         return;
                     }
                 }
@@ -766,24 +767,24 @@
      * @param itemKey
      * @param opt
      */
-    wpDataTablesExcelPlugin.prototype.deleteTableRows = function( itemKey, opt ) {
+    wpDataTablesExcelPlugin.prototype.deleteTableRows = function (itemKey, opt) {
         var startRow = opt.start.row;
         var endRow = opt.end.row;
         var tableSettings = this.getSettings();
         var idColProp = tableSettings.idColumnKey;
-        var idColIndex = this.propToCol( idColProp );
+        var idColIndex = this.propToCol(idColProp);
         //gets row ids column values for all selected rows
         var deleteRowsData = this.getData(startRow, idColIndex, endRow, idColIndex);
         var deleteRowIds = [];
 
-        for ( var i = 0; i < deleteRowsData.length; i++ ) {
+        for (var i = 0; i < deleteRowsData.length; i++) {
             var rowId = deleteRowsData[i][0];
-            if ( rowId ) {
+            if (rowId) {
                 deleteRowIds.push(deleteRowsData[i][0]);
             }
         }
 
-        if( deleteRowIds.length > 0 ) {
+        if (deleteRowIds.length > 0) {
             var excelPlugin = this.getPlugin('wpDataTablesExcelPlugin');
             var wpdatatable_id = excelPlugin.tableWpId;
             var deleteRows = {};
@@ -801,27 +802,27 @@
                 url: tableSettings.adminAjaxBaseUrl,
                 data: ajax_data,
                 dataType: 'json',
-                success: function( response ){
+                success: function (response) {
                     excelPlugin.toggleTableOverlay('hide');
 
-                    if( response.error.length > 0 ) {
+                    if (response.error.length > 0) {
                         wdtNotify('Error!', response.error, 'danger');
                         excelPlugin.getRemoteTableData();
-                    } else if( response.success.length > 0 ) {
-                        for ( var rowIdx = startRow; rowIdx <= endRow; rowIdx++ ) {
+                    } else if (response.success.length > 0) {
+                        for (var rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
                             this.alter('remove_row', rowIdx);
                         }
                     } else {
                         excelPlugin.getRemoteTableData();
                     }
                 },
-                error: function( response ) {
+                error: function (response) {
                     excelPlugin.toggleTableOverlay('hide');
-                    console.log( response );
+                    console.log(response);
                     //make sure if error happens we have right data displayed
                     excelPlugin.getRemoteTableData();
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     excelPlugin.toggleTableOverlay('show');
                 }
             });
@@ -829,7 +830,7 @@
     };
 
     //TODO: Context menu items should be added to already set items if any, not to override them completely. Check this.
-    wpDataTablesExcelPlugin.prototype.addContextMenuItems = function() {
+    wpDataTablesExcelPlugin.prototype.addContextMenuItems = function () {
         //var excelPlugin = this;
         this.contextMenu = {
             items: {
@@ -852,18 +853,18 @@
         this.tableSettings.contextMenu = this.contextMenu;
     };
 
-    wpDataTablesExcelPlugin.prototype.sortDate = function( sortOrder ) {
-        var direction = ( sortOrder )? 1: -1;
-        return function(a, b) {
+    wpDataTablesExcelPlugin.prototype.sortDate = function (sortOrder) {
+        var direction = (sortOrder) ? 1 : -1;
+        return function (a, b) {
             var date1 = moment(a[1], "YYYY-MM-DD");
             var date2 = moment(b[1], "YYYY-MM-DD");
             var value;
 
-            if( !date1.isValid() && !date2.isValid() ) {
+            if (!date1.isValid() && !date2.isValid()) {
                 value = 0;
-            } else if( !date1.isValid() ) {
+            } else if (!date1.isValid()) {
                 value = -1;
-            } else if( !date2.isValid() ) {
+            } else if (!date2.isValid()) {
                 value = 1;
             } else {
                 value = date1.valueOf() - date2.valueOf();
@@ -873,13 +874,13 @@
         }
     };
 
-    wpDataTablesExcelPlugin.prototype.removeContextMenuItems = function() {
+    wpDataTablesExcelPlugin.prototype.removeContextMenuItems = function () {
         //TODO: Implement removeContextMenuItems function
         //It should remove previously added context menu items and leave items that are added externally if there are any
         //This method should be called on plugin disabled.
     };
 
 // You need to register your plugin in order to use it within Handsontable.
-Handsontable.plugins.registerPlugin('wpDataTablesExcelPlugin', wpDataTablesExcelPlugin);
+    Handsontable.plugins.registerPlugin('wpDataTablesExcelPlugin', wpDataTablesExcelPlugin);
 
 })(jQuery);

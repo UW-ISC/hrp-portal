@@ -3,9 +3,13 @@
 use WDTIntegration\WPDataFolders;
 
 defined('ABSPATH') or die('Access denied.');
-class WPDataChartsFolders extends WPDataFolders{
+
+class WPDataChartsFolders extends WPDataFolders
+{
     private static $parentConstructorCalled = false;
-    public function __construct() {
+
+    public function __construct()
+    {
         if (!self::$parentConstructorCalled) {
             parent::__construct();
             self::$parentConstructorCalled = true;
@@ -43,6 +47,7 @@ class WPDataChartsFolders extends WPDataFolders{
     {
         $this->_itemsPage = $itemsPage;
     }
+
     /**
      * @return string
      */
@@ -61,15 +66,17 @@ class WPDataChartsFolders extends WPDataFolders{
     {
         return WPDataChart::getAll();
     }
+
     public function filterBrowseAllColumns($allColumns)
     {
-        $allColumns =  ["move" => '1'] + $allColumns;
+        $allColumns = ["move" => '1'] + $allColumns;
         return array_slice($allColumns, 0, 3, true) +
             array("folders" => __('Folders', 'wpdatatables')) +
             array_slice($allColumns, 3, count($allColumns) - 1, true);
     }
 
-    public function getPredefinedOrderByValue(){
+    public function getPredefinedOrderByValue()
+    {
         return ['id', 'title', 'engine', 'type'];
     }
 

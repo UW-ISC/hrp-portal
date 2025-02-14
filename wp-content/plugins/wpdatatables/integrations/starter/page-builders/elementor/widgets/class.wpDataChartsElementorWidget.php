@@ -4,24 +4,29 @@ namespace Elementor;
 
 use WDTConfigController;
 
-class WPDataCharts_Elementor_Widget extends Widget_Base {
+class WPDataCharts_Elementor_Widget extends Widget_Base
+{
 
     private $_allCharts;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'wpdatacharts';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return 'wpDataCharts';
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'wpdt-chart-logo';
     }
 
-    public function get_categories() {
-        return [ 'wpdatatables-elementor' ];
+    public function get_categories()
+    {
+        return ['wpdatatables-elementor'];
     }
 
     /**
@@ -40,19 +45,20 @@ class WPDataCharts_Elementor_Widget extends Widget_Base {
         $this->_allCharts = $allCharts;
     }
 
-    protected function register_controls() {
+    protected function register_controls()
+    {
 
         $this->start_controls_section(
             'wpdatacharts_section',
             [
-                'label' => __( 'wpDataChart content', 'wpdatatables' ),
+                'label' => __('wpDataChart content', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-chart-id',
             [
-                'label' => __( 'Select wpDataChart:', 'wpdatatables' ),
+                'label' => __('Select wpDataChart:', 'wpdatatables'),
                 'type' => Controls_Manager::SELECT,
                 'options' => WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'charts'),
                 'default' => 0
@@ -62,7 +68,8 @@ class WPDataCharts_Elementor_Widget extends Widget_Base {
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
         self::setAllCharts(WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'charts'));
         $settings = $this->get_settings_for_display();
         $chartShortcodeParams = '[wpdatachart id=' . $settings['wpdt-chart-id'] . ']';

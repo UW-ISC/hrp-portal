@@ -23,14 +23,18 @@ class EditingIntegration
     public static function init()
     {
         // Editing options in table settings
-        add_action('wpdatatables_add_table_editing_elements', array('WDTIntegration\EditingIntegration', 'addTableOptionsOnEditingTab'));
+        add_action('wpdatatables_add_table_editing_elements', array('WDTIntegration\EditingIntegration',
+            'addTableOptionsOnEditingTab'));
 
         // Editing options in column settings
-        add_action('wpdatatables_add_column_editing_elements', array('WDTIntegration\EditingIntegration', 'addColumnOptionsOnEditingTab'));
+        add_action('wpdatatables_add_column_editing_elements', array('WDTIntegration\EditingIntegration',
+            'addColumnOptionsOnEditingTab'));
 
         // Enqueue scripts
-        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\EditingIntegration', 'adminEnqueueScripts'), 10);
-        add_action('wpdatatables_enqueue_on_frontend', array('WDTIntegration\EditingIntegration', 'frontendEnqueueScripts'), 10);
+        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\EditingIntegration',
+            'adminEnqueueScripts'), 10);
+        add_action('wpdatatables_enqueue_on_frontend', array('WDTIntegration\EditingIntegration',
+            'frontendEnqueueScripts'), 10);
     }
 
     /**
@@ -71,4 +75,5 @@ class EditingIntegration
         }
     }
 }
+
 EditingIntegration::init();

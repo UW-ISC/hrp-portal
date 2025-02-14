@@ -10,24 +10,31 @@
                                                           data-toggle="tab"><?php esc_html_e('Chart', 'wpdatatables'); ?></a>
                     </li>
                     <li class="chart-container region"><a href="#chart-container-tabs-10" data-toggle="tab"
-                                                          class=""><?php esc_html_e('Region', 'wpdatatables'); ?></a></li>
+                                                          class=""><?php esc_html_e('Region', 'wpdatatables'); ?></a>
+                    </li>
                     <li class="chart-container series"><a href="#chart-container-tabs-2" data-toggle="tab"
-                                                          class=""><?php esc_html_e('Series', 'wpdatatables'); ?></a></li>
+                                                          class=""><?php esc_html_e('Series', 'wpdatatables'); ?></a>
+                    </li>
                     <li class="chart-container axes"><a href="#chart-container-tabs-3" data-toggle="tab"
                                                         class=""><?php esc_html_e('Axes', 'wpdatatables'); ?></a></li>
                     <li class="chart-container title"><a href="#chart-container-tabs-4" data-toggle="tab"
                                                          class=""><?php esc_html_e('Title', 'wpdatatables'); ?></a></li>
                     <li class="chart-container tooltips"><a href="#chart-container-tabs-5" data-toggle="tab"
-                                                            class=""><?php esc_html_e('Tooltip', 'wpdatatables'); ?></a></li>
+                                                            class=""><?php esc_html_e('Tooltip', 'wpdatatables'); ?></a>
+                    </li>
                     <li class="chart-container legend"><a href="#chart-container-tabs-6" data-toggle="tab"
-                                                          class=""><?php esc_html_e('Legend', 'wpdatatables'); ?></a></li>
+                                                          class=""><?php esc_html_e('Legend', 'wpdatatables'); ?></a>
+                    </li>
                     <li class="chart-container highcharts"><a href="#chart-container-tabs-7" data-toggle="tab"
                                                               class=""><?php esc_html_e('Exporting', 'wpdatatables'); ?></a>
                     </li>
                     <li class="chart-container highcharts"><a href="#chart-container-tabs-8" data-toggle="tab"
-                                                              class=""><?php esc_html_e('Credits', 'wpdatatables'); ?></a></li>
-                    <li class="chart-container apex-toolbar-container"><a href="#chart-container-tabs-9" data-toggle="tab"
-                                                              class=""><?php esc_html_e('Toolbar', 'wpdatatables'); ?></a></li>
+                                                              class=""><?php esc_html_e('Credits', 'wpdatatables'); ?></a>
+                    </li>
+                    <li class="chart-container apex-toolbar-container"><a href="#chart-container-tabs-9"
+                                                                          data-toggle="tab"
+                                                                          class=""><?php esc_html_e('Toolbar', 'wpdatatables'); ?></a>
+                    </li>
                     <li class="chart-container loader"><a href="#chart-container-tabs-11"
                                                           data-toggle="tab"><?php esc_html_e('Loader', 'wpdatatables'); ?></a>
                     </li>
@@ -74,14 +81,19 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                        <button type="button" id="btn-minus-chart-width" disabled="disabled" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="chart-width">
-                                            <i class="wpdt-icon-minus"></i>
-                                        </button>
-                                        <input type="number" name="chart-width" min="0" value="0" readonly class="form-control input-sm input-number"
-                                               id="chart-width">
-                                        <button type="button" id="btn-plus-chart-width" disabled="disabled" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="chart-width">
-                                            <i class="wpdt-icon-plus-full"></i>
-                                        </button>
+                                            <button type="button" id="btn-minus-chart-width" disabled="disabled"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="chart-width">
+                                                <i class="wpdt-icon-minus"></i>
+                                            </button>
+                                            <input type="number" name="chart-width" min="0" value="0" readonly
+                                                   class="form-control input-sm input-number"
+                                                   id="chart-width">
+                                            <button type="button" id="btn-plus-chart-width" disabled="disabled"
+                                                    class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="chart-width">
+                                                <i class="wpdt-icon-plus-full"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -110,14 +122,18 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="chart-height">
-                                            <i class="wpdt-icon-minus"></i>
-                                        </button>
-                                        <input type="number" name="chart-height"  min="0" value="400" class="form-control input-sm input-number"
-                                               id="chart-height">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="chart-height">
-                                            <i class="wpdt-icon-plus-full"></i>
-                                        </button>
+                                            <button type="button"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="chart-height">
+                                                <i class="wpdt-icon-minus"></i>
+                                            </button>
+                                            <input type="number" name="chart-height" min="0" value="400"
+                                                   class="form-control input-sm input-number"
+                                                   id="chart-height">
+                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="chart-height">
+                                                <i class="wpdt-icon-plus-full"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -156,12 +172,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="start-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="start-angle">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="start-angle" min="-360" value="0"  class="form-control input-sm input-number"
+                                        <input type="number" name="start-angle" min="-360" value="0"
+                                               class="form-control input-sm input-number"
                                                id="start-angle">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="start-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="start-angle">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -177,12 +196,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="end-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="end-angle">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="end-angle" min="-360" value="360"  class="form-control input-sm input-number"
+                                        <input type="number" name="end-angle" min="-360" value="360"
+                                               class="form-control input-sm input-number"
                                                id="end-angle">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="end-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="end-angle">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -239,12 +261,16 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="border-width">
+                                            <button type="button"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="border-width">
                                                 <i class="wpdt-icon-minus"></i>
                                             </button>
-                                            <input type="number" name="border-width" min="0" value="0"  class="form-control input-sm input-number"
+                                            <input type="number" name="border-width" min="0" value="0"
+                                                   class="form-control input-sm input-number"
                                                    id="border-width">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="border-width">
+                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="border-width">
                                                 <i class="wpdt-icon-plus-full"></i>
                                             </button>
                                         </div>
@@ -284,12 +310,16 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="border-radius">
+                                            <button type="button"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="border-radius">
                                                 <i class="wpdt-icon-minus"></i>
                                             </button>
-                                            <input type="number" name="border-radius" min="0" value="0" class="form-control input-sm input-number"
+                                            <input type="number" name="border-radius" min="0" value="0"
+                                                   class="form-control input-sm input-number"
                                                    id="border-radius">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="border-radius">
+                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="border-radius">
                                                 <i class="wpdt-icon-plus-full"></i>
                                             </button>
                                         </div>
@@ -302,12 +332,13 @@
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Zoom type', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php esc_attr_e('Decides in what dimensions the user can zoom by dragging the mouse', 'wpdatatables'); ?><?php esc_attr_e('. For Apexcharts you have to have zoom enabled in the toolbar.' , 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Decides in what dimensions the user can zoom by dragging the mouse', 'wpdatatables'); ?><?php esc_attr_e('. For Apexcharts you have to have zoom enabled in the toolbar.', 'wpdatatables'); ?>"></i>
                         </h4>
                         <div class="form-group">
                             <div class="fg-line">
                                 <div class="select">
-                                    <label for="zoom-type"></label><select class="selectpicker" name="zoom-type" id="zoom-type">
+                                    <label for="zoom-type"></label><select class="selectpicker" name="zoom-type"
+                                                                           id="zoom-type">
                                         <option selected="selected" value="none">None</option>
                                         <option value="x">X</option>
                                     </select>
@@ -396,9 +427,9 @@
                                         <input type="text" name="line-background-image" id="line-background-image"
                                                class="form-control input-sm doNotTriggerChange" value=""/>
 
-                                            <button class="btn bgm-blue" id="wdt-line-image-clear-button">
-                                                <span class="wpdt-icon-image"></span>
-                                            </button>
+                                        <button class="btn bgm-blue" id="wdt-line-image-clear-button">
+                                            <span class="wpdt-icon-image"></span>
+                                        </button>
 
                                     </div>
                                 </div>
@@ -457,16 +488,17 @@
                         <div class="select">
                             <select class="form-control selectpicker"
                                     id="color-palette">
-                                <option value="palette1" selected="selected"><?php esc_html_e('Palette 1', 'wpdatatables'); ?></option>
-                                <option value="palette2" ><?php esc_html_e('Palette 2', 'wpdatatables'); ?></option>
-                                <option value="palette3" ><?php esc_html_e('Palette 3', 'wpdatatables'); ?></option>
+                                <option value="palette1"
+                                        selected="selected"><?php esc_html_e('Palette 1', 'wpdatatables'); ?></option>
+                                <option value="palette2"><?php esc_html_e('Palette 2', 'wpdatatables'); ?></option>
+                                <option value="palette3"><?php esc_html_e('Palette 3', 'wpdatatables'); ?></option>
                                 <option value="palette4"><?php esc_html_e('Palette 4', 'wpdatatables'); ?></option>
                                 <option value="palette5"><?php esc_html_e('Palette 5', 'wpdatatables'); ?></option>
                                 <option value="palette6"><?php esc_html_e('Palette 6', 'wpdatatables'); ?></option>
-                                <option value="palette7" ><?php esc_html_e('Palette 7', 'wpdatatables'); ?></option>
-                                <option value="palette8" ><?php esc_html_e('Palette 8', 'wpdatatables'); ?></option>
-                                <option value="palette9" ><?php esc_html_e('Palette 9', 'wpdatatables'); ?></option>
-                                <option value="palette10" ><?php esc_html_e('Palette 10', 'wpdatatables'); ?></option>
+                                <option value="palette7"><?php esc_html_e('Palette 7', 'wpdatatables'); ?></option>
+                                <option value="palette8"><?php esc_html_e('Palette 8', 'wpdatatables'); ?></option>
+                                <option value="palette9"><?php esc_html_e('Palette 9', 'wpdatatables'); ?></option>
+                                <option value="palette10"><?php esc_html_e('Palette 10', 'wpdatatables'); ?></option>
                             </select>
                         </div>
                     </div>
@@ -483,12 +515,17 @@
                                     <div class="col-sm-12">
                                         <div class="fg-line ">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="marker-size">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="marker-size">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="marker-size" min="0" value="0" class="form-control input-sm input-number"
+                                                <input type="number" name="marker-size" min="0" value="0"
+                                                       class="form-control input-sm input-number"
                                                        id="marker-size">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="marker-size">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="marker-size">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -533,12 +570,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-blur">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="dropshadow-blur">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="dropshadow-blur" min="1" value="3"  class="form-control input-sm input-number"
+                                        <input type="number" name="dropshadow-blur" min="1" value="3"
+                                               class="form-control input-sm input-number"
                                                id="dropshadow-blur">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-blur">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="dropshadow-blur">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -554,12 +594,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-opacity">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="dropshadow-opacity">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="dropshadow-opacity" min="1" value="35"  class="form-control input-sm input-number"
+                                        <input type="number" name="dropshadow-opacity" min="1" value="35"
+                                               class="form-control input-sm input-number"
                                                id="dropshadow-opacity">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-opacity">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="dropshadow-opacity">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -599,12 +642,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-top">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="dropshadow-top">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="dropshadow-top" value="5" min="-100" class="form-control input-sm input-number"
+                                        <input type="number" name="dropshadow-top" value="5" min="-100"
+                                               class="form-control input-sm input-number"
                                                id="dropshadow-top">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-top">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="dropshadow-top">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -620,12 +666,15 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="wdt-custom-number-input">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-left">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                data-type="minus" data-field="dropshadow-left">
                                             <i class="wpdt-icon-minus"></i>
                                         </button>
-                                        <input type="number" name="dropshadow-left" value="5" min="-100" class="form-control input-sm input-number"
+                                        <input type="number" name="dropshadow-left" value="5" min="-100"
+                                               class="form-control input-sm input-number"
                                                id="dropshadow-left">
-                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-left">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                data-type="plus" data-field="dropshadow-left">
                                             <i class="wpdt-icon-plus-full"></i>
                                         </button>
                                     </div>
@@ -644,12 +693,16 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="plot-border-width">
+                                            <button type="button"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="plot-border-width">
                                                 <i class="wpdt-icon-minus"></i>
                                             </button>
-                                            <input type="number" name="plot-border-width" min="0" value="" class="form-control input-sm input-number plot-border-width"
+                                            <input type="number" name="plot-border-width" min="0" value=""
+                                                   class="form-control input-sm input-number plot-border-width"
                                                    id="plot-border-width">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="plot-border-width">
+                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="plot-border-width">
                                                 <i class="wpdt-icon-plus-full"></i>
                                             </button>
                                         </div>
@@ -688,12 +741,16 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="font-size">
+                                            <button type="button"
+                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                    data-type="minus" data-field="font-size">
                                                 <i class="wpdt-icon-minus"></i>
                                             </button>
-                                            <input type="number" name="font-size" value="" min="8" class="form-control input-sm input-number"
+                                            <input type="number" name="font-size" value="" min="8"
+                                                   class="form-control input-sm input-number"
                                                    id="font-size">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="font-size">
+                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                    data-type="plus" data-field="font-size">
                                                 <i class="wpdt-icon-plus-full"></i>
                                             </button>
                                         </div>
@@ -828,12 +885,17 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="grid-stroke">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="grid-stroke">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="grid-stroke" min="0" value="1" class="form-control input-sm input-number"
+                                                <input type="number" name="grid-stroke" min="0" value="1"
+                                                       class="form-control input-sm input-number"
                                                        id="grid-stroke">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="grid-stroke">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="grid-stroke">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -1004,12 +1066,17 @@
                                         <div class="col-sm-12">
                                             <div class="fg-line ">
                                                 <div class="wdt-custom-number-input">
-                                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="stroke-width">
+                                                    <button type="button"
+                                                            class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                            data-type="minus" data-field="stroke-width">
                                                         <i class="wpdt-icon-minus"></i>
                                                     </button>
-                                                    <input type="number" name="stroke-width" min="1" value="2" class="form-control input-sm input-number"
+                                                    <input type="number" name="stroke-width" min="1" value="2"
+                                                           class="form-control input-sm input-number"
                                                            id="stroke-width">
-                                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="stroke-width">
+                                                    <button type="button"
+                                                            class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                            data-type="plus" data-field="stroke-width">
                                                         <i class="wpdt-icon-plus-full"></i>
                                                     </button>
                                                 </div>
@@ -1031,14 +1098,19 @@
                                         <div class="col-sm-12">
                                             <div class="fg-line ">
                                                 <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="vertical-axis-min">
-                                                    <i class="wpdt-icon-minus"></i>
-                                                </button>
-                                                <input type="number" name="vertical-axis-min" min="-10000" class="form-control input-sm input-number"
-                                                       id="vertical-axis-min">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="vertical-axis-min">
-                                                    <i class="wpdt-icon-plus-full"></i>
-                                                </button>
+                                                    <button type="button"
+                                                            class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                            data-type="minus" data-field="vertical-axis-min">
+                                                        <i class="wpdt-icon-minus"></i>
+                                                    </button>
+                                                    <input type="number" name="vertical-axis-min" min="-10000"
+                                                           class="form-control input-sm input-number"
+                                                           id="vertical-axis-min">
+                                                    <button type="button"
+                                                            class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                            data-type="plus" data-field="vertical-axis-min">
+                                                        <i class="wpdt-icon-plus-full"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1057,14 +1129,19 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="vertical-axis-max">
-                                                <i class="wpdt-icon-minus"></i>
-                                            </button>
-                                            <input type="number" name="vertical-axis-max" min="-10000" class="form-control input-sm input-number"
-                                                   id="vertical-axis-max">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="vertical-axis-max">
-                                                <i class="wpdt-icon-plus-full"></i>
-                                            </button>
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="vertical-axis-max">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="vertical-axis-max" min="-10000"
+                                                       class="form-control input-sm input-number"
+                                                       id="vertical-axis-max">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="vertical-axis-max">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1082,12 +1159,17 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="tick-amount">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="tick-amount">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="tick-amount" min="0" value="0" class="form-control input-sm input-number"
+                                                <input type="number" name="tick-amount" min="0" value="0"
+                                                       class="form-control input-sm input-number"
                                                        id="tick-amount">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="tick-amount">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="tick-amount">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -1333,14 +1415,19 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="tooltip-border-width">
-                                                <i class="wpdt-icon-minus"></i>
-                                            </button>
-                                            <input type="number" name="tooltip-border-width" value="1" min="1" class="form-control input-sm input-number"
-                                                   id="tooltip-border-width">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="tooltip-border-width">
-                                                <i class="wpdt-icon-plus-full"></i>
-                                            </button>
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="tooltip-border-width">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="tooltip-border-width" value="1" min="1"
+                                                       class="form-control input-sm input-number"
+                                                       id="tooltip-border-width">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="tooltip-border-width">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1377,14 +1464,19 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="tooltip-border-radius">
-                                                <i class="wpdt-icon-minus"></i>
-                                            </button>
-                                            <input type="number" name="tooltip-border-radius" min="0" class="form-control input-sm input-number"
-                                                   id="tooltip-border-radius" value="3">
-                                            <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="tooltip-border-radius">
-                                                <i class="wpdt-icon-plus-full"></i>
-                                            </button>
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="tooltip-border-radius">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="tooltip-border-radius" min="0"
+                                                       class="form-control input-sm input-number"
+                                                       id="tooltip-border-radius" value="3">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="tooltip-border-radius">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1595,12 +1687,17 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="legend_border_width">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="legend_border_width">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="legend_border_width" min="0" value="0"  class="form-control input-sm input-number"
+                                                <input type="number" name="legend_border_width" min="0" value="0"
+                                                       class="form-control input-sm input-number"
                                                        id="legend_border_width">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="legend_border_width">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="legend_border_width">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -1639,12 +1736,17 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="legend_border_radius">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="legend_border_radius">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="legend_border_radius" value="0" min="0" class="form-control input-sm input-number"
+                                                <input type="number" name="legend_border_radius" value="0" min="0"
+                                                       class="form-control input-sm input-number"
                                                        id="legend_border_radius">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="legend_border_radius">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="legend_border_radius">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -1729,12 +1831,17 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="exporting-width">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="exporting-width">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="exporting-width" min="0" class="form-control input-sm input-number"
+                                                <input type="number" name="exporting-width" min="0"
+                                                       class="form-control input-sm input-number"
                                                        id="exporting-width">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="exporting-width">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="exporting-width">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -1894,12 +2001,18 @@
                             <div class="select">
                                 <select class="form-control selectpicker" multiple="multiple"
                                         id="toolbar-buttons">
-                                    <option value="download" selected="selected"><?php esc_html_e('Download', 'wpdatatables'); ?></option>
-                                    <option value="selection" selected="selected"><?php esc_html_e('Selection', 'wpdatatables'); ?></option>
-                                    <option value="zoom" selected="selected"><?php esc_html_e('Zoom', 'wpdatatables'); ?></option>
-                                    <option value="zoomin" selected="selected"><?php esc_html_e('Zoom in', 'wpdatatables'); ?></option>
-                                    <option value="zoomout" selected="selected"><?php esc_html_e('Zoom out', 'wpdatatables'); ?></option>
-                                    <option value="pan" selected="selected"><?php esc_html_e('Panning', 'wpdatatables'); ?></option>
+                                    <option value="download"
+                                            selected="selected"><?php esc_html_e('Download', 'wpdatatables'); ?></option>
+                                    <option value="selection"
+                                            selected="selected"><?php esc_html_e('Selection', 'wpdatatables'); ?></option>
+                                    <option value="zoom"
+                                            selected="selected"><?php esc_html_e('Zoom', 'wpdatatables'); ?></option>
+                                    <option value="zoomin"
+                                            selected="selected"><?php esc_html_e('Zoom in', 'wpdatatables'); ?></option>
+                                    <option value="zoomout"
+                                            selected="selected"><?php esc_html_e('Zoom out', 'wpdatatables'); ?></option>
+                                    <option value="pan"
+                                            selected="selected"><?php esc_html_e('Panning', 'wpdatatables'); ?></option>
                                 </select>
                             </div>
                         </div>
@@ -1934,12 +2047,12 @@
                             <div class="select">
                                 <select class="form-control selectpicker"
                                         id="region-google-charts">
-                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
-                                    <option value="002" ><?php esc_html_e('Africa', 'wpdatatables'); ?></option>
-                                    <option value="150" ><?php esc_html_e('Europe', 'wpdatatables'); ?></option>
-                                    <option value="019" ><?php esc_html_e('Americas', 'wpdatatables'); ?></option>
-                                    <option value="142" ><?php esc_html_e('Asia', 'wpdatatables'); ?></option>
-                                    <option value="009" ><?php esc_html_e('Oceania', 'wpdatatables'); ?></option>
+                                    <option value="world"><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                    <option value="002"><?php esc_html_e('Africa', 'wpdatatables'); ?></option>
+                                    <option value="150"><?php esc_html_e('Europe', 'wpdatatables'); ?></option>
+                                    <option value="019"><?php esc_html_e('Americas', 'wpdatatables'); ?></option>
+                                    <option value="142"><?php esc_html_e('Asia', 'wpdatatables'); ?></option>
+                                    <option value="009"><?php esc_html_e('Oceania', 'wpdatatables'); ?></option>
                                 </select>
                             </div>
                         </div>
@@ -1953,30 +2066,52 @@
                             </h4>
                             <div class="select">
                                 <select class="form-control selectpicker disabled"
-                                        id="sub-continents-geo-chart" >
-                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
-                                    <option value="015" class="wdt_africa" ><?php esc_html_e('Northern Africa', 'wpdatatables'); ?></option>
-                                    <option value="011" class="wdt_africa"><?php esc_html_e('Western Africa', 'wpdatatables'); ?></option>
-                                    <option value="017" class="wdt_africa"><?php esc_html_e('Middle Africa', 'wpdatatables'); ?></option>
-                                    <option value="014" class="wdt_africa"><?php esc_html_e('Eastern Africa', 'wpdatatables'); ?></option>
-                                    <option value="018" class="wdt_africa"><?php esc_html_e('Southern Africa', 'wpdatatables'); ?></option>
-                                    <option value="154" class="wdt_europe"><?php esc_html_e('Northern Europe', 'wpdatatables'); ?></option>
-                                    <option value="155" class="wdt_europe"><?php esc_html_e('Western Europe', 'wpdatatables'); ?></option>
-                                    <option value="151" class="wdt_europe"><?php esc_html_e('Eastern Europe', 'wpdatatables'); ?></option>
-                                    <option value="039" class="wdt_europe"><?php esc_html_e('Southern Europe', 'wpdatatables'); ?></option>
-                                    <option value="021" class="wdt_america"><?php esc_html_e('Northern America', 'wpdatatables'); ?></option>
-                                    <option value="029" class="wdt_america"><?php esc_html_e('Caribbean', 'wpdatatables'); ?></option>
-                                    <option value="013" class="wdt_america"><?php esc_html_e('Central America', 'wpdatatables'); ?></option>
-                                    <option value="005" class="wdt_america"><?php esc_html_e('South America', 'wpdatatables'); ?></option>
-                                    <option value="143" class="wdt_asia"><?php esc_html_e('Central Asia', 'wpdatatables'); ?></option>
-                                    <option value="030" class="wdt_asia"><?php esc_html_e('Eastern Asia', 'wpdatatables'); ?></option>
-                                    <option value="034" class="wdt_asia"><?php esc_html_e('Southern Asia', 'wpdatatables'); ?></option>
-                                    <option value="035" class="wdt_asia"><?php esc_html_e('South-Eastern Asia', 'wpdatatables'); ?></option>
-                                    <option value="145" class="wdt_asia"><?php esc_html_e('Western Asia', 'wpdatatables'); ?></option>
-                                    <option value="053" class="wdt_australia"><?php esc_html_e('Australia and New Zealand', 'wpdatatables'); ?></option>
-                                    <option value="054" class="wdt_australia"><?php esc_html_e('Melanesia', 'wpdatatables'); ?></option>
-                                    <option value="057" class="wdt_australia"><?php esc_html_e('Micronesia', 'wpdatatables'); ?></option>
-                                    <option value="061" class="wdt_australia"><?php esc_html_e('Polynesia', 'wpdatatables'); ?></option>
+                                        id="sub-continents-geo-chart">
+                                    <option value="world"><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                    <option value="015"
+                                            class="wdt_africa"><?php esc_html_e('Northern Africa', 'wpdatatables'); ?></option>
+                                    <option value="011"
+                                            class="wdt_africa"><?php esc_html_e('Western Africa', 'wpdatatables'); ?></option>
+                                    <option value="017"
+                                            class="wdt_africa"><?php esc_html_e('Middle Africa', 'wpdatatables'); ?></option>
+                                    <option value="014"
+                                            class="wdt_africa"><?php esc_html_e('Eastern Africa', 'wpdatatables'); ?></option>
+                                    <option value="018"
+                                            class="wdt_africa"><?php esc_html_e('Southern Africa', 'wpdatatables'); ?></option>
+                                    <option value="154"
+                                            class="wdt_europe"><?php esc_html_e('Northern Europe', 'wpdatatables'); ?></option>
+                                    <option value="155"
+                                            class="wdt_europe"><?php esc_html_e('Western Europe', 'wpdatatables'); ?></option>
+                                    <option value="151"
+                                            class="wdt_europe"><?php esc_html_e('Eastern Europe', 'wpdatatables'); ?></option>
+                                    <option value="039"
+                                            class="wdt_europe"><?php esc_html_e('Southern Europe', 'wpdatatables'); ?></option>
+                                    <option value="021"
+                                            class="wdt_america"><?php esc_html_e('Northern America', 'wpdatatables'); ?></option>
+                                    <option value="029"
+                                            class="wdt_america"><?php esc_html_e('Caribbean', 'wpdatatables'); ?></option>
+                                    <option value="013"
+                                            class="wdt_america"><?php esc_html_e('Central America', 'wpdatatables'); ?></option>
+                                    <option value="005"
+                                            class="wdt_america"><?php esc_html_e('South America', 'wpdatatables'); ?></option>
+                                    <option value="143"
+                                            class="wdt_asia"><?php esc_html_e('Central Asia', 'wpdatatables'); ?></option>
+                                    <option value="030"
+                                            class="wdt_asia"><?php esc_html_e('Eastern Asia', 'wpdatatables'); ?></option>
+                                    <option value="034"
+                                            class="wdt_asia"><?php esc_html_e('Southern Asia', 'wpdatatables'); ?></option>
+                                    <option value="035"
+                                            class="wdt_asia"><?php esc_html_e('South-Eastern Asia', 'wpdatatables'); ?></option>
+                                    <option value="145"
+                                            class="wdt_asia"><?php esc_html_e('Western Asia', 'wpdatatables'); ?></option>
+                                    <option value="053"
+                                            class="wdt_australia"><?php esc_html_e('Australia and New Zealand', 'wpdatatables'); ?></option>
+                                    <option value="054"
+                                            class="wdt_australia"><?php esc_html_e('Melanesia', 'wpdatatables'); ?></option>
+                                    <option value="057"
+                                            class="wdt_australia"><?php esc_html_e('Micronesia', 'wpdatatables'); ?></option>
+                                    <option value="061"
+                                            class="wdt_australia"><?php esc_html_e('Polynesia', 'wpdatatables'); ?></option>
                                 </select>
                             </div>
                         </div>
@@ -1990,8 +2125,8 @@
                             </h4>
                             <div class="select">
                                 <select class="form-control selectpicker disabled"
-                                        id="countries-geo-chart" >
-                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                        id="countries-geo-chart">
+                                    <option value="world"><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
                                     <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/geochart_options.php'; ?>
                                 </select>
                             </div>
@@ -2064,7 +2199,7 @@
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="loader-color" value="" disabled
                                                    class="form-control cp-value wdt-add-picker"
-                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>"/>
+                                                   placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>"/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -2084,7 +2219,7 @@
                                         <div class="col-sm-12">
                                             <input type="text" id="loader-style-label" value="" disabled
                                                    class="form-control input-sm"
-                                                   placeholder="<?php esc_attr_e( 'Coming Soon...', 'wpdatatables' ); ?>"/>
+                                                   placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>"/>
                                         </div>
                                     </div>
                                 </div>

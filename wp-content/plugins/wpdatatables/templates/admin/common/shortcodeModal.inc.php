@@ -1,7 +1,8 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <!-- #wdt-backend-close-modal -->
-<div class="modal fade wpdt-modals" id="wdt-backend-shortcode-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade wpdt-modals" id="wdt-backend-shortcode-modal" data-backdrop="static" data-keyboard="false"
+     tabindex="-1"
      role="dialog" aria-hidden="true">
 
     <!-- .modal-dialog -->
@@ -29,10 +30,13 @@
                         </label>
                         <div class="col-sm-12 p-0">
                             <div class="fg-line">
-                                <textarea id="wpdt-shortcode-data" rows="10" placeholder="<?php esc_attr_e('[shortcode]','wpdatatables'); ?>" required></textarea>
+                                <textarea id="wpdt-shortcode-data" rows="10"
+                                          placeholder="<?php esc_attr_e('[shortcode]', 'wpdatatables'); ?>"
+                                          required></textarea>
                             </div>
                         </div>
-                        <div class="error-msg" hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
+                        <div class="error-msg"
+                             hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>
                     </div>
                 </div>
             </div>

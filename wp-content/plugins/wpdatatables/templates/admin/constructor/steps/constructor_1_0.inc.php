@@ -22,7 +22,7 @@
 
             <div class="col-sm-6">
                 <h4 class="c-title-color m-b-2">
-				    <?php esc_html_e('Table description', 'wpdatatables'); ?>
+                    <?php esc_html_e('Table description', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                        title="<?php esc_attr_e('What is the description of the table? (optional)', 'wpdatatables'); ?>"></i>
                 </h4>
@@ -91,15 +91,16 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-            <div class = "category">
-                <p class="wdt-category-heading"><?php esc_html_e("PRICING TABLES TEMPLATES", "wpdatatables") ?></p>
-            </div>
+                <div class="category">
+                    <p class="wdt-category-heading"><?php esc_html_e("PRICING TABLES TEMPLATES", "wpdatatables") ?></p>
+                </div>
             </div>
         </div>
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-1-template" data-type="wdt-pricing-table-1-template" data-template_id="3">
+                <div class="card" id="wdt-pricing-table-1-template" data-type="wdt-pricing-table-1-template"
+                     data-template_id="3">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -107,7 +108,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -119,7 +122,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-2-template" data-type="wdt-pricing-table-2-template" data-template_id="2">
+                <div class="card" id="wdt-pricing-table-2-template" data-type="wdt-pricing-table-2-template"
+                     data-template_id="2">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -127,7 +131,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -139,7 +145,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-3-template" data-type="wdt-pricing-table-3-template" data-template_id="12">
+                <div class="card" id="wdt-pricing-table-3-template" data-type="wdt-pricing-table-3-template"
+                     data-template_id="12">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -147,7 +154,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-three" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-three"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -158,7 +167,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-4-template" data-type="wdt-pricing-table-4-template" data-template_id="14">
+                <div class="card" id="wdt-pricing-table-4-template" data-type="wdt-pricing-table-4-template"
+                     data-template_id="14">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -166,7 +176,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-four" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-four"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -179,7 +191,8 @@
         </div>
         <div class="row">
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-5-template" data-type="wdt-pricing-table-5-template" data-template_id="18">
+                <div class="card" id="wdt-pricing-table-5-template" data-type="wdt-pricing-table-5-template"
+                     data-template_id="18">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -187,7 +200,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-five" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-five"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -198,7 +213,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-6-template" data-type="wdt-pricing-table-6-template" data-template_id="19">
+                <div class="card" id="wdt-pricing-table-6-template" data-type="wdt-pricing-table-6-template"
+                     data-template_id="19">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -206,7 +222,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-six" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-six"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -217,7 +235,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-7-template" data-type="wdt-pricing-table-7-template" data-template_id="23">
+                <div class="card" id="wdt-pricing-table-7-template" data-type="wdt-pricing-table-7-template"
+                     data-template_id="23">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -225,7 +244,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-seven" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-seven"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -236,7 +257,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-8-template" data-type="wdt-pricing-table-8-template" data-template_id="27">
+                <div class="card" id="wdt-pricing-table-8-template" data-type="wdt-pricing-table-8-template"
+                     data-template_id="27">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -244,7 +266,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-eight" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-eight"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -257,7 +281,8 @@
         </div>
         <div class="row">
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pricing-table-9-template" data-type="wdt-pricing-table-9-template" data-template_id="28">
+                <div class="card" id="wdt-pricing-table-9-template" data-type="wdt-pricing-table-9-template"
+                     data-template_id="28">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -265,7 +290,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-nine" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pricing-table/#pricing-table-example-nine"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -278,7 +305,7 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-                <div class = "category">
+                <div class="category">
                     <p class="wdt-category-heading"><?php esc_html_e("COMPARISON TABLES TEMPLATES", "wpdatatables") ?></p>
                 </div>
             </div>
@@ -286,7 +313,8 @@
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-1-template" data-type="wdt-comparison-table-1-template" data-template_id="10">
+                <div class="card" id="wdt-comparison-table-1-template" data-type="wdt-comparison-table-1-template"
+                     data-template_id="10">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -294,7 +322,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -306,7 +336,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-2-template" data-type="wdt-comparison-table-2-template" data-template_id="11">
+                <div class="card" id="wdt-comparison-table-2-template" data-type="wdt-comparison-table-2-template"
+                     data-template_id="11">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -314,7 +345,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -325,7 +358,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-3-template" data-type="wdt-comparison-table-3-template" data-template_id="16">
+                <div class="card" id="wdt-comparison-table-3-template" data-type="wdt-comparison-table-3-template"
+                     data-template_id="16">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -333,7 +367,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-three" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-three"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -344,7 +380,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-4-template" data-type="wdt-comparison-table-4-template" data-template_id="17">
+                <div class="card" id="wdt-comparison-table-4-template" data-type="wdt-comparison-table-4-template"
+                     data-template_id="17">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -352,7 +389,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-four" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-four"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -365,7 +404,8 @@
         </div>
         <div class="row">
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-5-template" data-type="wdt-comparison-table-5-template" data-template_id="20">
+                <div class="card" id="wdt-comparison-table-5-template" data-type="wdt-comparison-table-5-template"
+                     data-template_id="20">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -373,7 +413,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-five" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-five"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -384,7 +426,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-6-template" data-type="wdt-comparison-table-6-template" data-template_id="21">
+                <div class="card" id="wdt-comparison-table-6-template" data-type="wdt-comparison-table-6-template"
+                     data-template_id="21">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -392,7 +435,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-six" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-six"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -403,7 +448,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-7-template" data-type="wdt-comparison-table-7-template" data-template_id="22">
+                <div class="card" id="wdt-comparison-table-7-template" data-type="wdt-comparison-table-7-template"
+                     data-template_id="22">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -411,7 +457,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-seven" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-seven"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -422,7 +470,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-comparison-table-8-template" data-type="wdt-comparison-table-8-template" data-template_id="29">
+                <div class="card" id="wdt-comparison-table-8-template" data-type="wdt-comparison-table-8-template"
+                     data-template_id="29">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -430,7 +479,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-eight" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-amazon-product-comparison-table/#comparison-table-example-eight"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -443,7 +494,7 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-                <div class = "category">
+                <div class="category">
                     <p class="wdt-category-heading"><?php esc_html_e("PEDIGREE TABLES TEMPLATES", "wpdatatables") ?></p>
                 </div>
             </div>
@@ -451,7 +502,8 @@
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card"  id="wdt-pedigree-table-1-template" data-type="wdt-pedigree-table-1-template" data-template_id="8">
+                <div class="card" id="wdt-pedigree-table-1-template" data-type="wdt-pedigree-table-1-template"
+                     data-template_id="8">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -459,7 +511,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -471,7 +525,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pedigree-table-2-template" data-type="wdt-pedigree-table-2-template" data-template_id="9">
+                <div class="card" id="wdt-pedigree-table-2-template" data-type="wdt-pedigree-table-2-template"
+                     data-template_id="9">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -479,7 +534,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -491,7 +548,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-pedigree-table-3-template" data-type="wdt-pedigree-table-3-template" data-template_id="6">
+                <div class="card" id="wdt-pedigree-table-3-template" data-type="wdt-pedigree-table-3-template"
+                     data-template_id="6">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -499,7 +557,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-three" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-pedigree-table/#pedigree-table-example-three"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -513,7 +573,7 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-                <div class = "category">
+                <div class="category">
                     <p class="wdt-category-heading"><?php esc_html_e("TABLES WITH MERGED CELLS TEMPLATES", "wpdatatables") ?></p>
                 </div>
             </div>
@@ -521,7 +581,8 @@
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-merged-cells-table-1-template" data-type="wdt-merged-cells-table-1-template" data-template_id="4">
+                <div class="card" id="wdt-merged-cells-table-1-template" data-type="wdt-merged-cells-table-1-template"
+                     data-template_id="4">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -529,7 +590,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -541,7 +604,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-merged-cells-table-2-template" data-type="wdt-merged-cells-table-2-template" data-template_id="5">
+                <div class="card" id="wdt-merged-cells-table-2-template" data-type="wdt-merged-cells-table-2-template"
+                     data-template_id="5">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -549,7 +613,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -561,7 +627,8 @@
             </div>
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-merged-cells-table-3-template" data-type="wdt-merged-cells-table-3-template" data-template_id="7">
+                <div class="card" id="wdt-merged-cells-table-3-template" data-type="wdt-merged-cells-table-3-template"
+                     data-template_id="7">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -569,7 +636,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-three" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-three"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -580,7 +649,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-merged-cells-table-4-template" data-type="wdt-merged-cells-table-4-template" data-template_id="15">
+                <div class="card" id="wdt-merged-cells-table-4-template" data-type="wdt-merged-cells-table-4-template"
+                     data-template_id="15">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -588,7 +658,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-four" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-table-merge-cells/#merged-cells-example-four"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -602,7 +674,7 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-                <div class = "category">
+                <div class="category">
                     <p class="wdt-category-heading"><?php esc_html_e("EMPLOYEE TABLES TEMPLATES", "wpdatatables") ?></p>
                 </div>
             </div>
@@ -610,7 +682,8 @@
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-employee-table-1-template" data-type="wdt-employee-table-1-template" data-template_id="1">
+                <div class="card" id="wdt-employee-table-1-template" data-type="wdt-employee-table-1-template"
+                     data-template_id="1">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -618,7 +691,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -629,7 +704,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-employee-table-2-template" data-type="wdt-employee-table-2-template" data-template_id="13">
+                <div class="card" id="wdt-employee-table-2-template" data-type="wdt-employee-table-2-template"
+                     data-template_id="13">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -637,7 +713,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -648,7 +726,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-employee-table-3-template" data-type="wdt-employee-table-3-template" data-template_id="26">
+                <div class="card" id="wdt-employee-table-3-template" data-type="wdt-employee-table-3-template"
+                     data-template_id="26">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -656,7 +735,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-three" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-employee-table/#employee-table-example-three"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -669,7 +750,7 @@
         </div>
         <div class="row m-t-20 m-b-5 p-l-20 p-r-20">
             <div class="wpdt-custom-center-flex">
-                <div class = "category">
+                <div class="category">
                     <p class="wdt-category-heading"><?php esc_html_e("SCHEDULING TABLES TEMPLATES", "wpdatatables") ?></p>
                 </div>
             </div>
@@ -677,7 +758,8 @@
         <div class="row">
 
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-scheduling-table-1-template" data-type="wdt-scheduling-table-1-template" data-template_id="24">
+                <div class="card" id="wdt-scheduling-table-1-template" data-type="wdt-scheduling-table-1-template"
+                     data-template_id="24">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -685,7 +767,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-scheduling-table/#scheduling-table-example-one" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-scheduling-table/#scheduling-table-example-one"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
@@ -696,7 +780,8 @@
                 </div>
             </div>
             <div class="wdt-simple-table-template col-sm-2">
-                <div class="card" id="wdt-scheduling-table-2-template" data-type="wdt-scheduling-table-2-template" data-template_id="25">
+                <div class="card" id="wdt-scheduling-table-2-template" data-type="wdt-scheduling-table-2-template"
+                     data-template_id="25">
                     <div class="card-header">
                         <div class="wdt-simple-table-template-overlay"></div>
                         <img class="img-responsive"
@@ -704,7 +789,9 @@
                         <button class=" btn btn-primary wdt-simple-table-constructor">
                             <?php esc_html_e('Create table', 'wpdatatables'); ?>
                         </button>
-                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase" href="https://wpdatatables.com/documentation/table-examples/wordpress-scheduling-table/#scheduling-table-example-two" target="_blank" rel="nofollow">
+                        <a class=" btn btn-primary showcase wdt-simple-table-constructor-showcase"
+                           href="https://wpdatatables.com/documentation/table-examples/wordpress-scheduling-table/#scheduling-table-example-two"
+                           target="_blank" rel="nofollow">
                             <?php esc_html_e('Show live', 'wpdatatables'); ?>
                             <i class="wpdt-icon-external-link" style="background-color: transparent"></i>
                         </a>
