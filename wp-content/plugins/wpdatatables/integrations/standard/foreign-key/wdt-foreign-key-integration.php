@@ -22,7 +22,8 @@ class ForeignKeyIntegration
     public static function init()
     {
         // Add foreign key settings block in column settings
-        add_action('wpdatatables_add_foreign_key_block', array('WDTIntegration\ForeignKeyIntegration', 'addSettingsBlock'));
+        add_action('wpdatatables_add_foreign_key_block', array('WDTIntegration\ForeignKeyIntegration',
+            'addSettingsBlock'));
 
         // Add foreign key configure modal in admin area
         add_action('wpdatatables_admin_after_edit', array('WDTIntegration\ForeignKeyIntegration', 'addConfigureModal'));
@@ -40,6 +41,7 @@ class ForeignKeyIntegration
         ob_end_clean();
         echo $settingsBlock;
     }
+
     /**
      * Adds Configure foreign key modal
      */

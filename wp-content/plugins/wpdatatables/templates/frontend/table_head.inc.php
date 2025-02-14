@@ -50,7 +50,8 @@ $type = $this->getTableType();
         class="<?php if ($dataColumn->getHiddenAttr()) {
             echo esc_attr($dataColumn->getHiddenAttr());
         } ?> wdtheader <?php if ($dataColumn->getSorting()) { ?>sort <?php } ?><?php echo esc_attr($dataColumn->getCSSClasses()); ?>"
-        style="<?php echo esc_attr($dataColumn->getCSSStyle()); ?>"><?php if ($is_safari) { ?><span><?php echo esc_attr($dataColumn->getTitle()) ?></span> <?php } ?>
+        style="<?php echo esc_attr($dataColumn->getCSSStyle()); ?>"><?php if ($is_safari) { ?>
+            <span><?php echo esc_attr($dataColumn->getTitle()) ?></span> <?php } ?>
         <?php if (!($is_safari)) { ?><?php echo esc_attr($dataColumn->getTitle()) ?><?php } ?></th><?php } ?>
     <?php do_action('wpdatatables_after_header', $this->getWpId()); ?>
 </tr>

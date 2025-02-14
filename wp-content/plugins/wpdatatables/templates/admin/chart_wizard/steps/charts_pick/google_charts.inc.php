@@ -83,7 +83,8 @@
         <div class="card" data-type="google_stacked_bar_chart" data-min_columns="2" data-max_columns="0">
             <div class="card-header">
                 <div class="wdt-chart-wizard-overlay"></div>
-                <img class="img-responsive" src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google_stacked_bar_chart.jpg">
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google_stacked_bar_chart.jpg">
             </div>
             <div class="card-body">
                 <h4 class="f-14"><?php esc_html_e('Stacked bar chart', 'wpdatatables'); ?></h4>
@@ -218,11 +219,12 @@
         </div>
     </div>
     <div class="col-xs-12" style="margin-left:2px">
-            <div class="alert alert-info alert-dismissible hidden" role="alert">
-                    <i class="wpdt-icon-info-circle-full"></i>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-                  </button>
-                  <span class="wdt-alert-title f-600"><?php esc_html_e('Marker GeoChart and Text GeoChart are disabled without Google Maps API key! Region GeoChart can be used without Google Maps API key, but options for choosing continents, subcontinents and countries are disabled!', 'wpdatatables'); ?><br></span>
-            </div>
+        <div class="alert alert-info alert-dismissible hidden" role="alert">
+            <i class="wpdt-icon-info-circle-full"></i>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">×</span>
+            </button>
+            <span class="wdt-alert-title f-600"><?php esc_html_e('Marker GeoChart and Text GeoChart are disabled without Google Maps API key! Region GeoChart can be used without Google Maps API key, but options for choosing continents, subcontinents and countries are disabled!', 'wpdatatables'); ?><br></span>
+        </div>
     </div>
 </div>

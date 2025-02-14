@@ -8,7 +8,7 @@
 
     var charts = [];
 
-    if (allCharts !== null){
+    if (allCharts !== null) {
         for (var i = 0; i < allCharts.length; i++) {
             charts.push({
                 value: allCharts[i].id,
@@ -86,7 +86,6 @@
                 transform: 'translate(3.000000, 0.000000)',
 
             })
-
         ),
 
         category: 'wpdatatables-blocks',
@@ -145,7 +144,7 @@
                 var short_code = '';
 
                 if (attributes.chartID !== '') {
-                    short_code += '[wpdatachart id=' + attributes.chartID  + ']'
+                    short_code += '[wpdatachart id=' + attributes.chartID + ']'
                 } else if (charts.length !== 0) {
                     short_code = '[wpdatachart id=' + charts[0].value + ']'
                 } else {
@@ -156,6 +155,7 @@
 
                 return short_code
             }
+
             if (charts.length !== 0) {
                 inspectorElements.push(el(components.SelectControl, {
                     id: 'wpdatatables-js-select-chart',
@@ -193,7 +193,8 @@
                 )
             ]
         },
-        example: () => {},
+        example: () => {
+        },
         save: function (props) {
             return (
                 el('div', {},

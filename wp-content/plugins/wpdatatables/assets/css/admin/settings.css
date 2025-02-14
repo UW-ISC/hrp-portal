@@ -19,16 +19,18 @@
     box-shadow: 0 2px 5px rgba(23, 43, 77, 0.1), 0 0 1px rgba(23, 43, 77, 0.32);
     border-radius: 3px;
 }
+
 .wpdt-c .wdt-activation-section .panel-body .alert {
     padding: 9px !important;
 }
-.wpdt-c .wdt-activation-section .wpdt-plugins-desc{
+
+.wpdt-c .wdt-activation-section .wpdt-plugins-desc {
     min-height: 50px;
     padding: 12px;
     background: #F8F8FA;
 }
 
-.wpdt-c .wdt-activation-section  .wpdt-plugins-desc img{
+.wpdt-c .wdt-activation-section .wpdt-plugins-desc img {
     display: inline-block !important;
     background: #FFFFFF;
     width: 40px;
@@ -38,7 +40,8 @@
     box-shadow: 0 1px 2px rgba(9, 29, 112, 0.17);
     border-radius: 12px;
 }
-.wpdt-c .wdt-activation-section  .wpdt-plugins-desc h4 {
+
+.wpdt-c .wdt-activation-section .wpdt-plugins-desc h4 {
     display: inline-block;
     width: 80%;
     vertical-align: middle;
@@ -47,9 +50,11 @@
     line-height: 20px;
     color: #061938;
 }
+
 .wpdt-c .wdt-envato-activation {
     margin-top: 12px;
 }
+
 .wpdt-c .wdt-envato-activation .wdt-envato-deactivation-button,
 .wpdt-c .wdt-store-activate-plugin.btn-danger,
 .wpdt-c .wdt-store-activate-plugin.btn-danger:focus:focus {
@@ -65,15 +70,17 @@
     font-size: 14px;
     line-height: 20px;
 }
+
 .wpdt-c .wdt-envato-activation .wdt-envato-deactivation-button i,
-.wpdt-c .wdt-store-activate-plugin.btn-danger i{
+.wpdt-c .wdt-store-activate-plugin.btn-danger i {
     color: #F03E3E;
 }
-.wpdt-c .wdt-store-activate-plugin.btn-primary i{
+
+.wpdt-c .wdt-store-activate-plugin.btn-primary i {
     color: #FFFFFF;
 }
 
-.wpdt-c .wdt-envato-activation .wdt-envato-activation-button{
+.wpdt-c .wdt-envato-activation .wdt-envato-activation-button {
     background: #FFFFFF;
     border: 1px solid #DFE1E6;
     box-sizing: border-box;
@@ -119,7 +126,7 @@
     box-sizing: border-box;
     box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
     border-radius: 3px;
-    padding:10px 12px;
+    padding: 10px 12px;
 }
 
 .wpdt-c .wdt-custom-number-input {
@@ -130,7 +137,7 @@
 .wpdt-c .wdt-custom-number-input .wdt-btn-number:hover:disabled,
 .wpdt-c .wdt-custom-number-input .wdt-btn-number:active,
 .wpdt-c .wdt-custom-number-input .wdt-btn-number:visited,
-.wpdt-c .wdt-custom-number-input .wdt-btn-number{
+.wpdt-c .wdt-custom-number-input .wdt-btn-number {
     position: absolute;
     height: 100%;
     width: 40px;
@@ -138,11 +145,12 @@
     color: #8796AF;
     background: #F8F8FA;
 }
+
 .wpdt-c .wdt-custom-number-input input {
     text-align: center;
 }
 
-.wpdt-c .wdt-custom-number-input .wdt-btn-number.wdt-button-minus{
+.wpdt-c .wdt-custom-number-input .wdt-btn-number.wdt-button-minus {
     left: 0;
     top: 0;
     height: 100%;
@@ -151,7 +159,8 @@
     background: #F8F8FA;
     border-radius: 2px 0 0 2px;
 }
-.wpdt-c .wdt-custom-number-input .wdt-btn-number.wdt-button-plus{
+
+.wpdt-c .wdt-custom-number-input .wdt-btn-number.wdt-button-plus {
     right: 0;
     top: 0;
     height: 100%;

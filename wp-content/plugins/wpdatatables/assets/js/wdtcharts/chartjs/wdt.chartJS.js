@@ -118,7 +118,7 @@ var wpDataTablesChartJS = function () {
             }
             var chartID = this.container.id.replace(/.*_(\d+)/, '$1');
             if (jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                     if (jQuery(this).attr('data-id') === chartID) {
                         jQuery(this).hide();
                     }
@@ -579,7 +579,7 @@ var wpDataTablesChartJS = function () {
                     obj.chart = new Chart(obj.canvas, obj.options);
                     var chartID = obj.container.id.replace(/.*_(\d+)/, '$1');
                     if (jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
-                        jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function() {
+                        jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                             if (jQuery(this).attr('data-id') === chartID) {
                                 jQuery(this).hide();
                             }

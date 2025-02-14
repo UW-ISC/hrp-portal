@@ -79,7 +79,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
         },
         // Save a cell value function
         saveData: function (val, rowId, columnId) {
-            if($.inArray(obj.params.columnHeader, ['wdt_created_by','wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at']) !== -1 ){
+            if ($.inArray(obj.params.columnHeader, ['wdt_created_by', 'wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at']) !== -1) {
                 obj.params.currentCell.empty().html(wpdatatables_frontend_strings.cannot_be_edit_wpdatatables);
                 $(document).click(function () {
                     $this.html($value);
@@ -324,7 +324,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 // Saving event and fix for double ajax call
                 var hasFired = false;
                 $(obj.params.editSelector).blur(function () {
-                    if(!hasFired){
+                    if (!hasFired) {
                         hasFired = true;
                         obj.params.value = $(this).val();
                         obj.validateAndSave($(this));
@@ -344,7 +344,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 // Saving event
                 var hasFired = false;
                 $(obj.params.editSelector).blur(function () {
-                    if(!hasFired){
+                    if (!hasFired) {
                         hasFired = true;
                         obj.params.value = $(this).val();
                         obj.validateAndSave($(this));
@@ -364,7 +364,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 // Saving event
                 var hasFired = false;
                 $(obj.params.editSelector).blur(function () {
-                    if(!hasFired){
+                    if (!hasFired) {
                         hasFired = true;
                         obj.params.value = $(this).val();
                         obj.validateAndSave($(this));
@@ -411,25 +411,25 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                             },
                             success: function (data) {
                                 data = JSON.parse(data);
-                                if(obj.params.inputType === 'multi-selectbox') {
+                                if (obj.params.inputType === 'multi-selectbox') {
                                     var uniqueValues = [...new Set(data.map(item => item.value.split(', ').map(val => val.trim())).flat())];
                                 }
                                 // Populate the selectpicker with the fetched data
                                 $(obj.params.editSelector).empty();
 
-                                if(obj.params.inputType === 'multi-selectbox'){
+                                if (obj.params.inputType === 'multi-selectbox') {
                                     $.each(uniqueValues, function (index, item) {
                                         var selected = obj.params.value !== null && obj.params.value.includes(item);
                                         $(obj.params.editSelector).append('<option value="' + item + '"' + (selected ? ' selected' : '') + '>' + item + '</option>');
                                     });
                                 } else {
                                     $.each(data, function (index, item) {
-                                            $(obj.params.editSelector).append('<option value="' + item.value + '">' + item.value + '</option>');
+                                        $(obj.params.editSelector).append('<option value="' + item.value + '">' + item.value + '</option>');
                                     });
                                 }
 
                                 // Add the selected option if obj.params.value is not null
-                                if (obj.params.value !== null && obj.params.inputType === 'selectbox' ) {
+                                if (obj.params.value !== null && obj.params.inputType === 'selectbox') {
                                     $(obj.params.editSelector).append('<option selected value="' + obj.params.value + '">' + obj.params.value + '</option>');
                                 }
                                 $(obj.params.editSelector).on('changed.bs.select', function () {
@@ -451,14 +451,14 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
 
                     // Load all possible values when the selectpicker is shown
                     $(obj.params.editSelector).on('show.bs.select', function (e) {
-                        if(!tableDescription.advancedEditingOptions.aoColumns[obj.params.columnId].searchInSelectBoxEditing && $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox').length){
+                        if (!tableDescription.advancedEditingOptions.aoColumns[obj.params.columnId].searchInSelectBoxEditing && $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox').length) {
                             $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox')[0].style.display = 'none';
                         }
                         setTimeout(function () {
                             $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox .form-control').val('').trigger('keyup');
                         }, 500);
 
-                            loadAllPossibleValues();
+                        loadAllPossibleValues();
                     });
                 }
                 obj.params.currentCell.css({'overflow': 'initial'});

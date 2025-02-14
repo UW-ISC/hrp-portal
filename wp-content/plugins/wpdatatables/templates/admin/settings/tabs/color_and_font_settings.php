@@ -51,12 +51,18 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="fg-line wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-font-size">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="wdt-font-size" min="8" value="" class="form-control input-sm input-number" data-name="wdtFontSize"
+                                                <input type="number" name="wdt-font-size" min="8" value=""
+                                                       class="form-control input-sm input-number"
+                                                       data-name="wdtFontSize"
                                                        id="wdt-font-size">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-font-size">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -131,7 +137,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-border-color"
-                                                   data-name="wdtHeaderBorderColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtHeaderBorderColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -170,7 +177,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-active-color"
-                                                   data-name="wdtHeaderActiveColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtHeaderActiveColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -189,7 +197,8 @@
                 <div class="panel-heading" role="tab" id="heading-three">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three" aria-expanded="false"
-                           aria-controls="collapse-three" class="collapsed"><?php esc_html_e('Table border', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-three"
+                           class="collapsed"><?php esc_html_e('Table border', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-three" class="collapse" role="tabpanel" aria-labelledby="heading-three">
@@ -206,7 +215,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-table-inner-border-color"
-                                                   data-name="wdtTableInnerBorderColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtTableInnerBorderColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -226,7 +236,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-table-outer-border-color"
-                                                   data-name="wdtTableOuterBorderColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtTableOuterBorderColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -242,7 +253,8 @@
                             </h5>
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input type="checkbox" name="wdt-remove-borders" id="wdt-remove-borders"/>
-                                <label for="wdt-remove-borders" class="ts-label"><?php esc_html_e('Remove borders in table', 'wpdatatables'); ?></label>
+                                <label for="wdt-remove-borders"
+                                       class="ts-label"><?php esc_html_e('Remove borders in table', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                         <div class="col-sm-3 wdt-remove-borders-header">
@@ -253,7 +265,8 @@
                             </h5>
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input type="checkbox" name="wdt-remove-borders-header" id="wdt-remove-borders-header"/>
-                                <label for="wdt-remove-borders-header" class="ts-label"><?php esc_html_e('Remove borders in header', 'wpdatatables'); ?></label>
+                                <label for="wdt-remove-borders-header"
+                                       class="ts-label"><?php esc_html_e('Remove borders in header', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                     </div>
@@ -267,7 +280,8 @@
                 <div class="panel-heading" role="tab" id="heading-four">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-four" aria-expanded="false"
-                           aria-controls="collapse-four" class="collapsed"> <?php esc_html_e('Row color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-four"
+                           class="collapsed"> <?php esc_html_e('Row color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-four" class="collapse" role="tabpanel" aria-labelledby="heading-four">
@@ -341,7 +355,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-selected-row-color"
-                                                   data-name="wdtSelectedRowColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtSelectedRowColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -360,7 +375,8 @@
                 <div class="panel-heading" role="tab" id="heading-five">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-five" aria-expanded="false"
-                           aria-controls="collapse-five" class="collapsed"><?php esc_html_e('Cell color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-five"
+                           class="collapsed"><?php esc_html_e('Cell color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-five" class="collapse" role="tabpanel" aria-labelledby="heading-five">
@@ -377,7 +393,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-active-even-cell-color"
-                                                   data-name="wdtActiveEvenCellColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtActiveEvenCellColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -397,7 +414,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-active-odd-cell-color"
-                                                   data-name="wdtActiveOddCellColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtActiveOddCellColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -416,7 +434,8 @@
                 <div class="panel-heading" role="tab" id="heading-six">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-six" aria-expanded="false"
-                           aria-controls="collapse-six" class="collapsed"><?php esc_html_e('Buttons color in modals', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-six"
+                           class="collapsed"><?php esc_html_e('Buttons color in modals', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-six" class="collapse" role="tabpanel" aria-labelledby="heading-six">
@@ -452,7 +471,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-border-color"
-                                                   data-name="wdtButtonBorderColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtButtonBorderColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -511,7 +531,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-font-hover-color"
-                                                   data-name="wdtButtonFontHoverColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtButtonFontHoverColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -531,7 +552,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-border-hover-color"
-                                                   data-name="wdtButtonBorderHoverColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtButtonBorderHoverColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -550,12 +572,18 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="fg-line wdt-custom-number-input">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-border-input-radius">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                        data-type="minus" data-field="wdt-border-input-radius">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="number" name="wdt-border-input-radius" min="1" value="" class="form-control input-sm input-number" data-name="wdtBorderRadius"
+                                                <input type="number" name="wdt-border-input-radius" min="1" value=""
+                                                       class="form-control input-sm input-number"
+                                                       data-name="wdtBorderRadius"
                                                        id="wdt-border-input-radius">
-                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-border-input-radius">
+                                                <button type="button"
+                                                        class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                        data-type="plus" data-field="wdt-border-input-radius">
                                                     <i class="wpdt-icon-plus-full"></i>
                                                 </button>
                                             </div>
@@ -575,7 +603,8 @@
                 <div class="panel-heading" role="tab" id="heading-seven">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-seven" aria-expanded="false"
-                           aria-controls="collapse-seven" class="collapsed"><?php esc_html_e('Modals and overlay color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-seven"
+                           class="collapsed"><?php esc_html_e('Modals and overlay color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-seven" class="collapse" role="tabpanel" aria-labelledby="heading-seven">
@@ -612,7 +641,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-modal-background-color"
-                                                   data-name="wdtModalBackgroundColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtModalBackgroundColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -668,7 +698,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-background-color"
-                                                   data-name="wdtPaginationBackgroundColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtPaginationBackgroundColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -688,7 +719,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-color"
-                                                   data-name="wdtPaginationColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtPaginationColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -707,7 +739,8 @@
                                     <div class="fg-line dropdown">
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
-                                            <input type="text" id="wdt-pagination-current-background-color" data-name="wdtPaginationCurrentBackgroundColor"
+                                            <input type="text" id="wdt-pagination-current-background-color"
+                                                   data-name="wdtPaginationCurrentBackgroundColor"
                                                    class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -727,7 +760,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-current-color"
-                                                   data-name="wdtPaginationCurrentColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtPaginationCurrentColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -746,7 +780,8 @@
                                     <div class="fg-line dropdown">
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
-                                            <input type="text" id="wdt-pagination-hover-background-color" data-name="wdtPaginationHoverBackgroundColor"
+                                            <input type="text" id="wdt-pagination-hover-background-color"
+                                                   data-name="wdtPaginationHoverBackgroundColor"
                                                    class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -766,7 +801,8 @@
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-hover-color"
-                                                   data-name="wdtPaginationHoverColor" class="form-control cp-value wdt-add-picker"
+                                                   data-name="wdtPaginationHoverColor"
+                                                   class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>

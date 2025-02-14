@@ -25,7 +25,9 @@ class WPDataTable_Google_Sheet
 
     /**
      *  Get Google Service account token
+     *
      * @param string|array $credential
+     *
      * @throws WDTException
      */
     public function getToken(array $credential = [])
@@ -51,7 +53,7 @@ class WPDataTable_Google_Sheet
                 'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
                 'assertion' => $jwt,
             ),
-            'timeout'   => 100
+            'timeout' => 100
         );
 
         $googleResponse = wp_remote_post('https://oauth2.googleapis.com/token', $args);
@@ -66,6 +68,7 @@ class WPDataTable_Google_Sheet
 
     /**
      *  Google Token Validation
+     *
      * @param string|array $token
      */
     public function wdtTokenValidationChecker($token = '')
@@ -85,9 +88,11 @@ class WPDataTable_Google_Sheet
 
     /**
      * Get data from Google Spreadsheet
+     *
      * @param string $spreadsheetsURL
      * @param string|array $credentials
      * @param string|array $token
+     *
      * @throws WDTException
      */
     public function getData($spreadsheetsURL, $credentials, $token)
@@ -109,7 +114,7 @@ class WPDataTable_Google_Sheet
         $isValid = $this->wdtTokenValidationChecker($token);
         $worksheetsName = '';
         if ($isValid[0]) {
-            $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token'], array('timeout'=> 100));
+            $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token'], array('timeout' => 100));
             if (!is_wp_error($requestGoogleSheetMetaData) && isset($requestGoogleSheetMetaData['response']['code']) && $requestGoogleSheetMetaData['response']['code'] == 200) {
                 $googleSheetMetaData = json_decode($requestGoogleSheetMetaData['body'], TRUE);
                 foreach ($googleSheetMetaData['sheets'] as $sheet) {
@@ -127,7 +132,7 @@ class WPDataTable_Google_Sheet
                         throw new WDTException('Google sheet does not have data in first row. Please fill with data and try again.');
                     return WDTTools::gsArrayToWDTArray($googleSheetData['values']);
                 } else {
-                    if (is_wp_error($googleSheetDataRequest)){
+                    if (is_wp_error($googleSheetDataRequest)) {
                         $errorMsg = $googleSheetDataRequest->get_error_message();
                     } else {
                         $errorMsg = isset($googleSheetDataRequest['response']) && isset($googleSheetDataRequest['response']['message']) ? json_encode($googleSheetDataRequest['response']['message']) : "Google sheet meta data is not sent";
@@ -135,7 +140,7 @@ class WPDataTable_Google_Sheet
                     throw new WDTException($errorMsg);
                 }
             } else {
-                if (is_wp_error($requestGoogleSheetMetaData)){
+                if (is_wp_error($requestGoogleSheetMetaData)) {
                     $errorMsg = $requestGoogleSheetMetaData->get_error_message();
                 } else {
                     $errorMsg = isset($requestGoogleSheetMetaData['response']) && isset($requestGoogleSheetMetaData['response']['message']) ? json_encode($requestGoogleSheetMetaData['response']['message']) : "Google sheet meta data is not sent";
@@ -147,12 +152,13 @@ class WPDataTable_Google_Sheet
         }
     }
 
-    private function convertPrivateKeyFormat($credentials) {
-        $removeBegin = str_replace('-----BEGIN PRIVATE KEY-----','', $credentials['private_key']);
-        $removeEnd = str_replace('-----END PRIVATE KEY-----','', $removeBegin);
-        if (strrpos($removeEnd,' ') != false){
-            $replaceSpaces = str_replace(' ',PHP_EOL, $removeEnd);
-            $credentials['private_key'] = '-----BEGIN PRIVATE KEY-----' .  $replaceSpaces  . '-----END PRIVATE KEY-----' . PHP_EOL;
+    private function convertPrivateKeyFormat($credentials)
+    {
+        $removeBegin = str_replace('-----BEGIN PRIVATE KEY-----', '', $credentials['private_key']);
+        $removeEnd = str_replace('-----END PRIVATE KEY-----', '', $removeBegin);
+        if (strrpos($removeEnd, ' ') != false) {
+            $replaceSpaces = str_replace(' ', PHP_EOL, $removeEnd);
+            $credentials['private_key'] = '-----BEGIN PRIVATE KEY-----' . $replaceSpaces . '-----END PRIVATE KEY-----' . PHP_EOL;
         }
         return $credentials;
     }

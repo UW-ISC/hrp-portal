@@ -439,6 +439,7 @@ class WdtChartjsChart extends WPDataChart
      *
      * @param array $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct(array $constructedChartData, $loadFromDB = false)
@@ -781,6 +782,7 @@ class WdtChartjsChart extends WPDataChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -794,6 +796,7 @@ class WdtChartjsChart extends WPDataChart
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)
@@ -915,6 +918,7 @@ class WdtChartjsChart extends WPDataChart
 
     /**
      * @param $chartData
+     *
      * @return mixed|null
      */
     public function setChartRenderData($chartData)

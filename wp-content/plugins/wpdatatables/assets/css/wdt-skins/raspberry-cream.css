@@ -9,13 +9,14 @@
     src: url(../../fonts/wpDataTablesIcons.eot);
     src: url(../../fonts/wpDataTablesIcons.eot?#iefix) format('embedded-opentype'), url(../../fonts/wpDataTablesIcons.woff) format('woff'), url(../../fonts/wpDataTablesIcons.ttf) format('truetype'), url(../../fonts/wpDataTablesIcons.svg#wpDataTablesIcons) format('svg');
 }
+
 /*  Table   */
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper {
     margin-bottom: 0;
     background: #ffffff;
     padding: 16px;
-    line-height:normal !important;
+    line-height: normal !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable {
@@ -23,17 +24,16 @@
     color: #6B7280;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dropdown-menu>li>a {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dropdown-menu > li > a {
     box-shadow: none !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableContainer {
-    background:none;
+    background: none;
 }
 
 div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry-cream,
-div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper
-{
+div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper {
     background: #ffffff;
     padding: 0;
 }
@@ -43,7 +43,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 /*  Display length and Global search  */
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter {
     font-size: 13px;
     margin-bottom: 10px;
 }
@@ -64,20 +64,22 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #5e6166;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter {
     float: left;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter label{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter label {
     position: relative;
     font-weight: normal;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter label .wdt-search-icon {
     position: relative;
     line-height: normal;
     font-weight: normal;
 }
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter label .wdt-search-icon:before{
+
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter label .wdt-search-icon:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\e901';
     position: absolute;
@@ -88,7 +90,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-weight: normal;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter input.form-control{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter input.form-control {
     border-radius: 6px;
     border: solid 1px #dcdfe6;
     padding-left: 15px;
@@ -115,7 +117,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select > .btn-default:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select > .btn-default:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\f107';
     color: #6B7280;
@@ -149,21 +151,21 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-size: 14px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li {
     border-bottom: 1px solid #ebeef5;
-    margin:0 16px;
+    margin: 0 16px;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li:last-child {
     border-bottom: none;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li.selected a span.text{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li.selected a span.text {
     color: #A8157F;
     background: #ffffff;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li a span.text{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li a span.text {
     font-weight: 500;
     font-style: normal;
     font-stretch: normal;
@@ -172,14 +174,16 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #6B7280;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu .dropdown-menu>li>a {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu .dropdown-menu > li > a {
     padding: 14px 0;
     background: #ffffff;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select .selected .check-mark {
     margin-top: 0 !important;
     right: 1px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select .check-mark:before {
     color: #A8157F;
 }
@@ -194,25 +198,27 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #6B7280;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader .outlined{
-    border:1px solid #F5DDEF !important;
+.wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader .outlined {
+    border: 1px solid #F5DDEF !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .outlined {
     border: 2px solid #F5DDEF !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr td.outlined,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr td.outlined,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr td.outlined,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr td.outlined{
-    border-left:1px solid #F5DDEF !important;
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr td.outlined {
+    border-left: 1px solid #F5DDEF !important;
     border-top: none !important;
     border-bottom: 1px solid #F5DDEF !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr th.outlined,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr th.outlined,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr th.outlined,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr th.outlined{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr th.outlined {
     border-bottom: 1px solid #f5f7fa !important;
 }
 
@@ -220,34 +226,37 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left th.outlined,
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right th.outlined,
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left.dtfc-has-right th.outlined,
-.wpdt-c.wdt-skin-raspberry-cream tfoot td.outlined{
-    border-left:1px solid #F5DDEF !important;
-    border-right:1px solid #F5DDEF !important;
+.wpdt-c.wdt-skin-raspberry-cream tfoot td.outlined {
+    border-left: 1px solid #F5DDEF !important;
+    border-right: 1px solid #F5DDEF !important;
     border-bottom: transparent !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-left.dtfc-has-right td.sorting_2,
 .wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-right td.sorting_2,
 .wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-left td.sorting_2 {
     border-left: 1px solid #F5DDEF !important;
     border-right: 1px solid #F5DDEF !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader td.sorting_1,
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left.dtfc-has-right td.sorting_1,
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right td.sorting_1,
-.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left td.sorting_1{
-    border-left:1px solid #F5DDEF !important;
-    border-right:1px solid #F5DDEF !important;
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left td.sorting_1 {
+    border-left: 1px solid #F5DDEF !important;
+    border-right: 1px solid #F5DDEF !important;
     border-bottom: transparent !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right tr:last-child td.sorting_1,
-.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left tr:last-child td.sorting_1{
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left tr:last-child td.sorting_1 {
     border-bottom: 1px solid #ebeef5 !important;
 }
 
 /*  Table Header  *//* added Table Header for fixed header*/
-.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  > thead > tr > th,
-.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  thead th.sorting,
-.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  .wdt-checkbox-filter.btn,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr > th,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead th.sorting,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable .wdt-checkbox-filter.btn,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-checkbox-filter.btn,
@@ -269,52 +278,59 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     line-height: 3;
     letter-spacing: 0.05em;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn {
     text-align: center;
 }
+
 .wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream .wdt_checkbox_option input[type="checkbox"]:checked:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt_checkbox_option input[type=checkbox]:checked::before,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt_checkbox_option input[type=checkbox]:checked::before{
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt_checkbox_option input[type=checkbox]:checked::before {
     border: 2px solid #A8157F;
     background: #A8157F;
     top: 0;
     left: 0;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th,
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:first-child,
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:last-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:first-child,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:last-child{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:last-child {
     background-color: #ffffff; /* th background color */
     border-color: #f5f7fa; /* th border color */
     color: #000000;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th {
     border-left: none;
     border-right: none;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:first-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:first-child {
     border-right: none;
     border-left: 1px solid #f5f7fa;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:last-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:last-child {
     border-left: none;
     border-right: 1px solid #f5f7fa;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead tr th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead tr th {
-    -o-transition:.5s;
-    -ms-transition:.5s;
-    -moz-transition:.5s;
-    -webkit-transition:.5s;
-    transition:.5s;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead th.sorting_asc,
@@ -337,9 +353,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f176';
-    padding-left: 10px ;
+    padding-left: 10px;
     opacity: 1;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_desc:after,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_desc:after,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_desc:after,
@@ -348,51 +365,53 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f175';
-    padding-left: 10px ;
+    padding-left: 10px;
     opacity: 1;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:after,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:after,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:after,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after {
     font-family: 'wpDataTablesIcons';
     display: inline-block;
     content: '\f176';
-    padding-left: 10px ;
+    padding-left: 10px;
 }
+
 /*  Table Body  */
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody td {
-    border: 1px solid #f5f7fa;     /* td inner border color */
-    -o-transition:.5s;
-    -ms-transition:.5s;
-    -moz-transition:.5s;
-    -webkit-transition:.5s;
-    transition:.5s;
+    border: 1px solid #f5f7fa; /* td inner border color */
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody tr:last-child td {
-    border-bottom-color: #ebeef5;  /* table outer border color */
+    border-bottom-color: #ebeef5; /* table outer border color */
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tr.odd td {
-    background-color:  #FFFFFF;  /* odd rows background color */
+    background-color: #FFFFFF; /* odd rows background color */
     border-left: none;
     border-right: none;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tr.even td {
-    background-color: #F9FAFB;  /* even rows background color */
+    background-color: #F9FAFB; /* even rows background color */
     border-left: none;
     border-right: none;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tr td:first-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead tr td:first-child,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot tr td:first-child{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot tr td:first-child {
     /* table outer border color */
     border-right: none;
-    border-left:1px solid #f5f7fa;
+    border-left: 1px solid #f5f7fa;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tr td:last-child,
@@ -400,7 +419,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot tr td:last-child {
     /* table outer border color */
     border-left: none;
-    border-right:1px solid #f5f7fa;
+    border-right: 1px solid #f5f7fa;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tr.odd td.sorting_1 {
@@ -447,6 +466,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-top: 6px;
     padding-top: 2px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wdt-datatables-admin-wrap button.wdt-column-settings,
 .wpdt-c.wdt-skin-raspberry-cream .wdt-datatables-admin-wrap button.wdt-delete-formula-column {
     border: unset;
@@ -465,8 +485,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     background-color: #F5DDEF !important;
     color: #6B7280;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .ellipsis{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .ellipsis {
     min-width: 30px;
     height: 30px;
     border-radius: 6px;
@@ -482,6 +503,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     text-shadow: none;
     text-indent: -9999em;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate a {
     display: inline-block;
     padding: 7px;
@@ -507,8 +529,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.current:hover {
     color: #A8157F;
     border-radius: 6px;
-    box-shadow:inset 0 0 0 2px #F5DDEF;
+    box-shadow: inset 0 0 0 2px #F5DDEF;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled:hover:before,
@@ -521,7 +544,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.next:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.previous:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.last:before,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.first:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.first:before {
     font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: normal;
@@ -529,7 +552,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-stretch: normal;
     line-height: 1;
     letter-spacing: normal;
-    color:#6B7280;
+    color: #6B7280;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.next:before {
@@ -551,7 +574,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.next:hover:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.previous:hover:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.last:hover:before,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.first:hover:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.first:hover:before {
     color: #ffffff;
 }
 
@@ -569,6 +592,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     vertical-align: middle;
     -webkit-font-smoothing: antialiased;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-checkbox-filter.btn:before,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn:before {
     margin-top: 1px;
@@ -603,7 +627,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden span.responsiveExpander,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr > td > span.responsiveExpander{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr > td > span.responsiveExpander {
     opacity: 0.6;
     background-image: url(../../img/plus.png);
     background-repeat: no-repeat;
@@ -617,30 +641,30 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border-bottom: 1px solid #fffbf1;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander ,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander:hover{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander:hover {
     background-image: url(../../img/plusafter.png);
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr > td > span.responsiveExpander:after,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander:after{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show > td span.responsiveExpander:after {
     display: none !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.detail-show td:first-child,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr td:first-child{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr td:first-child {
     line-height: 28px;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td {
-    background-color: #ffffff;  /* even rows background color */
+    background-color: #ffffff; /* even rows background color */
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li {
     position: relative;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnValue{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnValue {
     display: inline-flex;
     min-width: 200px;
     margin-left: 20px;
@@ -648,17 +672,18 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     white-space: -moz-pre-wrap;
     white-space: -o-pre-wrap;
 }
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle{
+
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle {
     display: inline-block;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle button.wdt-column-settings{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle button.wdt-column-settings {
     position: absolute;
     right: 0;
     top: -2px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle button.wdt-delete-formula-column{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle button.wdt-delete-formula-column {
     position: absolute;
     right: 40px;
     top: -2px;
@@ -679,6 +704,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     display: flex;
     justify-content: flex-start;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden > tbody > tr.row-detail > td > ul > li:last-child {
     border-bottom: none !important;
 }
@@ -876,8 +902,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding: 12px 20px 0 0;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection label ,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection  .wdt-filter-text input::placeholder{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection label,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-filter-text input::placeholder {
     max-width: 212px;
     white-space: nowrap;
     -ms-text-overflow: ellipsis;
@@ -886,15 +912,16 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-bottom: 0;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block){
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block) {
     width: 241px;
     margin-right: 14px;
     margin-bottom: 4px;
     min-height: 120px;
 }
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection{
+
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection {
     width: 100% !important;
-    margin:0 !important;
+    margin: 0 !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection div:first-child,
@@ -903,13 +930,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 #wpdatatable-preview-container .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-clear-filters-button-block,
-#wpdatatable-preview-container .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-pf-search-filters-button-block{
+#wpdatatable-preview-container .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-pf-search-filters-button-block {
     padding-top: 30px !important;
     margin-bottom: 10px;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-clear-filters-button-block,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-pf-search-filters-button-block{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-pf-search-filters-button-block {
     padding-top: 34px !important;
 }
 
@@ -917,7 +944,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-pf-search-filters-button,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-pf-search-filters-button{
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-pf-search-filters-button {
     height: 40px;
     border-radius: 6px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
@@ -935,24 +962,25 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-pf-search-filters-button,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-pf-search-filters-button{
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-pf-search-filters-button {
     width: 109px;
 }
 
 #wdt-filter-widget .wdt-clear-filters-widget-button,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button{
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button {
     background-color: #ffffff;
     color: #6B7280;
     text-shadow: none;
 }
+
 #wdt-filter-widget .wdt-clear-filters-widget-button:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button:before,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button:before{
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt-clear-filters-button:before {
     display: none;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-pf-search-filters-button{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterSection .wdt-pf-search-filters-button {
     background-color: #A8157F;
     color: #ffffff;
 }
@@ -962,9 +990,11 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-right: 0 !important;
     margin-left: 12px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_clear_filters:before {
     display: none;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTables .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTables input[type=text],
@@ -975,9 +1005,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .filter_column button,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter .wpDataTableFilterSection input.form-control,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection input.form-control,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .form-control:not(textarea){
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .form-control:not(textarea) {
     height: 36px !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTables .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn {
     text-align: center;
@@ -1085,8 +1116,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border-bottom: none !important;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .check-mark:before ,
-#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .check-mark:before ,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .check-mark:before,
+#wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .check-mark:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable .bootstrap-select .check-mark:before,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select .check-mark:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-menu li.selected span,
@@ -1095,6 +1126,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select .dropdown-menu li.selected span {
     color: #A8157F;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a, .wpdt-c .dropdown-menu > .active > a:hover,
 .wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a:focus {
     background-color: #FAEFF8;
@@ -1103,9 +1135,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable .bootstrap-select,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default {
     height: 36px !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu {
     margin: 0 16px;
     height: 42px;
@@ -1127,17 +1160,18 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #111827;
     padding-right: 40px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:after,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:after,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable .bootstrap-select > .btn-default:after,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default:after{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default:after {
     display: none !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:before,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable .bootstrap-select > .btn-default:before,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default:before{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select > .btn-default:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\f0e1';
     color: #6B7280;
@@ -1149,13 +1183,15 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     width: 0;
     background-image: none;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable td {
     padding: 17px 20px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot td,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th {
     vertical-align: middle;
-    border-bottom:1px solid #f5f7fa;
+    border-bottom: 1px solid #f5f7fa;
     border-left: none;
     border-right: none;
     padding-top: 10px;
@@ -1176,7 +1212,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     letter-spacing: normal;
     color: #6B7280;
 }
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog{
+
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog {
     font-family: var(--wpdt-inter-google-font, inherit);
     font-weight: normal;
     font-style: normal;
@@ -1197,7 +1234,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     background-color: #ffffff;
 }
 
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content {
     border-radius: 6px;
     box-shadow: 0 2px 16px 0 rgba(33, 43, 54, 0.08), 0 31px 41px 0 rgba(33, 43, 54, 0.2);
     background-color: #ffffff;
@@ -1205,15 +1242,15 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header,
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header,
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header
-{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header {
     border-bottom: 1px solid #ebeef5;
     margin-bottom: 20px;
     padding: 23px 20px;
 }
+
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header .modal-title,
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header .modal-title,
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header .modal-title{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header .modal-title {
     clear: inherit;
     padding: 0;
     font-family: var(--wpdt-inter-google-font, inherit);
@@ -1236,11 +1273,12 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .wdt-skin-raspberry-cream .wpdt-icon-step-backward::before {
     content: "\f053";
 }
+
 .wpdt-c .wdt-skin-raspberry-cream .wpdt-icon-step-forward::before {
     content: "\f054";
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header button.close{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header button.close {
     width: 20px;
     height: 20px;
 
@@ -1306,31 +1344,33 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding-right: 0;
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block {
     margin: 60px 0 0 0;
     display: flex;
     flex-wrap: wrap;
     font-size: 16px;
     line-height: normal;
 }
+
 .wpdt-c #wdt-md-modal.wdt-skin-raspberry-cream .modal-body .detailColumn,
-.wpdt-c #wdt-md-modal.wdt-skin-raspberry-cream .modal-body .col-sm-3{
+.wpdt-c #wdt-md-modal.wdt-skin-raspberry-cream .modal-body .col-sm-3 {
     font-size: 16px !important;
 }
 
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
     font-size: 16px;
     line-height: normal;
 }
+
 .wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group {
     margin-bottom: 5px;
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body,
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body {
     padding: 0 20px 10px;
 }
 
@@ -1348,12 +1388,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group > p,
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group .fg-line > div.detailColumn{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group .fg-line > div.detailColumn {
     margin-top: 9px;
     margin-bottom: 9px;
     line-height: 20px;
     vertical-align: baseline;
 }
+
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block .form-group > label {
     margin-top: 9px;
     margin-bottom: 9px;
@@ -1370,7 +1411,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block .form-group:last-child,
-.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group:last-child{
+.wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-details-dialog-fields-block .form-group:last-child {
     margin-bottom: 0;
 }
 
@@ -1380,7 +1421,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-right: 0;
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-button-block .bootstrap-select > .btn-default{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-button-block .bootstrap-select > .btn-default {
     height: 35px;
 }
 
@@ -1400,12 +1441,12 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding: 11px 13px !important;
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block input.editDialogInput .btn-default{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block input.editDialogInput .btn-default {
     height: 35px;
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button {
     border: solid 1px #ebedf2;
     background-color: #ffffff;
     height: 40px;
@@ -1420,7 +1461,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     letter-spacing: normal;
     text-align: center;
     color: #6B7280;
-    text-transform:none;
+    text-transform: none;
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button {
@@ -1440,19 +1481,19 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button i,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button i{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button i {
     color: #6B7280;
     float: none;
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button i.wpdt-icon-chevron-left{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button i.wpdt-icon-chevron-left {
     padding-right: 120px;
     font-size: 20px;
     vertical-align: inherit;
 
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button i.wpdt-icon-chevron-right{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button i.wpdt-icon-chevron-right {
     padding-left: 120px;
     font-size: 20px;
     vertical-align: inherit;
@@ -1468,6 +1509,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     float: right;
     display: flex;
 }
+
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-apply-duplicate-button,
@@ -1494,6 +1536,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     letter-spacing: normal;
     height: 40px;
 }
+
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-apply-duplicate-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button i,
@@ -1522,6 +1565,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream a.basket-link {
     color: #A8157F;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wdt-woo-variable-product select {
     color: #6B7280;
 }
@@ -1547,6 +1591,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-left: 16px;
     color: #ffffff;
 }
+
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-content .modal-footer button.wdt-cancel-delete-button {
     border: none;
 }
@@ -1562,7 +1607,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer #wdt-checkbox-filter-reset{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer #wdt-checkbox-filter-reset {
     width: 105px;
     border: 1px solid #F9FAFB;
     border-radius: 6px;
@@ -1570,6 +1615,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     background-color: #6B7280;
     color: #fff;
 }
+
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-browse-delete-button,
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-content .modal-footer button.wdt-cancel-delete-button {
     text-transform: capitalize;
@@ -1595,7 +1641,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     display: none;
 }
 
-.wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream #wdt-checkbox-filter-reset:before{
+.wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream #wdt-checkbox-filter-reset:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\f00d';
     font-size: 14px;
@@ -1603,7 +1649,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     vertical-align: initial;
 }
 
-.wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream #wdt-checkbox-filter-close:before{
+.wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream #wdt-checkbox-filter-close:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\f00c';
     font-size: 14px;
@@ -1645,27 +1691,28 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-right: 0;
     margin-bottom: 0;
 }
+
 .wpdt-icon-line-columns:before {
     content: "\e926";
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button.DTTT_button_new,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_new{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_new {
     border: 1px solid #F5DDEF;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button.DTTT_button_duplicate,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_duplicate{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_duplicate {
     border: 1px solid #D1D5DB;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button.DTTT_button_print,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_print{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button.DTTT_button_print {
     width: auto;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button {
     display: flex;
     align-items: center;
     height: 40px;
@@ -1689,7 +1736,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button:not(.disabled),
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button:not(.disabled){
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button:not(.disabled) {
     opacity: 1;
 }
 
@@ -1748,16 +1795,17 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_edit:hover,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_duplicate:hover,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_delete:hover,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:hover{
-    background-color: #ffffff ;
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:hover {
+    background-color: #ffffff;
     background-image: none;
-    box-shadow:none !important;
+    box-shadow: none !important;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button_spacer,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons a.DTTT_button_spacer:active,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_spacer,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_spacer:active{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons button.DTTT_button_spacer:active {
     opacity: 0;
     background: none;
 }
@@ -1775,7 +1823,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:b
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_md:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_md:before {
     font-family: wpDataTablesIcons, sans-serif !important;
     font-size: 18px;
     font-style: normal;
@@ -1798,23 +1846,23 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:b
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before {
     margin-left: 7px;
     margin-right: 7px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export {
     width: 117px;
     order: 2;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before {
     content: '\f33d';
     font-size: 14px;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export:after,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:after{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:after {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\f107';
     color: #6B7280;
@@ -1823,16 +1871,17 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:b
     top: 11px;
     font-size: 16px;
 }
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:after{
+
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:after {
     color: #111827;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print {
     width: 90px;
     order: 3;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before {
     font-family: wpDataTablesIcons, sans-serif !important;
     content: '\e90e';
     font-size: 14px;
@@ -1849,79 +1898,79 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:b
 }
 
 div.dt-button-collection.wdt-skin-raspberry-cream a.dt-button.buttons-excel:before,
-div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-excel:before{
+div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-excel:before {
     content: '\f1c3';
     vertical-align: middle;
     padding-right: 8px;
 }
 
 div.dt-button-collection.wdt-skin-raspberry-cream a.dt-button.buttons-csv:before,
-div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-csv:before{
+div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-csv:before {
     content: '\f6dd';
     vertical-align: middle;
     padding-right: 8px;
 }
 
 div.dt-button-collection.wdt-skin-raspberry-cream a.dt-button.buttons-copy:before,
-div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy:before{
+div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy:before {
     content: '\f0c5';
     vertical-align: middle;
     padding-right: 8px;
 }
 
 div.dt-button-collection.wdt-skin-raspberry-cream a.dt-button.buttons-pdf:before,
-div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:before{
+div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:before {
     content: '\f1c1';
     vertical-align: middle;
     padding-right: 8px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new {
     width: 112px;
     order: 5;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before {
     content: '\e913';
     vertical-align: middle;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit {
     width: 85px;
     order: 6;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before {
     content: '\e910';
     vertical-align: middle;
 
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate {
     width: 120px;
     order: 7;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before {
     content: '\f24d';
     vertical-align: middle;
     font-size: 16px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete {
     width: 100px;
     order: 8;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
-.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-footer button.wdt-browse-delete-button:before{
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-footer button.wdt-browse-delete-button:before {
     font-family: wpDataTablesIcons, sans-serif;
     content: '\e90f';
     color: #DD1E35;
     vertical-align: initial;
 }
 
-.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-footer button.wdt-browse-delete-button:before{
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-footer button.wdt-browse-delete-button:before {
     color: #fff;
 }
 
@@ -1929,7 +1978,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:b
     content: '';
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis {
     width: 131px;
     order: 1;
 }
@@ -1951,21 +2000,21 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf s
     vertical-align: bottom;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before {
     content: '\e911';
     color: #111827;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before:hover,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before:hover,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before:hover{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before:hover {
     color: #ffffff;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons .DTTT_button.DTTT_button_delete{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dt-buttons .DTTT_button.DTTT_button_delete {
     border: 1px solid #D1D5DB;
     margin-right: 0;
-    background-color:  #fff;
+    background-color: #fff;
     width: auto;
 }
 
@@ -1992,6 +2041,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf s
     color: #111827;
     vertical-align: middle;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete span {
     color: #FFFFFF;
     vertical-align: middle;
@@ -2014,6 +2064,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf s
     border-left: 7px solid transparent;
     bottom: -7px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new span,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit span,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate span,
@@ -2051,15 +2102,16 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf s
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete {
     width: inherit !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete:before,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md:before{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md:before {
     color: #ffffff !important;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md {
     margin-left: 0 !important;
 }
 
@@ -2115,7 +2167,7 @@ div.dt-button-background {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 2001;
 }
 
@@ -2133,7 +2185,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-excel,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-csv,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf,
-div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy{
+div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy {
     height: 42px;
     font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 16px;
@@ -2171,7 +2223,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf:a
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy:active,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-columnVisibility:active,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-columnVisibility:visited {
-    outline:none;
+    outline: none;
     border-bottom: 1px solid #ebeef5 !important;
     background-color: #ffffff;
 }
@@ -2233,17 +2285,17 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     z-index: 9999;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info:before, div.dt-button-info:before{
+.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info:before, div.dt-button-info:before {
     position: absolute;
     font-family: wpDataTablesIcons, sans-serif;
     content: '\e905';
     left: 7px;
-    top:6px;
+    top: 6px;
     color: #A8157F;
     font-size: 36px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info:after, div.dt-button-info:after{
+.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info:after, div.dt-button-info:after {
     position: absolute;
     font-family: wpDataTablesIcons, sans-serif;
     content: '\e906';
@@ -2253,7 +2305,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     color: #ffffff;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info h2, div.dt-button-info h2{
+.wpdt-c.wdt-skin-raspberry-cream div.dt-button-info h2, div.dt-button-info h2 {
     font-family: GraphikWeb, sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -2279,12 +2331,13 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     }
 
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_info,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate.paging_full_numbers{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate.paging_full_numbers {
         text-align: center !important;
         float: none;
         margin-left: 0;
         margin-right: 0;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_info {
         margin-bottom: 10px;
     }
@@ -2292,33 +2345,37 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis {
         width: 68px;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print {
         width: 52px;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export {
         width: 67px;
     }
 
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis span,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print span,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export span
-    {
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export span {
         display: none;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before {
         margin-right: 15px;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before {
         margin-right: 0;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before{
-        margin-left:0;
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before {
+        margin-left: 0;
         margin-right: 7px;
     }
 
@@ -2362,6 +2419,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block) {
         width: 231px;
     }
+
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter #wdt-pf-search-filters-button-block {
         width: 17% !important;
     }
@@ -2379,7 +2437,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
         order: 1;
     }
 
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print {
         order: 3;
     }
 
@@ -2387,7 +2445,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
         order: 2;
     }
 
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_clear_filters{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_clear_filters {
         order: 4;
         margin-right: 2px !important;
         margin-left: 0;
@@ -2397,7 +2455,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
         display: none;
     }
 
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new  {
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_new {
         order: 5;
         margin-bottom: 12px;
     }
@@ -2420,7 +2478,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_print,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_export,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_clear_filters{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .DTTT_button.DTTT_button_clear_filters {
         margin-bottom: 12px;
     }
 
@@ -2444,7 +2502,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_info,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate.paging_full_numbers{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate.paging_full_numbers {
         text-align: center !important;
         float: none;
     }
@@ -2532,7 +2590,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .ellipsis,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.current{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.current {
         min-width: 30px;
     }
 
@@ -2543,7 +2601,8 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button {
         width: 8%;
     }
-    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button{
+
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button {
         left: 267px;
     }
 }
@@ -2557,7 +2616,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button,
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .ellipsis,
-    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.current{
+    .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate .paginate_button.current {
         min-width: 25px;
     }
 }
@@ -2569,27 +2628,32 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     margin-top: 0 !important;
     background-color: #A8157F !important;
 }
+
 #wdt-filter-widget .wdt-skin-raspberry-cream .noUi-handle.noUi-handle-lower,
-.wpdt-c.wdt-skin-raspberry-cream .noUi-handle.noUi-handle-lower{
+.wpdt-c.wdt-skin-raspberry-cream .noUi-handle.noUi-handle-lower {
     right: 0 !important;
     left: 100% !important;
     margin-top: 0 !important;
     background-color: #A8157F !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .noUi-horizontal,
-#wdt-filter-widget .wdt-skin-raspberry-cream .noUi-horizontal{
+#wdt-filter-widget .wdt-skin-raspberry-cream .noUi-horizontal {
     margin-top: 40px !important;
     margin-right: 15px !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .noUi-connect,
-#wdt-filter-widget .wdt-skin-raspberry-cream .noUi-connect{
-    background-color: #A8157F !important ;
+#wdt-filter-widget .wdt-skin-raspberry-cream .noUi-connect {
+    background-color: #A8157F !important;
     margin-top: 0 !important;
 }
+
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection#wdt-clear-filters-button-block {
     padding-top: 0 !important;
     width: 100%;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .noUi-tooltip {
     background: #F9FAFB;
     padding: 0 5px 0 5px;
@@ -2599,35 +2663,42 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead .noUi-tooltip {
     font-size: 10px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
     border-right: none;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate a {
     box-shadow: none !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tr td:first-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead tr td:first-child,
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tfoot tr td:first-child{
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tfoot tr td:first-child {
     /* table outer border color */
     border-right: none;
     border-left: none;
 }
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot td{
+
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot td {
     border-top: transparent;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .dataTables_filter:focus-within,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .dataTables_length:focus-within,
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG dt-button:focus{
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG dt-button:focus {
     border: 1px solid #A8157F !important;
 }
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG th:focus{
+
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG th:focus {
     border: 2px solid #A8157F !important;
 }
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG *:focus{
+
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG *:focus {
     box-shadow: #A8157F;
     border: 1px solid #A8157F !important;
 }
+
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-apply-duplicate-button:focus,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-apply-edit-button:focus,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-next-edit-button:focus,
@@ -2636,51 +2707,63 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-edit-dialog-button-block:focus,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG input.editDialogInput:focus,
 .wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-cancel-delete-button:focus,
-.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-browse-delete-button:focus{
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-raspberry-cream.wpTableWCAG .modal-footer .wdt-browse-delete-button:focus {
     border: 1px solid #A8157F !important;
 }
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .wdt-ok-edit-button:focus{
+
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream.wpTableWCAG .wdt-ok-edit-button:focus {
     border: 2px solid #A8157F !important;
 }
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .dataTables_length button:focus{
+
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .dataTables_length button:focus {
     border: none !important;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .dataTables_filter input[type="search"] {
     opacity: 1;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 1;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled:before,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled:hover:before,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled:active:before {
     color: #6f7276;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.odd a,
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.odd .master_detail_column_btn{
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.odd .master_detail_column_btn {
     color: #1772ba;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.even a,
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.even .master_detail_column_btn{
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper tr.even .master_detail_column_btn {
     color: #1772ba;
 }
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .filter_column button{
+
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper .filter_column button {
     color: #747474;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper table.wpDataTable tr.odd.selected > td,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper table.wpDataTable tr.odd.selected > td.sorting_1,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper table.wpDataTable tr.even.selected > td,
 .wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTablesWrapper table.wpDataTable tr.even.selected > td.sorting_1 {
     color: #656c79;
 }
-.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG  .wpDataTables .wdt-checkbox-filter.btn,
-#wdt-filter-widget .wdt-skin-raspberry-cream.wpTableWCAG  .wdt-checkbox-filter.btn{
+
+.wpdt-c.wdt-skin-raspberry-cream.wpTableWCAG .wpDataTables .wdt-checkbox-filter.btn,
+#wdt-filter-widget .wdt-skin-raspberry-cream.wpTableWCAG .wdt-checkbox-filter.btn {
     color: #6e6e6e;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream .bootstrap-select .bs-searchbox:before {
     top: -10px;
 }
+
 .wpdt-c.wdt-skin-raspberry-cream tfoot .bootstrap-select .bs-searchbox:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
     top: 10px;

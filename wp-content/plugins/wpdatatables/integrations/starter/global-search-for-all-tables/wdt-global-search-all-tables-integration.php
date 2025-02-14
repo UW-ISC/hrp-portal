@@ -14,9 +14,11 @@ define('WDT_GSALL_INTEGRATION', true);
 class GlobalSearchAllTables
 {
     private static $counter = 1;
+
     public static function init()
     {
-        add_shortcode('wpdatatables_page_search', array('WDTIntegration\GlobalSearchAllTables', 'wdtGlobalSearchHandler'));
+        add_shortcode('wpdatatables_page_search', array('WDTIntegration\GlobalSearchAllTables',
+            'wdtGlobalSearchHandler'));
     }
 
     public static function wdtGlobalSearchHandler($atts, $content = null)
@@ -47,4 +49,5 @@ class GlobalSearchAllTables
         return $globalSearchAllTablesHtml;
     }
 }
+
 GlobalSearchAllTables::init();

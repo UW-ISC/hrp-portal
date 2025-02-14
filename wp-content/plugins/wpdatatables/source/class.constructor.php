@@ -16,7 +16,7 @@ class wpDataTableConstructor
     private $_name;
     private $_index;
     private $_db;
-    protected $_table_data ;
+    protected $_table_data;
 
     protected $_column_headers;
 
@@ -85,7 +85,17 @@ class wpDataTableConstructor
     {
         $columnPropertiesConstruct = new stdClass();
 
-        $allowed_types = array("VARCHAR", "INT", "BIGINT", "TINYINT", "SMALLINT", "MEDIUMINT", "DECIMAL", "TEXT", "DATE", "DATETIME", "TIME");
+        $allowed_types = array("VARCHAR",
+            "INT",
+            "BIGINT",
+            "TINYINT",
+            "SMALLINT",
+            "MEDIUMINT",
+            "DECIMAL",
+            "TEXT",
+            "DATE",
+            "DATETIME",
+            "TIME");
         if (!isset($column['predefined_type_in_db']) || !in_array($column['predefined_type_in_db'], $allowed_types)) {
             $column['predefined_type_in_db'] = 'VARCHAR';
             $column['predefined_type_value_in_db'] = 255;
@@ -136,8 +146,8 @@ class wpDataTableConstructor
             $columnProperties = self::columnPropertiesMapper($columnPropertiesConstruct, $column_header)[$column['predefined_type_in_db']];
         }
         $editingDefaultValue = '';
-        if ($column['type'] === 'multiselect'){
-            if (isset($column['default_value']) && is_array($column['default_value'])){
+        if ($column['type'] === 'multiselect') {
+            if (isset($column['default_value']) && is_array($column['default_value'])) {
                 $editingDefaultValue = sanitize_text_field(implode('|', $column['default_value']));
             }
         } else {
@@ -168,7 +178,7 @@ class wpDataTableConstructor
             $columnProperties['advanced_settings']['possibleValuesType'] = 'list';
         }
 
-        return apply_filters( 'wpdatatables_filter_column_properties', $columnProperties , $column, $connection);
+        return apply_filters('wpdatatables_filter_column_properties', $columnProperties, $column, $connection);
 
     }
 
@@ -329,7 +339,7 @@ class wpDataTableConstructor
             ]
         ];
 
-        return apply_filters( 'wpdatatables_filter_column_properties_mapper', $columnPropertiesMapper , $column_header, $columnPropertiesConstruct);
+        return apply_filters('wpdatatables_filter_column_properties_mapper', $columnPropertiesMapper, $column_header, $columnPropertiesConstruct);
     }
 
     /**
@@ -340,7 +350,7 @@ class wpDataTableConstructor
         global $wpdb;
         $this->_table_data = apply_filters_deprecated(
             'wdt_before_generate_manual_table',
-            array( $tableData ),
+            array($tableData),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_before_generate_manual_table'
         );
@@ -358,11 +368,11 @@ class wpDataTableConstructor
                 $this->_name = sanitize_text_field($tableData['name_in_database']);
             }
             try {
-                    if (strlen($this->_name) > 63 || !preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $this->_name)) {
-                        throw new WDTException(__('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included. ', 'wpdatatables'));
-                    }
+                if (strlen($this->_name) > 63 || !preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $this->_name)) {
+                    throw new WDTException(__('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included. ', 'wpdatatables'));
+                }
             } catch (WDTException $e) {
-                    return $e;
+                return $e;
             }
         } else {
             $this->generateTableName($connection, $id);
@@ -406,7 +416,7 @@ class wpDataTableConstructor
                 $res = $wpdb->get_results($checkTableQuery);
                 if (!empty($res)) {
                     WPDataTable::deleteTable($wpdatatable_id);
-                    add_action('admin_notices', function() {
+                    add_action('admin_notices', function () {
                         echo '<div class="notice notice-error"><p>' . __('There was an error while trying to generate the table! Internal Server Error. Table with this name already exists in the database.', 'wpdatatables') . '</p></div>';
                     });
                 }
@@ -594,7 +604,7 @@ class wpDataTableConstructor
         $additional_statement = '';
         $additional_statement = apply_filters_deprecated(
             'wpdt_add_default_columns',
-            array( $additional_statement, $wpdatatable_id, $column_index),
+            array($additional_statement, $wpdatatable_id, $column_index),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_add_default_columns'
         );;
@@ -896,9 +906,9 @@ class wpDataTableConstructor
 
         $this->_column_headers = apply_filters_deprecated(
             'wpdt_insert_additional_column_header',
-            array( $this->_column_headers ),
+            array($this->_column_headers),
             WDT_INITIAL_STARTER_VERSION,
-            'wpdatatables_insert_additional_column_header' );
+            'wpdatatables_insert_additional_column_header');
         $this->_column_headers = apply_filters('wpdatatables_insert_additional_column_header', $this->_column_headers);
 
         $vendor = Connection::getVendor($tableData['connection']);
@@ -1080,7 +1090,7 @@ class wpDataTableConstructor
 
         // Fill in with default value if requested
         $column_data['default_value'] = sanitize_text_field($column_data['default_value']);
-        if ($column_data['fill_default'] == 1 && ($column_data['default_value'] || $column_data['type'] == 'hidden' ))  {
+        if ($column_data['fill_default'] == 1 && ($column_data['default_value'] || $column_data['type'] == 'hidden')) {
 
             $valueQuoute = "'";
 
@@ -1108,7 +1118,7 @@ class wpDataTableConstructor
                 }
             }
 
-            $column_data = apply_filters( 'wpdatatables_filter_column_data_for_new_column', $column_data, $tableData);
+            $column_data = apply_filters('wpdatatables_filter_column_data_for_new_column', $column_data, $tableData);
 
             $where = '';
 

@@ -728,6 +728,7 @@ class WdtApexchartsChart extends WPDataChart
      *
      * @param array $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct(array $constructedChartData, $loadFromDB = false)
@@ -820,8 +821,7 @@ class WdtApexchartsChart extends WPDataChart
                 'apexcharts_stepline_area_chart',
                 'apexcharts_basic_area_chart',
                 'apexcharts_column_chart'])
-            && !empty($this->_user_defined_series_data))
-        {
+            && !empty($this->_user_defined_series_data)) {
             $seriesIndex = 0;
             $i = 1;
             foreach ($this->_user_defined_series_data as $series_data) {
@@ -843,8 +843,7 @@ class WdtApexchartsChart extends WPDataChart
             'apexcharts_stacked_bar_chart',
             'apexcharts_100_stacked_bar_chart',
             'apexcharts_stacked_column_chart',
-            'apexcharts_100_stacked_column_chart']))
-        {
+            'apexcharts_100_stacked_column_chart'])) {
             $seriesIndex = 0;
             foreach ($this->_user_defined_series_data as $series_data) {
                 $this->_render_data['options']['series'][$seriesIndex] = array(
@@ -930,7 +929,9 @@ class WdtApexchartsChart extends WPDataChart
 
                     if (!in_array(
                         $this->_type,
-                        array('apexcharts_grouped_bar_chart', 'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart'))
+                        array('apexcharts_grouped_bar_chart',
+                            'apexcharts_stacked_bar_chart',
+                            'apexcharts_100_stacked_bar_chart'))
                     )
                         $seriesEntry['type'] = isset($this->_render_data['options']['series'][$i - 1]['type']) ? $this->_render_data['options']['series'][$i - 1]['type'] : $this->getApexSeriesType($this->getType());
 
@@ -1019,8 +1020,10 @@ class WdtApexchartsChart extends WPDataChart
         $this->_apexcharts_render_data['options']['chart']['height'] = $this->getHeight();
         $this->_apexcharts_render_data['options']['chart']['animations']['enabled'] = $this->isEnableAnimation();
         $this->_apexcharts_render_data['options']['chart']['background'] = ($this->getPlotBackgroundImage() != 'undefined' && $this->getPlotBackgroundImage() != '') ? $this->getPlotBackgroundImage() : $this->getBackgroundColor();
-        if (in_array($this->_type, array('apexcharts_pie_chart', 'apexcharts_pie_with_gradient_chart',
-            'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart'))) {
+        if (in_array($this->_type, array('apexcharts_pie_chart',
+            'apexcharts_pie_with_gradient_chart',
+            'apexcharts_donut_chart',
+            'apexcharts_donut_with_gradient_chart'))) {
             $this->_apexcharts_render_data['options']['theme']['monochrome'] = array();
             $this->_apexcharts_render_data['options']['theme']['monochrome']['enabled'] = $this->isMonochrome();
             $this->_apexcharts_render_data['options']['theme']['monochrome']['color'] = $this->getMonochromeColor();
@@ -1083,8 +1086,7 @@ class WdtApexchartsChart extends WPDataChart
                 'apexcharts_donut_chart',
                 'apexcharts_donut_with_gradient_chart',
                 'apexcharts_radialbar_chart',
-                'apexcharts_radialbar_gauge_chart')))
-        {
+                'apexcharts_radialbar_gauge_chart'))) {
             foreach ($apexchartsRender['series'] as $series) {
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $apexchartsRender['series'][0]['name'];
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['title']['text'] = $series['label'];
@@ -1111,8 +1113,11 @@ class WdtApexchartsChart extends WPDataChart
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['tickAmount'] = $this->getTickAmount() ?: 0;
                 $i++;
             }
-        } else if (in_array($this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
-            'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
+        } else if (in_array($this->_type, array('apexcharts_grouped_bar_chart',
+            'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_bar_chart',
+            'apexcharts_100_stacked_column_chart',
+            'apexcharts_stacked_column_chart'))) {
             $this->_apexcharts_render_data['options']['yaxis']['seriesName'] = $apexchartsRender['series'][0]['name'];
             $this->_apexcharts_render_data['options']['yaxis']['title']['text'] = $this->getMinorAxisLabel() ?: $this->_render_data["series"][0]['label'];
             if ($this->getVerticalAxisMin() !== '') {
@@ -1171,6 +1176,7 @@ class WdtApexchartsChart extends WPDataChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -1185,6 +1191,7 @@ class WdtApexchartsChart extends WPDataChart
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)
@@ -1222,8 +1229,11 @@ class WdtApexchartsChart extends WPDataChart
         }
         $this->setGridAxes($gridAxes);
         $this->setMajorAxisLabel(isset($renderData['apexcharts_render_data']['options']['xaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['xaxis']['title']['text'] : '');
-        if (in_array($this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
-            'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
+        if (in_array($this->_type, array('apexcharts_grouped_bar_chart',
+            'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_bar_chart',
+            'apexcharts_100_stacked_column_chart',
+            'apexcharts_stacked_column_chart'))) {
             $this->setMinorAxisLabel(isset($renderData['apexcharts_render_data']['options']['yaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['yaxis']['title']['text'] : '');
             $this->setVerticalAxisMin(isset($renderData['apexcharts_render_data']['options']['yaxis']['min']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['min'] : '');
             $this->setVerticalAxisMax(isset($renderData['apexcharts_render_data']['options']['yaxis']['max']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['max'] : '');
@@ -1275,6 +1285,7 @@ class WdtApexchartsChart extends WPDataChart
 
     /**
      * @param $type
+     *
      * @return string
      */
     public function getApexSeriesType($type)
@@ -1350,6 +1361,7 @@ class WdtApexchartsChart extends WPDataChart
 
     /**
      * @param $chartData
+     *
      * @return mixed|null
      */
     public function setChartRenderData($chartData)

@@ -4,7 +4,7 @@
 class DIVI_wpDataTable extends ET_Builder_Module
 {
 
-    public $slug       = 'DIVI_wpDataTable';
+    public $slug = 'DIVI_wpDataTable';
     public $vb_support = 'on';
 
     private $_allTables;
@@ -27,7 +27,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
 
     protected $module_credits = array(
         'module_uri' => '',
-        'author'     => '',
+        'author' => '',
         'author_uri' => '',
     );
 
@@ -36,7 +36,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
         $this->name = esc_html__('wpDataTable', 'wpdatatables');
         $this->setAllTables(WDTConfigController::getAllTablesAndChartsForPageBuilders('divi', 'tables'));
         if (defined('WDT_WOO_COMMERCE_INTEGRATION')) {
-            add_action('wp_enqueue_scripts', array('DIVI_wpDataTable','enqueueCustomDiviJs'));
+            add_action('wp_enqueue_scripts', array('DIVI_wpDataTable', 'enqueueCustomDiviJs'));
         }
     }
 
@@ -132,7 +132,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
                 'default_on_front' => ''
             ),
             'export_file_name' => array(
-                'label' => __( 'Set the name for the export file', 'wpdatatables' ),
+                'label' => __('Set the name for the export file', 'wpdatatables'),
                 'type' => 'text',
                 'default_on_front' => ''
             ),
@@ -146,7 +146,8 @@ class DIVI_wpDataTable extends ET_Builder_Module
         );
     }
 
-    protected function is_not_woocommerce_table() {
+    protected function is_not_woocommerce_table()
+    {
         $wooCommerceTableIds = array('330', '331'); // WooCommerce table IDs
         $selectedTableId = $this->props['id'] ?? null;
 
@@ -156,7 +157,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $shortcode = '[wpdatatable ';
-        $tableId =  $this->props['id'];
+        $tableId = $this->props['id'];
         $view = $this->props['view'];
         $var1 = $this->props['var1'];
         $var2 = $this->props['var2'];
@@ -172,7 +173,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
         //Fix for Divi not recognizing table ID as an int when only one table is created
         if (!is_numeric($tableId)) {
             $tableId = substr($tableId, strrpos($tableId, "(id:") + 4);
-            $tableId = substr($tableId, 0,strrpos($tableId, ')') );
+            $tableId = substr($tableId, 0, strrpos($tableId, ')'));
             $tableId = (int)$tableId;
         }
 
@@ -186,34 +187,34 @@ class DIVI_wpDataTable extends ET_Builder_Module
         $shortcode .= 'id=' . $tableId;
         $shortcode .= $view == 'excel-like' ? ' table_view=excel' : ' table_view=regular';
 
-        if($var1) {
+        if ($var1) {
             $shortcode .= ' var1 =' . $var1;
         }
-        if($var2) {
+        if ($var2) {
             $shortcode .= ' var2 =' . $var2;
         }
-        if($var3) {
+        if ($var3) {
             $shortcode .= ' var3 =' . $var3;
         }
-        if($var4) {
+        if ($var4) {
             $shortcode .= ' var4 =' . $var4;
         }
-        if($var5) {
+        if ($var5) {
             $shortcode .= ' var5 =' . $var5;
         }
-        if($var6) {
+        if ($var6) {
             $shortcode .= ' var6 =' . $var6;
         }
-        if($var7) {
+        if ($var7) {
             $shortcode .= ' var7 =' . $var7;
         }
-        if($var8) {
+        if ($var8) {
             $shortcode .= ' var8 =' . $var8;
         }
-        if($var9) {
+        if ($var9) {
             $shortcode .= ' var9 =' . $var9;
         }
-        if($export_file_name) {
+        if ($export_file_name) {
             $shortcode .= ' export_file_name=' . $export_file_name;
         }
         $shortcode .= ']';

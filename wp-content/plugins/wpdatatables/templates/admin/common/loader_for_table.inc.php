@@ -17,7 +17,9 @@ if (!$isLoaderVisible || $isHideBeforeFiltering) {
     $style = "display: none;";
 }
 ?>
-<div data-id="<?php echo esc_attr($this->getWpId())?>" class="wdt-timeline-item wdt-timeline-<?php echo esc_attr($this->getId()); ?>" style="<?php echo esc_attr($style); ?>">
+<div data-id="<?php echo esc_attr($this->getWpId()) ?>"
+     class="wdt-timeline-item wdt-timeline-<?php echo esc_attr($this->getId()); ?>"
+     style="<?php echo esc_attr($style); ?>">
     <div class="wdt-table-loader">
         <div class="wdt-table-loader-row wdt-table-loader-header">
             <div class="wdt-table-loader-header-cell wdt-animated-background"></div>

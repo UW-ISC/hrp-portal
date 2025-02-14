@@ -53,7 +53,7 @@
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/constructor_column_block.inc.php'; ?>
 
-                    <?php do_action( 'wpdatatables_add_constructor_step_in_wizard' ); ?>
+                    <?php do_action('wpdatatables_add_constructor_step_in_wizard'); ?>
 
                 </div>
                 <!-- /.card-body -->
@@ -72,7 +72,8 @@
                                     <a><?php esc_html_e('Open in Excel-like editor', 'wpdatatables'); ?></a></li>
                             </ul>
                         </div>
-                        <div class="btn-group wdt-woo-constructor-create-button pull-right m-l-5" style="display: none;">
+                        <div class="btn-group wdt-woo-constructor-create-button pull-right m-l-5"
+                             style="display: none;">
                             <button type="button" class="btn btn-primary">
                                 <?php esc_html_e('Create the table', 'wpdatatables'); ?>
                             </button>

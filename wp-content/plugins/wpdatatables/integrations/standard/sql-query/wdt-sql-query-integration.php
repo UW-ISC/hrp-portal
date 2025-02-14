@@ -22,7 +22,8 @@ class SQLQueryIntegration
     public static function init()
     {
         // Add SQL query settings block in column settings
-        add_action('wpdatatables_add_mysql_settings_block', array('WDTIntegration\SQLQueryIntegration', 'addSettingsBlock'));
+        add_action('wpdatatables_add_mysql_settings_block', array('WDTIntegration\SQLQueryIntegration',
+            'addSettingsBlock'));
     }
 
     /**

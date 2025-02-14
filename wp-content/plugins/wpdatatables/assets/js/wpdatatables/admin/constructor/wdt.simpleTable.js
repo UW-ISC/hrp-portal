@@ -1037,7 +1037,7 @@
             var starRateElement = $("#wdt-backend-star-modal .rateYo");
             var element = '#' + selecter,
                 defoult = jQuery(element).val() == "" ? '#FFD700' : jQuery(element).val(),
-                partClass = selecter === 'wpdt-star-rating-color' ? 'wpdt-sc-': '',
+                partClass = selecter === 'wpdt-star-rating-color' ? 'wpdt-sc-' : '',
                 selectedStarColor = '';
 
             const pickr = new Pickr({
@@ -1067,21 +1067,21 @@
                     'rgba(255, 193, 7, 1)'
                 ],
                 components: {
-                        preview: true,
-                        opacity: false,
-                        hue: true,
-                        interaction: {
-                            hex: true,
-                            rgba: true,
-                            hsla: false,
-                            hsva: false,
-                            cmyk: false,
-                            clear: true,
-                            input: true,
-                            save: true
-                        }
+                    preview: true,
+                    opacity: false,
+                    hue: true,
+                    interaction: {
+                        hex: true,
+                        rgba: true,
+                        hsla: false,
+                        hsva: false,
+                        cmyk: false,
+                        clear: true,
+                        input: true,
+                        save: true
                     }
-                }).on('init', pickr => {
+                }
+            }).on('init', pickr => {
 
                 pickr.show();
                 selectedStarColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
@@ -1114,6 +1114,7 @@
                 jQuery(element).parent('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", 'none');
             })
         }
+
         /**
          * Apply color picker on Text and Background color of cell
          */
@@ -1638,12 +1639,12 @@
                     highlightRow = selectedRange.highlight.row,
                     highlightCol = selectedRange.highlight.col,
                     cellHTMLContent = '';
-                if(tinyMCE.activeEditor.getContent().indexOf('wpdt-html-content') >= 0) {
+                if (tinyMCE.activeEditor.getContent().indexOf('wpdt-html-content') >= 0) {
                     cellHTMLContent = tinyMCE.activeEditor.getContent();
                 } else {
                     cellHTMLContent = '<div data-type-content="wpdt-html-content">'
-                                      + tinyMCE.activeEditor.getContent()
-                                      + '</div>';
+                        + tinyMCE.activeEditor.getContent()
+                        + '</div>';
                 }
                 wpdtEditor.setDataAtCell(highlightRow, highlightCol, cellHTMLContent);
                 wpdtEditor.render();
@@ -1738,7 +1739,7 @@
                     starRateElement.rateYo('destroy');
                 starRateElement.rateYo({
                     normalFill: "#A0A0A0",
-                    ratedFill : (starData.data('star-color') === '') ? "#FFD700" : starData.data('star-color'),
+                    ratedFill: (starData.data('star-color') === '') ? "#FFD700" : starData.data('star-color'),
                     halfStar: true,
                     numStars: starData.data('star-num'),
                     maxValue: starData.data('star-num'),
@@ -1834,8 +1835,8 @@
                 var maxValue = parseInt(starRateElement.rateYo("option", "maxValue")),
                     rating = starRateElement.rateYo("option", "rating"),
                     showNumber = $('#wpdt-star-rating-number').is(":checked"),
-                    starColor =jQuery('#wpdt-star-rating-color').val();
-                    colHeaderArr = wpdtEditor.getColHeader();
+                    starColor = jQuery('#wpdt-star-rating-color').val();
+                colHeaderArr = wpdtEditor.getColHeader();
 
                 starRateElement.css("margin-bottom", "5px");
                 starWrapper = '<div class="rating">';
@@ -1951,7 +1952,7 @@
                 }
                 getHeightData();
                 wpdtEditor.selectCell(0, 0)
-             });
+            });
             // wpdtEditor.addHook('beforeRemoveRow', function (from, amount) {
             //     var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
             //         to = from + amount - 1,

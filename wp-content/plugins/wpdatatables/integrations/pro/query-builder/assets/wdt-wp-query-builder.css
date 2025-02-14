@@ -2,7 +2,10 @@ label.wdt-query-label {
     font-weight: normal;
     margin-top: 10px;
 }
+
 .wpdt-c .wdt-wp-query-preview-block,
+.wpdt-c .wdt-datatables-admin-wrap .bg-white.wdt-wp-query-cf-template,
+.wpdt-c .wdt-datatables-admin-wrap .bg-white.wdt-wp-query-clause-template,
 .wpdt-c .wdt-datatables-admin-wrap .bg-white.wdt-wp-query-tax-template,
 .wpdt-c .wdt-datatables-admin-wrap .bg-white.wdt-wp-query-date-template,
 .wpdt-c .wdt-datatables-admin-wrap .bg-white.wdt-wp-query-meta-template {

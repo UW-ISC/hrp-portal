@@ -30,12 +30,14 @@ class WDTTools
             'file' => __('Attachment', 'wpdatatables')
         );
 
-        return apply_filters( 'wpdatatables_filter_possible_column_types', $possibleColumnTypes );
+        return apply_filters('wpdatatables_filter_possible_column_types', $possibleColumnTypes);
     }
 
     /**
      * Helper function that sanitize column header
+     *
      * @param $headersInFormula
+     *
      * @return array
      */
     public static function sanitizeHeaders($headersInFormula): array
@@ -54,7 +56,9 @@ class WDTTools
 
     /**
      * Helper function for applying placeholders(variables)
+     *
      * @param $string
+     *
      * @return mixed
      */
     public static function applyPlaceholders($string)
@@ -69,7 +73,9 @@ class WDTTools
 
     /**
      * Helper function that returns curl data
+     *
      * @param $url
+     *
      * @return mixed|null
      * @throws Exception
      */
@@ -87,7 +93,7 @@ class WDTTools
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         $data = apply_filters('wpdatatables_curl_get_data', null, $ch, $url);
-        if( null === $data ) {
+        if (null === $data) {
             $data = curl_exec($ch);
             if (curl_error($ch)) {
                 $error = curl_error($ch);
@@ -116,7 +122,9 @@ class WDTTools
 
     /**
      * Helper function to find CSV delimiter
+     *
      * @param $csv_url
+     *
      * @return string
      */
     public static function detectCSVDelimiter($csv_url)
@@ -197,7 +205,9 @@ class WDTTools
 
     /**
      * Helper function that convert CSV file to Array
+     *
      * @param $csv
+     *
      * @return array
      */
     public static function csvToArray($csv)
@@ -212,7 +222,9 @@ class WDTTools
 
     /**
      * Helper function that convert Google Sheet array to adopt in wpdt Array
+     *
      * @param $arr
+     *
      * @return array
      */
     public static function gsArrayToWDTArray($arr)
@@ -227,9 +239,9 @@ class WDTTools
         $keys = array_map('trim', $keys);
         $returnArray = array();
         for ($j = 0; $j < $count; $j++) {
-            if (count($arr[$j]) < $countLabels){
-                for ($k = 0; $k < $countLabels; $k++){
-                    if(!isset($arr[$j][$k])){
+            if (count($arr[$j]) < $countLabels) {
+                for ($k = 0; $k < $countLabels; $k++) {
+                    if (!isset($arr[$j][$k])) {
                         $arr[$j][$k] = '';
                     }
                 }
@@ -241,9 +253,12 @@ class WDTTools
         }
         return $returnArray;
     }
+
     /**
      * Helper function that extract Google Spreadsheet URL and get ID
+     *
      * @param $url
+     *
      * @return string
      */
     public static function getGoogleSpreadsheetID($url)
@@ -251,9 +266,12 @@ class WDTTools
         $url_arr = explode('/', $url);
         return $url_arr[count($url_arr) - 2];
     }
+
     /**
      * Helper function that extract Google Spreadsheet URL and get Worksheets ID
+     *
      * @param $url
+     *
      * @return string
      */
     public static function getGoogleWorksheetsID($url)
@@ -278,7 +296,9 @@ class WDTTools
 
     /**
      * Helper function that extract Google Spreadsheet
+     *
      * @param $url
+     *
      * @return array|string
      * @throws Exception
      */
@@ -311,6 +331,7 @@ class WDTTools
 
         return array();
     }
+
     public static function getTranslationStringsBrowse()
     {
         return array(
@@ -319,6 +340,7 @@ class WDTTools
             'copyBrowser' => __('Copy', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsCommon()
     {
         return array(
@@ -349,6 +371,7 @@ class WDTTools
             'errorText_common' => __('Unable to retrieve results', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsConstructor()
     {
         global $wpdb;
@@ -363,13 +386,14 @@ class WDTTools
             'newColumnName_constructor' => __('New column', 'wpdatatables'),
             'selectAll_constructor' => __('Select all', 'wpdatatables'),
             'deselectAll_constructor' => __('Deselect all', 'wpdatatables'),
-            'customDatabaseNameError_constructor' =>  __('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
-            'customDatabaseNameLengthError_constructor' =>  __('The database name must be less than 64 characters.', 'wpdatatables'),
-            'customDatabaseNameTypeError_constructor' =>  __('The database name can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
+            'customDatabaseNameError_constructor' => __('The database name must be less than 64 characters and can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
+            'customDatabaseNameLengthError_constructor' => __('The database name must be less than 64 characters.', 'wpdatatables'),
+            'customDatabaseNameTypeError_constructor' => __('The database name can only contain letters, numbers, and underscores. It cannot start with a number unless the prefix is included.', 'wpdatatables'),
             'wpPrefixForDatabase_constructor' => $wpdb->prefix,
             'emtyfields_woo' => __('All of the following fields must be filled out: Taxonomy, Tax Field and Tax Terms.', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsSimpleTable()
     {
         return array(
@@ -408,6 +432,7 @@ class WDTTools
             'copy_simple_table' => __('Copy', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsTableSettingsMain()
     {
         return array(
@@ -443,17 +468,23 @@ class WDTTools
             'purchaseCodeInvalid_main' => __('The purchase code is invalid or it has expired', 'wpdatatables'),
             'activation_domains_limit_main' => __('You have reached maximum number of registered domains', 'wpdatatables'),
             'activation_envato_failed_main' => __('It seems you don\'t have a valid purchase of wpDataTables', 'wpdatatables'),
-            'envato_failed_powerful_main' => __('It seems you don\'t have a valid purchase of Powerful Filters for wpDataTables', 'wpdatatables'), //*
-            'envato_failed_report_main' => __('It seems you don\'t have a valid purchase of Report Builder for wpDataTables', 'wpdatatables'), //*
-            'envato_failed_gravity_main' => __('It seems you don\'t have a valid purchase of Gravity Forms integration for wpDataTables', 'wpdatatables'), //*
-            'envato_failed_formidable_main' => __('It seems you don\'t have a valid purchase of Formidable Forms integration for wpDataTables', 'wpdatatables'), //*
+            'envato_failed_powerful_main' => __('It seems you don\'t have a valid purchase of Powerful Filters for wpDataTables', 'wpdatatables'),
+            //*
+            'envato_failed_report_main' => __('It seems you don\'t have a valid purchase of Report Builder for wpDataTables', 'wpdatatables'),
+            //*
+            'envato_failed_gravity_main' => __('It seems you don\'t have a valid purchase of Gravity Forms integration for wpDataTables', 'wpdatatables'),
+            //*
+            'envato_failed_formidable_main' => __('It seems you don\'t have a valid purchase of Formidable Forms integration for wpDataTables', 'wpdatatables'),
+            //*
             'pluginActivated_main' => __('Plugin has been activated', 'wpdatatables'),
-            'pluginDeactivated_main' => __('Plugin has been deactivated', 'wpdatatables'), //*
+            'pluginDeactivated_main' => __('Plugin has been deactivated', 'wpdatatables'),
+            //*
             'envato_api_activated_main' => __('Activated with Envato', 'wpdatatables'),
             'activateWithEnvato_main' => __('Activate with Envato', 'wpdatatables'),
             'unable_to_deactivate_plugin_main' => __('Unable to deactivate plugin. Please try again later.', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsWpDataTables()
     {
         return array(
@@ -505,7 +536,7 @@ class WDTTools
             ),
             'from_wpdatatables' => __('From', 'wpdatatables'),
             'to_wpdatatables' => __('To', 'wpdatatables'),
-            'sortingError_wpdatatables' => __('At least one show/hide sorting icon must be enabled!','wpdatatables'),
+            'sortingError_wpdatatables' => __('At least one show/hide sorting icon must be enabled!', 'wpdatatables'),
             'firstPageWCAG_wpdatatables' => __('Navigate to First page', 'wpdatatables'),
             'lastPageWCAG_wpdatatables' => __('Navigate to Last page', 'wpdatatables'),
             'nextPageWCAG_wpdatatables' => __('Navigate to Next page', 'wpdatatables'),
@@ -531,21 +562,22 @@ class WDTTools
             'columnSearchWCAG_wpdatatables' => __(' column searching for ', 'wpdatatables'),
             'valueFromWCAG_wpdatatables' => __('value from ', 'wpdatatables'),
             'valueToWCAG_wpdatatables' => __(' value to ', 'wpdatatables'),
-            'andforWCAG_wpdatatables' => __( ' and for ', 'wpdatatables'),
-            'andforGloablWCAG_wpdatatables' => __( ' and for Global search of value ', 'wpdatatables'),
-            'forGloablWCAG_wpdatatables' => __( 'for Global search of value ', 'wpdatatables'),
-            'lenghtMenuWCAG_wpdatatables' => __( 'Length menu:', 'wpdatatables'),
-            'searchTableWCAG_wpdatatables' => __( 'Search table:', 'wpdatatables'),
-            'all_wpdatatables' => __( 'All', 'wpdatatables'),
-            'customDisplayError_wpdatatables' => __( 'Invalid format of custom rows per page. Please enter a valid format like "1,2,3,4". If you use the number 0, it must be in the format 0 without any preceding zeros.', 'wpdatatables'),
+            'andforWCAG_wpdatatables' => __(' and for ', 'wpdatatables'),
+            'andforGloablWCAG_wpdatatables' => __(' and for Global search of value ', 'wpdatatables'),
+            'forGloablWCAG_wpdatatables' => __('for Global search of value ', 'wpdatatables'),
+            'lenghtMenuWCAG_wpdatatables' => __('Length menu:', 'wpdatatables'),
+            'searchTableWCAG_wpdatatables' => __('Search table:', 'wpdatatables'),
+            'all_wpdatatables' => __('All', 'wpdatatables'),
+            'customDisplayError_wpdatatables' => __('Invalid format of custom rows per page. Please enter a valid format like "1,2,3,4". If you use the number 0, it must be in the format 0 without any preceding zeros.', 'wpdatatables'),
             'close_common_wpdatatables' => __('Close', 'wpdatatables'),
             'error_adding_to_cart_wpdatatables' => __('Error adding products to cart.', 'wpdatatables'),
             'select_products_for_cart_wpdatatables' => __('Please select products to add to the cart.', 'wpdatatables'),
             'error_fetching_cart_info_wpdatatables' => __('Error fetching cart info.', 'wpdatatables'),
-            'could_not_add_to_cart_wpdatatables' => __( 'Could not add this product to cart - the stock of this product could be limited.' , 'wpdatatables' ),
+            'could_not_add_to_cart_wpdatatables' => __('Could not add this product to cart - the stock of this product could be limited.', 'wpdatatables'),
             'emtyfields_woo_front' => __('All of the following fields must be filled out: Taxonomy, Tax Field and Tax Terms.', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsColumnFilter()
     {
         return array(
@@ -578,6 +610,7 @@ class WDTTools
             'dividerSearchBox_columnfilter' => __('This is divider between searchbox input and options to select', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsExcel()
     {
         return array(
@@ -588,12 +621,14 @@ class WDTTools
             'detach_file_excel' => __('detach', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsExcelPlugin()
     {
         return array(
             'invalid_value_excel' => __('You have entered invalid value. Press ESC to cancel.', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsPlugin()
     {
         return array(
@@ -603,6 +638,7 @@ class WDTTools
             'previousFilter' => __('Choose an option in previous filters', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsFunctions()
     {
         return array(
@@ -632,6 +668,7 @@ class WDTTools
             'nothingSelected_functions' => __('Nothing selected', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsInlineEditing()
     {
         return array(
@@ -657,6 +694,7 @@ class WDTTools
             'inlineEditing_inline' => __('Inline editing of the cell ', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsAddRemoveColumn()
     {
         return array(
@@ -701,6 +739,7 @@ class WDTTools
             'queryParamAddRemoveColumn' => __('Query Parameter (GET)', 'wpdatatables'),
         );
     }
+
     public static function getTranslationStringsChartWizard()
     {
         return array(
@@ -709,6 +748,7 @@ class WDTTools
             'saveChart' => __('Save chart', 'wpdatatables'),
         );
     }
+
     /**
      * Helper function that returns all update info
      * TODO (Update before new versions)
@@ -717,49 +757,50 @@ class WDTTools
     public static function getUpdateInfo()
     {
         return array(
-            'version'  => get_option('wdtVersion'),
-            'release_date' => '14.11.2024.',
+            'version' => get_option('wdtVersion'),
+            'release_date' => '24.12.2024.',
             'features' => [
                 0 => [
-                    'text' => 'WooCommerce Integration!',
-                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/woocommerce-integration'
+                    'text' => 'Custom Fields support for WP Posts Builder tables.',
+                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/custom-fields-integration-with-wpdatatables'
                 ],
                 1 => [
-                    'text' => 'WP Posts Builder - New Table Type.',
-                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/wp-post-builder-integration'
+                    'text' => 'Added Price Comparison Operators in WooCommerce Tables.',
+                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/woocommerce-integration'
                 ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Implemented Error Handling Mechanism for Resolving Column Position Conflicts.',
+                    'text' => 'Updated Highcharts and Highstock Libraries.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Added Option to Enable/Disable Loaders Globally for Tables and Charts.',
+                    'text' => 'Updated PHP Spreadsheet Library.',
                     'link' => ''
                 ],
             ],
-            'bugfixes'=> [
+            'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed Issue with Filtering Multiline Columns from Google Spreadsheets.',
+                    'text' => 'Fixed Issue with custom post id placeholder.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed Issue with Date Display and Highcharts when Using Range Picker.',
+                    'text' => 'Fixed Issue with Vertical Axis Label in Highcharts.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed Issue with Unable to Change Series Colors in Charts.',
+                    'text' => 'Fixed issue with Elementor builder pages not rendering properly.',
                     'link' => ''
                 ],
                 3 => [
-                    'text' => 'Fixed Issue with Rendering Embedded Child Table in Parent Table.',
+                    'text' => 'Fixed issue with Mini Cart Rendering After Adding to Cart.',
                     'link' => ''
                 ],
 
             ]
         );
     }
+
     /**
      * Helper function that returns all update info
      * TODO (Update before new versions)
@@ -768,7 +809,7 @@ class WDTTools
     public static function getDeactivationInfo()
     {
         return array(
-            'version'  => get_option('wdtVersion'),
+            'version' => get_option('wdtVersion'),
             'wdt_nonce' => wp_nonce_field('wdtDeactivationNonce', 'wdtNonce'),
             'titleDeactivation' => __('QUICK FEEDBACK', 'wpdatatables'),
             'captionDeactivation' => __('If you have a moment, please let us know why you are deactivating the wpDataTables plugin:', 'wpdatatables'),
@@ -776,67 +817,68 @@ class WDTTools
             'deactivate_reasons' => [
                 0 => [
                     'id' => 'feature_needed',
-                    'title' => esc_html__( 'The plugin doesn’t have a feature that I need' ),
+                    'title' => esc_html__('The plugin doesn’t have a feature that I need'),
                     'input_placeholder' => esc_html__('Please explain your use case and the feature you need: '),
                     'alert' => '',
                 ],
                 1 => [
                     'id' => 'premium_version',
-                    'title' => esc_html__( 'I bought the premium version' ),
+                    'title' => esc_html__('I bought the premium version'),
                     'input_placeholder' => '',
                     'alert' => '',
                 ],
                 2 => [
                     'id' => 'stopped_working',
-                    'title' => esc_html__( 'The plugin suddenly stopped working' ),
+                    'title' => esc_html__('The plugin suddenly stopped working'),
                     'input_placeholder' => esc_html__('Tell us more… '),
                     'alert' => esc_html__('Have you reached out to our support team?'),
                 ],
                 3 => [
                     'id' => 'broke_my_site',
-                    'title' => esc_html__( 'The plugin broke my site' ),
+                    'title' => esc_html__('The plugin broke my site'),
                     'input_placeholder' => esc_html__('Tell us more… '),
                     'alert' => esc_html__('Have you reached out to our support team?'),
                 ],
                 4 => [
                     'id' => 'better_plugin',
-                    'title' => esc_html__( 'I found a better plugin' ),
+                    'title' => esc_html__('I found a better plugin'),
                     'input_placeholder' => esc_html__('Please share which plugin: '),
                     'alert' => '',
                 ],
                 5 => [
                     'id' => 'temporary_deactivation',
-                    'title' => esc_html__( 'It is a temporary deactivation - I’m troubleshooting an issue' ),
+                    'title' => esc_html__('It is a temporary deactivation - I’m troubleshooting an issue'),
                     'input_placeholder' => '',
                     'alert' => '',
                 ],
                 6 => [
                     'id' => 'able_to_work',
-                    'title' => esc_html__( 'I haven’t been able to get the plugin to work' ),
+                    'title' => esc_html__('I haven’t been able to get the plugin to work'),
                     'input_placeholder' => esc_html__('Tell us more… '),
                     'alert' => esc_html__('Have you reached out to our support team?'),
                 ],
                 7 => [
                     'id' => 'no_longer_needed',
-                    'title' => esc_html__( 'I no longer need the plugin' ),
+                    'title' => esc_html__('I no longer need the plugin'),
                     'input_placeholder' => esc_html__('Please share more about your use case: '),
                     'alert' => '',
                 ],
                 8 => [
                     'id' => 'conflict',
-                    'title' => esc_html__( 'The plugin has a conflict with the theme or other plugin' ),
+                    'title' => esc_html__('The plugin has a conflict with the theme or other plugin'),
                     'input_placeholder' => esc_html__('Please share which plugin/theme: '),
                     'alert' => esc_html__('Have you reached out to our support team?'),
                 ],
                 9 => [
                     'id' => 'other',
-                    'title' => esc_html__( 'Other' ),
+                    'title' => esc_html__('Other'),
                     'input_placeholder' => esc_html__('How could we improve? '),
                     'alert' => '',
                 ],
             ]
         );
     }
+
     /**
      * Helper function that returns an array with date and time settings from wp_options
      * @return array
@@ -844,8 +886,8 @@ class WDTTools
     public static function getDateTimeSettings()
     {
         return array(
-            'wdtDateFormat'   => get_option('wdtDateFormat'),
-            'wdtTimeFormat'   => get_option('wdtTimeFormat'),
+            'wdtDateFormat' => get_option('wdtDateFormat'),
+            'wdtTimeFormat' => get_option('wdtTimeFormat'),
             'wdtNumberFormat' => get_option('wdtNumberFormat'),
             'wdtGlobalTableLoader' => get_option('wdtGlobalTableLoader'),
         );
@@ -854,8 +896,8 @@ class WDTTools
     public static function getGoogleApiMapsKey()
     {
         return array(
-            'wdtGoogleApiMaps'   => get_option('wdtGoogleApiMaps'),
-            'wdtGoogleApiMapsValidated'   => get_option('wdtGoogleApiMapsValidated'),
+            'wdtGoogleApiMaps' => get_option('wdtGoogleApiMaps'),
+            'wdtGoogleApiMapsValidated' => get_option('wdtGoogleApiMapsValidated'),
             'wdtGlobalChartLoader' => get_option('wdtGlobalChartLoader'),
         );
     }
@@ -867,9 +909,9 @@ class WDTTools
     public static function getWpDataTablesAdminPages()
     {
         return array(
-            'dashboardUrl'        => menu_page_url('wpdatatables-dashboard', false),
-            'browseTablesUrl'     => menu_page_url('wpdatatables-administration', false),
-            'browseChartsUrl'     => menu_page_url('wpdatatables-charts', false)
+            'dashboardUrl' => menu_page_url('wpdatatables-dashboard', false),
+            'browseTablesUrl' => menu_page_url('wpdatatables-administration', false),
+            'browseChartsUrl' => menu_page_url('wpdatatables-charts', false)
         );
     }
 
@@ -879,13 +921,13 @@ class WDTTools
      */
     public static function getTutorialsTranslationStrings()
     {
-        $guideTeacherIMG = '<img class="wdt-emoji-title" src="'. WDT_ROOT_URL . 'assets/img/male-teacher.png">';
-        $waveIMG = '<img class="wdt-emoji-body" src="'. WDT_ROOT_URL . 'assets/img/wave.png">';
-        $partyTitleIMG = '<img class="wdt-emoji-title" src="'. WDT_ROOT_URL . 'assets/img/party-popper.png">';
-        $hourglassIMG = '<img class="wdt-emoji-title" src="'. WDT_ROOT_URL . 'assets/img/hourglass-not-done.png">';
-        $raisedHandsIMG = '<img class="wdt-emoji-title m-l-5" src="'. WDT_ROOT_URL . 'assets/img/raising-hands.png">';
-        $chartIMG = '<img class="wdt-emoji-title" src="'. WDT_ROOT_URL . 'assets/img/chart-increasing.png">';
-        $username =  wp_get_current_user()->user_login;
+        $guideTeacherIMG = '<img class="wdt-emoji-title" src="' . WDT_ROOT_URL . 'assets/img/male-teacher.png">';
+        $waveIMG = '<img class="wdt-emoji-body" src="' . WDT_ROOT_URL . 'assets/img/wave.png">';
+        $partyTitleIMG = '<img class="wdt-emoji-title" src="' . WDT_ROOT_URL . 'assets/img/party-popper.png">';
+        $hourglassIMG = '<img class="wdt-emoji-title" src="' . WDT_ROOT_URL . 'assets/img/hourglass-not-done.png">';
+        $raisedHandsIMG = '<img class="wdt-emoji-title m-l-5" src="' . WDT_ROOT_URL . 'assets/img/raising-hands.png">';
+        $chartIMG = '<img class="wdt-emoji-title" src="' . WDT_ROOT_URL . 'assets/img/chart-increasing.png">';
+        $username = wp_get_current_user()->user_login;
 
         return array(
             'cannot_be_empty_field' => __('The field cannot be empty!', 'wpdatatables'),
@@ -902,7 +944,7 @@ class WDTTools
             'tour0' => array(
                 'step0' => array(
                     'title' => $guideTeacherIMG . __('Welcome to the tutorial!', 'wpdatatables'),
-                    'content' => __('Hello ', 'wpdatatables') . $username . $waveIMG  .  __(', in this tutorial, we will show you how to create a simple table from scratch by choosing a custom number of columns and rows. How to customize each cell, merge cells and a lot more.', 'wpdatatables'),
+                    'content' => __('Hello ', 'wpdatatables') . $username . $waveIMG . __(', in this tutorial, we will show you how to create a simple table from scratch by choosing a custom number of columns and rows. How to customize each cell, merge cells and a lot more.', 'wpdatatables'),
                 ),
                 'step1' => array(
                     'title' => __(' Let\'s create a new wpDataTable from scratch!', 'wpdatatables'),
@@ -937,7 +979,7 @@ class WDTTools
                     'content' => __('When you click on the button, the empty table will be ready for you. ', 'wpdatatables'),
                 ),
                 'step9' => array(
-                    'title' => $hourglassIMG .__('We are generating the table...', 'wpdatatables'),
+                    'title' => $hourglassIMG . __('We are generating the table...', 'wpdatatables'),
                     'content' => __('Please, when you see the table, click \'Continue\' to move on.', 'wpdatatables'),
                 ),
                 'step10' => array(
@@ -961,14 +1003,14 @@ class WDTTools
                     'content' => __('Here you will see how your table will look like on the page. Please click \'Continue\' to move on.', 'wpdatatables'),
                 ),
                 'step15' => array(
-                    'title' =>$partyTitleIMG .  __('Congrats! Your table is ready.', 'wpdatatables'),
+                    'title' => $partyTitleIMG . __('Congrats! Your table is ready.', 'wpdatatables'),
                     'content' => __('Now you can copy the shortcode for this table, and check out how it looks on your website when you paste it to a post or page. You can always come back and edit the table as you like.', 'wpdatatables'),
                 )
             ),
             'tour1' => array(
                 'step0' => array(
                     'title' => $guideTeacherIMG . __('Welcome to the tutorial!', 'wpdatatables'),
-                    'content' => __('Hello ', 'wpdatatables') . $username . $waveIMG  .  __(', in this tutorial we will show you how to create a wpDataTable linked to an existing data source. "Linked" in this context means that if you create a table, for example, based on an Excel file, it will read the data from this file every time it loads, making sure all table values changes are instantly reflected in the table.', 'wpdatatables'),
+                    'content' => __('Hello ', 'wpdatatables') . $username . $waveIMG . __(', in this tutorial we will show you how to create a wpDataTable linked to an existing data source. "Linked" in this context means that if you create a table, for example, based on an Excel file, it will read the data from this file every time it loads, making sure all table values changes are instantly reflected in the table.', 'wpdatatables'),
                 ),
                 'step1' => array(
                     'title' => __('Let\'s create a new wpDataTable!', 'wpdatatables'),
@@ -1003,7 +1045,7 @@ class WDTTools
                     'content' => __('Please click on the \'Save Changes\' button to create a table.<br><br> If you get an error message after button click and you are not able to solve it, please contact us on our support platform and provide us this data source that you use for creating this table and copy error message as well and click Skip tutorial.', 'wpdatatables'),
                 ),
                 'step9' => array(
-                    'title' => $hourglassIMG .__('The table is creating...', 'wpdatatables'),
+                    'title' => $hourglassIMG . __('The table is creating...', 'wpdatatables'),
                     'content' => __('Now the table is creating. Wait until you see it in the background and then click \'Continue\'.', 'wpdatatables'),
                 ),
                 'step10' => array(
@@ -1298,9 +1340,11 @@ class WDTTools
 
     /**
      * Helper function that define default value
+     *
      * @param $possible
      * @param $index
      * @param string $default
+     *
      * @return string
      */
     public static function defineDefaultValue($possible, $index, $default = '')
@@ -1310,7 +1354,9 @@ class WDTTools
 
     /**
      * Helper function that extract column headers in array
+     *
      * @param $rawDataArr
+     *
      * @return array
      * @throws WDTException
      */
@@ -1325,8 +1371,10 @@ class WDTTools
 
     /**
      * Helper function that detect columns data type
+     *
      * @param $rawDataArr
      * @param $headerArr
+     *
      * @return array
      * @throws WDTException
      */
@@ -1358,8 +1406,10 @@ class WDTTools
 
     /**
      * Helper function that convert XML to Array
+     *
      * @param $xml SimpleXMLElement
      * @param bool $root
+     *
      * @return array|string
      */
     public static function convertXMLtoArr($xml, $root = true)
@@ -1398,7 +1448,9 @@ class WDTTools
 
     /**
      * Helper function that check if the array is associative
+     *
      * @param $arr
+     *
      * @return bool
      */
     public static function isArrayAssoc($arr)
@@ -1408,7 +1460,9 @@ class WDTTools
 
     /**
      * Helper function that detect single column type
+     *
      * @param $values
+     *
      * @return string
      */
     private static function wdtDetectColumnType($values)
@@ -1457,7 +1511,9 @@ class WDTTools
      * Function that checks if the passed value is integer
      * wdtIsInteger(23); //bool(true)
      * wdtIsInteger("23"); //bool(true)
+     *
      * @param $input
+     *
      * @return bool
      */
     private static function wdtIsInteger($input)
@@ -1472,7 +1528,9 @@ class WDTTools
 
     /**
      * Function that checks if the passed values are float
+     *
      * @param $values
+     *
      * @return bool
      */
     private static function wdtIsFloat($values)
@@ -1490,7 +1548,9 @@ class WDTTools
 
     /** @noinspection PhpUnusedPrivateMethodInspection
      * Function that checks if the passed value is date
+     *
      * @param $input
+     *
      * @return bool
      */
     private static function wdtIsDate($input)
@@ -1505,7 +1565,9 @@ class WDTTools
 
     /** @noinspection PhpUnusedPrivateMethodInspection
      * Function that checks if the passed values is datetime
+     *
      * @param $input
+     *
      * @return bool
      */
     private static function wdtIsDateTime($input)
@@ -1524,7 +1586,9 @@ class WDTTools
 
     /**
      * Function that checks if the passed values match a Woo Table Select Column
+     *
      * @param $input
+     *
      * @return bool
      */
     private static function wdtIsSelect($input): bool
@@ -1534,7 +1598,9 @@ class WDTTools
 
     /**
      * Function that checks if the passed values match a Woo Table Add To Cart Column
+     *
      * @param $input
+     *
      * @return bool
      */
     private static function wdtIsAddToCart($input): bool
@@ -1546,6 +1612,7 @@ class WDTTools
      * @param $valuesArray
      * @param $checkFunction
      * @param string $regularExpression
+     *
      * @return bool
      * @throws WDTException
      */
@@ -1587,7 +1654,7 @@ class WDTTools
      */
     public static function getRemoteInformation($slug, $purchaseCode, $envatoTokenEmail)
     {
-        $serverName =  ( defined( 'WP_CLI' ) && WP_CLI ) ? php_uname('n') : $_SERVER['SERVER_NAME'];
+        $serverName = (defined('WP_CLI') && WP_CLI) ? php_uname('n') : $_SERVER['SERVER_NAME'];
         $request = wp_remote_post(
             WDT_STORE_API_URL . 'autoupdate/info',
             [
@@ -1616,7 +1683,9 @@ class WDTTools
 
     /**
      * Helper function that converts PHP to Moment Date Format
+     *
      * @param $dateFormat
+     *
      * @return string
      */
     public static function convertPhpToMomentDateFormat($dateFormat)
@@ -1675,8 +1744,10 @@ class WDTTools
 
     /**
      * Helper method to detect the headers that are present in formula
+     *
      * @param $formula
      * @param $headers
+     *
      * @return array
      */
     public static function getColHeadersInFormula($formula, $headers)
@@ -1692,7 +1763,9 @@ class WDTTools
 
     /**
      * Helper function which converts WP upload URL to Path
+     *
      * @param $uploadUrl
+     *
      * @return mixed
      */
     public static function urlToPath($uploadUrl)
@@ -1708,7 +1781,9 @@ class WDTTools
 
     /**
      * Helper function which converts upload path to URL
+     *
      * @param $uploadPath
+     *
      * @return mixed
      */
     public static function pathToUrl($uploadPath)
@@ -1725,8 +1800,10 @@ class WDTTools
 
     /**
      * Helper function that convert hex color to rgba
+     *
      * @param $color
      * @param bool $opacity
+     *
      * @return string
      */
     public static function hex2rgba($color, $opacity = false)
@@ -1771,17 +1848,22 @@ class WDTTools
 
     /**
      * Helper function that checks if given string is a valid color (hex, rgba, rgb, hsla)
+     *
      * @param $color
+     *
      * @return bool
      */
-    public static function isStringAColor($color) {
+    public static function isStringAColor($color)
+    {
 
         $regex = '/^(\#[\da-f]{3}|\#[\da-f]{6}|rgba\(((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,\s*){2}((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*)(,\s*(0\.\d+|1))\)|hsla\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)(,\s*(0\.\d+|1))\)|rgb\((?:\s*\d+\s*,){2}\s*[\d]+\)|hsl\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)\))$/i';
 
         return preg_match($regex, $color);
     }
+
     /**
      * Sanitizes the cell string and wraps it with quotes
+     *
      * @param $string
      * @param $connection
      *
@@ -1802,7 +1884,7 @@ class WDTTools
             $isPostgreSql = $vendor === Connection::$POSTGRESQL;
 
             if ($isPostgreSql) {
-                if (version_compare(WDT_PHP_SERVER_VERSION, '8.1', '>')){
+                if (version_compare(WDT_PHP_SERVER_VERSION, '8.1', '>')) {
                     $connectionPostgreSql = PgSqlConnection::getInstance($connection);
                     $string = pg_escape_string($connectionPostgreSql, $string);
                     $string = stripslashes($string);
@@ -1825,7 +1907,9 @@ class WDTTools
 
     /**
      * Check if passed string is HTML element
+     *
      * @param $string
+     *
      * @return bool
      */
     public static function isHtml($string)
@@ -1835,14 +1919,16 @@ class WDTTools
 
     /**
      * Function that strip JS attributes to prevent XSS attacks
+     *
      * @param $htmlString
+     *
      * @return bool|string
      */
     public static function stripJsAttributes($htmlString)
     {
         $htmlString = stripcslashes($htmlString);
         $htmlString = '<div>' . $htmlString . '</div>';
-        if ( function_exists( 'mb_convert_encoding' ) ) {
+        if (function_exists('mb_convert_encoding')) {
             $domd = new DOMDocument();
             $domd_status = @$domd->loadHTML(mb_convert_encoding($htmlString, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING);
             if ($domd_status) {
@@ -1869,7 +1955,7 @@ class WDTTools
     public static function wdtUIKitEnqueue()
     {
         if (get_option('wdtIncludeGoogleFonts'))
-            wp_enqueue_style( 'wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',  array(), WDT_CURRENT_VERSION);
+            wp_enqueue_style('wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-select', WDT_CSS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-tagsinput', WDT_CSS_PATH . 'bootstrap/bootstrap-tagsinput/bootstrap-tagsinput.css', array(), WDT_CURRENT_VERSION);
@@ -1887,11 +1973,14 @@ class WDTTools
         wp_enqueue_style('wdt-uikit', WDT_CSS_PATH . 'uikit/uikit.css', array(), WDT_CURRENT_VERSION);
 
         if (!is_admin() && get_option('wdtIncludeBootstrap') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         } else if (is_admin() && get_option('wdtIncludeBootstrapBackEnd') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         } else {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         }
         if (is_admin() && (get_option('wdtGettingStartedPageStatus') != 1)) {
             wp_enqueue_script('wdt-bootstrap-tour', WDT_JS_PATH . 'bootstrap/bootstrap-tour/bootstrap-tour.js', array('jquery'), WDT_CURRENT_VERSION, true);
@@ -1912,18 +2001,21 @@ class WDTTools
     public static function wdtUIKitEnqueueNotEdit()
     {
         if (get_option('wdtIncludeGoogleFonts'))
-            wp_enqueue_style( 'wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',  array(), WDT_CURRENT_VERSION);
+            wp_enqueue_style('wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-select', WDT_CSS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-animate', WDT_CSS_PATH . 'animate/animate.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-uikit', WDT_CSS_PATH . 'uikit/uikit.css', array(), WDT_CURRENT_VERSION);
 
         if (!is_admin() && get_option('wdtIncludeBootstrap') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         } else if (is_admin() && get_option('wdtIncludeBootstrapBackEnd') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         } else {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery',
+                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
         }
 
         wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
@@ -1933,6 +2025,7 @@ class WDTTools
 
     /**
      * Helper method to add PHP vars to JS vars
+     *
      * @param $varName
      * @param $phpVar
      */
@@ -1959,8 +2052,10 @@ class WDTTools
     /**
      * Helper method that converts provided String to Unix Timestamp
      * based on provided date format
+     *
      * @param $dateString
      * @param $dateFormat
+     *
      * @return false|int
      */
     public static function wdtConvertStringToUnixTimestamp($dateString, $dateFormat)
@@ -1968,9 +2063,14 @@ class WDTTools
         if ($dateString == '') return null;
         if (!$dateFormat) $dateFormat = get_option('wdtDateFormat');
 
-        if (null !== $dateFormat && substr($dateFormat, 0,5) === 'd/m/Y') {
+        if (null !== $dateFormat && substr($dateFormat, 0, 5) === 'd/m/Y') {
             $returnDate = strtotime(str_replace('/', '-', $dateString));
-        } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y', 'm-d-y','d.m.y','Y.m.d','d-m-Y'])) {
+        } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y',
+                'm-d-Y',
+                'm-d-y',
+                'd.m.y',
+                'Y.m.d',
+                'd-m-Y'])) {
             $returnDate = strtotime(str_replace(['.', '-'], '/', $dateString));
         } else if (null !== $dateFormat && $dateFormat == 'm/Y') {
             $dateObject = DateTime::createFromFormat($dateFormat, $dateString);
@@ -1986,17 +2086,18 @@ class WDTTools
     /**
      * Helper method that converts provided Unix Timestamp to string
      * based on provided date format
+     *
      * @param $columnType
      * @param $displayColumnNameData
      */
     public static function wdtConvertUnixTimestampToString($columnType, $displayColumnNameData)
     {
-        if ($columnType == 'date'){
-            $displayColumnNameData =  date(get_option('wdtDateFormat'), $displayColumnNameData);
-        } else if ($columnType == 'datetime'){
-            $displayColumnNameData =  date(get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'), $displayColumnNameData);
-        } else if ($columnType == 'time'){
-            $displayColumnNameData =  date(get_option('wdtTimeFormat'), $displayColumnNameData);
+        if ($columnType == 'date') {
+            $displayColumnNameData = date(get_option('wdtDateFormat'), $displayColumnNameData);
+        } else if ($columnType == 'datetime') {
+            $displayColumnNameData = date(get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'), $displayColumnNameData);
+        } else if ($columnType == 'time') {
+            $displayColumnNameData = date(get_option('wdtTimeFormat'), $displayColumnNameData);
         }
 
         return $displayColumnNameData;
@@ -2004,7 +2105,9 @@ class WDTTools
 
     /**
      * Show error message
+     *
      * @param $errorMessage
+     *
      * @return string
      */
     public static function wdtShowError($errorMessage)
@@ -2019,8 +2122,10 @@ class WDTTools
 
     /**
      * Helper function to generate unique MySQL column headers
+     *
      * @param $header
      * @param $existing_headers
+     *
      * @return mixed|string
      */
     public static function generateMySQLColumnName($header, $existing_headers)
@@ -2074,7 +2179,9 @@ class WDTTools
 
     /**
      * Helper function to translate special UTF-8 to latin for MySQL
+     *
      * @param $text
+     *
      * @return mixed|string
      */
     public static function slugify($text)
@@ -2217,6 +2324,7 @@ class WDTTools
      * Get table count from database
      *
      * @param $filter
+     *
      * @return null|string
      */
     public static function getTablesCount($filter)
@@ -2231,6 +2339,7 @@ class WDTTools
      * Get data for last insert table from database
      *
      * @param $filter
+     *
      * @return stdClass
      */
     public static function getLastTableData($filter)
@@ -2258,6 +2367,7 @@ class WDTTools
      * Convert Table type for readable content
      *
      * @param $tableType
+     *
      * @return string
      */
     public static function getConvertedTableType($tableType)
@@ -2325,10 +2435,10 @@ class WDTTools
         }
 
         if (!(Connection::isSeparate($tableData->connection))) {
-            if ($idValCheck != '0'){
-                $res = $wpdb->query($wpdb->prepare( "SELECT `{$idColumnName}` FROM {$mySqlTableName} WHERE `{$idColumnName}` = %d AND `{$userIDColumnName}` = %d", $idValCheck, get_current_user_id() ));
-                if ( !$res){
-                    if ($action == 'delete'){
+            if ($idValCheck != '0') {
+                $res = $wpdb->query($wpdb->prepare("SELECT `{$idColumnName}` FROM {$mySqlTableName} WHERE `{$idColumnName}` = %d AND `{$userIDColumnName}` = %d", $idValCheck, get_current_user_id()));
+                if (!$res) {
+                    if ($action == 'delete') {
                         $returnResult['error'] = __('User do not have permissions to delete this row! ', 'wpdatatables');
                     } else {
                         $returnResult['error'] = __('User do not have permission to update data!', 'wpdatatables');
@@ -2352,7 +2462,7 @@ class WDTTools
             if ($idValCheck != '0') {
                 $query = "SELECT {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} FROM {$mySqlTableName} WHERE {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} = {$idValCheck} AND {$leftSysIdentifier}{$userIDColumnName}{$rightSysIdentifier} =" . get_current_user_id();
                 if (!$sql->getField($query)) {
-                    if ($action == 'delete'){
+                    if ($action == 'delete') {
                         $returnResult['error'] = __('User does not have permissions to delete this row! ', 'wpdatatables');
                     } else {
                         $returnResult['error'] = __('User does not have permission to update data!', 'wpdatatables');

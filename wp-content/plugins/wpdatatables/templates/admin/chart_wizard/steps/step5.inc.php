@@ -9,7 +9,8 @@
 <div class="m-b-20">
     <label class="m-b-16"><?php esc_html_e('Paste this shortcode to render this chart', 'wpdatatables'); ?></label>
     <div id="wpdt-shortcode-container">
-        <a class="wdt-copy-shortcode" data-toggle="tooltip" data-shortcode-type="chart"  data-placement="right"  title="<?php esc_attr_e('Click to copy shortcode', 'wpdatatables'); ?>">
+        <a class="wdt-copy-shortcode" data-toggle="tooltip" data-shortcode-type="chart" data-placement="right"
+           title="<?php esc_attr_e('Click to copy shortcode', 'wpdatatables'); ?>">
             <i class="wpdt-icon-copy"></i>
         </a>
         <span id="wdt-chart-shortcode-id"></span>

@@ -16,14 +16,16 @@
                <?php esc_html_e('If you cannot find this email please follow the next instructions:.', 'wpdatatables'); ?></p>
 
                <ul class="m-l-20" style="list-style: disc;">
-                   <li><?php esc_html_e('Access the store page ', 'wpdatatables'); ?> <a href="https://store.tms-plugins.com/login"
-                                                                                 target="_blank"><?php esc_html_e('here', 'wpdatatables'); ?></a>,</li>
+                   <li><?php esc_html_e('Access the store page ', 'wpdatatables'); ?> <a
+                               href="https://store.tms-plugins.com/login"
+                               target="_blank"><?php esc_html_e('here', 'wpdatatables'); ?></a>,</li>
                 <li><?php esc_html_e('Choose Forgot Password option,', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('Enter the email that you have used during the purchase and click Send recovery email,', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('Use the password and email to log in to the store page,', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('Copy the purchase code from your dashboard page on the store and paste it below.', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('If you still cannot find the purchase code please contact our support ', 'wpdatatables'); ?> <a
-                            href="https://tmsplugins.ticksy.com/" target="_blank"><?php esc_html_e('here.', 'wpdatatables'); ?></a></li>
+                            href="https://tmsplugins.ticksy.com/"
+                            target="_blank"><?php esc_html_e('here.', 'wpdatatables'); ?></a></li>
                </ul>
             </span>
             </div>
@@ -81,7 +83,8 @@
                                             <i class="wpdt-icon-info-circle-full"></i>
                                             <span class="wdt-alert-title f-600">
                                         <?php esc_html_e('Your purchase code has been hidden for security reasons. You can find it on your', 'wpdatatables'); ?>
-                                        <a href="https://store.tms-plugins.com/login" target="_blank"><?php esc_html_e('store page', 'wpdatatables'); ?></a>.
+                                        <a href="https://store.tms-plugins.com/login"
+                                           target="_blank"><?php esc_html_e('store page', 'wpdatatables'); ?></a>.
                                     </span>
                                         </div>
                                     </div>
@@ -151,7 +154,7 @@
         </div>
         <!-- /Panel Group -->
 
-        <?php do_action_deprecated( 'wdt_add_activation', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_activation' ); ?>
+        <?php do_action_deprecated('wdt_add_activation', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_activation'); ?>
         <?php do_action('wpdatatables_add_activation'); ?>
 
     </div>

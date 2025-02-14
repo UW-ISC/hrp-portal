@@ -24,21 +24,37 @@
                     <div class="fg-line m-l-10">
                         <span id="wdt-show-all"><?php esc_attr_e('Show/Hide All'); ?></span>
                     </div>
-                    <?php if (isset($tableData) && $tableData->table->editable != 0) {?>
-                        <input id="wdt-select-all-column-editing" type="checkbox" class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Enable/disable editing'); ?>">
-                    <?php }?>
-                    <?php if (isset($tableData->wdtJsonConfig) && isset($tableData->wdtJsonConfig->masterDetail)) {?>
-                        <input id="wdt-select-all-column-master-detail" type="checkbox" class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide Master-detail column'); ?>">
-                    <?php }?>
-                    <?php if(isset($tableData)) do_action_deprecated( 'wpdt_add_small_column_block', array($tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_small_column_block' );?>
-                    <?php if(isset($tableData)) do_action('wpdatatables_add_small_column_block', $tableData);?>
+                    <?php if (isset($tableData) && $tableData->table->editable != 0) { ?>
+                        <input id="wdt-select-all-column-editing" type="checkbox"
+                               class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip"
+                               title="<?php esc_attr_e('Enable/disable editing'); ?>">
+                    <?php } ?>
+                    <?php if (isset($tableData->wdtJsonConfig) && isset($tableData->wdtJsonConfig->masterDetail)) { ?>
+                        <input id="wdt-select-all-column-master-detail" type="checkbox"
+                               class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip"
+                               title="<?php esc_attr_e('Show/hide Master-detail column'); ?>">
+                    <?php } ?>
+                    <?php if (isset($tableData)) do_action_deprecated('wpdt_add_small_column_block', array($tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_small_column_block'); ?>
+                    <?php if (isset($tableData)) do_action('wpdatatables_add_small_column_block', $tableData); ?>
 
-                    <input id="wdt-select-all-column-global-search" type="checkbox" class="pull-right wdt-column-block-icon formula-remove-option select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Enable/disable in global search'); ?>">
-                    <input id="wdt-select-all-column-filters" type="checkbox" class="pull-right wdt-column-block-icon formula-remove-option select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide filters'); ?>">
-                    <input id="wdt-select-all-column-sorting" type="checkbox" class="pull-right wdt-column-block-icon formula-remove-option select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide sorting'); ?>">
-                    <input id="wdt-select-all-column-visibility" type="checkbox" class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide the columns'); ?>">
-                    <input id="wdt-select-all-column-mobile-visibility" type="checkbox" class="pull-right wdt-column-block-icon deselect-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide on mobile'); ?>">
-                    <input id="wdt-select-all-column-tablet-visibility" type="checkbox" class="pull-right wdt-column-block-icon deselect-all-columns" data-toggle="tooltip" title="<?php esc_attr_e('Show/hide on tablet'); ?>">
+                    <input id="wdt-select-all-column-global-search" type="checkbox"
+                           class="pull-right wdt-column-block-icon formula-remove-option select-all-columns"
+                           data-toggle="tooltip" title="<?php esc_attr_e('Enable/disable in global search'); ?>">
+                    <input id="wdt-select-all-column-filters" type="checkbox"
+                           class="pull-right wdt-column-block-icon formula-remove-option select-all-columns"
+                           data-toggle="tooltip" title="<?php esc_attr_e('Show/hide filters'); ?>">
+                    <input id="wdt-select-all-column-sorting" type="checkbox"
+                           class="pull-right wdt-column-block-icon formula-remove-option select-all-columns"
+                           data-toggle="tooltip" title="<?php esc_attr_e('Show/hide sorting'); ?>">
+                    <input id="wdt-select-all-column-visibility" type="checkbox"
+                           class="pull-right wdt-column-block-icon select-all-columns" data-toggle="tooltip"
+                           title="<?php esc_attr_e('Show/hide the columns'); ?>">
+                    <input id="wdt-select-all-column-mobile-visibility" type="checkbox"
+                           class="pull-right wdt-column-block-icon deselect-all-columns" data-toggle="tooltip"
+                           title="<?php esc_attr_e('Show/hide on mobile'); ?>">
+                    <input id="wdt-select-all-column-tablet-visibility" type="checkbox"
+                           class="pull-right wdt-column-block-icon deselect-all-columns" data-toggle="tooltip"
+                           title="<?php esc_attr_e('Show/hide on tablet'); ?>">
                 </div>
                 <div class="wdt-columns-container">
                     <!-- Column blocks go here -->
@@ -47,7 +63,8 @@
             </div>
             <div class="modal-footer">
                 <hr>
-                <button type="button" class="btn btn-danger btn-icon-text" data-dismiss="modal" id="wdt-cancel-columns-list">
+                <button type="button" class="btn btn-danger btn-icon-text" data-dismiss="modal"
+                        id="wdt-cancel-columns-list">
                     <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                 </button>
                 <button type="button" class="btn btn-primary btn-icon-text" id="wdt-apply-columns-list">

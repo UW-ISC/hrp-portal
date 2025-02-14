@@ -11,8 +11,8 @@ let constructedWooCommerceData = {
 
 const tax_query_parameters = ['product_type', 'product_tag', 'product_cat', 'product_visibility'];
 const meta_query_parameters = ['_sku', 'total_sales', '_stock', '_stock_status', '_backorders',
-    '_wc_average_rating', '_wc_review_count', '_upsell_ids', '_crosssell_ids', '_price', '_regular_price', '_sale_price',
-    '_width', '_length', '_weight', '_height'];
+    '_wc_average_rating', '_wc_review_count', '_upsell_ids', '_crosssell_ids', '_width', '_length', '_weight', '_height'];
+const price_meta_query_parameters = ['_price', '_regular_price', '_sale_price', '_price_operator', '_regular_price_operator', '_sale_price_operator'];
 const metaQueryMappings = {
     '_sku': {compare: '=', type: 'CHAR'},
     'total_sales': {compare: '=', type: 'NUMERIC'},
@@ -24,9 +24,6 @@ const metaQueryMappings = {
     '_wc_review_count': {compare: '=', type: 'NUMERIC'},
     '_upsell_ids': {compare: 'REGEXP', type: 'CHAR'},
     '_crosssell_ids': {compare: 'REGEXP', type: 'CHAR'},
-    '_price': {compare: '=', type: 'NUMERIC'},
-    '_regular_price': {compare: '=', type: 'NUMERIC'},
-    '_sale_price': {compare: '=', type: 'NUMERIC'},
     '_width': {compare: '=', type: 'NUMERIC'},
     '_length': {compare: '=', type: 'NUMERIC'},
     '_weight': {compare: '=', type: 'NUMERIC'},
@@ -35,6 +32,24 @@ const metaQueryMappings = {
 
 (function ($) {
     let wdtNonce = $('#wdtNonce').val();
+
+    /**
+     * Toggle the display of range inputs
+     */
+    $('.price-comparison-operator').on('change', function () {
+        let target = $(this).data('target');
+        let operator = $(this).val();
+        let rangeContainer = $(`.wdt-woo-price-range-inputs[data-parent="${target}"]`);
+        let singleInputContainer = $(`.wdt-custom-number-input[data-input="${target}"]`);
+
+        if (operator === 'between') {
+            rangeContainer.show();
+            singleInputContainer.hide();
+        } else {
+            rangeContainer.hide();
+            singleInputContainer.show();
+        }
+    });
 
     /**
      * Change the WP Posts Query preview
@@ -50,6 +65,8 @@ const metaQueryMappings = {
             handleTaxParameter(inputValue, wooParameter);
         } else if (meta_query_parameters.includes(wooParameter)) {
             handleMetaParameter(inputValue, wooParameter);
+        } else if (price_meta_query_parameters.includes(wooParameter)) {
+            handlePriceParameter(inputValue, wooParameter);
         } else {
             constructedWooCommerceData[this.dataset.value] = inputValue;
         }
@@ -157,13 +174,81 @@ const metaQueryMappings = {
         }
     }
 
+    function handlePriceParameter(inputValue, wooParameter) {
+        if (inputValue.length === 0 || inputValue === '') {
+            delete constructedWooCommerceData.meta_query[wooParameter];
+            return;
+        }
+
+        if (wooParameter.endsWith('_operator')) {
+            handlePriceOperatorChange(inputValue, wooParameter);
+        } else {
+            handlePriceChange(inputValue, wooParameter);
+        }
+    }
+
+    function handlePriceOperatorChange(operator, wooParameter) {
+        let priceParameter = wooParameter.replace(/_operator$/, '');
+        if (operator === 'between') {
+            const minPrice = $(`.wdt-woo-price-range-inputs[data-parent="${priceParameter}"] .price-range-min`).val();
+            const maxPrice = $(`.wdt-woo-price-range-inputs[data-parent="${priceParameter}"] .price-range-max`).val();
+
+            if (minPrice && maxPrice) {
+                constructedWooCommerceData.meta_query[priceParameter] = {
+                    key: priceParameter,
+                    value: [parseFloat(minPrice), parseFloat(maxPrice)],
+                    compare: 'BETWEEN',
+                    type: 'NUMERIC'
+                };
+            } else {
+                delete constructedWooCommerceData.meta_query[priceParameter];
+            }
+        } else {
+            const price = $(`input[data-value="${priceParameter}"]`).val();
+            constructedWooCommerceData.meta_query[priceParameter] = {
+                key: priceParameter,
+                value: parseFloat(price),
+                compare: operator,
+                type: 'NUMERIC'
+            };
+        }
+    }
+
+    function handlePriceChange(inputValue, wooParameter) {
+        let operatorSelector = $(`.price-comparison-operator[data-target="${wooParameter}"]`);
+        let operator = operatorSelector.val();
+
+        if (operator === 'between') {
+            const minPrice = $(`.wdt-woo-price-range-inputs[data-parent="${wooParameter}"] .price-range-min`).val();
+            const maxPrice = $(`.wdt-woo-price-range-inputs[data-parent="${wooParameter}"] .price-range-max`).val();
+
+            if (minPrice && maxPrice) {
+                constructedWooCommerceData.meta_query[wooParameter] = {
+                    key: wooParameter,
+                    value: [parseFloat(minPrice), parseFloat(maxPrice)],
+                    compare: 'BETWEEN',
+                    type: 'NUMERIC'
+                };
+            } else {
+                delete constructedWooCommerceData.meta_query[wooParameter];
+            }
+        } else {
+            constructedWooCommerceData.meta_query[wooParameter] = {
+                key: wooParameter,
+                value: parseFloat(inputValue),
+                compare: operator,
+                type: 'NUMERIC'
+            };
+        }
+    }
+
     function handleProductVisibility(inputValue, wooParameter) {
         // Clear the tax query if "Visible" is chosen
         if (!inputValue.length || !inputValue[0]) {
             delete constructedWooCommerceData.tax_query[wooParameter];
             return;
         }
-      
+
         const taxQueryConditions = inputValue.map((value) => {
             if (value === 'exclude-from-catalog exclude-from-search') {
                 // "Hidden" requires both terms, so use "AND"

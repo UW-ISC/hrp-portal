@@ -22,9 +22,11 @@ class Placeholders
     public static function init()
     {
         // Add placeholders settings block in table settings
-        add_action('wpdatatables_add_table_placeholders_elements', array('WDTIntegration\Placeholders', 'addSettingsBlock'));
+        add_action('wpdatatables_add_table_placeholders_elements', array('WDTIntegration\Placeholders',
+            'addSettingsBlock'));
 
     }
+
     public static function maybeApply($string)
     {
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wpdb;
@@ -55,16 +57,14 @@ class Placeholders
             $string = str_replace('%CURRENT_USER_LOGIN%', "{$wdtCurUserLogin}", $string);
         }
         if (strpos($string, '%CURRENT_POST_ID%') !== false) {
-            if (isset($table->currentPostIdPlaceholder)) {
-                $currentPostIdPlaceholder = $table->currentPostIdPlaceholder;
-            } elseif (isset($_POST['currentPostIdPlaceholder'])) {
-                $currentPostIdPlaceholder = $_POST['currentPostIdPlaceholder'];
+            $currentPostIdPlaceholder = $table->currentPostIdPlaceholder ?? $_POST['currentPostIdPlaceholder'] ?? null;
+
+            $wdtCurPostId = $currentPostIdPlaceholder ?? get_the_ID();
+
+            // Fall back to global post object if necessary
+            if (!$wdtCurPostId && isset($GLOBALS['post'])) {
+                $wdtCurPostId = (int)$GLOBALS['post']->ID;
             }
-
-            $url = wp_get_referer();
-            $postID = url_to_postid($url);
-
-            $wdtCurPostId = $currentPostIdPlaceholder ?? (!empty($postID) ? $postID : get_the_ID());
 
             $string = str_replace('%CURRENT_POST_ID%', $wdtCurPostId, $string);
         }
@@ -188,11 +188,12 @@ class Placeholders
 
         return $string;
     }
+
     public static function maybeApplyInColumns($value)
     {
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
-        if ($value && !is_array($value) && !is_object ($value)) {
+        if ($value && !is_array($value) && !is_object($value)) {
             // Current user ID
             if (strpos($value, '%CURRENT_USER_ID%') !== false) {
                 $value = str_replace('%CURRENT_USER_ID%', get_current_user_id(), $value);
@@ -201,7 +202,8 @@ class Placeholders
                 $value = str_replace('%CURRENT_USER_LOGIN%', wp_get_current_user()->user_login, $value);
             }// Current post id
             if (strpos($value, '%CURRENT_POST_ID%') !== false) {
-                $value = str_replace('%CURRENT_POST_ID%', get_the_ID(), $value);
+                $currentPostId = get_the_ID() ?? ((int)$GLOBALS['post']->ID ?? null);
+                $value = str_replace('%CURRENT_POST_ID%', $currentPostId, $value);
             }// Current user first name
             if (strpos($value, '%CURRENT_USER_FIRST_NAME%') !== false) {
                 $value = str_replace('%CURRENT_USER_FIRST_NAME%', wp_get_current_user()->first_name, $value);

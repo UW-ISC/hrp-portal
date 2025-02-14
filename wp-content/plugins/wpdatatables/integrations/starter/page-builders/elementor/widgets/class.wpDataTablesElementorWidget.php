@@ -4,24 +4,29 @@ namespace Elementor;
 
 use WDTConfigController;
 
-class WPDataTables_Elementor_Widget extends Widget_Base {
+class WPDataTables_Elementor_Widget extends Widget_Base
+{
 
     private $_allTables;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'wpdatatables';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return 'wpDataTables';
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'wpdt-table-logo';
     }
 
-    public function get_categories() {
-        return [ 'wpdatatables-elementor' ];
+    public function get_categories()
+    {
+        return ['wpdatatables-elementor'];
     }
 
     /**
@@ -40,19 +45,20 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         $this->_allTables = $allTables;
     }
 
-    protected function register_controls() {
+    protected function register_controls()
+    {
 
         $this->start_controls_section(
             'wpdatatables_section',
             [
-                'label' => __( 'wpDataTable content', 'wpdatatables' ),
+                'label' => __('wpDataTable content', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-table-id',
             [
-                'label' => __( 'Select wpDataTable:', 'wpdatatables' ),
+                'label' => __('Select wpDataTable:', 'wpdatatables'),
                 'type' => Controls_Manager::SELECT,
                 'options' => WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'tables'),
                 'default' => 0
@@ -62,11 +68,11 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         $this->add_control(
             'wpdt-view',
             [
-                'label' => __( 'Choose table view:', 'wpdatatables' ),
+                'label' => __('Choose table view:', 'wpdatatables'),
                 'type' => Controls_Manager::SELECT,
                 'options' => [
-                    'regular' => __( 'Regular wpDataTable', 'wpdatatables' ),
-                    'excel-like' => __( 'Excel-like wpDataTable', 'wpdatatables' ),
+                    'regular' => __('Regular wpDataTable', 'wpdatatables'),
+                    'excel-like' => __('Excel-like wpDataTable', 'wpdatatables'),
                 ],
                 'default' => 'regular',
             ]
@@ -75,107 +81,108 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         $this->add_control(
             'wpdt-var1',
             [
-                'label' => __( 'Set placeholder %VAR1%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR1%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR1% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR1% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var2',
             [
-                'label' => __( 'Set placeholder %VAR2%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR2%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR2% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR2% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var3',
             [
-                'label' => __( 'Set placeholder %VAR3%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR3%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR3% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR3% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var4',
             [
-                'label' => __( 'Set placeholder %VAR4%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR4%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR4% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR4% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var5',
             [
-                'label' => __( 'Set placeholder %VAR5%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR5%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR5% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR5% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var6',
             [
-                'label' => __( 'Set placeholder %VAR6%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR6%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR6% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR6% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var7',
             [
-                'label' => __( 'Set placeholder %VAR7%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR7%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR7% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR7% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var8',
             [
-                'label' => __( 'Set placeholder %VAR8%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR8%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR8% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR8% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-var9',
             [
-                'label' => __( 'Set placeholder %VAR9%:', 'wpdatatables' ),
+                'label' => __('Set placeholder %VAR9%:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert %VAR9% placeholder', 'wpdatatables' ),
+                'placeholder' => __('Insert %VAR9% placeholder', 'wpdatatables'),
             ]
         );
 
         $this->add_control(
             'wpdt-file-name',
             [
-                'label' => __( 'Set name for export file:', 'wpdatatables' ),
+                'label' => __('Set name for export file:', 'wpdatatables'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'placeholder' => __( 'Insert name for export file', 'wpdatatables' ),
+                'placeholder' => __('Insert name for export file', 'wpdatatables'),
             ]
         );
 
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
         self::setAllTables(WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'tables'));
         $settings = $this->get_settings_for_display();
         $tableShortcodeParams = '[wpdatatable id=' . $settings['wpdt-table-id'];

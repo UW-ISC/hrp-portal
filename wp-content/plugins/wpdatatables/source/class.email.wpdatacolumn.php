@@ -10,6 +10,7 @@ class EmailWDTColumn extends WDTColumn
 
     /**
      * EmailWDTColumn constructor.
+     *
      * @param array $properties
      */
     public function __construct($properties = array())
@@ -20,6 +21,7 @@ class EmailWDTColumn extends WDTColumn
 
     /**
      * @param $content
+     *
      * @return mixed|string
      */
     public function prepareCellOutput($content)

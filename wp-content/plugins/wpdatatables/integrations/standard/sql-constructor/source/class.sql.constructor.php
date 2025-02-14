@@ -50,7 +50,7 @@ class WDTSQLConstructor extends wpDataTableConstructor
 
         $this->_table_data = apply_filters_deprecated(
             'wdt_before_generate_mysql_based_query',
-            array( $tableData ),
+            array($tableData),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_before_generate_mysql_based_query'
         );
@@ -100,7 +100,7 @@ class WDTSQLConstructor extends wpDataTableConstructor
         global $wpdb;
         $this->_table_data = apply_filters_deprecated(
             'wdt_before_generate_wp_based_query',
-            array( $tableData ),
+            array($tableData),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_before_generate_wp_based_query'
         );
@@ -1078,7 +1078,6 @@ class WDTSQLConstructor extends wpDataTableConstructor
         return $res;
 
     }
-
 
 
     /**

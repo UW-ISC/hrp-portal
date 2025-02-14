@@ -48,7 +48,8 @@
 
                 <div class="card-body card-padding" id="wdt-chart-wizard-body">
                     <?php wp_nonce_field('wdtChartWizardNonce', 'wdtNonce'); ?>
-                    <input type="hidden" id="wp-data-chart-id" value="<?php if(isset($chartId)) echo esc_attr($chartId) ?>"/>
+                    <input type="hidden" id="wp-data-chart-id"
+                           value="<?php if (isset($chartId)) echo esc_attr($chartId) ?>"/>
                     <input type="hidden" id="wdt-browse-charts-url"
                            value="<?php echo admin_url('admin.php?page=wpdatatables-charts'); ?>"/>
 
@@ -217,7 +218,7 @@
                     <div class="fg-line">
                         <div class="row">
                             <div class="col-sm-12" style="display: flex">
-                                <input type="text" name="font-name" id="series-image-{{:#index}}" value="" class="form-control input-sm series-image" placeHolder="<?php esc_attr_e('Upload an image or paste URL','wpdatatables'); ?>" />
+                                <input type="text" name="font-name" id="series-image-{{:#index}}" value="" class="form-control input-sm series-image" placeHolder="<?php esc_attr_e('Upload an image or paste URL', 'wpdatatables'); ?>" />
                                 <button id="wdt-upload-chart-image-{{:#index}}" class="wdt-series-image-button"><span class="wpdt-icon-image"></span></button>
                             </div>
                         </div>
@@ -235,6 +236,7 @@
             </div>
         </div>
     {{/for}}
+
 
 </script>
 
@@ -269,5 +271,6 @@
             {{/for}}
         </tbody>
     </table>
+
 
 </script>

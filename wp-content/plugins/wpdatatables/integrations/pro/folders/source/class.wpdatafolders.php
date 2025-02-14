@@ -98,22 +98,26 @@ class WPDataFolders
         add_filter('wpdatatables_filter_browse_charts_query', [$this, 'filterQuery'], 10, 2);
         add_filter('wpdatatables_filter_browse_charts_order_current_url', [$this, 'filterPaginationCurrentUrl'], 10, 2);
         add_filter('wpdatatables_filter_browse_charts_column_headers', [$this, 'filterColumnHeaders'], 10, 2);
-        add_filter('wpdatatables_filter_browse_charts_pagination_page_current_url', [$this, 'filterColumnHeaders'], 10, 2);
+        add_filter('wpdatatables_filter_browse_charts_pagination_page_current_url', [$this,
+            'filterColumnHeaders'], 10, 2);
 
         // Filter Report Browse page
         add_filter('reportbuilder_filter_browse_reports_all_columns', [$this, 'filterAllColumns'], 10, 2);
         add_filter('reportbuilder_filter_browse_reports_query', [$this, 'filterQuery'], 10, 2);
         add_filter('reportbuilder_filter_browse_reports_count_query', [$this, 'filterCountQuery'], 10, 2);
-        add_filter('reportbuilder_filter_browse_reports_order_current_url', [$this, 'filterPaginationCurrentUrl'], 10, 2);
+        add_filter('reportbuilder_filter_browse_reports_order_current_url', [$this,
+            'filterPaginationCurrentUrl'], 10, 2);
         add_filter('reportbuilder_filter_browse_reports_column_headers', [$this, 'filterColumnHeaders'], 10, 2);
-        add_filter('reportbuilder_filter_browse_reports_pagination_page_current_url', [$this, 'filterColumnHeaders'], 10, 2);
+        add_filter('reportbuilder_filter_browse_reports_pagination_page_current_url', [$this,
+            'filterColumnHeaders'], 10, 2);
 
         // Filter Table Browse page
         add_filter('wpdatatables_filter_browse_tables_all_columns', [$this, 'filterAllColumns'], 10, 2);
         add_filter('wpdatatables_filter_browse_tables_query', [$this, 'filterQuery'], 10, 2);
         add_filter('wpdatatables_filter_browse_tables_count_query', [$this, 'filterCountQuery'], 10, 2);
         add_filter('wpdatatables_filter_browse_tables_pagination_page_url', [$this, 'filterPaginationUrl'], 10, 4);
-        add_filter('wpdatatables_filter_browse_tables_pagination_page_current_url', [$this, 'filterPaginationCurrentUrl'], 10, 2);
+        add_filter('wpdatatables_filter_browse_tables_pagination_page_current_url', [$this,
+            'filterPaginationCurrentUrl'], 10, 2);
         add_filter('wpdatatables_filter_browse_tables_order_current_url', [$this, 'filterPaginationCurrentUrl'], 10, 2);
         add_filter('wpdatatables_filter_browse_tables_column_headers', [$this, 'filterColumnHeaders'], 10, 2);
         // Add data in columns for browse table
@@ -836,7 +840,7 @@ class WPDataFolders
             if ($action == 'delete') {
                 $instance->deleteFolder($wpdb, $instance, $dbTable, $childrenIDs, $type, $folderID);
                 $data = $instance->getAllUnassigned();
-                if ($data == '0'){
+                if ($data == '0') {
                     $response['success'] = 1;
                     $response['data'] = 0;
                 }
@@ -925,12 +929,14 @@ class WPDataFolders
             }
         }
     }
-    public function deleteItem($id, $type){
+
+    public function deleteItem($id, $type)
+    {
         global $wpdb;
         $wpdb->delete("{$this->getFoldersMetaDB()}",
             array(
                 'type_id' => $id,
-                'type'    => $type
+                'type' => $type
             )
         );
     }
@@ -1283,7 +1289,7 @@ class WPDataFolders
                 'folders'
             ];
 
-            if (get_option('wdtUseSeparateCon')){
+            if (get_option('wdtUseSeparateCon')) {
                 $allowedValues[] = 'connection';
             }
 

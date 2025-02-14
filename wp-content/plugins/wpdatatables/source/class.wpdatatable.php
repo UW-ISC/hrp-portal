@@ -163,7 +163,7 @@ class WPDataTable
     private $_fixedHeaders = false;
     private $_fixedHeadersOffset = 0;
     private $_simple_template_id = 0;
-    private  $_customRowDisplay = '';
+    private $_customRowDisplay = '';
     protected $_transformValueColumns = array();
 
     /**
@@ -232,14 +232,19 @@ class WPDataTable
     {
         $this->_fixedColumns = $fixedcolumns;
     }
-    public function getCusgtomDisplayLength() {
+
+    public function getCusgtomDisplayLength()
+    {
         return $this->_customRowDisplay;
     }
 
-    public function setCustomDisplayLength($customRowDisplay) {
+    public function setCustomDisplayLength($customRowDisplay)
+    {
         $this->_customRowDisplay = $customRowDisplay;
     }
-    public function getLeftFixedColumnsNumber() {
+
+    public function getLeftFixedColumnsNumber()
+    {
         return $this->_fixedLeftColumnsNumber;
     }
 
@@ -859,6 +864,7 @@ class WPDataTable
     {
         $this->_infoBlock = (bool)$infoBlock;
     }
+
     /**
      * @param boolean $paginationOnTop
      */
@@ -866,10 +872,12 @@ class WPDataTable
     {
         $this->_pagination_top = (int)$paginationOnTop;
     }
+
     public function getPaginationOnTop()
     {
         return $this->_pagination_top;
     }
+
     /**
      * @return bool
      */
@@ -1252,6 +1260,7 @@ class WPDataTable
     {
         $this->_table_wcag = $tableWCAG;
     }
+
     public function isLoaderVisible()
     {
         return $this->_loader;
@@ -1261,6 +1270,7 @@ class WPDataTable
     {
         $this->_loader = $loader;
     }
+
     public function getSimpleTemplateId()
     {
         return $this->_simple_template_id;
@@ -1675,7 +1685,7 @@ class WPDataTable
             $dataColumnProperties['globalSearchColumn'] = isset($wdtParameters['globalSearchColumn'][$key]) ? $wdtParameters['globalSearchColumn'][$key] : false;
             $dataColumnProperties = apply_filters_deprecated(
                 'wpdt_filter_data_column_properties',
-                array( $dataColumnProperties, $wdtParameters, $key ),
+                array($dataColumnProperties, $wdtParameters, $key),
                 WDT_INITIAL_STARTER_VERSION,
                 'wpdatatables_filter_data_column_properties'
             );
@@ -1863,7 +1873,7 @@ class WPDataTable
         if (empty($wdtParameters['dates_detected'])
             && count(array_intersect(array('date', 'datetime', 'time'), $wdtColumnTypes))
         ) {
-            if (!($this instanceof WPExcelDataTable && !$this->serverSide())){
+            if (!($this instanceof WPExcelDataTable && !$this->serverSide())) {
                 foreach ($wdtColumnTypes as $key => $columnType) {
                     $currentDateFormat = isset($wdtParameters['dateInputFormat'][$key]) ? $wdtParameters['dateInputFormat'][$key] : null;
                     if (in_array($columnType, array('date', 'datetime', 'time'))) {
@@ -1912,7 +1922,7 @@ class WPDataTable
                 }
             }
         }
-        foreach ($wdtColumnTypes as $key => $columnType){
+        foreach ($wdtColumnTypes as $key => $columnType) {
             foreach ($this->_dataRows as &$dataRow) {
                 if (isset($dataRow[$key])) {
                     $dataRow[$key] = wp_kses_post($dataRow[$key]);
@@ -2930,7 +2940,9 @@ class WPDataTable
                             }
                             $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
-                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            $formula = str_replace(array('$',
+                                '_',
+                                '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
                             foreach ($headers as $header_key => $header_value) {
                                 if (strpos($formula, $header_value) !== false) {
                                     $formula = str_replace($header_value, '  IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
@@ -2999,7 +3011,9 @@ class WPDataTable
                             }
                             $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
-                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            $formula = str_replace(array('$',
+                                '_',
+                                '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
                             foreach ($headers as $header_key => $header_value) {
                                 if (strpos($formula, $header_value) !== false) {
                                     $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
@@ -3068,7 +3082,9 @@ class WPDataTable
                             }
                             $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
-                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            $formula = str_replace(array('$',
+                                '_',
+                                '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
                             foreach ($headers as $header_key => $header_value) {
                                 if (strpos($formula, $header_value) !== false) {
                                     $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
@@ -3137,7 +3153,9 @@ class WPDataTable
                             }
                             $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
-                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            $formula = str_replace(array('$',
+                                '_',
+                                '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
                             foreach ($headers as $header_key => $header_value) {
                                 if (strpos($formula, $header_value) !== false) {
                                     $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
@@ -3292,7 +3310,7 @@ class WPDataTable
             );
             $colObjOptions = apply_filters_deprecated(
                 'wpdt_filter_supplementary_array_column_object',
-                array( $colObjOptions, $wdtParameters, $dataColumn_key ),
+                array($colObjOptions, $wdtParameters, $dataColumn_key),
                 WDT_INITIAL_STARTER_VERSION,
                 'wpdatatables_filter_supplementary_array_column_object'
             );
@@ -4003,7 +4021,7 @@ class WPDataTable
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
 
-        do_action_deprecated( 'wdt_enqueue_on_frontend', array($this), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_frontend' );
+        do_action_deprecated('wdt_enqueue_on_frontend', array($this), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_frontend');
         do_action('wpdatatables_enqueue_on_frontend', $this);
     }
 
@@ -4071,7 +4089,7 @@ class WPDataTable
                 }
 
                 if (!empty($duplicateColumns)) {
-                     $this->wdtReoderColumnPositions($duplicateColumns, $positions, $tableData->id);
+                    $this->wdtReoderColumnPositions($duplicateColumns, $positions, $tableData->id);
                 }
             }
             foreach ($tableData->columns as $column) {
@@ -4354,7 +4372,7 @@ class WPDataTable
 
         $params = apply_filters_deprecated(
             'wpdt_filter_column_params',
-            array( $params, $columnData ),
+            array($params, $columnData),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_filter_column_params'
         );
@@ -4411,13 +4429,13 @@ class WPDataTable
 
                 $disableLimit = apply_filters_deprecated(
                     'wpdt_filter_sql_disable_limit',
-                    array( !empty($tableData->disable_limit), $this->connection ),
+                    array(!empty($tableData->disable_limit), $this->connection),
                     WDT_INITIAL_STARTER_VERSION,
                     'wpdatatables_filter_sql_disable_limit'
                 );
                 $disableLimit = apply_filters('wpdatatables_filter_sql_disable_limit', !empty($tableData->disable_limit), $this->connection);
 
-                $params['disable_limit'] = $disableLimit ;
+                $params['disable_limit'] = $disableLimit;
 
 
                 $this->queryBasedConstruct(
@@ -4632,7 +4650,8 @@ class WPDataTable
             $this->prepareRenderingRules($tableData->columns);
         }
 
-        do_action_deprecated( 'wdt_extend_wpdatatable_object', array($this, $tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_extend_wpdatatable_object' );
+        do_action_deprecated('wdt_extend_wpdatatable_object', array($this,
+            $tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_extend_wpdatatable_object');
         do_action('wpdatatables_extend_wpdatatable_object', $this, $tableData);
 
     }
@@ -4866,7 +4885,7 @@ class WPDataTable
 
             $this->_columnsCSS = apply_filters_deprecated(
                 'wpdt_filter_columns_css',
-                array( $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader ),
+                array($this->_columnsCSS, $column, $this->getId(), $cssColumnHeader),
                 WDT_INITIAL_STARTER_VERSION,
                 'wpdatatables_filter_columns_css'
             );
@@ -5703,7 +5722,8 @@ class WPDataTable
         return $wpDataTable;
     }
 
-    public static function wdtReoderColumnPositions($duplicateColumns, $positions, $tableId){
+    public static function wdtReoderColumnPositions($duplicateColumns, $positions, $tableId)
+    {
 
         global $wpdb;
 

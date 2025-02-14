@@ -6,8 +6,8 @@
         <div class="col-sm-4 m-b-16">
 
             <h4 class="c-title-color m-b-2 wdt-beta-feature">
-                <?php esc_html_e( 'Fixed columns', 'wpdatatables' ); ?>
-                <p class="m-b-2 wdt-fixedcolumns wdt-beta-feature"><?php esc_html_e( 'BETA', 'wpdatatables' ); ?></p>
+                <?php esc_html_e('Fixed columns', 'wpdatatables'); ?>
+                <p class="m-b-2 wdt-fixedcolumns wdt-beta-feature"><?php esc_html_e('BETA', 'wpdatatables'); ?></p>
                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#fixed-columns-hint"
                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
             </h4>
@@ -15,11 +15,11 @@
             <!-- Hidden popover for fixed header -->
             <div class="hidden" id="fixed-columns-hint">
                 <div class="popover-heading">
-                    <?php esc_html_e( 'Fixed columns', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Fixed columns', 'wpdatatables'); ?>
                 </div>
 
                 <div class="popover-body">
-                    <?php esc_html_e( 'Enable this to make columns fixed.', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Enable this to make columns fixed.', 'wpdatatables'); ?>
                 </div>
             </div>
             <!-- /Hidden popover for fixed header -->
@@ -27,14 +27,14 @@
             <div class="toggle-switch" data-ts-color="blue">
                 <input id="wdt-fixed-columns" type="checkbox">
                 <label for="wdt-fixed-columns"
-                       class="ts-label"><?php esc_html_e( 'Enable fixed columns', 'wpdatatables' ); ?></label>
+                       class="ts-label"><?php esc_html_e('Enable fixed columns', 'wpdatatables'); ?></label>
             </div>
         </div>
 
         <div class="col-sm-4 m-b-16 advanced-table-settings-block-fixed-columns hidden">
 
             <h4 class="c-title-color m-b-2">
-                <?php esc_html_e( 'Left columns numbers', 'wpdatatables' ); ?>
+                <?php esc_html_e('Left columns numbers', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin"
                    data-popover-content="#fixed-left-columns-number-hint"
                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
@@ -43,11 +43,11 @@
             <!-- Hidden offset for fixed headers hint -->
             <div class="hidden" id="fixed-left-columns-number-hint">
                 <div class="popover-heading">
-                    <?php esc_html_e( 'Left columns number', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Left columns number', 'wpdatatables'); ?>
                 </div>
 
                 <div class="popover-body">
-                    <?php esc_html_e( 'You can enter the number for fixed left columns here.', 'wpdatatables' ); ?>
+                    <?php esc_html_e('You can enter the number for fixed left columns here.', 'wpdatatables'); ?>
                 </div>
             </div>
             <!-- /Hidden offset for fixed headers hint -->
@@ -72,7 +72,7 @@
         <div class="col-sm-4 m-b-16 advanced-table-settings-block-fixed-columns hidden">
 
             <h4 class="c-title-color m-b-2">
-                <?php esc_html_e( 'Right columns numbers', 'wpdatatables' ); ?>
+                <?php esc_html_e('Right columns numbers', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin"
                    data-popover-content="#fixed-right-columns-number-hint"
                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
@@ -81,11 +81,11 @@
             <!-- Hidden offset for fixed headers hint -->
             <div class="hidden" id="fixed-right-columns-number-hint">
                 <div class="popover-heading">
-                    <?php esc_html_e( 'Right columns number', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Right columns number', 'wpdatatables'); ?>
                 </div>
 
                 <div class="popover-body">
-                    <?php esc_html_e( 'You can enter the number for fixed right columns here.', 'wpdatatables' ); ?>
+                    <?php esc_html_e('You can enter the number for fixed right columns here.', 'wpdatatables'); ?>
                 </div>
             </div>
             <!-- /Hidden offset for fixed headers hint -->
@@ -112,8 +112,8 @@
         <div class="col-sm-4 m-b-16">
 
             <h4 class="c-title-color m-b-2 wdt-beta-feature">
-                <?php esc_html_e( 'Fixed headers', 'wpdatatables' ); ?>
-                <p class="m-b-2 wdt-fixedheaders wdt-beta-feature"><?php esc_html_e( 'BETA', 'wpdatatables' ); ?></p>
+                <?php esc_html_e('Fixed headers', 'wpdatatables'); ?>
+                <p class="m-b-2 wdt-fixedheaders wdt-beta-feature"><?php esc_html_e('BETA', 'wpdatatables'); ?></p>
                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#fixed-headers-hint"
                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
             </h4>
@@ -121,11 +121,11 @@
             <!-- Hidden popover for fixed header -->
             <div class="hidden" id="fixed-headers-hint">
                 <div class="popover-heading">
-                    <?php esc_html_e( 'Fixed header', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Fixed header', 'wpdatatables'); ?>
                 </div>
 
                 <div class="popover-body">
-                    <?php esc_html_e( 'Enable this to make header fixed.', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Enable this to make header fixed.', 'wpdatatables'); ?>
                 </div>
             </div>
             <!-- /Hidden popover for fixed header -->
@@ -133,14 +133,14 @@
             <div class="toggle-switch" data-ts-color="blue">
                 <input id="wdt-fixed-header" type="checkbox">
                 <label for="wdt-fixed-header"
-                       class="ts-label"><?php esc_html_e( 'Enable fixed header', 'wpdatatables' ); ?></label>
+                       class="ts-label"><?php esc_html_e('Enable fixed header', 'wpdatatables'); ?></label>
             </div>
         </div>
 
         <div class="col-sm-4 m-b-16 advanced-table-settings-block-fixed-header hidden">
 
             <h4 class="c-title-color m-b-2">
-                <?php esc_html_e( 'Header offset', 'wpdatatables' ); ?>
+                <?php esc_html_e('Header offset', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#fixed-header-offset-hint"
                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
             </h4>
@@ -148,11 +148,11 @@
             <!-- Hidden offset for fixed headers hint -->
             <div class="hidden" id="fixed-header-offset-hint">
                 <div class="popover-heading">
-                    <?php esc_html_e( 'Header offset', 'wpdatatables' ); ?>
+                    <?php esc_html_e('Header offset', 'wpdatatables'); ?>
                 </div>
 
                 <div class="popover-body">
-                    <?php esc_html_e( 'You can enter the offset for fixed header here.', 'wpdatatables' ); ?>
+                    <?php esc_html_e('You can enter the offset for fixed header here.', 'wpdatatables'); ?>
                 </div>
             </div>
             <!-- /Hidden offset for fixed headers hint -->

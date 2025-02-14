@@ -164,12 +164,6 @@ var wpdatatable_plugin_config = {
             jQuery('#wdt-getting-started-page-status').prop('checked', gettingStartedPageStatus);
         }
     },
-    setLiteVSPremiumPageStatus: function (liteVSPremiumPageStatus) {
-        wdt_current_config.wdtLiteVSPremiumPageStatus = liteVSPremiumPageStatus;
-        if (jQuery('#wdt-lite-vs-premium-page-status').val() != liteVSPremiumPageStatus) {
-            jQuery('#wdt-lite-vs-premium-page-status').prop('checked', liteVSPremiumPageStatus);
-        }
-    },
     setIncludeGogleFonts: function (includeGoogleFonts) {
         wdt_current_config.wdtIncludeGoogleFonts = includeGoogleFonts;
         if (jQuery('#wdt-include-google-fonts').val() != includeGoogleFonts) {

@@ -34,6 +34,10 @@
                 <a href="#author-settings-tab" aria-controls="author-settings-tab" role="tab"
                    data-toggle="tab"><?php esc_html_e('Author', 'wpdatatables'); ?></a>
             </li>
+            <li class="ccf-settings-tab">
+                <a href="#cf-settings-tab" aria-controls="cf-settings-tab" role="tab"
+                   data-toggle="tab"><?php esc_html_e('Custom Fields', 'wpdatatables'); ?></a>
+            </li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="general-settings-tab">
@@ -120,7 +124,6 @@
                                    class="form-control input-sm wdt-wp-query-parameter" data-value="post_password"
                                    placeholder="<?php esc_attr_e('Post password', 'wpdatatables'); ?>">
                         </div>
-
                     </div>
 
                 </div>
@@ -648,6 +651,19 @@
                     </div>
                 </div>
             </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="cf-settings-tab">
+                <div class="row">
+                    <div id="wdt-wp-query-cf-container">
+                    </div>
+
+                    <div class="col-sm-12 p-l-0 m-t-10">
+                        <button class="btn pull-left wdt-wp-query-add-cf-column">
+                            <i class="wpdt-icon-plus-thin"></i> <?php esc_html_e('Add New Custom Field Column', 'wpdatatables'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -722,6 +738,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script id="wdt-wp-query-meta-template" type="text/x-jsrender">
@@ -744,7 +761,7 @@
             <h4 class="c-title-color m-b-2">
     <?php esc_html_e('Value', 'wpdatatables'); ?>
     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-       title="<?php esc_attr_e("Specify the value associated with the custom field key.", 'wpdatatables'); ?>"></i>
+       title="<?php esc_attr_e('Specify the value associated with the custom field key.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="fg-line form-group m-b-0">
                 <input id="wdt-wp-query-meta-value-{{>metaFieldId}}" data-count={{>metaFieldId}} type="text"
@@ -817,6 +834,7 @@
     </div>
 
 </div>
+
 </script>
 
 <script id="wdt-wp-query-date-template" type="text/x-jsrender">
@@ -946,6 +964,48 @@
             <div class="col-sm-1 p-r-0 p-l-0 text-center">
                 <ul class="actions p-r-5">
                     <li class="p-t-30" id="wdt-constructor-delete-date-clause">
+                        <a>
+                            <i class="wpdt-icon-trash"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script id="wdt-wp-query-cf-template" type="text/x-jsrender">
+    <div class="card-body bg-white wdt-wp-query-cf-template">
+        <div class="row ">
+            <div class="col-sm-2-0 m-b-16">
+                <h4 class="c-title-color m-b-2">
+    <?php esc_html_e('Column Header', 'wpdatatables'); ?>
+    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+       title="<?php esc_attr_e('Enter the header', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="fg-line form-group m-b-0">
+                <input id="wdt-wp-query-cf-header-{{>cfColumnId}}" data-count="{{>cfColumnId}}" type="text"
+                       class="form-control input-sm wdt_wp_query_cf_parameter" data-value="column_header"
+                       placeholder="<?php esc_attr_e('Column Header', 'wpdatatables'); ?>" value="<?php esc_attr_e('New column', 'wpdatatables'); ?>">
+            </div>
+        </div>
+
+        <div class="col-sm-2-0 m-b-16">
+            <h4 class="c-title-color m-b-2">
+    <?php esc_html_e('Custom Field', 'wpdatatables'); ?>
+    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+       title="<?php esc_attr_e('Specify the value of the custom field', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="fg-line form-group m-b-0">
+                <input id="wdt-wp-query-cf-{{>cfColumnId}}" data-count={{>cfColumnId}} type="text"
+                       class="form-control input-sm wdt_wp_query_cf_parameter" data-value="cf"
+                       placeholder="<?php esc_attr_e('Custom Field', 'wpdatatables'); ?>">
+            </div>
+        </div>
+            <div class="col-sm-1 p-r-0 p-l-0 text-center">
+                <ul class="actions p-r-5">
+                    <li class="p-t-30" id="wdt-constructor-delete-cf-column">
                         <a>
                             <i class="wpdt-icon-trash"></i>
                         </a>

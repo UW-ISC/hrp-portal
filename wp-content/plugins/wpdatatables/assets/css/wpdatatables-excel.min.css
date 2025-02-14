@@ -1,6 +1,7 @@
 div.wpExcelTable {
-    clear:both;
+    clear: both;
 }
+
 .wpExcelTable .handsontableInputHolder {
     background: white;
 }
@@ -25,7 +26,7 @@ div.wpExcelTable {
 }
 
 .wpExcelTable .invalid_editor_value > textarea {
-    background-color: #ff4c42!important;
+    background-color: #ff4c42 !important;
 }
 
 .wpExcelTable .overlayed_elm {
@@ -33,7 +34,7 @@ div.wpExcelTable {
     pointer-events: none;
 }
 
-.wpExcelTable .overlayed_elm>* {
+.wpExcelTable .overlayed_elm > * {
     opacity: .3;
 }
 
@@ -54,7 +55,7 @@ div.wpExcelTable {
 
 .wpExcelTable > .handsontable:first-child .overlayed_elm:after {
     display: inline-block;
-    font-family: wpDataTablesIcons!important;
+    font-family: wpDataTablesIcons !important;
     font-style: normal;
     font-weight: 400;
     text-align: center;

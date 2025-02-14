@@ -421,6 +421,7 @@ class WPDataChart
     {
         $this->_json_chart_render_data = $json_chart_render_data;
     }
+
     /**
      * @return bool
      */
@@ -436,9 +437,11 @@ class WPDataChart
     {
         $this->_loader = (bool)$loader;
     }
+
     /**
      * @param $constructedChartData
      * @param bool $loadFromDB
+     *
      * @throws WDTException
      */
     public function __construct($constructedChartData, $loadFromDB)
@@ -488,8 +491,10 @@ class WPDataChart
     /**
      *
      * Creates a new WPDataChart based on the chart engine
+     *
      * @param $constructedChartData
      * @param bool $loadFromDB
+     *
      * @return mixed
      */
     public static function build($constructedChartData, $loadFromDB = false)
@@ -965,8 +970,9 @@ class WPDataChart
         }
     }
 
-    public function roundFloatsInArray($data, $precision) {
-        array_walk_recursive($data, function(&$value) use ($precision) {
+    public function roundFloatsInArray($data, $precision)
+    {
+        array_walk_recursive($data, function (&$value) use ($precision) {
             if (is_float($value)) {
                 $value = round($value, $precision);
             }
@@ -979,12 +985,12 @@ class WPDataChart
         $max_precision = get_option('wdtDecimalPlaces');
         $number_format = get_option('wdtNumberFormat');
 
-        array_walk_recursive($data, function($value) use ($number_format, &$max_precision) {
+        array_walk_recursive($data, function ($value) use ($number_format, &$max_precision) {
             if (is_float($value)) {
                 if ($number_format == 1) {
                     $decimal_part = explode('.', (string)$value);
                 } else {
-                    $value_string = str_replace('.', ',',(string)$value);
+                    $value_string = str_replace('.', ',', (string)$value);
                     $decimal_part = explode(',', $value_string);
                 }
 
@@ -1110,6 +1116,7 @@ class WPDataChart
 
     /**
      * @param $chartId
+     *
      * @return array|false|object|stdClass
      */
     public static function getChartDataById($chartId)
@@ -1162,14 +1169,19 @@ class WPDataChart
                 wp_localize_script('wdt-wpdatatables', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
             } else {
                 wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
-                wp_enqueue_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery', 'wdt-datatables', 'wdt-common'), WDT_CURRENT_VERSION, true);
-                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery',
+                    'wdt-datatables',
+                    'wdt-common'), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery',
+                    'wdt-datatables'), WDT_CURRENT_VERSION, true);
             }
 
             if (get_option('wdtIncludeBootstrap') == 1) {
-                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
+                    'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
             } else {
-                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery',
+                    'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
             }
             wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
             wp_enqueue_script('underscore');
@@ -1186,6 +1198,7 @@ class WPDataChart
 
     /**
      * @param $js_ext
+     *
      * @return false|string
      */
     public function enqueueChartSpecificScripts($js_ext)
@@ -1216,7 +1229,9 @@ class WPDataChart
 
     /**
      * Delete chart by ID
+     *
      * @param $chartId
+     *
      * @return bool
      */
     public static function delete($chartId)
@@ -1254,6 +1269,7 @@ class WPDataChart
 
     /**
      * @param $renderData
+     *
      * @return void
      */
     public function setSpecificChartProperties($renderData)
@@ -1264,6 +1280,7 @@ class WPDataChart
     /**
      * @param $chartData
      * @param $renderData
+     *
      * @return void
      */
     public function setGeneralChartProperties($chartData, $renderData)
@@ -1305,7 +1322,7 @@ class WPDataChart
                         $this->_render_data['options']['series'][$seriesIndex]['color'] = $series_data['color'];
                     }
                     if (!empty($series_data['label'])) {
-                        $this->_render_data['options']['series'][$seriesIndex]['label'] =  $series_data['label'];
+                        $this->_render_data['options']['series'][$seriesIndex]['label'] = $series_data['label'];
                     }
                 }
                 $seriesIndex++;
@@ -1370,6 +1387,7 @@ class WPDataChart
 
     /**
      * @param $chartData
+     *
      * @return mixed|null
      */
     public function setChartRenderData($chartData)

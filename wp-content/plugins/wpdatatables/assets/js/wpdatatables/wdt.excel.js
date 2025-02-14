@@ -2,13 +2,13 @@
  * Created by Milos Roksandic on 12.1.16..
  */
 
-(function(Handsontable, $){
+(function (Handsontable, $) {
     //this is used for setting default values in new rows for every cell that has it.
     var baseBeginEditing = Handsontable.editors.BaseEditor.prototype.beginEditing;
-    Handsontable.editors.BaseEditor.prototype.beginEditing = function(initialValue, event) {
+    Handsontable.editors.BaseEditor.prototype.beginEditing = function (initialValue, event) {
         var settings = this.instance.getSettings();
 
-        if ( settings.wpDataTablesExcelPlugin ) {
+        if (settings.wpDataTablesExcelPlugin) {
             if (typeof initialValue == 'undefined' && !settings.readOnly) {
                 var idColProp = settings.idColumnKey;
                 var idColVal = this.instance.getDataAtRowProp(this.row, idColProp);
@@ -25,16 +25,16 @@
 
     //this is fix for valid cells that had invalid background after cancelling edition
     var baseCancelChanges = Handsontable.editors.BaseEditor.prototype.cancelChanges;
-    Handsontable.editors.BaseEditor.prototype.cancelChanges = function() {
+    Handsontable.editors.BaseEditor.prototype.cancelChanges = function () {
         var settings = this.instance.getCellMeta(this.row, this.col);
 
-        if ( settings.wpDataTablesExcelPlugin ) {
+        if (settings.wpDataTablesExcelPlugin) {
             //removing class that indicates that this editor has invalid value, also removing title tag because of tooltip.
-            var $editorElement = $(document.activeElement).closest('#' + this.instance.rootElement.id +' > div.invalid_editor_value')
+            var $editorElement = $(document.activeElement).closest('#' + this.instance.rootElement.id + ' > div.invalid_editor_value')
                 .removeClass('invalid_editor_value');
 
             //closing tooltip if previously not closed.
-            if( $editorElement.length > 0 && $editorElement.next('div.tooltip:visible').length ) {
+            if ($editorElement.length > 0 && $editorElement.next('div.tooltip:visible').length) {
                 $editorElement.tooltip('destroy');
             }
 
@@ -42,10 +42,10 @@
             var value = this.instance.getDataAtCell(this.row, this.col);
 
             //getting cell validator and making sure that value is actually valid, and if so css class that marks table cell as invalid is removed.
-            if ( validator ) {
+            if (validator) {
                 var isValid = false;
                 if (typeof validator == 'function') {
-                    validator.call(settings, value, function(val){
+                    validator.call(settings, value, function (val) {
                         return isValid = val;
                     });
                 } else if (validator instanceof RegExp) {
@@ -75,10 +75,10 @@
     function initWdtMultilineEditor() {
         var ExcelMultilineEditor = Handsontable.editors.TextEditor.prototype.extend();
 
-        ExcelMultilineEditor.prototype.bindEvents = function() {
+        ExcelMultilineEditor.prototype.bindEvents = function () {
             //Preventing default editing behaviour when Enter Key pressed, allowing new line character.
-            this.eventManager.addEventListener(this.TEXTAREA, 'keydown', function(event) {
-                if ( event.which == Handsontable.helper.KEY_CODES.ENTER ) {
+            this.eventManager.addEventListener(this.TEXTAREA, 'keydown', function (event) {
+                if (event.which == Handsontable.helper.KEY_CODES.ENTER) {
                     Handsontable.Dom.stopImmediatePropagation(event);
                 }
             });
@@ -97,21 +97,21 @@
     function initWdtDateEditor() {
         var ExcelDateEditor = Handsontable.editors.TextEditor.prototype.extend();
 
-        ExcelDateEditor.prototype.init = function() {
+        ExcelDateEditor.prototype.init = function () {
             Handsontable.editors.TextEditor.prototype.init.apply(this, arguments);
 
             var table_settings = this.instance.getSettings();
             this.time_format = table_settings.timeFormat;
             var $__9 = this;
-            this.instance.addHook('afterDestroy', (function() {
+            this.instance.addHook('afterDestroy', (function () {
                 $__9.parentDestroyed = true;
                 $__9.destroyElements();
             }));
         };
 
-        ExcelDateEditor.prototype.createElements = function(){
+        ExcelDateEditor.prototype.createElements = function () {
             Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
-             // Create password input and update relevant properties
+            // Create password input and update relevant properties
             this.TEXTAREA = document.createElement('input');
             this.TEXTAREA.className = 'wdt-datepicker';
             this.textareaStyle = this.TEXTAREA.style;
@@ -124,11 +124,11 @@
         };
 
         //this event is needed because of handsontable bug, when entered invalid data, escape was not calling finish editing function
-        ExcelDateEditor.prototype.onBeforeKeyDown = function(event) {
+        ExcelDateEditor.prototype.onBeforeKeyDown = function (event) {
             switch (event.keyCode) {
                 case Handsontable.helper.KEY_CODES.ESCAPE:
                     var editor = this.getActiveEditor();
-                    editor.finishEditing( true );
+                    editor.finishEditing(true);
                     break;
                 case Handsontable.helper.KEY_CODES.ARROW_DOWN:
                 case Handsontable.helper.KEY_CODES.ARROW_UP:
@@ -136,43 +136,43 @@
             }
         };
 
-        ExcelDateEditor.prototype.beginEditing = function(e) {
+        ExcelDateEditor.prototype.beginEditing = function (e) {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
         //this is a fix for bug that when invalid time is tried to be saved, date picker was unable to appear.
-        ExcelDateEditor.prototype.discardEditor = function(validationResult) {
+        ExcelDateEditor.prototype.discardEditor = function (validationResult) {
             Handsontable.editors.TextEditor.prototype.discardEditor.apply(this, arguments);
 
             var hotInstance = this.instance;
             var allowInvalid = hotInstance.getCellMeta(this.row, this.col).allowInvalid;
 
-            if( !allowInvalid && !validationResult ) {
-                if( !this.$timePicker.$node.is(':visible') ) {
+            if (!allowInvalid && !validationResult) {
+                if (!this.$timePicker.$node.is(':visible')) {
                     this.$timePicker.open();
                 }
             }
         };
 
-        ExcelDateEditor.prototype.open = function() {
+        ExcelDateEditor.prototype.open = function () {
             this.instance.addHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.open.apply(this, arguments);
         };
 
-        ExcelDateEditor.prototype.beginEditing = function(){
+        ExcelDateEditor.prototype.beginEditing = function () {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
-        ExcelDateEditor.prototype.focus = function( event ){
+        ExcelDateEditor.prototype.focus = function (event) {
             Handsontable.editors.DateEditor.prototype.focus.apply(this, arguments);
         }
 
-        ExcelDateEditor.prototype.close = function() {
+        ExcelDateEditor.prototype.close = function () {
             this.instance.removeHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.close.apply(this, arguments);
         };
 
-        ExcelDateEditor.prototype.finishEditing = function() {
+        ExcelDateEditor.prototype.finishEditing = function () {
             var isCancelled = arguments[0] !== (void 0) ? arguments[0] : false;
             var ctrlDown = arguments[1] !== (void 0) ? arguments[1] : false;
             if (isCancelled) {
@@ -184,12 +184,12 @@
             Handsontable.editors.TextEditor.prototype.finishEditing.apply(this, arguments);
         };
 
-        ExcelDateEditor.prototype.prepare = function( row, col, prop, td, originalValue, cellProperties ) {
-            if( !originalValue || originalValue == '0000-00-00' ) {
+        ExcelDateEditor.prototype.prepare = function (row, col, prop, td, originalValue, cellProperties) {
+            if (!originalValue || originalValue == '0000-00-00') {
                 originalValue = '';
             }
 
-            if ( originalValue && !this.same_display_and_edit_format ) {
+            if (originalValue && !this.same_display_and_edit_format) {
                 var table_settings = this.instance.getSettings();
                 //values are converted from database format to desired display format
                 originalValue = moment(originalValue, table_settings.dataSourceDateFormat).format(table_settings.displayDateFormat);
@@ -199,8 +199,8 @@
             Handsontable.editors.DateEditor.prototype.prepare.apply(this, arguments);
         };
 
-        ExcelDateEditor.prototype.saveValue = function( val, ctrlDown ) {
-                        if ( val[0][0] && !this.same_display_and_edit_format ) {
+        ExcelDateEditor.prototype.saveValue = function (val, ctrlDown) {
+            if (val[0][0] && !this.same_display_and_edit_format) {
                 var table_settings = this.instance.getSettings();
                 //values are converted from desired display format to database format in order to save properly
                 val[0][0] = moment(val[0][0], table_settings.displayDateFormat).format(table_settings.dataSourceDateFormat);
@@ -223,21 +223,21 @@
     function initWdtDateTimeEditor() {
         var ExcelDateTimeEditor = Handsontable.editors.TextEditor.prototype.extend();
 
-        ExcelDateTimeEditor.prototype.init = function() {
+        ExcelDateTimeEditor.prototype.init = function () {
             Handsontable.editors.TextEditor.prototype.init.apply(this, arguments);
 
             var table_settings = this.instance.getSettings();
             this.time_format = table_settings.timeFormat;
             var $__9 = this;
-            this.instance.addHook('afterDestroy', (function() {
+            this.instance.addHook('afterDestroy', (function () {
                 $__9.parentDestroyed = true;
                 $__9.destroyElements();
             }));
         };
 
-        ExcelDateTimeEditor.prototype.createElements = function(){
+        ExcelDateTimeEditor.prototype.createElements = function () {
             Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
-             // Create password input and update relevant properties
+            // Create password input and update relevant properties
             this.TEXTAREA = document.createElement('input');
             this.TEXTAREA.className = 'wdt-datetimepicker';
             this.textareaStyle = this.TEXTAREA.style;
@@ -250,11 +250,11 @@
         };
 
         //this event is needed because of handsontable bug, when entered invalid data, escape was not calling finish editing function
-        ExcelDateTimeEditor.prototype.onBeforeKeyDown = function(event) {
+        ExcelDateTimeEditor.prototype.onBeforeKeyDown = function (event) {
             switch (event.keyCode) {
                 case Handsontable.helper.KEY_CODES.ESCAPE:
                     var editor = this.getActiveEditor();
-                    editor.finishEditing( true );
+                    editor.finishEditing(true);
                     break;
                 case Handsontable.helper.KEY_CODES.ARROW_DOWN:
                 case Handsontable.helper.KEY_CODES.ARROW_UP:
@@ -262,43 +262,43 @@
             }
         };
 
-        ExcelDateTimeEditor.prototype.beginEditing = function(e) {
+        ExcelDateTimeEditor.prototype.beginEditing = function (e) {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
         //this is a fix for bug that when invalid time is tried to be saved, date picker was unable to appear.
-        ExcelDateTimeEditor.prototype.discardEditor = function(validationResult) {
+        ExcelDateTimeEditor.prototype.discardEditor = function (validationResult) {
             Handsontable.editors.TextEditor.prototype.discardEditor.apply(this, arguments);
 
             var hotInstance = this.instance;
             var allowInvalid = hotInstance.getCellMeta(this.row, this.col).allowInvalid;
 
-            if( !allowInvalid && !validationResult ) {
-                if( !this.$timePicker.$node.is(':visible') ) {
+            if (!allowInvalid && !validationResult) {
+                if (!this.$timePicker.$node.is(':visible')) {
                     this.$timePicker.open();
                 }
             }
         };
 
-        ExcelDateTimeEditor.prototype.open = function() {
+        ExcelDateTimeEditor.prototype.open = function () {
             this.instance.addHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.open.apply(this, arguments);
         };
 
-        ExcelDateTimeEditor.prototype.beginEditing = function(){
+        ExcelDateTimeEditor.prototype.beginEditing = function () {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
-        ExcelDateTimeEditor.prototype.focus = function( event ){
+        ExcelDateTimeEditor.prototype.focus = function (event) {
             Handsontable.editors.DateEditor.prototype.focus.apply(this, arguments);
         }
 
-        ExcelDateTimeEditor.prototype.close = function() {
+        ExcelDateTimeEditor.prototype.close = function () {
             this.instance.removeHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.close.apply(this, arguments);
         };
 
-        ExcelDateTimeEditor.prototype.finishEditing = function() {
+        ExcelDateTimeEditor.prototype.finishEditing = function () {
             var isCancelled = arguments[0] !== (void 0) ? arguments[0] : false;
             var ctrlDown = arguments[1] !== (void 0) ? arguments[1] : false;
             if (isCancelled) {
@@ -310,28 +310,28 @@
             Handsontable.editors.TextEditor.prototype.finishEditing.apply(this, arguments);
         };
 
-        ExcelDateTimeEditor.prototype.prepare = function( row, col, prop, td, originalValue, cellProperties ) {
-            if( !originalValue || originalValue == '0000-00-00 00:00:00' ) {
+        ExcelDateTimeEditor.prototype.prepare = function (row, col, prop, td, originalValue, cellProperties) {
+            if (!originalValue || originalValue == '0000-00-00 00:00:00') {
                 originalValue = '';
             }
 
-            if ( originalValue && !this.same_display_and_edit_format ) {
+            if (originalValue && !this.same_display_and_edit_format) {
                 var table_settings = this.instance.getSettings();
                 //values are converted from database format to desired display format
-                originalValue = moment( originalValue, table_settings.dataSourceDateFormat+' hh:mm:ss')
-                    .format( table_settings.displayDateFormat+' '+table_settings.momentTimeFormat );
+                originalValue = moment(originalValue, table_settings.dataSourceDateFormat + ' hh:mm:ss')
+                    .format(table_settings.displayDateFormat + ' ' + table_settings.momentTimeFormat);
             }
 
             // Remember to invoke parent's method
             Handsontable.editors.DateEditor.prototype.prepare.apply(this, arguments);
         };
 
-        ExcelDateTimeEditor.prototype.saveValue = function( val, ctrlDown ) {
-            if ( val[0][0] && !this.same_display_and_edit_format ) {
+        ExcelDateTimeEditor.prototype.saveValue = function (val, ctrlDown) {
+            if (val[0][0] && !this.same_display_and_edit_format) {
                 var table_settings = this.instance.getSettings();
                 //values are converted from desired display format to database format in order to save properly
-                val[0][0] = moment(val[0][0], table_settings.displayDateFormat+' '+table_settings.momentTimeFormat)
-                    .format(table_settings.dataSourceDateFormat+' H:mm:ss');
+                val[0][0] = moment(val[0][0], table_settings.displayDateFormat + ' ' + table_settings.momentTimeFormat)
+                    .format(table_settings.dataSourceDateFormat + ' H:mm:ss');
             }
             // Remember to invoke parent's method
             Handsontable.editors.DateEditor.prototype.saveValue.apply(this, arguments);
@@ -350,21 +350,21 @@
     function initWdtTimeEditor() {
         var ExcelTimeEditor = Handsontable.editors.TextEditor.prototype.extend();
 
-        ExcelTimeEditor.prototype.init = function() {
+        ExcelTimeEditor.prototype.init = function () {
             Handsontable.editors.TextEditor.prototype.init.apply(this, arguments);
 
             var table_settings = this.instance.getSettings();
             this.time_format = table_settings.timeFormat;
             var $__9 = this;
-            this.instance.addHook('afterDestroy', (function() {
+            this.instance.addHook('afterDestroy', (function () {
                 $__9.parentDestroyed = true;
                 $__9.destroyElements();
             }));
         };
 
-        ExcelTimeEditor.prototype.createElements = function(){
+        ExcelTimeEditor.prototype.createElements = function () {
             Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
-             // Create password input and update relevant properties
+            // Create password input and update relevant properties
             this.TEXTAREA = document.createElement('input');
             this.TEXTAREA.className = 'wdt-timepicker';
             this.textareaStyle = this.TEXTAREA.style;
@@ -377,11 +377,11 @@
         };
 
         //this event is needed because of handsontable bug, when entered invalid data, escape was not calling finish editing function
-        ExcelTimeEditor.prototype.onBeforeKeyDown = function(event) {
+        ExcelTimeEditor.prototype.onBeforeKeyDown = function (event) {
             switch (event.keyCode) {
                 case Handsontable.helper.KEY_CODES.ESCAPE:
                     var editor = this.getActiveEditor();
-                    editor.finishEditing( true );
+                    editor.finishEditing(true);
                     break;
                 case Handsontable.helper.KEY_CODES.ARROW_DOWN:
                 case Handsontable.helper.KEY_CODES.ARROW_UP:
@@ -389,43 +389,43 @@
             }
         };
 
-        ExcelTimeEditor.prototype.beginEditing = function(e) {
+        ExcelTimeEditor.prototype.beginEditing = function (e) {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
         //this is a fix for bug that when invalid time is tried to be saved, date picker was unable to appear.
-        ExcelTimeEditor.prototype.discardEditor = function(validationResult) {
+        ExcelTimeEditor.prototype.discardEditor = function (validationResult) {
             Handsontable.editors.TextEditor.prototype.discardEditor.apply(this, arguments);
 
             var hotInstance = this.instance;
             var allowInvalid = hotInstance.getCellMeta(this.row, this.col).allowInvalid;
 
-            if( !allowInvalid && !validationResult ) {
-                if( !this.$timePicker.$node.is(':visible') ) {
+            if (!allowInvalid && !validationResult) {
+                if (!this.$timePicker.$node.is(':visible')) {
                     this.$timePicker.open();
                 }
             }
         };
 
-        ExcelTimeEditor.prototype.open = function() {
+        ExcelTimeEditor.prototype.open = function () {
             this.instance.addHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.open.apply(this, arguments);
         };
 
-        ExcelTimeEditor.prototype.beginEditing = function(){
+        ExcelTimeEditor.prototype.beginEditing = function () {
             Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
         }
 
-        ExcelTimeEditor.prototype.focus = function( event ){
+        ExcelTimeEditor.prototype.focus = function (event) {
             Handsontable.editors.DateEditor.prototype.focus.apply(this, arguments);
         }
 
-        ExcelTimeEditor.prototype.close = function() {
+        ExcelTimeEditor.prototype.close = function () {
             this.instance.removeHook('beforeKeyDown', this.onBeforeKeyDown);
             Handsontable.editors.TextEditor.prototype.close.apply(this, arguments);
         };
 
-        ExcelTimeEditor.prototype.finishEditing = function() {
+        ExcelTimeEditor.prototype.finishEditing = function () {
             var isCancelled = arguments[0] !== (void 0) ? arguments[0] : false;
             var ctrlDown = arguments[1] !== (void 0) ? arguments[1] : false;
             if (isCancelled) {
@@ -437,25 +437,25 @@
             Handsontable.editors.TextEditor.prototype.finishEditing.apply(this, arguments);
         };
 
-        ExcelTimeEditor.prototype.prepare = function( row, col, prop, td, originalValue, cellProperties ) {
-            if( !originalValue ) {
+        ExcelTimeEditor.prototype.prepare = function (row, col, prop, td, originalValue, cellProperties) {
+            if (!originalValue) {
                 originalValue = '';
-            }else{
+            } else {
                 var table_settings = this.instance.getSettings();
-                originalValue = moment( originalValue, 'H:mm:ss')
-                                    .format( table_settings.momentTimeFormat );
+                originalValue = moment(originalValue, 'H:mm:ss')
+                    .format(table_settings.momentTimeFormat);
             }
 
             // Remember to invoke parent's method
             Handsontable.editors.TextEditor.prototype.prepare.apply(this, arguments);
         };
 
-        ExcelTimeEditor.prototype.saveValue = function( val, ctrlDown ) {
+        ExcelTimeEditor.prototype.saveValue = function (val, ctrlDown) {
             // Format time back to MySQL format
-            if( val[0][0] ){
+            if (val[0][0]) {
                 var table_settings = this.instance.getSettings();
-                val[0][0] = moment( val[0][0], table_settings.momentTimeFormat )
-                                    .format('H:mm:ss');
+                val[0][0] = moment(val[0][0], table_settings.momentTimeFormat)
+                    .format('H:mm:ss');
             }
 
             // Remember to invoke parent's method
@@ -479,7 +479,7 @@
     function initWdtAttachmentEditor() {
         var ExcelAttachmentEditor = Handsontable.editors.BaseEditor.prototype.extend();
 
-        ExcelAttachmentEditor.prototype.init = function() {
+        ExcelAttachmentEditor.prototype.init = function () {
             //this is wordpress media library for handling file uploads.
             this.wdtCustomUploader = wp.media({
                 title: wpdatatables_excel_strings.select_upload_file_excel,
@@ -493,29 +493,32 @@
             var htInstance = this.instance;
             this.wdtCustomUploader.on('select', function () {
                 var attachment = editor.wdtCustomUploader.state().get('selection').first().toJSON();
-                var cellRenderer = htInstance.getCellRenderer(editor.row,editor.col).name;
+                var cellRenderer = htInstance.getCellRenderer(editor.row, editor.col).name;
                 var value = attachment.url;
 
                 //if file is for image column(we presume it is image file), there is a check if thumbnail exists and with and height properties are saved as a query string part of image url.
-                if( cellRenderer == 'wdtImageRenderer' ) {
-                    if( attachment.type != 'image' ) {
+                if (cellRenderer == 'wdtImageRenderer') {
+                    if (attachment.type != 'image') {
                         value = '';
                     } else {
-                        var imgUri = new URI( value );
-                        imgUri.setQuery({ img_width: attachment.width, img_height: attachment.height});
+                        var imgUri = new URI(value);
+                        imgUri.setQuery({img_width: attachment.width, img_height: attachment.height});
 
                         value = imgUri.toString();
 
-                        if( attachment.sizes.thumbnail ) {
-                            var thumbUri = new URI( attachment.sizes.thumbnail.url );
-                            thumbUri.setQuery({ img_width: attachment.sizes.thumbnail.width, img_height: attachment.sizes.thumbnail.height});
+                        if (attachment.sizes.thumbnail) {
+                            var thumbUri = new URI(attachment.sizes.thumbnail.url);
+                            thumbUri.setQuery({
+                                img_width: attachment.sizes.thumbnail.width,
+                                img_height: attachment.sizes.thumbnail.height
+                            });
                             value = thumbUri.toString() + '||' + value;
                         }
                     }
                 }
 
                 //saving value
-                htInstance.setDataAtCell( editor.row, editor.col, value );
+                htInstance.setDataAtCell(editor.row, editor.col, value);
             });
 
             $browseButton = $('<button class="button-primary">' + wpdatatables_excel_strings.browse_file_excel + '</button>');
@@ -532,7 +535,7 @@
 
 
             $editorCnt = $('<div class="wdtAttachmentEditorHolder" ></div>')
-                .append( this.UPLOADED_FILES_ELEMENTS, this.BROWSE_BUTTON, this.INPUT_FILE_URL )
+                .append(this.UPLOADED_FILES_ELEMENTS, this.BROWSE_BUTTON, this.INPUT_FILE_URL)
                 .hide();
 
             this.EDITOR_CONTENT = $editorCnt[0];
@@ -541,25 +544,28 @@
             this.instance.rootElement.appendChild(this.EDITOR_CONTENT);
         };
 
-        ExcelAttachmentEditor.prototype.getValue = function() {
+        ExcelAttachmentEditor.prototype.getValue = function () {
             return this.INPUT_FILE_URL.value;
         };
 
-        ExcelAttachmentEditor.prototype.setValue = function( newValue ) {
+        ExcelAttachmentEditor.prototype.setValue = function (newValue) {
             this.INPUT_FILE_URL.value = newValue;
 
             var uploaded_file = '';
             var htInstance = this.instance;
 
-            if ( newValue != '' ) {
+            if (newValue != '') {
                 var link = newValue.split('||')[0];
                 var uploaded_file;
                 //if( !/\.(jpg|jpeg|png|gif)$/i.test( link ) ) {
                 //    //TODO: add empty file icon if not image
                 //}
 
-                if ( htInstance.getCellRenderer(this.row,this.col).name == 'wdtImageRenderer' ) {
-                    uploaded_file = $('<img src="'+link+'" />').css({'max-width':'100px', 'max-height':'50px'})[0].outerHTML;
+                if (htInstance.getCellRenderer(this.row, this.col).name == 'wdtImageRenderer') {
+                    uploaded_file = $('<img src="' + link + '" />').css({
+                        'max-width': '100px',
+                        'max-height': '50px'
+                    })[0].outerHTML;
                 } else {
                     //only file name is displayed
                     uploaded_file = newValue.split('/').pop();
@@ -568,9 +574,9 @@
                 uploaded_file += '<span class="delete_file">[<a href="#">' + wpdatatables_excel_strings.detach_file_excel + '</a>]</span>';
             }
 
-            $(this.UPLOADED_FILES_ELEMENTS).html( uploaded_file );
+            $(this.UPLOADED_FILES_ELEMENTS).html(uploaded_file);
 
-            $( this.UPLOADED_FILES_ELEMENTS ).on('click', 'a', function( e ) {
+            $(this.UPLOADED_FILES_ELEMENTS).on('click', 'a', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
@@ -580,21 +586,21 @@
             });
         };
 
-        ExcelAttachmentEditor.prototype.open = function() {
+        ExcelAttachmentEditor.prototype.open = function () {
             this.refreshDimensions();
         };
 
-        ExcelAttachmentEditor.prototype.close = function() {
+        ExcelAttachmentEditor.prototype.close = function () {
             this.editorContainerStyle.display = 'none';
         };
 
-        ExcelAttachmentEditor.prototype.focus = function() {
+        ExcelAttachmentEditor.prototype.focus = function () {
             this.BROWSE_BUTTON.focus();
         };
 
         //this is taken from TextEditor.prototype.getEditedCell and modified
         //this is probably needed because of fixed headers, columns, rows, etc...
-        ExcelAttachmentEditor.prototype.getEditedCell = function() {
+        ExcelAttachmentEditor.prototype.getEditedCell = function () {
             var editorSection = this.checkEditorSection(),
                 editedCell;
             switch (editorSection) {
@@ -643,7 +649,7 @@
 
         //this is taken from TextEditor.prototype.refreshDimensions and modified
         //this is probably needed because of fixed headers, columns, rows, etc...
-        ExcelAttachmentEditor.prototype.refreshDimensions = function() {
+        ExcelAttachmentEditor.prototype.refreshDimensions = function () {
             if (this.state !== Handsontable.EditorState.EDITING) {
                 return;
             }
@@ -721,17 +727,19 @@
     function initWdtDropdownEditor() {
         var ExcelDropdownEditor = Handsontable.editors.DropdownEditor.prototype.extend();
 
-        ExcelDropdownEditor.confirmWdtDropdownCellValidate = function (isValid, value, row, prop, source){
-            var col_index = this.propToCol( prop );
-            var cell_meta = this.getCellMeta( row, col_index);
+        ExcelDropdownEditor.confirmWdtDropdownCellValidate = function (isValid, value, row, prop, source) {
+            var col_index = this.propToCol(prop);
+            var cell_meta = this.getCellMeta(row, col_index);
 
             //for wdt.dropdown column type, validator is defined by default that checks if selected value is in possible values list.
             //also this plugin has functionality that additional validator also can be defined via 'cell_validator' property.
             //it is automatically assigned depending of the renderer type(e.g. numeric or link).
             //this validator is called here for checking if data is in good format.
-            if( isValid && typeof cell_meta.cell_validator == 'function') {
+            if (isValid && typeof cell_meta.cell_validator == 'function') {
                 var valid_value = false;
-                cell_meta.cell_validator( value, function(valid){return valid_value = valid;});
+                cell_meta.cell_validator(value, function (valid) {
+                    return valid_value = valid;
+                });
 
                 return valid_value;
             } else {
@@ -739,13 +747,13 @@
             }
         };
 
-        ExcelDropdownEditor.prototype.open = function() {
+        ExcelDropdownEditor.prototype.open = function () {
             Handsontable.editors.DropdownEditor.prototype.open.apply(this, arguments);
 
             this.instance.addHook('afterValidate', ExcelDropdownEditor.confirmWdtDropdownCellValidate);
         };
 
-        ExcelDropdownEditor.prototype.close = function() {
+        ExcelDropdownEditor.prototype.close = function () {
             Handsontable.editors.DropdownEditor.prototype.close.apply(this, arguments);
 
             this.instance.removeHook('afterValidate', ExcelDropdownEditor.confirmWdtDropdownCellValidate);
@@ -764,7 +772,7 @@
     function initWdtMultipleSelectEditor() {
         var ExcelMultiSelectEditor = Handsontable.editors.ExcelDropdownEditor.prototype.extend();
 
-        ExcelMultiSelectEditor.onBeforeKeyDown = function(event) {
+        ExcelMultiSelectEditor.onBeforeKeyDown = function (event) {
             //on ENTER we want to select dropdown item
             switch (event.keyCode) {
                 case Handsontable.helper.KEY_CODES.ENTER:
@@ -772,9 +780,9 @@
                     var choicesListHot = editor.htEditor.getInstance();
                     var selectedCellsRange = choicesListHot.getSelected();
 
-                    if( selectedCellsRange ) {
-                        var selectedTD = choicesListHot.getCell( selectedCellsRange[0], selectedCellsRange[1] );
-                        ExcelMultiSelectEditor.selectDropdownItem( selectedTD, choicesListHot ,editor );
+                    if (selectedCellsRange) {
+                        var selectedTD = choicesListHot.getCell(selectedCellsRange[0], selectedCellsRange[1]);
+                        ExcelMultiSelectEditor.selectDropdownItem(selectedTD, choicesListHot, editor);
                     }
 
                     event.stopImmediatePropagation(); // prevent EditorManager from processing this event
@@ -784,24 +792,24 @@
         };
 
         //marking selected values in dropdown and add them in textarea.
-        ExcelMultiSelectEditor.selectDropdownItem = function(selectedTD, choicesListHot ,editor) {
+        ExcelMultiSelectEditor.selectDropdownItem = function (selectedTD, choicesListHot, editor) {
             var $td = $(selectedTD);
             var cell_value = $td.text();
-            if($td.children('strong:first-child').length) {
-                $td.html( cell_value );
+            if ($td.children('strong:first-child').length) {
+                $td.html(cell_value);
             } else {
-                $td.html( '<strong>' + cell_value + '</strong>' );
+                $td.html('<strong>' + cell_value + '</strong>');
             }
 
             var value = [];
-            $(choicesListHot.rootElement).find('td strong:first-child').each(function(){
+            $(choicesListHot.rootElement).find('td strong:first-child').each(function () {
                 value.push($(this).text());
             });
 
             editor.setValue(value.join());
         };
 
-        ExcelMultiSelectEditor.prototype.open = function() {
+        ExcelMultiSelectEditor.prototype.open = function () {
             // register listener
             this.instance.addHook('beforeKeyDown', ExcelMultiSelectEditor.onBeforeKeyDown);
 
@@ -817,7 +825,7 @@
             choicesListHot.removeHook('afterOnCellMouseDown', choicesListHotSettings.afterOnCellMouseDown);
 
             choicesListHot.updateSettings({
-                afterRenderer: function(TD, row, col, prop, value) {
+                afterRenderer: function (TD, row, col, prop, value) {
                     //taken from autocmplete editor and modified
                     //marking values that are entered in textarea.
                     var caseSensitive = this.getCellMeta(row, col).filteringCaseSensitive === true,
@@ -830,12 +838,12 @@
                         }
                     }
                 },
-                afterOnCellMouseDown: function(event, coords, TD) {
+                afterOnCellMouseDown: function (event, coords, TD) {
                     //taken from handsontable editor and modified
                     //on mouse click on a select box handsontable element
                     var cell_value = this.getValue();
                     if (cell_value !== void 0) {
-                        ExcelMultiSelectEditor.selectDropdownItem( TD, choicesListHot ,editor );
+                        ExcelMultiSelectEditor.selectDropdownItem(TD, choicesListHot, editor);
                     }
 
                     editor.focus();
@@ -844,14 +852,14 @@
         };
 
         //overriding from handsontable editor because it was taking only one selected item
-        ExcelMultiSelectEditor.prototype.finishEditing = function(isCancelled, ctrlDown) {
+        ExcelMultiSelectEditor.prototype.finishEditing = function (isCancelled, ctrlDown) {
             if (this.htEditor && this.htEditor.isListening()) {
                 this.instance.listen();
             }
 
             if (this.htEditor) {
                 var value = [];
-                $(this.htEditor.getInstance().rootElement).find('td strong:first-child').each(function(){
+                $(this.htEditor.getInstance().rootElement).find('td strong:first-child').each(function () {
                     value.push($(this).text());
                 });
 
@@ -862,7 +870,7 @@
             return Handsontable.editors.TextEditor.prototype.finishEditing.apply(this, arguments);
         };
 
-        ExcelMultiSelectEditor.prototype.close = function() {
+        ExcelMultiSelectEditor.prototype.close = function () {
             Handsontable.editors.ExcelDropdownEditor.prototype.close.apply(this, arguments);
             // remove listener
             this.instance.removeHook('beforeKeyDown', ExcelMultiSelectEditor.onBeforeKeyDown);
@@ -878,100 +886,100 @@
     /**
      * LINK RENDERER DEFINITION.
      */
-    function wdtLinkRenderer( instance, td, row, col, prop, value, cellProperties ) {
+    function wdtLinkRenderer(instance, td, row, col, prop, value, cellProperties) {
         //check if link is empty
         //also check if editor type is attachment
         Handsontable.TextRenderer.apply(this, arguments);
 
-        if( !value ) {
+        if (!value) {
             return td;
         }
 
         var link_parts = value.split('||');
         var link = link_parts[0];
 
-        if( link.length == 0 ) {
+        if (link.length == 0) {
             return td;
         }
 
-        var content = ( link_parts.length > 1 )? link_parts[1]: link;
+        var content = (link_parts.length > 1) ? link_parts[1] : link;
         var table_settings = instance.getSettings();
         var class_name = 'wdt_link';
         var title_attr = '';
 
-        if( !table_settings.readOnly ) {
+        if (!table_settings.readOnly) {
             class_name += '_editable';
-            title_attr = 'title="ctrl+click to open hyperlink:'+ link +'"';
+            title_attr = 'title="ctrl+click to open hyperlink:' + link + '"';
         }
 
-        $(td).html('<a class="'+class_name+'" href="'+ link +'" target="_blank" '+ title_attr +'>'+ content +'</a>');
+        $(td).html('<a class="' + class_name + '" href="' + link + '" target="_blank" ' + title_attr + '>' + content + '</a>');
     }
 
     /**
      * E-MAIL RENDERER DEFINITION.
      */
-    function wdtEmailRenderer( instance, td, row, col, prop, value, cellProperties ) {
+    function wdtEmailRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.TextRenderer.apply(this, arguments);
 
-        if( !value ) {
+        if (!value) {
             return td;
         }
 
         var email_parts = value.split('||');
         var email = email_parts[0];
 
-        if( email.length == 0 ) {
+        if (email.length == 0) {
             return td;
         }
 
-        var content = ( email_parts.length > 1 )? email_parts[1]: email;
+        var content = (email_parts.length > 1) ? email_parts[1] : email;
         var table_settings = instance.getSettings();
         var class_name = 'wdt_email';
         var title_attr = '';
 
-        if( !table_settings.readOnly ) {
+        if (!table_settings.readOnly) {
             class_name += '_editable';
-            title_attr = 'title="ctrl+click to send email to:'+ email +'"';
+            title_attr = 'title="ctrl+click to send email to:' + email + '"';
         }
 
-        $(td).html('<a class="'+class_name+'" href="mailto:'+ email +'" '+ title_attr +'>'+ content +'</a>');
+        $(td).html('<a class="' + class_name + '" href="mailto:' + email + '" ' + title_attr + '>' + content + '</a>');
     }
 
     /**
      * IMAGE RENDERER DEFINITION.
      */
-    function wdtImageRenderer( instance, td, row, col, prop, value, cellProperties ) {
+    function wdtImageRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.TextRenderer.apply(this, arguments);
 
-        if( !value ) {
+        if (!value) {
             return td;
         }
 
         var image_parts = value.split('||');
         var image_url = image_parts[0];
 
-        if( image_url.length == 0 ) {
+        if (image_url.length == 0) {
             return td;
         }
 
         //image width and height data are saved with image url(in editing cell process) as query params ('img_width' and 'img_height') in order to fast retrieve them.
         //without presetting image dimensions, handsontable had troubles to render table dimensions properly if image column is present.
-        var imageUri = new URI( image_url );
-        var imageQuery = imageUri.query( true );
-        var img_width = ( imageUri.hasQuery( 'img_width' ) )? imageQuery.img_width: 0;
-        var img_height = ( imageUri.hasQuery( 'img_height' ) )? imageQuery.img_height: 0;
+        var imageUri = new URI(image_url);
+        var imageQuery = imageUri.query(true);
+        var img_width = (imageUri.hasQuery('img_width')) ? imageQuery.img_width : 0;
+        var img_height = (imageUri.hasQuery('img_height')) ? imageQuery.img_height : 0;
 
         var img_style = '';
 
-        if( img_width > 0 ) {
+        if (img_width > 0) {
             img_style += 'width:' + img_width + 'px; '
         }
 
-        if( img_height > 0 ) {
+        if (img_height > 0) {
             img_style += 'height:' + img_height + 'px;'
         }
 
-        if( img_style.length > 0 ) {
+        if (img_style.length > 0) {
             img_style = 'style="' + img_style + '"';
         }
 
@@ -981,23 +989,23 @@
 
         var html = '';
 
-        if( image_parts.length > 1 && image_parts[1] != '' ) {
+        if (image_parts.length > 1 && image_parts[1] != '') {
             var tableSettings = instance.getSettings();
             var class_name = 'wdt_link';
             var title_attr = '';
 
-            var fullSizeImgUri = new URI( image_parts[1] );
-            fullSizeImgUri.removeQuery( ['img_width', 'img_height'] );
+            var fullSizeImgUri = new URI(image_parts[1]);
+            fullSizeImgUri.removeQuery(['img_width', 'img_height']);
             var full_size_image = fullSizeImgUri.toString();
 
-            if( !tableSettings.readOnly ) {
+            if (!tableSettings.readOnly) {
                 class_name += '_editable';
-                title_attr = 'title="ctrl+click to open hyperlink:'+ full_size_image +'"';
+                title_attr = 'title="ctrl+click to open hyperlink:' + full_size_image + '"';
             }
 
             var image_html = '<img class="wpdt-thumb" src="' + image_url + '" ' + img_style + ' />';
 
-            html = '<a class="'+class_name+'" href="'+ full_size_image +'" target="_blank" '+ title_attr +'>' + image_html + '</a>';
+            html = '<a class="' + class_name + '" href="' + full_size_image + '" target="_blank" ' + title_attr + '>' + image_html + '</a>';
         } else {
             html = '<img class="wpdt-thumb" src="' + image_url + '" ' + img_style + ' />';
         }
@@ -1020,9 +1028,9 @@
      * CUSTOM DATE RENDERER DEFINITION.
      */
     function wdtDateRenderer(instance, td, row, col, prop, value, cellProperties) {
-        if( !value || value == '0000-00-00' ) {
+        if (!value || value == '0000-00-00') {
             value = '';
-            $(td).html( value );
+            $(td).html(value);
             Handsontable.AutocompleteRenderer(instance, td, row, col, prop, value, cellProperties);
             return td;
         }
@@ -1040,10 +1048,10 @@
     /**
      * Custom DateTime renderer
      */
-    function wdtDateTimeRenderer( instance, td, row, col, prop, value, cellProperties ){
-        if( !value || value == '0000-00-00 00:00:00' ) {
+    function wdtDateTimeRenderer(instance, td, row, col, prop, value, cellProperties) {
+        if (!value || value == '0000-00-00 00:00:00') {
             value = '';
-            $(td).html( value );
+            $(td).html(value);
             Handsontable.AutocompleteRenderer(instance, td, row, col, prop, value, cellProperties);
             return td;
         }
@@ -1054,14 +1062,14 @@
             //values are converted from database format to desired display format
             value = moment(
                 value,
-                table_settings.dataSourceDateFormat+' HH:mm:ss'
+                table_settings.dataSourceDateFormat + ' HH:mm:ss'
             ).format(
                 table_settings.displayDateFormat + ' ' + table_settings.momentTimeFormat
             );
-        }else{
+        } else {
             value = moment(
                 value,
-                table_settings.dataSourceDateFormat+' HH:mm:ss'
+                table_settings.dataSourceDateFormat + ' HH:mm:ss'
             ).format(
                 table_settings.dataSourceDateFormat + ' ' + table_settings.momentTimeFormat
             );
@@ -1073,17 +1081,17 @@
     /**
      * Custom Time renderer
      */
-    function wdtTimeRenderer( instance, td, row, col, prop, value, cellProperties ){
-        if( !value ) {
+    function wdtTimeRenderer(instance, td, row, col, prop, value, cellProperties) {
+        if (!value) {
             value = '';
-            $(td).html( value );
+            $(td).html(value);
             Handsontable.AutocompleteRenderer(instance, td, row, col, prop, value, cellProperties);
             return td;
         }
 
         var table_settings = instance.getSettings();
 
-        value = moment( value, 'HH:mm:ss').format( table_settings.momentTimeFormat );
+        value = moment(value, 'HH:mm:ss').format(table_settings.momentTimeFormat);
 
         Handsontable.AutocompleteRenderer(instance, td, row, col, prop, value, cellProperties);
     }
@@ -1152,14 +1160,14 @@
     /**
      * LINK VALIDATOR DEFINITION.
      */
-    Handsontable.wdtLinkValidator = function(value, callback) {
+    Handsontable.wdtLinkValidator = function (value, callback) {
         if (value === null) {
             value = '';
         }
 
         var is_valid = false;
 
-        if( value == '' ) {
+        if (value == '') {
             is_valid = true;
         } else {
             var regex = /^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?(||.*)?$/i;
@@ -1167,20 +1175,20 @@
             is_valid = regex.test(value);
         }
 
-        callback( is_valid );
+        callback(is_valid);
     };
 
     /**
      * E-MAIL VALIDATOR DEFINITION.
      */
-    Handsontable.wdtEmailValidator = function(value, callback) {
+    Handsontable.wdtEmailValidator = function (value, callback) {
         if (value === null) {
             value = '';
         }
 
         var is_valid = false;
 
-        if( value == '' ) {
+        if (value == '') {
             is_valid = true;
         } else {
             //took from wdtValidateEmail, in wpdatatables.func.js, maybe move these helper functions somewhere that every library can use them
@@ -1195,12 +1203,12 @@
     /**
      * CUSTOM DATE VALIDATOR DEFINITION.
      */
-    Handsontable.wdtDateValidator = function(value, callback) {
+    Handsontable.wdtDateValidator = function (value, callback) {
         if (value === null) {
             value = '';
         }
 
-        if( value == '' ) {
+        if (value == '') {
             callback(true);
         } else {
             Handsontable.DateValidator.call(this, value, callback);
@@ -1210,7 +1218,7 @@
     /**
      * CUSTOM DATETIME VALIDATOR DEFINITION
      */
-    Handsontable.wdtDateTimeValidator = function( value, callback ){
+    Handsontable.wdtDateTimeValidator = function (value, callback) {
         if (value === null) {
             value = '';
         }
@@ -1219,22 +1227,22 @@
 
         var isValidDate = moment(new Date(value)).isValid();
         var isValidFormat = moment(
-                                value,
-                                table_settings.dataSourceDateFormat+' H:mm:ss',
-                                true
-                            ).isValid();
+            value,
+            table_settings.dataSourceDateFormat + ' H:mm:ss',
+            true
+        ).isValid();
 
-        if( value == '' ) {
+        if (value == '') {
             callback(true);
         } else {
-            callback( isValidDate && isValidFormat );
+            callback(isValidDate && isValidFormat);
         }
     };
 
     /**
      * CUSTOM TIME VALIDATOR DEFINITION
      */
-    Handsontable.wdtTimeValidator = function( value, callback ){
+    Handsontable.wdtTimeValidator = function (value, callback) {
         if (value === null) {
             value = '';
         }
@@ -1247,10 +1255,10 @@
             true
         ).isValid();
 
-        if( value == '' ) {
+        if (value == '') {
             callback(true);
         } else {
-            callback( isValidTime );
+            callback(isValidTime);
         }
     };
 
@@ -1258,29 +1266,29 @@
      * MULTI-SELECT VALIDATOR DEFINITION.
      * Checking if entered values are in possible values.
      */
-    Handsontable.wdtMultiSelectValidator = function(value, callback) {
+    Handsontable.wdtMultiSelectValidator = function (value, callback) {
         var isValid = true;
 
         if (value === null) {
             value = '';
         }
 
-        if( this.source ) {
+        if (this.source) {
             var selected = value.toLowerCase().split(',');
             var choices = this.source.join(',').toLowerCase().split(',');
 
-            for( var i = 0; i < selected.length; i++ ) {
-                if( choices.indexOf( selected[i] ) == -1 ) {
+            for (var i = 0; i < selected.length; i++) {
+                if (choices.indexOf(selected[i]) == -1) {
                     isValid = false;
                     break;
                 }
             }
-        } else if( value ) {
+        } else if (value) {
             //if there is no select box and value is not empty
             isValid = false;
         }
 
-        callback( isValid );
+        callback(isValid);
     };
 
     registerEditors();
@@ -1289,13 +1297,13 @@
 
 })(Handsontable, jQuery);
 
-if( typeof wpDataTablesExcelOptions == 'undefined' ) {
+if (typeof wpDataTablesExcelOptions == 'undefined') {
     window.wpDtExcelTables = {};
 }
 
 (function ($) {
     $(function () {
-        $('div.wpExcelTable').each( function (){
+        $('div.wpExcelTable').each(function () {
             $(this).handsontable({
                 wpDataTablesExcelPlugin: true
             });

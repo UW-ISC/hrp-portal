@@ -142,8 +142,10 @@ class WDTBrowseChartsTable extends WP_List_Table
 
     /**
      * Set default columns value
+     *
      * @param object $item
      * @param string $column_name
+     *
      * @return string
      */
     function column_default($item, $column_name)
@@ -175,14 +177,14 @@ class WDTBrowseChartsTable extends WP_List_Table
             case 'id':
             case 'title':
             default:
-            if (has_filter('wpdatatables_browse_tables_column_name_' . $column_name)) {
-                return apply_filters(
-                    'wpdatatables_browse_tables_column_name_' . $column_name,
-                    $item[$column_name], $item, 'chart'
-                );
-            } else {
-                return $item[$column_name];
-            }
+                if (has_filter('wpdatatables_browse_tables_column_name_' . $column_name)) {
+                    return apply_filters(
+                        'wpdatatables_browse_tables_column_name_' . $column_name,
+                        $item[$column_name], $item, 'chart'
+                    );
+                } else {
+                    return $item[$column_name];
+                }
         }
     }
 
@@ -209,7 +211,9 @@ class WDTBrowseChartsTable extends WP_List_Table
 
     /**
      * Customize checkbox column items
+     *
      * @param object $item
+     *
      * @return string
      */
     function column_cb($item)
@@ -221,7 +225,9 @@ class WDTBrowseChartsTable extends WP_List_Table
 
     /**
      * Display chart type column values
+     *
      * @param $item
+     *
      * @return string
      */
     function column_type($item)
@@ -418,6 +424,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      * Print column headers, accounting for hidden and sortable columns.
      *
      * @param bool $with_id Whether to set the id attribute or not
+     *
      * @since 3.1.0
      * @access public
      *
@@ -524,6 +531,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      * Display the pagination.
      *
      * @param string $which
+     *
      * @since 3.1.0
      * @access protected
      *
@@ -590,6 +598,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      *
      * @param string $which The location of the bulk actions: 'top' or 'bottom'.
      * This is designated as optional for backward compatibility.
+     *
      * @since 3.1.0
      * @access protected
      *
@@ -607,6 +616,7 @@ class WDTBrowseChartsTable extends WP_List_Table
              * This filter can currently only be used to remove bulk actions.
              *
              * @param array $actions An array of the available bulk actions.
+             *
              * @since 3.5.0
              *
              */
@@ -627,6 +637,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      * Generate the table navigation above or below the table
      *
      * @param string $which
+     *
      * @since 3.1.0
      * @access protected
      */
@@ -644,6 +655,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      *
      * @param string $text The 'submit' button label.
      * @param string $input_id ID attribute value for the search input field.
+     *
      * @since 3.1.0
      * @access public
      *

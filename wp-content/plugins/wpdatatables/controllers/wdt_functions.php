@@ -13,7 +13,8 @@ defined('ABSPATH') or die('Access denied.');
 global $wp_version;
 
 
-function wdtActivationInsertTemplates() {
+function wdtActivationInsertTemplates()
+{
     WPDataTablesTemplates::importStandardSimpleTemplates();
 }
 
@@ -348,7 +349,7 @@ function wdtActivationCreateTables()
         update_option('wdtShowBundlesNotice', 'yes');
     }
     if (get_option('wdtShowAmeliaBanner') === false) {
-        update_option('wdtShowAmeliaBanner', 'yes' );
+        update_option('wdtShowAmeliaBanner', 'yes');
     }
     if (!get_option('wdtGoogleApiMaps')) {
         update_option('wdtGoogleApiMaps', '');
@@ -369,7 +370,7 @@ function wdtActivationCreateTables()
     update_option('wdtHideUpdateModal', 0);
 
     if (get_option('wdtBootstrapUpdateNotice') === false) {
-        update_option('wdtBootstrapUpdateNotice', 'yes' );
+        update_option('wdtBootstrapUpdateNotice', 'yes');
     }
     delete_option('wdtGeneratedTablesCount');
 
@@ -475,7 +476,8 @@ function wdtUninstallDelete()
     }
 }
 
-function wdtCheckSimpleTemplatesActivation ($rowCount, $tableName) {
+function wdtCheckSimpleTemplatesActivation($rowCount, $tableName)
+{
     global $wpdb;
 
     if (get_option('wdtActivationSimpleTableTemplates') !== 'yes') {
@@ -489,6 +491,7 @@ function wdtCheckSimpleTemplatesActivation ($rowCount, $tableName) {
 
 /**
  * Activation hook
+ *
  * @param $networkWide
  */
 function wdtActivation($networkWide)
@@ -510,7 +513,7 @@ function wdtActivation($networkWide)
                 //Insert standard templates if not exists
                 $tableName = $wpdb->prefix . 'wpdatatables_templates';
                 $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-                wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
+                wdtCheckSimpleTemplatesActivation($rowCount, $tableName);
             }
             switch_to_blog($oldBlog);
 
@@ -522,7 +525,7 @@ function wdtActivation($networkWide)
     //Insert standard templates if not exists
     $tableName = $wpdb->prefix . 'wpdatatables_templates';
     $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-    wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
+    wdtCheckSimpleTemplatesActivation($rowCount, $tableName);
 }
 
 /**
@@ -568,8 +571,8 @@ function wdtAdminRatingMessages()
     $diffIntrval = round(($datetimeCurrentDate->format('U') - $datetimeInstallDate->format('U')) / (60 * 60 * 24));
     $systemInfoPage = get_site_url() . '/wp-admin/admin.php?page=wpdatatables-system-info';
 
-    if( is_admin() && strpos($wpdtPage,'wpdatatables') !== false &&
-        get_option( 'wdtBootstrapUpdateNotice' ) == "yes"){
+    if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false &&
+        get_option('wdtBootstrapUpdateNotice') == "yes") {
         echo '<div class="notice notice-info is-dismissible wpdt-bootstrap-update-notice">
              <p class="wpdt-bootstrap-update"><strong>Coming Soon!</strong> wpDataTables will <strong>update Bootstrap JS framework</strong> for improved performance and enhanced functionality.</p>
          </div>';
@@ -600,8 +603,8 @@ function wdtAdminRatingMessages()
         wp_enqueue_style('wdt-bundles-css', WDT_CSS_PATH . 'admin/bundles.css');
     }
 
-    if( is_admin() && (strpos($wpdtPage,'wpdatatables-dashboard') !== false) &&
-        get_option( 'wdtShowAmeliaBanner' ) == "yes" && wdtInstalledPluginsAmeliaPromotion()) {
+    if (is_admin() && (strpos($wpdtPage, 'wpdatatables-dashboard') !== false) &&
+        get_option('wdtShowAmeliaBanner') == "yes" && wdtInstalledPluginsAmeliaPromotion()) {
         include WDT_TEMPLATE_PATH . 'admin/common/promote_amelia.php';
         wp_enqueue_style('wdt-promo-css', WDT_CSS_PATH . 'admin/amelia_promo_banner.css');
     }
@@ -620,24 +623,26 @@ function wdtHideUpdateModal()
 }
 
 add_action('wp_ajax_wdtHideUpdateModal', 'wdtHideUpdateModal');
-function wdt_sanitize_multi_upload( $fields ) {
-    return array_map( function( $field ) {
-        return array_map( 'sanitize_file_name', $field );
-    }, $fields );
+function wdt_sanitize_multi_upload($fields)
+{
+    return array_map(function ($field) {
+        return array_map('sanitize_file_name', $field);
+    }, $fields);
 }
 
-function wdt_get_super_global_value( $super_global, $key ) {
-        if ( ! isset( $super_global[ $key ] ) ) {
-            return null;
-        }
+function wdt_get_super_global_value($super_global, $key)
+{
+    if (!isset($super_global[$key])) {
+        return null;
+    }
 
-        if ( $_FILES === $super_global ) {
-            return isset( $super_global[ $key ]['name'] ) ?
-                sanitize_file_name( $super_global[ $key ] ) :
-                wdt_sanitize_multi_upload( $super_global[ $key ] );
-        }
+    if ($_FILES === $super_global) {
+        return isset($super_global[$key]['name']) ?
+            sanitize_file_name($super_global[$key]) :
+            wdt_sanitize_multi_upload($super_global[$key]);
+    }
 
-        return wp_kses_post_deep( wp_unslash( $super_global[ $key ] ) );
+    return wp_kses_post_deep(wp_unslash($super_global[$key]));
 }
 
 function wdtSaveDeactivationinfo()
@@ -646,12 +651,12 @@ function wdtSaveDeactivationinfo()
         wp_send_json_error();
     }
 
-    if (!current_user_can( 'activate_plugins' )) {
+    if (!current_user_can('activate_plugins')) {
         wp_send_json_error();
     }
 
-    $reason = wdt_get_super_global_value( $_POST, 'choice' ) ?? '';
-    $reason_caption = wdt_get_super_global_value( $_POST, "textareaDescription" ) ?? '';
+    $reason = wdt_get_super_global_value($_POST, 'choice') ?? '';
+    $reason_caption = wdt_get_super_global_value($_POST, "textareaDescription") ?? '';
 
     $reason = sanitize_key($reason);
     $reason_caption = sanitize_textarea_field($reason_caption);
@@ -665,14 +670,16 @@ add_action('wp_ajax_wdtSaveDeactivationinfo', 'wdtSaveDeactivationinfo');
 
 function wdtEnqueueDeactivationModal()
 {
-    if((strpos($_SERVER['REQUEST_URI'],'plugins.php') !== false)) {
+    if ((strpos($_SERVER['REQUEST_URI'], 'plugins.php') !== false)) {
         wp_enqueue_script('wdt-deactivate-info-js', WDT_ROOT_URL . 'assets/js/deactivation/deactivation-modal.js', array(), WDT_CURRENT_VERSION, true);
         wp_localize_script('wdt-deactivate-info-js', 'wpdatatables_deactivate_info', WDTTools::getDeactivationInfo());
     }
 }
+
 add_action('admin_enqueue_scripts', 'wdtEnqueueDeactivationModal');
 
-function wdtIsPluginInstalled($plugin_path) {
+function wdtIsPluginInstalled($plugin_path)
+{
     $plugins_dir = WP_PLUGIN_DIR;
     $plugin_file = $plugins_dir . '/' . $plugin_path;
 
@@ -700,17 +707,17 @@ function wdtInstalledPluginsAmeliaPromotion()
         if (is_plugin_active($plugin)) {
             $installed_plugins[] = $plugin;
         }
-        if(wdtIsPluginInstalled($plugin)){
+        if (wdtIsPluginInstalled($plugin)) {
             $installed_plugins_not_active[] = $plugin;
         }
     }
 
     if (!empty($installed_plugins)) {
-        if(is_plugin_inactive("ameliabooking/ameliabooking.php"))
+        if (is_plugin_inactive("ameliabooking/ameliabooking.php"))
             return true;
     }
     if (!empty($installed_plugins_not_active)) {
-        if(!wdtIsPluginInstalled("ameliabooking/ameliabooking.php"))
+        if (!wdtIsPluginInstalled("ameliabooking/ameliabooking.php"))
             return true;
     }
 
@@ -731,12 +738,14 @@ add_action('wp_ajax_wdtHideRating', 'wdtHideRating');
 /**
  * Remove Bootstrap Update notice message
  **/
-function wdtRemoveBootstrapUpdateNotice() {
-    update_option( 'wdtBootstrapUpdateNotice', 'no' );
-    echo json_encode( array("success") );
+function wdtRemoveBootstrapUpdateNotice()
+{
+    update_option('wdtBootstrapUpdateNotice', 'no');
+    echo json_encode(array("success"));
     exit;
 }
-add_action( 'wp_ajax_wdt_remove_bootstrap_update_notice', 'wdtRemoveBootstrapUpdateNotice' );
+
+add_action('wp_ajax_wdt_remove_bootstrap_update_notice', 'wdtRemoveBootstrapUpdateNotice');
 /**
  * Remove Forminator notice message
  */
@@ -758,16 +767,19 @@ function wdtRemoveBundlesNotice()
     echo json_encode(array("success"));
     exit;
 }
-add_action( 'wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice' );
+
+add_action('wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice');
 /**
  * Remove Amelia promo notice message
  **/
-function wdtRemoveAmeliaPromoNotice() {
-    update_option( 'wdtShowAmeliaBanner', 'no' );
-    echo json_encode( array("success") );
+function wdtRemoveAmeliaPromoNotice()
+{
+    update_option('wdtShowAmeliaBanner', 'no');
+    echo json_encode(array("success"));
     exit;
 }
-add_action( 'wp_ajax_wdt_remove_promo_amelia_notice', 'wdtRemoveAmeliaPromoNotice' );
+
+add_action('wp_ajax_wdt_remove_promo_amelia_notice', 'wdtRemoveAmeliaPromoNotice');
 
 /**
  * Remove Simple Table alert message
@@ -808,6 +820,7 @@ add_action('wp_ajax_wdtTempHideRating', 'wpdtTempHideRatingDiv');
 
 /**
  * Create tables on every new site (multisite)
+ *
  * @param $blogId
  */
 function wdtOnCreateSiteOnMultisiteNetwork($blogId)
@@ -819,7 +832,7 @@ function wdtOnCreateSiteOnMultisiteNetwork($blogId)
         //Insert standard templates if not exists
         $tableName = $wpdb->prefix . 'wpdatatables_templates';
         $rowCount = $wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
-        wdtCheckSimpleTemplatesActivation ($rowCount, $tableName);
+        wdtCheckSimpleTemplatesActivation($rowCount, $tableName);
         restore_current_blog();
     }
 }
@@ -828,7 +841,9 @@ add_action('wpmu_new_blog', 'wdtOnCreateSiteOnMultisiteNetwork');
 
 /**
  * Delete table on site delete (multisite)
+ *
  * @param $tables
+ *
  * @return array
  */
 function wdtOnDeleteSiteOnMultisiteNetwork($tables)
@@ -864,6 +879,7 @@ if (!function_exists('add_action')) {
 
 /**
  * Helper func that prints out the table
+ *
  * @param $id
  */
 function wdtOutputTable($id)
@@ -873,8 +889,10 @@ function wdtOutputTable($id)
 
 /**
  * Handler for the chart shortcode
+ *
  * @param $atts
  * @param null $content
+ *
  * @return bool|string
  * @throws WDTException
  */
@@ -921,8 +939,10 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null)
 
 /**
  * Handler for the table cell shortcode
+ *
  * @param $atts
  * @param null $content
+ *
  * @return mixed|string
  * @throws Exception
  */
@@ -1032,7 +1052,12 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null)
                 if (!isset($wpDataTable->getWdtColumnTypes()[$columnID]))
                     return esc_html__('Column ID for provided table ID not found!', 'wpdatatables');
 
-                if (in_array($wpDataTable->getWdtColumnTypes()[$columnID], ['date', 'datetime', 'time', 'float', 'formula', 'select']))
+                if (in_array($wpDataTable->getWdtColumnTypes()[$columnID], ['date',
+                    'datetime',
+                    'time',
+                    'float',
+                    'formula',
+                    'select']))
                     return esc_html__('At the moment float, formula, date, datetime and time columns can not be used as column_id. Please use other column that contains unique identifiers.', 'wpdatatables');
 
                 if ($columnKey == $columnID)
@@ -1259,7 +1284,8 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null)
                     }
                     if ($columnIDValue != '' || $columnID != '') {
                         if ($fieldData['label'] == $columnID) {
-                            $searchCriteria['field_filters'][] = ['key' => $fieldData['fieldIds'], 'value' => $columnIDValue];
+                            $searchCriteria['field_filters'][] = ['key' => $fieldData['fieldIds'],
+                                'value' => $columnIDValue];
                         }
                     }
                 }
@@ -1296,7 +1322,9 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null)
                     return esc_html__('Table do not have data for provided table ID!', 'wpdatatables');
                 if ($includeSort && $isTableSortable) {
                     $sortDirection = $sortDirection == 'ASC' ? SORT_ASC : SORT_DESC;
-                    $sortingType = in_array($columnType, array('float', 'int', 'formula')) ? SORT_NUMERIC : SORT_REGULAR;
+                    $sortingType = in_array($columnType, array('float',
+                        'int',
+                        'formula')) ? SORT_NUMERIC : SORT_REGULAR;
                     array_multisort(
                         array_column($dataRows, $sortColumn),
                         $sortDirection,
@@ -1370,8 +1398,10 @@ function formulaFormat($headersInFormulaColumn, $formulaColumn, $tableName, $lef
 
 /**
  * Handler for the table shortcode
+ *
  * @param $atts
  * @param null $content
+ *
  * @return mixed|string
  * @throws Exception
  */
@@ -1488,9 +1518,11 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
 
 /**
  * Handler for the SUM, AVG, MIN and MAX function shortcode
+ *
  * @param $atts
  * @param null $content
  * @param null $shortcode
+ *
  * @return string
  * @throws WDTException
  */
@@ -1637,8 +1669,10 @@ function wdtTableRenderScriptStyleBlock($obj)
 
 /**
  * Checks if current user can edit table on the front-end
+ *
  * @param $tableEditorRoles
  * @param $id
+ *
  * @return bool|mixed
  */
 function wdtCurrentUserCanEdit($tableEditorRoles, $id)
@@ -1674,7 +1708,9 @@ function wdtCurrentUserCanEdit($tableEditorRoles, $id)
 
 /**
  * Removes all dangerous strings from query
+ *
  * @param $query
+ *
  * @return mixed|string
  */
 function wdtSanitizeQuery($query)
@@ -1710,7 +1746,7 @@ function wdtSanitizeQuery($query)
 
     $query = apply_filters_deprecated(
         'wpdt_sanitize_query',
-        array( $query ),
+        array($query),
         WDT_INITIAL_STARTER_VERSION,
         'wpdatatables_sanitize_query'
     );
@@ -1760,7 +1796,9 @@ add_action('init', 'wdtMCEButtons');
 
 /**
  * Function that add buttons for MCE editor
+ *
  * @param $pluginArray
+ *
  * @return mixed
  */
 function wdtAddButtons($pluginArray)
@@ -1772,7 +1810,9 @@ function wdtAddButtons($pluginArray)
 
 /**
  * Function that register buttons for MCE editor
+ *
  * @param $buttons
+ *
  * @return mixed
  */
 function wdtRegisterButtons($buttons)

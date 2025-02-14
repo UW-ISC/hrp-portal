@@ -349,6 +349,7 @@ a[data-link-content="wpdt-link-content"] button,
     width: 50% !important;
     float: left;
 }
+
 .wpdt-c table.wpdtSimpleTable.bt[data-has-header='1'] td.border-separate {
     width: 44% !important;
     margin: 0 3%;
@@ -373,6 +374,7 @@ table.wpdtSimpleTable.bt[data-has-header='1'] td.wpdt-header-classes {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
+
 .wpdt-c table.wpdtSimpleTable.bt tr.remove-borders,
 .wpdt-c table.wpdtSimpleTable.bt td.remove-borders,
 .wpdt-c table.wpdtSimpleTable tr.remove-borders,
@@ -380,14 +382,17 @@ table.wpdtSimpleTable.bt[data-has-header='1'] td.wpdt-header-classes {
 .wpdt-c table.wpdtSimpleTable th.remove-borders {
     border: none !important;
 }
-.wpdt-c table.wpdtTemplatePricing1 tr:last-child td:first-child{
+
+.wpdt-c table.wpdtTemplatePricing1 tr:last-child td:first-child {
     border-left-color: #FFFFFF !important;
     border-bottom-color: #FFFFFF !important;
 }
+
 .wpdt-c table.wpdtTemplatePricing1 tr:first-child td:first-child {
     border-left-color: #FFFFFF !important;
     border-top-color: #FFFFFF !important;
 }
+
 .wpdt-c table.wpdtTemplatePedigree1 td {
     border: 1px solid #000000 !important;
 }

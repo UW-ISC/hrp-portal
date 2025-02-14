@@ -1,7 +1,9 @@
 <?php
 
 defined('ABSPATH') or die('Access denied.');
-class WDTColumn {
+
+class WDTColumn
+{
 
     protected $_id = null;
     protected $_inputType = '';
@@ -36,7 +38,7 @@ class WDTColumn {
     protected $_possibleValuesType;
     protected $_possibleValuesAddEmpty = false;
     protected $_possibleValuesAjax = 10;
-	protected $_column_align_fields = '';
+    protected $_column_align_fields = '';
     protected $_rangeSlider;
     protected $_rangeMaxValueDisplay;
     protected $_customMaxRangeValue;
@@ -44,29 +46,31 @@ class WDTColumn {
     protected $_editingDefaultValue = null;
     protected $_parentTable = null;
     protected $_linkButtonLabel;
-	protected $_column_align_header = '';
+    protected $_column_align_header = '';
     protected $_transformValueText = array();
 
-	protected $_column_rotate_header_name = '';
+    protected $_column_rotate_header_name = '';
 
     public $masterDetailColumnOption;
+
     /**
      * WDTColumn constructor.
      *
      * @param array $properties
      */
-    public function __construct($properties = array()) {
+    public function __construct($properties = array())
+    {
         $this->_cssClassArray = WDTTools::defineDefaultValue($properties, 'classes', array());
         $this->_textBefore = WDTTools::defineDefaultValue($properties, 'text_before', '');
         $this->_textAfter = WDTTools::defineDefaultValue($properties, 'text_after', '');
-        $this->_transformValueText = WDTTools::defineDefaultValue($properties, 'transformValueText','');
+        $this->_transformValueText = WDTTools::defineDefaultValue($properties, 'transformValueText', '');
         $this->setSorting(WDTTools::defineDefaultValue($properties, 'sorting', 1));
         $this->_title = WDTTools::defineDefaultValue($properties, 'title', '');
         $this->_isVisible = WDTTools::defineDefaultValue($properties, 'visible', true);
         $this->_width = WDTTools::defineDefaultValue($properties, 'width', '');
         $this->_orig_header = WDTTools::defineDefaultValue($properties, 'orig_header', '');
         $this->_exactFiltering = WDTTools::defineDefaultValue($properties, 'exactFiltering', '');
-        $this->setGlobalSearchColumn(WDTTools::defineDefaultValue($properties,'globalSearchColumn', 1));
+        $this->setGlobalSearchColumn(WDTTools::defineDefaultValue($properties, 'globalSearchColumn', 1));
         $this->setSearchInSelectBox(WDTTools::defineDefaultValue($properties, 'searchInSelectBox', 1));
         $this->setSearchInSelectBoxEditing(WDTTools::defineDefaultValue($properties, 'searchInSelectBoxEditing', 1));
         $this->_searchable = WDTTools::defineDefaultValue($properties, 'searchable', true);
@@ -89,138 +93,160 @@ class WDTColumn {
     /**
      * @return string
      */
-    public function getInputType() {
+    public function getInputType()
+    {
         return $this->_inputType;
     }
 
     /**
      * @param string $inputType
      */
-    public function setInputType($inputType) {
+    public function setInputType($inputType)
+    {
         $this->_inputType = $inputType;
     }
 
     /**
      * @return bool
      */
-    public function isHiddenOnPhones() {
+    public function isHiddenOnPhones()
+    {
         return $this->_hiddenOnPhones;
     }
 
     /**
      * @param bool $hiddenOnPhones
      */
-    public function setHiddenOnPhones($hiddenOnPhones) {
+    public function setHiddenOnPhones($hiddenOnPhones)
+    {
         $this->_hiddenOnPhones = $hiddenOnPhones;
     }
 
     /**
      * @return bool
      */
-    public function isHiddenOnTablets() {
+    public function isHiddenOnTablets()
+    {
         return $this->_hiddenOnTablets;
     }
 
     /**
      * @param bool $hiddenOnTablets
      */
-    public function setHiddenOnTablets($hiddenOnTablets) {
+    public function setHiddenOnTablets($hiddenOnTablets)
+    {
         $this->_hiddenOnTablets = $hiddenOnTablets;
     }
 
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return apply_filters('wpdatatables_filter_column_title', $this->_title, $this->getOriginalHeader(), $this);
     }
+
     /**
      * @param string $title
      */
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->_title = $title;
     }
+
     /**
      * @return string
      */
-    public function getOriginalHeader() {
+    public function getOriginalHeader()
+    {
         return $this->_orig_header;
     }
 
     /**
      * @param string $orig_header
      */
-    public function setOriginalHeader($orig_header) {
+    public function setOriginalHeader($orig_header)
+    {
         $this->_orig_header = $orig_header;
     }
 
     /**
      * @return bool|string
      */
-    public function isVisible() {
+    public function isVisible()
+    {
         return $this->_isVisible;
     }
 
     /**
      * @return bool
      */
-    public function isVisibleOnMobiles() {
+    public function isVisibleOnMobiles()
+    {
         return ($this->_isVisible && !$this->_hiddenOnPhones && !$this->_hiddenOnTablets);
     }
 
     /**
      * @param bool|string $isVisible
      */
-    public function setIsVisible($isVisible) {
+    public function setIsVisible($isVisible)
+    {
         $this->_isVisible = $isVisible;
     }
 
     /**
      * @return mixed
      */
-    public function getCssStyle() {
+    public function getCssStyle()
+    {
         return $this->_cssStyle;
     }
 
     /**
      * @param mixed $cssStyle
      */
-    public function setCssStyle($cssStyle) {
+    public function setCssStyle($cssStyle)
+    {
         $this->_cssStyle = $cssStyle;
     }
 
     /**
      * @return string
      */
-    public function getWidth() {
+    public function getWidth()
+    {
         return $this->_width ? $this->_width : 'auto';
     }
 
     /**
      * @param string $width
      */
-    public function setWidth($width) {
+    public function setWidth($width)
+    {
         $this->_width = $width;
     }
 
     /**
      * @return bool
      */
-    public function getSorting() {
+    public function getSorting()
+    {
         return $this->_sorting;
     }
 
     /**
      * @param int $sorting
      */
-    public function setSorting($sorting) {
+    public function setSorting($sorting)
+    {
         $this->_sorting = (bool)$sorting;
     }
 
     /**
      * @return mixed
      */
-    public function getCSSClasses() {
+    public function getCSSClasses()
+    {
         $classesStr = implode(' ', $this->_cssClassArray);
         $classesStr = apply_filters('wpdatatables_filter_column_cssClassArray', $classesStr, $this->_title);
         return $classesStr;
@@ -229,36 +255,42 @@ class WDTColumn {
     /**
      * @param $class
      */
-    public function addCSSClass($class) {
+    public function addCSSClass($class)
+    {
         $this->_cssClassArray[] = $class;
     }
 
     /**
      * @return mixed
      */
-    public function getDataType() {
+    public function getDataType()
+    {
         return $this->_dataType;
     }
 
     /**
      * @param mixed $dataType
      */
-    public function setDataType($dataType) {
+    public function setDataType($dataType)
+    {
         $this->_dataType = $dataType;
     }
 
     /**
      * @return string
      */
-    public function getFilterType() {
+    public function getFilterType()
+    {
         return $this->_filterType;
     }
 
     /**
      * @param $filterType
+     *
      * @throws WDTException
      */
-    public function setFilterType($filterType) {
+    public function setFilterType($filterType)
+    {
         if (!in_array($filterType,
             array(
                 'none',
@@ -287,14 +319,16 @@ class WDTColumn {
     /**
      * @return array
      */
-    public function getPossibleValuesList() {
+    public function getPossibleValuesList()
+    {
         return $this->_possibleValues;
     }
 
     /**
      * @param array $possibleValues
      */
-    public function setPossibleValues($possibleValues) {
+    public function setPossibleValues($possibleValues)
+    {
         if (!empty($possibleValues)) {
             if (!is_array($possibleValues)) {
                 $possibleValues = explode('|', $possibleValues);
@@ -309,7 +343,8 @@ class WDTColumn {
      * @return string
      * @throws WDTException
      */
-    public function getFilterDefaultValue() {
+    public function getFilterDefaultValue()
+    {
         $value = $this->_filterDefaultValue;
 
         if ($value) {
@@ -333,11 +368,11 @@ class WDTColumn {
                     $valueCopy = $this->applyPlaceholders($valueCopy);
 
                     $value['value'] = $valueCopy;
-                    
+
                     if ($this->getFilterType() == "text") {
                         $key = array_search($valueCopy, $distinctValues);
                         $value['text'] = $distinctValues[$key];
-                    }else {
+                    } else {
                         $value['text'] = $distinctValues[$valueCopy];
                     }
                 }
@@ -354,10 +389,10 @@ class WDTColumn {
 
         $value = apply_filters_deprecated(
             'wpdt_filter_filtering_default_value',
-            array( $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId() ),
+            array($value, $this->getOriginalHeader(), $this->getParentTable()->getWpId()),
             WDT_INITIAL_STARTER_VERSION,
-            'wpdatatables_filter_filtering_default_value' );
-        $value = apply_filters('wpdatatables_filter_filtering_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
+            'wpdatatables_filter_filtering_default_value');
+        $value = apply_filters('wpdatatables_filter_filtering_default_value', $value, $this->getOriginalHeader(), $this->getParentTable()->getWpId());
 
         return $value;
     }
@@ -365,7 +400,8 @@ class WDTColumn {
     /**
      * @param string $defaultValue
      */
-    public function setFilterDefaultValue($defaultValue) {
+    public function setFilterDefaultValue($defaultValue)
+    {
         if ($defaultValue !== null && strpos($defaultValue, '|') !== false) {
             $defaultValue = explode('|', $defaultValue);
         }
@@ -375,77 +411,88 @@ class WDTColumn {
     /**
      * @return string
      */
-    public function getTextBefore() {
+    public function getTextBefore()
+    {
         return $this->_textBefore;
     }
 
     /**
      * @param string $textBefore
      */
-    public function setTextBefore($textBefore) {
+    public function setTextBefore($textBefore)
+    {
         $this->_textBefore = $textBefore;
     }
 
     /**
      * @return string
      */
-    public function getTransformValueText() {
+    public function getTransformValueText()
+    {
         return $this->_transformValueText;
     }
 
     /**
      * @param string $textvalue
      */
-    public function setTransformValueText($textvalue) {
+    public function setTransformValueText($textvalue)
+    {
         $this->_transformValueText = $textvalue;
     }
 
     /**
      * @return string
      */
-    public function getTextAfter() {
+    public function getTextAfter()
+    {
         return $this->_textAfter;
     }
 
     /**
      * @param string $textAfter
      */
-    public function setTextAfter($textAfter) {
+    public function setTextAfter($textAfter)
+    {
         $this->_textAfter = $textAfter;
     }
 
     /**
      * @return bool
      */
-    public function isNotNull() {
+    public function isNotNull()
+    {
         return $this->_notNull;
     }
 
     /**
      * @param bool $notNull
      */
-    public function setNotNull($notNull) {
+    public function setNotNull($notNull)
+    {
         $this->_notNull = (bool)$notNull;
     }
 
     /**
      * @return bool
      */
-    public function isShowThousandsSeparator() {
+    public function isShowThousandsSeparator()
+    {
         return $this->_showThousandsSeparator;
     }
 
     /**
      * @param bool $showThousandsSeparator
      */
-    public function setShowThousandsSeparator($showThousandsSeparator) {
+    public function setShowThousandsSeparator($showThousandsSeparator)
+    {
         $this->_showThousandsSeparator = $showThousandsSeparator;
     }
 
     /**
      * @return array
      */
-    public function getConditionalFormattingData() {
+    public function getConditionalFormattingData()
+    {
         return $this->_conditionalFormattingData;
     }
 
@@ -456,63 +503,72 @@ class WDTColumn {
      *
      * @param array $conditionalFormattingData
      */
-    public function setConditionalFormattingData($conditionalFormattingData) {
+    public function setConditionalFormattingData($conditionalFormattingData)
+    {
         $this->_conditionalFormattingData = $conditionalFormattingData;
     }
 
     /**
      * @return bool
      */
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return $this->_searchable;
     }
 
     /**
      * @param bool $searchable
      */
-    public function setSearchable($searchable) {
+    public function setSearchable($searchable)
+    {
         $this->_searchable = $searchable;
     }
 
     /**
      * @return int
      */
-    public function getDecimalPlaces() {
+    public function getDecimalPlaces()
+    {
         return $this->_decimalPlaces;
     }
 
     /**
      * @param int $decimalPlaces
      */
-    public function setDecimalPlaces($decimalPlaces) {
+    public function setDecimalPlaces($decimalPlaces)
+    {
         $this->_decimalPlaces = $decimalPlaces;
     }
 
     /**
      * @return string
      */
-    public function getExactFiltering() {
+    public function getExactFiltering()
+    {
         return $this->_exactFiltering;
     }
 
     /**
      * @param string $exactFiltering
      */
-    public function setExactFiltering($exactFiltering) {
+    public function setExactFiltering($exactFiltering)
+    {
         $this->_exactFiltering = $exactFiltering;
     }
 
     /**
      * @return int
      */
-    public function getGlobalSearchColumn() {
+    public function getGlobalSearchColumn()
+    {
         return $this->_globalSearchColumn;
     }
 
     /**
      * @param int $globalSearchColumn
      */
-    public function setGlobalSearchColumn($globalSearchColumn) {
+    public function setGlobalSearchColumn($globalSearchColumn)
+    {
         $this->_globalSearchColumn = $globalSearchColumn;
     }
 
@@ -551,14 +607,16 @@ class WDTColumn {
     /**
      * @return string
      */
-    public function getRangeSlider() {
+    public function getRangeSlider()
+    {
         return $this->_rangeSlider;
     }
 
     /**
      * @param string $rangeSlider
      */
-    public function setRangeSlider($rangeSlider) {
+    public function setRangeSlider($rangeSlider)
+    {
         $this->_rangeSlider = $rangeSlider;
     }
 
@@ -597,138 +655,166 @@ class WDTColumn {
     /**
      * @return string
      */
-    public function getFilterLabel() {
+    public function getFilterLabel()
+    {
         return $this->_filterLabel;
     }
 
     /**
      * @param string $filterLabel
      */
-    public function setFilterLabel($filterLabel) {
+    public function setFilterLabel($filterLabel)
+    {
         $this->_filterLabel = $filterLabel;
     }
 
     /**
      * @return string
      */
-    public function getLinkButtonLabel() {
+    public function getLinkButtonLabel()
+    {
         return $this->_linkButtonLabel;
     }
 
     /**
      * @param string $linkButtonLabel
      */
-    public function setLinkButtonLabel($linkButtonLabel) {
+    public function setLinkButtonLabel($linkButtonLabel)
+    {
         $this->_linkButtonLabel = $linkButtonLabel;
     }
 
     /**
      * @return bool
      */
-    public function isCheckboxesInModal() {
+    public function isCheckboxesInModal()
+    {
         return $this->_checkboxesInModal;
     }
 
     /**
      * @param bool $checkboxesInModal
      */
-    public function setCheckboxesInModal($checkboxesInModal) {
+    public function setCheckboxesInModal($checkboxesInModal)
+    {
         $this->_checkboxesInModal = $checkboxesInModal;
     }
 
     /**
      * @return bool
      */
-    public function isAndLogic() {
+    public function isAndLogic()
+    {
         return $this->_andLogic;
     }
 
     /**
      * @param bool $andLogic
      */
-    public function setAndLogic($andLogic) {
+    public function setAndLogic($andLogic)
+    {
         $this->_andLogic = $andLogic;
     }
 
     /**
      * @return string
      */
-    public function getPossibleValuesType() {
+    public function getPossibleValuesType()
+    {
         return $this->_possibleValuesType;
     }
 
     /**
      * @param string $possibleValuesType
      */
-    public function setPossibleValuesType($possibleValuesType) {
+    public function setPossibleValuesType($possibleValuesType)
+    {
         $this->_possibleValuesType = $possibleValuesType;
     }
 
     /**
      * @return mixed
      */
-    public function getPossibleValuesAddEmpty() {
+    public function getPossibleValuesAddEmpty()
+    {
         return $this->_possibleValuesAddEmpty;
     }
 
     /**
      * @param mixed $possibleValuesAddEmpty
      */
-    public function setPossibleValuesAddEmpty($possibleValuesAddEmpty) {
+    public function setPossibleValuesAddEmpty($possibleValuesAddEmpty)
+    {
         $this->_possibleValuesAddEmpty = (bool)$possibleValuesAddEmpty;
     }
 
     /**
      * @return int
      */
-    public function getPossibleValuesAjax() {
+    public function getPossibleValuesAjax()
+    {
         return $this->_possibleValuesAjax;
     }
-	public function getColumnAlignFields() {
-		return $this->_column_align_fields;
-	}
+
+    public function getColumnAlignFields()
+    {
+        return $this->_column_align_fields;
+    }
+
     /**
      * @param int $possibleValuesAjax
      */
-    public function setPossibleValuesAjax($possibleValuesAjax) {
+    public function setPossibleValuesAjax($possibleValuesAjax)
+    {
         $this->_possibleValuesAjax = $possibleValuesAjax;
     }
-	public function getColumnAlignHeader() {
-		return $this->_column_align_header;
- 	}
-	public function setColumnAlignHeader($column_align) {
-		$this->_column_align_header = $column_align;
-	}
-	public function setColumnAlignFields($column_align) {
-		$this->_column_align_fields = $column_align;
-	}
+
+    public function getColumnAlignHeader()
+    {
+        return $this->_column_align_header;
+    }
+
+    public function setColumnAlignHeader($column_align)
+    {
+        $this->_column_align_header = $column_align;
+    }
+
+    public function setColumnAlignFields($column_align)
+    {
+        $this->_column_align_fields = $column_align;
+    }
 
     /**
      * @return mixed
      */
-    public function getForeignKeyRule() {
+    public function getForeignKeyRule()
+    {
         return $this->_foreignKeyRule;
     }
 
-	public function getColumnRotationHeader() {
-			return $this->_column_rotate_header_name;
- 	}
+    public function getColumnRotationHeader()
+    {
+        return $this->_column_rotate_header_name;
+    }
 
-	public function setColumnRotationHeader($column_rotate) {
-			$this->_column_rotate_header_name = $column_rotate;
-	}
+    public function setColumnRotationHeader($column_rotate)
+    {
+        $this->_column_rotate_header_name = $column_rotate;
+    }
 
     /**
      * @param mixed $foreignKeyRule
      */
-    public function setForeignKeyRule($foreignKeyRule) {
+    public function setForeignKeyRule($foreignKeyRule)
+    {
         $this->_foreignKeyRule = $foreignKeyRule;
     }
 
     /**
      * @return mixed
      */
-    public function getEditingDefaultValue() {
+    public function getEditingDefaultValue()
+    {
         $value = $this->_editingDefaultValue;
 
         if ($value) {
@@ -762,11 +848,11 @@ class WDTColumn {
         }
         $value = apply_filters_deprecated(
             'wpdt_filter_editing_default_value',
-            array( $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId() ),
+            array($value, $this->getOriginalHeader(), $this->getParentTable()->getWpId()),
             WDT_INITIAL_STARTER_VERSION,
             'wpdatatables_filter_editing_default_value'
         );
-        $value = apply_filters('wpdatatables_filter_editing_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
+        $value = apply_filters('wpdatatables_filter_editing_default_value', $value, $this->getOriginalHeader(), $this->getParentTable()->getWpId());
 
         return $value;
     }
@@ -774,29 +860,34 @@ class WDTColumn {
     /**
      * @param string $editingDefaultValue
      */
-    public function setEditingDefaultValue($editingDefaultValue) {
+    public function setEditingDefaultValue($editingDefaultValue)
+    {
         $this->_editingDefaultValue = $editingDefaultValue;
     }
 
     /**
      * @return null
      */
-    public function getParentTable() {
+    public function getParentTable()
+    {
         return $this->_parentTable;
     }
 
     /**
      * @param null $parentTable
      */
-    public function setParentTable($parentTable) {
+    public function setParentTable($parentTable)
+    {
         $this->_parentTable = $parentTable;
     }
 
     /**
      * @param $cellContent
+     *
      * @return mixed
      */
-    public function returnCellValue($cellContent) {
+    public function returnCellValue($cellContent)
+    {
         $cellValue = $this->prepareCellOutput($cellContent);
         $cellValue = apply_filters('wpdatatables_filter_cell_val', $cellValue, $this->getParentTable()->getWpId());
         return $cellValue;
@@ -807,19 +898,23 @@ class WDTColumn {
      *
      * @return string
      */
-    public function getGoogleChartColumnType() {
+    public function getGoogleChartColumnType()
+    {
         return 'string';
     }
 
-    public function hideOnTablets() {
+    public function hideOnTablets()
+    {
         $this->_hiddenOnTablets = true;
     }
 
-    public function showOnTablets() {
+    public function showOnTablets()
+    {
         $this->_hiddenOnTablets = false;
     }
 
-    public function getHiddenAttr() {
+    public function getHiddenAttr()
+    {
         $hidden = array();
         if ($this->_hiddenOnPhones) {
             $hidden[] = 'phone';
@@ -832,9 +927,11 @@ class WDTColumn {
 
     /**
      * @param $content
+     *
      * @return mixed
      */
-    public function prepareCellOutput($content) {
+    public function prepareCellOutput($content)
+    {
         if (is_array($content)) {
             return $content['value'];
         }
@@ -846,9 +943,11 @@ class WDTColumn {
      * Apply placeholders
      *
      * @param $value
+     *
      * @return mixed
      */
-    private function applyPlaceholders($value) {
+    private function applyPlaceholders($value)
+    {
 
         if (defined('WDT_PH_INTEGRATION')) {
             return \WDTIntegration\Placeholders::maybeApplyInColumns($value);
@@ -862,9 +961,11 @@ class WDTColumn {
      *
      * @param string $wdtColumnType
      * @param array $properties
+     *
      * @return mixed
      */
-    public static function generateColumn($wdtColumnType = 'string', $properties = array()) {
+    public static function generateColumn($wdtColumnType = 'string', $properties = array())
+    {
         if (!$wdtColumnType) {
             $wdtColumnType = 'string';
         }
@@ -880,7 +981,8 @@ class WDTColumn {
      *
      * @return StdClass
      */
-    public function getColumnJSON($columnID) {
+    public function getColumnJSON($columnID)
+    {
         $colJsDefinition = new StdClass();
         $colJsDefinition = apply_filters('wpdatatables_extend_column_js_definition', $colJsDefinition, $this);
         $colJsDefinition->sType = $this->_jsDataType;
@@ -912,7 +1014,8 @@ class WDTColumn {
      * @return stdClass
      * @throws WDTException
      */
-    public function getJSFilterDefinition() {
+    public function getJSFilterDefinition()
+    {
         /** @var WPDataTable $parentTable */
         $parentTable = $this->getParentTable();
         $jsFilterDef = new stdClass();
@@ -924,12 +1027,14 @@ class WDTColumn {
         $jsFilterDef->globalSearchColumn = $this->getGlobalSearchColumn();
 
         $jsFilterDef->values = null;
-        if ((in_array($this->getFilterType(), array('select', 'multiselect', 'checkbox')) || in_array($this->getInputType(), array('selectbox', 'multi-selectbox')))) {
+        if ((in_array($this->getFilterType(), array('select',
+                'multiselect',
+                'checkbox')) || in_array($this->getInputType(), array('selectbox', 'multi-selectbox')))) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
                     $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $distValues = self::getPossibleValuesRead($this, true,false);
+                    $distValues = self::getPossibleValuesRead($this, true, false);
                 }
                 foreach ($distValues as $value) {
                     $distinctValue['value'] = $value;
@@ -945,7 +1050,7 @@ class WDTColumn {
             } elseif ($this->_possibleValuesType === 'foreignkey' && $parentTable->serverSide()) {
                 $readValues = [];
                 if ($this->getParentTable()->getOnlyOwnRows()) {
-                    $readValues = self::getPossibleValuesRead($this, true,false);
+                    $readValues = self::getPossibleValuesRead($this, true, false);
                 }
                 foreach ($this->getPossibleValuesList() as $value => $label) {
                     // If foreign key is used with "User can see only own rows"
@@ -966,7 +1071,7 @@ class WDTColumn {
 
         if ($this->getRangeSlider() === 1 && $this->getParentTable()->serverSide()) {
             $jsFilterDef->minValue = $this->getColumnMinValue();
-            $jsFilterDef->maxValue =  $this->getColumnMaxValue();
+            $jsFilterDef->maxValue = $this->getColumnMaxValue();
         }
 
         if (($this->getFilterType() === 'select') && $parentTable->serverSide() && $this->getPossibleValuesAddEmpty()) {
@@ -987,10 +1092,10 @@ class WDTColumn {
         $jsFilterDef->displayHeader = $this->getTitle();
         $jsFilterDef->possibleValuesAddEmpty = $this->getPossibleValuesAddEmpty();
         $jsFilterDef->possibleValuesAjax = $this->getPossibleValuesAjax();
-	    $jsFilterDef->column_align_fields = $this->getColumnAlignFields();
+        $jsFilterDef->column_align_fields = $this->getColumnAlignFields();
         $jsFilterDef->defaultValue = $this->getFilterDefaultValue();
-	    $jsFilterDef->column_align_header = $this->getColumnAlignHeader();
-	    $jsFilterDef->column_rotate_header_name = $this->getColumnRotationHeader();
+        $jsFilterDef->column_align_header = $this->getColumnAlignHeader();
+        $jsFilterDef->column_rotate_header_name = $this->getColumnRotationHeader();
         $jsFilterDef->exactFiltering = $this->getExactFiltering();
         $jsFilterDef->filterLabel = $this->getFilterLabel();
         $jsFilterDef->searchInSelectBox = $this->getSearchInSelectBox();
@@ -1012,7 +1117,8 @@ class WDTColumn {
      *
      * @return stdClass
      */
-    public function getJSEditingDefinition() {
+    public function getJSEditingDefinition()
+    {
 
         $parentTable = $this->getParentTable();
         $jsEditingDef = new stdClass();
@@ -1026,7 +1132,7 @@ class WDTColumn {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
                     $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $distValues = self::getPossibleValuesRead($this, true,false);
+                    $distValues = self::getPossibleValuesRead($this, true, false);
                 }
                 foreach ($distValues as $value) {
                     $distinctValue['value'] = $value;
@@ -1044,7 +1150,7 @@ class WDTColumn {
                 $foreignKeyRule = $this->getForeignKeyRule();
                 $allowAllPossibleValuesForeignKey = $foreignKeyRule->allowAllPossibleValuesForeignKey;
                 if ($this->getParentTable()->getOnlyOwnRows()) {
-                    $readValues = self::getPossibleValuesRead($this, true,false);
+                    $readValues = self::getPossibleValuesRead($this, true, false);
                 }
                 foreach ($this->getPossibleValuesList() as $value => $label) {
                     // If foreign key is used with "User can see only own rows"
@@ -1072,13 +1178,13 @@ class WDTColumn {
         $jsEditingDef->defaultValue = $this->getEditingDefaultValue();
         $jsEditingDef->defaultValue = $this->applyPlaceholders($jsEditingDef->defaultValue);
         $jsEditingDef->possibleValuesAjax = $this->getPossibleValuesAjax();
-	    $jsEditingDef->column_align_fields = $this->getColumnAlignFields();
+        $jsEditingDef->column_align_fields = $this->getColumnAlignFields();
         $jsEditingDef->mandatory = $this->isNotNull();
         $jsEditingDef->displayHeader = $this->getTitle();
         $jsEditingDef->foreignKeyRule = $this->getForeignKeyRule();
         $jsEditingDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
-	    $jsEditingDef->column_align_header = $this->getColumnAlignHeader();
-	    $jsEditingDef->column_rotate_header_name = $this->getColumnRotationHeader();
+        $jsEditingDef->column_align_header = $this->getColumnAlignHeader();
+        $jsEditingDef->column_rotate_header_name = $this->getColumnRotationHeader();
 
         return apply_filters(
             'wpdatatables_filter_js_editing_definition',
@@ -1093,17 +1199,22 @@ class WDTColumn {
      *
      * @return array
      */
-    public function getPossibleValues() {
+    public function getPossibleValues()
+    {
         /** @var WPDataTable $parentTable */
         $parentTable = $this->getParentTable();
         $values = array();
 
-        if (empty($this->_formula) && $this->getDataType() !== '' && !in_array($this->getDataType(), array('date', 'datetime', 'time', 'formula', 'select'), true)) {
+        if (empty($this->_formula) && $this->getDataType() !== '' && !in_array($this->getDataType(), array('date',
+                'datetime',
+                'time',
+                'formula',
+                'select'), true)) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
                     $values = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $values = self::getPossibleValuesRead($this, true,false);
+                    $values = self::getPossibleValuesRead($this, true, false);
                 }
             } elseif ($this->_possibleValuesType === 'list' || ($this->_possibleValuesType === 'foreignkey' && $parentTable->serverSide() == false)) {
                 $values = $this->getPossibleValuesList();
@@ -1130,9 +1241,11 @@ class WDTColumn {
      * @param WDTColumn $column
      * @param           $tableData
      * @param           $filterByUserId
+     *
      * @return array|bool
      */
-    public static function getPossibleValuesRead($column, $filterByUserId, $tableData = null) {
+    public static function getPossibleValuesRead($column, $filterByUserId, $tableData = null)
+    {
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
         $distValues = array();
         /** @var WPDataTable $parentTable */
@@ -1205,7 +1318,7 @@ class WDTColumn {
         }));
     }
 
-    private function getColumnMinValue ()
+    private function getColumnMinValue()
     {
         global $wpdb;
         $parentTable = $this->getParentTable();
@@ -1234,12 +1347,12 @@ class WDTColumn {
             return (float)$wpdb->get_row($minQuery)->min;
         } else {
             $sql = Connection::getInstance($parentTable->connection);
-            $minValue= $sql->getRow($minQuery)['min'];
+            $minValue = $sql->getRow($minQuery)['min'];
             return (float)($minValue);
         }
     }
 
-    private function getColumnMaxValue ()
+    private function getColumnMaxValue()
     {
         global $wpdb;
         $parentTable = $this->getParentTable();

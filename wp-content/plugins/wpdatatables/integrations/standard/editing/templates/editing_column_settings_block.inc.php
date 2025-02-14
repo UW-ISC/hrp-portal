@@ -87,7 +87,8 @@
         <div class="form-group wdt-editing-hidden-default-value-selectpicker-block">
             <div class="fg-line">
                 <div class="select">
-                    <select class="selectpicker wdt-editing-hidden-default-value-select" id="wdt-editing-hidden-default-value-selectpicker">
+                    <select class="selectpicker wdt-editing-hidden-default-value-select"
+                            id="wdt-editing-hidden-default-value-selectpicker">
                         <optgroup label="<?php esc_html_e('Current User', 'wpdatatables'); ?>">
                             <option value="user-id"><?php esc_html_e('Current User ID', 'wpdatatables'); ?></option>
                             <option value="user-display-name"><?php esc_html_e('Current User Display Name', 'wpdatatables'); ?></option>
@@ -135,7 +136,8 @@
         </div>
 
     </div>
-    <div class="col-sm-6 wdt-dynamic-editing-predefined-block wdt-editing-hidden-query-param-value-block" hidden="hidden">
+    <div class="col-sm-6 wdt-dynamic-editing-predefined-block wdt-editing-hidden-query-param-value-block"
+         hidden="hidden">
         <h4 class="c-title-color m-b-2">
             <?php esc_html_e('Query Parameter Key', 'wpdatatables'); ?>
             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -144,7 +146,8 @@
 
         <div class="form-group">
             <div class="fg-line">
-                <input type="text" class="form-control input-sm wdt-editing-hidden-query-param-value" value="" placeholder="<?php esc_attr_e('E.g query_parameter_key', 'wpdatatables'); ?>">
+                <input type="text" class="form-control input-sm wdt-editing-hidden-query-param-value" value=""
+                       placeholder="<?php esc_attr_e('E.g query_parameter_key', 'wpdatatables'); ?>">
             </div>
         </div>
     </div>
@@ -157,7 +160,8 @@
 
         <div class="form-group">
             <div class="fg-line">
-                <input type="text" class="form-control input-sm wdt-editing-hidden-post-meta-value" value="" placeholder="<?php esc_attr_e('E.g meta_key', 'wpdatatables'); ?>">
+                <input type="text" class="form-control input-sm wdt-editing-hidden-post-meta-value" value=""
+                       placeholder="<?php esc_attr_e('E.g meta_key', 'wpdatatables'); ?>">
             </div>
         </div>
     </div>
@@ -170,7 +174,8 @@
 
         <div class="form-group">
             <div class="fg-line">
-                <input type="text" class="form-control input-sm wdt-editing-hidden-acf-data-value" value="" placeholder="<?php esc_attr_e('E.g acf_key', 'wpdatatables'); ?>">
+                <input type="text" class="form-control input-sm wdt-editing-hidden-acf-data-value" value=""
+                       placeholder="<?php esc_attr_e('E.g acf_key', 'wpdatatables'); ?>">
             </div>
         </div>
     </div>

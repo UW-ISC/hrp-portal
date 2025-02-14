@@ -19,7 +19,7 @@ class WDTSettingsController
                     $childSetting = sanitize_text_field($childSetting);
                 }
             } elseif (function_exists('sanitize_textarea_field') && ($key === "wdtCustomJs" || $key === "wdtCustomCss")) {
-                if ($key === "wdtCustomJs" && ! current_user_can( 'unfiltered_html' ) ) {
+                if ($key === "wdtCustomJs" && !current_user_can('unfiltered_html')) {
                     $setting = '';
                 } else {
                     $setting = sanitize_textarea_field($setting);
@@ -40,7 +40,7 @@ class WDTSettingsController
                 $token = $googleSheet->getToken($settings);
             } catch (WDTException $e) {
                 $result['error'] = '<br>' . $e->getMessage();
-                echo json_encode($result) ;
+                echo json_encode($result);
                 exit();
             }
             if ($token[0]) {
@@ -50,10 +50,11 @@ class WDTSettingsController
             }
         } else {
             $result['error'] = '<br>Private data for your Google service account are not set.';
-            echo json_encode($result) ;
+            echo json_encode($result);
             exit();
         }
     }
+
     public static function saveGoogleApiMaps($settings)
     {
         $settings = sanitize_text_field($settings);
@@ -73,7 +74,7 @@ class WDTSettingsController
                 $wpdb->prepare(
                     "UPDATE " . $wpdb->prefix . "wpdatatables_cache
                            SET auto_update = %d",
-                   $autoUpdateOption
+                    $autoUpdateOption
                 )
             );
             $wpdb->query(
@@ -95,11 +96,11 @@ class WDTSettingsController
             }
             update_option($key, $value);
             if ($key == 'wdtGlobalChartLoader') {
-                if($globalChartLoader == $updatedValueChart) $checkValueChart = false;
+                if ($globalChartLoader == $updatedValueChart) $checkValueChart = false;
                 else $checkValueChart = true;
             }
             if ($key == 'wdtGlobalTableLoader') {
-                if($globalTableLoader == $updatedValueTable) $checkValueTable = false;
+                if ($globalTableLoader == $updatedValueTable) $checkValueTable = false;
                 else $checkValueTable = true;
             }
         }
@@ -157,7 +158,7 @@ class WDTSettingsController
             'wdtRenderFilter' => get_option('wdtRenderFilter'),
             'wdtDecimalPlaces' => get_option('wdtDecimalPlaces'),
             'wdtCSVDelimiter' => get_option('wdtCSVDelimiter'),
-            'wdtSortingOrderBrowseTables'=> get_option('wdtSortingOrderBrowseTables'),
+            'wdtSortingOrderBrowseTables' => get_option('wdtSortingOrderBrowseTables'),
             'wdtTabletWidth' => get_option('wdtTabletWidth'),
             'wdtMobileWidth' => get_option('wdtMobileWidth'),
             'wdtGettingStartedPageStatus' => get_option('wdtGettingStartedPageStatus'),
@@ -235,7 +236,7 @@ class WDTSettingsController
     public static function getArrInterfaceLanguages()
     {
         $newArrLang = [];
-        $languages= self::getInterfaceLanguages();
+        $languages = self::getInterfaceLanguages();
 
         foreach ($languages as $language) {
             $newArrLang[$language['name']] = $language['file'];

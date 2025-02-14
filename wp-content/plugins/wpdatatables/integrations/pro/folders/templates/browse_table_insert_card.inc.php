@@ -123,9 +123,10 @@ if ($itemInstance instanceof WPDataTablesFolders ||
                         <li class="active">
                             <a href="#" data-value="table_type"><?php esc_html_e('Type', 'wpdatatables'); ?></a>
                         </li>
-                        <?php  if (get_option('wdtUseSeparateCon')) { ?>
+                        <?php if (get_option('wdtUseSeparateCon')) { ?>
                             <li class="active">
-                                <a href="#" data-value="connection"><?php esc_html_e('Connection', 'wpdatatables'); ?></a>
+                                <a href="#"
+                                   data-value="connection"><?php esc_html_e('Connection', 'wpdatatables'); ?></a>
                             </li>
                         <?php }
                     } else if ($itemInstance->getType() == 'chart') {
@@ -229,12 +230,12 @@ if ($itemInstance instanceof WPDataTablesFolders ||
                     <?php esc_html_e('Folder name can not be empty. Please insert folder name.', 'wpdatatables'); ?>
                 </p>
                 <?php if ($itemsType == 'table') { ?>
-                <p class="wpdt-folder-delete-notice" class="hidden">
-                    <?php esc_html_e('Tables in the folder will not be deleted.', 'wpdatatables'); ?>
-                </p>
-                <p class="wpdt-folder-remove-notice" class="hidden">
-                    <?php esc_html_e('Table will not be deleted.', 'wpdatatables'); ?>
-                </p>
+                    <p class="wpdt-folder-delete-notice" class="hidden">
+                        <?php esc_html_e('Tables in the folder will not be deleted.', 'wpdatatables'); ?>
+                    </p>
+                    <p class="wpdt-folder-remove-notice" class="hidden">
+                        <?php esc_html_e('Table will not be deleted.', 'wpdatatables'); ?>
+                    </p>
                 <?php } else if ($itemsType == 'chart') { ?>
                     <p class="wpdt-folder-delete-notice" class="hidden">
                         <?php esc_html_e('Charts in the folder will not be deleted.', 'wpdatatables'); ?>

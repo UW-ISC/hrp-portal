@@ -85,7 +85,6 @@
     <!-- /div.chartjs-charts-type -->
 
 
-
     <?php do_action('wpdatatables_add_chart_picker') ?>
 
 

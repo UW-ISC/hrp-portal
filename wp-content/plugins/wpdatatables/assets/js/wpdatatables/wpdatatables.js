@@ -1055,7 +1055,7 @@ var singleClick = false;
                             $(tableDescriptionChild.selector).DataTable().destroy();
                             wdtRenderDataTable($(tableDescription.selector + ' table'), tableDescriptionChild);
                         });
-                    } else if($(tableDescription.selector + ' .wpDataTablesWrapper').length >= 1) {
+                    } else if ($(tableDescription.selector + ' .wpDataTablesWrapper').length >= 1) {
                         $(tableDescription.selector + ' .wpDataTablesWrapper').each(function () {
                             let id = $(this)[0].id.replace('_wrapper', '');
                             let tableDescriptionChild = JSON.parse($('#' + $('#' + id).data('described-by')).val());

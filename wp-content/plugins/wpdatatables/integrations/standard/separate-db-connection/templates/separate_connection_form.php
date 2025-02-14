@@ -1,6 +1,8 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
-<div role="tabpanel" class="tab-pane <?php if(($isDefault && $allDefaultOptions[$key]) || (!$isDefault && $key== 0)) echo 'active'; ?> separate-connection" id="connection<?php echo esc_attr($key); ?>">
+<div role="tabpanel"
+     class="tab-pane <?php if (($isDefault && $allDefaultOptions[$key]) || (!$isDefault && $key == 0)) echo 'active'; ?> separate-connection"
+     id="connection<?php echo esc_attr($key); ?>">
     <div class="row">
         <div class="col-sm-6 col-md-6 m-b-16">
             <h4 class="c-title-color m-b-2">
@@ -11,7 +13,8 @@
 
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-name"
-                       placeholder="<?php esc_html_e('Connection Name', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['name']); ?>">
+                       placeholder="<?php esc_html_e('Connection Name', 'wpdatatables'); ?>"
+                       value="<?php echo esc_attr($wdtSeparateConnection['name']); ?>">
             </div>
         </div>
         <div class="col-sm-6 col-md-6 m-b-16">
@@ -39,9 +42,12 @@
                 <div class="select select-vendor">
                     <select class="selectpicker wdt-my-sql-vendor" name="wdt-my-sql-vendor">
                         <option value="" disabled></option>
-                        <option <?php if($wdtSeparateConnection['vendor'] === "mysql") echo 'selected'; ?> value="mysql"><?php esc_html_e('MySQL', 'wpdatatables'); ?></option>
-                        <option <?php if($wdtSeparateConnection['vendor'] === "mssql") echo 'selected'; ?> value="mssql"><?php esc_html_e('MSSQL', 'wpdatatables'); ?></option>
-                        <option <?php if($wdtSeparateConnection['vendor'] === "postgresql") echo 'selected'; ?> value="postgresql"><?php esc_html_e('PostgreSQL', 'wpdatatables'); ?></option>
+                        <option <?php if ($wdtSeparateConnection['vendor'] === "mysql") echo 'selected'; ?>
+                                value="mysql"><?php esc_html_e('MySQL', 'wpdatatables'); ?></option>
+                        <option <?php if ($wdtSeparateConnection['vendor'] === "mssql") echo 'selected'; ?>
+                                value="mssql"><?php esc_html_e('MSSQL', 'wpdatatables'); ?></option>
+                        <option <?php if ($wdtSeparateConnection['vendor'] === "postgresql") echo 'selected'; ?>
+                                value="postgresql"><?php esc_html_e('PostgreSQL', 'wpdatatables'); ?></option>
                     </select>
                 </div>
             </div>
@@ -54,7 +60,8 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-db"
-                       placeholder="<?php esc_attr_e('Database name', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['database']); ?>">
+                       placeholder="<?php esc_attr_e('Database name', 'wpdatatables'); ?>"
+                       value="<?php echo esc_attr($wdtSeparateConnection['database']); ?>">
             </div>
         </div>
     </div>
@@ -68,7 +75,8 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-host"
-                       placeholder="<?php esc_attr_e('Host address', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['host']); ?>">
+                       placeholder="<?php esc_attr_e('Host address', 'wpdatatables'); ?>"
+                       value="<?php echo esc_attr($wdtSeparateConnection['host']); ?>">
             </div>
         </div>
         <div class="col-sm-6 col-md-6 m-b-16">
@@ -77,11 +85,11 @@
                 <i class=" wpdt-icon-info-circle connection-port" data-toggle="tooltip" data-placement="right"
                    title="<?php
                    $defaultPort = '';
-                   if($wdtSeparateConnection['vendor'] === "mysql")
+                   if ($wdtSeparateConnection['vendor'] === "mysql")
                        $defaultPort = '3306';
-                   elseif($wdtSeparateConnection['vendor'] === "mssql")
+                   elseif ($wdtSeparateConnection['vendor'] === "mssql")
                        $defaultPort = '1433';
-                   elseif($wdtSeparateConnection['vendor'] === "postgresql")
+                   elseif ($wdtSeparateConnection['vendor'] === "postgresql")
                        $defaultPort = '5432';
 
                    esc_attr_e('Port for the connection' . ($defaultPort ? ' (default: ' . $defaultPort . ').' : ''), 'wpdatatables');
@@ -89,7 +97,8 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-port"
-                       placeholder="<?php esc_attr_e('Port', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['port']); ?>">
+                       placeholder="<?php esc_attr_e('Port', 'wpdatatables'); ?>"
+                       value="<?php echo esc_attr($wdtSeparateConnection['port']); ?>">
             </div>
         </div>
     </div>
@@ -104,7 +113,8 @@
 
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-user"
-                       placeholder="<?php esc_attr_e('User', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['user']); ?>">
+                       placeholder="<?php esc_attr_e('User', 'wpdatatables'); ?>"
+                       value="<?php echo esc_attr($wdtSeparateConnection['user']); ?>">
             </div>
         </div>
         <div class="col-sm-6 col-md-6 m-b-16">
@@ -114,7 +124,8 @@
                    title="<?php esc_attr_e('Password for the provided user.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="fg-line">
-                <input type="password" class="form-control" placeholder="<?php esc_attr_e('Password', 'wpdatatables'); ?>"
+                <input type="password" class="form-control"
+                       placeholder="<?php esc_attr_e('Password', 'wpdatatables'); ?>"
                        value="<?php echo $wdtSeparateConnection['password']; ?>" name="wdtMySqlPwd">
             </div>
         </div>
@@ -131,9 +142,12 @@
                 <div class="select select-driver">
                     <select class="selectpicker wdt-sql-driver" name="wdt-sql-driver">
                         <option value="" disabled></option>
-                        <option <?php if(isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "dblib") echo 'selected'; ?> value="dblib"><?php esc_html_e('DBLIB', 'wpdatatables'); ?></option>
-                        <option <?php if(isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "sqlsrv") echo 'selected'; ?> value="sqlsrv"><?php esc_html_e('SQLSRV', 'wpdatatables'); ?></option>
-                        <option <?php if(isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "odbc") echo 'selected'; ?> value="odbc"><?php esc_html_e('ODBC', 'wpdatatables'); ?></option>
+                        <option <?php if (isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "dblib") echo 'selected'; ?>
+                                value="dblib"><?php esc_html_e('DBLIB', 'wpdatatables'); ?></option>
+                        <option <?php if (isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "sqlsrv") echo 'selected'; ?>
+                                value="sqlsrv"><?php esc_html_e('SQLSRV', 'wpdatatables'); ?></option>
+                        <option <?php if (isset($wdtSeparateConnection['driver']) && $wdtSeparateConnection['driver'] === "odbc") echo 'selected'; ?>
+                                value="odbc"><?php esc_html_e('ODBC', 'wpdatatables'); ?></option>
                     </select>
                 </div>
             </div>
@@ -145,7 +159,8 @@
                    title="<?php esc_attr_e('Set this connection as default.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="toggle-switch" data-ts-color="blue">
-                <input id="wdt-my-sql-default<?php echo esc_attr($key); ?>" <?php if($wdtSeparateConnection['default']) echo 'checked'; ?> type="checkbox" class="wdt-my-sql-default-checkbox">
+                <input id="wdt-my-sql-default<?php echo esc_attr($key); ?>" <?php if ($wdtSeparateConnection['default']) echo 'checked'; ?>
+                       type="checkbox" class="wdt-my-sql-default-checkbox">
                 <label for="wdt-my-sql-default<?php echo esc_attr($key); ?>"
                        class="ts-label wdt-my-sql-default-label"><?php esc_html_e('Set this connection as default', 'wpdatatables'); ?></label>
             </div>

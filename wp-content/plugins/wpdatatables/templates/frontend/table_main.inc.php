@@ -19,7 +19,7 @@ if ($this->getFilteringForm()) {
 ?>
 <?php $customClasses = apply_filters_deprecated(
     'wdt_add_class_to_table_html_element',
-    array( esc_attr($this->getCSSClasses()), $this->getWpId() ),
+    array(esc_attr($this->getCSSClasses()), $this->getWpId()),
     WDT_INITIAL_STARTER_VERSION,
     'wpdatatables_add_class_to_table_html_element'
 ); ?>

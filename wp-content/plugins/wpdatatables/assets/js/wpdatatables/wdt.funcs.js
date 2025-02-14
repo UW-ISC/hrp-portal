@@ -149,7 +149,7 @@ jQuery(document).ready(function ($) {
     // Datepicker
     $('body').on('focus', '.wdt-datepicker', function () {
         var isHandsonTable = $(this).parent('.handsontableInputHolder').length
-        if(!isHandsonTable){
+        if (!isHandsonTable) {
             var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length || $(this).closest('.wdt-conditional-formatting-rule').length
                 ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
             var filterElem = 'none';
@@ -174,13 +174,13 @@ jQuery(document).ready(function ($) {
                 if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
                     wdtAddDatePlaceholders($(this));
                 }
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     // If fixed header and/or fixed column is turned on call function
                     showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0);
                 }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     hidePickerForFixedHeaderAndColumns($(this));
                 }
             });
@@ -189,7 +189,7 @@ jQuery(document).ready(function ($) {
     // Timepicker
     $('body').on('focus', '.wdt-timepicker', function () {
         var isHandsonTable = $(this).parent('.handsontableInputHolder').length
-        if(!isHandsonTable) {
+        if (!isHandsonTable) {
             var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length || $(this).closest('.wdt-conditional-formatting-rule').length
                 ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
             var filterElem = 'none';
@@ -211,13 +211,13 @@ jQuery(document).ready(function ($) {
             .off('dp.show')
             .on('dp.show', function () {
                 $(this).parent().find('div.bootstrap-datetimepicker-widget').addClass('wdt-datetimepicker-modal');
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     // If fixed header and/or fixed column is turned on call function
                     showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 1);
                 }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     hidePickerForFixedHeaderAndColumns($(this));
                 }
             });
@@ -251,13 +251,13 @@ jQuery(document).ready(function ($) {
                 if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
                     wdtAddDatePlaceholders($(this));
                 }
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     // If fixed header and/or fixed column is turned on call function
                     showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0)
                 }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                if(!isHandsonTable) {
+                if (!isHandsonTable) {
                     hidePickerForFixedHeaderAndColumns($(this));
                 }
             });
@@ -622,8 +622,8 @@ function hidePickerForFixedHeaderAndColumns(dateData) {
 }
 
 function getMomentWdtDateFormat() {
-    return wpdatatables_settings.wdtDateFormat.replace(/[DdMmYyFj]/g, function(match) {
-        switch(match) {
+    return wpdatatables_settings.wdtDateFormat.replace(/[DdMmYyFj]/g, function (match) {
+        switch (match) {
             case 'D':
                 return 'ddd';
             case 'd':
@@ -796,14 +796,15 @@ function createAceEditor(selector) {
         }), 100)
     }
 }
+
 /**
  * Changing the filed type in DataBase (how to store in DB) when you change wpdatacolumn type from selectbox
  * @param possibleValueInput->input,multiline-sting,select,multiselect..
  * @param addRemoveColumn
  */
-function typeNameInDatabaseForSelectedType(possibleValueInput){
+function typeNameInDatabaseForSelectedType(possibleValueInput) {
     let type;
-    switch(possibleValueInput) {
+    switch (possibleValueInput) {
         case 'input':
         case 'hidden':
             type = 'VARCHAR';
@@ -815,8 +816,7 @@ function typeNameInDatabaseForSelectedType(possibleValueInput){
                     constructedTableData.connection_type == 'mssql') ||
                 (jQuery('#wdt-table-connection').length &&
                     jQuery('#wdt-table-connection').data('vendor') == 'mssql')
-            )
-            {
+            ) {
                 type = 'VARCHAR';
             }
             break;
@@ -849,14 +849,15 @@ function typeNameInDatabaseForSelectedType(possibleValueInput){
     }
     return type;
 }
+
 /**
  * Changing the filed type value (length in DB) when you change type in DB selectbox value
  * Not depending of wpdatacolumn type change
  * @param typeValue->VARCHAR,INT,DECIMAL..
  */
-function typeValueInDBFromTypeInDB(typeValue){
+function typeValueInDBFromTypeInDB(typeValue) {
     let type;
-    switch(typeValue) {
+    switch (typeValue) {
         case 'VARCHAR':
             type = '255';
             break;
@@ -887,13 +888,14 @@ function typeValueInDBFromTypeInDB(typeValue){
     }
     return type;
 }
+
 /**
  * Changing the filed type value (length in DB) when you change wpdatacolumn type from selectbox
  * @param possibleValueInput->input,multiline-sting,select,multiselect..
  */
-function typeValueInDBFromWpcolumnType(possibleValueInput){
+function typeValueInDBFromWpcolumnType(possibleValueInput) {
     let typeValue;
-    switch(possibleValueInput) {
+    switch (possibleValueInput) {
         case 'input':
         case 'hidden':
             typeValue = '255';
@@ -905,8 +907,7 @@ function typeValueInDBFromWpcolumnType(possibleValueInput){
                     constructedTableData.connection_type == 'mssql') ||
                 (jQuery('#wdt-table-connection').length &&
                     jQuery('#wdt-table-connection').data('vendor') == 'mssql')
-            )
-            {
+            ) {
                 typeValue = '8000'
             }
             break;

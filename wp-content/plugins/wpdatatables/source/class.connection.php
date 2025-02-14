@@ -2,7 +2,8 @@
 
 defined('ABSPATH') or die('Access denied.');
 
-class Connection {
+class Connection
+{
     public static $MYSQL = 'mysql';
     public static $MSSQL = 'mssql';
     public static $POSTGRESQL = 'postgresql';
@@ -10,9 +11,11 @@ class Connection {
 
     /**
      * Return only one instance of separate connection
+     *
      * @param $id
      */
-    public static function getInstance($id = null) {
+    public static function getInstance($id = null)
+    {
 
         if (empty(self::$_instance) || !isset(self::$_instance[$id]))
             self::$_instance[$id] = self::create($id);
@@ -22,6 +25,7 @@ class Connection {
 
     /**
      * Create separate connection
+     *
      * @param $id
      * @param $host
      * @param $database
@@ -31,7 +35,8 @@ class Connection {
      * @param $vendor
      * @param $driver
      */
-    public static function create($id = null, $host = null, $database = null, $user = null, $password = null, $port = null, $vendor = null, $driver = null) {
+    public static function create($id = null, $host = null, $database = null, $user = null, $password = null, $port = null, $vendor = null, $driver = null)
+    {
         if ($id) {
             foreach (self::getAll() as $connection) {
                 if ($connection['id'] === $id) {
@@ -64,12 +69,16 @@ class Connection {
 //                return new PDOSql($vendor, "mysql:host=$host;port=$port;dbname=$database", $user, $password);
         }
     }
+
     /**
      * Return left/right quote for table based on vendor
+     *
      * @param String $vendor of the connection
+     *
      * @return String
      */
-    public static function getTableLeftRightQuote($vendor) {
+    public static function getTableLeftRightQuote($vendor)
+    {
         if ($vendor === Connection::$MYSQL) {
             return '`';
         }
@@ -81,10 +90,13 @@ class Connection {
 
     /**
      * Return left quote for table column based on vendor
+     *
      * @param String $vendor of the connection
+     *
      * @return String
      */
-    public static function getLeftColumnQuote($vendor) {
+    public static function getLeftColumnQuote($vendor)
+    {
         if ($vendor === Connection::$MYSQL) {
             return '`';
         }
@@ -100,10 +112,13 @@ class Connection {
 
     /**
      * Return right quote for table column based on vendor
+     *
      * @param String $vendor of the connection
+     *
      * @return String
      */
-    public static function getRightColumnQuote($vendor) {
+    public static function getRightColumnQuote($vendor)
+    {
         if ($vendor === Connection::$MYSQL) {
             return '`';
         }
@@ -119,11 +134,14 @@ class Connection {
 
     /**
      * Checks if separate connection is used
+     *
      * @param String $id of the connection, in case of empty string, connection is WP MySql
+     *
      * @return boolean
      * @throws Exception
      */
-    public static function isSeparate($id = null) {
+    public static function isSeparate($id = null)
+    {
         if ($id && get_option('wdtUseSeparateCon')) {
             if ($id) {
                 foreach (self::getAll() as $connection) {
@@ -143,11 +161,14 @@ class Connection {
 
     /**
      * Get type of DB (MySQL, MSSQL, PostgreSQL)
+     *
      * @param String $id of the connection, in case of empty string, connection is WP MySql
+     *
      * @return String
      * @throws Exception
      */
-    public static function getVendor($id = null) {
+    public static function getVendor($id = null)
+    {
         if ($id) {
             foreach (self::getAll() as $connection) {
                 if ($connection['id'] === $id) {
@@ -163,11 +184,14 @@ class Connection {
 
     /**
      * Get name of DB
+     *
      * @param String $id of the connection, in case of empty string, connection is WP MySql
+     *
      * @return String
      * @throws Exception
      */
-    public static function getName($id = null) {
+    public static function getName($id = null)
+    {
         if ($id) {
             foreach (self::getAll() as $connection) {
                 if ($connection['id'] === $id) {
@@ -184,7 +208,8 @@ class Connection {
     /**
      * Get all connections created in Settings
      */
-    public static function getAll() {
+    public static function getAll()
+    {
         return (array)json_decode(get_option('wdtSeparateCon'), true);
     }
 
@@ -192,7 +217,8 @@ class Connection {
      * Checks if separate connection is enabled
      * @return boolean
      */
-    public static function enabledSeparate() {
+    public static function enabledSeparate()
+    {
         return get_option('wdtUseSeparateCon') ? true : false;
     }
 
@@ -201,7 +227,8 @@ class Connection {
      *
      * @param $connections
      */
-    public static function saveAll($connections) {
+    public static function saveAll($connections)
+    {
         update_option('wdtUseSeparateCon', true);
         update_option('wdtSeparateCon', $connections);
     }

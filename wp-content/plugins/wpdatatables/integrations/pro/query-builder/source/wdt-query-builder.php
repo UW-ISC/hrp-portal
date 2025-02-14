@@ -30,27 +30,38 @@ class WPQueryIntegration
      */
     public static function init()
     {
-        add_action('wpdatatables_enqueue_constructor_scripts', array('WDTIntegration\WPQueryIntegration', 'enqueueWPQueryConstructorScripts'));
+        add_action('wpdatatables_enqueue_constructor_scripts', array('WDTIntegration\WPQueryIntegration',
+            'enqueueWPQueryConstructorScripts'));
 
-        add_action('wpdatatables_add_table_constructor_type_in_wizard', array('WDTIntegration\WPQueryIntegration', 'addNewTableTypes'));
+        add_action('wpdatatables_add_table_constructor_type_in_wizard', array('WDTIntegration\WPQueryIntegration',
+            'addNewTableTypes'));
 
-        add_action('wp_ajax_wpdatatables_generate_live_wp_posts_preview', array('WDTIntegration\WPQueryIntegration', 'wdtGenerateWpQueryLivePreview'));
+        add_action('wp_ajax_wpdatatables_generate_live_wp_posts_preview', array('WDTIntegration\WPQueryIntegration',
+            'wdtGenerateWpQueryLivePreview'));
 
-        add_action('wp_ajax_wpdatatables_generate_wp_posts_query_preview', array('WDTIntegration\WPQueryIntegration', 'wdtGenerateWpQueryPreviewTable'));
+        add_action('wp_ajax_wpdatatables_generate_wp_posts_query_preview', array('WDTIntegration\WPQueryIntegration',
+            'wdtGenerateWpQueryPreviewTable'));
 
-        add_filter('wpdatatables_filter_insert_table_array', array('WDTIntegration\WPQueryIntegration', 'wdtExtendTableConfig'), 10, 1);
+        add_filter('wpdatatables_filter_insert_table_array', array('WDTIntegration\WPQueryIntegration',
+            'wdtExtendTableConfig'), 10, 1);
 
-        add_action('wp_ajax_wpdatatables_constructor_generate_wp_query_wdt', array('WDTIntegration\WPQueryIntegration', 'wdtGenerateWpQueryTable'));
+        add_action('wp_ajax_wpdatatables_constructor_generate_wp_query_wdt', array('WDTIntegration\WPQueryIntegration',
+            'wdtGenerateWpQueryTable'));
 
-        add_action('wpdatatables_generate_wp_posts_query', array('WDTIntegration\WPQueryIntegration', 'wpPostsBasedConstruct'), 10, 3);
+        add_action('wpdatatables_generate_wp_posts_query', array('WDTIntegration\WPQueryIntegration',
+            'wpPostsBasedConstruct'), 10, 3);
 
-        add_action('wpdatatables_add_data_source_tab', array('WDTIntegration\WPQueryIntegration', 'wdtAddIntegrationDataSourceTab'), 10, 1);
+        add_action('wpdatatables_add_data_source_tab', array('WDTIntegration\WPQueryIntegration',
+            'wdtAddIntegrationDataSourceTab'), 10, 1);
 
-        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\WPQueryIntegration', 'wdtEnqueueWpPostsScripts'));
+        add_action('wpdatatables_enqueue_on_edit_page', array('WDTIntegration\WPQueryIntegration',
+            'wdtEnqueueWpPostsScripts'));
 
-        add_filter('wpdatatables_possible_values_wp_posts_query', array('WDTIntegration\WPQueryIntegration', 'getPossibleWPQueryValuesRead'), 10, 3);
+        add_filter('wpdatatables_possible_values_wp_posts_query', array('WDTIntegration\WPQueryIntegration',
+            'getPossibleWPQueryValuesRead'), 10, 3);
 
-        add_filter('wpdatatables_filter_cell_output', array('WDTIntegration\WPQueryIntegration', 'allowHtmlInColumn'), 10, 3);
+        add_filter('wpdatatables_filter_cell_output', array('WDTIntegration\WPQueryIntegration',
+            'allowHtmlInColumn'), 10, 3);
     }
 
     /**
@@ -64,6 +75,12 @@ class WPQueryIntegration
             array(),
             WDT_CURRENT_VERSION,
             true
+        );
+        wp_enqueue_style(
+            'wdt-wp-query-css',
+            WDT_WP_QUERY_ASSETS_PATH . 'wdt-wp-query-builder.css',
+            array(),
+            WDT_CURRENT_VERSION
         );
     }
 
@@ -108,6 +125,7 @@ class WPQueryIntegration
 
     /**
      * @param $tableType
+     *
      * @return void
      */
     public static function wdtAddIntegrationDataSourceTab($tableType)
@@ -204,17 +222,40 @@ class WPQueryIntegration
 
     /**
      * @param $query
+     *
      * @return string
      */
     public static function buildQueryPreview($query): string
     {
         if ($query->have_posts()) {
             $columns = [
-                'ID', 'Post Author', 'Post Date', 'Post Date GMT', 'Post Content', 'Post Title',
-                'Post Excerpt', 'Post Status', 'Comment Status', 'Ping Status', 'Post Password',
-                'Post Name', 'To Ping', 'Pinged', 'Post Modified', 'Post Modified GMT',
-                'Post Content Filtered', 'Post Parent', 'GUID', 'Menu Order', 'Post Mime Type',
-                'Comment Count', 'Filter', 'Ancestors', 'Page Template', 'Post Category', 'Tags Input'
+                'ID',
+                'Post Author',
+                'Post Date',
+                'Post Date GMT',
+                'Post Content',
+                'Post Title',
+                'Post Excerpt',
+                'Post Status',
+                'Comment Status',
+                'Ping Status',
+                'Post Password',
+                'Post Name',
+                'To Ping',
+                'Pinged',
+                'Post Modified',
+                'Post Modified GMT',
+                'Post Content Filtered',
+                'Post Parent',
+                'GUID',
+                'Menu Order',
+                'Post Mime Type',
+                'Comment Count',
+                'Filter',
+                'Ancestors',
+                'Page Template',
+                'Post Category',
+                'Tags Input'
             ];
 
             $preview = '<table class="table table-condensed"><thead><tr>';
@@ -273,6 +314,7 @@ class WPQueryIntegration
 
     /**
      * @param $params
+     *
      * @return WP_Query
      */
     public static function buildQuery($params): WP_Query
@@ -312,6 +354,7 @@ class WPQueryIntegration
     /**
      * @param $args
      * @param $taxonomies
+     *
      * @return void
      */
     public static function createTaxQuery(&$args, $taxonomies)
@@ -326,7 +369,7 @@ class WPQueryIntegration
             if ($index === 'relation') {
                 $relation = $taxonomy;
             } elseif (is_array($taxonomy)) {
-                $taxonomy['operator'] = isset($taxonomy['operator'])  ? $taxonomy['operator'] : 'IN';
+                $taxonomy['operator'] = isset($taxonomy['operator']) ? $taxonomy['operator'] : 'IN';
                 $args['tax_query'][] = $taxonomy;
             } elseif (is_string($taxonomy)) {
                 $args['tax_query'][] = [
@@ -345,6 +388,7 @@ class WPQueryIntegration
     /**
      * @param $args
      * @param $customFields
+     *
      * @return void
      */
     public static function createMetaQuery(&$args, $customFields)
@@ -380,6 +424,7 @@ class WPQueryIntegration
     /**
      * @param $args
      * @param $dateClauses
+     *
      * @return void
      */
     public static function createDateQuery(&$args, $dateClauses)
@@ -427,6 +472,7 @@ class WPQueryIntegration
      * @param $wpDataTable
      * @param $content
      * @param $wdtParameters
+     *
      * @return mixed|void
      */
     public static function wpPostsBasedConstruct($wpDataTable, $content, $wdtParameters)
@@ -448,8 +494,12 @@ class WPQueryIntegration
         } else {
             // Retrieve all posts if pagination isn't set, as WP default pagination is set to 10
             $queryData->posts_per_page = $queryData->posts_per_page ?? "-1";
+
+            $customFieldColumns = $queryData->customFieldColumns ?? null;
+            unset($queryData->customFieldColumns);
+
             $query = self::buildQuery($queryData);
-            $postTableColumns = self::getPostTableColumns($query);
+            $postTableColumns = self::getPostTableColumns($query, $wdtParameters, $customFieldColumns);
 
             return $wpDataTable->arrayBasedConstruct($postTableColumns, $wdtParameters);
         }
@@ -457,27 +507,57 @@ class WPQueryIntegration
 
     /**
      * @param $query
-     * @return array|void
+     * @param $wdtParameters
+     * @param $customFieldColumns
+     *
+     * @return array
      */
-    public static function getPostTableColumns($query)
+    public static function getPostTableColumns($query, &$wdtParameters, $customFieldColumns): array
     {
-        $postTableColumns = array();
+        $postTableColumns = [];
+        $wdtParameters['columnTitles'] = $wdtParameters['columnTitles'] ?? [
+            'ID' => 'ID',
+            'post_author' => 'Author',
+            'post_date' => 'Date',
+            'post_date_gmt' => 'Date GMT',
+            'post_content' => 'Content',
+            'post_title' => 'Title',
+            'post_excerpt' => 'Excerpt',
+            'post_status' => 'Status',
+            'post_category' => 'Category',
+            'tags_input' => 'Tags',
+            'comment_status' => 'Comment Status',
+            'ping_status' => 'Ping Status',
+            'post_password' => 'Password',
+            'post_name' => 'Name',
+            'to_ping' => 'To Ping',
+            'pinged' => 'Pinged',
+            'post_modified' => 'Modified',
+            'post_modified_gmt' => 'Modified GMT',
+            'post_content_filtered' => 'Content Filtered',
+            'post_parent' => 'Parent',
+            'guid' => 'GUID',
+            'menu_order' => 'Menu Order',
+            'post_mime_type' => 'Mime Type',
+            'comment_count' => 'Comment Count',
+            'filter' => 'Filter',
+            'ancestors' => 'Ancestors',
+            'page_template' => 'Template',
+        ];
+
         if ($query->have_posts()) {
-            $excludedTaxonomies = ['category', 'post_tag', 'post_format', 'product_visibility', 'product_tag',
-                'product_cat','product_type', 'product_shipping_class', 'pa_product_style', 'pa_weight'];
-            $excludedTaxonomies = apply_filters('wpdatatables_filter_taxonomies_before_building', $excludedTaxonomies);
             $usedTaxonomies = [];
-            // Loop through all posts to find which taxonomies have terms
             while ($query->have_posts()) {
                 $query->the_post();
                 $postId = get_the_ID();
-
                 $taxonomies = get_object_taxonomies(get_post_type($postId));
+
                 foreach ($taxonomies as $taxonomy) {
-                    if (in_array($taxonomy, $excludedTaxonomies)) {
-                        continue;
+                    // Check if this taxonomy has terms assigned to the current post
+                    $terms = get_the_terms($postId, $taxonomy);
+                    if (!empty($terms) && !is_wp_error($terms)) {
+                        $usedTaxonomies[$taxonomy] = true;
                     }
-                    $usedTaxonomies[$taxonomy] = true;
                 }
             }
             wp_reset_postdata();
@@ -516,29 +596,61 @@ class WPQueryIntegration
                     'page_template' => get_post_meta($postId, '_wp_page_template', true),
                 ];
 
-                foreach (array_keys($usedTaxonomies) as $taxonomy) {
-                    $terms = get_the_terms($postId, $taxonomy);
-                    if ($terms && !is_wp_error($terms)) {
-                        $term_links = array_map(function ($term) {
-                            return '<a href="' . get_term_link($term) . '">' . $term->name . '</a>';
-                        }, $terms);
-                        $postData[$taxonomy] = implode(', ', $term_links);
-                    } else {
-                        $postData[$taxonomy] = '';
+                if ($customFieldColumns) {
+                    // Extract 'cf' values from $customFieldColumns
+                    $selectedCustomFields = array_map(function ($column) {
+                        return $column['cf'];
+                    }, $customFieldColumns);
+
+                    // Add custom fields
+                    $cfLookup = array_column($customFieldColumns, 'column_header', 'cf');
+                    $customFields = get_post_meta($postId);
+
+                    // Add selected taxonomies
+                    foreach (array_keys($usedTaxonomies) as $taxonomy) {
+                        if (!in_array($taxonomy, $selectedCustomFields, true)) {
+                            continue;
+                        }
+                        $wdtParameters['columnTitles'][$taxonomy] = $wdtParameters['columnTitles'][$taxonomy] ?? $cfLookup[$taxonomy] ?? 'New column';
+
+                        // Fetch taxonomy terms
+                        $terms = get_the_terms($postId, $taxonomy);
+                        if ($terms && !is_wp_error($terms)) {
+                            $termLinks = array_map(function ($term) {
+                                return '<a href="' . get_term_link($term) . '">' . $term->name . '</a>';
+                            }, $terms);
+                            $postData[$taxonomy] = implode(', ', $termLinks);
+                        } else {
+                            $postData[$taxonomy] = '';
+                        }
+                    }
+
+                    // Populate the selected custom fields with null values first, then go through the existing meta to fill with data
+                    foreach ($selectedCustomFields as $field) {
+                        $postData[$field] = null;
+                        $wdtParameters['columnTitles'][$field] = $wdtParameters['columnTitles'][$field] ?? $cfLookup[$field] ?? 'New column';
+                    }
+                    foreach ($customFields as $key => $values) {
+                        if (in_array($key, $selectedCustomFields, true) && !empty($values)) {
+                            $postData[$key] = implode(', ', $values);
+                        }
                     }
                 }
 
+                // Convert arrays to strings for display
                 self::convertArraysToStrings($postData);
+
                 $postTableColumns[] = $postData;
             }
             wp_reset_postdata();
-            return $postTableColumns;
         }
 
+        return $postTableColumns;
     }
 
     /**
      * @param $postId
+     *
      * @return string
      */
     private static function getPostContentForDisplay($postId): string
@@ -555,6 +667,7 @@ class WPQueryIntegration
 
     /**
      * @param $postId
+     *
      * @return string
      */
     private static function getPostPasswordForDisplay($postId): string
@@ -569,6 +682,7 @@ class WPQueryIntegration
 
     /**
      * @param $postId
+     *
      * @return string
      */
     private static function getPostCategoriesForDisplay($postId): string
@@ -585,6 +699,7 @@ class WPQueryIntegration
 
     /**
      * @param $postId
+     *
      * @return string
      */
     private static function getPostTagsForDisplay($postId): string
@@ -601,6 +716,7 @@ class WPQueryIntegration
 
     /**
      * @param array $array
+     *
      * @return void
      */
     public static function convertArraysToStrings(array &$array)
@@ -616,6 +732,7 @@ class WPQueryIntegration
 
     /**
      * @param $queryData
+     *
      * @return mixed
      */
     public static function sanitizePostsQueryData($queryData)
@@ -694,17 +811,22 @@ class WPQueryIntegration
 
     /**
      * @param $object
+     *
      * @return array
      */
     public static function sanitizeObject($object): array
     {
+        $allowedOperators = ['<', '<=', '>', '>=', '=', '!='];
         $result = [];
+
         foreach ($object as $key => $value) {
             if (is_array($value) || is_object($value)) {
                 $sanitizedValue = self::sanitizeObject($value);
                 if (!empty($sanitizedValue) || is_numeric($sanitizedValue) || !$sanitizedValue) {
                     $result[$key] = $sanitizedValue;
                 }
+            } elseif (in_array($value, $allowedOperators, true)) {
+                $result[$key] = $value;
             } elseif (empty($value)) {
                 continue;
             } elseif (is_numeric($value)) {
@@ -722,6 +844,7 @@ class WPQueryIntegration
 
     /**
      * @param $tableConfig
+     *
      * @return mixed
      *
      * Extend the table config object to enable server-side processing
@@ -749,10 +872,15 @@ class WPQueryIntegration
      * @param $queryData
      * @param $wpDataTable
      * @param $wdtParameters
+     *
      * @return void
      */
     public static function ajaxReturnConstruct($queryData, $wpDataTable, $wdtParameters)
     {
+        // Get any user Custom Field Columns
+        $customFieldColumns = $queryData->customFieldColumns ?? null;
+        unset($queryData->customFieldColumns);
+
         $query = self::buildQuery($queryData);
         $totalLength = $query->found_posts;
 
@@ -996,7 +1124,19 @@ class WPQueryIntegration
                         $queryData->post_parent = intval($searchValue);
                         break;
                     default:
-                        $queryData->{$columnName} = $searchValue;
+                        if ($wdtParameters["exactFiltering"][$columnName] === 1) {
+                            $queryData->meta_query[] = array(
+                                'key' => $columnName,
+                                'value' => $searchValue,
+                                'compare' => '=',
+                            );
+                        } else {
+                            $queryData->meta_query[] = array(
+                                'key' => $columnName,
+                                'value' => $searchValue,
+                                'compare' => 'LIKE',
+                            );
+                        }
                         break;
                 }
             }
@@ -1005,7 +1145,66 @@ class WPQueryIntegration
 
         // Global Search
         if (!empty($globalSearchValue)) {
-            $queryData->s = $globalSearchValue;
+            $filteredPostIDs = array();
+
+            // Collect all post IDs from the initial query
+            $allPostIDsQuery = new WP_Query(array_merge(
+                json_decode(json_encode($queryData), true),
+                array(
+                    'fields' => 'ids',
+                    'posts_per_page' => -1,
+                )
+            ));
+
+            if ($allPostIDsQuery->have_posts()) {
+                $allPostIDs = $allPostIDsQuery->posts;
+            } else {
+                $allPostIDs = array();
+            }
+
+            // Narrow down by searching all columns
+            foreach ($allPostIDs as $postID) {
+                $post = get_post($postID);
+
+                // Search in standard fields
+                $matches = false;
+                foreach ([
+                             'ID', 'post_author', 'post_date', 'post_date_gmt', 'post_modified',
+                             'post_modified_gmt', 'post_content', 'post_excerpt', 'post_title',
+                             'post_name', 'comment_status', 'ping_status', 'post_status',
+                             'post_type', 'post_password', 'post_mime_type', 'guid'
+                         ] as $field) {
+                    if (stripos((string)$post->$field, $globalSearchValue) !== false) {
+                        $matches = true;
+                        break;
+                    }
+                }
+
+                // Search in custom fields
+                if (!$matches) {
+                    foreach ($customFieldColumns as $customField) {
+                        $metaValue = get_post_meta($postID, $customField, true);
+                        if (stripos((string)$metaValue, $globalSearchValue) !== false) {
+                            $matches = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Add matching post ID
+                if ($matches) {
+                    $filteredPostIDs[] = $postID;
+                }
+            }
+
+            // Further filter the query data
+            if (!empty($filteredPostIDs)) {
+                $queryData->post__in = isset($queryData->post__in)
+                    ? array_intersect($queryData->post__in, $filteredPostIDs)
+                    : $filteredPostIDs;
+            } else {
+                $queryData->post__in = array(0);
+            }
         }
 
         // Pagination
@@ -1013,7 +1212,7 @@ class WPQueryIntegration
         $queryData->offset = $start;
 
         $query = self::buildQuery($queryData);
-        $tableArray = self::getPostTableColumns($query);
+        $tableArray = self::getPostTableColumns($query, $wdtParameters, $customFieldColumns);
 
         $resultLength = $query->found_posts;
         $output = array(
@@ -1034,6 +1233,7 @@ class WPQueryIntegration
 
     /**
      * @param $searchValue
+     *
      * @return array
      */
     public static function getPostIdsByTitle($searchValue): array
@@ -1050,6 +1250,7 @@ class WPQueryIntegration
 
     /**
      * @param $searchTitle
+     *
      * @return array
      */
     public static function getPostIdsByExactTitle($searchTitle): array
@@ -1067,6 +1268,7 @@ class WPQueryIntegration
     /**
      * @param $searchValue
      * @param $field
+     *
      * @return array
      */
     public static function getPostIdsByExactContent($searchValue, $field): array
@@ -1084,6 +1286,7 @@ class WPQueryIntegration
     /**
      * @param $searchValue
      * @param $field
+     *
      * @return array
      */
     public static function getPostIdsByContent($searchValue, $field): array
@@ -1098,6 +1301,7 @@ class WPQueryIntegration
 
     /**
      * @param $searchValue
+     *
      * @return array
      */
     public static function getPostIdsBySlugPartial($searchValue): array
@@ -1120,6 +1324,7 @@ class WPQueryIntegration
      * @param $column
      * @param $filterByUserId
      * @param $tableData
+     *
      * @return array
      */
     public static function getPossibleWPQueryValuesRead($column, $filterByUserId, $tableData = null): array
@@ -1209,6 +1414,7 @@ class WPQueryIntegration
 
     /**
      * @param $cellOutput
+     *
      * @return int|null
      */
     public static function extractPostId($cellOutput): ?int
@@ -1217,7 +1423,13 @@ class WPQueryIntegration
         return isset($matches[1]) ? (int)$matches[1] : null;
     }
 
-    public static function sanitizeArray($data) {
+    /**
+     * @param $data
+     *
+     * @return array
+     */
+    public static function sanitizeArray($data): array
+    {
         $sanitizedData = [];
 
         if (isset($data) && is_array($data)) {

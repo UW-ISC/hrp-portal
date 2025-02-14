@@ -177,6 +177,7 @@ class wpDataTableSourceFile
 
     /**
      * wpDataTableSourceFile constructor.
+     *
      * @param $file
      * @param $fileSourceAction
      * @param $tableData
@@ -352,6 +353,7 @@ class wpDataTableSourceFile
      *
      * @param $statement
      * @param null $connection
+     *
      * @throws Exception
      */
     public function executeQueryStatement($statement, $connection = null)
@@ -404,7 +406,7 @@ class wpDataTableSourceFile
             }
 
             $headingsArray = array_keys($namedDataArray[0]);
-            foreach($headingsArray as $heading){
+            foreach ($headingsArray as $heading) {
                 if ($heading === '')
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
@@ -435,7 +437,7 @@ class wpDataTableSourceFile
             while (!end($headingsArray[1])) {
                 array_pop($headingsArray[1]);
             };
-            foreach($headingsArray[1] as $heading){
+            foreach ($headingsArray[1] as $heading) {
                 if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
@@ -510,13 +512,13 @@ class wpDataTableSourceFile
                 if ($insertType == 'import') {
                     // Set all cells in the row to their defaults
                     foreach ($this->getTableData()->columns as $column) {
-                        if (has_filter('wpdatatables_import_default_entry_data_gsheet_column_type_' .$column->type)) {
+                        if (has_filter('wpdatatables_import_default_entry_data_gsheet_column_type_' . $column->type)) {
                             $insertArray[$column_headers[$column->orig_header]] = apply_filters(
                                 'wpdatatables_import_default_entry_data_gsheet_column_type_' . $column->type,
                                 null, $column, $column_headers, $insertArray
                             );
                         } else {
-                             $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                            $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
                         }
                     }
                 }
@@ -575,7 +577,7 @@ class wpDataTableSourceFile
                     if ($insertType == 'import') {
                         // Set all cells in the row to their defaults
                         foreach ($this->getTableData()->columns as $column) {
-                            if (has_filter('wpdatatables_import_default_entry_data_other_source_column_type_' .$column->type)) {
+                            if (has_filter('wpdatatables_import_default_entry_data_other_source_column_type_' . $column->type)) {
                                 $insertArray[$column_headers[$column->orig_header]] = apply_filters(
                                     'wpdatatables_import_default_entry_data_other_source_column_type_' . $column->type,
                                     null, $column, $column_headers, $insertArray
@@ -583,7 +585,15 @@ class wpDataTableSourceFile
                             } else {
                                 $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
                             }
-                            if (in_array($column->predefined_type_in_db, array('DATE', 'DATETIME', 'TIME', 'INT', 'DECIMAL', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT'))) {
+                            if (in_array($column->predefined_type_in_db, array('DATE',
+                                'DATETIME',
+                                'TIME',
+                                'INT',
+                                'DECIMAL',
+                                'BIGINT',
+                                'SMALLINT',
+                                'TINYINT',
+                                'MEDIUMINT'))) {
                                 $insertArray[$column_headers[$column->orig_header]] = ("'" . sanitize_text_field($column->default_value) . "'") == "''" ? 'NULL' : "'" . sanitize_text_field($column->default_value) . "'";
                             }
                         }
@@ -666,7 +676,7 @@ class wpDataTableSourceFile
                     if (!in_array($columnHeader, array_values($column_headers))) {
                         continue;
                     }
-                    if (is_null($insertArray[$columnHeader])){
+                    if (is_null($insertArray[$columnHeader])) {
                         $insertArray[$columnHeader] = sanitize_text_field($insertArray[$columnHeader]);
                     } else {
                         $insertArray[$columnHeader] = wp_kses_post($insertArray[$columnHeader]);
@@ -677,7 +687,7 @@ class wpDataTableSourceFile
 
             $insertArray = apply_filters_deprecated(
                 'wpdt_insert_additional_column_value',
-                array( $insertArray, $row, $this->getTableType() ),
+                array($insertArray, $row, $this->getTableType()),
                 WDT_INITIAL_STARTER_VERSION,
                 'wpdatatables_insert_additional_column_value'
             );
@@ -701,6 +711,7 @@ class wpDataTableSourceFile
      * Adds a new column to the table
      *
      * @param $column_data
+     *
      * @throws Exception
      */
     public function addNewColumn($column_data)
@@ -762,6 +773,7 @@ class wpDataTableSourceFile
      *
      * @param $newColumnData
      * @param $tableId
+     *
      * @return stdClass
      */
     public function createColumnObject($newColumnData, $tableId)
@@ -810,9 +822,9 @@ class wpDataTableSourceFile
         $column->possibleValuesAddEmpty = 0;
         $column->possibleValuesType = null;
         $column->possibleValuesAjax = 10;
-	    $column->column_align_fields = '';
+        $column->column_align_fields = '';
         $column->rangeSlider = 0;
-	    $column->column_align_header = '';
+        $column->column_align_header = '';
         $column->rangeMaxValueDisplay = 'default';
         $column->customMaxRangeValue = null;
         $column->skip_thousands_separator = 0;
@@ -823,7 +835,7 @@ class wpDataTableSourceFile
         $column->valuesList = null;
         $column->visible = 1;
         $column->width = 0;
-	    $column->column_rotate_header_name = '';
+        $column->column_rotate_header_name = '';
 
         return $column;
     }
@@ -851,7 +863,7 @@ class wpDataTableSourceFile
             if (Connection::isSeparate($this->getTableData()->connection)) {
                 // External DB
                 $this->_db->doQuery($insert_statement, array());
-                $last =  (int)$this->_db->getLastInsertId() - $this->getInsertLimiter() + 1;
+                $last = (int)$this->_db->getLastInsertId() - $this->getInsertLimiter() + 1;
                 if ($this->getFileSourceAction() == 'replaceTable' || $this->getFileSourceAction() == 'addDataToTable' || $this->getFileSourceAction() == 'replaceTableData') {
                     $dbName = $wpdb->prefix . 'wpdatatables_columns';
                     $checkColumnsQuery = "
@@ -944,23 +956,23 @@ class wpDataTableSourceFile
                         );
                     }
                 }
-                    if ($this->getFileSourceAction() == 'addDataToTable') {
-                        $update_fill_default = "UPDATE {$tableName} 
+                if ($this->getFileSourceAction() == 'addDataToTable') {
+                    $update_fill_default = "UPDATE {$tableName} 
                         SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
                             wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
                             wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
                             wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
                      WHERE wdt_ID > {$last};";
-                        $this->_db->doQuery($update_fill_default, array());
-                    } else {
-                        $update_fill_default = "UPDATE {$tableName} 
+                    $this->_db->doQuery($update_fill_default, array());
+                } else {
+                    $update_fill_default = "UPDATE {$tableName} 
                         SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
                             wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
                             wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
                             wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
                     WHERE 1=1";
-                        $this->_db->doQuery($update_fill_default, array());
-                    }
+                    $this->_db->doQuery($update_fill_default, array());
+                }
             } else {
                 if ($this->getFileSourceAction() == 'addDataToTable') {
                     $last_wdt_id = $wpdb->get_row("SELECT wdt_ID FROM {$tableName} ORDER BY wdt_ID DESC LIMIT 1");
@@ -1040,7 +1052,7 @@ class wpDataTableSourceFile
                         )
                     );
                 }
-                if ($this->getFileSourceAction() == 'addDataToTable'){
+                if ($this->getFileSourceAction() == 'addDataToTable') {
                     $update_fill_default = "UPDATE {$tableName} 
                         SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
                             wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
@@ -1086,6 +1098,7 @@ class wpDataTableSourceFile
      * Error handler for incorrect file data
      *
      * @param $columnHeaders
+     *
      * @throws WDTException
      */
     public function checkIfFileDataIsCorrect($columnHeaders)
@@ -1141,6 +1154,7 @@ class wpDataTableSourceFile
      * Drops all existing table columns except wdt_ID
      *
      * @param $columnTypes
+     *
      * @throws Exception
      */
     private function deleteAllColumnsExceptId($columnTypes)
@@ -1207,6 +1221,7 @@ class wpDataTableSourceFile
      * Sets new column data
      *
      * @param $columnTypes
+     *
      * @throws Exception
      */
     private function createNewColumns($columnTypes)
@@ -1241,6 +1256,7 @@ class wpDataTableSourceFile
      * given the number of total rows to be inserted
      *
      * @param $highestRow
+     *
      * @return int
      */
     private function testInsertLimiter($highestRow)

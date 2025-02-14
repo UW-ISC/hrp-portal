@@ -28,12 +28,12 @@
                                     <select class="selectpicker" id="wdt-column-foreign-table" data-live-search="true">
                                         <option value=0><?php esc_html_e('Pick a table...', 'wpdatatables'); ?></option>
                                         <?php foreach (WPDataTable::getAllTables() as $wdt) {
-                                            if (isset($connection) && $connection === $wdt['connection']) {?>
-                                            <option value="<?php echo esc_attr($wdt['id']); ?>"><?php echo esc_html($wdt['title']); ?>
-                                                (id: <?php echo esc_html($wdt['id']); ?>)
-                                            </option>
-                                        <?php }
-                                            } ?>
+                                            if (isset($connection) && $connection === $wdt['connection']) { ?>
+                                                <option value="<?php echo esc_attr($wdt['id']); ?>"><?php echo esc_html($wdt['title']); ?>
+                                                    (id: <?php echo esc_html($wdt['id']); ?>)
+                                                </option>
+                                            <?php }
+                                        } ?>
                                     </select>
                                 </div>
                             </div>

@@ -11,11 +11,12 @@ $googleSettings = get_option('wdtGoogleSettings');
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <i class="wpdt-icon-info-circle-full"></i>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true"><i
-                                class="wpdt-icon-times-full"></i></span></button>
+                                aria-hidden="true"><i
+                                    class="wpdt-icon-times-full"></i></span></button>
                     <span class="wdt-alert-title f-600">
                        <?php esc_html_e('Detail instruction how to enable Google API\'s and create your service account you can find on this', 'wpdatatables'); ?>
-                        <a href="https://wpdatatables.com/documentation/connect-wordpress-tables-with-google-sheets-api/" rel="nofollow" target="_blank"><?php esc_html_e('link', 'wpdatatables'); ?></a>.
+                        <a href="https://wpdatatables.com/documentation/connect-wordpress-tables-with-google-sheets-api/"
+                           rel="nofollow" target="_blank"><?php esc_html_e('link', 'wpdatatables'); ?></a>.
                     </span>
                 </div>
             </div>

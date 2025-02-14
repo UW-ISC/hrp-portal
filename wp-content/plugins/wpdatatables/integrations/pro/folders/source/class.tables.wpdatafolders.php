@@ -3,6 +3,7 @@
 use WDTIntegration\WPDataFolders;
 
 defined('ABSPATH') or die('Access denied.');
+
 class WPDataTablesFolders extends WPDataFolders
 {
     private static $parentConstructorCalled = false;

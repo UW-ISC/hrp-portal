@@ -327,7 +327,7 @@ var aceEditor = null;
                                     $('#wdt-constructor-woo-commerce-table-description').change();
                                     previousStepButton.animateFadeIn();
                                 } else {
-                                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.responseText );
+                                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.responseText);
                                     $('#wdt-error-modal').modal('show');
                                     $curStepBlock.show();
                                 }
@@ -413,7 +413,7 @@ var aceEditor = null;
                 let taxTerms = document.querySelector('.wdt-wp-query-tax-terms');
                 let taxonomy = document.querySelector('.wdt-wp-query-taxonomy');
 
-                if(taxField || taxTerms || taxonomy) {
+                if (taxField || taxTerms || taxonomy) {
                     if (taxField.value.trim() === '' || taxTerms.value.trim() === '' || taxonomy.value.trim() === '') {
                         wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.emtyfields_woo, 'danger');
                         $('.wdt-preload-layer').hide();
@@ -1339,7 +1339,7 @@ var aceEditor = null;
                 $('.wdt-preload-layer').animateFadeOut();
                 $('.wdt-constructor-column-name:eq(' + index + ')').css('cssText', 'background: red!important');
             }
-        } else if ( constructedTableData.method === 'wp_posts_query') {
+        } else if (constructedTableData.method === 'wp_posts_query') {
             if (!$('#wdt-constructor-wp-posts-table-name').val()) {
                 wdtNotify(wpdatatables_constructor_strings.error_constructor, wpdatatables_constructor_strings.tableNameEmpty_constructor, 'danger');
                 return;

@@ -5,7 +5,6 @@ defined('ABSPATH') or die('Access denied.');
 /**
  * Class GutenbergBlock
  */
-
 class GutenbergBlock
 {
     /**
@@ -21,7 +20,7 @@ class GutenbergBlock
                 if (self::isGutenbergActive()) {
                     /** @var static $class */
                     $class = get_called_class();
-                    add_action( 'enqueue_block_editor_assets', function () use ( $class ) {
+                    add_action('enqueue_block_editor_assets', function () use ($class) {
                         $class::registerBlockType();
                     });
                 }
@@ -56,13 +55,13 @@ class GutenbergBlock
 
         // Fix for conflict with Avada - Fusion builder and gutenberg blocks
         // Fix for Gutenberg blocks when Avada's post/page types are disabled
-        if ( class_exists( 'FusionBuilder' ) && !(isset( $_GET['gutenberg-editor']))){
+        if (class_exists('FusionBuilder') && !(isset($_GET['gutenberg-editor']))) {
             $postTypes = FusionBuilder::allowed_post_types();
             return count(array_intersect(['page', 'post'], $postTypes)) < 2;
         }
 
         // Fix for conflict with WooCommerce product page
-        if ( class_exists( 'WooCommerce' ) && (isset( $_GET['post_type'])) && ($_GET['post_type']) == "product"){
+        if (class_exists('WooCommerce') && (isset($_GET['post_type'])) && ($_GET['post_type']) == "product") {
             return false;
         }
 

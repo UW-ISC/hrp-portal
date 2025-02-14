@@ -31,8 +31,7 @@
 
                             // Update the specific row with a mini cart and product quantity
                             selectedRows.each(function (value, index) {
-                                let productIdColIndex = getColumnIndexByHeader('product_id', tableSelector)
-                                let product_id = value[productIdColIndex];
+                                let product_id = productIds[index];
                                 let cartHtml = `
                                     <div class="wdt-woo-mini-cart" name="wdt-woo-mini-cart">
                                         <a href="${data.data.cart_url}" class="wdt-woo-mini-cart-icon">
@@ -112,8 +111,8 @@
             let tableId = Number(this.dataset.value);
             let tableSelector = $('table.wpDataTable[data-wpdatatable_id=' + tableId + ']').get(0).id;
             let button = $(this);
-            let productId = button.data('product_id');
-            let quantity = button.closest('.wdt-woo-variable-product').find('input[name="quantity"]').val();
+            let productId = parseInt(button.data('product_id').toString().replace(/[^\d]/g, ''), 10);
+            let quantity = button.closest('.wdt-woo-product').find('input[name="quantity"]').val();
             let variations = {};
 
             // Get selected variations
@@ -223,34 +222,37 @@
             wpdatatable_config.setShowCartInformation($(this).is(':checked') ? 1 : 0);
         });
 
-        // If predefined values are available, pre-fill the dropdowns and enable the button if all are selected
-        $('.wdt-woo-variable-product').each(function () {
-            let allPreselected = true;
+        setTimeout(function () {
+            // If predefined values are available, pre-fill the dropdowns and enable the button if all are selected
+            $('.wdt-woo-variable-product').each(function () {
+                let allPreselected = true;
 
-            $(this).find('.wdt-woo-variation-selector').each(function () {
-                let preselectedValue = $(this).find('option[selected]').val();
-                if (preselectedValue) {
-                    $(this).val(preselectedValue);
-                } else {
-                    allPreselected = false;
+                $(this).find('.wdt-woo-variation-selector').each(function () {
+                    let preselectedValue = $(this).find('option[selected]').val();
+                    if (preselectedValue) {
+                        $(this).val(preselectedValue);
+                    } else {
+                        allPreselected = false;
+                    }
+                });
+
+                let addToCartButton = $(this).find('.single_add_to_cart_button');
+                if (allPreselected) {
+                    addToCartButton.prop('disabled', false);
                 }
             });
-
-            let addToCartButton = $(this).find('.single_add_to_cart_button');
-            if (allPreselected) {
-                addToCartButton.prop('disabled', false);
-            }
-        });
+        }, 500);
 
         function getColumnIndexByHeader(originalHeader, selector) {
             let table = wpDataTables[selector].DataTable();
 
             let columnIndex = -1;
             table.columns().every(function (index) {
-                let headerText = this.header().textContent.trim();
+                let classList = this.header().classList;
+                let columnClass = Array.from(classList).find(cls => cls.startsWith('column-'));
+                let headerText = columnClass ? columnClass.slice(7) : null;
                 if (headerText === originalHeader) {
                     columnIndex = index;
-                    return false;
                 }
             });
 

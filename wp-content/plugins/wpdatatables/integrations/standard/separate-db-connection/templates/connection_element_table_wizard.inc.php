@@ -1,4 +1,4 @@
-<?php  defined('ABSPATH') or die('Access denied.'); ?>
+<?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <div class="col-sm-2 p-l-0">
     <!-- Separate connection -->
@@ -14,7 +14,8 @@
                 <select class="selectpicker" id="wdt-constructor-table-connection">
                     <option value="">WP Connection</option>
                     <?php foreach (Connection::getAll() as $key => $wdtSeparateConnection) { ?>
-                        <option data-vendor='<?php echo esc_attr($wdtSeparateConnection['vendor']) ?>' value="<?php echo esc_attr($wdtSeparateConnection['id']) ?>" <?php echo $wdtSeparateConnection['default'] ? 'selected' : '' ?>><?php echo esc_html($wdtSeparateConnection['name']) ?></option>
+                        <option data-vendor='<?php echo esc_attr($wdtSeparateConnection['vendor']) ?>'
+                                value="<?php echo esc_attr($wdtSeparateConnection['id']) ?>" <?php echo $wdtSeparateConnection['default'] ? 'selected' : '' ?>><?php echo esc_html($wdtSeparateConnection['name']) ?></option>
                     <?php } ?>
                 </select>
             </div>
