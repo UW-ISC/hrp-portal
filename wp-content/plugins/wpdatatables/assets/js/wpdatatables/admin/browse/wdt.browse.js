@@ -178,5 +178,25 @@ var duplicate_table_id = '';
                 btnDelete.addClass('disabled').html('<i class="wpdt-icon-trash-reg"></i>' + wpdatatables_browse_strings.deleteBrowser);
             }
         });
+
+        /**
+         * Hide folders upgrade notice
+         */
+        $(document).on('click', '.wdt-dismiss-folders-btn', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: ajaxurl,
+                method: "POST",
+                data: {
+                    'action': 'wdtDismissFoldersNotice'
+                },
+                dataType: "json",
+                success: function (e) {
+                    if (e == "success") {
+                        $('.wdt-folders-upgrade-notice').slideUp('fast');
+                    }
+                }
+            });
+        })
     });
 })(jQuery);

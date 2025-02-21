@@ -366,7 +366,9 @@ function wdtActivationCreateTables()
     if (!get_option('wdtGlobalChartLoader')) {
         update_option('wdtGlobalChartLoader', 1);
     }
-
+    if (!get_option('wdtDismissFoldersNotice')) {
+        update_option('wdtDismissFoldersNotice', 'no');
+    }
     update_option('wdtHideUpdateModal', 0);
 
     if (get_option('wdtBootstrapUpdateNotice') === false) {
@@ -429,6 +431,7 @@ function wdtUninstallDelete()
         delete_option('wdtAvgFunctionsLabel');
         delete_option('wdtInstallDate');
         delete_option('wdtRatingDiv');
+        delete_option('wdtDismissFoldersNotice');
         delete_option('wdtShowForminatorNotice');
         delete_option('wdtMDNewsDiv');
         delete_option('wdtTempFutureDate');
@@ -817,6 +820,18 @@ function wpdtTempHideRatingDiv()
 }
 
 add_action('wp_ajax_wdtTempHideRating', 'wpdtTempHideRatingDiv');
+
+/**
+ * Remove rating message
+ */
+function wdtDismissFoldersNotice()
+{
+    update_option('wdtDismissFoldersNotice', 'yes');
+    echo json_encode(array("success"));
+    exit;
+}
+
+add_action('wp_ajax_wdtDismissFoldersNotice', 'wdtDismissFoldersNotice');
 
 /**
  * Create tables on every new site (multisite)

@@ -755,6 +755,7 @@ var singleClick = false;
                         selector: 'td.wdt_woo_select_column',
                     };
 
+                    // Dynamically handle select column index
                     let selectColumnIndex = selectColumn.aTargets[0];
                     selectColumn.orderable = false;
                     selectColumn.searchable = false;
@@ -764,26 +765,50 @@ var singleClick = false;
 
                     dataTableOptions.columnDefs[selectColumnIndex] = selectColumn;
 
-                    if (tableDescription.dataTableParams.order[0][0] === selectColumnIndex) {
-                        tableDescription.dataTableParams.order[0][0]++;
+                    // Ensure valid initial order column
+                    let defaultOrder = dataTableOptions.order[0];
+                    if (defaultOrder && defaultOrder[0] === selectColumnIndex) {
+                        let firstSortableIndex = dataTableOptions.columnDefs.findIndex(column => column.orderable !== false);
+                        if (firstSortableIndex !== -1) {
+                            defaultOrder[0] = firstSortableIndex;
+                        } else {
+                            defaultOrder[0] = 1;
+                        }
                     }
 
-                    let selectVisibleIndex = findSelectColumnVisibleIndex(dataTableOptions.columnDefs);
+                    // Adjust select column functionality post-reordering
+                    let findSelectColumnIndex = () => {
+                        let columns = $(tableDescription.selector).DataTable().settings()[0].aoColumns;
+                        return columns.findIndex(col => col.className === 'wdt_woo_select_column');
+                    };
 
-                    if (selectVisibleIndex !== -1) {
-                        dataTableOptions.rowCallback = function (row, data) {
-                            $('td:eq(' + selectVisibleIndex + ')', row).html('<input type="checkbox" class="select-checkbox">');
-                        };
-                        dataTableOptions.headerCallback = function (thead, data, start, end, display) {
-                            let $headerCell = $(thead).find('th').eq(selectVisibleIndex);
+                    // Row callback for checkbox rendering
+                    dataTableOptions.rowCallback = function (row, data) {
+                        let currentSelectColumnIndex = findSelectColumnIndex();
+                        if (currentSelectColumnIndex !== -1) {
+                            $('td:eq(' + currentSelectColumnIndex + ')', row).html('<input type="checkbox" class="select-checkbox">');
+                        }
+                    };
+
+                    // Header callback for "select all" checkbox
+                    dataTableOptions.headerCallback = function (thead, data, start, end, display) {
+                        let currentSelectColumnIndex = findSelectColumnIndex();
+                        if (currentSelectColumnIndex !== -1) {
+                            let $headerCell = $(thead).find('th').eq(currentSelectColumnIndex);
                             let currentHtml = $headerCell.html();
                             let updatedHtml = currentHtml.replace(/select/, '<input type="checkbox" class="wdt-get-all-checkbox">');
                             $headerCell.html(updatedHtml);
-                        };
-                    }
+                        }
+                    };
 
+                    // Update select column index after reorder
+                    $(tableDescription.selector).on('column-reorder.dt', function (e, settings, details) {
+                        selectColumnIndex = findSelectColumnIndex();
+                    });
+
+                    // Event handlers for "select all" and individual checkboxes
                     $(tableDescription.selector).on('click', '.wdt-get-all-checkbox', function () {
-                        var rows = $(tableDescription.selector).DataTable().rows({'search': 'applied'}).nodes();
+                        let rows = $(tableDescription.selector).DataTable().rows({'search': 'applied'}).nodes();
                         $('input[type="checkbox"]', rows).prop('checked', this.checked);
                         if (this.checked) {
                             $(tableDescription.selector).DataTable().rows({'search': 'applied'}).select();
@@ -793,8 +818,8 @@ var singleClick = false;
                     });
 
                     $(tableDescription.selector).on('click', '.select-checkbox', function () {
-                        var $row = $(this).closest('tr');
-                        var isChecked = $(this).prop('checked');
+                        let $row = $(this).closest('tr');
+                        let isChecked = $(this).prop('checked');
                         if (isChecked) {
                             $(tableDescription.selector).DataTable().row($row).select();
                         } else {
@@ -802,7 +827,6 @@ var singleClick = false;
                         }
                     });
                 }
-
             }
 
             /**
@@ -1048,8 +1072,7 @@ var singleClick = false;
             wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
                 sName: 'addOutlineClass',
                 fn: function (oSettings) {
-
-                    if ($(tableDescription.selector + ' table').length >= 1) {
+                    if ($(tableDescription.selector + ' table:not(.fixedHeader-floating)').length >= 1) {
                         $(tableDescription.selector + ' table.wpDataTable:not(.wpdtSimpleTable)').each(function () {
                             let tableDescriptionChild = JSON.parse($('#' + $(this).data('described-by')).val());
                             $(tableDescriptionChild.selector).DataTable().destroy();
@@ -1064,26 +1087,23 @@ var singleClick = false;
                         });
                     }
                     if ($(tableDescription.selector).length != 0) {
-                        if ($(tableDescription.selector + ' table').length >= 1) {
+                        if ($(tableDescription.selector + ' table:not(.fixedHeader-floating)').length >= 1) {
                             let parentTable = $(tableDescription.selector + ' > table').eq(0);
                         }
-                        if ($(tableDescription.selector).parent().closest('table').length >= 1) {
+                        if ($(tableDescription.selector).parent().closest('table:not(.fixedHeader-floating)').length >= 1) {
                             let parentTable = $(tableDescription.selector).parent().closest('table');
                         }
-
                         if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito', 'dark-mojito']) !== -1) {
                             //Find the column that the table is sorted by
                             let columnPos = oSettings.aaSorting[0][0];
                             let columnTitle = oSettings.aoColumns[columnPos].className.substring(
-                                oSettings.aoColumns[columnPos].className.indexOf("column-") + 7,
-                            );
-
+                                oSettings.aoColumns[columnPos].className.indexOf("column-") + 7);
                             let tableId = typeof parentTable != 'undefined' ? parentTable[0].id : oSettings.sTableId;
                             addOutlineBorder(tableId, columnTitle);
                         }
                     }
                 }
-            });
+                });
             if (tableDescription.table_wcag) {
                 wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
                     sName: 'addFilteredValues',
