@@ -187,7 +187,7 @@ class WDTNestedJson
         $args->customHeaders = $this->getCustomHeaders();
         $args->root = $this->getRoot();
 
-        return $args;
+        return apply_filters('wpdatatables_filter_nested_json_all_args', $args);
     }
 
     /**

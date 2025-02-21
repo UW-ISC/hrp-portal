@@ -29,8 +29,6 @@ class HighStockIntegration
         // Enqueue scripts
         add_action('wpdatatables_enqueue_chart_wizard_scripts', array('WDTIntegration\HighStockIntegration',
             'enqueueScripts'), 11);
-
-        add_action('wp_enqueue_scripts', array('WDTIntegration\HighStockIntegration', 'enqueueCustomStyles'));
     }
 
     /**
@@ -54,19 +52,6 @@ class HighStockIntegration
         $highChartStockSource = get_option('wdtHighChartStableVersion') ? WDT_HS_ASSETS_URL . 'js/highcharts-stock.js' : '//code.highcharts.com/stock/modules/stock.js';
         wp_enqueue_script('wdt-highstock', $highChartStockSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-wp-highstock', WDT_HS_ASSETS_URL . 'js/wdt.highstock.js', array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
-    }
-
-    public static function enqueueCustomStyles()
-    {
-        wp_register_style('highcharts-custom-styles', false);
-        wp_enqueue_style('highcharts-custom-styles');
-        $customCss = "
-    div[class^='highstock_'],
-    .highcharts-root,
-    .highcharts-container {
-        overflow: visible !important;
-    }";
-        wp_add_inline_style('highcharts-custom-styles', $customCss);
     }
 }
 

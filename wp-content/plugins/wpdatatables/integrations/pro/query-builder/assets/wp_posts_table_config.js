@@ -259,7 +259,7 @@
                 tax_query_counter = getQueryClauseLength(wpdatatable_config.queryParameters.tax_query || {});
                 meta_query_counter = getQueryClauseLength(wpdatatable_config.queryParameters.meta_query || {});
                 date_query_counter = getQueryClauseLength(wpdatatable_config.queryParameters.date_query || {});
-                cf_column_counter = Object.keys(wpdatatable_config.queryParameters.customFieldColumns).length;
+                cf_column_counter = Object.keys(wpdatatable_config.queryParameters.customFieldColumns ?? {}).length;
 
                 // Clear existing clauses
                 clearClauses('div#wdt-wp-query-custom-fields-container');
@@ -491,6 +491,9 @@
             let key = this.dataset.value;
             let count = this.dataset.count;
 
+            if (!wpdatatable_config.queryParameters.customFieldColumns) {
+                wpdatatable_config.queryParameters.customFieldColumns = {};
+            }
             if (!wpdatatable_config.queryParameters.customFieldColumns[count]) {
                 wpdatatable_config.queryParameters.customFieldColumns[count] = {};
             }

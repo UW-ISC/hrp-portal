@@ -3562,6 +3562,7 @@ class WPDataTable
                 unlink($tempFileName);
             }
             $objWorksheet = $objPHPExcel->getActiveSheet();
+            $objWorksheet = apply_filters('wpdatatables_before_get_excel_headers', $objWorksheet, $this->getWpId(), $xls_url);
             $highestRow = $objWorksheet->getHighestRow();
             $highestColumn = $objWorksheet->getHighestDataColumn();
 
@@ -3947,12 +3948,12 @@ class WPDataTable
                 if ($this->isEditable()) {
                     WDTTools::wdtUIKitEnqueue();
                     wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStringsCommon());
-                    wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
                 }
             }
             if ($this->isResponsive()) {
                 wp_enqueue_script('wdt-responsive', WDT_JS_PATH . 'responsive/datatables.responsive.js', array(), WDT_CURRENT_VERSION, true);
             }
+            wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
             wp_enqueue_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery',
                 'wdt-datatables',
                 'wdt-common'), WDT_CURRENT_VERSION, true);

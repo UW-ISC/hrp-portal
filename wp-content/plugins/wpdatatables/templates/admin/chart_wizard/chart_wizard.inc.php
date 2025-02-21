@@ -134,9 +134,9 @@
 </div>
 
 <script id="wdt-chart-series-setting-block" type="text/x-jsrender">
-    {{for series}}
-        <div class="chart-series-block" data-orig_header="{{>orig_header}}">
-            <h4 class="c-title-color m-b-4 title">
+    {{for series ~allSeries=#data}}
+            <div class="chart-series-block" data-orig_header="{{>orig_header}}">
+                <h4 class="c-title-color m-b-4 title">
                     <?php esc_html_e('Serie', 'wpdatatables'); ?>: {{>label}}
             </h4>
             <div class="chart-series-label">
@@ -189,7 +189,7 @@
                     </div>
                 </div>
             </div>
-            {{if ~isMultipleSeries(#data)}}
+            {{if ~isMultipleSeries(~allSeries)}}
                 <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
                     <h4 class="c-title-color m-b-4">
                     <?php esc_html_e('Type', 'wpdatatables'); ?>

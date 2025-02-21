@@ -757,47 +757,62 @@ class WDTTools
     public static function getUpdateInfo()
     {
         return array(
-            'version' => get_option('wdtVersion'),
-            'release_date' => '24.12.2024.',
+            'version' => '7.1.1',
+            'release_date' => '18.02.2025',
             'features' => [
-                0 => [
-                    'text' => 'Custom Fields support for WP Posts Builder tables.',
-                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/custom-fields-integration-with-wpdatatables'
-                ],
-                1 => [
-                    'text' => 'Added Price Comparison Operators in WooCommerce Tables.',
-                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/woocommerce-integration'
-                ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Updated Highcharts and Highstock Libraries.',
+                    'text' => 'Improved Conditional Formatting Clarity for WEEK Placeholders in Date Columns',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Updated PHP Spreadsheet Library.',
+                    'text' => 'Corrected Notification Message for Folder Feature and Added \'Never Show Again\' Option',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Added Hook to Skip Initial Rows in Excel Sheet (wpdatatables_before_get_excel_headers)',
+                    'link' => ''
+                ],
+                3 => [
+                    'text' => 'Added Filter to Allow Custom URL Arguments for Nested JSON with Special Characters (wpdatatables_filter_nested_json_all_args)',
+                    'link' => ''
+                ],
+                4 => [
+                    'text' => 'Removed unnecessary files',
                     'link' => ''
                 ],
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed Issue with custom post id placeholder.',
+                    'text' => 'Fixed issue with Google Chart displaying incorrect values',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed Issue with Vertical Axis Label in Highcharts.',
+                    'text' => 'Fixed issue with unnecessary Highcharts code loading on empty WPDataTables pages',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with Elementor builder pages not rendering properly.',
+                    'text' => 'Fixed Issue with Fixed Headers causing vertical scrolling and pagination to malfunction on both back-end and front-end views.',
                     'link' => ''
                 ],
                 3 => [
-                    'text' => 'Fixed issue with Mini Cart Rendering After Adding to Cart.',
+                    'text' => 'Fixed Issue with Fixed Headers Causing Custom HTML Button to Appear in Text Filter Input in Table Footer.',
                     'link' => ''
                 ],
-
-            ]
+                4 => [
+                    'text' => 'Fixed Issue with Column Reordering in WooCommerce Tables.',
+                    'link' => ''
+                ],
+                5 => [
+                    'text' => 'Fixed issue with WP Posts tables not rendering correctly without selected Custom Fields',
+                    'link' => ''
+                ],
+                6 => [
+                    'text' => 'Fixed issue with Multiple-series ApexCharts not working as combo charts correctly',
+                    'link' => ''
+                ],
+            ],
         );
     }
 
