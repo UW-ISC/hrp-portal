@@ -382,17 +382,11 @@ var wpDataTablesGoogleChart = function () {
                         for (var j in obj.columnIndexes) {
                             if (obj.columns[j].type == 'number') {
                                 var value = filteredData[i][obj.columnIndexes[j]];
-                                if (isNaN(value)) {
-                                    if (numberFormat == 1) {
-                                        var thousandsSeparator = '.';
-                                        var decimalSeparator = ',';
-                                    } else {
-                                        var thousandsSeparator = ',';
-                                        var decimalSeparator = '.';
-                                    }
-                                    value = wdtUnformatNumber(value, thousandsSeparator, decimalSeparator, true);
+                                if (numberFormat == 1) {
+                                    rowEntry.push(parseFloat(wdtUnformatNumber(value, '.', ',', true)));
+                                } else {
+                                    rowEntry.push(parseFloat(wdtUnformatNumber(value, ',', '.', true)));
                                 }
-                                rowEntry.push(parseFloat(value));
                             } else if (obj.columns[j].type == 'date') {
                                 rowEntry.push(moment(filteredData[i][obj.columnIndexes[j]], momentDateFormat).toDate());
                             } else if (obj.columns[j].type == 'datetime') {

@@ -565,7 +565,7 @@ class WDTConfigController
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
         $table->loader = (int)($table->loader);
-        $table->showCartInformation = (int)($table->showCartInformation);
+        $table->showCartInformation = isset($table->showCartInformation) ? (int)($table->showCartInformation) : 0;
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 

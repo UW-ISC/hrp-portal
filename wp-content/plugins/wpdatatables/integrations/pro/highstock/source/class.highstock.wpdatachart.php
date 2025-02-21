@@ -11,9 +11,15 @@ use WdtHighchartsChart\WdtHighchartsChart;
 class WdtHighstockChart extends WdtHighchartsChart
 {
 
+    /**
+     * @var null
+     */
     protected $_highstock_render_data = NULL;
 
     // Path depending on "Stable version"
+    /**
+     * @var string
+     */
     protected $highChartStockSource = '//code.highcharts.com/stock/modules/stock.js';
 
     /**
@@ -245,6 +251,15 @@ class WdtHighstockChart extends WdtHighchartsChart
             'wdt-highstock'), WDT_CURRENT_VERSION);
 
         wp_enqueue_script('wpdatatables-highstock', WDT_HS_ASSETS_URL . 'js/wdt.highstock' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+        wp_register_style('highcharts-custom-styles', false);
+        wp_enqueue_style('highcharts-custom-styles');
+        $customCss = "
+    div[class^='highstock_'],
+    .highcharts-root,
+    .highcharts-container {
+        overflow: visible !important;
+    }";
+        wp_add_inline_style('highcharts-custom-styles', $customCss);
         return json_encode($this->_highstock_render_data);
     }
 
@@ -286,6 +301,11 @@ class WdtHighstockChart extends WdtHighchartsChart
         $this->formatShiftedAxes();
     }
 
+    /**
+     * @param $chartData
+     *
+     * @return mixed|null
+     */
     public function setChartRenderData($chartData)
     {
         if (!empty($renderData['highstock_render_data'])) {
@@ -294,6 +314,11 @@ class WdtHighstockChart extends WdtHighchartsChart
         return parent::setChartRenderData($chartData);
     }
 
+    /**
+     * @param $array
+     *
+     * @return void
+     */
     public function sortNestedArrayByFirstElement(&$array)
     {
         usort($array, function ($a, $b) {

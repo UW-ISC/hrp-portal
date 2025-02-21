@@ -266,25 +266,23 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with features, improvements, and bugfixes:
+                            New update with improvements and bugfixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Custom Fields support for WP Posts Builder tables.</li>
-                                <li><strong>Feature:</strong> Added Price Comparison Operators in WooCommerce Tables.</li>
-                                <li><strong>Improvement:</strong> Updated Highcharts and Highstock Libraries.
-                                </li>
-                                <li><strong>Improvement:</strong> Updated PHP Spreadsheet Library.
-                                </li>
-                                <li><strong>BugFix:</strong> Fixed Issue with custom post id placeholder.
-                                </li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Vertical Axis Label in Highcharts.
-                                </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Elementor builder pages not rendering properly.
-                                </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Mini Cart Rendering After Adding to Cart.
-                                </li>
+                                <li><strong>Improvement:</strong> Improved Conditional Formatting Clarity for WEEK Placeholders in Date Columns</li>
+                                <li><strong>Improvement:</strong> Corrected Notification Message for Folder Feature and Added 'Never Show Again' Option</li>
+                                <li><strong>Improvement:</strong> Added Hook to Skip Initial Rows in Excel Sheet (wpdatatables_before_get_excel_headers)</li>
+                                <li><strong>Improvement:</strong> Added Filter to Allow Custom URL Arguments for Nested JSON with Special Characters (wpdatatables_filter_nested_json_all_args)</li>
+                                <li><strong>Improvement:</strong> Removed unnecessary files</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Google Chart displaying incorrect values</li>
+                                <li><strong>BugFix:</strong> Fixed issue with unnecessary Highcharts code loading on empty WPDataTables pages</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Fixed Headers causing vertical scrolling and pagination to malfunction on both back-end and front-end views.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Fixed Headers Causing Custom HTML Button to Appear in Text Filter Input in Table Footer.</li>
+                                <li><strong>BugFix:</strong> Fixed Issue with Column Reordering in WooCommerce Tables.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with WP Posts tables not rendering correctly without selected Custom Fields</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Multiple-series ApexCharts not working as combo charts correctly</li>
                                 <li>Other small bug fixes.</li>
                             </ul>
                         </div>

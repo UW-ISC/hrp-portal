@@ -1203,7 +1203,6 @@ defined('ABSPATH') or die('Access denied.');
 
                         </div>
                         <!-- /.row -->
-
                         <div class="row">
 
                             <div class="col-sm-12 p-l-0">
@@ -1213,7 +1212,18 @@ defined('ABSPATH') or die('Access denied.');
                             </div>
 
                         </div>
-
+                        <div class="row wpdt-conditional-message">
+                            <div class="alert alert-info alert-dismissible hidden" role="alert"
+                                 style="margin-top: 40px;margin-bottom: 0px;width: 97%;margin-left: 15px;">
+                                <i class="wpdt-icon-info-circle-full"></i>
+                                <span class="wdt-alert-title f-500"
+                                      style="font-size: 14px">
+                                    <?php esc_html_e('If you select one of the following values: ', 'wpdatatables'); ?>
+                                    <strong><?php esc_html_e('%LAST_WEEK%, %THIS_WEEK%, %NEXT_WEEK%, %LAST_30_DAYS%, %LAST_MONTH%, %NEXT_MONTH%, %THIS_MONTH% ', 'wpdatatables'); ?></strong>
+                                    <?php esc_html_e('as criteria, it is not possible to use the comparison values because they are based on the dates within the selected value. ', 'wpdatatables'); ?>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <!--/#column-conditional-formatting-settings -->
 
