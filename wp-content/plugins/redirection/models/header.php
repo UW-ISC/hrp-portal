@@ -22,8 +22,20 @@ class Red_Http_Headers {
 
 		if ( isset( $header['headerSettings'] ) && is_array( $header['headerSettings'] ) ) {
 			foreach ( $header['headerSettings'] as $key => $setting_value ) {
-				if ( is_array( $setting_value ) && isset( $setting_value['value'] ) ) {
-					$settings[ $this->sanitize( sanitize_text_field( $key ) ) ] = $this->sanitize( $setting_value['value'] );
+				if ( is_array( $setting_value ) ) {
+					if ( isset( $setting_value['value'] ) ) {
+						$settings[ $this->sanitize( sanitize_text_field( $key ) ) ] = $this->sanitize( $setting_value['value'] );
+					} elseif ( isset( $setting_value['choices'] ) ) {
+						$settings[ $this->sanitize( sanitize_text_field( $key ) ) ] = array_map(
+							function ( $choice ) {
+								return [
+									'label' => $this->sanitize( isset( $choice['label'] ) ? $choice['label'] : '' ),
+									'value' => $this->sanitize( isset( $choice['value'] ) ? $choice['value'] : '' ),
+								];
+							},
+							$setting_value['choices']
+						);
+					}
 				} else {
 					$settings[ $this->sanitize( sanitize_text_field( $key ) ) ] = $this->sanitize( $setting_value );
 				}
@@ -107,15 +119,25 @@ class Red_Http_Headers {
 		}
 	}
 
+	/**
+	 * Sanitize that string
+	 *
+	 * @param string $text
+	 * @return string
+	 */
 	private function sanitize( $text ) {
+		if ( is_array( $text ) ) {
+			return '';
+		}
+
 		// No new lines
-		$text = preg_replace( "/[\r\n\t].*?$/s", '', $text );
+		$text = (string) preg_replace( "/[\r\n\t].*?$/s", '', $text );
 
 		// Clean control codes
-		$text = preg_replace( '/[^\PC\s]/u', '', $text );
+		$text = (string) preg_replace( '/[^\PC\s]/u', '', $text );
 
 		// Try and remove bad decoding
-		if ( function_exists( 'iconv' ) ) {
+		if ( function_exists( 'iconv' ) && is_string( $text ) ) {
 			$converted = @iconv( 'UTF-8', 'UTF-8//IGNORE', $text );
 			if ( $converted !== false ) {
 				$text = $converted;
