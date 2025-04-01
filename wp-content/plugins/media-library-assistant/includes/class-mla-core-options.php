@@ -323,6 +323,16 @@ class MLACoreOptions {
 	const MLA_MEDIA_MODAL_APPLY_DISPLAY_SETTINGS = 'media_modal_apply_display_settings';
 
 	/**
+	 * Provides a unique name for the Intermediate Image Sizes option
+	 */
+	const MLA_IMAGE_SIZES = 'image_sizes';
+
+	/**
+	 * Provides a unique name for the Enable Intermediate Image Sizes option
+	 */
+	const MLA_ENABLE_IMAGE_SIZES = 'enable_image_sizes';
+
+	/**
 	 * Provides a unique name for the Post MIME Types option
 	 */
 	const MLA_POST_MIME_TYPES = 'post_mime_types';
@@ -1423,6 +1433,79 @@ class MLACoreOptions {
 					'delete' => 'mla_iptc_exif_option_handler',
 					'reset' => 'mla_iptc_exif_option_handler'),
 
+			self::MLA_ENABLE_IMAGE_SIZES =>
+				array('tab' => 'image',
+					'name' => __( 'Enable Intermediate Image Size Support', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check/uncheck this option to enable/disable Intermediate Image Size Support, then click <strong>Save Changes</strong> to record the new setting.', 'media-library-assistant' ) ),
+
+			self::MLA_IMAGE_SIZES =>
+				array('tab' => '',
+					'type' => 'custom',
+					'render' => 'mla_image_sizes_option_handler',
+					'update' => 'mla_image_sizes_option_handler',
+					'delete' => 'mla_image_sizes_option_handler',
+					'reset' => 'mla_image_sizes_option_handler',
+					'help' => __( 'Image Sizes help.', 'media-library-assistant' ),
+					'std' => array(
+						'thumbnail' => array(
+							'name' => _x( 'Thumbnail', 'image_sizes_name', 'media-library-assistant' ),
+							'width' => 150,
+							'height' => 150,
+							'crop' => false,
+							'horizontal' => '',
+							'vertical' => '',
+							'disabled' => false,
+							'description' => _x( 'WordPress reserved size', 'image_sizes_description', 'media-library-assistant' ),
+							'source' => 'core',
+						),
+						'medium' => array(
+							'name' => _x( 'Medium', 'image_sizes_name', 'media-library-assistant' ),
+							'width' => 300,
+							'height' => 300,
+							'crop' => false,
+							'horizontal' => '',
+							'vertical' => '',
+							'disabled' => false,
+							'description' => _x( 'WordPress reserved size', 'image_sizes_description', 'media-library-assistant' ),
+							'source' => 'core',
+						),
+						'medium_large' => array(
+							'name' => _x( 'Medium Large', 'image_sizes_name', 'media-library-assistant' ),
+							'width' => 768,
+							'height' => 0,
+							'crop' => false,
+							'horizontal' => '',
+							'vertical' => '',
+							'disabled' => false,
+							'description' => _x( 'WordPress reserved size', 'image_sizes_description', 'media-library-assistant' ),
+							'source' => 'core',
+						),
+						'large' => array(
+							'name' => _x( 'Large', 'image_sizes_name', 'media-library-assistant' ),
+							'width' => 1024,
+							'height' => 1024,
+							'crop' => false,
+							'horizontal' => '',
+							'vertical' => '',
+							'disabled' => false,
+							'description' => _x( 'WordPress reserved size', 'image_sizes_description', 'media-library-assistant' ),
+							'source' => 'core',
+						),
+						'post-thumbnail' => array(
+							'name' => _x( 'Post Thumbnail', 'image_sizes_name', 'media-library-assistant' ),
+							'width' => 266,
+							'height' => 266,
+							'crop' => false,
+							'horizontal' => '',
+							'vertical' => '',
+							'disabled' => false,
+							'description' => _x( 'WordPress reserved size, requires theme support', 'image_sizes_description', 'media-library-assistant' ),
+							'source' => 'core',
+						),
+					)),
+
 			self::MLA_ENABLE_POST_MIME_TYPES =>
 				array('tab' => 'view',
 					'name' => __( 'Enable View and Post MIME Type Support', 'media-library-assistant' ),
@@ -1665,7 +1748,11 @@ class MLACoreOptions {
 					'help' => __( 'Enter the text area...'),
 			*/
 		);
-		MLACore::mla_initialize_tax_checked_on_top();
+
+		// MLACore not loaded nor needed in uninstall.php
+		if ( class_exists( 'MLACore' ) ) {
+			MLACore::mla_initialize_tax_checked_on_top();
+		}
 	}
 } // class MLACoreOptions
 ?>

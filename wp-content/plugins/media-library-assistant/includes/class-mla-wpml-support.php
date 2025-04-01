@@ -1976,28 +1976,23 @@ class MLA_WPML_Table {
 	 * @return	void
 	 */
 	function __construct( $table ) {
-		/*
-		 * Save a reference to the parent MLA_List_Table object
-		 */
+		// Save a reference to the parent MLA_List_Table object
 		$this->mla_list_table = $table;
 
-		/*
-		 * Defined in /wp-admin/includes/class-wp-list-table.php
-		 */
+		// Defined in /wp-admin/includes/class-wp-list-table.php
 		// filter "views_{$this->screen->id}"
 		add_filter( 'views_media_page_mla-menu', 'MLA_WPML_Table::mla_views_media_page_mla_menu_filter', 10, 1 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-list-table.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_submenu_arguments', array( $this, 'mla_list_table_submenu_arguments' ), 10, 2 );
 		add_filter( 'mla_list_table_get_columns', array( $this, 'mla_list_table_get_columns' ), 10, 1 );
 		add_filter( 'mla_list_table_column_default', array( $this, 'mla_list_table_column_default' ), 10, 3 );
 		//add_filter( 'mla_list_table_build_inline_data', array( $this, 'mla_list_table_build_inline_data' ), 10, 2 );
 
-		/*
-		 * Defined in /plugins/wpml-media/inc/wpml-media.class.php
-		 */
+		// Defined in various /media-library-assistant/includes/class-mla-settings-*-tab.php
+		add_filter( 'mla_setting_table_submenu_arguments', array( $this, 'mla_list_table_submenu_arguments' ), 10, 2 );
+
+		// Defined in /plugins/wpml-media/inc/wpml-media.class.php
 		add_filter( 'wpml-media_view-upload-sql', array( $this, 'mla_wpml_media_view_upload_sql_filter' ), 10, 2 );
 		add_filter( 'wpml-media_view-upload-count', array( $this, 'mla_wpml_media_view_upload_count_filter' ), 10, 4 );
 		add_filter( 'wpml-media_view-upload-page-sql', array( $this, 'mla_wpml_media_view_upload_page_sql_filter' ), 10, 2 );

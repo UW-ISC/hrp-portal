@@ -97,7 +97,6 @@ p.submit.mla-settings-submit {
     <h3>Plugin Tool(s)</h3>
     <p>The plugin tools let you copy term definitions or term assignments from a source taxonomy to one destination taxonomy. Pick your source and destination sites, then run one of the tools below.</p>
     <form action="[+form_url+]" method="post" class="mla-display-settings-page" id="mla-display-settings-general-tools-form">
-      <input name="[+slug_prefix+]_tools[path_delimiter]" id="[+slug_prefix+]_tools_path_delimiter" type="hidden" value="[+path_delimiter+]" />
       <table style="border: 1px solid; width: 100%">
         <tbody>
           <tr>
@@ -126,16 +125,20 @@ p.submit.mla-settings-submit {
       <table style="border: 1px solid; width: 100%">
         <tbody>
           <tr> 
-            <!--          <td valign="top" width="300px">
+            <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp; </td>
+            <td valign="top">
             <table>
               <tbody>
                 <tr>
-                  <td valign="top" class="textright"><input name="[+slug_prefix+]_tools[copy_defaults]" id="[+slug_prefix+]_tools_copy_defaults" type="checkbox" [+copy_defaults_checked+] value="1" /></td>
-                  <td valign="top">&nbsp;<strong>Copy Defaults</strong></td>
+                  <td valign="top" class="textright"><input name="[+slug_prefix+]_tools[copy_term_meta]" id="[+slug_prefix+]_tools_copy_term_meta" type="checkbox" [+copy_term_meta_checked+] value="1" /></td>
+                  <td valign="top">&nbsp;<strong>Copy Term Meta values</strong></td>
                 </tr>
               </tbody>
             </table>
-          </td> -->
+			&nbsp;
+            </td>
+          </tr>
+          <tr> 
             <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp; </td>
             <td valign="top"><span class="submit mla-settings-submit">
               <input name="[+slug_prefix+]_tools_copy_definitions" class="button-primary" id="[+slug_prefix+]_tools_definitions" type="submit" value="Copy Term Definitions" />
@@ -147,7 +150,7 @@ p.submit.mla-settings-submit {
           </tr>
         </tbody>
       </table>
-      <p>The "Copy Term Assignments" tool lets you copy term definitions from a source MLA site to one or more destination sites.</p>
+      <p>The "Copy Term Assignments" tool lets you copy term definitions from a source taxonomy to one destination taxonomy.</p>
       <table style="border: 1px solid; width: 100%">
       <tbody>
         <tr>
@@ -262,6 +265,9 @@ The current MLA version provides mapping rules to assign taxonomy terms to Media
 The current version allows the specification of &ldquo;Delimiters&rdquo; (including a space character) to separate multiple terms within a metadata value. This example plugin adds a &ldquo;Path Delimiter&rdquo; that allows term parent and higher-level ancestor values to be specified, more precisely placing a term in the hierarchy. For example, a value such as &ldquo;/grand parent/parent/child&rdquo; denotes a specific term within a three-level hierarchy. In this example the delimiter at the start of the value means that &ldquo;grand parent&rdquo; must be a root term, i.e., it appears at the highest level and has no ancestors. This is an absolute path specification. A path such as &ldquo;parent/child&rdquo; is a relative path specification, starting wherever &ldquo;parent&rdquo; appears in the hierarchy.
 </p>
 <p>
+This plugin also provides two tools to help you manage taxonomies. The Copy Term Definitions tool copies term definitions from the source taxonomy to one destination taxonomy. The Copy Term Assignments tool copies term assignments from the source taxonomy to one destination taxonomy.
+</p>
+<p>
 <a name="processing"></a>
 </p>
 <p>
@@ -299,13 +305,16 @@ As the name implies, the Copy Term Definitions tool copies term definitions from
 As described in the <a href="#names-vs-slugs">Term Names Vs Slugs</a> section below, term slug values are guaranteed to be unique within a given taxonomy, and there is no problem having the same slug value in two or more taxonomies. This makes them the best choice for matching source definitions to existing destination definitions. The source slug will also be used to insert new destination terms so source parent/child relationships can be replicated in the destination taxonomy.
 </p>
 <p>
-The tool begins by compiling an array of a source terms; the array key is the term ID and the elements are an array with the term name, slug, description and parent.The WordPress <code>get_terms()</code> function provides the source terms for this step.
+The tool begins by compiling an array of a source terms; the array key is the term ID and the elements are an array with the term name, slug, description and parent. The WordPress <code>get_terms()</code> function provides the source terms for this step. If you check the optional Copy Term Meta values box, the WordPress <code>get_term_meta()</code> function gathers meta values, if any, assigned to each term.
 </p>
 <p>
 The tool completes the operation by iterating through the array of source terms, checking to see if they exist in the destination taxonomy and inserting them if they do not. If the destination taxonomy is hierarchical the logic will check for and insert parent terms as necessary. If the destination taxonomy is flat, all terms are inserted at the root level and source taxonomy parent relationships are ignored. Of course, if the source taxonomy is flat there are no parent relationships to consider and all terms are inserted at the root level of the destination taxonomy.
 </p>
 <p>
 For each source term, the tool calls the WordPress <code>get_term_by()</code> function using the term slug to detect a match. If a match is found the operation is complete and the tools moves on to the next source term. If there's no match, the tool inserts the source term as a new destination term. If the source term has a parent, the tool will see if the parent exists and if so, insert the new term under the existing parent (ignoring the original source parent). If the parent does not exist the tool will insert it and then insert the source term under the new destination parent. The parent match/insert process can extend up multiple levels to the root level.
+</p>
+<p>
+If you check the optional Copy Term Meta values box, for each source term that has meta values, the tool will copy these to the corresponding destination term. This is done both for existing destination terms as well as new destination terms inserted by the tool. For each meta value, the tool calls the WordPress <code>update_term_meta()</code> function using the destination term ID and meta key values.
 </p>
 <h4>The copy assignments tool</h4>
 <p>
@@ -362,7 +371,7 @@ When the page refreshes a status message at the top of the page will summarize t
 </p>
 <h4>The Copy Term Definitions tool</h4>
 <p>
-The Copy Term Definitions tool copies term definitions from the source taxonomy to one destination taxonomy. The source and destination dropdown controls include all taxonomies that are supported by MLA (see Taxonomy Support in the Settings/Media Library Assistant General tab).
+The Copy Term Definitions tool copies term definitions from the source taxonomy to one destination taxonomy. The source and destination dropdown controls include all taxonomies that are supported by MLA (see Taxonomy Support in the Settings/Media Library Assistant General tab). If you check the optional Copy Term Meta values box, term meta values are also copied from the source taxonomy to the corresponding term in the destination taxonomy.
 </p>
 <p>
 For the source taxonomy you select, the tool compiles all the term definitions. It then goes to the destination taxonomy and ensures that all of the source terms exist there. The tool inserts any source term that does not already exist. The tool won't delete any existing destination term that isn't in the source terms, and the tool does not make or affect any term assignments to Media Library items. Be sure you read the details in the "How the Plugin Works" section so you understand the operation and limitations of this tool.

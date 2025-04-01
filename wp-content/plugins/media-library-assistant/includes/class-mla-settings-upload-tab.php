@@ -44,17 +44,13 @@ class MLASettings_Upload {
 			'ntdeltitle' => __( 'Remove From Bulk Edit', 'media-library-assistant' ),
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
-			'useSpinnerClass' => false,
+			'useSpinnerClass' => true,
 			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'tab' => 'upload',
 			'fields' => array( 'original_slug', 'slug', 'mime_type', 'icon_type', 'core_type', 'mla_type', 'source', 'standard_source' ),
 			'checkboxes' => array( 'disabled' ),
 			'ajax_action' => MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG,
 		);
-
-		if ( version_compare( get_bloginfo( 'version' ), '4.2', '>=' ) ) {
-			$script_variables['useSpinnerClass'] = true;
-		}
 
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
@@ -354,7 +350,7 @@ class MLASettings_Upload {
 				'body' => '' 
 			);
 		} elseif ( !empty( $_REQUEST['mla-optional-uploads-display'] ) ) {
-			if ( 'true' != $_REQUEST['mla-optional-uploads-display'] ) {
+			if ( 'true' !== $_REQUEST['mla-optional-uploads-display'] ) {
 				check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 				unset( $_REQUEST['s'] );
 			}
@@ -374,7 +370,7 @@ class MLASettings_Upload {
 		}
 
 		// Process bulk actions that affect an array of items
-		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
+		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 				$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
 				if ( 'select' == $bulk_action ) {
@@ -468,7 +464,7 @@ class MLASettings_Upload {
 		}
 
 		// Check for disabled status
-		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_UPLOAD_MIMES ) ) {
+		if ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_UPLOAD_MIMES ) ) {
 			// Fill in with any page-level options
 			$options_list = '';
 			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
@@ -491,17 +487,23 @@ class MLASettings_Upload {
 		}
 
 		// Display the Upload MIME Types Table
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array(
-			'mla_admin_action',
-			'mla_item_slug',
-			'mla_item_ID',
-			'_wpnonce',
-			'_wp_http_referer',
-			'action',
-			'action2',
-			'cb_mla_item_ID',
-			'mla-optional-uploads-search',
-		), $_SERVER['REQUEST_URI'] ); // phpcs:ignore
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			$_SERVER['REQUEST_URI'] = remove_query_arg( array(
+				'mla_admin_action',
+				'mla_item_slug',
+				'mla_item_ID',
+				'_wpnonce',
+				'_wp_http_referer',
+				'action',
+				'action2',
+				'cb_mla_item_ID',
+				'mla-optional-uploads-cancel',
+				'mla-optional-uploads-search',
+				'mla-upload-options-save',
+				'mla-optional-uploads-display',
+				'mla-add-upload-submit',
+			), $_SERVER['REQUEST_URI'] ); // phpcs:ignore
+		}
 
 		//	Create an instance of our package class
 		$MLAListUploadTable = new MLA_Upload_List_Table();
@@ -517,6 +519,27 @@ class MLASettings_Upload {
 			}
 		}
 
+		// WPML requires that lang be the first argument after page
+		$view_arguments = MLA_Upload_List_Table::mla_submenu_arguments();
+		$form_language = isset( $view_arguments['lang'] ) ? '&lang=' . $view_arguments['lang'] : '';
+		$form_arguments = '?page=mla-settings-menu-upload' . $form_language . '&mla_tab=upload';
+
+		// We need to remember all the view arguments
+		$view_args = '';
+		foreach ( $view_arguments as $key => $value ) {
+			// 'lang' has already been added to the form action attribute
+			if ( in_array( $key, array( 'lang' ) ) ) {
+				continue;
+			}
+
+			if ( is_array( $value ) ) {
+				foreach ( $value as $element_key => $element_value )
+					$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s[%2$s]" value="%3$s" />', $key, $element_key, esc_attr( urldecode( $element_value ) ) ) . "\n";
+			} else {
+				$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s" value="%2$s" />', $key, esc_attr( urldecode( $value ) ) ) . "\n";
+			}
+		}
+
 		$page_values = array(
 			'File Extension Processing' => __( 'File Extension and MIME Type Processing', 'media-library-assistant' ),
 			'In this tab' => __( 'In this tab you can manage the list of file extension/MIME Type associations, which are used by WordPress to decide what kind of files can be uploaded to the Media Library and to fill in the <strong><em>post_mime_type</em></strong> value. To upload a file, the file extension must be in this list and be active.', 'media-library-assistant' ),
@@ -526,6 +549,7 @@ class MLASettings_Upload {
 			'Search Uploads' => __( 'Search Uploads', 'media-library-assistant' ),
 			'To search by' => __( 'To search by extension, use ".", e.g., ".doc"', 'media-library-assistant' ),
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-upload&mla_tab=upload',
+			'view_args' => $view_args,
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
@@ -912,24 +936,14 @@ class MLA_Upload_List_Table extends WP_List_Table {
 		$actions = array();
 
 		// Compose view arguments
-		$view_args = array(
+		$view_args = array_merge( array(
 			'page' => MLACoreOptions::MLA_SETTINGS_SLUG . '-upload',
 			'mla_tab' => 'upload',
 			'mla_item_slug' => urlencode( $item->slug )
-		);
+		), MLA_Upload_List_Table::mla_submenu_arguments() );
 
 		if ( isset( $_REQUEST['paged'] ) ) {
 			$view_args['paged'] = absint( $_REQUEST['paged'] );
-		}
-
-		if ( isset( $_REQUEST['order'] ) ) {
-			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
-			$view_args['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
-		}
-
-		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
-		if ( array_key_exists( $field, MLAMime::$default_sortable_upload_columns ) ) {
-			$view_args['orderby'] = urlencode( $field );
 		}
 
 		$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
@@ -1110,6 +1124,20 @@ class MLA_Upload_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Display the pagination, adding view, search and filter arguments
+	 *
+	 * @since 3.25
+	 * 
+	 * @param string	'top' | 'bottom'
+	 */
+	function pagination( $which ) {
+		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
+		$_SERVER['REQUEST_URI'] = add_query_arg( MLA_Upload_List_Table::mla_submenu_arguments(), $save_uri );
+		parent::pagination( $which );
+		$_SERVER['REQUEST_URI'] = $save_uri;
+	}
+
+	/**
 	 * This method dictates the table's columns and titles
 	 *
 	 * @since 1.40
@@ -1149,6 +1177,57 @@ class MLA_Upload_List_Table extends WP_List_Table {
 	 */
 	function get_sortable_columns( ) {
 		return MLAMime::$default_sortable_upload_columns;
+	}
+
+	/**
+	 * Process $_REQUEST, building $submenu_arguments
+	 *
+	 * @since 3.25
+	 *
+	 * @param boolean $include_filters Optional. Include the "click filter" values in the results. Default true.
+	 * @return array non-empty view, search, filter and sort arguments
+	 */
+	public static function mla_submenu_arguments( $include_filters = true ) {
+		static $submenu_arguments = NULL, $has_filters = NULL;
+
+		if ( is_array( $submenu_arguments ) && ( $has_filters === $include_filters ) ) {
+			return $submenu_arguments;
+		}
+
+		$submenu_arguments = array();
+		$has_filters = $include_filters;
+
+		// Search box arguments
+		if ( !empty( $_REQUEST['s'] ) ) {
+			$submenu_arguments['s'] = urlencode( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) );
+		}
+
+		// View arguments - see also MLAMime::mla_tabulate_upload_items
+		$field = sanitize_text_field( isset( $_REQUEST['mla_upload_view'] ) ? wp_unslash( $_REQUEST['mla_upload_view'] ) : 'all' );
+		if ( in_array( $field, array( 'all', 'core', 'mla', 'custom' ) ) ) {
+			$submenu_arguments['mla_upload_view'] = $field;
+		}
+
+		// Filter arguments (from table header)
+		$field = strtolower( sanitize_text_field( isset( $_REQUEST['mla_upload_status'] ) ? wp_unslash( $_REQUEST['mla_upload_status'] ) : 'any' ) );
+		if ( 'any' !== $field ) {
+			if ( in_array( $field, array( 'active', 'inactive' ) ) ) {
+				$submenu_arguments['mla_upload_status'] = $field;
+			}
+		}
+
+		// Sort arguments (from column header)
+		if ( isset( $_REQUEST['order'] ) ) {
+			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$submenu_arguments['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
+		}
+
+		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
+		if ( array_key_exists( $field, MLAImage_Size::$default_sortable_image_size_columns ) ) {
+			$submenu_arguments['orderby'] = $field;
+		}
+
+		return $submenu_arguments = apply_filters( 'mla_setting_table_submenu_arguments', $submenu_arguments, $include_filters, 'MLASettings_Upload' );
 	}
 
 	/**
@@ -1221,6 +1300,72 @@ class MLA_Upload_List_Table extends WP_List_Table {
 		$actions['delete'] = __( 'Delete/Revert Custom', 'media-library-assistant' );
 
 		return $actions;
+	}
+
+	/**
+	 * Get dropdown box of rule status values, i.e., Active/Inactive.
+	 *
+	 * @since 3.25
+	 *
+	 * @param string $selected Optional. Currently selected status. Default 'any'.
+	 * @return string HTML markup for dropdown box.
+	 */
+	public static function mla_get_upload_status_dropdown( $selected = 'any' ) {
+		$dropdown  = '<select name="mla_upload_status" class="postform" id="name">' . "\n";
+
+		$selected_attribute = ( $selected === 'any' ) ? ' selected="selected"' : '';
+		$dropdown .= "\t" . sprintf( '<option value="any"%1$s>%2$s</option>', $selected_attribute, _wp_specialchars( __( 'Any Status', 'media-library-assistant' ) ) ) . "\n";
+
+		$selected_attribute = ( $selected === 'active' ) ? ' selected="selected"' : '';
+		$dropdown .= "\t" . sprintf( '<option value="active"%1$s>%2$s</option>', $selected_attribute, _wp_specialchars( __( 'Active', 'media-library-assistant' ) ) ) . "\n";
+
+		$selected_attribute = ( $selected === 'inactive' ) ? ' selected="selected"' : '';
+		$dropdown .= "\t" . sprintf( '<option value="inactive"%1$s>%2$s</option>', $selected_attribute, _wp_specialchars( __( 'Inactive', 'media-library-assistant' ) ) ) . "\n";
+
+		$dropdown .= '</select>';
+
+		return $dropdown;
+	}
+
+	/**
+	 * Extra controls to be displayed between bulk actions and pagination
+	 *
+	 * Modeled after class-wp-posts-list-table.php in wp-admin/includes.
+	 *
+	 * @since 3.25
+	 * 
+	 * @param	string	'top' or 'bottom', i.e., above or below the table rows
+	 *
+	 * @return	void
+	 */
+	function extra_tablenav( $which ) {
+		// Decide which actions to show
+		if ( 'top' === $which ) {
+			$actions = array( 'mla_upload_status', 'mla_filter' );
+		} else {
+			$actions = array();
+		}
+
+		if ( empty( $actions ) ) {
+			return;
+		}
+
+		echo ( '<div class="alignleft actions">' );
+
+		foreach ( $actions as $action ) {
+			switch ( $action ) {
+				case 'mla_upload_status':
+					echo self::mla_get_upload_status_dropdown( isset( $_REQUEST['mla_upload_status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_upload_status'] ) ) : 'any' ); // phpcs:ignore
+					break;
+				case 'mla_filter':
+					submit_button( __( 'Filter', 'media-library-assistant' ), 'secondary', 'mla_filter', false, array( 'id' => 'template-query-submit' ) );
+					break;
+				default:
+					// ignore anything else
+			}
+		}
+
+		echo ( '</div>' );
 	}
 
 	/**

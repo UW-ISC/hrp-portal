@@ -140,7 +140,8 @@ wma,audio/x-ms-wma,audio,audio,Microsoft Windows Media Audio (compressed audio)
 wmf,application/x-msmetafile,default,vectorgfx,Microsoft Windows Metafile - proprietary format for vector graphics
 wmv,video/x-ms-wmv,video,video,Microsoft Audio Format
 wmx,video/x-ms-wmx,video,video,Microsoft Windows Media audio and video files
-woff,font/x-woff,default,font,Web Open Font Format
+woff,font/woff,default,font,Web Open Font Format 1.0
+woff2,font/woff2,default,font,Web Open Font Format 2.0
 word,application/msword,document,document,Microsoft Word Document
 wp,application/wordperfect,document,document,WordPerfect 5
 wpd,application/wordperfect,document,document,Wordperfect
@@ -1548,7 +1549,12 @@ wmv,audio/x-ms-wmv,Microsoft Audio Format
 wmv,video/x-ms-wmv,Microsoft Windows Media audio and video files
 wmx,video/x-ms-wmx,Microsoft Windows Media Audio/Video Playlist
 wmz,application/x-ms-wmz,Microsoft Windows Media Player Skin Package
-woff,application/x-font-woff,Web Open Font Format
+woff,application/x-font-woff,Web Open Font Format 1.0 old PHP versions
+woff,application/font-woff,Web Open Font Format 1.0 old PHP versions
+woff,font/woff,Web Open Font Format 1.0 current type
+woff2,application/x-font-woff2,Web Open Font Format 2.0 old PHP versions
+woff2,application/font-woff2,Web Open Font Format 2.0 old PHP versions
+woff2,font/woff2,Web Open Font Format 2.0 current type
 word,application/msword,Microsoft Word Document
 wp,application/wordperfect,WordPerfect 5
 wp5,application/wordperfect,WordPerfect 5

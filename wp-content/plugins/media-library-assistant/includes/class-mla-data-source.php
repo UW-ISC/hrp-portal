@@ -484,6 +484,8 @@ class MLAData_Source {
 		global $wpdb;
 		static $upload_dir_array, $upload_dir, $intermediate_sizes = NULL, $wp_attached_files = NULL, $wp_attachment_metadata = NULL;
 		static $current_id = 0, $file_info = NULL, $parent_info = NULL, $references = NULL, $alt_text = NULL;
+//error_log( __LINE__ . " _evaluate_data_source( $current_id, $post_id, $category ) data_value = " . var_export( $data_value, true ), 0 );
+
 		if ( 'none' === $data_value['data_source'] ) {
 			return '';
 		}
@@ -541,12 +543,14 @@ class MLAData_Source {
  			$file_info = MLAData_Source::_evaluate_file_information( $upload_dir, $wp_attached_files, $wp_attachment_metadata, $post_id );
 		}
 
-		$size_info = array( 'file' => '', 'width' => '', 'height' => '' );
+		$size_info = array( 'file' => '', 'width' => '', 'height' => '', 'size' => '' );
 		$match_count = preg_match( '/(.+)\[(.+)\]/', $data_source, $matches );
 		if ( 1 === $match_count ) {
 			$data_source = $matches[1] . '[size]';
+			$size_info['size'] = $matches[2];
 			if ( isset( $file_info['sizes'][ $matches[2] ] ) ) {
 				$size_info = $file_info['sizes'][ $matches[2] ];
+				$size_info['size'] = $matches[2];
 			}
 		}
 
@@ -739,9 +743,11 @@ class MLAData_Source {
 					break;
 				}
 
-				$filesize = self::_get_filesize( $results['absolute_file_name_raw'] );
-				if ( false !== $filesize ) {
-					$result = $filesize;
+				if ( !empty( $file_info['absolute_file_name_raw'] ) ) {
+					$filesize = self::_get_filesize( $file_info['absolute_file_name_raw'] );
+					if ( false !== $filesize ) {
+						$result = $filesize;
+					}
 				}
 				break;
 			case 'upload_date':
@@ -849,13 +855,16 @@ class MLAData_Source {
 			case 'size_bytes[size]':
 				if ( !empty( $size_info['filesize'] ) ) {
 					$result = $size_info['filesize'];
-				} else {
+				} elseif ( !empty( $size_info['file'] ) ) {
 					$result = self::_get_filesize( $file_info['absolute_path_raw'] . $size_info['file'] );
+				} else {
+					$result = false;
 				}
 				
 				if ( false === $result ) {
 					$result = '?';
 				}
+
 				break;
 			case 'size_pixels[size]':
 				$result = absint( (int) $size_info['width'] * (int) $size_info['height'] );

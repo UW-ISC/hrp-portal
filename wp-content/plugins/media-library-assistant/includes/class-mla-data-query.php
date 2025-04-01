@@ -1456,7 +1456,7 @@ class MLAQuery {
 		}
 
 		if ( isset( self::$query_parameters['debug'] ) ) {
-			$debug_array = array( 'posts_search' => MLACore::mla_decode_wp_filter('posts_search'), 'posts_join' => MLACore::mla_decode_wp_filter('posts_join'), 'posts_where' => MLACore::mla_decode_wp_filter('posts_where'), 'posts_orderby' => MLACore::mla_decode_wp_filter('posts_orderby') );
+			$debug_array = array( 'posts_search' => MLACore::mla_display_wp_filter('posts_search'), 'posts_join' => MLACore::mla_display_wp_filter('posts_join'), 'posts_where' => MLACore::mla_display_wp_filter('posts_where'), 'posts_orderby' => MLACore::mla_display_wp_filter('posts_orderby') );
 
 			/* translators: 1: DEBUG tag 2: query filter details */
 			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: _execute_list_table_query $wp_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );

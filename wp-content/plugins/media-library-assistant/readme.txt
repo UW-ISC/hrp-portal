@@ -2,9 +2,9 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Requires at least: 4.1
-Tested up to: 6.7.1
-Stable tag: 3.24
+Requires at least: 4.2
+Tested up to: 6.8
+Stable tag: 3.25
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -175,62 +175,58 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Screenshots ==
 
-1. The Media/Assistant submenu table showing the available columns, including "Featured in", "Inserted in", "Att. Categories" and "Att. Tags"; also shows the Quick Edit area.
-2. The Media/Assistant submenu table showing the Bulk Edit area with taxonomy Add, Remove and Replace options; also shows the tags suggestion popup.
-3. A typical edit taxonomy page, showing the "Attachments" column.
-4. The enhanced Edit page showing additional fields, categories and tags.
-5. The Settings page General tab, where you can customize support of Att. Categories, Att. Tags and other taxonomies, where-used reporting and the default sort order.
-6. The Settings page MLA Gallery tab, where you can add custom style and markup templates for `[mla_gallery]` shortcode output.
-7. The Settings page IPTC &amp; EXIF Processing Options screen, where you can map image metadata to standard fields (e.g. caption), taxonomy terms and custom fields.
-8. The Settings page Custom Field Processing Options screen, where you can map attachment metadata to custom fields for display in [mla_gallery] shortcodes and as sortable, searchable columns in the Media/Assistant submenu.
-9. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
+1. The Media/Assistant submenu table showing the enhanced search box, taxonomy filter and custom views; also shows the Quick Edit area.
+2. The Media/Assistant submenu table showing the Bulk Edit area with taxonomy Add, Remove and Replace options; also shows metadata mapping buttons.
+3. The Media/Assistant submenu table showing the pulldown Help menu and tabs..
+4. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
+5. The Search Terms popup modal window, which lets you filter the items displayed by searching for keywords and phrases in taxonomy term names.
+6. The Media/Upload New Media submenu page showing the Bulk Edit area to spply templates and mapping rules to items as they are uploaded.
+7. The enhanced Edit page showing additional fields, mapping rule buttons and taxonomy boxes.
+8. The enhanced Edit page showing parent selection, metadata display boxes and where-used reporting boxes.
+9. The enhanced Edit page showing the Select Parent popup window for easy parent post/page editing.
+10. The Settings page General tab, where you can customize where-used reporting and many other options.
+11. The Settings page General tab, showing the Taxonomy Support options and some of the the Media/Assistant display options.
+12. The Settings page General tab, showing the Media Manager and Media/Library Grid Mode enhancement options.
+13. The Settings page Image tab, where you can add and manage Intermediate Sizes for Media Library image items.
+14. The Settings page Views tab, where you can add and manage MIME Types and define Media/Assistant table views.
+15. The Settings page Uploads tab, where you can add and manage allowed file types and corredponding icons.
+16. The Settings page Shortcodes tab, where you can add and manage custom style and markup templates for the MLA shortcodes.
+17. The Settings page Custom Fields tab, where you can map attachment metadata to custom fields for display in [mla_gallery] shortcodes and as sortable, searchable columns in the Media/Assistant submenu.
+18. The Settings page IPTC/EXIF/WP Processing Options screen, where you can map image metadata to standard fields (e.g. caption), taxonomy terms and custom fields.
+19. The Settings page Documentation tab, a complete reference to MLA shortcodes and features.
+20. The Settings page Documentation/Example Plugins tab, showing the many optional plugins you can use or adapt to extend MLA features.
+21. The Settings page Debug tab, where you can activate debug logging categories as well as manage and display the error log.
 
 == Changelog ==
 
-= 3.24 =
-* New: Field-level data sources for accessing information about the original, unscaled files for very large images.
-* New: Extend REST support to the Att. Categories and Att. Tags taxonomies.
-* Fix: **IMPORTANT: Reflected Cross-Site Scripting security risks in the Smart Media Categories, MLA Unattached Fixit, and WooCommerce Fixit example plugins have been mitigated.**
-* Fix: For the `[mla_gallery]` shortcode, improved processing of the `mla_image_class` and `mla_image_alt` parameters when the attachment link contains other HTML tags.
+= 3.25 =
+* New: The Settings/Media Library Assistant Image tab lets you add, view and manage Intermediate Size values for image items.
+* New: For the Settings/Media Library Assistant Uploads tab, the active/inactive status has been changed from views to a filter dropdown.
+* New: For the "MLA Path Mapping Example" plugin (v1.12), the Copy Term Definitions tool has been enhanced with an option to copy Term Meta values as well as term definitions.
+* New: A new example plugin, "MLA Taxonomy Archive Redirect", allows you to specify a post/page that replaces the theme's (empty) taxonomy archive page with a gallery display.
+* New: A new example plugin, "MLA ACF Support", adds MLA enhanced taxonomy support to the ACF Pro Gallery field type.
+* New: A new example plugin, "MLA Gallery Download Checklist", supports downloading a ZIP archive of items selected by checking boxes in an `[mla_gallery]` display.
+* New: For items attached to a parent post/page, the `parent:` field-level prefix gives access to values assigned to the item's parent.
+* New: The `author:` field-level prefix gives access to values assigned to the item's author in the "users" and "usermeta" database tables.
+* Fix: Some defects in the handling of "MLA enhanced taxonomy support" in the Media Manager Modal Window have been corrected.
+* Fix: When the Settings/Media Library Assistant Uploads feature is active, a defect that prevented the installation of Google Fonts has been corrected.
+* Fix: A defect in option deletion during plugin deletion has been corrected.
+* Fix: A defect in processing shortcode parameters with field-level datasources containing brackets, e.g., `{+size_bytes{medium}+}`, has been corrected.
+* Fix: Changed the timing of custom style and markup template loading to resolve WP 6.7 PHP Notice "Function _load_textdomain_just_in_time was called incorrectly". 
+* Fix: For the Media/Library Grid mode, an incompatibility with the Enhanced Media Library plugin has been eliminated.
+* Fix: An "Undefined variable" problem when accessing the `file_fize` field-level data source has been corrected.
+* Fix: Search box formatting in some Settings/Media Library Assistant tabs has been cleaned up.
+* Fix: For the "MLA Substitution Parameter Hooks Example" plugin (v1.16), the `parent:` and `author:` prefixes have been removed because they are now provided by the MLA core plugin.
+* Fix: For the "MLA Substitution Parameter Hooks Example" plugin (v1.16), the `parent_terms:` and `page_terms:` prefixes have been removed because they are provided by the MLA core plugin (since v3.14).
 
-= 3.23 =
-* Fix: For the `[mla_gallery]` shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
+= 3.00 - 3.24 =
+* 3.24 - IMPORTANT: Reflected Cross-Site Scripting security risks in three example plugins mitigated. Field-level data sources for very large images. REST support for Att. Categories and Att. Tags. Improved processing of the `mla_image_class` and `mla_image_alt` parameters. Two enhancements, two fixes in all.
+* 3.23 - For the [mla_gallery] shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
+* 3.22 - IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`. Delay localization of built-in style and markup templates until `init` action.
+* 3.21 - IMPORTANT: WP 6.7 i18n fix and a Cross-Site Scripting (XSS) security risk mitigation. Media/Assistant admin page fixes and enhancement. Three enhancements, ten fixes in all.
+* 3.20 - IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated. Mapping rule and shortcode fixes. Four fixes in all.
+* 3.19 - IMPORTANT: A security risk in the Settings/Media Library Assistant Uploads tab has been mitigated. Mapping rule fixes and enhancement. Media/Assistant bulk action fix. One enhancement, six fixes in all.
 
-= 3.22 =
-* Fix: IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`.
-* Fix: Delay localization of built-in style and markup templates until `init` action.
-
-= 3.21 =
-* New: For the Media/Assistant admin page, a new entry in the "Screen Options" pulldown menu lets you change the "List Taxonomy" that populates the dropdown at the top of the submenu table.
-* New: For the `[mla_gallery]` shortcode, Simple Custom Field Parameters now include `meta_value_delimiter` to change the delimiter between multiple custom field values.
-* New: A brief reference to calling MLA's shortcode support functions has been added to the Settings/Media Library Assistant Documentation tab.
-* Fix: Removed i18n function calls from the `plugins_loaded` action to resolve WP 6.7 PHP Notice "Function _load_textdomain_just_in_time was called incorrectly". 
-* Fix: **IMPORTANT: A Cross-Site Scripting (XSS) security risk in the Settings/Media Library Assistant page, various tabs, has been mitigated.**
-* Fix: Various i18n cleanup touches to improve Plugin Check/Plugin Repo results
-* Fix: Code cleanup to remove calls to deprecated `like_escape()` function.
-* Fix: For the Media/Assistant admin page, fixed layout of the Search Media box and associated controls, the Bulk Edit area and the Quick Edit Area.
-* Fix: For EXIF metadata extraction, some PHP fatal errors caused by unusual values in the data have been corrected.
-* Fix: When the Real Media Library plugin is active, an array to string conversion defect on the Media/Assistant screen has been corrected.
-* Fix: For the "MLA Path Mapping Example" plugin, corrected term assignment copying when destination Term ID is not equal to Term Taxonomy ID.
-* Fix: For the "MLA Path Mapping Example" plugin, delayed initialization for compatibility with Enhanced Media Library.
-* Fix: Added logic to avoid errors in items with corrupted `_wp_attached_file` (array) values.
-
-= 3.20 =
-* Fix: **IMPORTANT: A security risk that allowed remote code execution from a logged in administrator account has been mitigated.**
-* Fix: For mapping rules, an AJAX nonce problem in the "Execute" rollover action has been corrected.
-* Fix: For the `[mla_gallery]` shortcode, a defect in processing `mla_link_href` parameters containing multiple query string parameters has been corrected.
-* Fix: For the `[mla_gallery]` shortcode when `mla_viewer=true`, a "PHP Warning: Undefined array key..." issue has been eliminated.
-
-= 3.19 =
-* New: For mapping rules, a new "Replace All" option for the "Keep Existing" setting will replace Standard Fields with an empty value and delete Taxonomy term assignments if the mapping rule evaluates to an empty value. 
-* Fix: **IMPORTANT: A security risk that allowed authenticated non-administrator (Author+) users to add file extensions to the Uploads list has been mitigated.**
-* Fix: More precise jQuery specification may improve handling of the Edit and Thumbnails bulk actions on the Media/Assistant admin submenu screen.
-* Fix: For Custom Fields and IPTC/EXIF/WP custom field rules, the "Replace" option for the "Keep Existing" setting will not delete existing non-empty values if the new value is empty. 
-* Fix: For IPTC/EXIF/WP custom field rules, the "Multi" Option setting is now respected. A defect in previous MLA versions caused this setting to be ignored.
-* Fix: For IPTC/EXIF/WP custom field rules, the "Delete NULL Values" setting is now respected. A defect in previous MLA versions always deleted NULL values.
-* Fix: The `utf8_encode()` function has been replaced by `mb_convert_encoding()` to eliminate a PHP 8.2 "Deprecated" warning.
-
-= 3.00 - 3.18 =
 * 3.18 - IMPORTANT: A security risk in the Media/Edit Media screen has been mitigated. A defect in formatting the order=DESC shortcode parameter has been corrected. Two fixes in all.
 * 3.17 - IMPORTANT: Security risks in the Media/Edit Media screen and shortcodes have been mitigated. Elementor fix for the Media Manager Modal (popup) Window. Eight fixes in all.
 * 3.16 - IMPORTANT: Security risks in the Media/Edit Media screen and [mla_custom_list] shortcode have been mitigated. Shortcode bug fixes and a new feature in the MLA Multi-search Example plugin. One enhancement, four fixes in all.
@@ -373,8 +369,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.24 =
-IMPORTANT: Reflected Cross-Site Scripting security risks in three example plugins mitigated. Field-level data sources for very large images. REST support for Att. Categories and Att. Tags. Improved processing of the `mla_image_class` and `mla_image_alt` parameters. Two enhancements, two fixes in all.
+= 3.25 =
+New tool for managing image Intermediate Sizes, taxonomy archive solution, new and enhanced example plugins and field-level data sources, WP 6.8 compatible. Eight enhancements, ten fixes in all.
 
 == Acknowledgements ==
 

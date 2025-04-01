@@ -1247,7 +1247,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 			$submenu_arguments['orderby'] = $field;
 		}
 
-		return $submenu_arguments;
+		return $submenu_arguments = apply_filters( 'mla_setting_table_submenu_arguments', $submenu_arguments, $include_filters, 'MLASettings_CustomFields' );
 	}
 
 	/**
@@ -1433,17 +1433,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 			$view_args['paged'] = absint( $_REQUEST['paged'] );
 		}
 
-		if ( isset( $_REQUEST['order'] ) ) {
-			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
-			$view_args['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
-		}
-
-		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
-		if ( array_key_exists( $field, self::$default_sortable_columns ) ) {
-			$view_args['orderby'] = urlencode( $field );
-		}
-
-			$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
+		$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
 
 		if ( !$item->read_only ) {
 			$actions['inline hide-if-no-js'] = '<a class="editinline" href="#" title="' . __( 'Edit this item inline', 'media-library-assistant' ) . '">' . __( 'Quick Edit', 'media-library-assistant' ) . '</a>';

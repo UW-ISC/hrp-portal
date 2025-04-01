@@ -7,7 +7,7 @@
 	<input type="hidden" name="page" value="mla-settings-menu-documentation" />
 	<input type="hidden" name="mla_tab" value="documentation" />
 	[+_wpnonce+]
-	<p class="search-box" style="margin-top: 1em">
+	<p class="search-box" style="margin-top: 1em; display: inline-block">
 		<label class="screen-reader-text" for="mla-search-example-input">[+Search Example Plugins+]:</label>
 		<input style="float: left" id="mla-search-example-input" name="s" type="search" value="[+s+]" />
 		<input class="button" style="float: right" name="mla-example-search" id="mla-search-example-submit" type="submit" value="[+Search Plugins+]" />

@@ -19,7 +19,7 @@
  * https://wordpress.org/support/topic/taxonomy-in-the-assistant-listing/
  *
  * @package MLA Path Mapping Example
- * @version 1.11
+ * @version 1.13
  */
 
 /*
@@ -27,10 +27,10 @@ Plugin Name: MLA Path Mapping Example
 Plugin URI: http://davidlingren.com/
 Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features, and has tools to copy term definitions and assignments between taxonomies.
 Author: David Lingren
-Version: 1.11
+Version: 1.13
 Author URI: http://davidlingren.com/
 
-Copyright 2018-2024 David Lingren
+Copyright 2018-2025 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.11';
+	const PLUGIN_VERSION = '1.13';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -122,7 +122,8 @@ class MLAPathMappingExample {
 					'assign_rule_parent' => array( 'type' => 'checkbox', 'default' => false, ),
 					'path_delimiter' => array( 'type' => 'text', 'default' => '/', ),
 				),
-				'general_tab_values' => array(), // additional page_values for 'page-level-options' template
+				'general_tab_values' => array(
+				), // additional page_values for 'page-level-options' template
 				'documentation_tab_values' => array(
 					'plugin_title' => 'MLA Path Mapping Example',
 					'settingsURL' => '', // Set at runtime in initialize()
@@ -195,11 +196,13 @@ class MLAPathMappingExample {
 		// Look for plugin-specific "tools" action 
 		$current_source_taxonomy = '0';
 		$current_destination_taxonomy = '0';
+		$current_copy_term_meta = false;
 
 		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_tools_copy_definitions'] ) ) {
 			$current_source_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['source_taxonomy'];
 			$current_destination_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['destination_taxonomy'];
-			self::$settings_arguments['messages'] = self::mpm_copy_definitions_action( $current_source_taxonomy, $current_destination_taxonomy );
+			$current_copy_term_meta = isset( $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_term_meta'] );
+			self::$settings_arguments['messages'] = self::mpm_copy_definitions_action( $current_source_taxonomy, $current_destination_taxonomy, $current_copy_term_meta );
 		}
 
 		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_tools_copy_assignments'] ) ) {
@@ -220,6 +223,7 @@ class MLAPathMappingExample {
 		$general_tab_values['source_taxonomy'] = self::mpm_taxonomy_options( $current_source_taxonomy );
 		$general_tab_values['destination_taxonomy'] = self::mpm_taxonomy_options( $current_destination_taxonomy );
 		$general_tab_values['path_delimiter'] = self::$plugin_settings->get_plugin_option('path_delimiter');
+		$general_tab_values['copy_term_meta_checked'] = $current_copy_term_meta ? 'checked="checked" ' : '';
 
 		self::$plugin_settings->update_plugin_argument('general_tab_values', $general_tab_values );
 	}
@@ -295,17 +299,18 @@ class MLAPathMappingExample {
 	 * @since 1.10
 	 *
 	 * @param	string	$source_taxonomy Name/slug value for selected source taxonomy
+	 * @param	boolean	$copy_term_meta True to copy term meta values
 	 *
 	 * @return	integer	Count of source terms
 	 */
-	private static function _get_source_terms( $source_taxonomy ) {
+	private static function _get_source_terms( $source_taxonomy, $copy_term_meta ) {
 
 		self::$source_terms = array();
 		$source_count = 0;
-
+		$meta_count = 0;
 		$terms = get_terms( array( 'taxonomy' => $source_taxonomy, 'hide_empty' => false, ) );
 		if ( is_wp_error( $terms ) ) {
-			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_get_source_terms( {$source_taxonomy} ) bad taxonomy error = " . var_export( $terms ), self::MLA_DEBUG_CATEGORY );
+			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_get_source_terms( {$source_taxonomy}, {$copy_term_meta} ) bad taxonomy error = " . var_export( $terms ), self::MLA_DEBUG_CATEGORY );
 
 			return $source_count;	
 		}
@@ -313,6 +318,20 @@ class MLAPathMappingExample {
 		foreach( $terms as $term ) {
 			self::$source_terms[ $term->term_id ] = array( 'name' => $term->name, 'slug' => $term->slug, 'description' => $term->description, 'parent' => $term->parent, );
 			$source_count++;
+
+			if ( $copy_term_meta ) {
+				$term_meta = get_term_meta( $term->term_id );
+
+				if ( ! empty( $term_meta ) ) {
+					foreach ( $term_meta as $key => $value ) {
+						if ( 1 === count( $value )  ) {
+							$term_meta[ $key ] = maybe_unserialize( $value[0] );
+						}
+					}
+
+					self::$source_term_meta[ $term->term_id ] = $term_meta;
+				}
+			}
 		}
 
 		// Sort by term id
@@ -320,7 +339,12 @@ class MLAPathMappingExample {
 			ksort( self::$source_terms );
 		}
 
-		MLACore::mla_debug_add( __LINE__ . " _get_source_terms( {$source_count} ) source_terms = " . var_export( self::$source_terms, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " _get_source_terms( {$source_count}, {$copy_term_meta} ) source_terms = " . var_export( self::$source_terms, true ), self::MLA_DEBUG_CATEGORY );
+
+		if ( $copy_term_meta ) {
+			MLACore::mla_debug_add( __LINE__ . " _get_source_terms( {$source_count}, {$copy_term_meta} ) source_term_meta = " . var_export( self::$source_term_meta, true ), self::MLA_DEBUG_CATEGORY );
+		}
+
 		return $source_count;	
 	} // _get_source_terms
 
@@ -329,10 +353,20 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.10
 	 *
-	 * @var array $_term_slugs ( term_id => array( 'slug' -> slug, 'parent' => parent, 'description' => description )
-	 *     }
+	 * @var array $source_terms ( term_id => array( 'slug' -> slug, 'parent' => parent, 'description' => description )
 	 */
 	private static $source_terms = array();	
+
+	/**
+	 * Source taxonomy term meta value definitions
+	 *
+	 * meta_value can be a string or an array.
+	 *
+	 * @since 1.12
+	 *
+	 * @var array $source_term_meta ( term_id => array( meta_key -> meta_value )
+	 */
+	private static $source_term_meta = array();	
 
 	/**
 	 * Insert a destination taxonomy term and its parent(s) if they do not already exist
@@ -341,15 +375,30 @@ class MLAPathMappingExample {
 	 *
 	 * @param	string	$destination_taxonomy taxonomy slug for this term
 	 * @param	integer	$term_id ID/index for self::$source_terms
-	 * @param	boolean	$return_object True to retirn entire term object, false (default) to return term_id.
+	 * @param	boolean	$copy_term_meta True to copy term meta values
+	 * @param	boolean	$return_array True to return array( term_id, term_taxonomy_id ), false (default) to return term_id.
 	 *
 	 * @return	integer/array	Destination term ID for this term or array( 'term_id' => $destination_term->term_id, 'term_taxonomy_id' => $destination_term->term_taxonomy_id, )
 	 */
-	private static function _maybe_insert_destination_term( $destination_taxonomy, $term_id, $return_array = false ) {
+	private static function _maybe_insert_destination_term( $destination_taxonomy, $term_id, $copy_term_meta, $return_array = false ) {
 		$term = self::$source_terms[ $term_id ];
 
 		$destination_term = get_term_by( 'slug', $term['slug'], $destination_taxonomy, $output = OBJECT, $filter = 'raw' );
 		if( $destination_term ) {
+			if ( $copy_term_meta && isset( self::$source_term_meta[ $term_id ] ) ) {
+				$new_term_id = $destination_term->term_id;
+				foreach ( self::$source_term_meta[ $term_id ] as $key => $value ) {
+					$update_result = update_term_meta( $new_term_id, $key, $value );
+	
+					if ( is_wp_error( $update_result ) ) {
+						MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_maybe_insert_destination_term() update_term_meta() WP_Error = " . var_export( $update_result, true ), self::MLA_DEBUG_CATEGORY );
+					}
+				}
+	
+				// Only do this once per copy action
+				unset( self::$source_term_meta[ $term_id ] );
+			}
+
 			if ( $return_array ) {
 				return array( 'term_id' => $destination_term->term_id, 'term_taxonomy_id' => $destination_term->term_taxonomy_id, );
 			}
@@ -359,7 +408,7 @@ class MLAPathMappingExample {
 
 		// Make sure the full path to this term exists
 		if ( 0 < $term['parent'] ) {
-			$parent = self::_maybe_insert_destination_term( $destination_taxonomy, $term['parent'] );
+			$parent = self::_maybe_insert_destination_term( $destination_taxonomy, $term['parent'], $copy_term_meta );
 		} else {
 			$parent = 0;
 		}
@@ -372,7 +421,7 @@ class MLAPathMappingExample {
 		);
 
 		$results = wp_insert_term( $term['name'], $destination_taxonomy, $args );
-		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_maybe_insert_destination_term( {$destination_taxonomy}, {$term_id}, {$return_array} ) wp_insert_term() results = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_maybe_insert_destination_term( {$destination_taxonomy}, {$term_id}, {$copy_term_meta}, {$return_array} ) wp_insert_term() results = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
 
 		if ( is_wp_error( $results ) ) {
 			if ( $return_array ) {
@@ -380,6 +429,20 @@ class MLAPathMappingExample {
 			}
 
 			return 0;
+		}
+
+		if ( $copy_term_meta && isset( self::$source_term_meta[ $term_id ] ) ) {
+			$new_term_id = $results['term_id'];
+			foreach ( self::$source_term_meta[ $term_id ] as $key => $value ) {
+				$update_result = update_term_meta( $new_term_id, $key, $value );
+
+				if ( is_wp_error( $update_result ) ) {
+					MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_maybe_insert_destination_term() update_term_meta() WP_Error = " . var_export( $update_result, true ), self::MLA_DEBUG_CATEGORY );
+				}
+			}
+
+			// Only do this once per copy action
+			unset( self::$source_term_meta[ $term_id ] );
 		}
 
 		if ( $return_array ) {
@@ -394,13 +457,14 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.10
 	 *
-	 * @param	$destination_taxonomy Destination taxonomy slug for this operation
+	 * @param	string	$destination_taxonomy Destination taxonomy slug for this operation
+	 * @param	boolean	$copy_term_meta True to copy term meta values
 	 *
 	 * @uses	self::$source_terms	Source site term definition objects 
 	 *
 	 * @return	integer	Count of terms inserted
 	 */
-	private static function _put_destination_terms( $destination_taxonomy ) {
+	private static function _put_destination_terms( $destination_taxonomy, $copy_term_meta ) {
 		$insert_count = 0;
 
 		if ( MLACore::mla_taxonomy_support( $destination_taxonomy, 'support' ) ) {
@@ -409,17 +473,16 @@ class MLAPathMappingExample {
 
 			$old_count = get_terms( array( 'taxonomy' => $destination_taxonomy, 'hide_empty' => false, 'fields' => 'count', ) );
 			if ( is_wp_error( $old_count ) ) {
-				MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_put_destination_terms( {$destination_taxonomy} ) bad get_terms() error = " . var_export( $old_count ), self::MLA_DEBUG_CATEGORY );
+				MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_put_destination_terms( {$destination_taxonomy}, {$copy_term_meta} ) bad get_terms() error = " . var_export( $old_count ), self::MLA_DEBUG_CATEGORY );
 				return 0;
 			}
 
-			$delimiter = $_REQUEST['mlapathmap_tools']['path_delimiter'];
 			foreach( self::$source_terms as $term_id => $term ) {
 				if ( $flat_taxonomy ) {
 					self::$source_terms[ $term_id ]['parent'] = 0;
 				}
 
-				$new_id = self::_maybe_insert_destination_term( $destination_taxonomy, $term_id );
+				$new_id = self::_maybe_insert_destination_term( $destination_taxonomy, $term_id, $copy_term_meta );
 			} // foreach term
 
 			$insert_count = get_terms( array( 'taxonomy' => $destination_taxonomy, 'hide_empty' => false, 'fields' => 'count', ) ) - $old_count;
@@ -433,13 +496,14 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.10
 	 *
-	 * @param	$source_taxonomy Source taxonomy slug for this operation
-	 * @param	$destination_taxonomy Destination taxonomy slug for this operation
+	 * @param	string	$source_taxonomy Source taxonomy slug for this operation
+	 * @param	string	$destination_taxonomy Destination taxonomy slug for this operation
+	 * @param	boolean	$copy_term_meta True to copy term meta values
 	 *
 	 * @return	string	action-specific message(s), e.g., summary of results
 	 */
-	public static function mpm_copy_definitions_action( $source_taxonomy, $destination_taxonomy ) {
-		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action( {$source_taxonomy}, $destination_taxonomy} )", self::MLA_DEBUG_CATEGORY );
+	public static function mpm_copy_definitions_action( $source_taxonomy, $destination_taxonomy, $copy_term_meta ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action( {$source_taxonomy}, {$destination_taxonomy}, {$copy_term_meta} )", self::MLA_DEBUG_CATEGORY );
 
 		if ( '0' === $source_taxonomy ) {
 			$messages = 'No Source Taxonomy selected, nothing copied.';
@@ -451,14 +515,14 @@ class MLAPathMappingExample {
 			// MLAObjects::initialize hasn't run yet
 			MLACore::mla_initialize_tax_checked_on_top();
 
-			$source_count = self::_get_source_terms( $source_taxonomy );
+			$source_count = self::_get_source_terms( $source_taxonomy, $copy_term_meta );
 			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action( {$source_count} )", self::MLA_DEBUG_CATEGORY );
 			$messages .= sprintf( 'Source %1$s - gathered %2$d term definitions.<br />', $source_taxonomy, $source_count ) . "\r\n";
 
 			if ( '0' === $destination_taxonomy ) {
 				$messages .= 'No Destination Taxonomy selected, nothing copied.';
 			} else {
-				$term_inserts = self::_put_destination_terms( $destination_taxonomy );
+				$term_inserts = self::_put_destination_terms( $destination_taxonomy, $copy_term_meta );
 				$messages .= sprintf( 'Destination %1$s - inserted %2$d term definitions.<br />', $destination_taxonomy, $term_inserts ) . "\r\n";
 			}
 
@@ -466,7 +530,7 @@ class MLAPathMappingExample {
 			delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $destination_taxonomy );
 		} // good $source_taxonomy
 
-		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mme_copy_settings_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
 		return $messages;		
 	} // mpm_copy_definitions_action
 
@@ -506,7 +570,7 @@ class MLAPathMappingExample {
 			if ( isset( self::$source_terms[ $term->term_id ]['destination_term'] ) ) {
 				$destination_terms[] = self::$source_terms[ $term->term_id ]['destination_term'];
 			} else {
-				$new_term = self::_maybe_insert_destination_term( $destination_taxonomy, $term->term_id, true );
+				$new_term = self::_maybe_insert_destination_term( $destination_taxonomy, $term->term_id, false, true );
 				self::$source_terms[ $term->term_id ]['destination_term'] = $new_term['term_id'];
 				$destination_terms[] = (integer) $new_term['term_id'];
 			}
@@ -514,7 +578,7 @@ class MLAPathMappingExample {
 
 		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments() destination_terms = " . var_export( $destination_terms, true ), self::MLA_DEBUG_CATEGORY );
 		$results = wp_set_post_terms( $attachment_id, $destination_terms, $destination_taxonomy, true );
-		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments( {$attachment_id}, {$destination_taxonomy} ) destination terms = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments( {$attachment_id}, {$destination_taxonomy} ) wp_set_post_terms = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
 
 		return count( $results );
 	} // _copy_term_assignments

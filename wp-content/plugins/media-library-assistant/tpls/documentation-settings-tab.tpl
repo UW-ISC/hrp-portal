@@ -39,6 +39,7 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#custom_field_queries">Custom Field Queries, the "meta_query"</a></li>
 <li><a href="#search_keywords">Keyword(s) Search</a></li>
 <li><a href="#cache_parameters">Caching Parameters</a></li>
+<li><a href="#fields_parameter">Fields Parameter</a></li>
 <li><a href="#debugging_output">Debugging Output</a></li>
 <li><a href="#mla_gallery_hooks">MLA Gallery Filters (Hooks)</a></li>
 </ul></div>
@@ -1357,6 +1358,24 @@ For applications that have very large numbers of attachments and taxonomy terms,
 </table>
 <p>
 In general you won't need these, since adding to the cache is the right thing to do, but they may be useful in specific circumstances. An example of such circumstances might be when using an <code>[mla_gallery]</code> to retrieve a simple list of thumbnails and links, but in which no other information about the items will be used and the taxonomy and meta data won't be needed. By not loading this information, you can save some time from the extra unnecessary SQL queries. 
+<a name="fields_parameter"></a>
+</p>
+<h4>Fields Parameter</h4>
+<p>
+If your application uses PHP code to access Media Library items you can use the <code>MLAShortcodes::mla_get_shortcode_attachments()</code> function to perform the data selection portion of the <code>[mla_gallery]</code> processing and return an array of Media Library items. In this case, you can add a <code>fields</code> parameter to simplify the query and return just the ID values for the selected items instead of complete objects. There are two possible values for this parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">fields=ids</td>
+<td>Return an array of ID values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">fields='id=>parent'</td>
+<td>Return an array of stdClass objects with ID and post_parent properties.</td>
+</tr>
+</table>
+<p>
+&nbsp;
 <a name="debugging_output"></a>
 </p>
 <h4>Debugging Output</h4>
@@ -5857,9 +5876,13 @@ The next sections define each of the prefix and option/format values.
 </p>
 <h4>Prefix values</h4>
 <p>
-There are eighteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
+There are twenty prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
 </p>
 <table>
+	<tr>
+		<td class="mla-doc-table-label">template</td>
+		<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for templates.</td>
+	</tr>
 	<tr>
 		<td class="mla-doc-table-label">request</td>
 		<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays. It can be used to collect data sent with both the GET and POST methods. For example, if the URL is <code>http://www.mysite.com/mypage?myarg=myvalue</code> you can access the query string as <code>[+request:myarg+]</code>, which has the value "myvalue".</td>
@@ -5867,6 +5890,12 @@ There are eighteen prefix values for field-level parameters. Prefix values must 
 	<tr>
 		<td class="mla-doc-table-label">query</td>
 		<td>The parameters defined in the <code>[mla_gallery]</code> shortcode. For example, if your shortcode is <code>[mla_gallery attachment_tag=my-tag div-class=some_class]</code> you can access the parameters as <code>[+query:attachment_tag+]</code> and <code>[+query:div-class+]</code> respectively. Only the parameters actually present in the shortcode are accessible; default values for parameters not actually present are not available. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">meta</td>
+		<td>WordPress attachment metadata, if any, embedded in the image/audio/video file. For this category, you can code any of the field names embedded in the _wp_attachment_metadata array. The "Attachment Metadata" display in the Media/Edit Media screen will show you the names and values of these fields. Note that the fields available differ among image, audio and video attachments.<br />
+		&nbsp;<br />
+		The "image_meta" portion of the attachment metadata is of particular interest. This array contains some "extended image metadata" drawn from IPTC and EXIF fields by WordPress and improved a bit. You can find more information in the Codex <a href="http://codex.wordpress.org/Function_Reference/wp_read_image_metadata" title="Codex information for image_meta" target="_blank">Function Reference/wp read image metadata</a>. For example, to get the ISO speed rating for an image, code <code>[+meta:image_meta.iso+]</code>.</td>
 	</tr>
 	<tr>
 		<td class="mla-doc-table-label">custom,<br />page_custom,<br />parent_custom</td>
@@ -5894,17 +5923,24 @@ There are eighteen prefix values for field-level parameters. Prefix values must 
 		</td>
 	</tr>
 	<tr>
-		<td class="mla-doc-table-label">meta</td>
-		<td>WordPress attachment metadata, if any, embedded in the image/audio/video file. For this category, you can code any of the field names embedded in the _wp_attachment_metadata array. The "Attachment Metadata" display in the Media/Edit Media screen will show you the names and values of these fields. Note that the fields available differ among image, audio and video attachments.<br />
+		<td class="mla-doc-table-label">parent</td>
+		<td>
+		Values assigned to the item's parent post/page; empty for unattached items.
+		These include any of the columns in the database posts table, e.g., <code>[+parent:post_title+]</code>. You can access the parent's Permalink as <code>[+parent:permalink+]</code>.<br />
 		&nbsp;<br />
-		The "image_meta" portion of the attachment metadata is of particular interest. This array contains some "extended image metadata" drawn from IPTC and EXIF fields by WordPress and improved a bit. You can find more information in the Codex <a href="http://codex.wordpress.org/Function_Reference/wp_read_image_metadata" title="Codex information for image_meta" target="_blank">Function Reference/wp read image metadata</a>. For example, to get the ISO speed rating for an image, code <code>[+meta:image_meta.iso+]</code>.</td>
+		You can also access custom field values assigned to the parent; simply use the custom field name. The field name, or key, can contain spaces and some punctuation characters. You cannot use the plus sign ('+') in a field name you want to use with <code>[mla_gallery]</code>. Custom field names are case-sensitive; "client" and "Client" are not the same.
+		<br />&nbsp;<br />
+		For custom fields only, the ",raw" option bypasses the code to sanitize the returned value. Use this option to allow HTML tags to be returned from a custom field.<br />&nbsp;
+		</td>
 	</tr>
 	<tr>
-		<td class="mla-doc-table-label">pdf</td>
+		<td class="mla-doc-table-label">author</td>
 		<td>
-		The Document Information Dictionary (D.I.D.)and XMP metadata, if any, embedded in a PDF file. For this category, you can code any of the nine D.I.D. entries (Title, Author, Subject, Keywords, Creator, Producer, CreationDate, ModDate, Trapped). For many documents there is also a rich collection of additional metadata stored in XMP Metadata Streams; see the <a href="#pdf_metadata">Metadata in PDF documents</a> section below for details on accessing PDF metadata.<br />
+		Values assigned to the item's author; empty if the author cannot be determined.
+		These include any of the columns in the database users and usermeta tables, e.g., <code>[+author:user_nicename+]</code> or  <code>[+author:description+]</code>.<br />
 		&nbsp;<br />
-		You can find more PDF information at the <a href="http://www.adobe.com/devnet/pdf.html" title="Adobe PDF Technology Center" target="_blank">Adobe PDF Technology Center</a>.<br />&nbsp;</td>
+		The ",raw" option bypasses the code to sanitize the returned value. Use this option, for example, to allow HTML tags to be returned.<br />&nbsp;
+		</td>
 	</tr>
 	<tr>
 		<td class="mla-doc-table-label">iptc</td>
@@ -5969,6 +6005,22 @@ MLA adds three fields of its own to the XMP metadata information:
 		<br />&nbsp;</td>
 	</tr>
 	<tr>
+		<td class="mla-doc-table-label">id3</td>
+		<td>
+		<a href="https://en.wikipedia.org/wiki/ID3" title="Wikipedia page for ID3" target="_blank">Wikipedia</a> says "ID3 is a metadata container most often used in conjunction with the MP3 audio file format. It allows information such as the title, artist, album, track number and other information about the file to be stored in the file itself."
+		WordPress includes a subset of the <a href="http://www.getid3.org/" title="Official getID3() site" target="_blank">getID3() PHP Media File Parser</a> with support for audio and video file formats. A few values are available for other file types but they are not very useful.<br />
+		&nbsp;<br />
+		You can also use [+id3:ALL_ID3+], a special "pseudo value" that returns a string representation of all the metadata. You can use this pseudo-value to examine the metadata in a file, find field names and see what values are present. The ALL_ID3 value is altered to limit the amount of information displayed. Values of more than 256 characters are truncated to 256 characters. This prevents large fields such as image thumbnails from dominating the display. Array values are replaced by an "(ARRAY)" placeholder, e.g., <code>'audio' => '(ARRAY)'</code>. You can explore array values individually by coding something like <code>[+id3:audio,export+]</code> to expand all levels within the array or <code>[+id3:audio,unpack+]</code> to expand one level within the array. You can go deeper in the array hierarchy with compound names, e.g., <code>[+id3:quicktime.moov.subatoms,unpack+]</code> or <code>[+id3:quicktime.moov.subatoms.*.name+]</code>.
+		<br />&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">pdf</td>
+		<td>
+		The Document Information Dictionary (D.I.D.)and XMP metadata, if any, embedded in a PDF file. For this category, you can code any of the nine D.I.D. entries (Title, Author, Subject, Keywords, Creator, Producer, CreationDate, ModDate, Trapped). For many documents there is also a rich collection of additional metadata stored in XMP Metadata Streams; see the <a href="#pdf_metadata">Metadata in PDF documents</a> section below for details on accessing PDF metadata.<br />
+		&nbsp;<br />
+		You can find more PDF information at the <a href="http://www.adobe.com/devnet/pdf.html" title="Adobe PDF Technology Center" target="_blank">Adobe PDF Technology Center</a>.<br />&nbsp;</td>
+	</tr>
+	<tr>
 		<td class="mla-doc-table-label">png</td>
 		<td>
 		For PNG files, data defined by the <a href="https://www.w3.org/TR/png/" title="W3C Draft Standard" target="_blank">Portable Network Graphics (PNG) Specification (Third Edition)</a> is extracted. The IHDR (Image header) seven elements of general interest. These are available in their raw numeric form and in an enhanced textual form. Any tEXt chunks, if present, are parsed into their keyword and text value parts and made available. The <a title="Find the Diffusion Parameters Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Diffusion+Parameters+Example%22" class="mla-doc-bold-link">MLA Diffusion Parameters Example</a> plugin parses the <code>png:parameters</code> text and creates an array of individual <code>png:diffusion.</code> elements.<br />
@@ -6012,19 +6064,6 @@ MLA adds two fields of its own to the MS Office metadata information:
 		<br />&nbsp;</td>
 	</tr>
 	<tr>
-		<td class="mla-doc-table-label">id3</td>
-		<td>
-		<a href="https://en.wikipedia.org/wiki/ID3" title="Wikipedia page for ID3" target="_blank">Wikipedia</a> says "ID3 is a metadata container most often used in conjunction with the MP3 audio file format. It allows information such as the title, artist, album, track number and other information about the file to be stored in the file itself."
-		WordPress includes a subset of the <a href="http://www.getid3.org/" title="Official getID3() site" target="_blank">getID3() PHP Media File Parser</a> with support for audio and video file formats. A few values are available for other file types but they are not very useful.<br />
-		&nbsp;<br />
-		You can also use [+id3:ALL_ID3+], a special "pseudo value" that returns a string representation of all the metadata. You can use this pseudo-value to examine the metadata in a file, find field names and see what values are present. The ALL_ID3 value is altered to limit the amount of information displayed. Values of more than 256 characters are truncated to 256 characters. This prevents large fields such as image thumbnails from dominating the display. Array values are replaced by an "(ARRAY)" placeholder, e.g., <code>'audio' => '(ARRAY)'</code>. You can explore array values individually by coding something like <code>[+id3:audio,export+]</code> to expand all levels within the array or <code>[+id3:audio,unpack+]</code> to expand one level within the array. You can go deeper in the array hierarchy with compound names, e.g., <code>[+id3:quicktime.moov.subatoms,unpack+]</code> or <code>[+id3:quicktime.moov.subatoms.*.name+]</code>.
-		<br />&nbsp;</td>
-	</tr>
-	<tr>
-		<td class="mla-doc-table-label">template</td>
-		<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for templates.</td>
-	</tr>
-	<tr>
 		<td class="mla-doc-table-label">matches</td>
 		<td>The matches prefix is part of MLA&rsquo;s <a href="#mla_regular_expressions">Regular Expression Features</a>. It allows you to access data sources created by applying the <code>,match(p)</code> and <code>,extract(p)</code> format/option values.</td>
 	</tr>
@@ -6046,7 +6085,7 @@ Three "option" values change the treatment of fields with multiple values:
 <table>
 	<tr>
 		<td class="mla-doc-table-label">,single</td>
-		<td>If this option is present, only the first value of the field will be returned. Use this option to limit the data returned for a custom field, taxonomy or metadata field that can have many values. For example, if you code <code>[+meta:sizes.thumbnail,single+]</code> the result will be "20120313-ASK_5605-150x150.jpg".
+		<td>If this option is present, only the first value of the field will be returned. Use this option to limit the data returned for a custom field, taxonomy or metadata field that can have many values. For example, if you code <code>[+meta:sizes.thumbnail,single+]</code> the result will be something like "20120313-ASK_5605-150x150.jpg".
 		</td>
 	</tr>
 	<tr>
@@ -7796,8 +7835,10 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 <td class="mla-doc-hook-definition">Called when the MLA_List_Table can't find a value for a given column.</td>
 </tr>
 <tr>
-<td class="mla-doc-hook-label">mla_list_table_submenu_arguments</td>
-<td class="mla-doc-hook-definition">Gives you an opportunity to filter the URL parameters that will be retained when the submenu page refreshes.</td>
+<td class="mla-doc-hook-label">mla_list_table_submenu_arguments,<br />
+mla_setting_table_submenu_arguments
+</td>
+<td class="mla-doc-hook-definition">Gives you an opportunity to filter the URL parameters that will be retained when the submenu page refreshes. The "mla_list_table..." filter is used in the Media/Assistant submenu. The "mla_setting_table..." filter is used in several Settings/Media Library Assistant submenu tabs. An additional parameter for this filter specifies which tab the filter applies to.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_prepare_items_pagination</td>
@@ -9109,6 +9150,10 @@ The MLA_DEBUG_LEVEL is also used to turn categories of debug messages on and off
 <tr>
 <td class="mla-doc-table-label">256, or 0x0100</td>
 <td>writes MLA-specific messages to the log for Media Manager Modal Window actions, e.g., "query_attachments".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">512, or 0x0200</td>
+<td>writes MLA-specific messages to the log for Intermediate Size processing.</td>
 </tr>
 </table>
 <p>

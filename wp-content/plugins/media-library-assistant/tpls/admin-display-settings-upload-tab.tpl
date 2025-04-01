@@ -77,7 +77,7 @@
 	<input type="hidden" name="mla_tab" value="upload" />
 	[+_wpnonce+]
 	[+results+]
-	<p class="search-box" style="margin-top: 1em">
+	<p class="search-box" style="margin-top: 1em; display: inline-block">
 		<label class="screen-reader-text" for="mla-search-optional-uploads-input">[+Search Known MIME+]:</label>
 		<input type="search" id="mla-search-optional-uploads-input" name="s" value="[+s+]" />
 		<input type="submit" name="mla-optional-uploads-search" id="mla-search-optional-uploads-submit" class="button" value="[+Search Types+]" />
@@ -106,9 +106,10 @@
 <form action="[+form_url+]" method="get" id="mla-search-uploads-form">
 	<input type="hidden" name="page" value="mla-settings-menu-upload" />
 	<input type="hidden" name="mla_tab" value="upload" />
+	[+view_args+]
 	[+_wpnonce+]
 	[+results+]
-	<p class="search-box" style="margin-top: 1em">
+	<p class="search-box" style="margin-top: 1em; display: inline-block">
 		<label class="screen-reader-text" for="mla-search-uploads-input">Search Upload MIME Types:</label>
 		<input style="float: left;" id="mla-search-uploads-input" name="s" type="search" value="[+s+]" />
 		<input style="float: right;" name="" id="mla-search-uploads-submit" class="button" type="submit" value="[+Search Uploads+]" />
@@ -122,6 +123,7 @@
 			<form action="[+form_url+]" method="post" id="mla-search-uploads-filter">
 				<input type="hidden" name="page" value="mla-settings-menu-upload" />
 				<input type="hidden" name="mla_tab" value="upload" />
+				[+view_args+]
 				[+_wpnonce+]
 
 <!-- template="after-table" -->
