@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.24';
+	const CURRENT_MLA_VERSION = '3.25';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -139,6 +139,15 @@ class MLACore {
 	 * @var	integer
 	 */
 	const MLA_DEBUG_CATEGORY_MMMW = 0x00000100;
+
+	/**
+	 * Constant to log Intermediate Image Size activity
+	 *
+	 * @since 3.25
+	 *
+	 * @var	integer
+	 */
+	const MLA_DEBUG_CATEGORY_IMAGE_SIZE = 0x00000200;
 
 	/**
 	 * Slug for adding plugin submenu
@@ -1520,10 +1529,11 @@ class MLACore {
 	 *
 	 * @param object The current post
 	 * @param array The meta box parameters
+	 * @param string Optional prefix to make HTML ID unique
 	 *
 	 * @return void Echoes HTML for the form fields
 	 */
-	public static function mla_checklist_meta_box( $target_post, $box ) {
+	public static function mla_checklist_meta_box( $target_post, $box, $prefix = '' ) {
 		global $post;
 
 		$defaults = array('taxonomy' => 'category', 'in_modal' => false );
@@ -1548,30 +1558,31 @@ class MLACore {
 				$post = $target_post; // for wp_popular_terms_checklist
 			}
 
+			$id_prefix = "mla-{$prefix}-{$taxonomy}";
 			$div_taxonomy_id = "mla-taxonomy-{$taxonomy}";
-			$tabs_ul_id = "mla-{$taxonomy}-tabs";
-			$tab_all_id = "mla-{$taxonomy}-all";
-			$tab_all_ul_id = "mla-{$taxonomy}-checklist";
-			$tab_pop_id = "mla-{$taxonomy}-pop";
-			$tab_pop_ul_id = "mla-{$taxonomy}-checklist-pop";
+			$tabs_ul_id = "{$id_prefix}-tabs";
+			$tab_all_id = "{$id_prefix}-all";
+			$tab_all_ul_id = "{$id_prefix}-checklist"; // wp-lists
+			$tab_pop_id = "{$id_prefix}-pop";
+			$tab_pop_ul_id = "{$id_prefix}-checklist-pop";
 			$input_terms_name = "mla_attachments[{$post_id}][{$name}][]";
 			$input_terms_id = "mla-{$name}-id";
-			$div_adder_id = "mla-{$taxonomy}-adder";
+			$div_adder_id = "{$id_prefix}-adder";
 			$div_adder_class = "mla-hidden-children";
-			$link_adder_id = "mla-{$taxonomy}-add-toggle";
-			$link_adder_p_id = "mla-{$taxonomy}-add";
-			$div_search_id = "mla-{$taxonomy}-searcher";
+			$link_adder_id = "{$id_prefix}-add-toggle";
+			$link_adder_p_id = "{$id_prefix}-add"; // wp-lists
+			$div_search_id = "{$id_prefix}-searcher";
 			$div_search_class = "mla-hidden-children";
-			$link_search_id = "mla-{$taxonomy}-search-toggle";
-			$link_search_p_id = "mla-{$taxonomy}-search";
+			$link_search_id = "{$id_prefix}-search-toggle";
+			$link_search_p_id = "{$id_prefix}-search";
 			$input_new_name = "new{$taxonomy}";
 			$input_new_id = "mla-new-{$taxonomy}";
 			$input_new_parent_name = "new{$taxonomy}_parent";
-			$input_new_submit_id = "mla-{$taxonomy}-add-submit";
-			$span_new_ajax_id = "mla-{$taxonomy}-ajax-response";
+			$input_new_submit_id = "{$id_prefix}-add-submit";
+			$span_new_ajax_id = "{$id_prefix}-ajax-response";
 			$input_search_name = "search-{$taxonomy}";
 			$input_search_id = "mla-search-{$taxonomy}";
-			$span_search_ajax_id = "mla-{$taxonomy}-search-ajax-response";
+			$span_search_ajax_id = "{$id_prefix}-search-ajax-response";
 		} else {
 			$div_taxonomy_id = "taxonomy-{$taxonomy}";
 			$tabs_ul_id = "{$taxonomy}-tabs";
@@ -1616,7 +1627,7 @@ class MLACore {
 				// Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
 				echo "<input type='hidden' name='" . esc_html( $input_terms_name) . "' id='" . esc_html( $input_terms_id ) . "' value='0' />";
 				?>
-				<ul id="<?php echo esc_html( $tab_all_ul_id ); ?>" data-wp-lists="list:<?php echo esc_html( $taxonomy )?>" class="categorychecklist form-no-clear">
+				<ul id="<?php echo esc_html( $tab_all_ul_id ); ?>" data-wp-lists="list:<?php echo esc_html( $prefix . '-' . $taxonomy )?>" class="categorychecklist form-no-clear">
 					<?php if ( $tax->hierarchical ): ?>
 					<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'checked_ontop'=> MLACore::mla_taxonomy_support( $taxonomy, 'checked-on-top' ) ) ) ?>
 					<?php else: ?>
@@ -1678,13 +1689,13 @@ class MLACore {
 	 * 
 	 * @param	string	$filter The name of the action/filter to be decoded
 	 *
-	 * @return	string	List of functions hooking the action/filter
+	 * @return	array	List of functions hooking the action/filter
 	 */
 	public static function mla_decode_wp_filter( $filter ) {
 		global $wp_filter;
 //error_log( __LINE__ . " mla_decode_wp_filter( $filter ) wp_filter = " . var_export( $wp_filter[ $filter ], true ), 0 );
 
-		$hook_list = '';
+		$hook_array = array();
 		if ( isset( $wp_filter[ $filter ] ) ) {
 			// WordPress 4.7+ uses WP_Hook, earlier versions use an array
 			if ( is_object( $wp_filter[ $filter ] ) ) {
@@ -1693,23 +1704,47 @@ class MLACore {
 				$callback_array = $wp_filter[ $filter ];
 			}
 
+//error_log( __LINE__ . " mla_decode_wp_filter( $filter ) callback_array = " . var_export( $callback_array, true ), 0 );
 			foreach ( $callback_array as $priority => $callbacks ) {
-				$hook_list .= "Priority: {$priority}\n";
 				foreach ( $callbacks as $tag => $reference ) {
-					$hook_list .= "{$tag} => ";
 					if ( is_string( $reference['function'] ) ) {
-						$hook_list .= $reference['function'] . "()\n";
+						$hook_array[ $priority ][ $tag ] = array( 'class' => '', 'function' => $reference['function'] );
 					} elseif ( is_array( $reference['function'] ) ) {
 						if ( is_object( $reference['function'][0] ) ) {
-							$hook_list .= get_class( $reference['function'][0] ) . '->';
+							$class = get_class( $reference['function'][0] ) . '->';
 						} else {
-							$hook_list .= $reference['function'][0] . '::';
+							$class = $reference['function'][0] . '::';
 						}
 
-						$hook_list .= $reference['function'][1] . "()\n";
+						$hook_array[ $priority ][ $tag ] = array( 'class' => $class, 'function' => $reference['function'][1] );
 					} else {
-						$hook_list .= 'unknown reference type: ' . gettype( $reference['function'] ) . "\n";
+						$hook_array[ $priority ][ $tag ] = array( 'class' => '', 'function' => 'unknown reference type: ' . gettype( $reference['function'] ) );
 					}
+				} // foreach tag
+			} // foreach proprity
+		} // filters exist
+
+//error_log( __LINE__ . " mla_decode_wp_filter( $filter ) hook_array = " . var_export( $hook_array, true ), 0 );
+		return $hook_array;
+	}
+
+	/**
+	 * Display the list of functions hooking an action/filter
+	 * 
+	 * @since 2.74
+	 * 
+	 * @param	string	$filter The name of the action/filter to be decoded
+	 *
+	 * @return	string	List of functions hooking the action/filter
+	 */
+	public static function mla_display_wp_filter( $filter ) {
+		$hook_array = self::mla_decode_wp_filter( $filter );
+		$hook_list = '';
+		if ( isset( $wp_filter[ $filter ] ) ) {
+			foreach ( $hook_array as $priority => $callbacks ) {
+				$hook_list .= "Priority: {$priority}\n";
+				foreach ( $callbacks as $tag => $reference ) {
+					$hook_list .= "{$tag} => " . $reference['class'] . $reference['function'];
 				} // foreach tag
 			} // foreach proprity
 		} // filters exist
@@ -2093,6 +2128,10 @@ add_action( 'init', 'MLAObjects::initialize', 0x7FFFFFFF );
 // MIME Type functions; some filters required in all modes.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-mime-types.php' );
 add_action( 'init', 'MLAMime::initialize', 0x7FFFFFFF );
+
+// Intermediate image sizes functions; some filters required in all modes.
+require_once( MLA_PLUGIN_PATH . 'includes/class-mla-image-sizes.php' );
+add_action( 'init', 'MLAImage_Size::initialize', 0x7FFFFFFF );
 
 // Admin Columns plugin support
 add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );

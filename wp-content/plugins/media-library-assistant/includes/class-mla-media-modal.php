@@ -208,6 +208,7 @@ class MLAModal {
 			'state' => 'initial',
 			'comma' => ',',
 			'ajaxNonce' => '',
+			'prefix' => 0,
 			'ajaxFillCompatAction' => MLACore::JAVASCRIPT_FILL_COMPAT_ACTION,
 			'ajaxQueryAttachmentsAction' => MLACore::JAVASCRIPT_QUERY_ATTACHMENTS_ACTION,
 			'ajaxUpdateCompatAction' => MLACore::JAVASCRIPT_UPDATE_COMPAT_ACTION,
@@ -269,6 +270,7 @@ class MLAModal {
 		$default_types = MLACore::mla_get_option( MLACoreOptions::MLA_POST_MIME_TYPES, true );
 		self::$mla_media_modal_settings['comma'] = _x( ',', 'tag_delimiter', 'media-library-assistant' );
 		self::$mla_media_modal_settings['ajaxNonce'] = wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+		self::$mla_media_modal_settings['prefix'] = 0;
 		self::$mla_media_modal_settings['allMimeTypes'] = MLAMime::mla_pluck_table_views();
 		self::$mla_media_modal_settings['allMimeTypes']['detached'] = $default_types['detached']['plural'];
 		self::$mla_media_modal_settings['allMimeTypes']['attached'] = $default_types['attached']['plural'];
@@ -355,7 +357,7 @@ class MLAModal {
 			'searchConnector' => $search_defaults['search_connector'],
 			'searchFields' => $search_defaults['search_fields'],
 			'searchValue' => '',
-			//'termsSearch' => ''
+			'searchClicks' => 0,
 		);
 
 		$initial_values = apply_filters( 'mla_media_modal_initial_filters', $initial_values, $post );
@@ -380,12 +382,11 @@ class MLAModal {
 		self::$mla_media_modal_settings['query']['initial']['searchConnector'] = $initial_values['searchConnector']; // mla_search_connector 'OR'; //
 		self::$mla_media_modal_settings['query']['initial']['searchFields'] = $initial_values['searchFields']; // mla_search_fields array( 'excerpt', 'title', 'content' ); //
 		self::$mla_media_modal_settings['query']['initial']['searchValue'] = $initial_values['searchValue']; // mla_search_value 'col'; //
-		//self::$mla_media_modal_settings['query']['initial']['termsSearch'] = $initial_values['termsSearch']; // mla_terms_search
 		self::$mla_media_modal_settings['query']['initial']['searchClicks'] = 0; // mla_search_clicks, to force transmission
 
 		$settings = array_merge( $settings, array( 'mla_settings' => self::$mla_media_modal_settings ) );
 		return apply_filters( 'mla_media_modal_settings', $settings, $post );
-	} // mla_mla_media_view_settings_filter
+	} // mla_media_view_settings_filter
 
 	/**
 	 * Adds string values to be passed to the Media Manager in /wp-includes/js/media-views.js.

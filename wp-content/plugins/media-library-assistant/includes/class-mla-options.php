@@ -2185,5 +2185,38 @@ class MLAOptions {
 		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_upload_mimes_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
 		return " MLAOptions::mla_upload_mimes_option_handler( $action, $key ) deprecated.";
 	} // mla_upload_mimes_option_handler
+
+	/**
+	 * Manage Intermediate Image Sizes support options
+ 	 *
+	 * @since 3.08
+	 * @uses self::$mla_option_templates contains row and table templates
+	 *
+	 * @param	string 	'render', 'update', 'delete', or 'reset'
+	 * @param	string 	option name, e.g., 'iptc_exif_mapping'
+	 * @param	array 	option parameters
+	 * @param	array 	Optional. null (default) for 'render' else option data, e.g., $_REQUEST
+	 *
+	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
+	 */
+	public static function mla_image_sizes_option_handler( $action, $key, $value, $args = NULL ) {
+		switch ( $action ) {
+			case 'render':
+				MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_image_sizes_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return " MLAOptions::mla_image_sizes_option_handler( $action, $key ) deprecated.";
+			case 'update':
+				MLACore::mla_update_option( $key, $args[ $key ] );
+				return '<br>update_option(' . $key . ")\r\n";
+			case 'delete':
+			case 'reset':
+				MLACore::mla_delete_option( $key );
+				return '<br>delete_option(' . $key . ")\r\n";
+			default:
+				// fallthru to default message
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_image_sizes_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+		return " MLAOptions::mla_image_sizes_option_handler( $action, $key ) deprecated.";
+	} // mla_upload_mimes_option_handler
 } // class MLAOptions
 ?>

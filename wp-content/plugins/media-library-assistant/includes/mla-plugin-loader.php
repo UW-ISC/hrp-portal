@@ -115,7 +115,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		 * IPTC/EXIF/WP and Custom Field mapping require full support, too.
 		 * NOTE: AJAX upload_attachment is no longer used - see /wp-admin/asynch-upload.php
 		 */
-		$ajax_exceptions = array( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, 'mla-inline-mapping-iptc-exif-scripts', 'mla-inline-mapping-custom-scripts', 'mla-polylang-quick-translate', 'mla-inline-edit-upload-scripts', 'mla-inline-edit-view-scripts', 'mla-inline-edit-custom-scripts', 'mla-inline-edit-iptc-exif-scripts', 'upload-attachment', 'mla-export-presets' );
+		$ajax_exceptions = array( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, 'mla-inline-mapping-iptc-exif-scripts', 'mla-inline-mapping-custom-scripts', 'mla-polylang-quick-translate', 'mla-inline-edit-image-scripts', 'mla-inline-edit-view-scripts', 'mla-inline-edit-upload-scripts', 'mla-inline-edit-custom-scripts', 'mla-inline-edit-iptc-exif-scripts', 'upload-attachment', 'mla-export-presets' );
 
  		$ajax_only = true;
 		if ( MLA_AJAX_EXCEPTIONS ) {

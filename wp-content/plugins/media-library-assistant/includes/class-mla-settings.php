@@ -14,6 +14,15 @@
  */
 class MLASettings {
 	/**
+	 * Slug for localizing and enqueueing JavaScript - MLA Image List Table
+	 *
+	 * @since 3.25
+	 *
+	 * @var	string
+	 */
+	const JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG = 'mla-inline-edit-image-scripts';
+
+	/**
 	 * Slug for localizing and enqueueing JavaScript - MLA View List Table
 	 *
 	 * @since 1.40
@@ -113,11 +122,14 @@ class MLASettings {
 		if( defined('DOING_AJAX') && DOING_AJAX && isset( $_REQUEST['action'] ) ) {
 			// Ajax handlers
 			switch ( $_REQUEST['action'] ) {
-				case self::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG:
-					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-upload-tab.php' );
+				case self::JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG:
+					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-image-tab.php' );
 					break;
 				case self::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG:
 					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-view-tab.php' );
+					break;
+				case self::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG:
+					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-upload-tab.php' );
 					break;
 				case self::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG:
 				case self::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG:
@@ -131,8 +143,12 @@ class MLASettings {
 		} elseif ( isset( $_REQUEST['page'] ) && is_string( $_REQUEST['page'] ) ) {
 			// Settings/Media Library Assistant current tab. General and Debug tabs are in this file.
 			$page = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) );
-			if ( 'mla-settings-menu-' == substr( $page, 0, 18 ) ) {
+			if ( 'mla-settings-menu-' === substr( $page, 0, 18 ) ) {
 				switch( substr( $page, 18 ) ) {
+					case 'image':
+						require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-image-tab.php' );
+						add_filter( 'set_screen_option_mla_images_per_page', 'MLASettings::mla_set_screen_option_filter', 10, 3 );
+						break;
 					case 'view':
 						require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-view-tab.php' );
 						add_filter( 'set_screen_option_mla_views_per_page', 'MLASettings::mla_set_screen_option_filter', 10, 3 );
@@ -238,15 +254,15 @@ class MLASettings {
 			 */
 			$category_option = MLACore::mla_get_option( 'attachment_category' );
 			$tag_option = MLACore::mla_get_option( 'attachment_tag' );
-			if ( ! ( ( 'checked' == $category_option ) && ( 'checked' == $tag_option ) ) ) {
+			if ( ! ( ( 'checked' === $category_option ) && ( 'checked' === $tag_option ) ) ) {
 				$tax_option = MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
-				if ( 'checked' != $category_option ) {
+				if ( 'checked' !== $category_option ) {
 					if ( isset( $tax_option['tax_support']['attachment_category'] ) ) {
 						unset( $tax_option['tax_support']['attachment_category'] );
 					}
 				}
 
-				if ( 'checked' != $tag_option )  {
+				if ( 'checked' !== $tag_option )  {
 					if ( isset( $tax_option['tax_support']['attachment_tag'] ) ) {
 						unset( $tax_option['tax_support']['attachment_tag'] );
 					}
@@ -429,6 +445,7 @@ class MLASettings {
 	 * @return	void
 	 */
 	public static function mla_admin_init_action() {
+		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG, 'MLASettings_Image::mla_inline_edit_image_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG, 'MLASettings_View::mla_inline_edit_view_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, 'MLASettings_Upload::mla_inline_edit_upload_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, 'MLASettings_CustomFields::mla_inline_edit_custom_action' );
@@ -450,7 +467,7 @@ class MLASettings {
 		global $wpdb, $wp_locale;
 
 		// Without a tab value, there's nothing to do
-		if ( ( self::$current_page_hook != $page_hook ) || empty( $_REQUEST['mla_tab'] ) ) {
+		if ( ( self::$current_page_hook !== $page_hook ) || empty( $_REQUEST['mla_tab'] ) ) {
 			return;
 		}
 
@@ -482,7 +499,7 @@ class MLASettings {
 		if ( isset( $_REQUEST['page'] ) && is_string( $_REQUEST['page'] ) ) {
 			// Settings/Media Library Assistant current tab.
 			$page = sanitize_text_field( wp_unslash( $_REQUEST['page'] ) );
-			if ( 'mla-settings-menu-' == substr( $page, 0, 18 ) ) {
+			if ( 'mla-settings-menu-' === substr( $page, 0, 18 ) ) {
 				$tab = substr( $page, 18 );
 			 }
 		}
@@ -503,7 +520,18 @@ class MLASettings {
 	 */
 	public static function mla_add_menu_options_action( ) {
 		if ( isset( $_REQUEST['mla_tab'] ) ) {
-			if ( 'view' == $_REQUEST['mla_tab'] ) {
+			if ( 'image' === $_REQUEST['mla_tab'] ) {
+				$option = 'per_page';
+
+				$args = array(
+					 'label' => __( 'Image Sizes per page', 'media-library-assistant' ),
+					'default' => 10,
+					'option' => 'mla_images_per_page' 
+				);
+
+				add_screen_option( $option, $args );
+			} // view
+			elseif ( 'view' === $_REQUEST['mla_tab'] ) {
 				$option = 'per_page';
 
 				$args = array(
@@ -525,7 +553,7 @@ class MLASettings {
 
 				add_screen_option( $option, $args );
 			} // optional upload
-			elseif ( 'upload' == $_REQUEST['mla_tab'] ) {
+			elseif ( 'upload' === $_REQUEST['mla_tab'] ) {
 				$option = 'per_page';
 
 				$args = array(
@@ -536,7 +564,7 @@ class MLASettings {
 
 				add_screen_option( $option, $args );
 			} // upload
-			elseif ( 'shortcodes' == $_REQUEST['mla_tab'] ) {
+			elseif ( 'shortcodes' === $_REQUEST['mla_tab'] ) {
 				$option = 'per_page';
 
 				$args = array(
@@ -547,7 +575,7 @@ class MLASettings {
 
 				add_screen_option( $option, $args );
 			} // shortcodes
-			elseif ( 'custom_field' == $_REQUEST['mla_tab'] ) {
+			elseif ( 'custom_field' === $_REQUEST['mla_tab'] ) {
 				$option = 'per_page';
 
 				$args = array(
@@ -558,7 +586,7 @@ class MLASettings {
 
 				add_screen_option( $option, $args );
 			} // custom_field
-			elseif ( 'iptc_exif' == $_REQUEST['mla_tab'] ) {
+			elseif ( 'iptc_exif' === $_REQUEST['mla_tab'] ) {
 				$option = 'per_page';
 
 				$args = array(
@@ -569,7 +597,7 @@ class MLASettings {
 
 				add_screen_option( $option, $args );
 			} // iptc_exif
-			elseif ( 'documentation' == $_REQUEST['mla_tab'] ) {
+			elseif ( 'documentation' === $_REQUEST['mla_tab'] ) {
 				if ( isset( $_REQUEST['mla-example-display'] ) || isset( $_REQUEST['mla-example-search'] ) ) {
 					$option = 'per_page';
 
@@ -659,7 +687,7 @@ class MLASettings {
 	}
 
 	/**
-	 * Only show screen options on the View and Upload tabs
+	 * Only show screen options on the Image, View and Upload tabs
 	 *
 	 * @since 1.40
 	 *
@@ -669,8 +697,8 @@ class MLASettings {
 	 * @return	boolean	True to display "Screen Options", false to suppress them
 	 */
 	public static function mla_screen_options_show_screen_filter( $show_screen, $this_screen ) {
-		if ( self::$current_page_hook == $this_screen->base ) {
-			if ( isset( $_REQUEST['mla_tab'] ) && in_array( $_REQUEST['mla_tab'], array( 'view', 'upload' ) ) ) {
+		if ( self::$current_page_hook === $this_screen->base ) {
+			if ( isset( $_REQUEST['mla_tab'] ) && in_array( $_REQUEST['mla_tab'], array( 'image', 'view', 'upload' ) ) ) {
 				return true;
 			}
 		}
@@ -690,7 +718,7 @@ class MLASettings {
 	 * @return	mixed	New value if this is our option, otherwise original status
 	 */
 	public static function mla_set_screen_option_filter( $status, $option, $value ) {
-		if ( in_array( $option, array ( 'mla_views_per_page', 'mla_uploads_per_page', 'mla_types_per_page', 'mla_shortcode_templates_per_page', 'mla_custom_field_rules_per_page', 'mla_iptc_exif_rules_per_page', 'mla_example_plugins_per_page' ) ) ) {
+		if ( in_array( $option, array ( 'mla_images_per_page', 'mla_views_per_page', 'mla_uploads_per_page', 'mla_types_per_page', 'mla_shortcode_templates_per_page', 'mla_custom_field_rules_per_page', 'mla_iptc_exif_rules_per_page', 'mla_example_plugins_per_page' ) ) ) {
 			return $value;
 		}
 
@@ -711,7 +739,7 @@ class MLASettings {
 	 * @return	array	Updated array of links for the Plugin
 	 */
 	public static function mla_add_plugin_settings_link_filter( $links, $file ) {
-		if ( $file == 'media-library-assistant/index.php' && current_user_can( 'manage_options' ) ) {
+		if ( $file === 'media-library-assistant/index.php' && current_user_can( 'manage_options' ) ) {
 			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation&mla_tab=documentation' ), __( 'Guide', 'media-library-assistant' ) );
 			array_unshift( $links, $settings_link );
 			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-general' ), __( 'Settings', 'media-library-assistant' ) );
@@ -741,7 +769,7 @@ class MLASettings {
 		 * Checkbox logic is done in the switch statements below,
 		 * custom logic is done in the handler.
 		 */
-		if ( ( 'checkbox' != $definition['type'] ) && ( 'custom' != $definition['type'] ) ) {
+		if ( ( 'checkbox' !== $definition['type'] ) && ( 'custom' !== $definition['type'] ) ) {
 			$current = $default;
 			if ( NULL === $update_source ) {
 				if ( isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ) {
@@ -884,7 +912,7 @@ class MLASettings {
 					'help' => $value['help'] 
 				);
 
-				if ( 'checked' == MLACore::mla_get_option( $key, false, false, $option_table ) ) {
+				if ( 'checked' === MLACore::mla_get_option( $key, false, false, $option_table ) ) {
 					$option_values['checked'] = 'checked="checked"';
 				}
 
@@ -910,7 +938,7 @@ class MLASettings {
 						'value' => $value['texts'][$optid] 
 					);
 
-					if ( $option == MLACore::mla_get_option( $key, false, false, $option_table ) ) {
+					if ( $option === MLACore::mla_get_option( $key, false, false, $option_table ) ) {
 						$option_values['checked'] = 'checked="checked"';
 					}
 
@@ -1046,6 +1074,7 @@ class MLASettings {
 	private static function _localize_tablist() {
 		self::$mla_tablist = array(
 			'general' => array( 'title' => __ ( 'General', 'media-library-assistant' ), 'render' => array( 'MLASettings', '_compose_general_tab' ) ),
+			'image' => array( 'title' => __ ( 'Image', 'media-library-assistant' ), 'render' => array( 'MLASettings_Image', 'mla_compose_image_tab' ) ),
 			'view' => array( 'title' => __ ( 'Views', 'media-library-assistant' ), 'render' => array( 'MLASettings_View', 'mla_compose_view_tab' ) ),
 			'upload' => array( 'title' => __ ( 'Uploads', 'media-library-assistant' ), 'render' => array( 'MLASettings_Upload', 'mla_compose_upload_tab' ) ),
 			'shortcodes' => array( 'title' => __ ( 'Shortcodes', 'media-library-assistant' ), 'render' => array( 'MLASettings_Shortcodes', 'mla_compose_shortcodes_tab' ) ),
@@ -1070,7 +1099,7 @@ class MLASettings {
 			if ( isset( self::$mla_tablist[ $tab ] ) ) {
 				$results = self::$mla_tablist[ $tab ];
 
-				if ( ( 'debug' == $tab ) && ( 0 == ( MLA_DEBUG_LEVEL & 1 ) ) ) {
+				if ( ( 'debug' === $tab ) && ( 0 === ( MLA_DEBUG_LEVEL & 1 ) ) ) {
 					$results = false;
 				}
 			} else {
@@ -1079,7 +1108,7 @@ class MLASettings {
 		} else {
 			$results = self::$mla_tablist;
 
-			if ( 0 == ( MLA_DEBUG_LEVEL & 1 ) ) {
+			if ( 0 === ( MLA_DEBUG_LEVEL & 1 ) ) {
 				unset ( $results['debug'] );
 			}
 		}
@@ -1103,7 +1132,7 @@ class MLASettings {
 		foreach ( self::_get_options_tablist() as $key => $item ) {
 			$item_values = array(
 				'data-tab-id' => $key,
-				'nav-tab-active' => ( $active_tab == $key ) ? 'nav-tab-active' : '',
+				'nav-tab-active' => ( $active_tab === $key ) ? 'nav-tab-active' : '',
 				'settings-page' => MLACoreOptions::MLA_SETTINGS_SLUG . '-' . $key,
 				'title' => $item['title']
 			);
@@ -1223,7 +1252,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		foreach ($options as $key => $value ) {
 			MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_DEFAULT_ORDERBY ]['options'][] = $value;
 			MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_DEFAULT_ORDERBY ]['texts'][] = $key;
-			if ( $current == $value ) {
+			if ( $current === $value ) {
 				$found_current = true;
 			}
 		}
@@ -1262,7 +1291,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		foreach ($options as $key => $value ) {
 			MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_MEDIA_MODAL_ORDERBY ]['options'][] = $value;
 			MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_MEDIA_MODAL_ORDERBY ]['texts'][] = $key;
-			if ( $current == $value ) {
+			if ( $current === $value ) {
 				$found_current = true;
 			}
 		}
@@ -1273,7 +1302,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 		$options_list = '';
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			if ( 'general' == $value['tab'] ) {
+			if ( 'general' === $value['tab'] ) {
 				$options_list .= self::mla_compose_option_row( $key, $value );
 			}
 		}
@@ -1295,7 +1324,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$action = false;
 
 		if ( isset( $_REQUEST['action'] ) ) {
-			if ( -1 != $_REQUEST['action'] ) {
+			if ( '-1' !== $_REQUEST['action'] ) {
 				return sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 			}
 
@@ -1303,7 +1332,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		} // isset action
 
 		if ( isset( $_REQUEST['action2'] ) ) {
-			if ( -1 != $_REQUEST['action2'] ) {
+			if ( '-1' !== $_REQUEST['action2'] ) {
 				return sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) );
 			}
 
@@ -1324,7 +1353,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$message_list = '';
 
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			if ( 'debug' == $value['tab'] ) {
+			if ( 'debug' === $value['tab'] ) {
 				$message_list .= self::mla_update_option_row( $key, $value );
 			} // view option
 		} // foreach mla_options
@@ -1390,7 +1419,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			$error_log_name =  ini_get( 'error_log' );
 		} else {
 			$first = substr( $error_log_name, 0, 1 );
-			if ( ( '/' != $first ) && ( '\\' != $first ) ) {
+			if ( ( '/' !== $first ) && ( '\\' !== $first ) ) {
 				$error_log_name = '/' . $error_log_name;
 			}
 
@@ -1400,7 +1429,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$error_log_exists = file_exists ( $error_log_name );
 
 		// Check for other page-level actions
-		if ( isset( $_REQUEST['mla_reset_log'] ) && 'true' == $_REQUEST['mla_reset_log'] ) {
+		if ( isset( $_REQUEST['mla_reset_log'] ) && 'true' === $_REQUEST['mla_reset_log'] ) {
 			check_admin_referer( MLACore::MLA_ERROR_LOG_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			$file_error = false;
 			$file_handle = @fopen( $error_log_name, 'w' );
@@ -1430,7 +1459,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		// Start with any page-level options
 		$options_list = '';
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			if ( 'debug' == $value['tab'] ) {
+			if ( 'debug' === $value['tab'] ) {
 				$options_list .= self::mla_compose_option_row( $key, $value );
 			}
 		}
@@ -1650,19 +1679,19 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$message_list = '';
 
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			if ( 'general' == $value['tab'] ) {
+			if ( 'general' === $value['tab'] ) {
 				$current = isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ? wp_kses( wp_unslash( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ), 'post' ) : '';
 				switch ( $key ) {
 					case MLACoreOptions::MLA_FEATURED_IN_TUNING:
-						MLACore::$process_featured_in = ( 'disabled' != $current );
+						MLACore::$process_featured_in = ( 'disabled' !== $current );
 						break;
 					case MLACoreOptions::MLA_INSERTED_IN_TUNING:
-						MLACore::$process_inserted_in = ( 'disabled' != $current );
+						MLACore::$process_inserted_in = ( 'disabled' !== $current );
 						break;
 					case MLACoreOptions::MLA_GALLERY_IN_TUNING:
-						MLACore::$process_gallery_in = ( 'disabled' != $current );
+						MLACore::$process_gallery_in = ( 'disabled' !== $current );
 
-						if ( 'refresh' == $current ) {
+						if ( 'refresh' === $current ) {
 							MLAQuery::mla_flush_mla_galleries( MLACoreOptions::MLA_GALLERY_IN_TUNING );
 							/* translators: 1: reference type, e.g., Gallery in */
 							$message_list .= "<br>" . sprintf( _x( '%1$s - references updated.', 'message_list', 'media-library-assistant' ), __( 'Gallery in', 'media-library-assistant' ) ) . "\r\n";
@@ -1670,9 +1699,9 @@ If you find the Media Library Assistant plugin useful and would like to support 
 						}
 						break;
 					case MLACoreOptions::MLA_MLA_GALLERY_IN_TUNING:
-						MLACore::$process_mla_gallery_in = ( 'disabled' != $current );
+						MLACore::$process_mla_gallery_in = ( 'disabled' !== $current );
 
-						if ( 'refresh' == $current ) {
+						if ( 'refresh' === $current ) {
 							MLAQuery::mla_flush_mla_galleries( MLACoreOptions::MLA_MLA_GALLERY_IN_TUNING );
 							/* translators: 1: reference type, e.g., Gallery in */
 							$message_list .= "<br>" . sprintf( _x( '%1$s - references updated.', 'message_list', 'media-library-assistant' ), __( 'MLA Gallery in', 'media-library-assistant' ) ) . "\r\n";
@@ -1741,10 +1770,10 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$message_list = '';
 
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			if ( 'general' == $value['tab'] ) {
-				if ( 'custom' == $value['type'] && isset( $value['reset'] ) ) {
+			if ( 'general' === $value['tab'] ) {
+				if ( 'custom' === $value['type'] && isset( $value['reset'] ) ) {
 					$message = call_user_func( array( 'MLAOptions', $value['reset'] ), 'reset', $key, $value, $_REQUEST );
-				} elseif ( ('header' == $value['type']) || ('hidden' == $value['type']) ) {
+				} elseif ( ('header' === $value['type']) || ('hidden' === $value['type']) ) {
 					$message = '';
 				} else {
 					MLACore::mla_delete_option( $key );
@@ -2039,7 +2068,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		if ( isset( $_REQUEST['mla-import-settings-file'] ) ) {
 			$filename = sanitize_text_field( wp_unslash( $_REQUEST['mla-import-settings-file'] ) );
 
-			if ( 'none' != $filename ) {
+			if ( 'none' !== $filename ) {
 				$filename = MLA_BACKUP_DIR . $filename;
 			} else {
 				$page_content['message'] = __( 'Please select an import settings file from the dropdown list.', 'media-library-assistant' );

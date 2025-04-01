@@ -1,0 +1,11 @@
+@charset "utf-8";
+/**
+ * CSS Document
+ *
+ * This file contains styling attributes for the MLA ACF Support example plugin
+ */
+
+#mla-acf-support-placeholder {
+	display: none;
+}
+ 

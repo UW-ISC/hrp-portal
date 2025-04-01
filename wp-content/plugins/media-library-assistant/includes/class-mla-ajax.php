@@ -197,8 +197,11 @@ class MLA_Ajax {
 		}
 
 		$new_names = sanitize_text_field( isset( $_POST[ 'new' . $key ] ) ? wp_unslash( $_POST[ 'new' . $key ] ) : '' );
-		$new_names = explode( ',', $new_names );
+		$new_names = array_unique( explode( ',', $new_names ) );
+		$current_names = isset( $_POST['tax_input'] ) && isset( $_POST['tax_input'][ $key ] ) ? $_POST['tax_input'][ $key ] : array();
+
 		$new_terms_markup = '';
+		$new_id = 0;
 		foreach( $new_names as $name ) {
 			if ( '' === sanitize_title( $name ) ) {
 				continue;
@@ -206,30 +209,35 @@ class MLA_Ajax {
 
 			if ( ! $id = term_exists( $name, $key ) ) {
 				$id = wp_insert_term( $name, $key );
-			}
 
-			if ( is_wp_error( $id ) ) {
-				continue;
+				if ( is_wp_error( $id ) ) {
+					continue;
+				}
 			}
 
 			if ( is_array( $id ) ) {
-				$id = absint( $id['term_id'] );
+				$new_id = absint( $id['term_id'] );
 			} else {
 				continue;
 			}
 
-			$term = get_term( $id, $key );
+			$term = get_term( $new_id, $key );
 			$name = $term->name;
 
+			// If it's already assigned, no need to add it to the response
+			if ( in_array( $name, $current_names ) ) {
+				continue;
+			}
+			
 			/*
 			 * Quick and Bulk edit areas use term ID, Edit Media and Media Modal use term name.
 			 * mla-add-term-scripts.js has this line to identify Quick and Bulk edit areas.
 			 * settings.data += '&mla_source=add-flat-checklist-term';
 			 */
 			if ( isset( $_REQUEST['mla_source'] ) && ( 'add-flat-checklist-term' === $_REQUEST['mla_source'] ) ) {
-				$new_terms_markup .= "<li id='{$key}-{$id}'><label class='selectit'><input value='{$id}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$id}' checked='checked' /> {$name}</label></li>\n";
+				$new_terms_markup .= "<li id='{$key}-{$new_id}'><label class='selectit'><input value='{$new_id}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$new_id}' checked='checked' /> {$name}</label></li>\n";
 			} else {
-				$new_terms_markup .= "<li id='{$key}-{$id}'><label class='selectit'><input value='{$name}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$id}' checked='checked' /> {$name}</label></li>\n";
+				$new_terms_markup .= "<li id='{$key}-{$new_id}'><label class='selectit'><input value='{$name}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$new_id}' checked='checked' /> {$name}</label></li>\n";
 			}
 		} // foreach new_name
 
@@ -238,7 +246,7 @@ class MLA_Ajax {
 
 		$add = array(
 			'what' => $key,
-			'id' => $id,
+			'id' => $new_id,
 			'data' => $new_terms_markup,
 			'position' => -1,
 			'supplemental' => array( 'newcat_parent' => $supplemental )
