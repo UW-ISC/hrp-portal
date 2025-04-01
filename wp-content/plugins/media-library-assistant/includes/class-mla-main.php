@@ -799,7 +799,7 @@ class MLA {
 	public static function mla_set_screen_option_filter( $status, $option, $value ) {
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) status = " . var_export( $status, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) wp_filter = " . MLACore::mla_decode_wp_filter('set-screen-option'), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) wp_filter = " . MLACore::mla_display_wp_filter('set-screen-option'), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		if ( ( MLA_OPTION_PREFIX . 'entries_per_page' ) === $option ) {
 			if ( isset( $_REQUEST['mla_so_filter_taxonomy'] ) ) {

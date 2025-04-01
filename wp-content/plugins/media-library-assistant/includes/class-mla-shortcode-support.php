@@ -19,8 +19,8 @@ if ( !class_exists( 'MLAData' ) ) {
 
 if ( !class_exists( 'MLATemplate_Support' ) ) {
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-template-support.php' );
+	MLATemplate_Support::mla_localize_template_definitions();
 }
-//error_log( __LINE__ . ' DEBUG: MLAShortcode_Support $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 
 /**
  * Class MLA (Media Library Assistant) Shortcode Support provides the functions that
@@ -468,10 +468,11 @@ class MLAShortcode_Support {
 	 * @return string HTML content to display gallery.
 	 */
 	public static function mla_gallery_shortcode( $attr, $content = NULL ) {
+		global $post;
 //error_log( __LINE__ . " mla_gallery_shortcode() _REQUEST = " . var_export( $_REQUEST, true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() content = " . var_export( $content, true ), 0 );
-		global $post;
+//error_log( __LINE__ . " mla_gallery_shortcode() post = " . var_export( $post, true ), 0 );
 
 		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
@@ -646,6 +647,7 @@ class MLAShortcode_Support {
 		 * Look for page-level, 'request:' and 'query:' substitution parameters,
 		 * which can be added to any input parameter
 		 */
+//error_log( __LINE__ . " mla_gallery_shortcode() page_values = " . var_export( $page_values, true ), 0 );
 		foreach ( $attr as $attr_key => $attr_value ) {
 			/*
 			 * attachment-specific Gallery Display Content parameters must be evaluated
@@ -1431,11 +1433,12 @@ class MLAShortcode_Support {
 			$new_text = isset( $item_template ) ? $item_template : '';
 			foreach( $mla_item_specific_arguments as $index => $value ) {
 				if ( !empty( $arguments[ $index ] ) ) {
-					$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
+					$new_arg = str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
+					$new_arg = str_replace( '{', '[', str_replace( '}', ']', $new_arg ) );
+					$new_text .= str_replace( '\[', '{', str_replace( '\]', '}', $new_arg ) );
 				}
 			}
 			$item_values = MLAData::mla_expand_field_level_parameters( $new_text, $attr, $item_values, $attachment->ID );
-
 			if ( $item_values['captiontag'] ) {
 				$item_values['caption'] = wptexturize( $attachment->post_excerpt );
 				if ( ! empty( $arguments['mla_caption'] ) ) {
@@ -4062,8 +4065,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
-			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_display_wp_filter('posts_where') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_display_wp_filter('posts_orderby') );
 		}
 
 		/*

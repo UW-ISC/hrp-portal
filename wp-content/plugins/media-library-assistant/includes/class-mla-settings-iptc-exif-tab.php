@@ -1375,7 +1375,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 			$submenu_arguments['orderby'] = $field;
 		}
 
-		return $submenu_arguments;
+		return $submenu_arguments = apply_filters( 'mla_setting_table_submenu_arguments', $submenu_arguments, $include_filters, 'MLASettings_IPTCEXIF' );
 	}
 
 	/**

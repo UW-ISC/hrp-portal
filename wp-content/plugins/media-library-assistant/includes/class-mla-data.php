@@ -1377,7 +1377,7 @@ class MLAData {
 		}
 
 		return $text;
-	}
+	} // _expand_terms
 
 	/**
 	 * Expand an entry for the custom field prefixes
@@ -1450,7 +1450,8 @@ class MLAData {
 	 * Analyze a template, expanding Field-level Markup Substitution Parameters
 	 *
 	 * Field-level parameters must have one of the following prefix values:
-	 * template, meta, query, request, terms, custom, iptc, exif, xmp, id3, pdf, matches.
+	 *     template, meta, query, request, terms, page_terms, parent_terms, custom, page_custom, parent_custom, 
+	 *     parent, author, iptc, exif, xmp, id3, pdf, png, mso, matches.
 	 * All but request and query require an attachment ID.
 	 *
 	 * @since 1.50
@@ -1466,7 +1467,7 @@ class MLAData {
 	 * @return	array	( parameter => value ) for all field-level parameters and anything in $markup_values
 	 */
 	public static function mla_expand_field_level_parameters( $tpl, $query = NULL, $markup_values = array(), $post_id = 0, $keep_existing = false, $default_option = 'text', $upload_metadata = NULL ) {
-		static $cached_post_id = 0, $item_metadata = NULL, $attachment_metadata = NULL, $id3_metadata = NULL;
+		static $cached_post_id = 0, $parent_cache = array(), $author_cache = array(), $item_metadata = NULL, $attachment_metadata = NULL, $id3_metadata = NULL;
 
 		if ( $cached_post_id !== $post_id ) {
 			
@@ -1611,6 +1612,133 @@ class MLAData {
 						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $parent_id );
 					}
 
+					break;
+				case 'parent':
+					if ( isset( $markup_values['parent'] ) ) {
+						$parent_id = absint( $markup_values['parent'] );
+					} else {
+						$item = get_post( $post_id );
+						$parent_id = absint( $item->post_parent );
+					}
+		
+					if ( 0 === $parent_id ) {
+						$markup_values[ $markup_key ] = '';
+						break;
+					}
+		
+					if ( isset( $parent_cache[ $parent_id ] ) ) {
+						$parent = $parent_cache[ $parent_id ];
+					} else {
+						$parent = get_post( $parent_id );
+		
+						if ( $parent instanceof WP_Post && $parent->ID === $parent_id ) {
+							$parent_cache[ $parent_id ] = $parent;
+						} else {
+							$markup_values[ $markup_key ] = '';
+							break;
+						}
+					}
+
+					$parent_value = '';
+					if ( property_exists( $parent, $value['value'] ) ) {
+						$parent_value = $parent->{$value['value']};
+					} elseif ( 'permalink' === $value['value'] ) {
+						$parent_value = get_permalink( $parent );
+					} else {
+						// Look for a custom field match
+						$meta_value = get_metadata( 'post', $parent_id, $value['value'], false );
+						if ( !empty( $meta_value ) ) {
+							$parent_value = $meta_value;
+						}
+					}
+		
+					$raw_format = 'raw' === $value['format'];
+					if ( is_scalar( $parent_value ) ) {
+						$parent_value = $raw_format ? (string) $parent_value : sanitize_text_field( (string) $parent_value );
+					} elseif ( is_array( $parent_value ) ) {
+						if ( 'single' === $value['option'] || 1 === count( $parent_value ) ) {
+							$parent_value = $raw_format ? (string) reset( $parent_value ) : sanitize_text_field( (string) reset( $parent_value ) );
+						} elseif ( ( 'export' === $value['option'] ) || ( 'unpack' === $value['option'] ) ) {
+							$parent_value = $raw_format ? (string) var_export( $parent_value, true ) : sanitize_text_field( (string) var_export( $parent_value, true ) );
+						} else {
+							if ( 'array' === $value['option'] ) {
+								$new_value = array();
+							} else {
+								$new_value = '';
+							}
+		
+							foreach ( $parent_value as $element ) {
+								$field_value = $raw_format ? (string) $element : sanitize_text_field( (string) $element );
+		
+								if ( 'array' === $value['option'] ) {
+									$new_value[] = $field_value;
+								} else {
+									$new_value .= strlen( $field_value ) ? ', ' . $field_value : $field_value;
+								}
+							}
+		
+							$parent_value = $new_value;
+						}
+					}
+
+					$markup_values[ $markup_key ] = $parent_value;
+					break;
+				case 'author':
+					if ( isset( $markup_values['author_id'] ) ) {
+						$item_author = absint( $markup_values['author_id'] );
+					} else {
+						$item = get_post( $post_id );
+						$item_author = absint( $item->post_author );
+					}
+		
+					if ( isset( $author_cache[ $item_author ] ) ) {
+						$author = $author_cache[ $item_author ];
+					} else {
+						$author = new WP_User( $item_author );
+						if ( $author instanceof WP_User && $author->ID === $item_author ) {
+							$author_cache[ $item_author ] = $author;
+						} else {
+							$markup_values[ $markup_key ] = '';
+							break;
+						}
+					}
+		
+					if ( property_exists( $author, $value['value'] ) ) {
+						$author_value = $author->{$value['value']};
+					} else {
+						$author_value = $author->get( $value['value'] );
+					}
+		
+					$raw_format = 'raw' === $value['format'];
+					if ( is_scalar( $author_value ) ) {
+						$author_value = $raw_format ? (string) $author_value : sanitize_text_field( (string) $author_value );
+					} elseif ( is_array( $author_value ) ) {
+						if ( 'single' === $value['option'] || 1 === count( $author_value ) ) {
+							$author_value = $raw_format ? (string) reset( $author_value ) : sanitize_text_field( (string) reset( $author_value ) );
+						} elseif ( ( 'export' === $value['option'] ) || ( 'unpack' === $value['option'] ) ) {
+							$author_value = $raw_format ? (string) var_export( $author_value, true ) : sanitize_text_field( (string) var_export( $author_value, true ) );
+						} else {
+							if ( 'array' === $value['option'] ) {
+								$new_value = array();
+							} else {
+								$new_value = '';
+							}
+		
+							foreach ( $author_value as $element ) {
+								$field_value = $raw_format ? (string) $element : sanitize_text_field( (string) $element );
+		
+								if ( 'array' === $value['option'] ) {
+									$new_value[] = $field_value;
+								} else {
+									$new_value .= strlen( $new_value ) ? ', ' . $field_value : $field_value;
+								}
+							}
+		
+							$author_value = $new_value;
+						}
+					};
+
+					$markup_values[ $markup_key ] = $author_value;
 					break;
 				case 'iptc':
 					if ( is_null( $attachment_metadata ) ) {

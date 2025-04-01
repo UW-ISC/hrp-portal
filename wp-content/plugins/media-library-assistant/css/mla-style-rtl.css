@@ -261,12 +261,14 @@ div.mla_errors {
  * MLA Settings page, Views and Uploads tab inline editing - adapted from load-styles.php
  */
  
+#wpbody-content .bulk-edit-row-image .inline-edit-col-left,
 #wpbody-content .bulk-edit-row-upload .inline-edit-col-left,
 #wpbody-content .bulk-edit-row-custom .inline-edit-col-left,
 #wpbody-content .bulk-edit-row-view .inline-edit-col-left {
 	width: 30%
 }
 
+#wpbody-content .bulk-edit-row-image .inline-edit-col-right,
 #wpbody-content .bulk-edit-row-upload .inline-edit-col-right,
 #wpbody-content .bulk-edit-row-custom .inline-edit-col-right,
 #wpbody-content .bulk-edit-row-view .inline-edit-col-right {
@@ -301,6 +303,8 @@ div.mla_errors {
 	float:left;
 }
 
+.quick-edit-row-image fieldset.inline-edit-col label span.title,
+.bulk-edit-row-image fieldset.inline-edit-col-right label span.title,
 .quick-edit-row-upload fieldset.inline-edit-col label span.title,
 .bulk-edit-row-upload fieldset.inline-edit-col-right label span.title,
 .quick-edit-row-view fieldset.inline-edit-col label span.title,
@@ -308,6 +312,8 @@ div.mla_errors {
 	width: 8em
 }
 
+.quick-edit-row-image fieldset.inline-edit-col label span.input-text-wrap,
+.bulk-edit-row-image fieldset.inline-edit-col-right label span.input-text-wrap,
 .quick-edit-row-upload fieldset.inline-edit-col label span.input-text-wrap,
 .bulk-edit-row-upload fieldset.inline-edit-col-right label span.input-text-wrap,
 .quick-edit-row-view fieldset.inline-edit-col label span.input-text-wrap,
@@ -316,16 +322,20 @@ div.mla_errors {
 	width: 12em
 }
 
+.quick-edit-row-image fieldset.inline-edit-col label,
 .quick-edit-row-upload fieldset.inline-edit-col label,
 .quick-edit-row-view fieldset.inline-edit-col label {
 	width: 21em
 }
 
+.quick-edit-row-image fieldset.inline-edit-col label.checkbox-label,
 .quick-edit-row-upload fieldset.inline-edit-col label.checkbox-label,
 .quick-edit-row-view fieldset.inline-edit-col label.checkbox-label {
 	width: 10.5em
 }
 
+.quick-edit-row-image fieldset.inline-edit-col input.inline-edit-menu-order,
+.bulk-edit-row-image fieldset.inline-edit-col-right label.inline-edit-menu-order span.input-text-wrap,
 .quick-edit-row-upload fieldset.inline-edit-col input.inline-edit-menu-order,
 .bulk-edit-row-upload fieldset.inline-edit-col-right label.inline-edit-menu-order span.input-text-wrap,
 .quick-edit-row-view fieldset.inline-edit-col input.inline-edit-menu-order,
@@ -334,6 +344,8 @@ div.mla_errors {
 }
 
 @media screen and ( max-width: 782px ) {
+	#wpbody-content .bulk-edit-row-image .inline-edit-col-left,
+	#wpbody-content .bulk-edit-row-image .inline-edit-col-right,
 	#wpbody-content .bulk-edit-row-upload .inline-edit-col-left,
 	#wpbody-content .bulk-edit-row-view .inline-edit-col-left,
 	#wpbody-content .bulk-edit-row-upload .inline-edit-col-right,
@@ -342,6 +354,8 @@ div.mla_errors {
 		width: 100%
 	}
 
+	.quick-edit-row-image fieldset.inline-edit-col label span.title,
+	.bulk-edit-row-image fieldset.inline-edit-col-right label span.title,
 	.quick-edit-row-upload fieldset.inline-edit-col label span.title,
 	.bulk-edit-row-upload fieldset.inline-edit-col-right label span.title,
 	.quick-edit-row-view fieldset.inline-edit-col label span.title,
@@ -349,6 +363,8 @@ div.mla_errors {
 		width: 100%
 	}
 
+	.quick-edit-row-image fieldset.inline-edit-col label span.input-text-wrap,
+	.bulk-edit-row-image fieldset.inline-edit-col-right label span.input-text-wrap,
 	.quick-edit-row-upload fieldset.inline-edit-col label span.input-text-wrap,
 	.bulk-edit-row-upload fieldset.inline-edit-col-right label span.input-text-wrap,
 	.quick-edit-row-view fieldset.inline-edit-col label span.input-text-wrap,
@@ -357,6 +373,7 @@ div.mla_errors {
 		width: 100%
 	}
 
+	.quick-edit-row-image fieldset.inline-edit-col label,
 	.quick-edit-row-upload fieldset.inline-edit-col label,
 	.quick-edit-row-view fieldset.inline-edit-col label {
 		float: none;

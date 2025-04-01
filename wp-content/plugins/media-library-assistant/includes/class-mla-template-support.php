@@ -340,6 +340,18 @@ class MLATemplate_Support {
 	 * @return null
 	 */
 	public static function mla_localize_template_definitions() {
+		static $hook_needed = true;
+		
+		// WordPress can't call _load_textdomain_just_in_time() before the init action
+		if ( ! did_action( 'init' ) ) {
+			if ( $hook_needed ) {
+				add_action( 'init', 'MLATemplate_Support::mla_localize_template_definitions', 10 );
+				$hook_needed = false;
+			}
+			
+			return;
+		}
+
 		self::$mla_template_definitions = array (
 			'style' => array(
 				'gallery' => array(
@@ -616,7 +628,10 @@ class MLATemplate_Support {
 				),
 			),
 		);
+
+		MLATemplate_Support::mla_load_custom_templates();
 //error_log( __LINE__ . ' mla_localize_template_definitions MLATemplate_Support::$mla_template_definitions = ' . var_export( MLATemplate_Support::$mla_template_definitions, true ), 0 );
+//error_log( __LINE__ . ' mla_localize_template_definitions MLATemplate_Support::$mla_custom_templates = ' . var_export( MLATemplate_Support::$mla_custom_templates, true ), 0 );
 	}
 	
 	/**
@@ -1047,7 +1062,4 @@ class MLATemplate_Support {
 		return false;
 	}
 } // Class MLATemplate_Support
-
-add_action( 'init', 'MLATemplate_Support::mla_localize_template_definitions', 10 );
-MLATemplate_Support::mla_load_custom_templates();
 ?>

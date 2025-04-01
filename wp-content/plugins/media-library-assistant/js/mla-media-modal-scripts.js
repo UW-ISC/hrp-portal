@@ -312,14 +312,10 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 
 			change: function() {
-				// var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
 				var filter = this.filters[ this.el.value ];
 
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
-					// this.model.set( filter.props, { silent: true } );
-					// $( '#mla-search-submit', toolbar ).trigger('click');
-					// console.log('AttachmentFilters.Mla filter: ', JSON.stringify( filter ) );
 					this.model.set( filter.props, { silent: false } );
 				}
 			}
@@ -442,14 +438,10 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 
 			change: function() {
-				// var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
 				var filter = this.filters[ this.el.value ];
 
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
-					// this.model.set( filter.props, { silent: true } );
-					// $( '#mla-search-submit', toolbar ).trigger('click');
-					// console.log('AttachmentFilters.MlaUploaded filter: ', JSON.stringify( filter ) );
 					this.model.set( filter.props, { silent: false } );
 				}
 			}
@@ -1157,7 +1149,7 @@ console.log( 'listening to controller events' );
 		}
 
 		jQuery.each( arrayIn, function( key, val ) {
-			val = jQuery.trim( val );
+			val = val.trim();
 
 			if ( val && jQuery.inArray( val, arrayOut ) == -1 ) {
 				arrayOut.push( val );
@@ -1220,7 +1212,10 @@ console.log( 'listening to controller events' );
 			delete current_tags[ num ];
 
 			$.each( current_tags, function( key, val ) {
-				val = $.trim( val );
+				if ( 'undefined' !== typeof val ) {
+					val = val.trim();
+				}
+				
 				if ( val ) {
 					new_tags.push( val );
 				}
@@ -1254,8 +1249,7 @@ console.log( 'listening to controller events' );
 			$.each( current_tags, function( key, val ) {
 				var element, xbutton;
 
-				val = $.trim( val );
-
+				val = val.trim();
 				if ( ! val ) {
 					return;
 				}
@@ -1308,7 +1302,7 @@ console.log( 'listening to controller events' );
 			}
 
 			if ( 'undefined' == typeof( f ) ) {
-				newtag.focus();
+				newtag.trigger('focus');
 			}
 
 			return false;
@@ -1536,7 +1530,6 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 					if ( true === hookCompat ) {
 						mlaModal.utility.hookCompatTaxonomies( model.get('id'), mlaModal.settings.$el );
-						//mlaModal.utility.hookCompatTaxonomies( model.get('id'), wp.media.frame.$el );
 					}
 				});
 			}
@@ -1547,14 +1540,28 @@ this.listenTo( this, 'all', this.selectionEvent );
 	 * Install the "click to expand" handler for MLA Searchable Taxonomy Meta Boxes
 	 */
 	mlaModal.utility.hookCompatTaxonomies = function( attachmentId, context ) {
-		var taxonomy, clickTaxonomy = null;
+		var prefix, taxonomy, clickTaxonomy = null;
+		
+		mlaModal.settings.prefix++,
+		prefix = mlaModal.settings.prefix.toString();
 
+/*		prefix = $( context ).attr('id');
+		
+		if ( 'undefined' === typeof prefix ) {
+			prefix = $( context ).attr('class');
+			
+			if ( 'undefined' === typeof prefix ) {
+				prefix = '';
+			}
+		} // */
+
+		//console.log( 'hook prefix: ' + prefix + ' attachmentId: ' + attachmentId );
 		$('.mla-taxonomy-field .categorydiv', context ).each( function(){
 			taxonomy = mlaModal.utility.parseTaxonomyId( $(this).attr('id') );
 
-			if ( -1 != mlaModal.settings.enhancedTaxonomies.indexOf( taxonomy ) ) {
+			if ( -1 !== mlaModal.settings.enhancedTaxonomies.indexOf( taxonomy ) ) {
 				// Load the taxonomy checklists on first expansion
-				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, prefix: prefix, el: context }, function( event ) {
 					mlaModal.utility.fillCompatTaxonomies( event.data );
 				});
 
@@ -1570,7 +1577,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 				if ( null === clickTaxonomy ) {
 					clickTaxonomy = taxonomy;
 				}
-				} else {
+			} else {
 				// Delete the enhanced row
 				$( 'tr.compat-field-' + taxonomy, context ).each( function(){
 					if ( $(this).hasClass('mla-taxonomy-row') ) {
@@ -1585,7 +1592,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 			if ( -1 != mlaModal.settings.enhancedTaxonomies.indexOf( taxonomy ) ) {
 				// Load the taxonomy checklists on first expansion
-				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, prefix: prefix, el: context }, function( event ) {
 					mlaModal.utility.fillCompatTaxonomies( event.data );
 				});
 
@@ -1652,6 +1659,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 		});
 
 		if ( query.length ) {
+			query[query.length] = 'prefix:' + data.prefix;
 			/**
 			 * wp.ajax.send( [action], [options] )
 			 *
@@ -1691,8 +1699,8 @@ this.listenTo( this, 'all', this.selectionEvent );
 	 * Support the MLA Searchable Taxonomy Meta Boxes
 	 */
 	mlaModal.utility.supportCompatTaxonomies = function( data ) {
-		var attachmentId = data.id, context = data.el;
-
+		var attachmentId = data.id, context = $( data.el );
+		
 		if ( mlaModal.settings.enableDetailsCategory ) {
 			$( '.mla-taxonomy-field .categorydiv', context ).each( function(){
 				var thisJQuery = $(this), catAddBefore, catAddAfter, taxonomy, settingName,
@@ -1700,7 +1708,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 				taxonomy = mlaModal.utility.parseTaxonomyId( $(this).attr('id') );
 				settingName = taxonomy + '_tab';
-				taxonomyIdPrefix = '#mla-' + taxonomy;
+				taxonomyIdPrefix = '#mla-' + data.prefix + '-' + taxonomy;
 				taxonomyNewIdSelector = '#mla-new-' + taxonomy;
 				taxonomySearchIdSelector = '#mla-search-' + taxonomy;
 				taxonomyTermsId = '#mla-attachments-' + attachmentId + '-' + taxonomy;
@@ -1718,17 +1726,29 @@ this.listenTo( this, 'all', this.selectionEvent );
 				});
 
 				// Update the taxonomy terms, if changed, on the server when the mouse leaves the checklist area
-				thisJQuery.on( "mouseleave", function() {
+				thisJQuery.on( "mouseleave", function( e ) {
 					var query, oldTerms, termList = [], checked =  thisJQuery.find( taxonomyIdPrefix + '-checklist input:checked' );
+
+					if ( thisJQuery.prop( 'disabled' ) ) {
+						//console.log( 'mouseleave disabled ' + thisJQuery.prop( 'disabled' ) );
+						return;
+					}
 
 					checked.each( function() {
 						termList[ termList.length ] = $(this).val();
 					});
 
-					termList.sort( function( a, b ) { return a - b; } );
+					termList.sort(); // ( function( a, b ) { return a - b; } );
 					termList = termList.join( ',' );
 
+					// adding a term can leave oldTerms out of sorts
 					oldTerms = thisJQuery.siblings( taxonomyTermsId ).val();
+					oldTerms = oldTerms.split(',');
+					oldTerms.sort(); // ( function( a, b ) { return a - b; } );
+					oldTerms = oldTerms.join( ',' );
+					
+					//console.log( 'mouseleave termList: ' + termList );
+					//console.log( 'mouseleave oldTerms: ' + oldTerms );
 					if ( oldTerms === termList ) {
 						return;
 					}
@@ -1741,6 +1761,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					 */
 					query = {
 						id: attachmentId,
+						prefix: data.prefix,
 					};
 					query[ taxonomy ] = termList;
 
@@ -1757,6 +1778,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					thisJQuery.find( taxonomySearchIdSelector ).val( '' );
 					thisJQuery.find( taxonomyIdPrefix + '-searcher' ).addClass( 'mla-hidden-children' );
 					thisJQuery.prop( 'disabled', false );
+					//console.log( 'mouseleave complete' );
 					});
 				});
 
@@ -1776,7 +1798,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					$(this).parent().addClass('tabs').siblings('li').removeClass('tabs');
 					thisJQuery.find( taxonomyIdPrefix + '-tabs' ).siblings('.tabs-panel').hide();
 					thisJQuery.find( t ).show();
-					$(this).focus();
+					$(this).trigger('focus');
 
 					// Store the "all/most used" setting in a cookie
 					if ( "#mla-" + taxonomy + '-all' == t ) {
@@ -1804,7 +1826,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 					if ( false === thisJQuery.find( taxonomyIdPrefix + '-adder' ).hasClass( 'mla-hidden-children' ) ) {
 						thisJQuery.find( taxonomyNewIdSelector ).val( '' ).removeClass( 'form-input-tip' );
-						thisJQuery.find( taxonomyNewIdSelector ).focus();
+						thisJQuery.find( taxonomyNewIdSelector ).trigger('focus');
 					}
 					return false;
 				});
@@ -1817,23 +1839,58 @@ this.listenTo( this, 'all', this.selectionEvent );
 					}
 				});
 
-				thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).on( 'click', function(){
-					thisJQuery.find( taxonomyNewIdSelector ).focus();
+				thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).on( 'click', function(event){
+					mlaModal.settings.clickValue = thisJQuery.find( taxonomyNewIdSelector ).val();
+					thisJQuery.find( taxonomyNewIdSelector ).val('');
+					mlaModal.settings.clickJQuery = thisJQuery;
+					//console.log( 'click: ', mlaModal.settings.clickValue );
+					thisJQuery.find( taxonomyNewIdSelector ).trigger('focus');
 				});
 
 				catAddBefore = function( s ) {
-					if ( ! thisJQuery.find( taxonomyNewIdSelector ).val() )
+					var dataKey = 'new' + taxonomy;
+					
+					if ( 'undefined' === typeof mlaModal.settings.clickValue || ! mlaModal.settings.clickValue ) {
+						//console.log( 'catAddBefore aborting' );
 						return false;
+					}
+					
+					if ( mlaModal.settings.clickJQuery.prop( 'disabled' ) ) {
+						//console.log( 'catAddBefore disabled, aborting' );
+						return false;
+					}
+					
+					//console.log( 'catAdd click: ', mlaModal.settings.clickValue );
+					//console.log( 'initial s.data: ', s.data );
+					sData = s.data.split('&');
+					//console.log( 'sData: ', JSON.stringify( sData ) );
 
-					s.data += '&' + thisJQuery.find( taxonomyIdPrefix + '-checklist :checked' ).serialize();
-					thisJQuery.prop( 'disabled', true );
+					sData = sData.map( function( value, index, array ) {
+						parts = value.split('=');
+						
+						if ( 'action' === parts[0] && 'add-' === parts[1].substring( 0,4 ) ) {
+							return 'action=add-' + taxonomy;
+						}
+						
+						if ( dataKey === parts[0] ) {
+							return dataKey + '=' + mlaModal.settings.clickValue;
+						}
+						
+						return value;
+					});
+					
+					s.data = sData.join('&');
+					//console.log( 'updated s.data: ', s.data );
+
+					s.data += '&' + mlaModal.settings.clickJQuery.find( taxonomyIdPrefix + '-checklist :checked' ).serialize();
+					mlaModal.settings.clickJQuery.prop( 'disabled', true );
 					return s;
 				};
 
 				catAddAfter = function( r, s ) {
 					var sup, drop = thisJQuery.find( '#new' + taxonomy + '_parent' );
 
-					thisJQuery.prop( 'disabled', false );
+					mlaModal.settings.clickJQuery.prop( 'disabled', false );
 					if ( 'undefined' != s.parsed.responses[0] && ( sup = s.parsed.responses[0].supplemental.newcat_parent ) ) {
 						drop.before( sup );
 						drop.remove();
@@ -1841,6 +1898,8 @@ this.listenTo( this, 'all', this.selectionEvent );
 							mlaModal.utility.mlaAttachmentsBrowser.updateFilters( taxonomy, sup );
 						}
 					}
+					
+					mlaModal.settings.clickJQuery.trigger( 'mouseleave' );
 				};
 
 				// wpList is in /wp-includes/js/wp-lists.js
@@ -1890,7 +1949,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					// keyup happens after keypress; change the focus if the text box has been closed
 					if ( 13 === event.keyCode ) {
 						event.preventDefault();
-						thisJQuery.find( taxonomyIdPrefix + '-search-toggle' ).focus();
+						thisJQuery.find( taxonomyIdPrefix + '-search-toggle' ).trigger('focus');
 						return;
 					}
 
@@ -1926,7 +1985,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 					if ( false === thisJQuery.find( taxonomyIdPrefix + '-searcher' ).hasClass( 'mla-hidden-children' ) ) {
 						thisJQuery.find( taxonomySearchIdSelector ).val( '' ).removeClass( 'form-input-tip' );
-						thisJQuery.find( taxonomySearchIdSelector ).focus();
+						thisJQuery.find( taxonomySearchIdSelector ).trigger('focus');
 					}
 
 					return false;
