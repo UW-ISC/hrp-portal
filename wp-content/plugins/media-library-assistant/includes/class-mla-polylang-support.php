@@ -105,7 +105,7 @@ class MLA_Polylang {
 		add_filter( 'mla_list_table_build_inline_data', 'MLA_Polylang::mla_list_table_build_inline_data', 10, 2 );
 
 		// Defined in various /media-library-assistant/includes/class-mla-settings-*-tab.php
-		add_filter( 'mla_setting_table_submenu_arguments', array( $this, 'mla_list_table_submenu_arguments' ), 10, 2 );
+		add_filter( 'mla_setting_table_submenu_arguments', 'MLA_Polylang::mla_list_table_submenu_arguments', 10, 2 );
 
 		// Defined in /media-library-assistant/includes/class-mla-objects.php
 		//add_filter( 'mla_taxonomy_get_columns', 'MLA_Polylang::mla_taxonomy_get_columns', 10, 3 );

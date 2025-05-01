@@ -285,8 +285,9 @@ class User_Role_Editor {
   
   
   public function add_js_to_users_page() {
-              
-      wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core','jquery-ui-button', 'jquery'), false, true );
+      global $wp_version;
+      
+      wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core','jquery-ui-button', 'jquery'), $wp_version, true );
       wp_register_script( 'ure-users', plugins_url( '/js/users.js', URE_PLUGIN_FULL_PATH ), array(), URE_VERSION, true );
       wp_enqueue_script ( 'ure-users' );      
       wp_localize_script( 'ure-users', 'ure_users_data', array(
@@ -482,7 +483,7 @@ class User_Role_Editor {
      * Load plugin translation files - linked to the 'init' action
      * 
      */
-    function load_translation() {
+    public function load_translation() {
 
         load_plugin_textdomain('user-role-editor', false, dirname( plugin_basename( URE_PLUGIN_FULL_PATH ) ) .'/lang');
         
@@ -497,7 +498,7 @@ class User_Role_Editor {
         }
         
     }
-    // end of ure_load_translation()
+    // end of load_translation()
 
     
     /**
@@ -730,6 +731,7 @@ class User_Role_Editor {
     
     
     protected function load_main_page_js() {
+        global $wp_version;
         
         $confirm_role_update = $this->lib->get_option('ure_confirm_role_update', 1);        
         $page_url = $this->get_ure_page_url();
@@ -742,8 +744,8 @@ class User_Role_Editor {
             $do_not_revoke_from_admin = false;
         }
         
-        wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core', 'jquery-ui-button', 'jquery'), false, true );
-        wp_enqueue_script('jquery-ui-selectable', '', array('jquery-ui-core', 'jquery'), false, true );        
+        wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core', 'jquery-ui-button', 'jquery'), $wp_version, true );
+        wp_enqueue_script('jquery-ui-selectable', '', array('jquery-ui-core', 'jquery'), $wp_version, true );        
         wp_enqueue_script('notifyjs', plugins_url('/js/notify.min.js', URE_PLUGIN_FULL_PATH ), array(), URE_VERSION, true );
         
         wp_register_script('ure', plugins_url('/js/ure.js', URE_PLUGIN_FULL_PATH ), array(), URE_VERSION, true );
@@ -787,12 +789,13 @@ class User_Role_Editor {
     
     
     protected function load_settings_js() {
-    
+        global $wp_version;
+        
         $page_url = $this->get_ure_page_url();
         
-        wp_enqueue_script('jquery-ui-tabs', '', array('jquery-ui-core', 'jquery'), false, true );
-        wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core', 'jquery'), false, true );
-        wp_enqueue_script('jquery-ui-button', '', array('jquery-ui-core', 'jquery'), false, true );
+        wp_enqueue_script('jquery-ui-tabs', '', array('jquery-ui-core', 'jquery'), $wp_version, true );
+        wp_enqueue_script('jquery-ui-dialog', '', array('jquery-ui-core', 'jquery'), $wp_version, true );
+        wp_enqueue_script('jquery-ui-button', '', array('jquery-ui-core', 'jquery'), $wp_version, true );
         wp_register_script('ure-settings', plugins_url('/js/settings.js', URE_PLUGIN_FULL_PATH ), array(), URE_VERSION, true );
         wp_enqueue_script('ure-settings');
         
