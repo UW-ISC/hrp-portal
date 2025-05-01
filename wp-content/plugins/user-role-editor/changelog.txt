@@ -1,6 +1,11 @@
 CHANGES LOG (full version).
 ===========================
 
+= [4.64.5] 16.04.2025 =
+* Update: Marked as compatible with WordPress 6.8
+* Update: Minor changes were applied to the CSS/JS loading code to minimize "Plugin Check" tool warnings.
+* Plugin headers were extended at role-editor.php and readme.txt files according to wordpress.org recommendations.
+
 = [4.64.4] 15.12.2024 =
 * Security Fix: Users - "Add Role", "Revoke Role" buttons: Cross-Site request forgery to privilege escalation was possible due to missed nonce validation. This issue was discovered and responsibly reported by vgo0.
 
