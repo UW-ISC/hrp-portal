@@ -349,14 +349,6 @@ var aceEditor = null;
                 }
                 constructedTableData.file = $('#wdt-constructor-input-url').val();
 
-                // Validation for valid URL link of Google spreadsheet
-                if (constructedTableData.file.indexOf("docs.google.com") != -1 && constructedTableData.file.indexOf("2PACX") != -1) {
-                    $('#wdt-error-modal .modal-body').html('URL from Google spreadsheet publish modal(popup) is not valid for wpDataTables. Please provide a valid URL link that you get from the browser address bar. More info in our documentation on this <a href="https://wpdatatables.com/documentation/creating-wpdatatables/creating-wpdatatables-from-google-spreadsheets/" target="_blank">link</a>. ');
-                    $('#wdt-error-modal').modal('show');
-                    $('.wdt-preload-layer').animateFadeOut();
-                    $('div.wdt-constructor-step[data-step="1-2"]').animateFadeIn();
-                    return;
-                }
                 $('.wdt-preload-layer').animateFadeIn();
                 $curStepBlock.hide();
                 previousStepButton.animateFadeIn();

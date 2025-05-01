@@ -22,6 +22,10 @@
                 <a href="#measurement-settings-tab" aria-controls="measurement-settings-tab" role="tab"
                    data-toggle="tab"><?php esc_html_e('Measurements', 'wpdatatables'); ?></a>
             </li>
+            <li class="woo-cf-settings-tab">
+                <a href="#woo-cf-settings-tab" aria-controls="woo-cf-settings-tab" role="tab"
+                   data-toggle="tab"><?php esc_html_e('Custom Fields', 'wpdatatables'); ?></a>
+            </li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="general-settings-tab">
@@ -36,7 +40,7 @@
                         <div class="select">
                             <select class="form-control selectpicker wdt-woo-parameter" multiple="multiple"
                                     title="<?php esc_attr_e('All', 'wpdatatables'); ?>"
-                                    id="wdt-wp-query-post-statuses" data-value="post_status">
+                                    id="wdt-woo-commerce-post-statuses" data-value="post_status">
                                 <option value="publish"><?php esc_html_e('Published', 'wpdatatables'); ?></option>
                                 <option value="pending"><?php esc_html_e('Pending', 'wpdatatables'); ?></option>
                                 <option value="draft"><?php esc_html_e('Draft', 'wpdatatables'); ?></option>
@@ -773,6 +777,26 @@
                     </div>
                 </div>
             </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="woo-cf-settings-tab">
+                <div class="row">
+                    <div id="wdt-woo-commerce-cf-container">
+                    </div>
+
+                    <div class="col-sm-12 p-l-0 m-t-10">
+                        <button class="btn pull-left wdt-woo-commerce-add-cf-column">
+                            <i class="wpdt-icon-plus-thin"></i> <?php esc_html_e('Add New Custom Field Column', 'wpdatatables'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<?php
+if (defined('WDT_WOO_COMMERCE_PATH')) {
+    include WDT_WOO_COMMERCE_PATH . 'source/templates/woo_custom_field_columns_block.inc.php';
+}
+?>
+

@@ -94,13 +94,14 @@
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
-                let cfId = $(this).closest('.wdt-wp-query-cf-template').find('.' + parameterId).data('count');
+                let tableType = wpdatatable_config.table_type === 'wp_posts_query' ? 'wp-query' : 'woo-commerce';
+                let cfId = $(this).closest('.wdt-' + tableType + '-cf-template').find('.' + parameterId).data('count');
 
                 if (wpdatatable_config.queryParameters[queryType] && wpdatatable_config.queryParameters[queryType][cfId]) {
                     delete wpdatatable_config.queryParameters[queryType][cfId];
                 }
                 window[counterVarName]--;
-                $(this).closest('.wdt-wp-query-cf-template').remove();
+                $(this).closest('.wdt-' + tableType + '-cf-template').remove();
                 if (wpdatatable_config.queryParameters[queryType]) {
                     let updatedEntries = {};
 
@@ -292,6 +293,11 @@
                     updateRegularParameters(key, value);
                 });
                 fillQueryParamsBack();
+
+                // Clear and re-populate Custom Field columns
+                cf_column_counter = Object.keys(wpdatatable_config.queryParameters.customFieldColumns ?? {}).length;
+                clearClauses('div#wdt-woo-commerce-cf-container');
+                wpdatatable_config.populateCustomFieldColumns();
             },
 
             updatePostQueryParameters: function () {
@@ -310,6 +316,9 @@
 
                 addClause('button.wdt-wp-query-add-cf-column', '#wdt-wp-query-cf-template', 'div#wdt-wp-query-cf-container', 'cf_column_counter', '', 'cfColumnId');
                 removeCfClause(document, '#wdt-constructor-delete-cf-column', 'cf_column_counter', 'wdt_wp_query_cf_parameter', 'customFieldColumns');
+
+                addClause('button.wdt-woo-commerce-add-cf-column', '#wdt-woo-commerce-cf-template', 'div#wdt-woo-commerce-cf-container', 'cf_column_counter', '', 'cfColumnId');
+                removeCfClause(document, '#wdt-constructor-delete-woo-cf-column', 'cf_column_counter', 'wdt_woo_commerce_cf_parameter', 'customFieldColumns');
             },
 
             populateClause: function (key) {
@@ -402,33 +411,31 @@
             },
             populateCustomFieldColumns: function () {
                 let value = wpdatatable_config.queryParameters.customFieldColumns;
-                let containerId = 'div#wdt-wp-query-cf-container';
-                let templateId = '#wdt-wp-query-cf-template';
+                let tableType = wpdatatable_config.table_type === 'wp_posts_query' ? 'wp-query' : 'woo-commerce';
+                let containerId = 'div#wdt-' + tableType + '-cf-container';
+                let templateId = '#wdt-' + tableType + '-cf-template';
                 let clauseId = 'cfColumnId';
 
                 let template = $.templates(templateId);
                 if (value && typeof value === 'object') {
                     Object.entries(value).forEach(([index, clause]) => {
-                        let blockHtml = template.render({[clauseId]: index});
+                        let blockHtml = template.render({[clauseId]: +index});
                         $(blockHtml).appendTo(containerId).show();
 
                         Object.entries(clause).forEach(([param, val]) => {
                             let $input = $(`[data-count="${index}"][data-value="${param}"]`);
                             if ($input.length) {
-                                if (param === 'cf') {
-                                    $input.val(val);
-                                }
+                                $input.val(val);
 
-                                if (param === 'column_header') {
-                                    // Update the display header and disable the CF Column Header input
-                                    let orig_header = clause["cf"];
-                                    if (wpdatatable_config.columns_by_headers && wpdatatable_config.columns_by_headers[orig_header]) {
-                                        $input.val(wpdatatable_config.columns_by_headers[orig_header].display_header)
-                                            .prop('disabled', true);
-                                    } else {
-                                        $input.val(val)
-                                            .prop('disabled', true);
-                                    }
+                                // Update the display header and disable the CF Column Header input
+                                let orig_header = clause['cf'];
+                                if (wpdatatable_config.columns_by_headers && wpdatatable_config.columns_by_headers[orig_header]) {
+                                    $(`[data-count="${index}"][data-value="column_header"]`).val(wpdatatable_config.columns_by_headers[orig_header].display_header)
+                                        .prop('disabled', true);
+                                } else {
+                                    let columnHeader = value[index].column_header ? value[index].column_header : 'New Column';
+                                    $(`[data-count="${index}"][data-value="column_header"]`).val(columnHeader)
+                                        .prop('disabled', true);
                                 }
 
                             }
@@ -486,7 +493,7 @@
         /**
          * Change the Custom Field Column parameters
          */
-        $(document).on('input change', '.wdt_wp_query_cf_parameter', function () {
+        $(document).on('input change', '.wdt_wp_query_cf_parameter, .wdt_woo_commerce_cf_parameter', function () {
             let value = $(this).val();
             let key = this.dataset.value;
             let count = this.dataset.count;

@@ -1158,3 +1158,35 @@ function wdtGetColumnPossibleValues()
 
 add_action('wp_ajax_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');
 add_action('wp_ajax_nopriv_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');
+
+/**
+ * Do shortcode for Elementor PopUp
+ *
+ * @throws WDTException
+ */
+function wdtDoShortcode()
+{
+    $shortcode = '[wpdatatable ';
+    if (!isset($_POST['formdata']['table_id']) || empty($_POST['formdata']['table_id'])) {
+        exit();
+    }
+    $formData = (int)$_POST['formdata']['table_id'];
+    $shortcode .= 'id=' . $formData;
+    $shortcode .= ']';
+
+   $output = do_shortcode($shortcode);
+
+    ob_start();
+    WPDataTable::renderModal();
+    $modalHTML = ob_get_clean();
+
+    $output .= $modalHTML;
+
+    echo wp_send_json_success($output);
+
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_do_shortcode_elementor', 'wdtDoShortcode');
+add_action('wp_ajax_nopriv_wpdatatables_do_shortcode_elementor', 'wdtDoShortcode');
+

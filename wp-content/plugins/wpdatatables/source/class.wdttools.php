@@ -309,7 +309,13 @@ class WDTTools
         }
         $url_arr = explode('/', $url);
         $spreadsheet_key = $url_arr[count($url_arr) - 2];
-        $csv_url = "https://docs.google.com/spreadsheets/d/{$spreadsheet_key}/pub?hl=en_US&hl=en_US&single=true&output=csv";
+
+        if (strpos($url, '2PACX') !== false) {
+            $csv_url = "https://docs.google.com/spreadsheets/d/e/{$spreadsheet_key}/pub?output=csv";
+        } else {
+            $csv_url = "https://docs.google.com/spreadsheets/d/{$spreadsheet_key}/pub?hl=en_US&hl=en_US&single=true&output=csv";
+        }
+
         if (strpos($url, '#') !== false) {
             $url_query = parse_url($url, PHP_URL_FRAGMENT);
         } else {
@@ -757,59 +763,31 @@ class WDTTools
     public static function getUpdateInfo()
     {
         return array(
-            'version' => '7.1.1',
-            'release_date' => '18.02.2025',
+            'version' => '7.2',
+            'release_date' => '07.04.2025',
             'features' => [
+                0 => [
+                    'text' => 'Custom Fields Support for WooCommerce Product Tables',
+                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/custom-fields-integration-with-wpdatatables/'
+                ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Improved Conditional Formatting Clarity for WEEK Placeholders in Date Columns',
+                    'text' => 'Avoid cookie sessions - compliance with DSGVO',
                     'link' => ''
-                ],
-                1 => [
-                    'text' => 'Corrected Notification Message for Folder Feature and Added \'Never Show Again\' Option',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Added Hook to Skip Initial Rows in Excel Sheet (wpdatatables_before_get_excel_headers)',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => 'Added Filter to Allow Custom URL Arguments for Nested JSON with Special Characters (wpdatatables_filter_nested_json_all_args)',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Removed unnecessary files',
-                    'link' => ''
-                ],
+                ]
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed issue with Google Chart displaying incorrect values',
+                    'text' => 'Issue with Numeric filters when using Foreign keys',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with unnecessary Highcharts code loading on empty WPDataTables pages',
+                    'text' => 'Fixed issue with wpDataTables functionality in Elementor pop-ups',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed Issue with Fixed Headers causing vertical scrolling and pagination to malfunction on both back-end and front-end views.',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => 'Fixed Issue with Fixed Headers Causing Custom HTML Button to Appear in Text Filter Input in Table Footer.',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Fixed Issue with Column Reordering in WooCommerce Tables.',
-                    'link' => ''
-                ],
-                5 => [
-                    'text' => 'Fixed issue with WP Posts tables not rendering correctly without selected Custom Fields',
-                    'link' => ''
-                ],
-                6 => [
-                    'text' => 'Fixed issue with Multiple-series ApexCharts not working as combo charts correctly',
+                    'text' => 'Fixed Issue with Google Sheets Authorization Due to Security Update',
                     'link' => ''
                 ],
             ],

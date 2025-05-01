@@ -3265,7 +3265,7 @@ class WPDataTable
             // If this is the table initialization from WP-admin, and no data is returned, throw an exception
             if ($init_read && empty($res_dataRows)) {
                 if (!strpos($mysql_error, 'doesn\'t exist')) {
-                    $msg = __('No data fetched!  <br/> If you are trying to save table for the first time, please enter some date before saving so table could be set accurately. <br/> You can remove it later if you need empty table to start with.', 'wpdatatables');
+                    $msg = __('No data fetched!  <br/> To create a wpDataTable, at least one row of data is required before saving. This ensures the table is generated correctly. If needed, you can remove the row later. <br/>', 'wpdatatables');
                 }
                 $msg .= '<br/><br/>' . __('Rendered query: ', 'wpdatatables') . '<strong>' . $query . '</strong><br/>';
                 if (!empty($mysql_error)) {
@@ -4021,7 +4021,7 @@ class WPDataTable
 
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
-
+        wp_localize_script('wdt-wpdatatables', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
         do_action_deprecated('wdt_enqueue_on_frontend', array($this), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_frontend');
         do_action('wpdatatables_enqueue_on_frontend', $this);
     }
