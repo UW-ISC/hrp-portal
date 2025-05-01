@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.2
 Tested up to: 6.8
-Stable tag: 3.25
+Stable tag: 3.26
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -199,6 +199,9 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.26 =
+* Fix: **IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.**
+
 = 3.25 =
 * New: The Settings/Media Library Assistant Image tab lets you add, view and manage Intermediate Size values for image items.
 * New: For the Settings/Media Library Assistant Uploads tab, the active/inactive status has been changed from views to a filter dropdown.
@@ -369,8 +372,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.25 =
-New tool for managing image Intermediate Sizes, taxonomy archive solution, new and enhanced example plugins and field-level data sources, WP 6.8 compatible. Eight enhancements, ten fixes in all.
+= 3.26 =
+IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.
 
 == Acknowledgements ==
 
