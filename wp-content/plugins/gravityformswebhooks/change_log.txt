@@ -1,3 +1,15 @@
+### 1.7.0 | 2025-04-11
+- Added early return if Gravity Forms is not on a supported version.
+- Added translator comments.
+- Added security enhancements. Credit: Francesco Carlucci via WordFence.
+- Updated docblocks for internal consistency.
+- Updated code style to match WordPress coding standards.
+
+### 1.6.0 | 2025-04-07
+- Fixed a display issue on the feed settings page where an extra merge tag button is being displayed.
+- Fixed a bug that causes PATCH data to be sent as an array when JSON is expected.
+- AF: Updated process_feed() return value for compatibility with Gravity Forms 2.9.4, so the framework can save the feed status to the entry meta.
+
 ### 1.5 | 2021-05-06
 - Fixed an issue that prevents saving feed settings for a request URL that contains encoded values.
 - Fixed an issue where the add-on icon is missing on the Form Settings page for Gravity Forms 2.5.

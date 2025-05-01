@@ -13,6 +13,8 @@ if ( window.gform ) {
  * @param excludeFieldTypes
  * @param isPrepop
  * @param option
+ *
+ * @return array
  */
 function gf_webhooks_merge_tags( mergeTags, elementId, hideAllFields, excludeFieldTypes, isPrepop, option ) {
 	mergeTags['other'].tags.push(

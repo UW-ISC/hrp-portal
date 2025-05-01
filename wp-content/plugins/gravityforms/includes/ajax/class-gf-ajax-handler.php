@@ -33,6 +33,8 @@ class GF_Ajax_Handler {
 		$target_page = absint( rgpost( 'gform_target_page_number_' . $form_id ) );
 		$source_page = absint( rgpost( 'gform_source_page_number_' . $form_id ) );
 
+		$this->hydrate_get_from_current_page_url();
+
 		$result = \GFAPI::validate_form( $form_id, array(), rgpost( 'gform_field_values' ), $target_page, $source_page );
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message() );
@@ -74,6 +76,8 @@ class GF_Ajax_Handler {
 			wp_send_json_error( $this->nonce_validation_message() );
 		}
 
+		$this->hydrate_get_from_current_page_url();
+
 		$form_id = absint( rgpost( 'form_id' ) );
 
 		/**
@@ -91,10 +95,17 @@ class GF_Ajax_Handler {
 			return;
 		}
 
-		$target_page = absint( rgpost( 'gform_target_page_number_' . $form_id ) );
-		$source_page = absint( rgpost( 'gform_source_page_number_' . $form_id ) );
+		// Getting posted values.
+		$target_page       = absint( rgpost( 'gform_target_page_number_' . $form_id ) );
+		$source_page       = absint( rgpost( 'gform_source_page_number_' . $form_id ) );
+		$field_values      = rgpost( 'gform_field_values' );
+		$theme             = rgpost( 'gform_theme' );
+		$style             = rgpost( 'gform_style_settings' );
+		$submission_method = rgpost( 'gform_submission_method' );
 
-		$result = \GFAPI::submit_form( $form_id, array(), rgpost( 'gform_field_values' ), $target_page, $source_page );
+		require_once \GFCommon::get_base_path() . '/form_display.php';
+
+		$result = \GFAPI::submit_form( $form_id, array(), $field_values, $target_page, $source_page, \GFFormDisplay::SUBMISSION_INITIATED_BY_WEBFORM );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message() );
@@ -102,17 +113,26 @@ class GF_Ajax_Handler {
 
 		$form = $result['form'];
 
-		// Adding validation markup if form failed validation
-		if ( ! $result['is_valid'] ) {
-			$result = $this->add_validation_summary( $form, $result );
-		}
-
 		// Adding confirmation markup if there is a confirmation message to be displayed.
 		if ( rgar( $result, 'confirmation_type' ) == 'message' && ! empty( rgar( $result, 'confirmation_message' ) ) ) {
-
 			// Get confirmation markup from get_form(). This is necessary to ensure that confirmation markup is properly formatted.
-			$result['confirmation_markup'] = \GFFormDisplay::get_form( $form_id, false, false, false, rgpost( 'gform_field_values' ), false, 0, rgpost( 'gform_theme' ), rgpost( 'gform_style_settings') );
+			$result['confirmation_markup'] = \GFFormDisplay::get_form( $form_id, false, false, false, $field_values, false, 0, $theme, $style );
+		} elseif ( ! $result['is_valid'] ) {
+			$result = $this->add_validation_summary( $form, $result );
+
+			// Refresh the form markup if single page or multipage forms have validation errors.
+			$result['form_markup'] = \GFFormDisplay::get_form( $form_id, false, false, false, $field_values, false, 0, $theme, $style );
+		} elseif ( $target_page > 0 ) {
+			// Getting the target page number taking page conditional logic into account.
+			$page_number = \GFFormDisplay::get_target_page( $form, $source_page, $field_values );
+
+			$result = $this->add_validation_summary( $form, $result );
+
+			// Getting the field markup for the target page if the form is a multipage form.
+			$result['page_markup'] = \GFFormDisplay::get_page( $form_id, $page_number, $field_values, $theme, $style, $submission_method );
 		}
+
+		$result['submission_type'] = $this->get_submission_type( $target_page, $source_page );
 
 		/**
 		 * Filters the ajax form submission result.
@@ -131,6 +151,29 @@ class GF_Ajax_Handler {
 		wp_send_json_success( $result );
 	}
 
+	/**
+	 * Returns the submission type based on the target and source page numbers.
+	 *
+	 * @since 2.9.7
+	 *
+	 * @param int $target_page The target page number.
+	 * @param int $source_page The source page number.
+	 *
+	 * @return string The submission type. Possible values are SUBMISSION_TYPE_SUBMIT, SUBMISSION_TYPE_NEXT, SUBMISSION_TYPE_PREVIOUS, and SUBMISSION_TYPE_SAVE_AND_CONTINUE.
+	 */
+	public function get_submission_type( $target_page, $source_page ) {
+		if ( isset( $_POST['gform_send_resume_link'] ) ) {
+			return \GFFormDisplay::SUBMISSION_TYPE_SEND_LINK;
+		} elseif ( rgpost( 'gform_save') ) {
+			return \GFFormDisplay::SUBMISSION_TYPE_SAVE_AND_CONTINUE;
+		} elseif ( $target_page === 0 ) {
+			return \GFFormDisplay::SUBMISSION_TYPE_SUBMIT;
+		} elseif ( $target_page > $source_page ) {
+			return \GFFormDisplay::SUBMISSION_TYPE_NEXT;
+		} else {
+			return \GFFormDisplay::SUBMISSION_TYPE_PREVIOUS;
+		}
+	}
 
 	/**
 	 * Handles the save link submission. Uses the $_POST array and sends the save link result as a JSON response.
@@ -152,6 +195,7 @@ class GF_Ajax_Handler {
 				'confirmation_type'    => 'message',
 				'confirmation_message' => $confirmation,
 				'confirmation_markup'  => $confirmation,
+				'submission_type'      => \GFFormDisplay::SUBMISSION_TYPE_SEND_LINK,
 			)
 		);
 	}
@@ -211,4 +255,30 @@ class GF_Ajax_Handler {
 		$result['validation_summary'] = wp_kses( $summary, wp_kses_allowed_html( 'post' ) );
 		return $result;
 	}
+
+	/**
+	 * Making the current page query string available for use with form filters.
+	 *
+	 * @since 2.9.5
+	 *
+	 * @return void
+	 */
+	private function hydrate_get_from_current_page_url() {
+		$url = rgpost( 'current_page_url' );
+
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		$query_string = parse_url( rawurldecode( $url ), PHP_URL_QUERY );
+
+		if ( empty( $query_string ) || ! is_string( $query_string ) ) {
+			return;
+		}
+
+		parse_str( $query_string, $query );
+		unset( $query['gf_page'] ); // Removing so it doesn't conflict with gf_ajax_page=preview.
+		$_GET = array_merge( $_GET, $query );
+	}
+
 }
