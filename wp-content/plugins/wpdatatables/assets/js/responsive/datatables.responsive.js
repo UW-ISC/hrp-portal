@@ -74,13 +74,8 @@ function ResponsiveDatatablesHelper(tableSelector, breakpoints, options) {
     this.lastBreakpoint = '';
     this.lastColumnsHiddenIndexes = [];
 
-    // Save state
-    var fileName = window.location.pathname.split("/").pop();
-    var context = this.api.settings().context[0];
-
-    this.tableId = context.sTableId;
-    this.saveState = context.oInit.bStateSave;
-    this.cookieName = 'DataTablesResponsiveHelper_' + this.tableId + (fileName ? '_' + fileName : '');
+    // Track if we need to save state internally
+    this.saveState = false;
     this.lastStateExists = false;
 
     // Index of the th in the header tr that stores where the attribute
@@ -157,7 +152,7 @@ ResponsiveDatatablesHelper.prototype.init = function (breakpoints, options) {
 };
 
 ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
-    // Get last state if it exists
+    // If saveState is enabled, attempt to get the last state from memory
     if (this.saveState) {
         this.getState();
     }
@@ -624,52 +619,26 @@ ResponsiveDatatablesHelper.prototype.disable = function (disable) {
 };
 
 /**
- * Get state from cookie.
+ * Get state
  */
 ResponsiveDatatablesHelper.prototype.getState = function () {
-    if (typeof (Storage)) {
-        // Use local storage
-        var value = JSON.parse(localStorage.getItem(this.cookieName));
-        if (value) {
-            this.columnIndexes = value.columnIndexes;
-            this.breakpoints = value.breakpoints;
-            this.expandColumn = value.expandColumn;
-            this.lastBreakpoint = value.lastBreakpoint;
-            this.lastStateExists = true;
-        }
-    } else {
-        // No local storage.
+    // Read from instance variables only (no localStorage)
+    if (this.lastStateExists) {
+        // Restore the last state if it was saved in memory within the instance
+        this.columnIndexes = this.columnIndexes || [];
+        this.columnsHiddenIndexes = this.columnsHiddenIndexes || [];
+        this.breakpoints = this.breakpoints || {};
+        this.expandColumn = this.expandColumn;
+        this.lastBreakpoint = this.lastBreakpoint;
     }
 };
 
 /**
- * Saves state to cookie.
+ * Save state
  */
 ResponsiveDatatablesHelper.prototype.setState = function () {
-    if (typeof (Storage)) {
-        // Use local storage
-        var d1 = this.difference(this.lastColumnsHiddenIndexes, this.columnsHiddenIndexes).length;
-        var d2 = this.difference(this.columnsHiddenIndexes, this.lastColumnsHiddenIndexes).length;
-
-        if (d1 + d2 > 0) {
-            var tt;
-            var value = {
-                columnIndexes: this.columnIndexes,               // array
-                columnsHiddenIndexes: this.columnsHiddenIndexes, // array
-                breakpoints: this.breakpoints,                   // object
-                expandColumn: this.expandColumn,                 // int|undefined
-                lastBreakpoint: this.lastBreakpoint              // string
-            };
-
-            var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-            if (!isSafari) {
-                localStorage.setItem(this.cookieName, JSON.stringify(value));
-            }
-            this.lastColumnsHiddenIndexes = this.columnsHiddenIndexes.slice(0);
-        }
-    } else {
-        // No local storage.
-    }
+    // Saving state in instance variable
+    this.lastStateExists = true;
 };
 
 /**

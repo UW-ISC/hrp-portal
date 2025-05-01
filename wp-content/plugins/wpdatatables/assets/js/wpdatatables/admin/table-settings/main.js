@@ -1087,6 +1087,7 @@
             var $andLogicBlock = $('.wdt-and-logic-block');
             var $useAndLogicBlock = $('#wdt-column-type').val() === 'string' && $('#wdt-column-values').val() !== 'foreignkey';
             var typeAttr = 'text';
+            let $foreignKeyFilteringNotice = $('.wdt-foreign-key-filter-alert');
 
             $renderCheckboxesInModal.prop('checked', 0);
             $andLogic.prop('checked', 0);
@@ -1108,6 +1109,11 @@
                 $renderCheckboxesInModalBlock.hide();
                 $renderSearchInSelectBoxBlock.hide();
                 $andLogicBlock.hide();
+                if (wpdatatable_config.currentOpenColumn.possibleValuesType === 'foreignkey') {
+                    $foreignKeyFilteringNotice.removeClass('hidden').show();
+                } else {
+                    $foreignKeyFilteringNotice.addClass('hidden').hide();
+                }
             } else if ($.inArray(filterType, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
                 $('div.wdt-exact-filtering-block').hide();
                 $('div.wdt-number-range-slider').hide();
@@ -1123,6 +1129,11 @@
                 $renderCheckboxesInModalBlock.hide();
                 $renderSearchInSelectBoxBlock.hide();
                 $andLogicBlock.hide();
+                if (wpdatatable_config.currentOpenColumn.possibleValuesType === 'foreignkey') {
+                    $foreignKeyFilteringNotice.removeClass('hidden').show();
+                } else {
+                    $foreignKeyFilteringNotice.addClass('hidden').hide();
+                }
 
                 if ($filterInputFrom.data('DateTimePicker') != undefined)
                     $filterInputFrom.data('DateTimePicker').destroy();
@@ -1166,6 +1177,7 @@
                 $renderCheckboxesInModalBlock.hide();
                 $renderSearchInSelectBoxBlock.hide();
                 $andLogicBlock.hide();
+                $foreignKeyFilteringNotice.addClass('hidden').hide();
 
                 // Must recreate selectpicker block because Ajax Selectpicker
                 $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected_wpdatatables + '" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected_wpdatatables + '"></select></div></div>');
@@ -1270,6 +1282,12 @@
                     $filterInputSelectpicker.on('show.bs.select', function (e) {
                         $filterInputSelectpickerBlock.find('.bs-searchbox .form-control').val('').trigger('keyup');
                     });
+
+                    if (filterType === 'multiselect') {
+                        $foreignKeyFilteringNotice.removeClass('hidden').show();
+                    } else {
+                        $foreignKeyFilteringNotice.addClass('hidden').hide();
+                    }
                 } else {
                     if (wpdatatable_config.currentOpenColumn.valuesList !== null && !$.isArray(wpdatatable_config.currentOpenColumn.valuesList)) {
                         var defaultValuesData = wpdatatable_config.currentOpenColumn.valuesList.split('|');
@@ -1654,12 +1672,6 @@
                         return;
                     }
                 }
-            }
-            // Validation for valid URL link of Google spreadsheet
-            if (wpdatatable_config.table_type == 'google_spreadsheet' && wpdatatable_config.content.indexOf("2PACX") != -1) {
-                $('#wdt-error-modal .modal-body').html('URL from Google spreadsheet publish modal(popup) is not valid for wpDataTables. Please provide a valid URL link that you get from the browser address bar. More info in our documentation on this <a href="https://wpdatatables.com/documentation/creating-wpdatatables/creating-wpdatatables-from-google-spreadsheets/" target="_blank">link</a>.');
-                $('#wdt-error-modal').modal('show');
-                return;
             }
             if (!wpdatatable_config.title) {
                 wdtNotify(wpdatatables_edit_strings.error_common, wpdatatables_edit_strings.tableNameEmpty_common, 'danger');

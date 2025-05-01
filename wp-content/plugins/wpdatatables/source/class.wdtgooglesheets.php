@@ -114,23 +114,47 @@ class WPDataTable_Google_Sheet
         $isValid = $this->wdtTokenValidationChecker($token);
         $worksheetsName = '';
         if ($isValid[0]) {
-            $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token'], array('timeout' => 100));
+            if (strpos($spreadsheetID, '2PACX') !== false) {
+                $url = 'https://docs.google.com/spreadsheets/d/e/' . $spreadsheetID . '/pub?output=csv';
+                $requestGoogleSheetMetaData = wp_remote_get($url, array('timeout' => 100));
+            } else {
+                $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token'], array('timeout' => 100));
+            }
             if (!is_wp_error($requestGoogleSheetMetaData) && isset($requestGoogleSheetMetaData['response']['code']) && $requestGoogleSheetMetaData['response']['code'] == 200) {
-                $googleSheetMetaData = json_decode($requestGoogleSheetMetaData['body'], TRUE);
-                foreach ($googleSheetMetaData['sheets'] as $sheet) {
-                    if ($sheet['properties']['sheetId'] == $sheetID) {
-                        $worksheetsName = $sheet['properties']['title'];
+                if (strpos($spreadsheetID, '2PACX') !== false) {
+                    $url = 'https://docs.google.com/spreadsheets/d/e/' . $spreadsheetID . '/pub?output=csv';
+                    $googleSheetDataRequest = wp_remote_get($url, array('timeout' => 100));
+                } else {
+                    $googleSheetMetaData = json_decode($requestGoogleSheetMetaData['body'], TRUE);
+                    foreach ($googleSheetMetaData['sheets'] as $sheet) {
+                        if ($sheet['properties']['sheetId'] == $sheetID) {
+                            $worksheetsName = $sheet['properties']['title'];
+                        }
                     }
+                    $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . urlencode($worksheetsName) . '?access_token=' . $token['access_token'], array('timeout' => 100));
                 }
-                $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . urlencode($worksheetsName) . '?access_token=' . $token['access_token'], array('timeout' => 100));
-
                 if (!is_wp_error($googleSheetDataRequest) && isset($googleSheetDataRequest['response']['code']) && $googleSheetDataRequest['response']['code'] == 200) {
-                    $googleSheetData = json_decode($googleSheetDataRequest['body'], TRUE);
-                    if (!isset($googleSheetData['values']))
-                        throw new WDTException('Google sheet does not have data. Please fill with data and try again.');
-                    if (isset($googleSheetData['values'][0]) && empty($googleSheetData['values'][0]))
-                        throw new WDTException('Google sheet does not have data in first row. Please fill with data and try again.');
-                    return WDTTools::gsArrayToWDTArray($googleSheetData['values']);
+                    if (strpos($spreadsheetID, '2PACX') !== false) {
+                        $csvData = wp_remote_retrieve_body($googleSheetDataRequest);
+
+                        $rows = explode("\n", $csvData);
+                        $helper = array ();
+
+                        foreach ($rows as $index => $row) {
+                            $helper[] = str_getcsv($row);
+                        }
+
+                        return WDTTools::gsArrayToWDTArray($helper);
+                    } else {
+                        $googleSheetData = json_decode($googleSheetDataRequest['body'], TRUE);
+                        if (!isset($googleSheetData['values'])) {
+                            throw new WDTException('Google sheet does not have data. Please fill with data and try again.');
+                        }
+                        if (isset($googleSheetData['values'][0]) && empty($googleSheetData['values'][0])) {
+                            throw new WDTException('Google sheet does not have data in first row. Please fill with data and try again.');
+                        }
+                        return WDTTools::gsArrayToWDTArray($googleSheetData['values']);
+                    }
                 } else {
                     if (is_wp_error($googleSheetDataRequest)) {
                         $errorMsg = $googleSheetDataRequest->get_error_message();

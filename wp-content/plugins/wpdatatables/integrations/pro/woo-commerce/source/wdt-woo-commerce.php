@@ -225,8 +225,12 @@ class WooCommerceIntegration extends WPQueryIntegration
             self::ajaxReturnConstruct($queryData, $wpDataTable, $wdtParameters);
         } else {
             $queryData->posts_per_page = $queryData->posts_per_page ?? "-1";
+
+            $customFieldColumns = $queryData->customFieldColumns ?? null;
+            unset($queryData->customFieldColumns);
+
             $query = self::buildQuery($queryData);
-            $productTableColumns = self::getWooCommerceTableColumns($query);
+            $productTableColumns = self::getWooCommerceTableColumns($query, $wdtParameters, $customFieldColumns);
             return $wpDataTable->arrayBasedConstruct($productTableColumns, $wdtParameters);
         }
         return true;
@@ -241,6 +245,10 @@ class WooCommerceIntegration extends WPQueryIntegration
      */
     public static function ajaxReturnConstruct($queryData, $wpDataTable, $wdtParameters)
     {
+        // Get any user Custom Field Columns
+        $customFieldColumns = $queryData->customFieldColumns ?? null;
+        unset($queryData->customFieldColumns);
+
         $query = self::buildQuery($queryData);
         $totalLength = $query->found_posts;
 
@@ -552,7 +560,7 @@ class WooCommerceIntegration extends WPQueryIntegration
                         }
                         break;
                     case 'short_description':
-                        if (isset($searchValue) && $searchValue !== '') {
+                        if ($searchValue !== '') {
                             add_filter('posts_where', function ($where) use ($searchValue, $wdtParameters, $columnName) {
                                 global $wpdb;
                                 if ($wdtParameters["exactFiltering"][$columnName] === 1) {
@@ -586,7 +594,19 @@ class WooCommerceIntegration extends WPQueryIntegration
                         }
                         break;
                     default:
-                        $queryData->{$columnName} = $searchValue;
+                        if ($wdtParameters["exactFiltering"][$columnName] === 1) {
+                            $queryData->meta_query[] = array(
+                                'key' => $columnName,
+                                'value' => $searchValue,
+                                'compare' => '=',
+                            );
+                        } else {
+                            $queryData->meta_query[] = array(
+                                'key' => $columnName,
+                                'value' => $searchValue,
+                                'compare' => 'LIKE',
+                            );
+                        }
                         break;
                 }
             }
@@ -594,7 +614,96 @@ class WooCommerceIntegration extends WPQueryIntegration
 
         // Global Search
         if (!empty($globalSearchValue)) {
-            $queryData->s = $globalSearchValue;
+            $filteredPostIDs = [];
+
+            $allPostIDsQuery = new WP_Query(array_merge(
+                json_decode(json_encode($queryData), true),
+                [
+                    'fields' => 'ids',
+                    'posts_per_page' => -1,
+                ]
+            ));
+
+            $allPostIDs = $allPostIDsQuery->have_posts() ? $allPostIDsQuery->posts : [];
+
+            foreach ($allPostIDs as $postID) {
+                $matches = false;
+
+                $post = get_post($postID);
+                if (stripos($post->post_title, $globalSearchValue) !== false ||
+                    stripos($post->post_content, $globalSearchValue) !== false ||
+                    stripos($post->post_date, $globalSearchValue) !== false ||
+                    stripos($post->post_excerpt, $globalSearchValue) !== false) {
+                    $matches = true;
+                }
+
+                if (!$matches) {
+                    $product = wc_get_product($postID);
+                    if (stripos($product->get_sku(), $globalSearchValue) !== false) {
+                        $matches = true;
+                    }
+                    if (stripos($product->get_price(), $globalSearchValue) !== false) {
+                        $matches = true;
+                    }
+                    if (stripos($product->get_dimensions(), $globalSearchValue) !== false) {
+                        $matches = true;
+                    }
+                    $featuredImage = get_the_post_thumbnail_url($postID, 'thumbnail');
+                    if ($featuredImage && stripos($featuredImage, $globalSearchValue) !== false) {
+                        $matches = true;
+                    }
+                }
+
+                if (!$matches) {
+                    $metaFields = ['_wc_review_count', '_wc_avertage_rating', '_stock_status'];
+                    foreach ($metaFields as $field) {
+                        $metaValue = get_post_meta($postID, $field, true);
+                        if ($metaValue != '' && stripos((string)$metaValue, $globalSearchValue) !== false) {
+                            $matches = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$matches) {
+                    $taxonomies = ['product_cat', 'product_tag'];
+                    foreach ($taxonomies as $taxonomy) {
+                        $terms = get_the_terms($postID, $taxonomy);
+                        if ($terms && !is_wp_error($terms)) {
+                            foreach ($terms as $term) {
+                                if (stripos($term->name, $globalSearchValue) !== false) {
+                                    $matches = true;
+                                    break 2;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Custom Fields
+                if (!$matches) {
+                    foreach ($customFieldColumns as $customFieldColumn) {
+                        $metaValue = get_post_meta($postID, $customFieldColumn['cf'], true);
+                        if ($metaValue !== '' && stripos((string)$metaValue, $globalSearchValue) !== false) {
+                            $matches = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Add matching post ID
+                if ($matches) {
+                    $filteredPostIDs[] = $postID;
+                }
+            }
+
+            // Further filter the query data
+            if (!empty($filteredPostIDs)) {
+                $queryData->post__in = isset($queryData->post__in)
+                    ? array_intersect($queryData->post__in, $filteredPostIDs)
+                    : $filteredPostIDs;
+            } else {
+                $queryData->post__in = [0];
+            }
         }
 
         // Pagination
@@ -602,7 +711,7 @@ class WooCommerceIntegration extends WPQueryIntegration
         $queryData->offset = $start;
 
         $query = self::buildQuery($queryData);
-        $tableArray = self::getWooCommerceTableColumns($query);
+        $tableArray = self::getWooCommerceTableColumns($query, $wdtParameters, $customFieldColumns);
 
         $resultLength = $query->found_posts;
         $output = array(
@@ -623,12 +732,32 @@ class WooCommerceIntegration extends WPQueryIntegration
 
     /**
      * @param WP_Query $query
+     * @param $wdtParameters
+     * @param $customFieldColumns
      *
-     * @return array|void
+     * @return array|mixed|void
      */
-    public static function getWooCommerceTableColumns(WP_Query $query)
+    public static function getWooCommerceTableColumns(WP_Query $query, &$wdtParameters, $customFieldColumns)
     {
+        $productTableColumns = [];
+
         if ($query->have_posts()) {
+            $usedTaxonomies = [];
+            while ($query->have_posts()) {
+                $query->the_post();
+                $postId = get_the_ID();
+                $taxonomies = get_object_taxonomies(get_post_type($postId));
+
+                foreach ($taxonomies as $taxonomy) {
+                    // Check if this taxonomy has terms assigned to the current post
+                    $terms = get_the_terms($postId, $taxonomy);
+                    if (!empty($terms) && !is_wp_error($terms)) {
+                        $usedTaxonomies[$taxonomy] = true;
+                    }
+                }
+            }
+            wp_reset_postdata();
+
             while ($query->have_posts()) {
                 $query->the_post();
                 global $product;
@@ -669,6 +798,10 @@ class WooCommerceIntegration extends WPQueryIntegration
                     'short_description' => $shortDescription,
                     'add_to_cart_button' => $addToCartButton
                 );
+
+                if ($customFieldColumns) {
+                    parent::getCustomFieldColumn($customFieldColumns, $productId, $usedTaxonomies, $wdtParameters, $productData);
+                }
 
                 $productData = apply_filters('wpdatatables_woo_product_data', $productData, $post);
 

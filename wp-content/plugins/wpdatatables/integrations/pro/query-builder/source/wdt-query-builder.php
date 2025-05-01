@@ -597,44 +597,7 @@ class WPQueryIntegration
                 ];
 
                 if ($customFieldColumns) {
-                    // Extract 'cf' values from $customFieldColumns
-                    $selectedCustomFields = array_map(function ($column) {
-                        return $column['cf'];
-                    }, $customFieldColumns);
-
-                    // Add custom fields
-                    $cfLookup = array_column($customFieldColumns, 'column_header', 'cf');
-                    $customFields = get_post_meta($postId);
-
-                    // Add selected taxonomies
-                    foreach (array_keys($usedTaxonomies) as $taxonomy) {
-                        if (!in_array($taxonomy, $selectedCustomFields, true)) {
-                            continue;
-                        }
-                        $wdtParameters['columnTitles'][$taxonomy] = $wdtParameters['columnTitles'][$taxonomy] ?? $cfLookup[$taxonomy] ?? 'New column';
-
-                        // Fetch taxonomy terms
-                        $terms = get_the_terms($postId, $taxonomy);
-                        if ($terms && !is_wp_error($terms)) {
-                            $termLinks = array_map(function ($term) {
-                                return '<a href="' . get_term_link($term) . '">' . $term->name . '</a>';
-                            }, $terms);
-                            $postData[$taxonomy] = implode(', ', $termLinks);
-                        } else {
-                            $postData[$taxonomy] = '';
-                        }
-                    }
-
-                    // Populate the selected custom fields with null values first, then go through the existing meta to fill with data
-                    foreach ($selectedCustomFields as $field) {
-                        $postData[$field] = null;
-                        $wdtParameters['columnTitles'][$field] = $wdtParameters['columnTitles'][$field] ?? $cfLookup[$field] ?? 'New column';
-                    }
-                    foreach ($customFields as $key => $values) {
-                        if (in_array($key, $selectedCustomFields, true) && !empty($values)) {
-                            $postData[$key] = implode(', ', $values);
-                        }
-                    }
+                    self::getCustomFieldColumn($customFieldColumns, $postId, $usedTaxonomies, $wdtParameters, $postData);
                 }
 
                 // Convert arrays to strings for display
@@ -1182,9 +1145,9 @@ class WPQueryIntegration
 
                 // Search in custom fields
                 if (!$matches) {
-                    foreach ($customFieldColumns as $customField) {
-                        $metaValue = get_post_meta($postID, $customField, true);
-                        if (stripos((string)$metaValue, $globalSearchValue) !== false) {
+                    foreach ($customFieldColumns as $customFieldColumn) {
+                        $metaValue = get_post_meta($postID, $customFieldColumn['cf'], true);
+                        if ($metaValue !== '' && stripos((string)$metaValue, $globalSearchValue) !== false) {
                             $matches = true;
                             break;
                         }
@@ -1399,11 +1362,11 @@ class WPQueryIntegration
     /**
      * @throws Exception
      */
-    public static function allowHtmlInColumn($cellOutput, $table_id, $column_name)
+    public static function allowHtmlInColumn($cellOutput, $tableId, $columnName)
     {
-        $tableType = WDTConfigController::loadTableFromDB($table_id)->table_type;
+        $tableType = WDTConfigController::loadTableFromDB($tableId)->table_type;
 
-        if ($tableType === 'wp_posts_query' && $column_name === 'post_content') {
+        if ($tableType === 'wp_posts_query' && $columnName === 'post_content') {
             $postId = self::extractPostId($cellOutput);
             if ($postId) {
                 return self::getPostContentForDisplay($postId);
@@ -1443,6 +1406,48 @@ class WPQueryIntegration
         }
 
         return $sanitizedData;
+    }
+
+    public static function getCustomFieldColumn($customFieldColumns, $postId, array $usedTaxonomies, &$wdtParameters, &$postData)
+    {
+        // Extract 'cf' values from $customFieldColumns
+        $selectedCustomFields = array_map(function ($column) {
+            return $column['cf'];
+        }, $customFieldColumns);
+
+        // Add custom fields
+        $cfLookup = array_column($customFieldColumns, 'column_header', 'cf');
+        $customFields = get_post_meta($postId);
+
+        // Add selected taxonomies
+        foreach (array_keys($usedTaxonomies) as $taxonomy) {
+            if (!in_array($taxonomy, $selectedCustomFields, true)) {
+                continue;
+            }
+            $wdtParameters['columnTitles'][$taxonomy] = $wdtParameters['columnTitles'][$taxonomy] ?? $cfLookup[$taxonomy] ?? 'New column';
+
+            // Fetch taxonomy terms
+            $terms = get_the_terms($postId, $taxonomy);
+            if ($terms && !is_wp_error($terms)) {
+                $termLinks = array_map(function ($term) {
+                    return '<a href="' . get_term_link($term) . '">' . $term->name . '</a>';
+                }, $terms);
+                $postData[$taxonomy] = implode(', ', $termLinks);
+            } else {
+                $postData[$taxonomy] = '';
+            }
+        }
+
+        // Populate the selected custom fields with null values first, then go through the existing meta to fill with data
+        foreach ($selectedCustomFields as $field) {
+            $postData[$field] = null;
+            $wdtParameters['columnTitles'][$field] = $wdtParameters['columnTitles'][$field] ?? $cfLookup[$field] ?? 'New column';
+        }
+        foreach ($customFields as $key => $values) {
+            if (in_array($key, $selectedCustomFields, true) && !empty($values)) {
+                $postData[$key] = implode(', ', $values);
+            }
+        }
     }
 }
 

@@ -1036,6 +1036,18 @@ defined('ABSPATH') or die('Access denied.');
                             <!-- /.row -->
 
                             <!-- .row -->
+                            <div class="alert alert-info alert-dismissible hidden wdt-foreign-key-filter-alert" role="alert"
+                                 style="margin-top: 160px;margin-bottom: 0px;width: 97%;margin-left: 15px;">
+                                <i class="wpdt-icon-info-circle-full"></i>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">×</span>
+                                </button>
+                                <span class="wdt-alert-title f-600"
+                                      style="font-size: 14px"><?php esc_html_e('Foreign key filtering is designed for Selectbox and Checkbox filters, with options populated from the remote table. Using other filter types could break the filtering functionality.', 'wpdatatables'); ?></span>
+                            </div>
+                            <!-- /.row -->
+
+                            <!-- .row -->
 
                             <div class="col-sm-6 wdt-filtering-enabled-block wdt-exact-filtering-block">
                                 <h4 class="c-title-color m-b-2">

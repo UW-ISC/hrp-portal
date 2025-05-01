@@ -254,8 +254,13 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
     var replaceFormat = numberFormat === 1 ? /\./g : /,/g;
 
     if (defaultValue !== '') {
-        fromDefaultValue = defaultValue[0];
-        toDefaultValue = defaultValue[1];
+        if (typeof defaultValue[0] === 'object') {
+            fromDefaultValue = defaultValue[0].value;
+            toDefaultValue = defaultValue[1].value;
+        } else {
+            fromDefaultValue = defaultValue[0];
+            toDefaultValue = defaultValue[1];
+        }
     }
 
     th.html('');
