@@ -6,7 +6,8 @@ let constructedWooCommerceData = {
     },
     meta_query: {
         relation: 'AND'
-    }
+    },
+    customFieldColumns: {}
 };
 
 const tax_query_parameters = ['product_type', 'product_tag', 'product_cat', 'product_visibility'];
@@ -279,6 +280,60 @@ const metaQueryMappings = {
         }
     }
 
+    /**
+     * Add new Custom Field Column
+     */
+    $('button.wdt-woo-commerce-add-cf-column').on('click', function (e) {
+        e.preventDefault();
+        cf_column_counter++;
+
+        let cfBlockTemplate = $.templates("#wdt-woo-commerce-cf-template");
+        let cfBlockHtml = cfBlockTemplate.render({cfColumnId: cf_column_counter});
+        $(cfBlockHtml).appendTo('div#wdt-woo-commerce-cf-container').animateFadeIn();
+
+    });
+
+    /**
+     * Remove Custom Field Column
+     */
+    $(document).on('click', '#wdt-constructor-delete-woo-cf-column', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        let cfColumnId = $(this).closest('.wdt-woo-commerce-cf-template').find('.wdt_woo_commerce_cf_parameter').data('count') - 1;
+
+        if (constructedWooCommerceData['customFieldColumns'] && constructedWooCommerceData['customFieldColumns'][cfColumnId]) {
+            delete constructedWooCommerceData['customFieldColumns'][cfColumnId];
+        }
+        if (constructedWooCommerceData['customFieldColumns']) {
+            let updatedEntries = {};
+
+            for (let key in constructedWooCommerceData['customFieldColumns']) {
+                updatedEntries[key] = constructedWooCommerceData['customFieldColumns'][key];
+            }
+            constructedWooCommerceData['customFieldColumns'] = updatedEntries;
+        }
+        cf_column_counter--;
+        $(this).closest('.wdt-wp-query-cf-template').remove();
+
+        renderWooTablePreview();
+    });
+
+    /**
+     * Change the Custom Field Column parameters
+     */
+    $(document).on('input change', '.wdt_woo_commerce_cf_parameter', function () {
+        let value = $(this).val();
+        let key = this.dataset.value;
+        let count = this.dataset.count;
+
+        if (!constructedWooCommerceData.customFieldColumns[count]) {
+            constructedWooCommerceData.customFieldColumns[count] = {};
+        }
+
+        constructedWooCommerceData.customFieldColumns[count][key] = value;
+
+        renderWooTablePreview();
+    });
 
     /**
      * Switch tabs in settings

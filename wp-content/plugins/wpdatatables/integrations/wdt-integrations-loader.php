@@ -95,8 +95,8 @@ class WDTIntegrationsLoader
             }
 
             // Include Google Sheet API settings
-            if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php')) {
-                require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php');
+            if (is_file(WDT_STARTER_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php')) {
+                require_once(WDT_STARTER_INTEGRATIONS_PATH . 'google-sheet-api/wdt-google-sheet-api-integration.php');
             }
 
             // Include Foreign Key

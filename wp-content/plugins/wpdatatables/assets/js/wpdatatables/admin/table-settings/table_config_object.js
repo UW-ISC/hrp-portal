@@ -224,6 +224,7 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings .mysql-settings-block').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
+                wpdatatable_config.addRemoveClauseTemplates();
                 wpdatatable_config.populateWooCommerceParameters();
                 jQuery('.wdt-table-settings .wdt-server-side-processing').animateFadeIn();
                 jQuery('.wdt-table-settings .wdt-auto-refresh').animateFadeIn();

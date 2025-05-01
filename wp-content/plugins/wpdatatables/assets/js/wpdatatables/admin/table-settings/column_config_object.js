@@ -1301,10 +1301,15 @@ WDTColumn.prototype.fillInputs = function () {
                         jQuery('#wdt-filter-default-value').val(this.filterDefaultValue);
                     }
                 } else if (jQuery.inArray(this.filter_type, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
-                    var filterDefaultValues = this.filterDefaultValue.split('|');
-                    jQuery('#wdt-filter-default-value-from').val(filterDefaultValues[0]);
-                    jQuery('#wdt-filter-default-value-to').val(filterDefaultValues[1]);
-                    this.filterDefaultValue = filterDefaultValues.join('|');
+                    if (typeof this.filterDefaultValue === 'object') {
+                        jQuery('#wdt-filter-default-value-from').val(this.filterDefaultValue[0].value);
+                        jQuery('#wdt-filter-default-value-to').val(this.filterDefaultValue[1].value);
+                    } else {
+                        var filterDefaultValues = this.filterDefaultValue.split('|');
+                        jQuery('#wdt-filter-default-value-from').val(filterDefaultValues[0]);
+                        jQuery('#wdt-filter-default-value-to').val(filterDefaultValues[1]);
+                        this.filterDefaultValue = filterDefaultValues.join('|');
+                    }
                 } else {
 
                     if (jQuery.inArray(this.filter_type, ['checkbox', 'select', 'multiselect']) != -1) {
