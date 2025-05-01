@@ -16,7 +16,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the version of the Webhooks Add-On.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_version Contains the version, defined in webhooks.php
 	 */
 	protected $_version = GF_WEBHOOKS_VERSION;
@@ -25,7 +25,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the minimum Gravity Forms version required.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_min_gravityforms_version The minimum version required.
 	 */
 	protected $_min_gravityforms_version = '2.2';
@@ -34,7 +34,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the plugin slug.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_slug The slug used for this plugin.
 	 */
 	protected $_slug = 'gravityformswebhooks';
@@ -43,7 +43,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the main plugin file.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_path The path to the main plugin file, relative to the plugins folder.
 	 */
 	protected $_path = 'gravityformswebhooks/webhooks.php';
@@ -52,7 +52,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the full path to this class file.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_full_path The full path.
 	 */
 	protected $_full_path = __FILE__;
@@ -61,7 +61,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the URL where this Add-On can be found.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string
 	 */
 	protected $_url = 'http://www.gravityforms.com';
@@ -70,7 +70,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the title of this Add-On.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_title The title of the Add-On.
 	 */
 	protected $_title = 'Gravity Forms Webhooks Add-On';
@@ -79,7 +79,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the short title of this Add-On.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_title The short title of the Add-On.
 	 */
 	protected $_short_title = 'Webhooks';
@@ -88,7 +88,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Contains an instance of this class, if available.
 	 *
 	 * @since  1.0
-	 * @access private
+	 *
 	 * @var    object $_instance If available, contains an instance of this class.
 	 */
 	private static $_instance = null;
@@ -97,7 +97,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines if Add-On should use Gravity Forms servers for update data.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    bool
 	 */
 	protected $_enable_rg_autoupgrade = true;
@@ -106,7 +106,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines if feeds can be processed asynchronously.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    bool
 	 */
 	protected $_async_feed_processing = true;
@@ -115,7 +115,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the capability needed to access the Add-On settings page.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_capabilities_settings_page The capability needed to access the Add-On settings page.
 	 */
 	protected $_capabilities_settings_page = 'gravityforms_webhooks';
@@ -124,7 +124,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the capability needed to access the Add-On form settings page.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_capabilities_form_settings The capability needed to access the Add-On form settings page.
 	 */
 	protected $_capabilities_form_settings = 'gravityforms_webhooks';
@@ -133,7 +133,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the capability needed to uninstall the Add-On.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    string $_capabilities_uninstall The capability needed to uninstall the Add-On.
 	 */
 	protected $_capabilities_uninstall = 'gravityforms_webhooks_uninstall';
@@ -142,7 +142,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Defines the capabilities to add to roles by the Members plugin.
 	 *
 	 * @since  1.0
-	 * @access protected
+	 *
 	 * @var    array $_capabilities Capabilities to add to roles by the Members plugin.
 	 */
 	protected $_capabilities = array( 'gravityforms_webhooks', 'gravityforms_webhooks_uninstall' );
@@ -151,7 +151,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Get instance of this class.
 	 *
 	 * @since  1.0
-	 * @access public
+	 *
 	 * @static
 	 *
 	 * @return $_instance
@@ -159,7 +159,7 @@ class GF_Webhooks extends GFFeedAddOn {
 	public static function get_instance() {
 
 		if ( null === self::$_instance ) {
-			self::$_instance = new self;
+			self::$_instance = new self();
 		}
 
 		return self::$_instance;
@@ -170,7 +170,6 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Enqueue needed stylesheets.
 	 *
 	 * @since  1.0
-	 * @access public
 	 *
 	 * @return array
 	 */
@@ -229,15 +228,17 @@ class GF_Webhooks extends GFFeedAddOn {
 	public function init() {
 		parent::init();
 
-		if ( $this->is_gravityforms_supported() ) {
-			add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 7 );
-
-			$this->add_delayed_payment_support(
-				array(
-					'option_label' => esc_html__( 'Send webhook only when payment is received.', 'gravityformswebhooks' ),
-				)
-			);
+		if ( ! $this->is_gravityforms_supported() ) {
+			return;
 		}
+
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 7 );
+
+		$this->add_delayed_payment_support(
+			array(
+				'option_label' => esc_html__( 'Send webhook only when payment is received.', 'gravityformswebhooks' ),
+			)
+		);
 	}
 
 	/**
@@ -263,7 +264,6 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Setup fields for feed settings.
 	 *
 	 * @since  1.0
-	 * @access public
 	 *
 	 * @uses GF_Webhooks::get_header_choices()
 	 *
@@ -273,7 +273,10 @@ class GF_Webhooks extends GFFeedAddOn {
 
 		// Prepare dependency for Request Body.
 		if ( version_compare( GFForms::$version, '2.5-dev-1', '<' ) ) {
-			$body_deps = array( 'field' => 'requestBodyType', 'values' => array( 'select_fields' ) );
+			$body_deps = array(
+				'field'  => 'requestBodyType',
+				'values' => array( 'select_fields' ),
+			);
 		} else {
 			$body_deps = array(
 				'live'   => true,
@@ -290,12 +293,12 @@ class GF_Webhooks extends GFFeedAddOn {
 			array(
 				'fields' => array(
 					array(
-						'label'          => esc_html__( 'Name', 'gravityformswebhooks' ),
-						'name'           => 'feedName',
-						'type'           => 'text',
-						'class'          => 'medium',
-						'required'       => true,
-						'tooltip'        => sprintf(
+						'label'    => esc_html__( 'Name', 'gravityformswebhooks' ),
+						'name'     => 'feedName',
+						'type'     => 'text',
+						'class'    => 'medium',
+						'required' => true,
+						'tooltip'  => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Name', 'gravityformswebhooks' ),
 							esc_html__( 'Enter a feed name to uniquely identify this setup.', 'gravityformswebhooks' )
@@ -306,12 +309,12 @@ class GF_Webhooks extends GFFeedAddOn {
 			array(
 				'fields' => array(
 					array(
-						'label'          => esc_html__( 'Request URL', 'gravityformswebhooks' ),
-						'name'           => 'requestURL',
-						'type'           => 'text',
-						'class'          => 'large merge-tag-support mt-position-right mt-hide_all_fields',
-						'required'       => true,
-						'tooltip'        => sprintf(
+						'label'               => esc_html__( 'Request URL', 'gravityformswebhooks' ),
+						'name'                => 'requestURL',
+						'type'                => 'text',
+						'class'               => 'large merge-tag-support mt-position-right mt-hide_all_fields',
+						'required'            => true,
+						'tooltip'             => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request URL', 'gravityformswebhooks' ),
 							esc_html__( 'Enter the URL to be used in the webhook request.', 'gravityformswebhooks' )
@@ -319,17 +322,17 @@ class GF_Webhooks extends GFFeedAddOn {
 						'validation_callback' => array( $this, 'validate_request_url' ),
 					),
 					array(
-						'label'          => esc_html__( 'Request Method', 'gravityformswebhooks' ),
-						'name'           => 'requestMethod',
-						'type'           => 'select',
-						'default_value'  => 'POST',
-						'required'       => true,
-						'tooltip'        => sprintf(
+						'label'         => esc_html__( 'Request Method', 'gravityformswebhooks' ),
+						'name'          => 'requestMethod',
+						'type'          => 'select',
+						'default_value' => 'POST',
+						'required'      => true,
+						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request Method', 'gravityformswebhooks' ),
 							esc_html__( 'Select the HTTP method used for the webhook request.', 'gravityformswebhooks' )
 						),
-						'choices'        => array(
+						'choices'       => array(
 							array(
 								'label' => 'GET',
 								'value' => 'GET',
@@ -353,17 +356,17 @@ class GF_Webhooks extends GFFeedAddOn {
 						),
 					),
 					array(
-						'label'          => esc_html__( 'Request Format', 'gravityformswebhooks' ),
-						'name'           => 'requestFormat',
-						'type'           => 'select',
-						'default_value'  => 'json',
-						'required'       => true,
-						'tooltip'        => sprintf(
+						'label'         => esc_html__( 'Request Format', 'gravityformswebhooks' ),
+						'name'          => 'requestFormat',
+						'type'          => 'select',
+						'default_value' => 'json',
+						'required'      => true,
+						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request Format', 'gravityformswebhooks' ),
 							esc_html__( 'Select the format for the webhook request.', 'gravityformswebhooks' )
 						),
-						'choices'        => array(
+						'choices'       => array(
 							array(
 								'label' => esc_html__( 'JSON', 'gravityformswebhooks' ),
 								'value' => 'json',
@@ -379,22 +382,21 @@ class GF_Webhooks extends GFFeedAddOn {
 			array(
 				'fields' => array(
 					array(
-						'label'          => esc_html__( 'Request Headers', 'gravityformswebhooks' ),
-						'name'           => 'requestHeaders',
-						'type'           => 'generic_map',
-						'required'       => false,
-						'merge_tags'     => true,
-						'tooltip'        => sprintf(
+						'label'       => esc_html__( 'Request Headers', 'gravityformswebhooks' ),
+						'name'        => 'requestHeaders',
+						'type'        => 'generic_map',
+						'required'    => false,
+						'tooltip'     => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request Headers', 'gravityformswebhooks' ),
 							esc_html__( 'Setup the HTTP headers to be sent with the webhook request.', 'gravityformswebhooks' )
 						),
-						'key_field'      => array(
+						'key_field'   => array(
 							'choices'      => $this->get_header_choices(),
 							'custom_value' => true,
 							'title'        => esc_html__( 'Name', 'gravityformswebhooks' ),
 						),
-						'value_field'    => array(
+						'value_field' => array(
 							'choices'      => 'form_fields',
 							'custom_value' => true,
 						),
@@ -404,19 +406,19 @@ class GF_Webhooks extends GFFeedAddOn {
 			array(
 				'fields' => array(
 					array(
-						'label'          => esc_html__( 'Request Body', 'gravityformswebhooks' ),
-						'name'           => 'requestBodyType',
-						'type'           => 'radio',
-						'default_value'  => 'all_fields',
-						'horizontal'     => true,
-						'required'       => true,
-						'onchange'       => version_compare( GFForms::$version, '2.5-dev-1', '<' ) ? "jQuery(this).closest('form').submit();" : null,
-						'tooltip'        => sprintf(
+						'label'         => esc_html__( 'Request Body', 'gravityformswebhooks' ),
+						'name'          => 'requestBodyType',
+						'type'          => 'radio',
+						'default_value' => 'all_fields',
+						'horizontal'    => true,
+						'required'      => true,
+						'onchange'      => version_compare( GFForms::$version, '2.5-dev-1', '<' ) ? "jQuery(this).closest('form').submit();" : null,
+						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request Body', 'gravityformswebhooks' ),
 							esc_html__( 'Select if all fields or select fields should be sent with the webhook request.', 'gravityformswebhooks' )
 						),
-						'choices'        => array(
+						'choices'       => array(
 							array(
 								'label' => esc_html__( 'All Fields', 'gravityformswebhooks' ),
 								'value' => 'all_fields',
@@ -428,18 +430,17 @@ class GF_Webhooks extends GFFeedAddOn {
 						),
 					),
 					array(
-						'label'          => esc_html__( 'Field Values', 'gravityformswebhooks' ),
-						'name'           => 'fieldValues',
-						'type'           => 'generic_map',
-						'required'       => true,
-						'merge_tags'     => true,
-						'dependency'     => $body_deps,
-						'tooltip'        => sprintf(
+						'label'       => esc_html__( 'Field Values', 'gravityformswebhooks' ),
+						'name'        => 'fieldValues',
+						'type'        => 'generic_map',
+						'required'    => true,
+						'dependency'  => $body_deps,
+						'tooltip'     => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Field Values', 'gravityformswebhooks' ),
 							esc_html__( 'Setup the fields to be sent in the webhook request.', 'gravityformswebhooks' )
 						),
-						'value_field'    => array(
+						'value_field' => array(
 							'choices'      => 'form_fields',
 							'custom_value' => true,
 						),
@@ -470,7 +471,6 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Setup columns for feed list table.
 	 *
 	 * @since  1.0
-	 * @access public
 	 *
 	 * @return array
 	 */
@@ -487,7 +487,6 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Prepares common HTTP header names as choices.
 	 *
 	 * @since  1.0
-	 * @access public
 	 *
 	 * @return array
 	 */
@@ -634,7 +633,6 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Enable feed duplication.
 	 *
 	 * @since  1.1.3
-	 * @access public
 	 *
 	 * @param int|array $id The ID of the feed to be duplicated or the feed object when duplicating a form.
 	 *
@@ -674,17 +672,13 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * Send webhook request.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @since  1.6 Updated return value for consistency with other add-ons, so the framework can save the feed status to the entry meta.
 	 *
 	 * @param array $feed  The current Feed object.
 	 * @param array $entry The current Entry object.
 	 * @param array $form  The current Form object.
 	 *
-	 * @uses GFAddOn::log_debug()
-	 * @uses GFAddOn::log_error()
-	 * @uses GFCommon::replace_variables()
-	 * @uses GFFeedAddOn::add_feed_error()
-	 * @uses GF_Webhooks::get_request_data()
+	 * @return WP_Error|array
 	 */
 	public function process_feed( $feed, $entry, $form ) {
 
@@ -734,8 +728,8 @@ class GF_Webhooks extends GFFeedAddOn {
 			$request_url = add_query_arg( urlencode_deep( $request_data ), $request_url );
 		}
 
-		// If this is a PUT or POST request, format request data.
-		if ( in_array( $request_method, array( 'POST', 'PUT' ) ) && 'json' === $feed['meta']['requestFormat'] ) {
+		// If this is a PUT, POST, or PATCH request, format request data.
+		if ( in_array( $request_method, array( 'POST', 'PUT', 'PATCH' ) ) && 'json' === $feed['meta']['requestFormat'] ) {
 
 			// Add content type header.
 			$request_headers['Content-Type'] = 'application/json';
@@ -759,7 +753,8 @@ class GF_Webhooks extends GFFeedAddOn {
 		// If feed URL is empty, log error and exit.
 		if ( rgblank( $request_url ) ) {
 			$this->add_feed_error( esc_html__( 'Webhook was not processed because request URL was empty.', 'gravityformswebhooks' ), $feed, $entry, $form );
-			return;
+
+			return new WP_Error( 'empty_request_url', 'The request URL is empty.' );
 		}
 
 		// Prepare request arguments.
@@ -785,13 +780,19 @@ class GF_Webhooks extends GFFeedAddOn {
 		$this->log_debug( __METHOD__ . '(): Sending webhook request to ' . $request_url . '; ' . print_r( $request_args, true ) );
 
 		// Execute request.
-		$response = wp_remote_request( $request_url, $request_args );
+		$response = wp_safe_remote_request( $request_url, $request_args );
 
 		// Log error or success based on response.
 		if ( is_wp_error( $response ) ) {
-			$this->add_feed_error( sprintf( esc_html__( 'Webhook was not successfully executed. %s (%d)', 'gravityformswebhooks' ), $response->get_error_message(), $response->get_error_code() ), $feed, $entry, $form );
+			/* translators: 1: the errors message 2: the response code */
+			$this->add_feed_error( sprintf( esc_html__( 'Webhook was not successfully executed. %1$s (%2$d)', 'gravityformswebhooks' ), $response->get_error_message(), $response->get_error_code() ), $feed, $entry, $form );
+			$return_response = true;
 		} else {
-			$this->log_debug( sprintf( '%s(): Webhook successfully executed. code: %s; body: %s', __METHOD__, wp_remote_retrieve_response_code( $response ), wp_remote_retrieve_body( $response ) ) );
+			$code = wp_remote_retrieve_response_code( $response );
+			/* translators: The response code */
+			$this->add_note( rgar( $entry, 'id' ), sprintf( esc_html__( 'Webhook sent. Response code: %d.', 'gravityformswebhooks' ), $code ), 'success' );
+			$this->log_debug( sprintf( '%s(): Webhook sent. Response code: %s; body: %s', __METHOD__, $code, wp_remote_retrieve_body( $response ) ) );
+			$return_response = false;
 		}
 
 		/**
@@ -806,13 +807,13 @@ class GF_Webhooks extends GFFeedAddOn {
 		 */
 		gf_do_action( array( 'gform_webhooks_post_request', $form['id'], $feed['id'] ), $response, $feed, $entry, $form );
 
+		return $return_response ? $response : $entry;
 	}
 
 	/**
 	 * Get data for webhook request.
 	 *
 	 * @since  1.0
-	 * @access public
 	 *
 	 * @param array $feed  The current Feed object.
 	 * @param array $entry The current Entry object.

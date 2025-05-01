@@ -404,7 +404,7 @@ class GFAPI {
 	 *
 	 * @return array|WP_Error Either an array of new form IDs or a WP_Error instance.
 	 */
-	public static function add_forms( $forms ) {
+	public static function add_forms( $forms, $continue_on_error = false ) {
 
 		if ( gf_upgrade()->get_submissions_block() ) {
 			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
@@ -414,15 +414,35 @@ class GFAPI {
 			return new WP_Error( 'invalid', __( 'Invalid form objects', 'gravityforms' ) );
 		}
 		$form_ids = array();
+		$failed_forms = array();
+		
 		foreach ( $forms as $form ) {
 			$result = self::add_form( $form );
 			if ( is_wp_error( $result ) ) {
-				return $result;
+				// If continue_on_error is true on the call, add the failed form details to the failed_forms array and return it else it will return the WP_Error.
+				if ( $continue_on_error ) {
+					$failed_forms[] = array(
+						'form_id' => $form['id'] ?? null,
+						'error'   => $result
+					);
+				} else {
+					return $result;
+				}
+				
+			} else {
+				$form_ids[] = $result;
 			}
-			$form_ids[] = $result;
+			
 		}
-
+		if ( $continue_on_error ) {
+			return array(
+				'form_ids'     => $form_ids,
+				'failed_forms' => $failed_forms
+			);
+		}
+		
 		return $form_ids;
+		
 	}
 
 	/**
@@ -1644,22 +1664,18 @@ class GFAPI {
 	 * 'resume_token' => string '045f941cc4c04d479556bab1db6d3495'
 	 *
 	 * @since  Unknown
-	 * @access public
+	 * @since  2.9.9 Added the optional $initiated_by param.
 	 *
-	 * @uses GFAPI::get_form()
-	 * @uses GFCommon::get_base_path()
-	 * @uses GFFormDisplay::process_form()
-	 * @uses GFFormDisplay::replace_save_variables()
-	 *
-	 * @param int $form_id The Form ID
-	 * @param array $input_values An array of values. Not $_POST, that will be automatically merged with the $input_values.
-	 * @param array $field_values Optional.
-	 * @param int $target_page Optional.
-	 * @param int $source_page Optional.
+	 * @param int      $form_id      The Form ID
+	 * @param array    $input_values An array of values. Not $_POST, that will be automatically merged with the $input_values.
+	 * @param array    $field_values Optional. An array of dynamic population parameter keys with their corresponding values used to populate the fields.
+	 * @param int      $target_page  Optional. For multi-page forms to indicate which page is to be loaded if the current page passes validation. Default is 0, indicating the last or only page is being submitted.
+	 * @param int      $source_page  Optional. For multi-page forms to indicate which page of the form was just submitted. Default is 1.
+	 * @param null|int $initiated_by Optional. The process that initiated the submission. Supported integers are 1 (aka GFFormDisplay::SUBMISSION_INITIATED_BY_WEBFORM) or 2 (aka GFFormDisplay::SUBMISSION_INITIATED_BY_API). Defaults to GFFormDisplay::SUBMISSION_INITIATED_BY_API.
 	 *
 	 * @return array|WP_Error An array containing the result of the submission.
 	 */
-	public static function submit_form( $form_id, $input_values, $field_values = array(), $target_page = 0, $source_page = 1 ) {
+	public static function submit_form( $form_id, $input_values, $field_values = array(), $target_page = 0, $source_page = 1, $initiated_by = null ) {
 
 		if ( gf_upgrade()->get_submissions_block() ) {
 			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
@@ -1679,7 +1695,8 @@ class GFAPI {
 
 		try {
 			require_once GFCommon::get_base_path() . '/form_display.php';
-			GFFormDisplay::process_form( $form_id, GFFormDisplay::SUBMISSION_INITIATED_BY_API );
+			$initiated_by = GFCommon::whitelist( $initiated_by, array( GFFormDisplay::SUBMISSION_INITIATED_BY_API, GFFormDisplay::SUBMISSION_INITIATED_BY_WEBFORM ) );
+			GFFormDisplay::process_form( $form_id, $initiated_by );
 		} catch ( Exception $ex ) {
 			remove_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
 			remove_filter( 'gform_pre_validation', array( 'GFAPI', 'submit_form_filter_gform_pre_validation' ), 50 );
@@ -1701,17 +1718,12 @@ class GFAPI {
 
 		$result = array();
 
-		$result['is_valid'] = $submission_details['is_valid'];
-
-		if ( $result['is_valid'] == false ) {
-			$result['validation_messages'] = self::get_field_validation_errors( $submission_details['form'] );
-		}
-
+		$result['is_valid']           = $submission_details['is_valid'];
 		$result['form']               = $submission_details['form'];
 		$result['page_number']        = $submission_details['page_number'];
 		$result['source_page_number'] = $submission_details['source_page_number'];
 
-		if ( $submission_details['is_valid'] ) {
+		if ( $result['is_valid'] || rgar( $submission_details, 'abort_with_confirmation' ) ) {
 			$confirmation_message = $submission_details['confirmation_message'];
 
 			if ( is_array( $confirmation_message ) ) {
@@ -1728,7 +1740,9 @@ class GFAPI {
 			}
 
 			$result['entry_id'] = rgars( $submission_details, 'lead/id' );
-			$result['is_spam']  = rgars( $submission_details, 'is_spam' );
+			$result['is_spam']  = rgar( $submission_details, 'is_spam' );
+		} else {
+			$result['validation_messages'] = self::get_field_validation_errors( $submission_details['form'] );
 		}
 
 		if ( isset( $submission_details['resume_token'] ) ) {
@@ -2378,6 +2392,80 @@ class GFAPI {
 		}
 
 		gform_update_meta( $entry_id, 'processed_feeds', $meta, $form_id );
+	}
+
+	/**
+	 * Returns the key used when saving/retrieving the feed status entry meta.
+	 *
+	 * @since 2.9.4
+	 *
+	 * @param int $feed_id The feed ID.
+	 *
+	 * @return string
+	 */
+	public static function get_entry_feed_status_key( $feed_id ) {
+		return sprintf( 'feed_%d_status', $feed_id );
+	}
+
+	/**
+	 * Retrieves the feed processing status for the specified entry from the "feed_{$feed_id}_status" meta.
+	 *
+	 * @since 2.9.4
+	 *
+	 * @param int  $entry_id              The entry ID.
+	 * @param int  $feed_id               The feed ID.
+	 * @param bool $return_latest         Indicates if only the latest attempt should be returned. Default is to return all attempts.
+	 * @param bool $return_latest_details Indicates if the details array of the latest attempt should be returned instead of just the status string.
+	 *
+	 * @return array|string
+	 */
+	public static function get_entry_feed_status( $entry_id, $feed_id, $return_latest = false, $return_latest_details = false ) {
+		$meta = gform_get_meta( $entry_id, self::get_entry_feed_status_key( $feed_id ) );
+		if ( empty( $meta ) ) {
+			return $return_latest && ! $return_latest_details ? '' : array();
+		}
+
+		if ( $return_latest ) {
+			$latest = end( $meta );
+
+			return $return_latest_details ? $latest : rgar( $latest, 'status', '' );
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Updates or deletes the "feed_{$feed_id}_status" meta for the specified entry.
+	 *
+	 * @since 2.9.4
+	 *
+	 * @param int        $entry_id The entry ID.
+	 * @param int        $feed_id  The feed ID.
+	 * @param array|null $status   {
+	 *     The status array to be appended to the metadata or null to delete the metadata.
+	 *
+	 *     @type int        $timestamp The timestamp for the feed processing attempt.
+	 *     @type string     $status    The status: success or failed.
+	 *     @type int|string $code      The error code.
+	 *     @type string     $message   The error message.
+	 *     @type mixed      $data      Additional data relating to the error.
+	 * }
+	 * @param null|int   $form_id  The form ID of the entry (optional, saves extra query if passed when creating the metadata).
+	 *
+	 * @return void
+	 */
+	public static function update_entry_feed_status( $entry_id, $feed_id, $status, $form_id = null ) {
+		$key = self::get_entry_feed_status_key( $feed_id );
+		if ( is_null( $status ) ) {
+			gform_delete_meta( $entry_id, $key );
+
+			return;
+		}
+
+		$meta   = self::get_entry_feed_status( $entry_id, $feed_id );
+		$meta[] = $status;
+
+		gform_update_meta( $entry_id, $key, $meta, $form_id );
 	}
 
 	// NOTIFICATIONS ----------------------------------------------
