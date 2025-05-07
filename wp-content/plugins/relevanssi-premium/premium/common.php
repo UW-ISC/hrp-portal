@@ -846,7 +846,7 @@ function relevanssi_target_matches( $match_object ) {
 				$no_matches = false;
 				break;
 			}
-			if ( ! is_object( $match_object->taxonomy_detail ) ) {
+			if ( ! is_object( $match_object->taxonomy_detail ) && ! empty( $match_object->taxonomy_detail ) ) {
 				$match_object->taxonomy_detail = json_decode( $match_object->taxonomy_detail );
 			}
 			if (
@@ -857,7 +857,7 @@ function relevanssi_target_matches( $match_object ) {
 				$no_matches = false;
 				break;
 			}
-			if ( ! is_object( $match_object->mysqlcolumn_detail ) ) {
+			if ( ! is_object( $match_object->mysqlcolumn_detail ) && ! empty( $match_object->mysqlcolumn_detail ) ) {
 				$match_object->mysqlcolumn_detail = json_decode( $match_object->mysqlcolumn_detail );
 			}
 			if (
@@ -1265,4 +1265,67 @@ function relevanssi_get_user_field_content( $user_id ): array {
 		$values[ $field ] = $field_value;
 	}
 	return $values;
+}
+
+/**
+ * Validates a source string using the filter hook.
+ *
+ * @param string $source The source identifier.
+ *
+ * @return string Validated identifier or an empty string.
+ */
+function relevanssi_validate_source( string $source ) : string {
+	/**
+	 * Filters an array to provide a list of valid source identifiers.
+	 *
+	 * Return an array with strings that are valid source identifiers. All other
+	 * values will be ignored.
+	 *
+	 * @param array An empty array.
+	 */
+	$valid_sources = apply_filters( 'relevanssi_valid_sources', array() );
+
+	if ( ! in_array( $source, $valid_sources, true ) ) {
+		return '';
+	}
+
+	return $source;
+}
+
+/**
+ * Generates the source dropdown to User Searches page.
+ *
+ * @param string $source The source identifier.
+ *
+ * @return string The HTML code for the source dropdown.
+ */
+function relevanssi_generate_source_select( string $source ) : string {
+	global $wpdb, $relevanssi_variables;
+
+	$sources = $wpdb->get_results(
+		'SELECT DISTINCT(source) ' .
+		"FROM {$relevanssi_variables['log_table']} ", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+		ARRAY_A
+	);
+
+	sort( $sources );
+
+	$source_options = '';
+	foreach ( $sources as $row ) {
+		if ( empty( $row['source'] ) ) {
+			continue;
+		}
+		$selected = '';
+		if ( $source === $row['source'] ) {
+			$selected = 'selected="selected"';
+		}
+		$source_options .= "<option $selected>{$row['source']}</option>";
+	}
+
+	$select = '<p>' . __( 'Source', 'relevanssi' ) . ': <select name="source">'
+		. '<option>' . __( 'All', 'relevanssi' ) . '</option>'
+	    . $source_options
+		. '</select></p>';
+
+	return $select;
 }
