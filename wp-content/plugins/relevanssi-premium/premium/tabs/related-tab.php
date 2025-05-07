@@ -189,7 +189,11 @@ function relevanssi_related_tab() {
 			continue;
 		}
 		if ( ! isset( $taxonomies_list[ $taxonomy->name ] ) ) {
-			$not_indexed[] = $taxonomy->labels->name;
+			if ( $taxonomy->labels->name ) {
+				$not_indexed[] = $taxonomy->labels->name;
+			} else {
+				$not_indexed[] = $taxonomy->name;
+			}
 			continue;
 		}
 		$checked = '';
@@ -209,7 +213,7 @@ function relevanssi_related_tab() {
 		);
 		if ( 'title' !== $taxonomy->name ) {
 			printf(
-				'<label><input type="checkbox" name="relevanssi_related_restrict[]" %1$s value="%2$s" %3$s/> %4$s %5$s</label>',
+				'<label><input type="checkbox" name="relevanssi_related_restrict[]" %1$s value="%2$s" %3$s/> %4$s %5$s (<code>%2$s</code>)</label>',
 				$restrict_checked, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				esc_attr( $taxonomy->name ),
 				$disabled, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
