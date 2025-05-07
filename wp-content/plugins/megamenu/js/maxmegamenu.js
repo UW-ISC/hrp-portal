@@ -8,6 +8,7 @@
     $.maxmegamenu = function(menu, options) {
         var plugin = this;
         var $menu = $(menu);
+        var $wrap = $(menu).parent();
         var $toggle_bar = $menu.siblings(".mega-menu-toggle");
         var html_body_class_timeout;
 
@@ -79,11 +80,15 @@
             }
 
             if ( plugin.settings.mobile_state == 'expand_active' ) {
-                $("li.mega-current-menu-ancestor.mega-menu-item-has-children > a.mega-menu-link," + 
-                  "li.mega-current-menu-item.mega-menu-item-has-children > a.mega-menu-link" + 
-                  "li.mega-current-menu-parent.mega-menu-item-has-children > a.mega-menu-link" + 
-                  "li.mega-current_page_ancestor.mega-menu-item-has-children > a.mega-menu-link" + 
-                  "li.mega-current_page_item.mega-menu-item-has-children > a.mega-menu-link", $menu).each(function() {
+                const activeItemSelectors = [
+                    "li.mega-current-menu-ancestor.mega-menu-item-has-children > a.mega-menu-link",
+                    "li.mega-current-menu-item.mega-menu-item-has-children > a.mega-menu-link",
+                    "li.mega-current-menu-parent.mega-menu-item-has-children > a.mega-menu-link",
+                    "li.mega-current_page_ancestor.mega-menu-item-has-children > a.mega-menu-link",
+                    "li.mega-current_page_item.mega-menu-item-has-children > a.mega-menu-link"
+                ];
+
+                $menu.find(activeItemSelectors.join(', ')).each(function() {
                     plugin.showPanel($(this));
                 });
             }
@@ -105,7 +110,9 @@
         };
 
         plugin.showPanel = function(anchor, immediate) {
-            if ( anchor.is("li.mega-menu-item") ) {
+            if ( $.isNumeric(anchor) ) {
+                anchor = $("li.mega-menu-item-" + anchor, $menu).find("a.mega-menu-link").first();
+            } else if ( anchor.is("li.mega-menu-item") ) {
                 anchor = anchor.find("a.mega-menu-link").first();
             }
 
@@ -171,7 +178,9 @@
 
 
         plugin.hidePanel = function(anchor, immediate) {
-            if ( anchor.is("li.mega-menu-item") ) {
+            if ( $.isNumeric(anchor) ) {
+                anchor = $("li.mega-menu-item-" + anchor, $menu).find("a.mega-menu-link").first();
+            } else if ( anchor.is("li.mega-menu-item") ) {
                 anchor = anchor.find("a.mega-menu-link").first();
             }
 
@@ -280,7 +289,11 @@
                 }
             });
 
-            clickable_parents.not("[data-has-click-event]").on("click.megamenu", function(e) {
+            clickable_parents.on("click.megamenu", function(e) {
+                if ( $(e.target).hasClass('mega-indicator') ) {
+                    return;
+                }
+
                 if (plugin.isDesktopView() && $(this).parent().hasClass("mega-toggle-on") && $(this).closest("ul.mega-sub-menu").parent().hasClass("mega-menu-tabbed") ) {
                     if (plugin.settings.second_click === "go") {
                         return;
@@ -311,10 +324,6 @@
                 }
             });
 
-            collapse_children_parents.each(function() {
-                $(this).attr("data-has-click-event", "true");
-            });
-
             if ( plugin.settings.second_click === "disabled" ) {
                 clickable_parents.off("click.megamenu");
             }
@@ -324,7 +333,7 @@
                 plugin.hideMobileMenu();
             });
 
-            $("button.mega-close", $menu.parent()).on("click", function(e) {
+            $("button.mega-close", $wrap).on("click", function(e) {
                 plugin.hideMobileMenu();
             });
         };
@@ -381,18 +390,18 @@
                 return isMobileOffCanvasHorizontal() && ( keyCode === up_arrow_key || keyCode === down_arrow_key || keyCode === tab_key );
             }
 
-            $menu.parent().on("keyup.megamenu", ".max-mega-menu, .mega-menu-toggle", function(e) {
+            $wrap.on("keyup.megamenu", ".max-mega-menu, .mega-menu-toggle", function(e) {
                 var keyCode = e.keyCode || e.which;
                 var active_link = $(e.target);
 
                 if (keyCode === tab_key) {
-                    $menu.parent().addClass("mega-keyboard-navigation");
+                    $wrap.addClass("mega-keyboard-navigation");
                 }
             });
 
-            $menu.parent().on("keydown.megamenu", "a.mega-menu-link, .mega-indicator, .mega-menu-toggle-block, .mega-menu-toggle-animated-block button", function(e) {
+            $wrap.on("keydown.megamenu", "a.mega-menu-link, .mega-indicator, .mega-menu-toggle-block, .mega-menu-toggle-animated-block button", function(e) {
 
-                if ( ! $menu.parent().hasClass("mega-keyboard-navigation") ) {
+                if ( ! $wrap.hasClass("mega-keyboard-navigation") ) {
                     return;
                 }
 
@@ -449,10 +458,10 @@
                     }
                 }
 
-                if ( keyCode === space_key ) {
-                    e.preventDefault();
-
+                if ( keyCode === space_key || keyCode === enter_key ) {
                     if ( active_link.is(".mega-menu-toggle-block, .mega-menu-toggle-animated-block button") ) {
+                        e.preventDefault();
+                        
                         if ( $toggle_bar.hasClass("mega-menu-open") ) {
                             plugin.hideMobileMenu();
                         } else {
@@ -508,7 +517,6 @@
                 }
 
                 if ( shouldTrapFocusInCurrentSubMenu() ) {
-                    console.log("trapping focusss");
                     var focused_item = $(":focus", $menu);
 
                     // if the menu doesn't have focus, focus the first menu item
@@ -586,12 +594,12 @@
                 }
             });
 
-            $menu.parent().on("focusout.megamenu", function(e) {
-                if ( $menu.parent().hasClass("mega-keyboard-navigation") ) {
+            $wrap.on("focusout.megamenu", function(e) {
+                if ( $wrap.hasClass("mega-keyboard-navigation") ) {
                     setTimeout(function() {
-                        var menu_has_focus = $menu.parent().find(":focus").length > 0;
+                        var menu_has_focus = $wrap.find(":focus").length > 0;
                         if (! menu_has_focus) {
-                            $menu.parent().removeClass("mega-keyboard-navigation");
+                            $wrap.removeClass("mega-keyboard-navigation");
                             plugin.hideAllPanels();
                             plugin.hideMobileMenu();
                         }
@@ -618,7 +626,7 @@
         };
 
         plugin.unbindKeyboardEvents = function() {
-            $menu.parent().off("keyup.megamenu keydown.megamenu focusout.megamenu");
+            $wrap.off("keyup.megamenu keydown.megamenu focusout.megamenu");
         };
 
         plugin.unbindMegaMenuEvents = function() {
@@ -679,16 +687,16 @@
             plugin.initIndicators();
         };
 
+        plugin.initMobile = function() {
+            plugin.switchToMobile();
+        };
+
         plugin.switchToDesktop = function() {
             $menu.data("view", "desktop");
             plugin.bindMegaMenuEvents();
             plugin.reverseRightAlignedItems();
             plugin.hideAllPanels();
             plugin.hideMobileMenu(true);
-        };
-
-        plugin.initMobile = function() {
-            plugin.switchToMobile();
         };
 
         plugin.switchToMobile = function() {
@@ -716,7 +724,9 @@
         };
 
         plugin.initIndicators = function() {
-            $(".mega-indicator", $menu).not("[data-has-click-event]").on("click.megamenu", function(e) {
+             $menu.off('click.megamenu', '.mega-indicator');
+
+             $menu.on('click.megamenu', '.mega-indicator', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -727,12 +737,8 @@
                 } else {
                     plugin.showPanel($(this).parent(), false);
                 }
-            });
-
-            $(".mega-indicator", $menu).each(function() {
-                $(this).attr('data-has-click-event', 'true');
-            });
-        }
+             });
+        };
 
         plugin.hideMobileMenu = function(force) {
             force = force || false;

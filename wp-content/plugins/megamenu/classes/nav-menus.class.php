@@ -473,32 +473,6 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 
 					?>
 					</select>
-
-					<select name='megamenu_meta[<?php echo esc_attr( $location ); ?>][effect_speed]'>
-					<?php
-
-						$selected = isset( $settings[ $location ]['effect_speed'] ) ? $settings[ $location ]['effect_speed'] : '200';
-
-						$options = apply_filters(
-							'megamenu_effect_speed',
-							array(
-								'600' => __( 'Slow', 'megamenu' ),
-								'400' => __( 'Med', 'megamenu' ),
-								'200' => __( 'Fast', 'megamenu' ),
-							),
-							$selected
-						);
-
-						ksort( $options );
-
-					foreach ( $options as $key => $value ) {
-						?>
-							<option value='<?php echo esc_attr( $key ); ?>' <?php selected( $key === $selected ); ?>><?php echo esc_html( $value ); ?></option>
-							<?php
-					}
-
-					?>
-					</select>
 				</td>
 			</tr>
 			<tr>
@@ -535,32 +509,6 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 					foreach ( $options as $key => $value ) {
 						?>
 							<option value='<?php echo $key; ?>' <?php selected( $value['selected'] ); ?>><?php echo $value['label']; ?></option>
-							<?php
-					}
-
-					?>
-					</select>
-
-					<select name='megamenu_meta[<?php echo $location; ?>][effect_speed_mobile]'>
-					<?php
-
-						$selected = isset( $settings[ $location ]['effect_speed_mobile'] ) ? $settings[ $location ]['effect_speed_mobile'] : '200';
-
-						$options = apply_filters(
-							'megamenu_effect_speed_mobile',
-							array(
-								'600' => __( 'Slow', 'megamenu' ),
-								'400' => __( 'Med', 'megamenu' ),
-								'200' => __( 'Fast', 'megamenu' ),
-							),
-							$selected
-						);
-
-						ksort( $options );
-
-					foreach ( $options as $key => $value ) {
-						?>
-							<option value='<?php echo $key; ?>' <?php selected( $key == $selected ); ?>><?php echo $value; ?></option>
 							<?php
 					}
 

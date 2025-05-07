@@ -1596,7 +1596,8 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled]:hover:after,
   font-size: 12px;
   cursor: pointer;
   color: white;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   width: auto;
   font-weight: normal;
   height: auto;
@@ -1653,7 +1654,6 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled]:hover:after,
   border-bottom: 0;
 }
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content .mega-accordion-title {
-  border-bottom: 1px solid #ccc;
   padding: 10px 3px 10px 10px;
   box-sizing: border-box;
 }
@@ -1694,7 +1694,7 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled]:hover:after,
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content table {
   font-size: 0.9em;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   border-collapse: collapse;
 }
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content table tr {
@@ -1710,9 +1710,6 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled]:hover:after,
   font-size: 0.9em;
   max-width: 120px;
   margin: 0;
-}
-.nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content table tr select.megamenu_effect_mobile {
-  max-width: 80px;
 }
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content table tr input[type=checkbox] {
   margin: 0;
