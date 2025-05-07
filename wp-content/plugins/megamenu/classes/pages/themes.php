@@ -923,7 +923,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									'keyboard_highlight'      => array(
 										'priority'    => 55,
 										'title'       => __( 'Keyboard Highlight Outline', 'megamenu' ),
-										'description' => __( 'Set the outline style for menu items when they recieve focus using keyboard navigation.', 'megamenu' ),
+										'description' => __( 'Set the outline style for menu items when they receive focus using keyboard navigation.', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'title' => __( 'Color', 'megamenu' ),
@@ -965,6 +965,18 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 												'title' => __( 'Enabled', 'megamenu' ),
 												'type'  => 'checkbox',
 												'key'   => 'resets',
+											),
+										),
+									),
+									'use_flex_css'      => array(
+										'priority'    => 80,
+										'title'       => __( 'Use Flex CSS', 'megamenu' ),
+										'description' => __( 'Experimental: Use flexbox to style the menu. Default: Disabled.', 'megamenu' ),
+										'settings'    => array(
+											array(
+												'title' => __( 'Enabled', 'megamenu' ),
+												'type'  => 'checkbox',
+												'key'   => 'use_flex_css',
 											),
 										),
 									),
@@ -2758,6 +2770,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 						)
 					);
 
+					if ( ! defined( 'MEGAMENU_ENABLE_FLEX_CSS_OPTION' ) || MEGAMENU_ENABLE_FLEX_CSS_OPTION === false ) {
+						unset($settings['general']['settings']['use_flex_css']);
+					}
+	
 					echo "<h2 class='nav-tab-wrapper'>";
 
 					$is_first = true;
@@ -2995,12 +3011,25 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			$value = $this->active_theme[ $key ];
 
+			$saved_settings = get_option( 'megamenu_settings' );
+
+			$css_type = 'standard';
+
+			if ( isset( $saved_settings['css_type'] ) ) {
+				$css_type = $saved_settings['css_type'];
+			}
 			?>
 
 			<select name='settings[<?php echo $key; ?>]'>
 				<option value='left' <?php selected( $value, 'left' ); ?>><?php _e( 'Left', 'megamenu' ); ?></option>
 				<option value='center' <?php selected( $value, 'center' ); ?>><?php _e( 'Center', 'megamenu' ); ?></option>
 				<option value='right' <?php selected( $value, 'right' ); ?>><?php _e( 'Right', 'megamenu' ); ?></option>
+
+				<?php if ($key == 'menu_item_align' && $css_type == 'flex'): ?>
+					<option value='space-around' <?php selected( $value, 'space-around' ); ?>><?php _e( 'space-around', 'megamenu' ); ?></option>
+					<option value='space-between' <?php selected( $value, 'space-between' ); ?>><?php _e( 'space-between', 'megamenu' ); ?></option>
+					<option value='space-evenly' <?php selected( $value, 'space-evenly' ); ?>><?php _e( 'space-evenly', 'megamenu' ); ?></option>
+				<?php endif; ?>
 			</select>
 
 			<?php

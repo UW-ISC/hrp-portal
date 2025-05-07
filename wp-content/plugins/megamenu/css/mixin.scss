@@ -1,8 +1,16 @@
+@mixin padding($top: 0, $right: 0, $bottom: 0, $left: 0) {
+    @if $top == $right and $right == $bottom and $bottom == $left and $left == $top {
+        padding: $top;
+    } @else if $top == $bottom and $right == $left {
+        padding: $top $right;
+    } @else {
+        padding: $top $right $bottom $left;
+    }
+}
+
 @mixin border-radius($topleft: 0, $topright: 0, $bottomright: 0, $bottomleft: 0) {
-    @if $topleft == 0 and $topright == 0 and $bottomright == 0 and $bottomleft == 0 {
-        border-radius: 0;
-    } @else if $topleft == 0px and $topright == 0px and $bottomright == 0px and $bottomleft == 0px {
-        border-radius: 0;
+    @if $topleft == $topright and $topright == $bottomright and $bottomright == $bottomleft and $bottomleft == $topleft {
+        border-radius: $topleft;
     } @else {
         border-radius: $topleft $topright $bottomright $bottomleft;
     }
@@ -16,9 +24,7 @@
     @if $to == $from {
         background: $to;
     } @else {
-        background: $to;
         background: linear-gradient(to bottom, $from, $to);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie_hex_str($from)}', endColorstr='#{ie_hex_str($to)}');
     }
 }
 
@@ -42,6 +48,65 @@
 @mixin desktop {
     @media only screen and (min-width : $responsive_breakpoint + 1) {
         @content;
+    }
+}
+
+@mixin resets {
+    #{$wrap},
+    #{$wrap} #{$menu},
+    #{$wrap} #{$menu} ul.mega-sub-menu,
+    #{$wrap} #{$menu} li.mega-menu-item,
+    #{$wrap} #{$menu} li.mega-menu-row,
+    #{$wrap} #{$menu} li.mega-menu-column,
+    #{$wrap} #{$menu} a.mega-menu-link,
+    #{$wrap} #{$menu} span.mega-menu-badge,
+    #{$wrap} button.mega-close {
+        transition: none;
+        @include border-radius(0, 0, 0, 0);
+        @include box-shadow(none);
+        background: none;
+        border: 0;
+        bottom: auto;
+        box-sizing: border-box;
+        clip: auto;
+        color: $panel_font_color;
+        display: block;
+        float: none;
+        font-family: unquote($panel_font_family);
+        font-size: $panel_font_size;
+        height: auto;
+        left: auto;
+        line-height: $line_height;
+        list-style-type: none;
+        margin: 0;
+        min-height: auto;
+        max-height: none;
+        min-width: auto;
+        max-width: none;
+        opacity: 1;
+        outline: none;
+        overflow: visible;
+        padding: 0;
+        position: relative;
+        pointer-events: auto;
+        right: auto;
+        text-align: left;
+        text-decoration: none;
+        text-indent: 0;
+        text-transform: none;
+        transform: none;
+        top: auto;
+        vertical-align: baseline;
+        visibility: inherit;
+        width: auto;
+        word-wrap: break-word;
+        white-space: normal;
+        -webkit-tap-highlight-color: transparent;
+
+        &:before,
+        &:after {
+            display: none;
+        }
     }
 }
 
