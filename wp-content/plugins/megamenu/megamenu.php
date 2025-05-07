@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.4.1
+ * Version:     3.5
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.4.1';
+		public $version = '3.5';
 
 
 		/**
@@ -76,7 +76,6 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			add_filter( 'wp_nav_menu_args', array( $this, 'modify_nav_menu_args' ), 99999 );
 			add_filter( 'wp_nav_menu', array( $this, 'add_responsive_toggle' ), 10, 2 );
-			add_filter( 'wp_nav_menu', array( $this, 'add_mobile_close_button' ), 11, 2 );
 
 			add_filter( 'wp_nav_menu_objects', array( $this, 'add_widgets_to_menu' ), apply_filters( 'megamenu_wp_nav_menu_objects_priority', 10 ), 2 );
 			add_filter( 'megamenu_nav_menu_objects_before', array( $this, 'apply_depth_to_menu_items' ), 5, 2 );
@@ -101,6 +100,8 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			add_shortcode( 'maxmenu', array( $this, 'register_shortcode' ) );
 			add_shortcode( 'maxmegamenu', array( $this, 'register_shortcode' ) );
+
+			add_action( 'elementor/widgets/register', array( $this, 'register_elementor_widget' ) );
 
 			if ( is_admin() ) {
 				$admin_classes = array(
@@ -132,6 +133,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			}
 
 		}
+
 
 		/**
 		 * Add a body class for each active mega menu location.
@@ -300,6 +302,18 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			//}
 		}
 
+
+		/**
+		 * Register elementor widget
+		 * 
+		 * @since 3.5
+		 */
+		public function register_elementor_widget( $widgets_manager ) {
+			require_once( MEGAMENU_PATH . 'classes/widgets/widget-elementor.class.php' );
+			$widgets_manager->register( new \Elementor_Max_Mega_Menu_Widget() );
+		}
+
+
 		/**
 		 * Create our own widget area to store all mega menu widgets.
 		 * All widgets from all menus are stored here, they are filtered later
@@ -425,7 +439,6 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			// gutenberg block
 			include_once MEGAMENU_PATH . 'integration/block/location/block.php';
-
 		}
 
 
@@ -536,14 +549,14 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		}
 
 		/**
-		 * Add the html for mobile menu close button
+		 * Return the html for mobile menu close button
 		 *
 		 * @param  string $nav_menu HTML markup of menu.
 		 * @param  object $args wp_nav_menu arguments.
 		 * @return string
 		 * @since  3.4
 		 */
-		public function add_mobile_close_button( $nav_menu, $args ) {
+		public function get_mobile_close_button( $args, $menu_settings, $menu_theme ) {
 		    // Cast $args to object if it is an array
 		    $args = (object) $args;
 
@@ -552,30 +565,19 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 		    // Only proceed if CSS version is 3.4 or higher
 		    if ( ! $css_version || version_compare( $css_version, '3.3.3', '<' ) ) {
-		        return $nav_menu;
+		        return "";
 		    }
-
-		    // Ensure we're working with a Mega Menu walker
-		    if ( empty( $args->walker ) || ! is_a( $args->walker, 'Mega_Menu_Walker' ) ) {
-		        return $nav_menu;
-		    }
-
-		    // Retrieve theme location and mega menu settings
-		    $location = $args->theme_location;
-		    $settings = get_option( 'megamenu_settings', [] );
 
 		    // Check if mobile effect is set and is either 'slide_left' or 'slide_right'
-		    if ( isset( $settings[ $location ]['effect_mobile'] ) && in_array( $settings[ $location ]['effect_mobile'], ['slide_left', 'slide_right'], true ) ) {
+		    if ( isset( $menu_settings['effect_mobile'] ) && in_array( $menu_settings['effect_mobile'], ['slide_left', 'slide_right'], true ) ) {
 
-		    	$menu_theme = mmm_get_theme_for_location( $location );
 		    	$label = esc_attr( do_shortcode( $menu_theme['close_icon_label'] ) );
 
-		        // Append close button before the closing </ul> tag (last 6 characters of $nav_menu)
-		        $button = apply_filters("megamenu_close_button", "<button class='mega-close' aria-label='" . $label . "'></button>", $nav_menu, $args, $location, $settings);
-		        return substr_replace( $nav_menu, $button, -6, 0 );
+		        // Append close button after the closing </ul> tag
+		        return apply_filters("megamenu_close_button", "<button class='mega-close' aria-label='" . esc_attr( $label ) . "'></button>", $args, $menu_settings);
 		    }
 
-		    return $nav_menu;
+		    return "";
 		}
 
 
@@ -683,11 +685,23 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 								$item->classes[] = 'menu-megamenu';
 							}
 
-							$classes = array( 'menu-row' );
+							if ( ! in_array( 'menu-grid', $item->classes, true ) ) {
+								$item->classes[] = 'menu-grid';
+							}
+
+							$classes = array( 'menu-row');
 
 							if ( isset( $row_data['meta']['class'] ) ) {
 								$classes = array_merge( $classes, array_unique( explode( ' ', $row_data['meta']['class'] ) ) );
 							}
+
+							if ( isset( $row_data['meta']['columns'] ) ) {
+								$row_columns = $row_data['meta']['columns'];
+							} else {
+								$row_columns = 12;
+							}
+
+							$styles = array('--columns:' . $row_columns);
 
 							$row_item = array(
 								'menu_item_parent'    => $item->ID,
@@ -701,6 +715,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 								'db_id'               => $rolling_dummy_id,
 								'url'                 => '',
 								'classes'             => $classes,
+								'styles'              => $styles
 							);
 
 							$items[] = (object) $row_item;
@@ -713,6 +728,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 								$next_order++;
 
 								$classes = array( 'menu-column' );
+								$styles = array();
 
 								if ( isset( $col_data['meta']['class'] ) ) {
 									$classes = array_merge( $classes, array_unique( explode( ' ', $col_data['meta']['class'] ) ) );
@@ -726,6 +742,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 								if ( isset( $col_data['meta']['span'] ) ) {
 									$classes[] = "menu-columns-{$col_data['meta']['span']}-of-{$row_columns}";
+									$styles[] = "--span:" . $col_data['meta']['span'];
 								}
 
 								if ( isset( $col_data['meta']['hide-on-mobile'] ) && 'true' === $col_data['meta']['hide-on-mobile'] ) {
@@ -748,6 +765,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 									'db_id'               => $rolling_dummy_id,
 									'url'                 => '',
 									'classes'             => $classes,
+									'styles'              => $styles
 								);
 
 								$items[] = (object) $col_item;
@@ -1077,15 +1095,19 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 					$parent_settings = array_filter( (array) get_post_meta( $item->menu_item_parent, '_megamenu', true ) );
 					$parent_settings = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $parent_settings );
 
+					$item->classes[] = "menu-column-standard";
+
 					$span = $item->megamenu_settings['mega_menu_columns'];
 
 					$total_columns = $parent_settings['panel_columns'];
 
 					if ( $total_columns >= $span ) {
 						$item->classes[] = "menu-columns-{$span}-of-{$total_columns}";
+						$item->styles    = array("--columns:{$total_columns}","--span:{$span}");
 						$column_count    = $span;
 					} else {
 						$item->classes[] = "menu-columns-{$total_columns}-of-{$total_columns}";
+						$item->styles    = array("--columns:{$total_columns}","--span:{$total_columns}");
 						$column_count    = $total_columns;
 					}
 
@@ -1285,6 +1307,8 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 				$sanitized_location = str_replace( apply_filters( 'megamenu_location_replacements', array( '-', ' ' ) ), '-', $current_theme_location );
 
+				$close_button = $this->get_mobile_close_button( $args, $menu_settings, $menu_theme );
+
 				$defaults = array(
 					'menu'            => wp_get_nav_menu_object( $menu_id ),
 					'container'       => $container,
@@ -1297,7 +1321,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 					'after'           => '',
 					'link_before'     => '',
 					'link_after'      => '',
-					'items_wrap'      => '<ul' . $attributes . '>%3$s</ul>',
+					'items_wrap'      => '<ul' . $attributes . '>%3$s</ul>' . $close_button,
 					'depth'           => 0,
 					'walker'          => new Mega_Menu_Walker(),
 				);

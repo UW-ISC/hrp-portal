@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
-Tested up to: 6.7
-Stable tag: 3.3.2
+Tested up to: 6.8
+Stable tag: 3.4.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,20 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.5 =
+
+* New: Dedicated Elementor Widget
+* Accessibility Improvement: Add presentation role to grid layout containers to prevent NVDA from announcing them
+* Accessibility Improvement: Add aria-hidden attribute to arrow indicators
+* Accessibility Fix: Pressing Enter on standard mobile toggle button now opens/closes mobile sub menu
+* Improvement: Use style attributes on grid layout to define number of rows and columns, in preparation for using CSS Grid styling
+* Improvement: Refactor mobile CSS, remove usage of :has
+* Improvement: Refactor second and third level item styling so that it can be used within tab sub menus without being duplicated
+* Improvement: Refactor method for adding close button HTML to menu output
+* Improvement: Refactor JS: remove usage of data-has-click-event attribute
+* Fix: Fix styling of mobile menu as it transitions from open to closed
+* Fix: Error loading scss in some instances
 
 = 3.4.1 =
 

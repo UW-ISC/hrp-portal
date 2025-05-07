@@ -99,7 +99,6 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		public function general_settings_page( $saved_settings ) {
 
 			$css = isset( $saved_settings['css'] ) ? $saved_settings['css'] : 'fs';
-			$js  = isset( $saved_settings['js'] ) ? $saved_settings['js'] : 'footer';
 
 			$locations = get_registered_nav_menus();
 
@@ -142,19 +141,6 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 							</div>
 						</td>
 					</tr>
-					<!--tr>
-						<td class='mega-name'>
-								<?php esc_html_e( 'JavaScript Output', 'megamenu' ); ?>
-							<div class='mega-description'>
-							</div>
-						</td>
-						<td class='mega-value'>
-							<select name='settings[js]' id='mega_css'>
-								<option value='footer' <?php echo selected( 'footer' === $js ); ?>><?php esc_html_e( 'Footer (default)', 'megamenu' ); ?></option>
-								<option value='head' <?php echo selected( 'head' === $js ); ?>><?php esc_html_e( 'Output in &lt;head&gt;', 'megamenu' ); ?></option>
-							<select>
-						</td>
-					</tr-->
 				</table>
 
 					<?php do_action( 'megamenu_general_settings', $saved_settings ); ?>

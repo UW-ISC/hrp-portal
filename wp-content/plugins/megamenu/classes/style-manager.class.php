@@ -561,7 +561,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			$dir = trailingslashit( $upload_dir['basedir'] ) . 'maxmegamenu/';
 
-			WP_Filesystem( false, $dir, true );
+			WP_Filesystem();
 
 			if ( ! $wp_filesystem->is_dir( $dir ) ) {
 				$wp_filesystem->mkdir( $dir );
@@ -595,13 +595,15 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @since 2.2.3
 		 * @return array
 		 */
-		private function get_possible_scss_file_locations() {
+		private function get_possible_scss_file_locations( $location = '', $theme = array(), $menu_id = 0 ) {
+
+
 			return apply_filters(
 				'megamenu_scss_locations',
 				array(
 					trailingslashit( get_stylesheet_directory() ) . trailingslashit( 'megamenu' ) . 'megamenu.scss', // child theme
 					trailingslashit( get_template_directory() ) . trailingslashit( 'megamenu' ) . 'megamenu.scss', // parent theme
-					$this->get_default_scss_file_location(),
+					$this->get_default_scss_file_location( $location, $theme, $menu_id ),
 				)
 			);
 		}
@@ -613,8 +615,16 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @since 2.2.3
 		 * @return string
 		 */
-		private function get_default_scss_file_location() {
-			return MEGAMENU_PATH . trailingslashit( 'css' ) . 'megamenu.scss';
+		private function get_default_scss_file_location( $location = '', $theme = array(), $menu_id = 0 ) {
+			$use_flex_css = isset($theme['use_flex_css']) ? $theme['use_flex_css'] : 'off';
+
+			$filename = 'megamenu.scss';
+
+			if ( $use_flex_css == 'on' ) {
+				$filename = 'megamenu.flex.scss';
+			}
+
+			return MEGAMENU_PATH . trailingslashit( 'css' ) . $filename;
 		}
 
 
@@ -625,7 +635,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @since 1.0
 		 * @return string
 		 */
-		private function load_scss_file() {
+		private function load_scss_file( $location, $theme, $menu_id ) {
 
 			/**
 			 *  *** IMPORTANT NOTICE ***
@@ -643,7 +653,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$scss  = file_get_contents( MEGAMENU_PATH . trailingslashit( 'css' ) . 'mixin.scss' );
 			$scss .= file_get_contents( MEGAMENU_PATH . trailingslashit( 'css' ) . 'reset.scss' );
 
-			$locations = $this->get_possible_scss_file_locations();
+			$locations = $this->get_possible_scss_file_locations( $location, $theme, $menu_id );
 
 			foreach ( $locations as $path ) {
 
@@ -761,12 +771,12 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 */
 		public function generate_css_for_location_new( $location, $theme, $menu_id ) {
 
-			if ( is_readable( MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php' ) && ! class_exists( 'scssc' ) ) {
+			if ( is_readable( MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php' ) && ! class_exists( 'ScssPhp\ScssPhp\Compiler' ) ) { 
 				require_once MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php';
 			}
 
-			$scssc = new Compiler();
-
+			$scssc = new \ScssPhp\ScssPhp\Compiler();
+			
 			$import_paths = apply_filters(
 				'megamenu_scss_import_paths',
 				array(
@@ -826,10 +836,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$vars['close_icon_font']      = 'dashicons';
 			$vars['close_icon_font_weight'] = 'normal';
 			$vars['arrow_combinator']     = "'>'";
-
-			if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-				$vars['arrow_combinator'] = "'+'";
-			}
 
 			$current_theme = wp_get_theme();
 			$theme_id      = $current_theme->template;
@@ -945,7 +951,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$scss .= '$' . $name . ': ' . $value . ";\n";
 			}
 
-			$scss .= $this->load_scss_file();
+			$scss .= $this->load_scss_file( $location, $theme, $menu_id );
 
 			$scss .= stripslashes( html_entity_decode( $theme['custom_css'], ENT_QUOTES ) );
 
@@ -1129,10 +1135,9 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			}
 
 			$upload_dir = wp_upload_dir();
-			$filename   = $this->get_css_filename();
 			$dir        = trailingslashit( $upload_dir['basedir'] ) . 'maxmegamenu/';
 
-			WP_Filesystem( false, $dir, true );
+			WP_Filesystem();
 			$wp_filesystem->rmdir( $dir, true );
 
 			delete_transient( $this->get_transient_key() );
@@ -1175,6 +1180,15 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 */
 		private function get_css_output_method() {
 			return isset( $this->settings['css'] ) ? $this->settings['css'] : 'fs';
+		}
+
+		/**
+		 * Return the CSS output method, default to filesystem
+		 *
+		 * @return string
+		 */
+		private function get_css_type() {
+			return isset( $this->settings['css_type'] ) ? $this->settings['css_type'] : 'standard';
 		}
 
 

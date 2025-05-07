@@ -1378,7 +1378,8 @@ body.toplevel_page_maxmegamenu,
 		font-size: 12px;
 		cursor: pointer;
 		color: white;
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 		width: auto;
 		font-weight: normal;
 		height: auto;
@@ -1452,7 +1453,6 @@ body.toplevel_page_maxmegamenu,
 			}
 
 			.mega-accordion-title {
-				border-bottom: 1px solid #ccc;
 				padding: 10px 3px 10px 10px;
 				box-sizing: border-box;
 
@@ -1502,7 +1502,7 @@ body.toplevel_page_maxmegamenu,
 			table {
 				font-size: 0.9em;
 				width: 100%;
-				margin-bottom: 5px;
+				margin-bottom: 15px;
 				border-collapse: collapse;
 
 				tr {
@@ -1521,10 +1521,6 @@ body.toplevel_page_maxmegamenu,
 						font-size: 0.9em;
 						max-width: 120px;
 						margin: 0;
-
-						&.megamenu_effect_mobile {
-							max-width: 80px;
-						}
 					}
 
 					input[type=checkbox] {

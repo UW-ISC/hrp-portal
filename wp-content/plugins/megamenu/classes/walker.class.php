@@ -29,12 +29,25 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 		 */
 		function start_lvl( &$output, $depth = 0, $args = array() ) {
 			$id = $this->currentItem->ID;
+			$classes = $this->currentItem->classes;
+			$style = "";
+			$role = "";
 
-			$id_attribute = ' id="mega-sub-menu-' . esc_attr($id) . '"';
+			if ( is_array( $classes ) && in_array( 'menu-row', $classes ) ) {
+				if ( isset( $this->currentItem->styles ) && count( $this->currentItem->styles ) ) {
+					$style = " style='" . esc_attr( implode( "; ", $this->currentItem->styles ) ) . "'";
+				}
+			}
+
+			if ( is_array( $classes ) && ( in_array( 'menu-row', $classes ) || in_array( 'menu-grid', $classes ) ) ) {
+				$role = " role='presentation'";
+			}
+
+			$id_attribute = ' id="mega-sub-menu-' . esc_attr( $id ) . '"';
 			
 			$indent = str_repeat( "\t", $depth );
 
-			$output .= "\n$indent<ul class=\"mega-sub-menu\">\n";
+			$output .= "\n$indent<ul class=\"mega-sub-menu\"{$style}{$role}>\n";
 		}
 
 		/**
@@ -79,19 +92,26 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 			}
 
 			// Item Class
-			   $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+			$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+			$styles = empty( $item->styles ) ? array() : (array) $item->styles;
 
 			if ( is_array( $classes ) && ! in_array( 'menu-column', $classes ) && ! in_array( 'menu-row', $classes ) ) {
 				$classes[] = 'menu-item-' . $item->ID;
 			}
 
-			   $class = join( ' ', apply_filters( 'megamenu_nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+			// remove style attribute from rows
+			if ( is_array( $classes ) && in_array( 'menu-row', $classes ) ) {
+				$styles = array();
+			}
 
-			   // these classes are prepended with 'mega-'
-			   $mega_classes = explode( ' ', $class );
+			$class = join( ' ', apply_filters( 'megamenu_nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+			$style = join( '; ', apply_filters( 'megamenu_nav_menu_css_style', array_filter( $styles ), $item, $args ) );
 
-			   // strip widget classes back to how they're intended to be output
-			   $class = str_replace( 'mega-menu-widget-class-', '', $class );
+			// these classes are prepended with 'mega-'
+			$mega_classes = explode( ' ', $class );
+
+			// strip widget classes back to how they're intended to be output
+			$class = str_replace( 'mega-menu-widget-class-', '', $class );
 
 			// Item ID
 			if ( is_array( $classes ) && ! in_array( 'menu-column', $classes ) && ! in_array( 'menu-row', $classes ) ) {
@@ -102,7 +122,21 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 			$id = esc_attr( apply_filters( 'megamenu_nav_menu_item_id', $id, $item, $args ) );
 
-			$output .= "<li class='{$class}' id='{$id}'>";
+			$list_item_attributes = array(
+				'class' => $class,
+				'style' => $style,
+				'id' => $id
+			);
+
+			$attributes = '';
+
+			foreach ( $list_item_attributes as $attr => $value ) {
+				if ( strlen( $value ) ) {
+					$attributes .= ' ' . $attr . '="' . esc_attr($value) . '"';
+				}
+			}
+
+			$output .= '<li' . $attributes . '>';
 
 			// output the widgets
 			if ( $item->type == 'widget' ) {
@@ -141,12 +175,10 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
 
-					if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-						$atts['aria-expanded'] = 'false';
+					$atts['aria-expanded'] = 'false';
 
-						if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
-							$atts['aria-expanded'] = 'true';
-						}
+					if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
+						$atts['aria-expanded'] = 'true';
 					}
 
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
@@ -205,28 +237,12 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$item_output .= '</span>';
 				}
 
-				if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-					$item_output .= '</a>';
-				}
-
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) ) {
 
 					$item_output .= '<span class="mega-indicator"';
 
 					$indicator_atts = array();
-
-					if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-						$indicator_atts['tabindex'] = '0';
-						$indicator_atts['role'] = 'button';
-						$indicator_atts['aria-label'] = esc_attr( apply_filters( 'megamenu_the_title', $item->title, $item->ID ) ) . " " . esc_html( 'submenu', 'megamenu' );
-						$indicator_atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
-						$indicator_atts['aria-expanded'] = 'false';
-
-						if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
-							$indicator_atts['aria-expanded'] = 'true';
-						}
-					}
-
+					$indicator_atts['aria-hidden'] = 'true';
 					$indicator_atts = apply_filters( 'megamenu_indicator_atts', $indicator_atts, $item, $args, $mega_classes );
 
 					foreach ( $indicator_atts as $attr => $value ) {
@@ -238,9 +254,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$item_output .= "></span>";
 				}
 
-				if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-					$item_output .= '</a>';
-				}
+				$item_output .= '</a>';
 
 				$item_output .= $args->after;
 
