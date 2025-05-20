@@ -4,7 +4,7 @@
  * Plugin Name: Max Mega Menu - Pro Addon
  * Plugin URI:  https://www.megamenu.com
  * Description: Extends the free version of Max Mega Menu with additional functionality.
- * Version:     2.4
+ * Version:     2.4.3
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * Copyright:   2020 Tom Hemsley (https://www.megamenu.com)
@@ -24,7 +24,7 @@ class Mega_Menu_Pro {
 	/**
 	 * @var string
 	 */
-	public $version = '2.4';
+	public $version = '2.4.3';
 
 
 	/**
@@ -47,8 +47,7 @@ class Mega_Menu_Pro {
 		define( "MEGAMENU_PRO_VERSION", $this->version );
 		define( "MEGAMENU_PRO_PLUGIN_FILE", __FILE__ );
 
-		$this->load_plugin_textdomain();
-
+		add_action( "init", array( $this, 'load_plugin_textdomain' ) );
 		add_action( "widgets_init", array( $this, 'register_widget' ) );
 		add_filter( "megamenu_versions", array( $this, 'add_version_to_header' ) );
 		add_action( "admin_init", array( $this, 'install_upgrade_check' ) );
@@ -313,8 +312,7 @@ class Mega_Menu_Pro {
 			'Mega_Menu_Font_Awesome_5' => $plugin_path . 'icons/fontawesome5/fontawesome5.php',
 			'Mega_Menu_Font_Awesome_6' => $plugin_path . 'icons/fontawesome6/fontawesome6.php',
 			'Mega_Menu_Badge' => $plugin_path . 'badge/badge.php',
-			'Mega_Menu_Image_Swap' => $plugin_path . 'image-swap/image-swap.php',
-			'Mega_Menu_Widget_Image_Swap' => $plugin_path . 'image-swap/image-swap-widget.class.php'
+			'Mega_Menu_Image_Swap' => $plugin_path . 'image-swap/image-swap.php'
 		);
 
 
@@ -326,13 +324,19 @@ class Mega_Menu_Pro {
 			unset( $classes['Mega_Menu_Font_Awesome_5'] );
 		}
 
-		foreach ( $classes as $classname => $file_path ) {
-			require_once( $file_path );
-			new $classname;
+		if ( defined( "MEGAMENU_PRO_IMAGE_SWAP_ENABLED" ) && MEGAMENU_PRO_IMAGE_SWAP_ENABLED === false ) {
+			unset( $classes['Mega_Menu_Image_Swap'] );
+		}
+
+		foreach ( $classes as $id => $path ) {
+			if ( is_readable( $path ) && ! class_exists( $id ) ) {
+				include_once $path;
+				new $id;
+			}
 		}
 
 		if ( class_exists( 'Mega_Menu_Toggle_Blocks' ) ) {
-			require_once( $plugin_path . 'toggle-blocks/toggle-blocks.php' );
+			include_once $plugin_path . 'toggle-blocks/toggle-blocks.php';
 			new Mega_Menu_Pro_Toggle_Blocks;
 		}
 
@@ -481,6 +485,10 @@ class Mega_Menu_Pro {
 		if ( defined( "MEGAMENU_PRO_IMAGE_SWAP_ENABLED" ) && MEGAMENU_PRO_IMAGE_SWAP_ENABLED === false ) {
 			return;
 		}
+
+		$plugin_path = plugin_dir_path( __FILE__ );
+
+		include_once $plugin_path . 'image-swap/image-swap-widget.class.php';
 		
 		if ( class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) {
 			register_widget( 'Mega_Menu_Widget_Image_Swap' );

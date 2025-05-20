@@ -2,10 +2,10 @@
 
 	span.mega-menu-badge {
 	    @include border-radius($badge_border_radius_top_left, $badge_border_radius_top_right, $badge_border_radius_bottom_right, $badge_border_radius_bottom_left);
-	    display: inline;
+	    display: inline-flex;
+	    line-height: normal;
 	    padding: $badge_padding_top $badge_padding_right $badge_padding_bottom $badge_padding_left;
 	    top: $badge_vertical_offset;
-	    position: relative;
 	    margin: 0 0 0 6px;
 	    text-align: center;
 
