@@ -5,6 +5,27 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.4.3 =
+
+* Fix: WordPress 6.8 PHP notice "Function _load_textdomain_just_in_time was called incorrectly"
+* Improvement: Remove duplicated CSS to style second and third level items within tabbed sub menus. Styling is now inherited from base plugin (requires Max Mega Menu v3.5)
+* Fix: Arrow position of tabbed sub menus on mobile
+* New: Add column gap and row gap options to style overrides
+
+= 2.4.2 =
+
+* Fix: Search box width on mobile
+* Fix: Display of tabbed sub menus on mobile
+* Updates: Add flex rules for compatibility with upcoming flex styling options
+
+= 2.4.1 =
+
+* Fix: WordPress 6.7 PHP notice "Function _load_textdomain_just_in_time was called incorrectly"
+* Improvement: Modernise the CSS used to display and position the search box, badges and tabs
+* Fix: Page overlay remains when mobile menu is closed (but still has focus)
+* Fix: Center align Font Awesome 6 icons when icon position is set to "top" and displayed within a sub menu
+* Fix: SVG custom icons
+
 = 2.4 =
 
 * New feature: Page Overlay (dim the page background when the menu is hovered over)

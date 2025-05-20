@@ -49,6 +49,8 @@
 			$custom_menu_item_link_text_decoration_hover: nth($item, 43);
 			$custom_menu_item_link_weight_hover: nth($item, 44);
 			$custom_menu_item_link_text_align: nth($item, 45);
+			$custom_menu_item_link_column_gap: nth($item, 46);
+			$custom_menu_item_link_row_gap: nth($item, 47);
 
 		  	@if type-of($id) == number {
 
@@ -281,6 +283,14 @@
 
 						@if $custom_menu_item_link_color != disabled {
 							color: $custom_menu_item_link_color;
+						}
+
+						@if $custom_menu_item_link_column_gap != disabled {
+							column-gap: $custom_menu_item_link_column_gap;
+						}
+
+						@if $custom_menu_item_link_row_gap != disabled {
+							row-gap: $custom_menu_item_link_row_gap;
 						}
 
 						@if $custom_menu_item_font_size != disabled {

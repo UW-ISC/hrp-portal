@@ -43,10 +43,10 @@
 	}
 
 	&.mega-icon-left {
-		a.fas.fa6:before,
-		a.fab.fa6:before,
-		a.far.fa6:before,
-		a.fal.fa6:before {
+		> a.fas.fa6:before,
+		> a.fab.fa6:before,
+		> a.far.fa6:before,
+		> a.fal.fa6:before {
 			width: 1.25em;
 			text-align: center;
 		}

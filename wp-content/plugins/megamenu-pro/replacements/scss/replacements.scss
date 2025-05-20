@@ -77,6 +77,7 @@
 			padding-top: 10px;
 			padding-bottom: 10px;
 	        text-align: center;
+	        justify-content: center;
 	        height: auto;
 	    }
 	}
@@ -122,22 +123,17 @@
 			#{$menu} {
 			  	li#mega-menu-item-#{$id} {
                     border-left: 0;
-                    -webkit-box-shadow: none;
-                    -moz-box-shadow: none;
                     box-shadow: none;
-
-			  		@include desktop {
-			  			line-height: $menu_item_link_height;
-			  		}
+                    align-content: center;
 
 			  		.mega-search-wrap {
 			  			position: relative;
 			  			width: $search_height; // square icon
 			  			height: $search_height;
-			  			vertical-align: middle;
-  						display: inline-block;
+  						display: flex;
   						z-index: 99999;
   						margin-top: $search_vertical_offset;
+  						align-items: center;
 
   						@include desktop {
 					  		&.mega-static {
@@ -153,10 +149,9 @@
 			  		}
 
 					.mega-search {
-						line-height: $search_height;
-						margin: 0;
 
 						@include mobile {
+							width: 100%;
 							padding: 0 5px;
 						}
 
@@ -204,15 +199,12 @@
 							background-color: $search_background_color_closed;
 							width: $search_width;
 							margin: 0;
-			  				min-height: 0;
 							padding: 0 $search_height 0 5px;
 							height: $search_height;
 							border: 0;
-							line-height: $search_height;
 							transition: width 0.6s, background-color 0.6s, color 1s;
 							box-sizing: border-box;
 							border-radius: $search_border_radius;
-							vertical-align: top;
 
 							@include mobile {
 								width: 100%;
@@ -229,6 +221,16 @@
 						}
 
 						.search-icon {
+							@include mobile {
+								right: 5px;
+							}
+
+							right: 0;
+							top: 0;
+							position: absolute;
+							cursor: pointer;
+							height: 100%;
+							width: $search_height;
 
 							@if $search_custom_icon_enabled == true {
 	                            background-image: url($search_custom_icon_url);
@@ -293,24 +295,12 @@
 								}
 							}
 
-							@include mobile {
-								right: 5px;
-							}
-
-							right: 0;
-							top: 0;
-							position: absolute;
-							width: $search_height;
-							height: $search_height;
-							cursor: pointer;
-							text-align: center;
-
 							&:before {
+								display: flex;
+								justify-content: center;
+								align-items: center;
 								color: $search_icon_color_closed;
-								height: $search_height;
-								width: $search_height;
-								vertical-align: middle;
-								line-height: $search_height;
+								height: 100%;
 
 								@if $search_custom_icon_size != inherit {
 									font-size: $search_custom_icon_size;

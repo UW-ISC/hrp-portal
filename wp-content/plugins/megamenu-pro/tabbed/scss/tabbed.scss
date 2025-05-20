@@ -1,5 +1,6 @@
 #{$wrap} #{$menu} > li.mega-menu-tabbed > ul.mega-sub-menu {
     padding: 0;
+    flex-direction: column;
 }
 
 @include desktop {
@@ -61,18 +62,19 @@
     position: static;
 
     > a.mega-menu-link {
+        display: flex;
         width: $tabbed_link_width;
-        float: left;
         @include background($tabbed_link_background_from, $tabbed_link_background_to);
         color: $tabbed_link_color;
         font-family: unquote($tabbed_link_family);
         font-size: $tabbed_link_size;
         font-weight: $tabbed_link_weight;
         padding: $tabbed_link_padding_top $tabbed_link_padding_right $tabbed_link_padding_bottom $tabbed_link_padding_left;
-        line-height: $tabbed_link_height;
+        min-height: $tabbed_link_height;
+        height: fit-content;
+        align-items: center;
         text-decoration: $tabbed_link_text_decoration;
         text-transform: $tabbed_link_text_transform;
-        vertical-align: baseline;
         margin: 0;
         border: 0;
         cursor: pointer;
@@ -97,20 +99,13 @@
         }
     }
 
+    &.mega-menu-item-has-children > a.mega-menu-link > .mega-indicator {
+        margin-left: auto;
+    }
+
     @include desktop {
         &.mega-menu-item-has-children > a.mega-menu-link > .mega-indicator:after {
             content: $arrow_right;
-        }
-    }
-
-    &.mega-menu-item-has-children > a.mega-menu-link + .mega-indicator {
-        float: none;
-        height: $tabbed_link_height;
-
-        @include desktop {
-            &:after {
-                content: $arrow_right;
-            }
         }
     }
 
@@ -131,10 +126,7 @@
         border-left: 1px solid $tabbed_link_vertical_divider;
         padding: $panel_padding_top $panel_padding_right $panel_padding_bottom $panel_padding_left;
         min-height: 100%;
-
-        .mega-menu-item-has-children > a.mega-menu-link:after {
-            display: none;
-        }
+        flex-direction: row;
     }
 
     &.mega-toggle-on > ul.mega-sub-menu {
@@ -157,90 +149,6 @@
 
     ul.mega-sub-menu li.mega-menu-item ul.mega-sub-menu li.mega-menu-item ul.mega-sub-menu {
         margin-left: 10px;
-    }
-
-    > ul.mega-sub-menu > li.mega-menu-item {
-        /* Second level menu item */
-        > a.mega-menu-link {
-            color: $panel_second_level_font_color;
-            font-family: unquote($panel_second_level_font);
-            font-size: $panel_second_level_font_size;
-            text-transform: $panel_second_level_text_transform;
-            text-decoration: $panel_second_level_text_decoration;
-            font-weight: $panel_second_level_font_weight;
-            margin: $panel_second_level_margin_top $panel_second_level_margin_right $panel_second_level_margin_bottom $panel_second_level_margin_left;
-            padding: $panel_second_level_padding_top $panel_second_level_padding_right $panel_second_level_padding_bottom $panel_second_level_padding_left;
-            vertical-align: top;
-            display: block;
-            border-top: $panel_second_level_border_top solid $panel_second_level_border_color;
-            border-left: $panel_second_level_border_left solid $panel_second_level_border_color;
-            border-right: $panel_second_level_border_right solid $panel_second_level_border_color;
-            border-bottom: $panel_second_level_border_bottom solid $panel_second_level_border_color;
-        }
-
-        /* Second level menu item hover */
-        > a.mega-menu-link:hover,
-        > a.mega-menu-link:focus {
-            color: $panel_second_level_font_color_hover;
-            font-weight: $panel_second_level_font_weight_hover;
-            text-decoration: $panel_second_level_text_decoration_hover;
-            @include background($panel_second_level_background_hover_from, $panel_second_level_background_hover_to);
-
-            > span.mega-title-below {
-                text-decoration: $panel_second_level_text_decoration_hover;
-            }
-        }
-
-        /* Third level menu item */
-        li.mega-menu-item > a.mega-menu-link {
-            color: $panel_third_level_font_color;
-            font-family: unquote($panel_third_level_font);
-            font-size: $panel_third_level_font_size;
-            text-transform: $panel_third_level_text_transform;
-            text-decoration: $panel_third_level_text_decoration;
-            font-weight: $panel_third_level_font_weight;
-            margin: $panel_third_level_margin_top $panel_third_level_margin_right $panel_third_level_margin_bottom $panel_third_level_margin_left;
-            padding: $panel_third_level_padding_top $panel_third_level_padding_right $panel_third_level_padding_bottom $panel_third_level_padding_left;
-            vertical-align: top;
-            display: block;
-        }
-
-        /* Third level menu item hover */
-        li.mega-menu-item > a.mega-menu-link:hover,
-        li.mega-menu-item > a.mega-menu-link:focus {
-            color: $panel_third_level_font_color_hover;
-            font-weight: $panel_third_level_font_weight_hover;
-            text-decoration: $panel_third_level_text_decoration_hover;
-            @include background($panel_third_level_background_hover_from, $panel_third_level_background_hover_to);
-        }
-    }
-
-    &.mega-no-headers > ul.mega-sub-menu > li.mega-menu-item {
-        > a.mega-menu-link {
-            color: $panel_third_level_font_color;
-            font-family: unquote($panel_third_level_font);
-            font-size: $panel_third_level_font_size;
-            text-transform: $panel_third_level_text_transform;
-            text-decoration: $panel_third_level_text_decoration;
-            font-weight: $panel_third_level_font_weight;
-            margin: 0;
-            padding: $panel_third_level_padding_top $panel_third_level_padding_right $panel_third_level_padding_bottom $panel_third_level_padding_left;
-            vertical-align: top;
-            display: block;
-            border-top: 0;
-            border-left: 0;
-            border-right: 0;
-            border-bottom: 0;
-        }
-
-        /* Second level menu item hover */
-        > a.mega-menu-link:hover,
-        > a.mega-menu-link:focus {
-            color: $panel_third_level_font_color_hover;
-            font-weight: $panel_third_level_font_weight_hover;
-            text-decoration: $panel_third_level_text_decoration_hover;
-            @include background($panel_third_level_background_hover_from, $panel_third_level_background_hover_to);
-        }
     }
 }
 

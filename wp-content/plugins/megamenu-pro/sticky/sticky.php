@@ -22,10 +22,8 @@ class Mega_Menu_Sticky {
         add_filter( 'megamenu_wrap_attributes', array( $this, 'add_sticky_attribute' ), 10, 5 );
         add_filter( 'megamenu_scss_variables', array( $this, 'add_sticky_scss_vars'), 10, 4 );
         add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_sticky_scss'), 10 );
-        add_action( 'megamenu_settings_table', array( $this, 'add_sticky_setting'), 20, 2);
         add_filter( 'megamenu_after_menu_item_settings', array( $this, 'add_menu_item_sticky_options'), 10, 6 );
         add_filter( 'megamenu_submitted_settings_meta', array( $this, 'filter_submitted_settings'), 10);
-        add_action( 'wp_ajax_mm_get_sticky_notes', array( $this, 'ajax_get_sticky_notes' ) );
         add_filter( 'megamenu_default_theme', array($this, 'add_theme_placeholders'), 10 );
         add_filter( 'megamenu_theme_editor_settings', array( $this, 'add_theme_editor_settings' ), 10 );
         add_filter( 'megamenu_location_settings', array( $this, 'add_location_settings' ), 10, 3 );
@@ -61,22 +59,17 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_desktop' => array(
                     'priority' => 50,
-                    'title' => __( "Stick on Desktop", "megamenu-pro" ),
+                    'title' => __( "Stick on", "megamenu-pro" ),
                     'description' => __("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenu-pro"),
                     'settings' => array(
                         array(
+                            'title' => __("Desktop", "megamenu-pro"),
                             'type' => 'checkbox',
                             'key' => 'sticky_desktop',
                             'value' => $this->get_sticky_setting( $settings, $location, 'sticky_desktop' )
-                        )
-                    )
-                ),
-                'sticky_mobile' => array(
-                    'priority' => 50,
-                    'title' => __( "Stick on Mobile", "megamenu-pro" ),
-                    'description' => __( "Enable the sticky menu on screen widths below the configured Responsive Breakpoint?", "megamenu-pro" ),
-                    'settings' => array(
+                        ),
                         array(
+                            'title' => __("Mobile", "megamenu-pro"),
                             'type' => 'checkbox',
                             'key' => 'sticky_mobile',
                             'value' => $this->get_sticky_setting( $settings, $location, 'sticky_mobile' )
@@ -215,28 +208,6 @@ class Mega_Menu_Sticky {
 
 
     /**
-     * Return the HTML to display in the Lightbox
-     *
-     * @since 1.6.2.2
-     * @return string
-     */
-    public function ajax_get_sticky_notes() {
-
-        check_ajax_referer( 'megamenu_edit' );
-
-        if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
-
-
-        $response = "<h2>" . __("Sticky Menu", "megamenu-pro") . "</h2>";
-        $response .= "<p><b>" . __("Is your theme already sticking/fixing the header?", "megamenu-pro") . "</b></p>";
-        $response .= "<p>" . __("Only enable this option if your theme is not already sticking the theme header and menu.", "megamenu-pro") . "</p>";
-        $response .= "<p>" . __("If your theme is already sticking/fixing your header and menu, then enabling this sticky option will cause conflicts. Therefore, if your theme is already sticking the header, you should leave this option unchecked.", "megamenu-pro") . "</p>";
-        
-        wp_send_json_success( json_encode( $response ) );
-    }
-
-
-    /**
      * Make sure 'sticky enabled' really is set to false if the checkbox is unchecked.
      */
     public function filter_submitted_settings( $settings ) {
@@ -299,134 +270,6 @@ class Mega_Menu_Sticky {
         $html .= $return;
 
         return $html;
-    }
-
-
-    /**
-     * Add Sticky settings to menu options
-     *
-     * @since 1.1
-     * @param string $location
-     * @param array $settings
-     */
-    public function add_sticky_setting( $location, $settings ) {
-        global $current_screen;
-     
-        if ( ! isset( $current_screen ) ) {
-            return null;
-        }
-        
-        if( 'nav-menus' != $current_screen->base ) {
-            return null;
-        }
-
-        ?>
-            </table>
-            <table class='sticky_settings'>
-                <tr>
-                    <td>
-                        <?php _e("Sticky", "megamenu-pro"); ?>
-                    </td>
-                    <td>
-                        <input type='checkbox' class='megamenu_sticky_enabled' name='megamenu_meta[<?php echo $location ?>][sticky_enabled]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_enabled') == 'true' ); ?> />
-                    </td>
-                </tr>
-
-                <?php
-
-                    if ( $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up') == 'true' ) {
-                        $sticky_husu_display = 'table-row';
-                    } else {
-                        $sticky_husu_display = 'none';
-                    }
-
-                    if ( $this->get_sticky_setting($settings, $location, 'sticky_enabled') == 'true' ) {
-                        $sticky_display = 'table-row';
-                    } else {
-                        $sticky_display = 'none';
-                        $sticky_husu_display = 'none';
-                    }
-                ?>
-
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Stick On Desktop", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenu-pro"); ?>"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_desktop]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_desktop') == 'true' ); ?> />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Stick On Mobile", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is small enough to fully fit on the screen without completely covering the page content.", "megamenu-pro"); ?>"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_mobile]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_mobile') == 'true' ); ?> />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td class='mega-name'>
-                        <?php _e("Sticky Opacity", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='number' step='0.1' min='0.2' max='1' name='megamenu_meta[<?php echo $location; ?>][sticky_opacity]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_opacity'); ?>' />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Sticky Offset", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='number' name='megamenu_meta[<?php echo $location; ?>][sticky_offset]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_offset'); ?>' /><span class='mega-after'>px</span>
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Expand Background Desktop", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_expand]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_expand') == 'true' ); ?> />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Expand Mobile Menu", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the width of the mobile menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_expand_mobile]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_expand_mobile') == 'true' ); ?> />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
-                    <td>
-                        <?php _e("Hide until scroll up", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus.", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='checkbox' class='megamenu_sticky_husu_enabled' name='megamenu_meta[<?php echo $location ?>][sticky_hide_until_scroll_up]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up') == 'true' ); ?> />
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_husu' style='display: <?php echo $sticky_husu_display; ?>;'>
-                    <td>
-                        <?php _e("Scroll tolerance (0-50)", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Prevent the menu from being rapidly hidden and revealed due to small mouse movements. Default: 10", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='number' step='1' min='0' max='50' name='megamenu_meta[<?php echo $location; ?>][sticky_hide_until_scroll_up_tolerance]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_tolerance'); ?>' /><span class='mega-after'>px</span>
-                    </td>
-                </tr>
-                <tr class='megamenu_sticky_husu' style='display: <?php echo $sticky_husu_display; ?>;'>
-                    <td>
-                        <?php _e("Hide until scroll up offset", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Initiate the Hide Until Scroll Up functionality once the page has been scrolled down this distance.", "megamenu-pro"); ?>'></i>
-                    </td>
-                    <td>
-                        <input type='number' step='1' min='0' name='megamenu_meta[<?php echo $location; ?>][sticky_hide_until_scroll_up_offset]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_offset'); ?>' /><span class='mega-after'>px</span>
-                    </td>
-                </tr>
-            </table>
-            <table>
-
-        <?php
-
     }
 
 
