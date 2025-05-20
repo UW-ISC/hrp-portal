@@ -1,6 +1,8 @@
 #{$wrap} {
 
 	#{$menu}.mega-menu-vertical {
+		flex-direction: column;
+
 		// top level items
 		> li.mega-menu-item {
 	    	display: list-item;
@@ -65,6 +67,7 @@
 
                 > a.mega-menu-link > span.mega-indicator {
                     float: right;
+                    margin-left: auto;
 
                     &:after {
                         content: $arrow_right;
@@ -81,6 +84,7 @@
 
                 > a.mega-menu-link > span.mega-indicator {
                     float: left;
+                    margin-left: auto;
 
                     &:after {
                         content: $arrow_left;
@@ -138,6 +142,7 @@
 	}
 
 	#{$menu}.mega-menu-accordion {
+		flex-direction: column;
 
 		// top level items
 		> li.mega-menu-item {
@@ -239,6 +244,7 @@
         @include desktop {
             li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
                 float: right;
+                margin-left: auto;
             }
         }
 

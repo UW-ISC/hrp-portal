@@ -295,6 +295,20 @@ class Mega_Menu_Style_Overrides {
 		$html .= "                 <small><em>" . __("Not recommended for top level menu items", "megamenu-pro") . "</em></small>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
+		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_column_gap', $menu_item_meta) . "'>";
+		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_column_gap', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Column Gap", "megamenu-pro") . "</td>";
+		$html .= "            <td class='mega-value'>";
+		$html .=                  $this->print_theme_freetext_option('menu_item_column_gap', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
+		$html .= "            </td>";
+		$html .= "        </tr>";
+		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_row_gap', $menu_item_meta) . "'>";
+		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_row_gap', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Row Gap", "megamenu-pro") . "</td>";
+		$html .= "            <td class='mega-value'>";
+		$html .=                  $this->print_theme_freetext_option('menu_item_row_gap', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
+		$html .= "            </td>";
+		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_height', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_height', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
 		$html .= "            <td class='mega-name'>" . __("Menu Item Height", "megamenu-pro") . "</td>";
@@ -790,6 +804,8 @@ class Mega_Menu_Style_Overrides {
 							'menu_item_link_text_decoration_hover' => isset($settings['styles']['enabled']['menu_item_link_text_decoration_hover']) ? $settings['styles']['enabled']['menu_item_link_text_decoration_hover'] : 'disabled',
 							'menu_item_link_weight_hover' => isset($settings['styles']['enabled']['menu_item_link_weight_hover']) ? $settings['styles']['enabled']['menu_item_link_weight_hover'] : 'disabled',
 							'menu_item_link_text_align' => isset($settings['styles']['enabled']['menu_item_link_text_align']) ? $settings['styles']['enabled']['menu_item_link_text_align'] : 'disabled',
+							'menu_item_column_gap' => isset($settings['styles']['enabled']['menu_item_column_gap']) ? $settings['styles']['enabled']['menu_item_column_gap'] : 'disabled',
+							'menu_item_row_gap' => isset($settings['styles']['enabled']['menu_item_row_gap']) ? $settings['styles']['enabled']['menu_item_row_gap'] : 'disabled',
 						);
 
 						$custom_vars[ $item->ID ] = $styles;
