@@ -752,84 +752,85 @@ var singleClick = false;
              */
             if (tableDescription.tableType === "woo_commerce") {
                 let selectColumn = dataTableOptions.columnDefs.find(column => column.origHeader === "select");
+                if(selectColumn.bVisible) {
+                    if (selectColumn) {
+                        dataTableOptions.select = {
+                            style: 'multi',
+                            selector: 'td.wdt_woo_select_column',
+                        };
 
-                if (selectColumn) {
-                    dataTableOptions.select = {
-                        style: 'multi',
-                        selector: 'td.wdt_woo_select_column',
-                    };
+                        // Dynamically handle select column index
+                        let selectColumnIndex = selectColumn.aTargets[0];
+                        selectColumn.orderable = false;
+                        selectColumn.searchable = false;
+                        selectColumn.InputType = "none";
+                        selectColumn.sType = selectColumn.wdtType = "select";
+                        selectColumn.className = 'wdt_woo_select_column';
 
-                    // Dynamically handle select column index
-                    let selectColumnIndex = selectColumn.aTargets[0];
-                    selectColumn.orderable = false;
-                    selectColumn.searchable = false;
-                    selectColumn.InputType = "none";
-                    selectColumn.sType = selectColumn.wdtType = "select";
-                    selectColumn.className = 'wdt_woo_select_column';
+                        dataTableOptions.columnDefs[selectColumnIndex] = selectColumn;
 
-                    dataTableOptions.columnDefs[selectColumnIndex] = selectColumn;
-
-                    // Ensure valid initial order column
-                    let defaultOrder = dataTableOptions.order[0];
-                    if (defaultOrder && defaultOrder[0] === selectColumnIndex) {
-                        let firstSortableIndex = dataTableOptions.columnDefs.findIndex(column => column.orderable !== false);
-                        if (firstSortableIndex !== -1) {
-                            defaultOrder[0] = firstSortableIndex;
-                        } else {
-                            defaultOrder[0] = 1;
+                        // Ensure valid initial order column
+                        let defaultOrder = dataTableOptions.order[0];
+                        if (defaultOrder && defaultOrder[0] === selectColumnIndex) {
+                            let firstSortableIndex = dataTableOptions.columnDefs.findIndex(column => column.orderable !== false);
+                            if (firstSortableIndex !== -1) {
+                                defaultOrder[0] = firstSortableIndex;
+                            } else {
+                                defaultOrder[0] = 1;
+                            }
                         }
+
+                        // Adjust select column functionality post-reordering
+                        let findSelectColumnIndex = () => {
+                            let columns = $(tableDescription.selector).DataTable().settings()[0].aoColumns;
+                            return columns.findIndex(col => col.className === 'wdt_woo_select_column');
+                        };
+
+                        // Row callback for checkbox rendering
+                        dataTableOptions.rowCallback = function (row, data) {
+                            let currentSelectColumnIndex = findSelectColumnIndex();
+                            if (currentSelectColumnIndex !== -1) {
+                                $('td:eq(' + currentSelectColumnIndex + ')', row).html('<input type="checkbox" class="select-checkbox">');
+                            }
+                        };
+
+                        // Header callback for "select all" checkbox
+                        dataTableOptions.headerCallback = function (thead, data, start, end, display) {
+                            let currentSelectColumnIndex = findSelectColumnIndex();
+                            if (currentSelectColumnIndex !== -1) {
+                                let $headerCell = $(thead).find('th').eq(currentSelectColumnIndex);
+                                let currentHtml = $headerCell.html();
+                                let updatedHtml = currentHtml.replace(/select/, '<input type="checkbox" class="wdt-get-all-checkbox">');
+                                $headerCell.html(updatedHtml);
+                            }
+                        };
+
+                        // Update select column index after reorder
+                        $(tableDescription.selector).on('column-reorder.dt', function (e, settings, details) {
+                            selectColumnIndex = findSelectColumnIndex();
+                        });
+
+                        // Event handlers for "select all" and individual checkboxes
+                        $(tableDescription.selector).on('click', '.wdt-get-all-checkbox', function () {
+                            let rows = $(tableDescription.selector).DataTable().rows({'search': 'applied'}).nodes();
+                            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                            if (this.checked) {
+                                $(tableDescription.selector).DataTable().rows({'search': 'applied'}).select();
+                            } else {
+                                $(tableDescription.selector).DataTable().rows({'search': 'applied'}).deselect();
+                            }
+                        });
+
+                        $(tableDescription.selector).on('click', '.select-checkbox', function () {
+                            let $row = $(this).closest('tr');
+                            let isChecked = $(this).prop('checked');
+                            if (isChecked) {
+                                $(tableDescription.selector).DataTable().row($row).select();
+                            } else {
+                                $(tableDescription.selector).DataTable().row($row).deselect();
+                            }
+                        });
                     }
-
-                    // Adjust select column functionality post-reordering
-                    let findSelectColumnIndex = () => {
-                        let columns = $(tableDescription.selector).DataTable().settings()[0].aoColumns;
-                        return columns.findIndex(col => col.className === 'wdt_woo_select_column');
-                    };
-
-                    // Row callback for checkbox rendering
-                    dataTableOptions.rowCallback = function (row, data) {
-                        let currentSelectColumnIndex = findSelectColumnIndex();
-                        if (currentSelectColumnIndex !== -1) {
-                            $('td:eq(' + currentSelectColumnIndex + ')', row).html('<input type="checkbox" class="select-checkbox">');
-                        }
-                    };
-
-                    // Header callback for "select all" checkbox
-                    dataTableOptions.headerCallback = function (thead, data, start, end, display) {
-                        let currentSelectColumnIndex = findSelectColumnIndex();
-                        if (currentSelectColumnIndex !== -1) {
-                            let $headerCell = $(thead).find('th').eq(currentSelectColumnIndex);
-                            let currentHtml = $headerCell.html();
-                            let updatedHtml = currentHtml.replace(/select/, '<input type="checkbox" class="wdt-get-all-checkbox">');
-                            $headerCell.html(updatedHtml);
-                        }
-                    };
-
-                    // Update select column index after reorder
-                    $(tableDescription.selector).on('column-reorder.dt', function (e, settings, details) {
-                        selectColumnIndex = findSelectColumnIndex();
-                    });
-
-                    // Event handlers for "select all" and individual checkboxes
-                    $(tableDescription.selector).on('click', '.wdt-get-all-checkbox', function () {
-                        let rows = $(tableDescription.selector).DataTable().rows({'search': 'applied'}).nodes();
-                        $('input[type="checkbox"]', rows).prop('checked', this.checked);
-                        if (this.checked) {
-                            $(tableDescription.selector).DataTable().rows({'search': 'applied'}).select();
-                        } else {
-                            $(tableDescription.selector).DataTable().rows({'search': 'applied'}).deselect();
-                        }
-                    });
-
-                    $(tableDescription.selector).on('click', '.select-checkbox', function () {
-                        let $row = $(this).closest('tr');
-                        let isChecked = $(this).prop('checked');
-                        if (isChecked) {
-                            $(tableDescription.selector).DataTable().row($row).select();
-                        } else {
-                            $(tableDescription.selector).DataTable().row($row).deselect();
-                        }
-                    });
                 }
             }
 
@@ -2453,7 +2454,25 @@ var singleClick = false;
                 }
             });
             //[<--/ Full version -->]//
-
+            if (tableDescription.index_column) {
+                $(tableDescription.selector).DataTable().on('order.dt search.dt', function () {
+                    let i = 1;
+                    let pos = 0;
+                    let indexcolumn = false;
+                    for(var k = 0; k < tableDescription.dataTableParams.columnDefs.length ; k++){
+                        if (tableDescription.dataTableParams.columnDefs[k].name == 'wdt_indexcolumn'){
+                            pos = k;
+                            indexcolumn = true;
+                        }
+                    }
+                    $(tableDescription.selector).DataTable()
+                        .cells(null, (indexcolumn ? pos : tableDescription.dataTableParams.columnDefs.length - 1), {})
+                        .every(function (cell) {
+                            this.data(i++);
+                        });
+                })
+                    .draw();
+            }
             return wpDataTables[tableDescription.tableId];
 
         };

@@ -460,39 +460,39 @@ div.mce-widget button i.mce-i-wpdatachart {
     border-bottom: none !important;
 }
 
-.wpdt-c #wdt-configure-foreign-key-modal .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c #wdt-remove-column-modal .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c #wdt-add-column-modal .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .bootstrap-select.btn-group .dropdown-menu > li.selected a,
-.wpdt-c #wdt-configure-foreign-key-modal .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c #wdt-remove-column-modal .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c #wdt-add-column-modal .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .bootstrap-select.btn-group .dropdown-menu > li > a:hover,
-.wpdt-c #wdt-configure-foreign-key-modal .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c #wdt-remove-column-modal .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c #wdt-add-column-modal .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .bootstrap-select.btn-group .dropdown-menu > li > a:focus,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .bootstrap-select.btn-group .dropdown-menu > li > a:focus {
+.wpdt-c #wdt-configure-foreign-key-modal .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c #wdt-remove-column-modal .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c #wdt-add-column-modal .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .dropdown.bootstrap-select .dropdown-menu > li a.active.selected,
+.wpdt-c #wdt-configure-foreign-key-modal .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c #wdt-remove-column-modal .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c #wdt-add-column-modal .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .dropdown.bootstrap-select .dropdown-menu > li > a:hover,
+.wpdt-c #wdt-configure-foreign-key-modal .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c #wdt-remove-column-modal .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c #wdt-add-column-modal .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-constructor .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-settings .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .plugin-dashboard .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .column-settings-panel .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-table-settings .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-chart-wizard .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-addons .dropdown.bootstrap-select .dropdown-menu > li > a:focus,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .dropdown.bootstrap-select .dropdown-menu > li > a:focus {
     background-color: rgba(0, 140, 255, 0.06) !important;
 }
 
@@ -608,7 +608,7 @@ div.mce-widget button i.mce-i-wpdatachart {
 .wpdt-c .wdt-datatables-admin-wrap .wdt-browse-table .bootstrap-select > .btn-default:before {
     position: absolute;
     top: 6px;
-    right: 0;
+    right: 10px;
     height: calc(100% - 2px);
     width: 30px;
     font-family: "wpDataTablesIcons";
@@ -931,20 +931,20 @@ div.mce-widget button i.mce-i-wpdatachart {
     box-shadow: none !important;
 }
 
-.wpdt-c .wdt-datatables-admin-wrap .bootstrap-select.btn-group .dropdown-menu li a {
+.wpdt-c .wdt-datatables-admin-wrap .dropdown.bootstrap-select .dropdown-menu li a {
     box-shadow: none !important;
     text-transform: none !important;
 }
 
-.wpdt-c .wdt-datatables-admin-wrap .wdt-add-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-editing-hidden-default-value-select.bootstrap-select.btn-group .dropdown-menu li a,
-.wpdt-c .wdt-datatables-admin-wrap .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li a {
+.wpdt-c .wdt-datatables-admin-wrap .wdt-add-hidden-default-value.dropdown.bootstrap-select .dropdown-menu li a,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-editing-hidden-default-value-select.dropdown.bootstrap-select .dropdown-menu li a,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-constructor-hidden-default-value.dropdown.bootstrap-select .dropdown-menu li a {
     padding-left: 30px !important;
 }
 
-.wpdt-c .wdt-add-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
-.wpdt-c .wdt-editing-hidden-default-value-select.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
-.wpdt-c .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header {
+.wpdt-c .wdt-add-hidden-default-value.dropdown.bootstrap-select .dropdown-menu li.dropdown-header,
+.wpdt-c .wdt-editing-hidden-default-value-select.dropdown.bootstrap-select .dropdown-menu li.dropdown-header,
+.wpdt-c .wdt-constructor-hidden-default-value.dropdown.bootstrap-select .dropdown-menu li.dropdown-header {
     margin-top: 10px !important;
 }
 

@@ -106,6 +106,24 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	protected $current_batch;
 
 	/**
+	 * Null or the current task.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @var mixed|null
+	 */
+	protected $current_task;
+
+	/**
+	 * Indicates if the task uses an array that supports the attempts key.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @var bool
+	 */
+	protected $supports_attempts = false;
+
+	/**
 	 * The status set when process is cancelling.
 	 *
 	 * @since 2.9.7
@@ -115,13 +133,22 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	const STATUS_CANCELLED = 1;
 
 	/**
-	 * The status set when process is paused or pausing.
+	 * The status set when processing is paused using $this->pause( true ).
 	 *
 	 * @since 2.9.7
 	 *
 	 * @var int
 	 */
 	const STATUS_PAUSED = 2;
+
+	/**
+	 * The status set when processing is paused using $bp_object->pause() or $bp_object->pause( false ).
+	 *
+	 * @since 2.9.10
+	 *
+	 * @var int
+	 */
+	const STATUS_PAUSED_NO_TS = 3;
 
 	/**
 	 * Initiate new background process
@@ -154,7 +181,8 @@ abstract class GF_Background_Process extends WP_Async_Request {
 		add_filter( 'cron_schedules', array( $this, 'schedule_cron_healthcheck' ) );
 
 		// Ensure dispatch query args included extra data.
-		add_filter( $this->identifier . '_query_args', array( $this, 'filter_dispatch_query_args' ) );
+		add_filter( $this->identifier . '_query_args', array( $this, 'filter_dispatch_query_args' ), 1 );
+		add_filter( $this->identifier . '_post_args', array( $this, 'filter_dispatch_post_args' ), 1 );
 
 		add_action( 'wp_delete_site', array( $this, 'delete_site_batches' ) );
 		add_action( 'make_spam_blog', array( $this, 'delete_site_batches' ) );
@@ -239,30 +267,31 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 * @return $this
 	 */
 	public function save() {
-		$key = $this->generate_key();
-
-		if ( ! empty( $this->data ) ) {
-			$this->log_debug( sprintf( '%s(): Saving batch %s. Tasks: %d.', __METHOD__, $key, count( $this->data ) ) );
-
-			$time = microtime( true );
-			$batch = array(
-				'blog_id'           => get_current_blog_id(),
-				'data'              => $this->data,
-				'timestamp_created' => $time,
-				'timestamp_updated' => $time,
-			);
-			update_site_option( $key, $batch );
-
-			/**
-			 * Batch saved action.
-			 *
-			 * @since 2.9.8
-			 *
-			 * @param string $key   The batch key.
-			 * @param array  $batch The saved batch.
-			 */
-			do_action( $this->identifier . '_batch_saved', $key, $batch );
+		if ( empty( $this->data ) ) {
+			return $this;
 		}
+
+		$key = $this->generate_key();
+		$this->log_debug( sprintf( '%s(): Saving batch %s. Tasks: %d.', __METHOD__, $key, count( $this->data ) ) );
+
+		$time  = microtime( true );
+		$batch = array(
+			'blog_id'           => get_current_blog_id(),
+			'data'              => $this->data,
+			'timestamp_created' => $time,
+			'timestamp_updated' => $time,
+		);
+		update_site_option( $key, $batch );
+
+		/**
+		 * Batch saved action.
+		 *
+		 * @since 2.9.8
+		 *
+		 * @param string $key   The batch key.
+		 * @param array  $batch The saved batch.
+		 */
+		do_action( $this->identifier . '_batch_saved', $key, $batch );
 
 		// Clean out data so that new data isn't prepended with closed session's data.
 		$this->data = array();
@@ -282,30 +311,39 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 * @return $this
 	 */
 	public function update( $key, $data ) {
-		if ( ! empty( $data ) ) {
-			$existing_batch = get_site_option( $key );
-			if ( $existing_batch ) {
-				$this->log_debug( sprintf( '%s(): Updating batch %s. Tasks remaining: %d.', __METHOD__, $key, count( $data ) ) );
-				$batch = array(
-					'blog_id'           => get_current_blog_id(),
-					'data'              => $data,
-					'timestamp_created' => rgar( $existing_batch, 'timestamp_created' ),
-					'timestamp_updated' => microtime( true ),
-				);
-				update_site_option( $key, $batch );
-
-				/**
-				 * Batch updated action.
-				 *
-				 * @since 2.9.8
-				 *
-				 * @param string $key            The batch key.
-				 * @param array  $data           The updated batch.
-				 * @param array  $existing_batch The batch from before it was updated.
-				 */
-				do_action( $this->identifier . '_batch_updated', $key, $batch, $existing_batch );
-			}
+		if ( empty( $data ) ) {
+			return $this;
 		}
+
+		$existing_batch = get_site_option( $key );
+		if ( empty( $existing_batch ) ) {
+			return $this;
+		}
+
+		$batch = array(
+			'blog_id'           => get_current_blog_id(),
+			'data'              => $data,
+			'timestamp_created' => rgar( $existing_batch, 'timestamp_created' ),
+			'timestamp_updated' => microtime( true ),
+		);
+
+		$result = update_site_option( $key, $batch );
+		if ( ! $result ) {
+			return $this;
+		}
+
+		$this->log_debug( sprintf( '%s(): Batch %s updated. Tasks remaining: %d.', __METHOD__, $key, count( $data ) ) );
+
+		/**
+		 * Batch updated action.
+		 *
+		 * @since 2.9.8
+		 *
+		 * @param string $key            The batch key.
+		 * @param array  $batch          The updated batch.
+		 * @param array  $existing_batch The batch from before it was updated.
+		 */
+		do_action( $this->identifier . '_batch_updated', $key, $batch, $existing_batch );
 
 		return $this;
 	}
@@ -387,7 +425,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 */
 	public function pause( $set_timestamp = false ) {
 		$this->log_debug( sprintf( '%s(): Pausing processing for %s.', __METHOD__, $this->action ) );
-		update_site_option( $this->get_status_key(), self::STATUS_PAUSED );
+		update_site_option( $this->get_status_key(), $set_timestamp ? self::STATUS_PAUSED : self::STATUS_PAUSED_NO_TS );
 		if ( $set_timestamp ) {
 			update_site_option( $this->get_identifier() . '_pause_timestamp', microtime( true ) );
 		}
@@ -401,7 +439,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 * @return bool
 	 */
 	public function is_paused() {
-		return $this->get_status() === self::STATUS_PAUSED;
+		return in_array( $this->get_status(), array( self::STATUS_PAUSED, self::STATUS_PAUSED_NO_TS ), true );
 	}
 
 	/**
@@ -846,6 +884,30 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	}
 
 	/**
+	 * Sets the current_task property.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param mixed|null $task Null or the task currently being processed.
+	 *
+	 * @return void
+	 */
+	protected function set_current_task( $task = null ) {
+		$this->current_task = $task;
+	}
+
+	/**
+	 * Gets the task currently being processed.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @return mixed|null
+	 */
+	protected function get_current_task() {
+		return $this->current_task;
+	}
+
+	/**
 	 * Handle
 	 *
 	 * Pass each queue item to the task handler, while remaining
@@ -916,12 +978,18 @@ abstract class GF_Background_Process extends WP_Async_Request {
 
 			$task_num = 0;
 
-			foreach ( $batch->data as $key => $value ) {
-				$this->log_debug( sprintf( '%s(): Processing task %d.', __METHOD__, ++$task_num ) );
+			add_action( 'shutdown', array( $this, 'shutdown_error_handler' ) );
+			foreach ( $batch->data as $key => $task ) {
+				$this->increment_task_attempts( $batch, $key, $task );
+				$attempt_num = $this->supports_attempts ? sprintf( ' Attempt number: %d.', rgar( $task, 'attempts', 1 ) ) : '';
+				$this->log_debug( sprintf( '%s(): Processing task %d.%s', __METHOD__, ++ $task_num, $attempt_num ) );
 
 				// Setting or refreshing the current batch before processing the task.
 				$this->set_current_batch( $batch );
-				$task = $this->task( $value );
+				$this->set_current_task( $task );
+
+				$task = $this->can_process_task( $task, $batch, $task_num ) ? $this->task( $task ) : false;
+				$this->set_current_task();
 
 				if ( $task !== false ) {
 					$this->log_debug( sprintf( '%s(): Keeping task %d in batch.', __METHOD__, $task_num ) );
@@ -946,6 +1014,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 					break;
 				}
 			}
+			remove_action( 'shutdown', array( $this, 'shutdown_error_handler' ) );
 
 			$this->log_debug( sprintf( '%s(): Batch completed for %s.', __METHOD__, $this->action ) );
 
@@ -975,6 +1044,115 @@ abstract class GF_Background_Process extends WP_Async_Request {
 		}
 
 		return $this->maybe_wp_die();
+	}
+
+	/**
+	 * Increments the item attempts property and updates the batch in the database.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param object $batch The current batch.
+	 * @param int    $key   The key used to access the task in the batch.
+	 * @param mixed  $task  The current task from the batch.
+	 */
+	protected function increment_task_attempts( &$batch, $key, &$task ) {
+		if ( ! $this->supports_attempts || ! is_array( $task ) ) {
+			return;
+		}
+
+		$task['attempts']    = ( $task['attempts'] ?? 0 ) + 1;
+		$batch->data[ $key ] = $task;
+		$this->update( $batch->key, $batch->data );
+	}
+
+	/**
+	 * Determines if the task can be processed based on its attempts property.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param mixed  $task     The task about to be processed.
+	 * @param object $batch    The batch currently being processed.
+	 * @param int    $task_num The number that identifies the task in the logs.
+	 *
+	 * @return bool
+	 */
+	protected function can_process_task( $task, $batch, $task_num ) {
+		if ( ! $this->supports_attempts ) {
+			return true;
+		}
+
+		$attempts = rgar( $task, 'attempts', 1 );
+		if ( $attempts === 1 ) { // Task is about to be processed for the first time.
+			return true;
+		}
+
+		$max_attempts = 1;
+		$identifier   = $this->get_identifier();
+
+		/**
+		 * Allows the number of retries to be modified before the task is abandoned.
+		 *
+		 * @since 2.9.9
+		 *
+		 * @param int    $max_attempts The maximum number of attempts allowed. Default: 1.
+		 * @param mixed  $task         The task about to be processed.
+		 * @param object $batch        The batch currently being processed.
+		 * @param string $identifier   The string used to identify the type of background process.
+		 */
+		$max_attempts = apply_filters( 'gform_max_async_task_attempts', $max_attempts, $task, $batch, $identifier );
+
+		if ( $attempts > $max_attempts ) {
+			$this->log_debug( sprintf( '%s(): Aborting. Task %d attempted too many times. Attempt number: %d. Limit: %d.', __METHOD__, $task_num, $attempts, $max_attempts ) );
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Detects if an error occurred before the shutdown hook was triggered, and then triggers logging of the error details.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @return void
+	 */
+	public function shutdown_error_handler() {
+		if ( empty( $this->get_current_batch() ) ) {
+			return;
+		}
+
+		$error = error_get_last();
+		if ( empty( $error['type'] ) ) {
+			return;
+		}
+
+		if ( ! in_array( $error['type'], array(
+			E_ERROR,
+			E_PARSE,
+			E_USER_ERROR,
+			E_COMPILE_ERROR,
+			E_RECOVERABLE_ERROR,
+		), true ) ) {
+			return;
+		}
+
+		$this->handle_error( $error );
+	}
+
+	/**
+	 * Logs the error.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param array $error The error returned by error_get_last().
+	 *
+	 * @return void
+	 */
+	protected function handle_error( $error ) {
+		$batch = $this->get_current_batch();
+		$this->log_error( sprintf( '%s(): Aborting. Error occurred during processing of batch %s; Tasks remaining: %d. Details: %s', __METHOD__, $batch->key, count( $batch->data ), print_r( $error, true ) ) );
+		$this->unlock_process();
 	}
 
 	/**
@@ -1192,15 +1370,28 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 * @return bool
 	 */
 	protected function is_pause_expired() {
-		$pause_timestamp = get_site_option( $this->get_identifier() . '_pause_timestamp' );
-		if ( empty( $pause_timestamp ) ) {
+		if ( $this->get_status() === self::STATUS_PAUSED_NO_TS ) {
+			$this->log_debug( __METHOD__ . '(): Processing was paused by an external method and will remain paused until $bp_object->resume() is called.' );
+
 			return false;
+		}
+
+		$pause_timestamp = get_site_option( $this->get_identifier() . '_pause_timestamp' );
+		if ( empty( $pause_timestamp ) || ! is_numeric( $pause_timestamp ) ) {
+			$this->log_error( __METHOD__ . '(): Processing is paused and the expiry timestamp is not set or contains an invalid value: ' . var_export( $pause_timestamp, true ) );
+
+			return true;
 		}
 
 		$paused_duration = time() - $pause_timestamp;
 		$duration_limit  = ( $this->get_cron_interval() / 2 ) * MINUTE_IN_SECONDS;
+		$is_expired      = ( $paused_duration >= $duration_limit );
 
-		return ( $paused_duration >= $duration_limit );
+		if ( ! $is_expired ) {
+			$this->log_debug( sprintf( '%s(): Processing is paused and can resume after %s.', __METHOD__, wp_date( 'Y-m-d H:i:s', (int) ( $pause_timestamp + $duration_limit ) ) ) );
+		}
+
+		return $is_expired;
 	}
 
 	/**
@@ -1400,6 +1591,19 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	public function filter_dispatch_query_args( $args ) {
 		$args[ $this->get_chain_id_arg_name() ] = $this->get_chain_id();
 
+		return $args;
+	}
+
+	/**
+	 * Filters the post arguments used during an async request.
+	 *
+	 * @since 2.9.10
+	 *
+	 * @param array $args Current post args.
+	 *
+	 * @return array
+	 */
+	public function filter_dispatch_post_args( $args ) {
 		// Reducing timeout to help with form submission performance.
 		$args['timeout'] = 0.01;
 
@@ -1545,6 +1749,19 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 */
 	public function log_debug( $message ) {
 		GFCommon::log_debug( $message );
+	}
+
+	/**
+	 * Writes an error message to the core log.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param string $message The message to be logged.
+	 *
+	 * @return void
+	 */
+	public function log_error( $message ) {
+		GFCommon::log_error( $message );
 	}
 
 }

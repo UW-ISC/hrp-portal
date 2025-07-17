@@ -174,4 +174,32 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-4 m-b-16">
+
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e( 'Index column', 'wpdatatables' ); ?>
+                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#index-column-hint"
+                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+            </h4>
+
+            <!-- Hidden popover for fixed header -->
+            <div class="hidden" id="index-column-hint">
+                <div class="popover-heading">
+                    <?php esc_html_e( 'Index column', 'wpdatatables' ); ?>
+                </div>
+
+                <div class="popover-body">
+                    <?php esc_html_e( 'Enable this to add index column.', 'wpdatatables' ); ?>
+                </div>
+            </div>
+            <!-- /Hidden popover for fixed header -->
+
+            <div class="toggle-switch" data-ts-color="blue">
+                <input id="wdt-index-column" type="checkbox">
+                <label for="wdt-index-column"
+                       class="ts-label"><?php esc_html_e( 'Add index column', 'wpdatatables' ); ?></label>
+            </div>
+        </div>
+    </div>
 </div>

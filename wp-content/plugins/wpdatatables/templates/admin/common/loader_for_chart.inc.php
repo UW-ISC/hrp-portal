@@ -9,6 +9,13 @@ $style = "height: {$height}px;";
 if (!$isLoaderVisible) {
     $style .= " display: none;";
 }
+
+if ($this->getChartLoaderColorSettings() != '') {
+    $loaderColor = $this->getChartLoaderColorSettings();
+}
+if ($this->getChartLoaderAnimationColorSettings() != '') {
+    $loaderColor = $this->getChartLoaderAnimationColorSettings();
+}
 ?>
 <div class="wdt-wrapper-chart-loader" data-id="<?php echo esc_attr($this->getId()); ?>"
      style="<?php echo esc_attr($style); ?>">
@@ -61,3 +68,14 @@ if (!$isLoaderVisible) {
         </div>
     </div>
 </div>
+<style>
+    <?php if( !empty($this->getChartLoaderColorSettings()) || !empty($this->getChartLoaderAnimationColorSettings())) {
+         $loaderChartColor = empty($this->getChartLoaderColorSettings()) ? '#bbbbbb' : $this->getChartLoaderColorSettings();
+         $loaderChartColorAnimation = empty($this->getChartLoaderAnimationColorSettings()) ? '#eeeeee' : $this->getChartLoaderAnimationColorSettings();
+        ?>
+    .wdt-wrapper-chart-loader[data-id="<?php echo esc_attr($this->getId())?>"] .wdt-chart-animated-background {
+        background: linear-gradient(to right, <?php echo $loaderChartColor; ?> 8%,  <?php echo $loaderChartColorAnimation; ?> 18%, <?php echo $loaderChartColor; ?>  33%);
+    }
+    <?php } ?>
+
+</style>

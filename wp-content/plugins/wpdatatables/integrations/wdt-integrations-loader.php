@@ -67,7 +67,10 @@ class WDTIntegrationsLoader
         if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php')) {
             require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'fixed-columns-and-headers/wdt-fixed-ch-integration.php');
         }
-
+        // Include Index Column
+        if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'index-column/wdt-index-column-integration.php')) {
+            require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'index-column/wdt-index-column-integration.php');
+        }
         // Include Hidden Column
         if (is_file(WDT_STANDARD_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php')) {
             require_once(WDT_STANDARD_INTEGRATIONS_PATH . 'hidden-column/wdt-hidden-column-integration.php');

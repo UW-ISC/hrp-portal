@@ -1252,6 +1252,9 @@ WDTColumn.prototype.fillInputs = function () {
 
     let filteringOptionEnabled = this.parent_table.filtering;
     let globalOptionEnabled = this.parent_table.global_search;
+    if (this.type == 'index') {
+        jQuery('li.column-transform-value-tab').hide();
+    }
     if (!(filteringOptionEnabled || globalOptionEnabled) ||
         this.type == 'formula' || this.type == 'select' || this.type == 'cart') {
         jQuery('li.column-filtering-settings-tab').hide();
@@ -1335,7 +1338,7 @@ WDTColumn.prototype.fillInputs = function () {
         }
     }
 
-    if ((this.parent_table.editable || this.parent_table.table_type == 'manual') && this.type != 'formula') {
+    if ((this.parent_table.editable || this.parent_table.table_type == 'manual') && this.type != 'formula' && this.type != 'index') {
         jQuery('li.column-editing-settings-tab').show();
         if (jQuery('#wdt-column-editor-input-type').length) {
             jQuery('#wdt-column-editor-input-type').selectpicker('val', this.editor_type).change();
@@ -1465,7 +1468,7 @@ WDTColumn.prototype.show = function () {
     jQuery('div.column-settings-panel .tab-content').find('.active').removeClass('active');
     jQuery('div#column-display-settings').addClass('active');
 
-    wpdatatable_config.sorting == 0 || this.type == 'formula' || this.type == 'select' || this.type == 'cart' ?
+    wpdatatable_config.sorting == 0 || this.type == 'formula' || this.type == 'select' || this.type == 'cart' || this.type == 'index' ?
         jQuery('.column-sorting-settings-tab').hide() :
         jQuery('.column-sorting-settings-tab').show();
 
@@ -1961,6 +1964,29 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
     if (column.filter_type == 'none') {
         $columnBlock.find('i.wdt-toggle-show-filters')
             .addClass('inactive')
+    }
+
+    if (column.filter_type == 'none') {
+        $columnBlock.find('i.wdt-toggle-show-filters')
+            .addClass('inactive')
+    }
+
+    if (column.type == 'index') {
+        $columnBlock.find('i.wdt-toggle-show-sorting').addClass('inactive');
+        $columnBlock.find('i.wdt-toggle-show-filters')
+            .prop('disabled', true)
+            .css('pointer-events', 'none')
+            .addClass('disabled'); // Opcionalno: dodaj klasu za stilizovanje
+
+        $columnBlock.find('i.wdt-toggle-show-sorting')
+            .prop('disabled', true)
+            .css('pointer-events', 'none')
+            .addClass('disabled');
+
+        $columnBlock.find('i.wdt-toggle-global-search')
+            .prop('disabled', true)
+            .css('pointer-events', 'none')
+            .addClass('disabled');
     }
 
     /**

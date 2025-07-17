@@ -187,13 +187,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     color: #ffffff;
 }
 
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group .dropdown-menu {
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-menu {
     left: -1px;
     padding: 0;
     background: #1a1a1a;
 }
 
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group ul.dropdown-menu {
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length .bootstrap-select ul.dropdown-menu {
     width: 180px;
     font-family: var(--wpdt-roboto-google-font, inherit);
     font-size: 14px;
@@ -1110,13 +1110,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-menu > li > a,
 #wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-menu > li > a,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark .bootstrap-select .dropdown-menu > li > a,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-#wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-#wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead .bootstrap-select.btn-group .dropdown-toggle .filter-option,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tfoot .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-toggle .filter-option,
+#wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-toggle .filter-option,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-toggle .filter-option,
+#wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-toggle .filter-option,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark .bootstrap-select .dropdown-toggle .filter-option,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead .bootstrap-select .dropdown-toggle .filter-option,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tfoot .bootstrap-select .dropdown-toggle .filter-option {
     color: #ffffff80;
 }
 
@@ -1141,9 +1141,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     margin: 0 16px;
 }
 
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length span.filter-option {
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle .filter-option {
     margin-left: 0;
     color: #606266;
+    font-family: var(--wpdt-inter-google-font, inherit);
 }
 
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:after,
@@ -1595,8 +1596,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     color: #ffffff;
 }
 
-.wpdt-c.wdt-skin-dark .wdt-add-to-cart-button,
-.wpdt-c.wdt-skin-dark .single_add_to_cart_button {
+.wpdt-c.wdt-skin-dark .wdt-woo-basket-info button.button.wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button {
     border: 1px solid #606fc7;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -1606,6 +1607,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     margin-left: 16px;
     color: #ffffff;
     width: fit-content;
+    position: relative;
+    padding: 0 10px !important;
 }
 
 .wpdt-c.wdt-skin-dark a.basket-link {
@@ -2821,4 +2824,28 @@ div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button {
     color: #6e7fe4;
+}
+
+.wpdt-c.wdt-skin-dark .wdt-woo-single-product .wdt-woo-loader,
+.wpdt-c.wdt-skin-dark .wdt-add-to-cart-button .wdt-woo-loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #606fc7;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: wdt-spin 2s linear infinite;
+    display: inline-block;
+    top: 25%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+@keyframes wdt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wpdt-c.wdt-skin-dark .wdt-add-to-cart-button .wdt-woo-loader {
+    display: none;
 }

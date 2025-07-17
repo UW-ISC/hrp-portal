@@ -1369,7 +1369,7 @@ class GFAPI {
 	 * @param string $property The property of the Entry object to be updated.
 	 * @param mixed  $value    The value to which the property should be set.
 	 *
-	 * @return bool Whether the entry property was updated successfully.
+	 * @return int|false The number of rows updated, or false on error or if there is a submissions block.
 	 */
 	public static function update_entry_property( $entry_id, $property, $value ) {
 		if ( gf_upgrade()->get_submissions_block() ) {
@@ -2466,6 +2466,24 @@ class GFAPI {
 		$meta[] = $status;
 
 		gform_update_meta( $entry_id, $key, $meta, $form_id );
+	}
+
+	/**
+	 * Retrieves the name of the given feed.
+	 *
+	 * @since 2.9.9
+	 *
+	 * @param array  $feed The feed.
+	 * @param string $key  Optional. The key used to store the name.
+	 *
+	 * @return string
+	 */
+	public static function get_feed_name( $feed, $key = '' ) {
+		if ( empty( $key ) ) {
+			$key = ! empty( $feed['meta']['feedName'] ) ? 'feedName' : 'feed_name';
+		}
+
+		return rgars( $feed, 'meta/' . $key, '' );
 	}
 
 	// NOTIFICATIONS ----------------------------------------------

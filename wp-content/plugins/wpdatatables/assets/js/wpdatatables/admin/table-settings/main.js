@@ -168,6 +168,8 @@
          * Change display length
          */
         $('#wdt-rows-per-page').change(function (e) {
+            if ($(this).data('suppress-change')) return;
+
             wpdatatable_config.setDisplayLength($(this).val());
         });
 
@@ -2265,6 +2267,57 @@
             delimiterRegex: '|',
             tagClass: 'label label-primary'
         });
+
+
+        var hash = window.location.hash;
+
+        // On page load
+        activateTabByHash(hash);
+
+        // On hashchange
+        window.addEventListener('hashchange', function () {
+            activateTabByHash(window.location.hash);
+        }, false);
+
+        // Update hash when any tab is clicked
+        $('.wdt-datatables-admin-wrap').on('click', '.wdt-table-settings .tab-nav a[data-toggle="tab"]', function (e) {
+            e.preventDefault();
+            var targetHash = this.hash;
+            if (targetHash) {
+                var scrollmem = $('body').scrollTop();
+                window.location.hash = targetHash;
+                $('html,body').scrollTop(scrollmem);
+            }
+
+            // Show tab (Bootstrap behavior)
+            $(this).wdtBootstrapTabs('show');
+        });
+
+        function activateTabByHash(hash) {
+            if (!hash) return;
+
+            // First, try matching a top-level tab
+            var $topLevelTab = $('.wdt-datatables-admin-wrap .wdt-table-settings ul.tab-nav a[href="' + hash + '"]');
+
+            if ($topLevelTab.length && typeof $.fn.wdtBootstrapTabs !== 'undefined') {
+                $topLevelTab.wdtBootstrapTabs('show');
+            }
+            // If not found, try nested tabs under #customize-table-settings
+            var $nestedTab = $('.customize-table-settings-ul a[href="' + hash + '"]');
+
+            if ($nestedTab.length) {
+                // First, make sure parent tab is shown
+                var $customizeTab = $('.wdt-datatables-admin-wrap .wdt-table-settings ul.tab-nav a[href="#customize-table-settings"]');
+                if ($customizeTab.length) {
+                    $customizeTab.wdtBootstrapTabs('show');
+                }
+
+                // Then show the nested tab
+                setTimeout(function () {
+                    $nestedTab.wdtBootstrapTabs('show');
+                }, 100); // slight delay in case parent tab needs time to render
+            }
+        }
 
         function updateEditButtons(enableDuplicateButton) {
             var editButtonsSelect = $('#wdt-edit-buttons-displayed');

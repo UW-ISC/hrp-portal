@@ -2026,11 +2026,11 @@ html.ismobile .page-loader {
   background: transparent;
 }
 
-.wpdt-c .bootstrap-select.btn-group .dropdown-menu li a.opt {
+.wpdt-c .bootstrap-select .dropdown-menu li a.opt {
   padding-left: 17px;
 }
 
-.wpdt-c .bootstrap-select.btn-group .dropdown-menu .no-results {
+.wpdt-c .bootstrap-select .dropdown-menu .no-results {
   padding: 8px 8px 0;
   background-color: #fff;
 }

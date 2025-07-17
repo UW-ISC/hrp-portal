@@ -804,7 +804,7 @@ function relevanssi_pdf_action_javascript() {
 			}
 			jQuery.post(ajaxurl, data, function(response ) {
 				var delete_response = JSON.parse(response);
-				if ( ! delete_response.deleted_rows ) {
+				if ( ! delete_response.deleted_rows && delete_response.deleted_rows !== 0 ) {
 					alert( relevanssi.error_reset_problems );
 				} else {
 					alert( relevanssi.error_reset_done );

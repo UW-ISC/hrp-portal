@@ -66,7 +66,7 @@ class WDTExcelColumn
                 $format = '0,0.' . str_repeat('0', $decimal_places);
                 $colJsDefinition->format = $format;
             }
-        } else if ($this->wdtColumn->getDataType() == 'formula') {
+        } else if( $this->wdtColumn->getDataType() == 'formula' || $this->wdtColumn->getDataType() == 'index') {
             $colJsDefinition->readOnly = true;
         }
 

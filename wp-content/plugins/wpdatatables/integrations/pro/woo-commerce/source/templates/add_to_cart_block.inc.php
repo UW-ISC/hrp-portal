@@ -10,7 +10,8 @@ if (is_null(WC()->cart)) {
         <button id="wdt-add-to-cart-button-<?php echo $this->getWpId() ?>"
                 class="button alt wdt-add-to-cart-button"
                 data-value="<?php echo $this->getWpId() ?>">
-            <?php esc_html_e('Add to cart', 'wpdatatables'); ?>
+            <span class="wdt-woo-button-text"> <?php esc_html_e('Add to cart', 'wpdatatables'); ?>   </span>
+            <span class="wdt-woo-loader" style="display: none;"></span>
         </button>
     <?php endif; ?>
 

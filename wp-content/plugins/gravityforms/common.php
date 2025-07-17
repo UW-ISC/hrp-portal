@@ -2185,6 +2185,7 @@ class GFCommon {
 	 *
 	 * If an email field has multiple merge tags, and not all of the fields are
 	 * filled out, we can end up with extra commas that break the header.
+	 * This method also accounts for removal of surrounding spaces.
 	 *
 	 * @since 2.8.6
 	 *
@@ -2193,8 +2194,7 @@ class GFCommon {
 	 * @return string
 	 */
 	public static function remove_extra_commas( $email ) {
-		//return rtrim( preg_replace( '/,+/', ',', $email ), ',' );
-		return ltrim( rtrim( preg_replace( '/,+/', ',', $email ), ',' ), ',' );
+		return ltrim( rtrim( preg_replace( '/[,\s]+/', ',', $email ), ',' ), ',' );
 	}
 
 	public static function send_notifications( $notification_ids, $form, $lead, $do_conditional_logic = true, $event = 'form_submission', $data = array() ) {
@@ -4083,18 +4083,17 @@ Content-Type: text/html;
 
 		$preview_link = sprintf(
 			'
-				<a
-					aria-label="%s"
-					href="%s"
-					class="%s gform-button--icon-leading"
-					target="%s"
-					rel="noopener"
-				><i class="gform-button__icon gform-common-icon gform-common-icon--eye"></i>%s</a>
+			<a href="%s" class="%s gform-button--icon-leading" target="%s" rel="noopener">
+				<span class="screen-reader-text">%s</span>
+				<span class="screen-reader-text">%s</span>
+				<i class="gform-button__icon gform-common-icon gform-common-icon--eye"></i>%s
+			</a>
 				',
-			esc_html__( 'Preview this form', 'gravityforms' ),
 			esc_url( $options['url'] ),
 			esc_attr( $options['link_class'] ),
 			esc_attr( $options['target'] ),
+			esc_html__( 'Preview this form', 'gravityforms' ),
+			esc_html__( '(opens in a new tab)', 'gravityforms' ),
 			esc_html( $options['label'] )
 		);
 
@@ -4578,30 +4577,25 @@ Content-Type: text/html;
 		self::timer_start( __METHOD__ );
 		$is_spam = false;
 
-		if ( self::akismet_enabled( $form_id ) ) {
-			$is_spam = self::is_akismet_spam( $form, $entry );
-			self::log_debug( __METHOD__ . '(): Result from Akismet: ' . json_encode( $is_spam ) );
-			if ( $is_spam ) {
-				self::set_spam_filter( $form_id, __( 'Akismet Spam Filter', 'gravityforms' ), '' );
-			}
+		$akismet_callback = array( __CLASS__, 'entry_is_spam_akismet' );
+		if ( has_filter( 'gform_entry_is_spam', $akismet_callback ) === false ) {
+			add_filter( 'gform_entry_is_spam', $akismet_callback, 90, 3 );
 		}
 
-		$gform_entry_is_spam_args = array( 'gform_entry_is_spam', $form_id );
-		if ( gf_has_filter( $gform_entry_is_spam_args ) ) {
-			GFCommon::log_debug( __METHOD__ . '(): Executing functions hooked to gform_entry_is_spam.' );
-			/**
-			 * Allows submissions to be flagged as spam by custom methods.
-			 *
-			 * @since 1.8.17
-			 * @since 2.4.17 Moved from GFFormDisplay::handle_submission().
-			 *
-			 * @param bool  $is_spam Indicates if the submission has been flagged as spam.
-			 * @param array $form    The form currently being processed.
-			 * @param array $entry   The entry currently being processed.
-			 */
-			$is_spam = gf_apply_filters( $gform_entry_is_spam_args, $is_spam, $form, $entry );
-			self::log_debug( __METHOD__ . '(): Result from gform_entry_is_spam filter: ' . json_encode( $is_spam ) );
-		}
+		GFCommon::log_debug( __METHOD__ . '(): Executing functions hooked to gform_entry_is_spam.' );
+
+		/**
+		 * Allows submissions to be flagged as spam by custom methods.
+		 *
+		 * @since 1.8.17
+		 * @since 2.4.17 Moved from GFFormDisplay::handle_submission().
+		 *
+		 * @param bool  $is_spam Indicates if the submission has been flagged as spam.
+		 * @param array $form    The form currently being processed.
+		 * @param array $entry   The entry currently being processed.
+		 */
+		$is_spam = gf_apply_filters( array( 'gform_entry_is_spam', $form_id ), $is_spam, $form, $entry );
+		self::log_debug( __METHOD__ . '(): Result from gform_entry_is_spam filter: ' . json_encode( $is_spam ) );
 
 		if ( $use_cache ) {
 			GFFormDisplay::$submission[ $form_id ]['is_spam'] = $is_spam;
@@ -4644,7 +4638,49 @@ Content-Type: text/html;
 		return $spam_enabled;
 	}
 
+	/**
+	 * Callback for gform_entry_is_spam; performs the Akimset spam check.
+	 *
+	 * @since 2.9.12 Moved to a filter callback from GFCommon::is_spam_entry().
+	 *
+	 * @param bool  $is_spam Indicates if the submission has been flagged as spam.
+	 * @param array $form    The form currently being processed.
+	 * @param array $entry   The entry currently being processed.
+	 *
+	 * @return bool
+	 */
+	public static function entry_is_spam_akismet( $is_spam, $form, $entry ) {
+		if ( $is_spam ) {
+			return $is_spam;
+		}
+
+		$form_id = (int) rgar( $form, 'id' );
+		if ( ! self::akismet_enabled( $form_id ) ) {
+			return $is_spam;
+		}
+
+		$is_spam = self::is_akismet_spam( $form, $entry );
+		self::log_debug( __METHOD__ . '(): Result from Akismet: ' . json_encode( $is_spam ) );
+		if ( $is_spam ) {
+			self::set_spam_filter( $form_id, __( 'Akismet Spam Filter', 'gravityforms' ), '' );
+		}
+
+		return $is_spam;
+	}
+
+	/**
+	 * Determines if the Akismet integration is available.
+	 *
+	 * @since unknown
+	 * @since 2.9.12 Disable the integration when the Akismet Add-On (that communicates directly with the Akismet API) is active.
+	 *
+	 * @return bool
+	 */
 	public static function has_akismet() {
+		if ( function_exists( 'gf_akismet' ) && method_exists( gf_akismet(), 'initalize_api' ) ) {
+			return false;
+		}
+
 		$akismet_exists = function_exists( 'akismet_http_post' ) || method_exists( 'Akismet', 'http_post' );
 
 		return $akismet_exists;
@@ -5593,7 +5629,7 @@ Content-Type: text/html;
 		 */
 		$logic_a11y_warn                   = esc_html__( 'Adding conditional logic to the form submit button could cause usability problems for some users and negatively impact the accessibility of your form. Learn more about button conditional logic in our %1$sdocumentation%2$s.', 'gravityforms' );
 		$logic_a11y_warn_link1             = '<a href="https://docs.gravityforms.com/field-accessibility-warning/" target="_blank" rel="noopener">';
-		$logic_a11y_warn_link2             = '</a>';
+		$logic_a11y_warn_link2             = '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'gravityforms' ) . '</span>&nbsp;<span class="gform-icon gform-icon--external-link"></span></a>';
 		$gf_vars['conditional_logic_a11y'] = sprintf( $logic_a11y_warn, $logic_a11y_warn_link1, $logic_a11y_warn_link2 );
 		$gf_vars['page']                   = esc_html__( 'Page', 'gravityforms' );
 		$gf_vars['next_button']            = esc_html__( 'Next Button', 'gravityforms' );
@@ -5628,13 +5664,20 @@ Content-Type: text/html;
 		$gf_vars['confirmationDeleteField']          = __( "Deleting this field will also delete all entry data associated with it. 'Cancel' to abort. 'OK' to delete.", 'gravityforms' );
 		$gf_vars['confirmationDeleteDisplayField']   = __( "You're about to delete this field. 'Cancel' to stop. 'OK' to delete", 'gravityforms' );
 
-		$gf_vars['confirmationDeleteDisplayFieldTitle'] = __('Warning', 'gravityforms');
+		$gf_vars['confirmationDeleteDisplayFieldTitle'] = __( 'Warning', 'gravityforms' );
 
-		$gf_vars['conditionalLogicDependency']           = __( "This form contains conditional logic dependent upon this field. Deleting this field will deactivate those conditional logic rules and also delete all entry data associated with the field. 'Cancel' to abort. 'OK' to delete.", 'gravityforms' );
-		$gf_vars['conditionalLogicDependencyChoice']     = __( "This form contains conditional logic dependent upon this choice. Are you sure you want to delete this choice? 'Cancel' to abort. 'OK' to delete.", 'gravityforms' );
-		$gf_vars['conditionalLogicDependencyChoiceEdit'] = __( "This form contains conditional logic dependent upon this choice. Are you sure you want to modify this choice? 'Cancel' to abort. 'OK' to continue.", 'gravityforms' );
-		$gf_vars['conditionalLogicDependencyAdminOnly']  = __( "This form contains conditional logic dependent upon this field. Are you sure you want to mark this field as Administrative? 'Cancel' to abort. 'OK' to continue.", 'gravityforms' );
-		$gf_vars['conditionalLogicWarningTitle']         = __('Conditional Logic Warning', 'gravityforms');
+		$gf_vars['conditionalLogicDependency']            = __( "This form contains {type} conditional logic dependent upon this field. Deleting this field will deactivate those conditional logic rules and also delete all entry data associated with the field. 'Cancel' to abort. 'OK' to delete.", 'gravityforms' );
+		$gf_vars['conditionalLogicDependencyChoice']      = __( "This form contains {type} conditional logic dependent upon this choice. Are you sure you want to delete this choice? 'Cancel' to abort. 'OK' to delete.", 'gravityforms' );
+		$gf_vars['conditionalLogicDependencyChoiceEdit']  = __( "This form contains {type} conditional logic dependent upon this choice. Are you sure you want to modify this choice? 'Cancel' to abort. 'OK' to continue.", 'gravityforms' );
+		$gf_vars['conditionalLogicDependencyAdminOnly']   = __( "This form contains {type} conditional logic dependent upon this field. Are you sure you want to mark this field as Administrative? 'Cancel' to abort. 'OK' to continue.", 'gravityforms' );
+		$gf_vars['conditionalLogicRichTextEditorWarning'] = __( "This form contains conditional logic dependent upon this field. This will no longer work if the Rich Text Editor is enabled.  Are you sure you want to enable the Rich Text Editor?  'Cancel' to abort. 'OK' to continue.", 'gravityforms' );
+		$gf_vars['conditionalLogicTypeButton']            = __( 'button', 'gravityforms' );
+		$gf_vars['conditionalLogicTypeConfirmation']      = __( 'confirmation', 'gravityforms' );
+		$gf_vars['conditionalLogicTypeNotification']      = __( 'notification', 'gravityforms' );
+		$gf_vars['conditionalLogicTypeNoficationRouting'] = __( 'notification routing', 'gravityforms' );
+		$gf_vars['conditionalLogicTypeField']             = __( 'field', 'gravityforms' );
+		$gf_vars['conditionalLogicTypeFeed']              = __( 'feed', 'gravityforms' );
+		$gf_vars['conditionalLogicWarningTitle']          = __( 'Conditional Logic Warning', 'gravityforms' );
 
 
 		$gf_vars['mergeTagsText'] = esc_html__( 'Insert Merge Tags', 'gravityforms' );
@@ -5974,17 +6017,43 @@ Content-Type: text/html;
 	 * @since 2.5
 	 */
 	public static function gf_header() {
+		$header_buttons = apply_filters( 'gform_settings_header_buttons', '' );
+		if ( !empty( $header_buttons ) ) {
+			$header_button_class = 'gform-settings-header--has_buttons';
+		} else {
+			$header_button_class = '';
+		}
 		?>
-		<header class="gform-settings-header">
+		<header class="gform-settings-header <?php echo esc_attr( $header_button_class ); ?>">
 			<div class="gform-settings__wrapper">
-				<img src="<?php echo GFCommon::get_base_url(); ?>/images/logos/gravity-logo-white.svg" alt="Gravity Forms" width="266" />
+				<img src="<?php echo GFCommon::get_base_url(); ?>/images/logos/gravity-logo-dark.svg" alt="Gravity Forms" width="220" />
 
-				<div class="gform-settings-header_buttons">
-					<?php echo apply_filters( 'gform_settings_header_buttons', '' ); ?>
-				</div>
+				<?php
+				if ( !empty ( $header_buttons ) ) { ?>
+					<div class="gform-settings-header_buttons">
+						<?php echo $header_buttons; ?>
+					</div>
+				<?php } ?>
 			</div>
 		</header>
 		<?php
+	}
+
+	/**
+	 * Outputs a visually hidden page header for screen readers.
+	 *
+	 * Retrieves the current admin page title, modifies it if needed,
+	 * and echoes it inside an \<h1\> with the "screen-reader-text" class for accessibility.
+	 *
+	 * @since 2.9.11
+	 * @return void
+	 */
+	public static function admin_screen_reader_title(){
+
+		$admin_title = get_admin_page_title();
+		$page_title = GFForms::modify_admin_title( $admin_title, '' );
+
+		echo '<h1 class="screen-reader-text">' . esc_html( $page_title ) . '</h1>';
 	}
 
 	/**
@@ -5995,10 +6064,7 @@ Content-Type: text/html;
 	public static function notices_section() {
 		?>
 		<div id="gf-admin-notices-wrapper">
-
-			<!-- WP appends notices to the first H tag, so this is here to capture admin notices. -->
-			<h2 class="gf-notice-container"></h2>
-
+		<?php self::admin_screen_reader_title(); ?>
 		</div>
 		<?php
 

@@ -2101,7 +2101,7 @@ defined('ABSPATH') or die('Access denied.');
                             <div role="tabpanel" class="tab-pane fade" id="loader-settings">
 
                                 <div class="row">
-                                    <div class="col-sm-4 wdt-table-loader">
+                                    <div class="col-sm-3 wdt-table-loader">
                                         <h4 class="c-title-color m-b-2">
                                             <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>
                                             <i class=" wpdt-icon-info-circle-thin"
@@ -2124,10 +2124,9 @@ defined('ABSPATH') or die('Access denied.');
                                                    class="ts-label"><?php esc_html_e('Enable table loader', 'wpdatatables'); ?></label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 opacity-5 wdt-loader-color">
+                                    <div class="col-sm-3 wdt-loader-color">
                                         <h5 class="c-title-color m-b-2">
-                                            <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
-                                            <?php esc_html_e('Loader Color', 'wpdatatables'); ?>
+                                            <?php esc_html_e( 'Loader Color', 'wpdatatables' ); ?>
                                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
                                                data-placement="right"
                                                title="<?php esc_attr_e('This color is used for loader.', 'wpdatatables'); ?>"></i>
@@ -2140,17 +2139,36 @@ defined('ABSPATH') or die('Access denied.');
                                                         <input type="text" id="wdt-table-loader-color"
                                                                data-name="wdtLoaderColor"
                                                                class="form-control cp-value wdt-add-picker"
-                                                               disabled
-                                                               value=""/
-                                                        placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>
-                                                        ">
+                                                               value=""/>
                                                         <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 opacity-5 wdt-loader-style">
+                                    <div class="col-sm-3 wdt-loader-color-background">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php esc_html_e( 'Loader Animation Color', 'wpdatatables' ); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php esc_attr_e( 'This color is used for loaders animation.', 'wpdatatables' ); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-loader-background-color"
+                                                               data-name="wdtLoaderBackgroundColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 opacity-5 wdt-loader-style">
                                         <h5 class="c-title-color m-b-2">
                                             <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
                                             <?php esc_html_e('Loader Style', 'wpdatatables'); ?>
