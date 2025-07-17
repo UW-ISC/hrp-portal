@@ -2187,7 +2187,6 @@
                         </div>
                         <div class="loader-color-style" id="loader-color-container">
                             <h4 class="c-title-color m-b-2">
-                                <i class="wpdt-icon-star-full" style="color: #FFC078;"></i>
                                 <?php esc_html_e('Loader Color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                    title="<?php esc_attr_e('This color is used for loader.', 'wpdatatables'); ?>"></i>
@@ -2197,9 +2196,27 @@
                                     <div class="fg-line dropdown">
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
-                                            <input type="text" id="loader-color" value="" disabled
-                                                   class="form-control cp-value wdt-add-picker"
-                                                   placeholder="<?php esc_attr_e('Coming Soon...', 'wpdatatables'); ?>"/>
+                                            <input type="text" id="loader-color" value=""
+                                                   class="form-control cp-value wdt-add-picker"/>
+                                            <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="loader-color-style" id="loader-color-animation-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Loader Animation Color', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This color is used for loaders animation.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="cp-container">
+                                <div class="form-group">
+                                    <div class="fg-line dropdown">
+                                        <div id="cp"
+                                             class="input-group wdt-color-picker">
+                                            <input type="text" id="loader-animation-color" value="" data-name="wdtChartLoaderAnimationColor"
+                                                   class="form-control cp-value wdt-add-picker"/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>

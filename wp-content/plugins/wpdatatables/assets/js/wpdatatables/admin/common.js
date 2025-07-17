@@ -34,6 +34,10 @@ jQuery.fn.wdtBootstrapPopover = jQuery.fn.popover;
  */
 jQuery.fn.wdtBootstrapTabs = jQuery.fn.tab;
 
+let lastClickedElement = null;
+jQuery(document).on('click', '*', function (e) {
+    lastClickedElement = this;
+});
 
 /**
 
@@ -75,6 +79,9 @@ jQuery.fn.extend({
     },
     fadeOutRight: function () {
         var $this = jQuery(this);
+        if (!jQuery(lastClickedElement).is('.wdt-apply,.wdt-column-apply, .wdt-apply *')) {
+            return;
+        }
         jQuery(this).animateCss('fadeOutRight', function () {
             $this
                 .addClass('hidden')

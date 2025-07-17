@@ -141,12 +141,12 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-aqua .wpD
     border: solid 1px #dcdfe6;
 }
 
-.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group .dropdown-menu {
+.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-menu {
     left: -1px;
     padding: 0;
 }
 
-.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group ul.dropdown-menu {
+.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length .bootstrap-select ul.dropdown-menu {
     width: 180px;
     font-family: var(--wpdt-roboto-google-font, inherit);
     font-size: 14px;
@@ -1059,9 +1059,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-aqua .wpD
     margin: 0 16px;
 }
 
-.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length span.filter-option {
+.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle .filter-option {
     margin-left: 0;
     color: #606266;
+    font-family: var(--wpdt-inter-google-font, inherit);
 }
 
 .wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:after,
@@ -2596,8 +2597,8 @@ div.dt-button-collection.wdt-skin-aqua button.dt-button.buttons-columnVisibility
     background-color: #007cb8 !important;
 }
 
-.wpdt-c.wdt-skin-aqua .single_add_to_cart_button,
-.wpdt-c.wdt-skin-aqua .wdt-add-to-cart-button {
+.wpdt-c.wdt-skin-aqua .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button,
+.wpdt-c.wdt-skin-aqua .wdt-woo-basket-info button.button.wdt-add-to-cart-button {
     color: #2271b1;
     border-color: #2271b1;
     background: #f6f7f7;
@@ -2615,4 +2616,30 @@ div.dt-button-collection.wdt-skin-aqua button.dt-button.buttons-columnVisibility
     white-space: nowrap;
     box-sizing: border-box;
     width: fit-content;
+    position: relative;
+    padding: 0 10px !important;
+}
+
+.wpdt-c.wdt-skin-aqua .wdt-woo-single-product .wdt-woo-loader,
+.wpdt-c.wdt-skin-aqua .wdt-add-to-cart-button .wdt-woo-loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #2271b1;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: wdt-spin 2s linear infinite;
+    display: inline-block;
+    top: 25%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+@keyframes wdt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wpdt-c.wdt-skin-aqua .wdt-add-to-cart-button .wdt-woo-loader {
+    display: none;
 }

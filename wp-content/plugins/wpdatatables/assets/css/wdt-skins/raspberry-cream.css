@@ -139,13 +139,13 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border: solid 1px #dcdfe6;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group .dropdown-menu {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-menu {
     left: -1px;
     padding: 0;
     border-radius: 6px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group ul.dropdown-menu {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select ul.dropdown-menu {
     width: 116px;
     font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
@@ -1127,7 +1127,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #A8157F;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a, .wpdt-c .dropdown-menu > .active > a:hover,
+.wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a, .wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a:hover,
 .wpdt-c.wdt-skin-raspberry-cream .dropdown-menu > .active > a:focus {
     background-color: #FAEFF8;
 }
@@ -1148,8 +1148,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding: 0 13px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length span.filter-option {
-    margin-left: 0;
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle .filter-option {
+    margin-left: 4px;
     width: 30px;
     height: 24px;
     font-family: var(--wpdt-inter-google-font, inherit);
@@ -1158,7 +1158,6 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     font-size: 16px;
     line-height: 24px;
     color: #111827;
-    padding-right: 40px;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select > .btn-default:after,
@@ -1551,8 +1550,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button,
-.wpdt-c.wdt-skin-raspberry-cream .wdt-add-to-cart-button,
-.wpdt-c.wdt-skin-raspberry-cream .single_add_to_cart_button {
+.wpdt-c.wdt-skin-raspberry-cream .wdt-woo-basket-info button.button.wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button {
     width: 171px;
     border: 1px solid #A8157F;
     background-color: #ffffff;
@@ -1560,6 +1559,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
     margin-left: 16px;
     color: #A8157F;
+    position: relative;
+    padding: 0 10px !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream a.basket-link {
@@ -2767,4 +2768,28 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 .wpdt-c.wdt-skin-raspberry-cream tfoot .bootstrap-select .bs-searchbox:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
     top: 10px;
+}
+
+.wpdt-c.wdt-skin-raspberry-cream .wdt-woo-single-product .wdt-woo-loader,
+.wpdt-c.wdt-skin-raspberry-cream .wdt-add-to-cart-button .wdt-woo-loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #c2178f;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: wdt-spin 2s linear infinite;
+    display: inline-block;
+    top: 25%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+@keyframes wdt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wpdt-c.wdt-skin-raspberry-cream .wdt-add-to-cart-button .wdt-woo-loader {
+    display: none;
 }

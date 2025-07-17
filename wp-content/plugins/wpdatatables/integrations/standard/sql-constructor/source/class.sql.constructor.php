@@ -1058,6 +1058,7 @@ class WDTSQLConstructor extends wpDataTableConstructor
                 'fixed_left_columns_number' => 0,
                 'fixed_right_columns_number' => 0,
                 'fixed_header' => false,
+                'index_column' => 0,
             )),
         );
 

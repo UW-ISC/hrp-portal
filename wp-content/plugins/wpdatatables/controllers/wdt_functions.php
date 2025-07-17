@@ -32,9 +32,9 @@ function wdtActivationCreateTables()
                         id bigint(20) NOT NULL AUTO_INCREMENT,
 						table_type varchar(55) NULL,
 						table_id bigint(20) NOT NULL,
-                        data text NOT NULL DEFAULT '',
-                        content text NOT NULL DEFAULT '',
-                        settings text NOT NULL DEFAULT '',
+                        data text NOT NULL,
+                        content text NOT NULL,
+                        settings text NOT NULL,
                         UNIQUE KEY id (id)
 						) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     $tablesTableName = $wpdb->prefix . 'wpdatatables';
@@ -57,7 +57,7 @@ function wdtActivationCreateTables()
 						inline_editing tinyint(1) NOT NULL default '0',
 						popover_tools tinyint(1) NOT NULL default '0',
 						editor_roles varchar(255) NOT NULL default '',
-						mysql_table_name text NOT NULL default '',
+						mysql_table_name text NOT NULL,
                         edit_only_own_rows tinyint(1) NOT NULL default 0,
                         userid_column_id int( 11 ) NOT NULL default 0,
 						display_length int(3) NOT NULL default '10',
@@ -78,7 +78,7 @@ function wdtActivationCreateTables()
                         var8 VARCHAR( 255 ) NOT NULL default '',
                         var9 VARCHAR( 255 ) NOT NULL default '',
                         tabletools_config VARCHAR( 255 ) NOT NULL default '',
-						advanced_settings TEXT NOT NULL default '',
+						advanced_settings TEXT NOT NULL,
 						UNIQUE KEY id (id)
 						) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
 
@@ -89,7 +89,7 @@ function wdtActivationCreateTables()
 						orig_header varchar(255) NOT NULL,
 						display_header varchar(255) NOT NULL,
 						filter_type enum('none','null_str','text','number','number-range','date-range','datetime-range','time-range','select','multiselect','checkbox') NOT NULL,
-						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail', 'select', 'cart') NOT NULL,
+						column_type enum('autodetect','string','int','float','date','link','email','image','formula','datetime','time','masterdetail', 'select', 'cart', 'index') NOT NULL,
 						input_type enum('none','text','textarea','mce-editor','date','datetime','time','link','email','selectbox','multi-selectbox','attachment') NOT NULL default 'text',
 						input_mandatory tinyint(1) NOT NULL default '0',
                         id_column tinyint(1) NOT NULL default '0',
@@ -101,15 +101,15 @@ function wdtActivationCreateTables()
 						sum_column tinyint(1) NOT NULL default '0',
 						skip_thousands_separator tinyint(1) NOT NULL default '0',
 						width VARCHAR( 4 ) NOT NULL default '',
-						possible_values TEXT NOT NULL default '',
-						default_value TEXT NOT NULL default '',
+						possible_values TEXT NOT NULL,
+						default_value TEXT NOT NULL,
 						css_class VARCHAR(255) NOT NULL default '',
 						text_before VARCHAR(255) NOT NULL default '',
 						text_after VARCHAR(255) NOT NULL default '',
-                        formatting_rules TEXT NOT NULL default '',
-                        calc_formula TEXT NOT NULL default '',
+                        formatting_rules TEXT NOT NULL,
+                        calc_formula TEXT NOT NULL,
 						color VARCHAR(255) NOT NULL default '',
-						advanced_settings TEXT NOT NULL default '',
+						advanced_settings TEXT NOT NULL,
 						pos int(11) NOT NULL default '0',
 						UNIQUE KEY id (id)
 						) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
@@ -127,7 +127,7 @@ function wdtActivationCreateTables()
     $rowsSql = "CREATE TABLE {$rowsTableName} (
                                   id bigint(20) NOT NULL AUTO_INCREMENT,
                                   table_id bigint(20) NOT NULL,
-                                  data TEXT NOT NULL default '',
+                                  data TEXT NOT NULL,
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     $cacheTableName = $wpdb->prefix . 'wpdatatables_cache';
@@ -135,11 +135,11 @@ function wdtActivationCreateTables()
                                   id bigint(20) NOT NULL AUTO_INCREMENT,
                                   table_id bigint(20) NOT NULL,
                                   table_type varchar(55) NOT NULL default '',
-                                  table_content text NOT NULL default '',
+                                  table_content text NOT NULL,
                                   auto_update tinyint(1) NOT NULL default 0,
                                   updated_time TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
-                                  data LONGTEXT NOT NULL default '',
-                                  log_errors text NOT NULL default '',
+                                  data LONGTEXT NOT NULL,
+                                  log_errors text NOT NULL,
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -1072,7 +1072,8 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null)
                     'time',
                     'float',
                     'formula',
-                    'select']))
+                    'select',
+                    'index']))
                     return esc_html__('At the moment float, formula, date, datetime and time columns can not be used as column_id. Please use other column that contains unique identifiers.', 'wpdatatables');
 
                 if ($columnKey == $columnID)

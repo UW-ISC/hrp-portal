@@ -8,7 +8,7 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.2');
+define('WDT_CURRENT_VERSION', '7.3');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
@@ -83,7 +83,8 @@ $wdtAllowTypes = array(
     'datetime',
     'time',
     'select',
-    'cart'
+    'cart',
+    'index',
 );
 /**
  * Required PHP version and get actual server PHP version

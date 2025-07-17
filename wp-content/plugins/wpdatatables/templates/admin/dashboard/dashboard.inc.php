@@ -271,11 +271,12 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Custom Fields Support for WooCommerce Product Tables.</li>
-                                <li><strong>Improvement:</strong> Avoid cookie sessions - compliance with DSGVO.</li>
-                                <li><strong>BugFix:</strong> Issue with Numeric filters when using Foreign keys.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with wpDataTables functionality in Elementor pop-ups.</li>
-                                <li><strong>BugFix:</strong> Fixed Issue with Google Sheets Authorization Due to Security Update.</li>
+                                <li><strong>Feature:</strong> Added Index Column.</li>
+                                <li><strong>Feature:</strong> Add color option for Loader customization.</li>
+                                <li><strong>Feature:</strong> Added loader to "Add to Cart" button in WooCommerce Tables.</li>
+                                <li><strong>Improvement:</strong> Upgraded Bootstrap Select to a higher version (security-checked).</li>
+                                <li><strong>BugFix:</strong> Fixed issue with replacing the entire table - STRING columns.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with plugin deactivating due to invalid default value in SQL query.</li>
                                 <li>Other small bug fixes.</li>
                             </ul>
                         </div>

@@ -708,9 +708,18 @@
 .wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper .filter_column button {
     color: #747474;
 }
+.wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle .filter-option {
+    margin-left: 20px;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    font-family: var(--wpdt-inter-google-font, inherit);
+    left: 0px;
+}
 
-.wpdt-c.wdt-skin-graphite .wdt-add-to-cart-button,
-.wpdt-c.wdt-skin-graphite .single_add_to_cart_button {
+.wpdt-c.wdt-skin-graphite .wdt-woo-basket-info button.button.wdt-add-to-cart-button,
+.wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button {
     background: linear-gradient(0deg, #4c4c4c, #313131);
     background-repeat: repeat-x;
     border-color: #000000;
@@ -723,6 +732,8 @@
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
     width: fit-content;
+    position: relative;
+    padding: 0 10px !important;
 }
 
 .wpdt-c.wdt-skin-graphite a.basket-link {
@@ -731,4 +742,28 @@
 
 .wpdt-c.wdt-skin-graphite .wdt-woo-variable-product select {
     color: #3e4249;
+}
+
+.wpdt-c.wdt-skin-graphite .wdt-woo-single-product .wdt-woo-loader,
+.wpdt-c.wdt-skin-graphite .wdt-add-to-cart-button .wdt-woo-loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #000000;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: wdt-spin 2s linear infinite;
+    display: inline-block;
+    top: 25%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+@keyframes wdt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wpdt-c.wdt-skin-graphite .wdt-add-to-cart-button .wdt-woo-loader {
+    display: none;
 }

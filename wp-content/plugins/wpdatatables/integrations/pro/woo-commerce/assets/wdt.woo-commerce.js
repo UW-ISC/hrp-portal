@@ -14,7 +14,9 @@
                 let cleanedValue = value[productColumnIndex].replace(/[^\d]/g, '');
                 productIds.push(parseInt(cleanedValue, 10));
             });
+            var button = this;
 
+            setButtonLoadingState(button, true);
 
             if (productIds.length > 0) {
                 $.ajax({
@@ -51,12 +53,14 @@
                                     $(currentContent).find('.wdt-woo-mini-cart').find('span.wdt-woo-cart-quantity').text(data.data.product_quantities[product_id])
                                 }
                             });
+                            setButtonLoadingState(button, false);
                         } else {
                             wdtNotify(
                                 wpdatatables_frontend_strings.error_wpdatatables,
                                 wpdatatables_frontend_strings.error_adding_to_cart_wpdatatables,
                                 'danger'
                             )
+                            setButtonLoadingState(button, false);
                         }
                     },
                     error: function () {
@@ -65,6 +69,7 @@
                             wpdatatables_frontend_strings.error_adding_to_cart_wpdatatables,
                             'danger'
                         )
+                        setButtonLoadingState(button, false);
                     }
                 });
             } else {
@@ -73,6 +78,7 @@
                     wpdatatables_frontend_strings.select_products_for_cart_wpdatatables,
                     'danger'
                 )
+                setButtonLoadingState(button, false);
             }
         });
 
@@ -114,6 +120,9 @@
             let productId = parseInt(button.data('product_id').toString().replace(/[^\d]/g, ''), 10);
             let quantity = button.closest('.wdt-woo-product').find('input[name="quantity"]').val();
             let variations = {};
+            var buttonLoader = this;
+
+            setButtonLoadingState(buttonLoader,  true);
 
             // Get selected variations
             button.closest('.wdt-woo-variable-product').find('.wdt-woo-variation-selector').each(function () {
@@ -141,6 +150,8 @@
                                 wpdatatables_frontend_strings.could_not_add_to_cart_wpdatatables,
                                 'danger'
                             )
+
+                            setButtonLoadingState(buttonLoader,  false);
                             return;
                         }
                         updateCartInfo();
@@ -162,7 +173,9 @@
                         } else {
                             $(currentContent).find('.wdt-woo-mini-cart').find('span.wdt-woo-cart-quantity').text(data.data.product_quantities)
                         }
+                        setButtonLoadingState(buttonLoader,  false);
                     } else {
+                        setButtonLoadingState(buttonLoader,  false);
                         wdtNotify(
                             wpdatatables_frontend_strings.error_wpdatatables,
                             wpdatatables_frontend_strings.error_adding_to_cart_wpdatatables,
@@ -257,6 +270,21 @@
             });
 
             return columnIndex;
+        }
+
+        function setButtonLoadingState(buttonElement, isLoading = true) {
+            const buttonText = buttonElement.querySelector('.wdt-woo-button-text');
+            const loader = buttonElement.querySelector('.wdt-woo-loader');
+
+            if (isLoading) {
+                buttonElement.classList.add('disabled');
+                if (buttonText) buttonText.style.opacity = '0.5';
+                if (loader) loader.style.display = 'inline-block';
+            } else {
+                buttonElement.classList.remove('disabled');
+                if (buttonText) buttonText.style.opacity = '1';
+                if (loader) loader.style.display = 'none';
+            }
         }
     });
 })(jQuery);

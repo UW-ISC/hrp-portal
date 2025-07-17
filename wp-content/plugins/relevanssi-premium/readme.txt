@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.1
 Tested up to: 6.8
-Stable tag: 2.27.6
+Stable tag: 2.27.7
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,12 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.27.7 =
+* Security: Relevanssi will now strip tags from excerpt text (keeping only the whitelisted tags) to avoid XSS attacks. An attack was possible if you used comments for excerpts or if you had a malicious contributor.
+* Minor fix: Stop the Did you mean feature from returning the original search phrase as a suggestion.
+* Minor fix: Improve performance by enabling caching for password protection check.
+* Minor fix: Relevanssi's removal of page builder shortcodes is less greedy and won't cause missed content anymore.
+
 = 2.27.6 =
 * Security: Exporting logs now checks for user capability. The default setting is 'manage_options', but it can be adjusted with the `relevanssi_options_capability` filter hook.
 * Security: Certain query parameters allowed SQL injection attacks. Thanks to Jack Taylor.
@@ -307,5 +313,5 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Make it possible to remove search queries with emoji from the log.
 
 == Upgrade notice ==
-= 2.27.6 =
-* Security fixes against log export and SQL injections.
+= 2.27.7 =
+* Security fix against a XSS vulnerability.

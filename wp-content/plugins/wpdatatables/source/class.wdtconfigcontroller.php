@@ -254,6 +254,7 @@ class WDTConfigController
             $table->fixed_header = isset($advancedSettings->fixed_header) ? $advancedSettings->fixed_header : false;
             $table->fixed_header_offset = isset($advancedSettings->fixed_header_offset) ? $advancedSettings->fixed_header_offset : 0;
             $table->customRowDisplay = isset($advancedSettings->customRowDisplay) ? $advancedSettings->customRowDisplay : '';
+            $table->index_column = isset($advancedSettings->index_column) ? $advancedSettings->index_column : 0;
             $table->showCartInformation = isset($advancedSettings->showCartInformation) ? $advancedSettings->showCartInformation : 1;
 
             $table = self::sanitizeTableConfig($table);
@@ -462,6 +463,7 @@ class WDTConfigController
                     'customRowDisplay' => $table->customRowDisplay,
                     'loader' => $table->loader,
                     'showCartInformation' => $table->showCartInformation,
+                    'index_column'=> $table->index_column,
                 )
             ),
         );
@@ -566,6 +568,7 @@ class WDTConfigController
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
         $table->loader = (int)($table->loader);
         $table->showCartInformation = isset($table->showCartInformation) ? (int)($table->showCartInformation) : 0;
+        $table->index_column = isset($table->index_column) ? (int)$table->index_column : 0;
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -1110,7 +1113,8 @@ class WDTConfigController
         );
 
         $columnsTypes = $wpdb->get_col($existingColumnsTypesQuery);
-        $columnsTypesArray = array_diff(array_combine($columnsNotInSource, $columnsTypes), ['formula', 'select']);
+        $columnsDB = self::loadColumnsFromDB($tableId);
+        $columnsTypesArray = array_diff(array_combine($columnsNotInSource, $columnsTypes), ['formula', 'select', 'index']);
         $columnsTypesArray = apply_filters('wpdatatables_columns_types_array', $columnsTypesArray, $columnsNotInSource, $columnsTypes);
         // Getting columns returned by the data source
         $dataSourceColumns = $table->getColumns();
@@ -1130,8 +1134,99 @@ class WDTConfigController
         }
 
 
-        self::$_resetColumnPosition = count(array_diff($dataSourceColumnsHeaders, array_keys($columnsTypesArray))) > 0 ||
-            count(array_diff(array_keys($columnsTypesArray), $dataSourceColumnsHeaders)) > 0;
+        $headersForComparison = $table->getTableType() === 'woo_commerce'
+            ? array_filter($dataSourceColumnsHeaders, fn($col) => $col !== 'select')
+            : $dataSourceColumnsHeaders;
+
+        self::$_resetColumnPosition =
+            count(array_diff($headersForComparison, array_keys($columnsTypesArray))) > 0 ||
+            count(array_diff(array_keys($columnsTypesArray), $headersForComparison)) > 0;
+
+        $dbHeaders = array_map(function($col) {
+            return $col->orig_header;
+        }, $columnsDB);
+
+        $dataSourceHeaders = array_map(function($col) {
+            return $col->getOriginalHeader();
+        }, $dataSourceColumns);
+
+        $content = json_decode($table->getTableContent(), true);
+        $customFieldColumns = isset($content['customFieldColumns']) && is_array($content['customFieldColumns'])
+            ? $content['customFieldColumns']
+            : [];
+        $missingHeaders = array_diff($dataSourceHeaders, $dbHeaders);
+        $customFieldCFs = array_column($customFieldColumns, 'cf');
+        $missingCustomFieldHeaders = array_intersect($missingHeaders, $customFieldCFs);
+        $deletedColumns = false;
+
+        if (count($missingHeaders) === 0) {
+            $filteredDbHeaders = array_filter($dbHeaders, function($header) {
+                return !preg_match('/^formula_\d+$/', $header) && $header !== 'wdt_indexcolumn' && $header !== 'masterdetail';
+            });
+
+            $missingCustomFieldHeaders = array_diff($filteredDbHeaders, $dataSourceHeaders);
+            $deletedColumns = true;
+        }
+
+        if(($table->getTableType() === 'woo_commerce' || $table->getTableType() === 'wp_posts_query') && (isset($content['customFieldColumns']) && is_array($content['customFieldColumns'])) &&
+            !empty($missingCustomFieldHeaders)) {
+
+            foreach ($missingHeaders as $missingHeader) {
+                foreach ($dataSourceColumns as $index => $col) {
+                    if ($col->getOriginalHeader() === $missingHeader) {
+                        $columnType = $col->getDataType();
+                        $insertionPos = $index;
+                        if (isset($columnsDB[$index])) {
+                            $insertionPos = count($columnsDB);
+                        }
+                        $dummyColumn = (object)[
+                            'orig_header' => $missingHeader,
+                            'column_type' => $columnType,
+                            'pos' => $insertionPos
+                        ];
+
+                        $columnsDB[] = $dummyColumn;
+                        $columnsTypes[] = $columnType;
+                        $columnsTypesArray[$missingHeader] = $columnType;
+                        break;
+                    }
+                }
+            }
+
+            $dataSourceColumnsSynced = [];
+
+            foreach ($columnsDB as $index => $col) {
+                $header = $col->orig_header;
+                $type = $col->column_type;
+
+                if ($deletedColumns && in_array($header, $missingCustomFieldHeaders, true)) {
+                    continue;
+                }
+
+                $existingCol = null;
+                foreach ($dataSourceColumns as $dsCol) {
+                    if ($dsCol->getOriginalHeader() === $header) {
+                        $existingCol = $dsCol;
+                        break;
+                    }
+                }
+
+                if ($existingCol) {
+                    $dataSourceColumnsSynced[$index] = $existingCol;
+                } else {
+                    $newCol = WDTColumn::generateColumn(
+                        $type,
+                        array(
+                            'orig_header' => $header,
+                        )
+                    );
+                    $dataSourceColumnsSynced[$index] = $newCol;
+                }
+            }
+
+            $dataSourceColumns = $dataSourceColumnsSynced;
+            $dataSourceColumns = array_values($dataSourceColumns);
+        }
 
         /** @var WDTColumn $column */
         foreach ($dataSourceColumns as $key => &$column) {
@@ -1232,24 +1327,43 @@ class WDTConfigController
         if ($frontendColumns != null) {
             foreach ($frontendColumns as $feColumn) {
                 // We are only interested in formula columns in this loop
-                if ($feColumn->type != 'formula') {
+                if ($feColumn->type != 'formula' && $feColumn->type != 'index' && $feColumn->orig_header != 'wdt_indexcolumn') {
                     continue;
                 }
-                if (!self::$_resetColumnPosition) {
-                    // Removing this column from the array of marked for deletion
-                    $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
+                if ($feColumn->type == 'index' || $feColumn->orig_header == 'wdt_indexcolumn') {
+                    if (!self::$_resetColumnPosition) {
+                        $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
+                        $wdtColumn = WDTColumn::generateColumn(
+                            'index',
+                            array(
+                                'orig_header' => $feColumn->orig_header,
+                                'display_header' => $feColumn->display_header,
+                                'decimalPlaces' => $feColumn->decimalPlaces,
+                                'sorting' => 0,
+                            )
+                        );
+                        $columnConfig = self::prepareDBColumnConfig($wdtColumn, $frontendColumns, $tableId);
+                        $columnConfig['filter_type'] = 'none';
+                        self::saveSingleColumn($columnConfig);
+                    }
+                }
+                if ($feColumn->type == 'formula') {
+                    if (!self::$_resetColumnPosition) {
+                        // Removing this column from the array of marked for deletion
+                        $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
 
-                    $wdtColumn = WDTColumn::generateColumn(
-                        'formula',
-                        array(
-                            'orig_header' => $feColumn->orig_header,
-                            'decimalPlaces' => $feColumn->decimalPlaces
-                        )
-                    );
-                    $columnConfig = self::prepareDBColumnConfig($wdtColumn, $frontendColumns, $tableId);
-                    $columnConfig['filter_type'] = 'none';
+                        $wdtColumn = WDTColumn::generateColumn(
+                            'formula',
+                            array(
+                                'orig_header' => $feColumn->orig_header,
+                                'decimalPlaces' => $feColumn->decimalPlaces
+                            )
+                        );
+                        $columnConfig = self::prepareDBColumnConfig($wdtColumn, $frontendColumns, $tableId);
+                        $columnConfig['filter_type'] = 'none';
 
-                    self::saveSingleColumn($columnConfig);
+                        self::saveSingleColumn($columnConfig);
+                    }
                 }
             }
         }
@@ -1271,6 +1385,37 @@ class WDTConfigController
             );
 
         }
+
+        $columnPosition = self::loadColumnsFromDB($tableId);
+
+        if (!empty($columnPosition)) {
+
+            usort($columnPosition, function ($a, $b) {
+                return (int)$a->pos - (int)$b->pos;
+            });
+
+            $fixed = false;
+            $expectedPos = 0;
+            global $wpdb;
+
+            foreach ($columnPosition as $column) {
+                if ((int)$column->pos !== $expectedPos) {
+                    $wpdb->query(
+                        $wpdb->prepare(
+                            "UPDATE {$wpdb->prefix}wpdatatables_columns 
+                     SET pos = %d 
+                     WHERE table_id = %d AND id = %d",
+                            $expectedPos,
+                            $tableId,
+                            $column->id
+                        )
+                    );
+                    $fixed = true;
+                }
+                $expectedPos++;
+            }
+        }
+
 
         do_action('wpdatatables_after_save_columns');
 
@@ -1735,6 +1880,7 @@ class WDTConfigController
         $table->simple_template_id = 0;
         $table->customRowDisplay = '';
         $table->showCartInformation = 1;
+        $table->index_column = 0;
         return $table;
     }
 

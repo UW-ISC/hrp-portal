@@ -274,4 +274,13 @@
     }
 
     <?php } ?>
+    <?php if( !empty($wdtTableFontColorSettings->wdtLoaderColor ) || !empty($wdtTableFontColorSettings->wdtLoaderBackgroundColor )) {
+        if(empty($wdtTableFontColorSettings->wdtLoaderColor )) $wdtTableFontColorSettings->wdtLoaderColor = '#bbbbbb';
+        if(empty($wdtTableFontColorSettings->wdtLoaderBackgroundColor )) $wdtTableFontColorSettings->wdtLoaderBackgroundColor = '#eeeeee';
+        ?>
+    .wdt-timeline-item[data-id="<?php echo $tableID ?>"] .wdt-animated-background {
+        background: linear-gradient(to right, <?php echo $wdtTableFontColorSettings->wdtLoaderBackgroundColor; ?> 8%, <?php echo $wdtTableFontColorSettings->wdtLoaderBackgroundColor; ?> 18%, <?php echo $wdtTableFontColorSettings->wdtLoaderColor; ?> 33%) ;
+    }
+    <?php } ?>
+
 </style>

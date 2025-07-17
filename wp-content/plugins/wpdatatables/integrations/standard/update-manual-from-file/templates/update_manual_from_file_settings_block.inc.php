@@ -1,7 +1,7 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <div class="col-sm-4 m-b-16 form-group wdt-add-data-source-field hidden">
-    <h4 class="c-title-color m-b-2 opacity-6">
+    <h4 class="c-title-color m-b-2">
         <?php esc_html_e('Select how to use source file data', 'wpdatatables'); ?>
         <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
            title=""
@@ -10,9 +10,7 @@
     <div class="fg-line">
         <div class="select">
             <select class="form-control selectpicker" id="wdt-source-file-data"
-                    autocomplete="off"
-            <option selected
-                    value><?php esc_html_e('Select an option', 'wpdatatables'); ?></option>
+                    title="<?php esc_html_e('Select an option', 'wpdatatables'); ?>">
             <option value="replaceTableData"><?php esc_html_e('Replace rows with source data', 'wpdatatables'); ?></option>
             <option value="addDataToTable"><?php esc_html_e('Add rows to the current table data', 'wpdatatables'); ?></option>
             <option value="replaceTable"><?php esc_html_e('Replace the entire table with the source', 'wpdatatables'); ?></option>

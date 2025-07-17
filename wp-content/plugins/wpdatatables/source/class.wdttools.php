@@ -763,31 +763,35 @@ class WDTTools
     public static function getUpdateInfo()
     {
         return array(
-            'version' => '7.2',
-            'release_date' => '07.04.2025',
+            'version' => '7.3',
+            'release_date' => '11.06.2025',
             'features' => [
                 0 => [
-                    'text' => 'Custom Fields Support for WooCommerce Product Tables',
-                    'link' => 'https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/custom-fields-integration-with-wpdatatables/'
+                    'text' => 'Added Index Column.',
+                    'link' => 'https://wpdatatables.com/documentation/column-features/index-column/'
+                ],
+                1 => [
+                    'text' => 'Add color option for Loader customization.',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Added loader to "Add to Cart" button in WooCommerce Tables.',
+                    'link' => ''
                 ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Avoid cookie sessions - compliance with DSGVO',
+                    'text' => 'Upgraded Bootstrap Select to a higher version (security-checked).',
                     'link' => ''
-                ]
+                ],
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Issue with Numeric filters when using Foreign keys',
+                    'text' => 'Fixed issue with replacing the entire table - STRING columns.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with wpDataTables functionality in Elementor pop-ups',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Fixed Issue with Google Sheets Authorization Due to Security Update',
+                    'text' => 'Fixed issue with plugin deactivating due to invalid default value in SQL query.',
                     'link' => ''
                 ],
             ],
@@ -1966,22 +1970,18 @@ class WDTTools
         wp_enqueue_style('wdt-uikit', WDT_CSS_PATH . 'uikit/uikit.css', array(), WDT_CURRENT_VERSION);
 
         if (!is_admin() && get_option('wdtIncludeBootstrap') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
-                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
         } else if (is_admin() && get_option('wdtIncludeBootstrapBackEnd') == 1) {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery',
-                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
         } else {
-            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery',
-                'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
         }
+
         if (is_admin() && (get_option('wdtGettingStartedPageStatus') != 1)) {
             wp_enqueue_script('wdt-bootstrap-tour', WDT_JS_PATH . 'bootstrap/bootstrap-tour/bootstrap-tour.js', array('jquery'), WDT_CURRENT_VERSION, true);
             wp_enqueue_script('wdt-bootstrap-tour-guide', WDT_JS_PATH . 'bootstrap/bootstrap-tour/bootstrap-tour-guide.js', array('jquery'), WDT_CURRENT_VERSION, true);
             wp_localize_script('wdt-bootstrap-tour-guide', 'wpdtTutorialStrings', WDTTools::getTutorialsTranslationStrings());
         }
-        wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
-        wp_enqueue_script('wdt-bootstrap-ajax-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/ajax-bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-tagsinput', WDT_JS_PATH . 'bootstrap/bootstrap-tagsinput/bootstrap-tagsinput.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-moment', WDT_JS_PATH . 'moment/moment.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-datetimepicker', WDT_JS_PATH . 'bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', array(), WDT_CURRENT_VERSION, true);
@@ -1989,6 +1989,8 @@ class WDTTools
         wp_enqueue_script('wdt-wNumb', WDT_JS_PATH . 'bootstrap/bootstrap-nouislider/wNumb.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-colorpicker', WDT_JS_PATH . 'bootstrap/bootstrap-colorpicker/bootstrap-colorpicker.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-growl', WDT_JS_PATH . 'bootstrap/bootstrap-growl/bootstrap-growl.min.js', array(), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array('jquery', 'wdt-bootstrap'), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-bootstrap-ajax-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/ajax-bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
     }
 
     public static function wdtUIKitEnqueueNotEdit()

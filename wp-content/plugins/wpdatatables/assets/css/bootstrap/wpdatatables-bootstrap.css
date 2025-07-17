@@ -11300,6 +11300,11 @@ select.input-group-lg > .input-group-btn > .btn {
 .wpdt-c .btn-group:not(.bootstrap-select), .wpdt-c .btn-group-vertical:not(.bootstrap-select) {
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
 }
+.wpdt-c div#wdt-gf-column-container .bs-actionsbox .btn-group:not(.bootstrap-select),
+.wpdt-c div#wdt-frf-column-container .bs-actionsbox .btn-group:not(.bootstrap-select),
+.wpdt-c div#wdt-ff-column-container .bs-actionsbox .btn-group:not(.bootstrap-select){
+    box-shadow: none;
+}
 
 .wpdt-c .btn-group .btn, .wpdt-c .btn-group-vertical .btn, .wpdt-c .btn-group .btn:active, .wpdt-c .btn-group-vertical .btn:active, .wpdt-c .btn-group .btn:focus, .wpdt-c .btn-group-vertical .btn:focus, .wpdt-c .btn-group .btn-group, .wpdt-c .btn-group-vertical .btn-group {
     box-shadow: none !important;
@@ -13534,7 +13539,7 @@ input:focus {
     display: block;
 }
 
-.wpdt-c .bootstrap-select.btn-group .dropdown-menu li {
+.wpdt-c .bootstrap-select .dropdown-menu li {
     display: block;
     margin: 0;
 }
@@ -13754,16 +13759,16 @@ input:focus {
     margin-left: 180px;
 }
 
-table.wpDataTable.wpFixedHeader .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable.dtfc-has-left .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable.dtfc-has-right .bootstrap-select.btn-group .dropdown-menu {
+table.wpDataTable.wpFixedHeader .bootstrap-select .dropdown-menu,
+table.wpDataTable.dtfc-has-left .bootstrap-select .dropdown-menu,
+table.wpDataTable.dtfc-has-right .bootstrap-select .dropdown-menu {
     min-width: auto !important;
 }
 
-table.wpDataTable.wpFixedHeader th.integer .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable.dtfc-has-left th.integer .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable.dtfc-has-right th.integer .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable th.integer .bootstrap-select.btn-group .dropdown-menu {
+table.wpDataTable.wpFixedHeader th.integer .bootstrap-select .dropdown-menu,
+table.wpDataTable.dtfc-has-left th.integer .bootstrap-select .dropdown-menu,
+table.wpDataTable.dtfc-has-right th.integer .bootstrap-select .dropdown-menu,
+table.wpDataTable th.integer .bootstrap-select .dropdown-menu {
     min-width: 200px !important;
 }
 
@@ -13797,7 +13802,7 @@ h2.wpdt-c {
 }
 
 .wpdt-c .filter_column .text_filter::placeholder,
-.wpdt-c .filter_column .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+.wpdt-c .filter_column .bootstrap-select .dropdown-toggle .filter-option-inner-inner {
     width: 75% !important;
     text-overflow: ellipsis !important;
 }
@@ -13823,4 +13828,41 @@ h2.wpdt-c {
 
 .wpdt-c .wdt-no-display {
     display: none;
+}
+.wpdt-c .bootstrap-select.wdt-select-filter .dropdown-toggle .filter-option{
+    top: 7px;
+    position: absolute;
+}
+/*.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .bootstrap-select.editDialogInput,*/
+/*.wpdt-c .bootstrap-select.editDialogInput{*/
+/*    padding-left: 0px;*/
+/*}*/
+.wpdt-c div#wpdatatable-preview-container .bootstrap-select.wdt-multiselect-filter .dropdown-toggle .filter-option {
+    height: 65%;
+}
+.wpdt-c .bootstrap-select.editDialogInput .dropdown-toggle .filter-option .filter-option-inner-inner{
+    font-family: var(--wpdt-inter-google-font, inherit);
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #6B7280;
+    height: 36px !important;
+    width: 100% !important;
+    padding: 4px 0px !important;
+}
+
+.wdt-datatables-admin-wrap .wpdt-c .bootstrap-select.editDialogInput .dropdown-toggle .filter-option .filter-option-inner-inner{
+    line-height: 1.8;
+}
+.wpdt-c .bootstrap-select .dropdown-toggle .filter-option{
+    top: -1px;
+}
+.wpdt-c .dataTables_length .bootstrap-select .dropdown-toggle .filter-option{
+    top: 0px;
+    height: auto;
+    left: -6px;
+    position: relative;
 }
