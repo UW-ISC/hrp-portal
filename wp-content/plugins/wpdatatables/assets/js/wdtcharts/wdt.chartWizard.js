@@ -1105,6 +1105,38 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                 break;
         }
     });
+
+
+    $('.wdt-color-picker #loader-color').change(function (e) {
+        if (typeof constructedChartData.chartLoaderColorSettings != 'object') {
+            constructedChartData.chartLoaderColorSettings = {};
+        }
+        var settingName = $(this).data('name');
+        var settingValue =  $(this).val();
+
+        constructedChartData.chartLoaderColorSettings = settingValue;
+
+
+        jQuery('input[data-name=' + settingName + ']').val(settingValue);
+        jQuery('input[data-name=' + settingName + '] + .wpcolorpicker-icon i').css("background-color", settingValue);
+
+    });
+
+    $('.wdt-color-picker #loader-animation-color').change(function (e) {
+        if (typeof constructedChartData.chartLoaderAnimationColorSettings != 'object') {
+            constructedChartData.chartLoaderAnimationColorSettings = {};
+        }
+        var settingName = $(this).data('name');
+        var settingValue =  $(this).val();
+
+        constructedChartData.chartLoaderAnimationColorSettings = settingValue;
+
+
+        jQuery('input[data-name=' + settingName + ']').val(settingValue);
+        jQuery('input[data-name=' + settingName + '] + .wpcolorpicker-icon i').css("background-color", settingValue);
+
+    });
+
     $(document).on('change', 'select#region-google-charts', function (e) {
         $('#sub-continents-geo-chart').selectpicker('val', 'world');
         $('#sub-continents-geo-chart').selectpicker('refresh');
@@ -1356,6 +1388,8 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         constructedChartData.region = $('#sub-continents-geo-chart').val() === 'world' || $('#region-google-charts').val() === 'world' ? $('#region-google-charts').val() : ($('#sub-continents-geo-chart').val() && $('#countries-geo-chart').val() === 'world' ? $('#sub-continents-geo-chart').val() : $('#countries-geo-chart').val());
         constructedChartData.datalessRegionColor = $('input.geochart_color').val();
         constructedChartData.colors = $('input.geochart-color-region').val();
+        constructedChartData.chartLoaderColorSettings = $('input#loader-color').val();
+        constructedChartData.chartLoaderAnimationColorSettings = $('input#loader-animation-color').val();
         // Series
         if (typeof constructedChartData.series_data == 'undefined') {
             constructedChartData.series_data = {};
@@ -1511,11 +1545,17 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         if (constructedChartData.loader) {
             $('#loader-row').prop('checked', 'checked');
             $('#loader-color-container').show();
+            $('#loader-color-animation-container').show();
             $('#loader-style-row').show();
         } else {
             $('#loader-row').prop('checked', '');
             $('#loader-color-container').hide();
+            $('#loader-color-animation-container').hide();
             $('#loader-style-row').hide();
+            $('input#loader-animation-color').val('');
+            $('#loader-color-animation-container .wpcolorpicker-icon i').css("background-color", '');
+            $('input#loader-color').val('');
+            $('#loader-color-container .wpcolorpicker-icon i').css("background-color", '');
         }
     }
 
@@ -1642,6 +1682,23 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             $('#btn-minus-chart-width').prop('disabled', false);
             $('#chart-width').prop('readonly', '');
             $('#chart-width').val('400');
+        }
+    });
+    $('#loader-row').on('change', function (e) {
+        if ($(this).is(':checked')) {
+            $('#loader-row').prop('checked', 'checked');
+            $('#loader-color-container').show();
+            $('#loader-color-animation-container').show();
+            $('#loader-style-row').show();
+        } else {
+            $('#loader-row').prop('checked', '');
+            $('#loader-color-container').hide();
+            $('#loader-color-animation-container').hide();
+            $('#loader-style-row').hide();
+            $('input#loader-animation-color').val('');
+            $('#loader-color-animation-container .wpcolorpicker-icon i').css("background-color", '');
+            $('input#loader-color').val('');
+            $('#loader-color-container .wpcolorpicker-icon i').css("background-color", '');
         }
     });
 
@@ -2122,6 +2179,20 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                 $('#chart-width').val(0);
                 $('#chart-width').prop('readonly', 'readonly');
             }
+            if (typeof editing_chart_data.render_data.chartLoaderColorSettings !== 'undefined') {
+                $('input#loader-color').val(editing_chart_data.render_data.chartLoaderColorSettings);
+                $('input#loader-color .wpcolorpicker-icon i').css("background-color", editing_chart_data.render_data.chartLoaderColorSettings);
+            } else {
+                $('input#loader-color').val('');
+                $('input#loader-color .wpcolorpicker-icon i').css("background-color", '');
+            }
+            if (typeof editing_chart_data.render_data.chartLoaderAnimationColorSettings !== 'undefined') {
+                $('input#loader-animation-color').val(editing_chart_data.render_data.chartLoaderAnimationColorSettings);
+                $('input#loader-animation-color .wpcolorpicker-icon i').css("background-color", editing_chart_data.render_data.chartLoaderAnimationColorSettings);
+            } else {
+                $('input#loader-animation-color').val('');
+                $('input#loader-animation-color .wpcolorpicker-icon i').css("background-color", '');
+            }
             $('#chart-height').val(editing_chart_data.render_data.options.height);
 
             if (editing_chart_data.render_data.group_chart) {
@@ -2153,12 +2224,18 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                 $('#loader-row').prop('checked', 'checked');
                 $('#loader-row').addClass('firstLoaderGlobal');
                 $('#loader-color-container').show();
+                $('#loader-color-animation-container').show();
                 $('#loader-style-row').show();
             } else {
                 $('#loader-row').prop('checked', '');
                 $('#loader-row').addClass('firstLoaderGlobal');
                 $('#loader-color-container').hide();
+                $('#loader-color-animation-container').hide();
                 $('#loader-style-row').hide();
+                $('input#loader-animation-color').val('');
+                $('#loader-color-animation-container .wpcolorpicker-icon i').css("background-color", '');
+                $('input#loader-color').val('');
+                $('#loader-color-container .wpcolorpicker-icon i').css("background-color", '');
             }
 
             if (editing_chart_data.engine == 'google') {

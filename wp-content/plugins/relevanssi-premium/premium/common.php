@@ -421,8 +421,19 @@ function relevanssi_premium_generate_suggestion( $query ) {
 			if ( true === $c ) {
 				++$exact_matches;
 			} elseif ( ! empty( $c ) && strval( $token ) !== $c ) {
-				array_push( $correct, $c );
+				$old_query = $query;
 				$query = str_ireplace( $token, $c, $query ); // Replace misspelled word in query with suggestion.
+				if ( $old_query !== $query ) {
+					/**
+					 * Sometimes a correction is found, but the replacement fails.
+					 * For example, when a search with accents is made but Relevanssi
+					 * removes the accents, and then cannot replace the accents-stripped
+					 * version of the search term to the query (this needs fixing).
+					 * 
+					 * Only push to correct answers if a replacement can be made.
+					 */
+					array_push( $correct, $c );
+				}
 			}
 		}
 		if ( count( $tokens ) === $exact_matches ) {

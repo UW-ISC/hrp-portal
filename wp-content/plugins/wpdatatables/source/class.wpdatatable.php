@@ -163,7 +163,8 @@ class WPDataTable
     private $_fixedHeaders = false;
     private $_fixedHeadersOffset = 0;
     private $_simple_template_id = 0;
-    private $_customRowDisplay = '';
+    private  $_customRowDisplay = '';
+    private $_index_column = 0;
     protected $_transformValueColumns = array();
 
     /**
@@ -280,6 +281,15 @@ class WPDataTable
     public function setFixedHeaders($fixedheader)
     {
         $this->_fixedHeaders = $fixedheader;
+    }
+    public function getIndexColumn()
+    {
+        return $this->_index_column;
+    }
+
+    public function setIndexColumn($indexcolumn)
+    {
+        $this->_index_column = $indexcolumn;
     }
 
     public function getFixedHeadersOffset()
@@ -1710,6 +1720,10 @@ class WPDataTable
                         $dataColumn->setFormula('');
                     }
                 } elseif ($wdtColumnTypes[$key] === 'select' || $wdtColumnTypes[$key] === 'cart') {
+                    $dataColumn->setSorting(false);
+                    $dataColumn->setSearchable(false);
+                }
+                if ($wdtColumnTypes[$key] === 'index') {
                     $dataColumn->setSorting(false);
                     $dataColumn->setSearchable(false);
                 }
@@ -3351,8 +3365,9 @@ class WPDataTable
                     $main_res_dataRows = $foreignKeyData['dataRows'];
                 }
             }
-
+            $i = (int)$_POST['start'];
             foreach ($main_res_dataRows as $res_row) {
+                $i++;
                 $row = array();
                 foreach ($wdtParameters['columnOrder'] as $dataColumn_key) {
                     if ($wdtParameters['data_types'][$dataColumn_key] == 'formula') {
@@ -3376,6 +3391,8 @@ class WPDataTable
                         } catch (Exception $e) {
                             $row[$dataColumn_key] = 0;
                         }
+                    } else if ($wdtParameters['data_types'][$dataColumn_key] == 'index') {
+                        $row[$dataColumn_key] = apply_filters('wpdatatables_filter_cell_output', $colObjs[$dataColumn_key]->returnCellValue((int)$i), $this->_wpId, $dataColumn_key);
                     } else {
                         if ($dataColumn_key != 'masterdetail') {
                             $row[$dataColumn_key] = apply_filters('wpdatatables_filter_cell_output', $colObjs[$dataColumn_key]->returnCellValue($res_row[$dataColumn_key]), $this->_wpId, $dataColumn_key);
@@ -4596,6 +4613,7 @@ class WPDataTable
             isset($advancedSettings->customRowDisplay) ? $this->setCustomDisplayLength($advancedSettings->customRowDisplay) : $this->setCustomDisplayLength('');
             isset($advancedSettings->loader) ? $this->setLoader($advancedSettings->loader) : $this->setLoader(get_option('wdtGlobalTableLoader'));
             isset($advancedSettings->showCartInformation) ? $this->setshowCartInformation($advancedSettings->showCartInformation) : $this->setshowCartInformation(1);
+            isset($advancedSettings->index_column) ? $this->setIndexColumn($advancedSettings->index_column) : $this->setIndexColumn(0);
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -4957,6 +4975,7 @@ class WPDataTable
         }
         //[<--/ Full version -->]//
         $obj->spinnerSrc = WDT_ASSETS_PATH . '/img/spinner.gif';
+        $obj->index_column = $this->getIndexColumn();
         $obj->groupingEnabled = $this->groupingEnabled();
         if ($this->groupingEnabled()) {
             $obj->groupingColumnIndex = $this->groupingColumn();

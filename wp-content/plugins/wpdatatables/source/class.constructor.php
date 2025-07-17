@@ -80,32 +80,56 @@ class wpDataTableConstructor
      * @param String $connection
      *
      * @return array
+     * @throws Exception
      */
     public static function defineColumnProperties($column_header, $column, $connection = null): array
     {
         $columnPropertiesConstruct = new stdClass();
 
-        $allowed_types = array("VARCHAR",
-            "INT",
-            "BIGINT",
-            "TINYINT",
-            "SMALLINT",
-            "MEDIUMINT",
-            "DECIMAL",
-            "TEXT",
-            "DATE",
-            "DATETIME",
-            "TIME");
-        if (!isset($column['predefined_type_in_db']) || !in_array($column['predefined_type_in_db'], $allowed_types)) {
-            $column['predefined_type_in_db'] = 'VARCHAR';
+        $allowed_types = array(
+            "VARCHAR", "INT", "BIGINT", "TINYINT", "SMALLINT",
+            "MEDIUMINT", "DECIMAL", "TEXT", "DATE", "DATETIME", "TIME"
+        );
+
+        $columnTypeMapper = array(
+            "string" => "VARCHAR",
+            "int" => "INT",
+            "float" => "DECIMAL",
+            "date" => "DATE",
+            "datetime" => "DATETIME",
+            "time" => "TIME",
+            "link" => "VARCHAR",
+            "email" => "VARCHAR",
+            "image" => "VARCHAR",
+        );
+
+        // Default size for supported types
+        $defaultTypeSizes = array(
+            "VARCHAR" => 255,
+            "DECIMAL" => "10,2",
+        );
+
+        $predefined_type_in_db = $column['predefined_type_in_db'] ?? null;
+
+        if (!in_array($predefined_type_in_db, $allowed_types, true)) {
+            if (isset($column['type']) && isset($columnTypeMapper[$column['type']])) {
+                $column['predefined_type_in_db'] = $columnTypeMapper[$column['type']];
+            } else {
+                $column['predefined_type_in_db'] = 'VARCHAR';
+            }
             $column['predefined_type_value_in_db'] = 255;
         }
         if (!preg_match('/^[\d,]+$/', $column['predefined_type_value_in_db']) && $column['predefined_type_value_in_db'] !== '') {
             $column['predefined_type_in_db'] = 'VARCHAR';
             $column['predefined_type_value_in_db'] = 255;
         }
-        $column['predefined_type_in_db'] = sanitize_text_field($column['predefined_type_in_db']);
-        $column['predefined_type_value_in_db'] = sanitize_text_field($column['predefined_type_value_in_db']);
+
+        // Determine the default size only for types that support it
+        if (isset($defaultTypeSizes[$column['predefined_type_in_db']])) {
+            $column['predefined_type_value_in_db'] = $defaultTypeSizes[$column['predefined_type_in_db']];
+        } else {
+            $column['predefined_type_value_in_db'] = null;
+        }
 
         $columnPropertiesConstruct->vendor = Connection::getVendor($connection);
         $columnPropertiesConstruct->isMySql = $columnPropertiesConstruct->vendor === Connection::$MYSQL;
@@ -119,7 +143,11 @@ class wpDataTableConstructor
         $columnPropertiesConstruct->columnTextType = 'TEXT';
         $columnPropertiesConstruct->columnPredefinedType = $column['predefined_type_in_db'];
         $columnPropertiesConstruct->columnPredefinedTypeValue = $column['predefined_type_value_in_db'];
-        $columnPropertiesConstruct->ValueForDB = $columnPropertiesConstruct->columnPredefinedType . '(' . $columnPropertiesConstruct->columnPredefinedTypeValue . ')';
+        $columnPropertiesConstruct->ValueForDB = $columnPropertiesConstruct->columnPredefinedType;
+        if ($columnPropertiesConstruct->columnPredefinedTypeValue) {
+            $columnPropertiesConstruct->ValueForDB .= '(' . $columnPropertiesConstruct->columnPredefinedTypeValue . ')';
+        }
+
         if ($columnPropertiesConstruct->isMySql) {
             $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->ValueForDB;
             $columnPropertiesConstruct->columnDateTimeType = 'DATETIME';

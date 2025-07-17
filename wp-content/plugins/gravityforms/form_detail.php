@@ -206,7 +206,9 @@ class GFFormDetail {
 						$dynamic_menu_items[ $key ] = $item;
 					}
 				}
-				echo GFForms::format_toolbar_menu_items( $fixed_menu_items );
+				if ( ! empty( $fixed_menu_items ) ) {
+					echo GFForms::format_toolbar_menu_items( $fixed_menu_items );
+				}
 				if ( ! empty( $dynamic_menu_items ) ) {
 					echo '<span class="gform-form-toolbar__divider"></span>';
 					echo GFForms::format_toolbar_menu_items( $dynamic_menu_items );
@@ -344,7 +346,11 @@ class GFFormDetail {
 					<p><?php esc_html_e( 'What would you like to do next?', 'gravityforms' ); ?></p>
 
 					<div class="new-form-option">
-						<a id="preview_form_link" href="<?php echo esc_url_raw( trailingslashit( site_url() ) ); ?>?gf_page=preview&id={formid}" target="_blank"><?php esc_html_e( 'Preview this Form', 'gravityforms' ); ?></a>
+						<a id="preview_form_link" href="<?php echo esc_url_raw( trailingslashit( site_url() ) ); ?>?gf_page=preview&id={formid}" target="_blank">
+						<?php esc_html_e( 'Preview this Form', 'gravityforms' ); ?>
+						<span class="screen-reader-text"><?php echo esc_html__('(opens in a new tab)', 'gravityforms'); ?></span>&nbsp;
+						<span class="gform-icon gform-icon--external-link"></span>
+						</a>
 					</div>
 
 					<?php if ( GFCommon::current_user_can_any( 'gravityforms_edit_forms' ) ) { ?>
@@ -3132,6 +3138,40 @@ class GFFormDetail {
 		die( $args_json );
 	}
 
+	/*
+	 * AJAX function to retrieve a form.
+	 *
+	 * Used by HasConditionalLogicDependencyLegwork in form_editor.js to check
+	 * conditional logic dependencies for fields, confirmations, notifications,
+	 * notification routing, and feeds.
+	 *
+	 * @since 2.9.9
+	 */
+	public static function ajax_get_form() {
+		check_ajax_referer( 'rg_ajax_get_form', 'rg_ajax_get_form' );
+
+		$form_id = absint( rgpost( 'form_id' ) );
+		$form    = GFFormsModel::get_form_meta( $form_id );
+
+		if ( empty( $form ) ) {
+			wp_send_json_error( esc_html__( 'No form found.', 'gravityforms' ) );
+		}
+
+		$feeds            = GFAPI::get_feeds( null, $form_id );
+		$feeds_conditions = array();
+		if( $feeds ) {
+			foreach( $feeds as $feed ) {
+				if( rgars( $feed, 'meta/feed_condition_conditional_logic_object' ) ) {
+					$feeds_conditions[] = $feed['meta']['feed_condition_conditional_logic_object'];
+				}
+			}
+		}
+
+		$form['feeds_conditions'] = $feeds_conditions;
+
+		wp_send_json_success( $form );
+	}
+
 	public static function change_input_type() {
 		check_ajax_referer( 'rg_change_input_type', 'rg_change_input_type' );
 
@@ -3350,9 +3390,9 @@ class GFFormDetail {
 							// Translators: 1. Opening <a> tag with link to the form export page, 2. closing <a> tag, 3. Opening <a> tag for documentation link, 4. Closing <a> tag.
 							esc_html__( 'If you continue to encounter this error, you can %1$sexport your form%2$s to include in your support request. You can also disable AJAX saving for this form. %3$sLearn more%4$s.', 'gravityforms' ),
 							'<a target="_blank" href="' . admin_url( 'admin.php?page=gf_export&subview=export_form&export_form_ids=' . rgget( 'id' ) ) . '" rel="noopener noreferrer" class="gform-export-form">',
-							'</a>',
+							'<span class="screen-reader-text">' . esc_html__('(opens in a new tab)', 'gravityforms') . '</span>&nbsp;<span class="gform-icon gform-icon--external-link"></span></a>',
 							'<a target="_blank" href="https://docs.gravityforms.com/gform_disable_ajax_save/" rel="noopener noreferrer">',
-							'</a>'
+							'<span class="screen-reader-text">' . esc_html__('(opens in a new tab)', 'gravityforms') . '</span>&nbsp;<span class="gform-icon gform-icon--external-link"></span></a>'
 						);
 					?>
 				</p>
@@ -3394,9 +3434,11 @@ class GFFormDetail {
 					class="gform-alert__cta gform-button gform-button--white gform-button--size-xs"
 					href="https://docs.gravityforms.com/about-legacy-markup"
 					target="_blank"
-					aria-label="<?php echo esc_html_e( 'Learn more about form legacy markup', 'gravityforms' ); ?>"
 				>
 					<?php echo esc_html_e( 'Learn More', 'gravityforms' ); ?>
+					<span class="screen-reader-text"><?php echo esc_html__('about form legacy markup', 'gravityforms'); ?></span>
+					<span class="screen-reader-text"><?php echo esc_html__('(opens in a new tab)', 'gravityforms'); ?></span>&nbsp;
+					<span class="gform-icon gform-icon--external-link"></span>
 				</a>
 			</div>
 		</div>
@@ -3424,6 +3466,7 @@ class GFFormDetail {
 		}
 
 		$deprecated_classes = array(
+			'gf_inline',
 			'gf_left_half',
 			'gf_right_half',
 			'gf_left_third',
@@ -3465,7 +3508,7 @@ class GFFormDetail {
 			<span class="gform-alert__icon gform-icon gform-icon--campaign" aria-hidden="true"></span>
 			<div class="gform-alert__message-wrap">
 				<p class="gform-alert__message" tabindex="0">
-					<?php echo esc_html_e( 'This form uses deprecated Ready Classes. Adding columns is easier than ever with the new Drag and Drop Layout Editor.', 'gravityforms' ); ?>
+					<?php echo esc_html_e( 'This form uses deprecated Ready Classes. These will be removed in Gravity Forms 3.1. Adding columns is easier than ever with the new Drag and Drop Layout Editor.', 'gravityforms' ); ?>
 				</p>
 				<a
 					class="gform-alert__cta gform-button gform-button--white gform-button--size-xs"
@@ -3474,6 +3517,8 @@ class GFFormDetail {
 					title="<?php esc_attr_e( 'Working with Columns in the Form Editor in Gravity Forms 2.5', 'gravityforms' ); ?>"
 				>
 					<?php esc_html_e( 'Learn More', 'gravityforms' ); ?>
+					<span class="screen-reader-text"><?php echo esc_html__('(opens in a new tab)', 'gravityforms'); ?></span>&nbsp;
+					<span class="gform-icon gform-icon--external-link"></span>
 				</a>
 			</div>
 			<button

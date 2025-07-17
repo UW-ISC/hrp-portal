@@ -960,7 +960,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
 
         // Load possible values on modal open
         select.on('show.bs.select', function (e) {
-
+            select.closest('.dropdown-menu').find('.optgroup-1').remove();
             select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
             //Added for fixed columns and fixed headers (height for showing selectbox)
             showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);

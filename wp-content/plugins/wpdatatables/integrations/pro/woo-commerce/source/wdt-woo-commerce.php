@@ -4,6 +4,7 @@ namespace WDTIntegration;
 
 use Exception;
 use WC_Product_Data_Store_CPT;
+use WDTException;
 use WP_Query;
 use WDTConfigController;
 
@@ -206,6 +207,7 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $wdtParameters
      *
      * @return true
+     * @throws WDTException
      */
     public static function wooCommerceBasedConstruct($wpDataTable, $content, $wdtParameters): bool
     {
@@ -219,6 +221,8 @@ class WooCommerceIntegration extends WPQueryIntegration
             );
             echo json_encode($result);
             exit();
+        } else if (!class_exists('woocommerce')) {
+            throw new WDTException(__('You are trying to load a table of an unknown type. You probably don\'t have the WooCommerce plugin activated, which is required to use this table type.', 'wpdatatables'));
         }
 
         if ($wpDataTable->isAjaxReturn()) {
@@ -986,16 +990,16 @@ class WooCommerceIntegration extends WPQueryIntegration
             // Disabled Add to Cart button
             $addToCartButton .= '<button disabled data-product_id="' . $productId . '" 
                             class="single_add_to_cart_button button alt ajax_add_to_cart"
-                            aria-label="' . $productName . '">
-                        ' . __('Add to cart', 'wpdatatables') . '
-                    </button>';
+                            aria-label="' . $productName . '"><span class="wdt-woo-button-text"> ' . __('Add to cart', 'wpdatatables') . '</span>
+                    <span class="wdt-woo-loader" style="display: none;"></span>' .
+                '</button>';
             $addToCartButton .= '</div>';
         } else {
             $addToCartButton = '<button data-product_id="' . $productId . '" 
                             class="single_add_to_cart_button button alt ajax_add_to_cart"
                             aria-label="' . $productName . '">
-                        ' . __('Add to cart', 'wpdatatables') . '
-                    </button>';
+                        <span class="wdt-woo-button-text"> ' . __('Add to cart', 'wpdatatables') . '</span>
+                    <span class="wdt-woo-loader" style="display: none;"></span></button>';
         }
         return apply_filters('wpdatatables_before_render_add_to_cart', $addToCartButton);
     }
@@ -1055,7 +1059,8 @@ class WooCommerceIntegration extends WPQueryIntegration
                              </div>';
 
                     // Disabled Add to Cart button (will be enabled once all variations are selected)
-                    $htmlOutput .= '<button disabled class="single_add_to_cart_button button alt ajax_add_to_cart" data-product_id="' . esc_attr($productId) . '" data-value="' . esc_attr($tableId) . '">' . __('Add to cart', 'wpdatatables') . '</button>';
+                    $htmlOutput .= '<button disabled class="single_add_to_cart_button button alt ajax_add_to_cart" data-product_id="' . esc_attr($productId) . '" data-value="' . esc_attr($tableId) . '"> <span class="wdt-woo-button-text"> ' . __('Add to cart', 'wpdatatables') . '</span>
+                        <span class="wdt-woo-loader" style="display: none;"></span>' . '</button>';
                 } else {
                     // Initialize HTML output
                     $htmlOutput = '<div class="wdt-woo-single-product wdt-woo-product">';
@@ -1065,7 +1070,8 @@ class WooCommerceIntegration extends WPQueryIntegration
                                 <label for="quantity_' . $productId . '">' . __('Quantity', 'wpdatatables') . '</label>
                                 <input type="number" name="quantity" id="quantity_' . $productId . '" value="1" min="1" class="wdt-woo-input-text" />
                              </div>';
-                    $htmlOutput .= '<button class="single_add_to_cart_button button alt ajax_add_to_cart" data-product_id="' . esc_attr($productId) . '" data-value="' . esc_attr($tableId) . '">' . __('Add to cart', 'wpdatatables') . '</button>';
+                    $htmlOutput .= '<button class="single_add_to_cart_button button alt ajax_add_to_cart" data-product_id="' . esc_attr($productId) . '" data-value="' . esc_attr($tableId) . '"><span class="wdt-woo-button-text"> ' . __('Add to cart', 'wpdatatables') . '</span><span class="wdt-woo-loader" style="display: none;"></span>' .
+                        '</button>';
                 }
 
                 $htmlOutput .= '</div>';

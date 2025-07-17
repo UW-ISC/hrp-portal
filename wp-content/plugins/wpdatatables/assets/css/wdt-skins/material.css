@@ -743,9 +743,18 @@ div.dt-button-collection.wdt-skin-material a.dt-button.active:before {
 .wpdt-c.wdt-skin-material.wpTableWCAG .wpDataTablesWrapper .DTTT_button > span {
     color: #1978c4;
 }
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle .filter-option {
+    margin-left: 20px;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    font-family: var(--wpdt-inter-google-font, inherit);
+    left: 0px;
+}
 
-.wpdt-c.wdt-skin-material .single_add_to_cart_button,
-.wpdt-c.wdt-skin-material .wdt-add-to-cart-button {
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button,
+.wpdt-c.wdt-skin-material .wdt-woo-basket-info button.button.wdt-add-to-cart-button {
     display: inline-block;
     text-decoration: none;
     line-height: 2.15384615;
@@ -756,4 +765,37 @@ div.dt-button-collection.wdt-skin-material a.dt-button.active:before {
     white-space: nowrap;
     box-sizing: border-box;
     width: fit-content;
+    position: relative;
+    padding: 0 10px !important;
+    border: 1px solid #2196F3;
+    background-color: #eee;
+    border-radius: 4px;
+}
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper .wdt-woo-product button.single_add_to_cart_button.button:focus,
+.wpdt-c.wdt-skin-material .wdt-woo-basket-info button.button.wdt-add-to-cart-button:focus{
+    color: inherit;
+}
+
+.wpdt-c.wdt-skin-material .wdt-woo-single-product .wdt-woo-loader,
+.wpdt-c.wdt-skin-material .wdt-add-to-cart-button .wdt-woo-loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #000000;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: wdt-spin 2s linear infinite;
+    display: inline-block;
+    top: 25%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+@keyframes wdt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wpdt-c.wdt-skin-material .wdt-add-to-cart-button .wdt-woo-loader {
+    display: none;
 }

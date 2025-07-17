@@ -583,7 +583,8 @@ function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null
                     'fixed_left_columns_number' => 0,
                     'fixed_right_columns_number' => 0,
                     'simple_template_id' => $tableTemplateID,
-                    'customRowDisplay' => ''
+                    'customRowDisplay' => '',
+                    'index_column' => 0,
                 )
             ),
         )

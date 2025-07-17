@@ -102,6 +102,7 @@ var wpdatatable_config = {
     simple_template_id: 0,
     customRowDisplay: '',
     loader: parseInt(wpdatatables_settings.wdtGlobalTableLoader),
+    index_column: jQuery('#wdt-index-column').val(),
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, nested_json, serialized, csv, excel
@@ -605,11 +606,13 @@ var wpdatatable_config = {
             }
         }
 
+        jQuery('#wdt-rows-per-page').data('suppress-change', true);
         jQuery('#wdt-rows-per-page')
-            .selectpicker('val', displayLength);
-        jQuery('#wdt-rows-per-page')
+            .selectpicker('val', displayLength)
             .val(displayLength)
             .selectpicker('refresh');
+        jQuery('#wdt-rows-per-page').data('suppress-change', false);
+
     },
     /**
      * Show or hide "Show X entries" dropdown
@@ -1329,9 +1332,14 @@ var wpdatatable_config = {
         if (wpdatatable_config.loader) {
             jQuery('.wdt-loader-color').show();
             jQuery('.wdt-loader-style').show();
+            jQuery('.wdt-loader-color-background').show();
         } else {
             jQuery('.wdt-loader-color').hide();
             jQuery('.wdt-loader-style').hide();
+            jQuery('.wdt-loader-color-background').hide();
+            this.setTableFontColorSettings(jQuery('.wdt-loader-color').find('.cp-value').data('name'), '');
+            this.setTableFontColorSettings(jQuery('.wdt-loader-color-background').find('.cp-value').data('name'), '');
+            jQuery('.wdt-loader-style').val('');
         }
     },
     setSimpleTemplateId: function (simple_template_id) {
