@@ -11,7 +11,7 @@
  * https://wordpress.org/support/topic/archive-templates-and-dynamic-galleries/
  * 
  * @package MLA Taxonomy Archive Redirect
- * @version 1.00
+ * @version 1.02
  */
 
 /*
@@ -19,7 +19,7 @@ Plugin Name: MLA Taxonomy Archive Redirect
 Plugin URI: http://davidlingren.com/
 Description: Detect a "Taxonomy Archive Page" URL and redirect to a specified page with [mla_gallery] parameters
 Author: David Lingren
-Version: 1.00
+Version: 1.02
 Author URI: http://davidlingren.com/
 
 Copyright 2025 David Lingren
@@ -52,7 +52,7 @@ class MLATaxonomyArchiveRedirect {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.00';
+	const PLUGIN_VERSION = '1.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -172,6 +172,11 @@ class MLATaxonomyArchiveRedirect {
 			return;
 		}
 
+		// The plugin isn't useful during AJAX operations
+		if ( defined('DOING_AJAX') && DOING_AJAX ) {
+			return;
+		}
+
 		$uri = 'v' . self::PLUGIN_VERSION . isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		MLACore::mla_debug_add( __LINE__ . " MLATaxonomyArchiveRedirect::initialize( {$uri} ) \$_REQUEST = " . var_export( $_REQUEST, true ), self::MLA_DEBUG_CATEGORY );
 
@@ -224,7 +229,7 @@ class MLATaxonomyArchiveRedirect {
 
 		add_action( 'parse_query', 'MLATaxonomyArchiveRedirect::mla_parse_query_action' );		
 
-		// The remaining filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
+		// The settings page is only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -240,7 +245,7 @@ class MLATaxonomyArchiveRedirect {
 		// Compose dynamic option rows
 		$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
 		$taxonomy_rows = '';
-		$row_values = array( 'site_url' => $general_tab_values['site_url'] );
+		$row_values = array( 'slug_prefix' => self::$settings_arguments['slug_prefix'], 'site_url' => $general_tab_values['site_url'] );
 		foreach ( $supported_taxonomies as $taxonomy ) {
 			$row_values['taxonomy'] = $taxonomy;
 			$row_values['archive_page'] = $current_values[ $taxonomy ];

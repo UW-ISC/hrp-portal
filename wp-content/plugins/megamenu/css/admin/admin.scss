@@ -1875,6 +1875,9 @@ body.toplevel_page_maxmegamenu {
 	    clear: both;
 	}
 
+	.megamenu_wrap .megamenu_right .warning {
+		margin-bottom: 0;
+	}
 	.megamenu_wrap .fail {
 		border-left-color: $red;
 	}
@@ -1950,14 +1953,33 @@ body.toplevel_page_maxmegamenu {
 			font-size: 0.9em;
 		}
 
-		h2.nav-tab-wrapper {
+		nav.nav-tab-wrapper {
+			position: relative;
 		    margin: 0;
+			display: inline-flex;
+			align-items: center;
+			align-content: center;
+			height: 64px;
+			gap: 30px;
+			width: 100%;
 
-			a.nav-tab {
+			a.mega-tab {
+				display: flex;
 			    cursor: pointer;
+			    height: 100%;
+			    align-content: center;
+    			flex-wrap: wrap;
+    			color: $text_grey;
+			    font-weight: 500;
+			    font-size: 14px;
+			    padding: 0 5px;
 
 			    @include tablet {
 			    	font-size: 12px;
+			    }
+
+			    &:hover {
+			    	color: $light_blue;
 			    }
 			}
 
@@ -1965,8 +1987,19 @@ body.toplevel_page_maxmegamenu {
 				background: white;
 			    position: relative;
 			    z-index: 1;
-			    border-bottom: 1px solid white;
+			    color: $light_blue;
 			}
+
+	        /* The sliding border element */
+	        .nav-tab-slider {
+	            position: absolute;
+	            bottom: 0;
+	            height: 3px;
+	            background-color: $light_blue;
+	            border-radius: 2px;
+	            transition: left 0.3s ease-out, width 0.3s ease-out;
+	            z-index: 1;
+	        }
 		}
 
 		h3.editing_theme {
@@ -2033,6 +2066,7 @@ body.toplevel_page_maxmegamenu {
 
 					a.nav-tab,
 					a.nav-tab-active {
+						cursor: pointer;
 						font-size: 12px;
 						font-weight: normal;
 						padding: 3px 5px;
@@ -2098,11 +2132,14 @@ body.toplevel_page_maxmegamenu {
 
 				.theme_selector {
 					margin-bottom: 20px;
-					float: left;
-					
+					font-size: 15px;
+					display: flex;
+					align-items: center;
+
 					select {
-						max-width: 500px;
-						font-size: 12px;
+						margin-left: 10px;
+						font-size: 14px;
+						border-color: black;
 					}
 				}
 
@@ -2113,7 +2150,7 @@ body.toplevel_page_maxmegamenu {
 
 					svg {
 						height: 30px;
-						border: 1px solid #7e8993;
+						border: 1px solid black;
 						border-radius: 3px;
 						box-sizing: border-box;
 					}
@@ -2125,14 +2162,13 @@ body.toplevel_page_maxmegamenu {
 				}
 
 				td.mega-name {
-					padding-left: 10px;
 					font-size: 14px;
 				}
 
 				h5 {
 					clear: both;
 					font-size: 1.1em;
-					margin: 15px 0 0 10px;
+					margin: 15px 0 0 0;
 					padding: 0;
 				}
 			}
@@ -2303,7 +2339,7 @@ body.toplevel_page_maxmegamenu {
 				input[type=text],
 				input[type=number],
 				select {
-					font-size: 11px;
+					font-size: 12px;
 					min-height: 28px;
 				}
 
@@ -2329,7 +2365,8 @@ body.toplevel_page_maxmegamenu {
 				}
 
 				input[type=text] {
-					width: 70px;
+					min-width: 70px;
+					field-sizing: content;
 				}
 
 				input[type=text].wide {
@@ -2344,14 +2381,6 @@ body.toplevel_page_maxmegamenu {
 					width: 16px;
 					height: 16px;
 					vertical-align: middle;
-				}
-
-				input.mega-setting-panel_width,
-				input.mega-setting-panel_inner_width {
-					width: 120px;
-				}
-				input.mega-setting-title {
-					width: 100px;
 				}
 
 				.wide input[type=text] {
@@ -2385,7 +2414,6 @@ body.toplevel_page_maxmegamenu {
 					position: relative;
 					padding-bottom: 25px;
 					padding-top: 15px;
-					border-top: 1px solid $grey; 
 
 					&.mega-name {
 						width: 33%;
@@ -2449,9 +2477,10 @@ body.toplevel_page_maxmegamenu {
 
 				td.mega-name .mega-description,
 				td.mega-value .mega-description {
-					font-size: 12px;
+					font-size: 13px;
 					color: #777;
 					line-height: 1.5em;
+					width: 80%;
 
 					p {
 						font-size: 12px;
@@ -2569,6 +2598,10 @@ body.toplevel_page_maxmegamenu {
 						    top: 34px;
 						    z-index: 1;
 						    border: 1px solid #ccc;
+
+						    .mega-custom-color-input-wrapper {
+						    	float: right;
+						    }
 						}
 
 						.mega-blocks .mega-right .block .block-settings {
@@ -2634,7 +2667,7 @@ body.toplevel_page_maxmegamenu {
 				}
 
 				label span.mega-short-desc {
-					font-size: 0.8em;
+					font-size: 10px;
 					text-transform: uppercase;
 					color: #777;
 					display: block;
@@ -2652,6 +2685,7 @@ body.toplevel_page_maxmegamenu {
 					    opacity: 0.5;
 					    margin-top: 6px;
 					    font-size: 16px;
+					    cursor: pointer;
 					}
 				}
 			}
@@ -2672,9 +2706,7 @@ body.toplevel_page_maxmegamenu {
 
 			div.mega-tab-content {
 			    position: relative;
-			    top: -1px;
 			    clear: both;
-			    border: 1px solid #ccc;
 			    float: left;
 			    width: 100%;
 			    padding: 0;

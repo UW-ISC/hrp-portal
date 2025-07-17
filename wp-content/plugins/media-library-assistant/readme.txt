@@ -2,9 +2,9 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Requires at least: 4.2
-Tested up to: 6.8
-Stable tag: 3.26
+Requires at least: 4.7
+Tested up to: 6.8.2
+Stable tag: 3.27
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -199,6 +199,16 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.27 =
+* New: For the `[mla_term_list]` shortcode, **the `checklist,div` output format wraps the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list.** More information in the Settings/Media Library Assistant Documentation tab.
+* New: EXIF metadata is extracted and available for AVIF files; requires ImageMagick version 7.0.25 or later and Imagick PHP support.
+* New: For the `[mla_gallery]` shortcode, **the `meta_date_key` parameter supports simple date searches and the `date_query` using any custom field instead of the Uploaded on date.** More information in the Settings/Media Library Assistant Documentation tab.
+* Fix: IMPORTANT: Reflected Cross-Site Scripting security risks in several `[mla_tag_cloud]` and `[mla_term_list]` shortcode parameters have been mitigated.
+* Fix: IMPORTANT: A Reflected Cross-Site Scripting security risk in the Select Parent modal window has been mitigated.
+* Fix: IMPORTANT: A Reflected Cross-Site Scripting security risk in the Settings/Media Library Assistant General tab has been mitigated.
+* Fix: When Polylang is active, correct a defect in preserving terms for untranslated taxonomies during the Bulk "Map IPTC/EXIF/WP metadata" action.
+* Fix: For the "MLA Taxonomy Archive Redirect" example plugin (v1.01), correct defect preventing AJAX operations from running to completion.
+
 = 3.26 =
 * Fix: **IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.**
 
@@ -372,8 +382,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.26 =
-IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.
+= 3.27 =
+IMPORTANT: Security fixes. Shortcode enhancements for term list checklists and custom field date queries, AVIF metadata support. Three enhancements and five fixes in all.
 
 == Acknowledgements ==
 

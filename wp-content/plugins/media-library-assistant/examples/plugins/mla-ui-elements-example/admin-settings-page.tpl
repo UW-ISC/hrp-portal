@@ -172,6 +172,7 @@ p.submit.mla-settings-submit {
 <li><a href="#use_filters"><strong>use_filters, for [mla_term_list]</strong></a></li>
 <li><a href="#add_filters_to"><strong>add_filters_to, for [mla_gallery]</strong></a></li>
 <li><a href="#default_empty_gallery"><strong>default_empty_gallery, for [mla_gallery]</strong></a></li>
+<li><a href="#mla_control_name"><strong>mla_control_name, for [mla_gallery]</strong></a></li>
 <li><a href="#muie_terms_search"><strong>The [muie_terms_search] shortcode</strong></a></li>
 <li><a href="#muie_keyword_search"><strong>The [muie_keyword_search] shortcode</strong></a></li>
 <li><a href="#muie_orderby"><strong>The [muie_orderby] and [muie_order] shortcodes</strong></a></li>
@@ -272,7 +273,7 @@ For gallery pagination links, the term list parameters (e.g., "tax_input") are r
 If the <code>$_REQUEST['tax_input']</code> element is present the selected terms are added to the <code>[mla_term_list]</code> shortcode parameters so the list output reflects them. They can also be accessed in an <code>[mla_gallery]</code> shortcode with the `request:` substitution parameter prefix.
 </p>
 <p>
-If you use the "mla_control_name" to replace the default <code>tax_input[[+taxonomy+]][]</code> name attribute, term selections will still be copied to the <code>$_REQUEST['tax_input']</code> element and the <code>muie_filters['tax_input']</code> query attribute. You can disable this behavoir by coding "use_filters=local".
+If you use the "mla_control_name" to replace the default <code>tax_input[[+taxonomy+]][]</code> name attribute, term selections will still be copied to the <code>$_REQUEST['tax_input']</code> element and the <code>muie_filters['tax_input']</code> query attribute. You can disable this behavoir by coding "use_filters=local". An example of how "use_filters=local" can be applied is in this support topic: <a href="https://wordpress.org/support/topic/how-to-split-2-types-of-tags/" title="use_filters=local Support Topic" target="_blank">how to split 2 types of tags?</a>
 </p>
 <p>
 If you are not getting the results you expect carefully inspecting the results of parsing the specification and generating the query can be a valuable exercise. You can add the <code>muie_debug=true</code> or <code>muie_debug=log</code> parameters to the <code>[mla_gallery]</code> shortcode, run a test and inspect the log file or the screen messages for more information about what's going on.
@@ -289,7 +290,6 @@ If you add "add_filters_to=any" to an [mla_gallery] shortcode this plugin will r
 If you add "add_filters_to={taxonomy_slug}" to an [mla_gallery] shortcode this plugin will do the actions described above and will also match the taxonomy_slug to a simple taxonomy query (if present) and look for a special "muie-no-terms" value. If the simple taxonomy value is "muie-no-terms", the taxonomy will be ignored, i.e., not added to the <code>tax_query</code> parameter.
 </p>
 <p>
-&nbsp;
 <a name="default_empty_gallery"></a>
 </p>
 <p>
@@ -300,7 +300,19 @@ If you add "add_filters_to={taxonomy_slug}" to an [mla_gallery] shortcode this p
 If you add "default_empty_gallery=true" to an [mla_gallery] shortcode the initial gallery display will show no items, until a selection is made from the other controls.
 </p>
 <p>
-If you also add an "mla_control_name" parameter to the shortcode with a comma-separated list of one or more control names, the presence of any non-empty control name elements in the request will cause the "empty gallery" test to fail and will display the gallery.
+The "mla_control_name" parameter described in the next section also affects the initial gallery display.
+</p>
+<p>
+<a name="mla_control_name"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>mla_control_name, for [mla_gallery]</h3>
+<p>
+If you add an "mla_control_name" parameter to the shortcode with a comma-separated list of one or more control names, any non-empty control name elements in the request will be preserved in the pagination values for a multi-page gallery display. The presence of any non-empty control name elements in the request will also cause the "empty gallery" test (see default_empty_gallery above) to fail and will display the gallery.
+</p>
+<p>
 <a name="muie_terms_search"></a>
 </p>
 <p>

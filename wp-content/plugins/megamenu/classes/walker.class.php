@@ -28,22 +28,23 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 		 * @param array  $args   An array of arguments. @see wp_nav_menu()
 		 */
 		function start_lvl( &$output, $depth = 0, $args = array() ) {
-			$id = $this->currentItem->ID;
-			$classes = $this->currentItem->classes;
 			$style = "";
 			$role = "";
 
-			if ( is_array( $classes ) && in_array( 'menu-row', $classes ) ) {
-				if ( isset( $this->currentItem->styles ) && count( $this->currentItem->styles ) ) {
-					$style = " style='" . esc_attr( implode( "; ", $this->currentItem->styles ) ) . "'";
+			if ( $this->currentItem !== null ) {
+				$id = $this->currentItem->ID;
+				$classes = $this->currentItem->classes;
+
+				if ( is_array( $classes ) && in_array( 'menu-row', $classes ) ) {
+					if ( isset( $this->currentItem->styles ) && count( $this->currentItem->styles ) ) {
+						$style = " style='" . esc_attr( implode( "; ", $this->currentItem->styles ) ) . "'";
+					}
+				}
+
+				if ( is_array( $classes ) && ( in_array( 'menu-row', $classes ) || in_array( 'menu-grid', $classes ) ) ) {
+					$role = " role='presentation'";
 				}
 			}
-
-			if ( is_array( $classes ) && ( in_array( 'menu-row', $classes ) || in_array( 'menu-grid', $classes ) ) ) {
-				$role = " role='presentation'";
-			}
-
-			$id_attribute = ' id="mega-sub-menu-' . esc_attr( $id ) . '"';
 			
 			$indent = str_repeat( "\t", $depth );
 

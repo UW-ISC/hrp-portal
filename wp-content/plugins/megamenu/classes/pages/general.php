@@ -69,7 +69,7 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 				update_option( 'megamenu_settings', $new_settings );
 			}
 
-			delete_transient( 'megamenu_failed_to_write_css_to_filesystem' );
+			delete_option( 'megamenu_failed_to_write_css_to_filesystem' );
 
 			do_action( 'megamenu_after_save_general_settings' );
 			do_action( 'megamenu_delete_cache' );
@@ -123,7 +123,7 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 							<select name='settings[css]' id='mega_css'>
 								<option value='fs' <?php echo selected( 'fs' === $css ); ?>><?php esc_html_e( 'Save to filesystem', 'megamenu' ); ?>
 									<?php
-									if ( get_transient( 'megamenu_failed_to_write_css_to_filesystem' ) ) {
+									if ( get_option( 'megamenu_failed_to_write_css_to_filesystem' ) ) {
 										echo ' ' . esc_html( '(Action required: Check upload folder permissions)', 'megamenu' );
 									}
 									?>

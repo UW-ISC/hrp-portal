@@ -238,13 +238,13 @@ class MLATermList {
 					if ( $current_is_slug || !is_numeric( $current_item ) ) {
 						if ( sanitize_title_for_query( $term->slug ) === sanitize_title_for_query( $current_item ) ) {
 							$is_active = true;
-							$item_values['current_item_class'] = $arguments['current_item_class'];
+							$item_values['current_item_class'] = sanitize_html_class( $arguments['current_item_class'] );
 							break;
 						}
 					} else {
 						if ( (integer) $term->term_id === (integer) $current_item ) {
 							$is_active = true;
-							$item_values['current_item_class'] = $arguments['current_item_class'];
+							$item_values['current_item_class'] = sanitize_html_class( $arguments['current_item_class'] );
 							break;
 						}
 					}
@@ -280,7 +280,7 @@ class MLATermList {
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$link_attributes .= 'class="' . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
+				$link_attributes .= 'class="' . sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
 			}
 
 			$item_values['link_attributes'] = $link_attributes;
@@ -352,7 +352,7 @@ class MLATermList {
 				if ( empty( $arguments['mla_option_text'] ) ) {
 					$item_values['thelabel'] = $pad . $item_values['link_text'];
 				} else {
-					$item_values['thelabel'] = $pad . MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values );
+					$item_values['thelabel'] = $pad . wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values ) );
 				}
 
 				if ( empty( $arguments['mla_option_value'] ) ) {
@@ -365,7 +365,7 @@ class MLATermList {
 						}
 					}
 				} else {
-					$item_values['thevalue'] = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_value'], $item_values );
+					$item_values['thevalue'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_value'], $item_values ) );
 				}
 
 				$item_values['popular'] = ''; // TODO Calculate 'term-list-popular'
@@ -390,7 +390,7 @@ class MLATermList {
 
 			if ( $is_active || $child_active ) {
 				$has_active = true;
-				$item_values['active_item_class'] = $arguments['active_item_class'];
+				$item_values['active_item_class'] = sanitize_html_class( $arguments['active_item_class'] );
 			}
 
 			if ( $is_list || $is_dropdown || $is_checklist ) {
@@ -602,7 +602,11 @@ class MLATermList {
 			} elseif ( 'dropdown' === $output_parameters[0] ) {
 				$template = 'term-list-dropdown';
 			} elseif ( 'checklist' === $output_parameters[0] ) {
-				$template = 'term-list-checklist';
+				if ( isset( $output_parameters[1] ) && ( 'div' === $output_parameters[1] ) ) {
+					$template = 'term-list-checklist-div';
+				} else {
+					$template = 'term-list-checklist';
+				}
 			}
 		}
 
@@ -712,7 +716,6 @@ class MLATermList {
 		$default_markup = 'term-list-ul';
 
 		if ( $is_list = in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
-
 			if ( 'list' === $output_parameters[0] && 'dd' === $arguments['captiontag'] ) {
 				$default_markup = 'term-list-dl';
 				$arguments['itemtag'] = 'dl';
@@ -748,7 +751,13 @@ class MLATermList {
 		}
 
 		if ( $is_checklist = 'checklist' === $output_parameters[0] ) {
-			$default_markup = 'term-list-checklist';
+				if ( isset( $output_parameters[1] ) && ( 'div' === $output_parameters[1] ) ) {
+					$default_style = 'term-list-checklist-div';
+					$default_markup = 'term-list-checklist-div';
+				} else {
+					$default_markup = 'term-list-checklist';
+				}
+
 			$arguments['termtag'] = 'li';
 		}
 
@@ -792,6 +801,11 @@ class MLATermList {
 		if ( ! empty( $exclude_later ) ) {
 			$arguments['exclude'] = $exclude_later;
 		}
+
+		$arguments['echo'] = 'true' === strtolower( $arguments['echo'] );
+		$arguments['separator'] = wp_kses( $arguments['separator'], 'post' );
+		$arguments['single_text'] = esc_attr( $arguments['single_text'] );
+		$arguments['multiple_text'] = esc_attr( $arguments['multiple_text'] );
 
 		// Invalid taxonomy names return WP_Error
 		if ( is_wp_error( $tags ) ) {
@@ -840,7 +854,7 @@ class MLATermList {
 			}
 
 			if ( 'array' === $arguments['mla_output'] ) {
-				$list .= $arguments['mla_nolink_text'];
+				$list .= wp_kses( $arguments['mla_nolink_text'], 'post' );
 
 				if ( empty( $list ) ) {
 					return array();
@@ -1047,7 +1061,7 @@ class MLATermList {
 			'mla_style' => $arguments['mla_style'],
 			'mla_markup' => $arguments['mla_markup'],
 			'taxonomy' => implode( '-', $arguments['taxonomy'] ),
-			'current_item' => $arguments['current_item'],
+			'current_item' => sanitize_title( $arguments['current_item'] ),
 			'itemtag' => tag_escape( $arguments['itemtag'] ),
 			'termtag' => tag_escape( $arguments['termtag'] ),
 			'captiontag' => tag_escape( $arguments['captiontag'] ),
@@ -1090,7 +1104,7 @@ class MLATermList {
 		if ( empty( $arguments['mla_control_name'] ) ) {
 			$mla_control_name = 'tax_input[[+taxonomy+]][]';
 		} else {
-			$mla_control_name = $arguments['mla_control_name'];;
+			$mla_control_name = esc_attr( $arguments['mla_control_name'] );
 		}
 
 		// Accumulate links for flat and array output

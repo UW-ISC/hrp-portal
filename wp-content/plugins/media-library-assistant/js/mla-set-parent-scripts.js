@@ -106,7 +106,7 @@ var jQuery;
 			}
 
 			if ( affectedTitles ) {
-				$( '#mla-set-parent-titles' ).html( affectedTitles );
+				$( '#mla-set-parent-titles' ).text( affectedTitles );
 			}
 
 			if ( mla.settings.useDashicons ) {

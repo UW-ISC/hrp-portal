@@ -124,22 +124,6 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 			<input type='hidden' name='menu_item_id' value='<?php echo esc_attr( $menu_item_id ); ?>' />
 			<input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ); ?>' />
 			<div class='widget-content'>
-				<?php
-
-				$css_version = get_transient( 'megamenu_css_version' );
-
-				if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
-					$link    = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __( 'Mega Menu' ) . ' > ' . __( 'Tools' ) . '</a>';
-					$notice  = "<div class='notice notice-success'><p>";
-					$notice .= sprintf( __( 'Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).', 'megamenu' ), $link );
-					$notice .= '</p></div>';
-					$notice .= '</div>';
-
-					echo $notice;
-				}
-
-				?>
-
 				<p>
 					<label><?php _e( 'Sub menu columns', 'megamenu' ); ?></label>
 

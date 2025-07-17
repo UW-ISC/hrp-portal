@@ -66,31 +66,17 @@ jQuery(function ($) {
         });
     }
     
-    $(".mm_colorpicker").spectrum({
-        preferredFormat: "rgb",
-        showInput: true,
-        showAlpha: true,
-        clickoutFiresChange: true,
-        showSelectionPalette: true,
-        showPalette: true,
-        palette: $.isArray(megamenu_spectrum_settings.palette) ? megamenu_spectrum_settings.palette : [],
-        localStorageKey: "maxmegamenu.themeeditor",
-        change: function(color) {
-            if (color.getAlpha() === 0) {
-                $(this).siblings('div.chosen-color').html('transparent');
-            } else {
-                $(this).siblings('div.chosen-color').html(color.toRgbString());
-            }
-        }
+    $('.mega-color-picker-input').customColorPicker({ 
+        defaultColor: '#DDDDDD', 
+        showCssVarPalette: false
     });
 
-    $(".mega-copy_color span").on('click', function() {
-        var from = $(this).parent().parent().children(":first").find("input");
-        var to = $(this).parent().parent().children(":last").find("input");
-
-        $(to).spectrum("set", from.val());
-        to.siblings('div.chosen-color').html(from.siblings('div.chosen-color').html());
+    $(".mega-copy_color").on('click', function() {
+        var from = $(this).prev().find('.mega-color-picker-input').customColorPicker('get');
+        var to = $(this).next().find(".mega-color-picker-input");
+        to.customColorPicker('set', from);
     })
+
 
     $(".confirm").on("click", function() {
         return confirm(megamenu_settings.confirm);
@@ -219,7 +205,7 @@ jQuery(function ($) {
             }
 
             if ( ( validation == 'int' && Math.floor(value) != value )
-              || ( validation == 'px' && ! ( value.substr(value.length - 2) == 'px' || value.substr(value.length - 2) == 'em' || value.substr(value.length - 2) == 'vh' || value.substr(value.length - 2) == 'vw' || value.substr(value.length - 2) == 'pt' || value.substr(value.length - 3) == 'rem' || value.substr(value.length - 1) == '%' ) && value != 0 && value != 'normal' && value != 'inherit' )
+              || ( validation == 'px' && ! ( value.substr(value.length - 2) == 'px' || value.substr(value.length - 2) == 'em' || value.substr(value.length - 2) == 'vh' || value.substr(value.length - 2) == 'vw' || value.substr(value.length - 2) == 'pt' || value == 'max-content' || value.substr(value.length - 3) == 'rem' || value.substr(value.length - 1) == '%' ) && value != 0 && value != 'normal' && value != 'inherit' )
               || ( validation == 'float' && ! $.isNumeric(value) ) ) {
                 label.addClass('mega-error');
                 error_message.show();
@@ -275,4 +261,76 @@ jQuery(function ($) {
         window.location.href = url;
     });
     
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Select relevant elements from the DOM
+    const navWrapper = document.querySelector('.nav-tab-wrapper');
+    const tabs = document.querySelectorAll('.mega-tab');
+    const slider = document.querySelector('.nav-tab-slider');
+    const activeTabContentDisplay = document.getElementById('active-tab-content');
+
+    // Find the initially active tab
+    let currentActiveTab = document.querySelector('.mega-tab.nav-tab-active');
+
+    // Function to position the slider under the active tab
+    function positionSlider(activeTab) {
+        if (!activeTab || !slider || !navWrapper) {
+            // If elements are missing, the new CSS :has rule will handle hiding the slider
+            // if no tab is active. If an activeTab is expected but missing,
+            // slider might not position correctly, but it won't be explicitly hidden by JS here.
+            return;
+        }
+
+        // Get the dimensions and position of the navigation wrapper and the active tab
+        const navWrapperRect = navWrapper.getBoundingClientRect();
+        const activeTabRect = activeTab.getBoundingClientRect();
+
+        // Calculate the slider's width and left position
+        // The left position is relative to the navWrapper
+        slider.style.width = activeTabRect.width + 'px';
+        slider.style.left = (activeTabRect.left - navWrapperRect.left) + 'px';
+
+        // Display the data-tab attribute of the active tab (for demonstration)
+        if (activeTabContentDisplay) {
+            activeTabContentDisplay.textContent = `Current active tab's data-tab: ${activeTab.getAttribute('data-tab')}`;
+        }
+    }
+
+    // Set the initial position of the slider if a tab is active
+    if (currentActiveTab) {
+        positionSlider(currentActiveTab);
+    }
+    // REMOVED: The 'else if' block that explicitly hid the slider using JS.
+    // CSS :has() now handles hiding the slider if no tab is initially active.
+
+
+    // Add click event listeners to each tab
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default anchor link behavior
+
+            // Remove 'nav-tab-active' class from the previously active tab
+            if (currentActiveTab) {
+                currentActiveTab.classList.remove('nav-tab-active');
+            }
+
+            // Add 'nav-tab-active' class to the clicked tab
+            this.classList.add('nav-tab-active');
+            currentActiveTab = this; // Update the reference to the current active tab
+
+            // Move the slider to the newly active tab
+            positionSlider(this);
+        });
+    });
+
+    // Reposition the slider on window resize to maintain correct alignment
+    window.addEventListener('resize', function() {
+        if (currentActiveTab) {
+            positionSlider(currentActiveTab);
+        }
+        // If no tab is active during resize, the CSS :has rule keeps the slider hidden.
+    });
 });
