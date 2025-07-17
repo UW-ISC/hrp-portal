@@ -553,13 +553,13 @@ class MLAOptions {
 					'value' => $value['name'],
 					'help' => $value['help'],
 					'size' => $value['size'],
-					'text' => $current_value,
+					'text' => (integer) $current_value,
 				);
 
 				return MLAData::mla_parse_template( MLAOptions::$mla_option_templates['text'], $option_values );
 			case 'update':
 				$user_id = get_current_user_id();
-				$new_value = isset( $args[ $key ] ) ? $args[ $key ] : get_option( 'posts_per_page', $value['std'] );
+				$new_value = (integer) isset( $args[ $key ] ) ? $args[ $key ] : get_option( 'posts_per_page', $value['std'] );
 
 				$result = update_user_option( $user_id, $key, $new_value, true );
 

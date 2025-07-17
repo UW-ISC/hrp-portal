@@ -1553,7 +1553,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$link_attributes .= 'class="' . esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
+				$link_attributes .= 'class="' . sanitize_html_class( self::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
 			}
 
 			if ( ! empty( $link_attributes ) ) {
@@ -2525,7 +2525,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( ! empty( $arguments['mla_link_class'] ) ) {
-			$new_link .= 'class="' . esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_class'], $markup_values ) ) . '" ';
+			$new_link .= 'class="' . sanitize_html_class( self::mla_process_shortcode_parameter( $arguments['mla_link_class'], $markup_values ) ) . '" ';
 		}
 
 		if ( ! empty( $arguments['mla_rollover_text'] ) ) {
@@ -2964,6 +2964,7 @@ class MLAShortcode_Support {
 			'mla_paginate_current' => NULL,
 			'mla_paginate_total' => NULL,
 			// Date and Time Queries
+			'meta_date_key' => '',
 			'year' => '',
 			'monthnum' => '',
 			'w' => '',
@@ -3725,6 +3726,14 @@ class MLAShortcode_Support {
 
 				unset( $arguments[ $key ] );
 				break;
+			case 'meta_date_key':
+				if ( ! empty( $value ) ) {
+					$query_arguments[ $key ] = $value;
+					// $use_children = false; date query parameters will do this
+				}
+
+				unset( $arguments[ $key ] );
+				break;
 			case 'year': // 4 digit year, e.g., 2021
 				if ( 4 === strlen( $value ) && is_numeric( $value ) ) {
 					$query_arguments[ $key ] = (int) $value;
@@ -3886,8 +3895,7 @@ class MLAShortcode_Support {
 		 * search results or archive pages.
 		 */
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_archive()</strong> = ' . var_export( is_archive(), true ) );
-			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_search()</strong> = ' . var_export( is_search(), true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug</strong> is_archive( ' . var_export( is_archive(), true ) . ' ) is_search( ' . var_export( is_search(), true ) . ' ) use_children( ' . var_export( $use_children, true ) . ' )' );
 		}
 
 		if ( isset( $query_arguments['posts_per_archive_page'] ) && ( is_archive() || is_search() ) ) {
@@ -3948,6 +3956,11 @@ class MLAShortcode_Support {
 			unset( $query_arguments['order'] );
 		}
 		
+		// Custom field date queries are handled in the filters
+		if ( ! empty( $query_arguments['meta_date_key'] ) ) {
+			self::$query_parameters['meta_date_key'] = $query_arguments['meta_date_key'];
+		}
+		
 		if ( self::$mla_debug ) {
 			add_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_filter', 0x7FFFFFFF, 1 );
 			add_filter( 'posts_clauses_request', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_request_filter', 0x7FFFFFFF, 1 );
@@ -3965,6 +3978,10 @@ class MLAShortcode_Support {
 		if ( empty( MLAQuery::$search_parameters['mla_terms_phrases'] ) && empty( MLAQuery::$search_parameters['s'] ) ) {
 			MLAQuery::$search_parameters = array( 'debug' => 'none' );
 		} else {
+			if ( self::$mla_debug ) {
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug</strong> search_parameters = ' . var_export( MLAQuery::$search_parameters, true ) );
+			}
+	
 			/*
 			 * Convert Terms Search parameters to the filter's requirements.
 			 * mla_terms_taxonomies is shared with keyword search.
@@ -4182,7 +4199,7 @@ class MLAShortcode_Support {
 
 		self::$mla_debug = $old_debug_mode;
 		return $attachments;
-	}
+	} // mla_get_shortcode_attachments
 
 	/**
 	 * Filters the JOIN clause for shortcode queries
@@ -4203,15 +4220,14 @@ class MLAShortcode_Support {
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
-		/*
-		 * Set for taxonomy queries unless post_parent=current. If true, we must disable
-		 * the LEFT JOIN clause that get_posts() adds to taxonomy queries.
-		 * We leave the clause in because the WHERE clauses refer to "p2.".
-		 * Replaced in MLA v2.94 by "post_type = 'mladisabletaxjoin'"
-		 * /
-		if ( self::$query_parameters['disable_tax_join'] ) {
-			$join_clause = str_replace( " LEFT JOIN {$wpdb->posts} AS p2 ON ({$wpdb->posts}.post_parent = p2.ID) ", " LEFT JOIN {$wpdb->posts} AS p2 ON (p2.ID = p2.ID) ", $join_clause );
-		} // */
+		// Custom field date queries require a join on the postmeta table, which may already be present
+		if ( ! empty( self::$query_parameters['meta_date_key'] ) ) {
+			$meta_clause = sprintf( ' INNER JOIN %1$s ON ( %2$s.ID = %1$s.post_id )', $wpdb->postmeta, $wpdb->posts );
+	
+			if ( false === strpos( $join_clause, $meta_clause ) ) {
+				$join_clause .= $meta_clause;
+			}
+		}
 
 		// These joins support the 'terms' search_field
 		if ( isset( MLAQuery::$search_parameters['tax_terms_count'] ) ) {
@@ -4279,6 +4295,14 @@ class MLAShortcode_Support {
 		// Add whitespace to prevent Role Scoper plugin clause modification
 		if ( strpos( $where_clause, "post_type = 'attachment'" ) ) {
 			$where_clause = str_replace( "post_type = 'attachment'", "post_type  =  'attachment'", $where_clause );
+		}
+
+		// Modify date query elements for custom field date query
+		if ( ! empty( self::$query_parameters['meta_date_key'] ) ) {
+			$meta_clause = sprintf( ' AND ( %1$spostmeta.meta_key = \'%2$s\' )', $table_prefix, self::$query_parameters['meta_date_key'] );
+			$post_field = sprintf( '%1$sposts.post_date', $table_prefix );
+			$meta_field = sprintf( '%1$spostmeta.meta_value', $table_prefix );
+			$where_clause = $meta_clause . str_replace( $post_field, $meta_field, $where_clause );
 		}
 
 		if ( isset( self::$query_parameters['post_parent'] ) ) {

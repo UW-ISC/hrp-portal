@@ -249,17 +249,15 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
-
-			wp_deregister_style( 'spectrum' );
-			wp_deregister_script( 'spectrum' );
 			
 			wp_enqueue_style( 'select2', MEGAMENU_BASE_URL . 'js/select2/select2.css', false, MEGAMENU_VERSION );
 			wp_enqueue_script( 'mega-menu-select2', MEGAMENU_BASE_URL . 'js/select2/select2.min.js', array(), MEGAMENU_VERSION );
 
 			wp_enqueue_style( 'mega-menu-settings', MEGAMENU_BASE_URL . 'css/admin/admin.css', false, MEGAMENU_VERSION );
 
-			wp_enqueue_style( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.css', false, "1.8.1" );
-			wp_enqueue_script( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.js', array( 'jquery' ), "1.8.1" );
+			wp_enqueue_style( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.css', false, MEGAMENU_VERSION );
+			wp_enqueue_script( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.js', array( 'jquery' ), MEGAMENU_VERSION );
+
 
 			wp_localize_script(
 				'spectrum',
@@ -267,7 +265,7 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 				apply_filters( 'megamenu_spectrum_localisation', array() )
 			);
 
-			wp_enqueue_script( 'mega-menu-theme-editor', MEGAMENU_BASE_URL . 'js/settings.js', array( 'jquery', 'spectrum', 'code-editor' ), MEGAMENU_VERSION );
+			wp_enqueue_script( 'mega-menu-theme-editor', MEGAMENU_BASE_URL . 'js/settings.js', array( 'jquery', 'mega-colorpicker', 'code-editor' ), MEGAMENU_VERSION );
 
 			wp_localize_script(
 				'mega-menu-theme-editor',

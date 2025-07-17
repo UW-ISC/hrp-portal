@@ -199,9 +199,11 @@ class MLATagCloud {
 		}
 		 
 		// Special handling of current_item; look for this parameter in $_REQUEST if it's not present in the shortcode itself.
-		if ( ! isset( $attr['current_item'] ) ) {
+		if ( isset( $attr['current_item'] ) ) {
+			$attr['current_item'] = sanitize_title( $attr['current_item'] );
+		} else {
 			if ( isset( $_REQUEST['current_item'] ) ) {
-				$attr['current_item'] = sanitize_text_field( wp_unslash( $_REQUEST['current_item'] ) );
+				$attr['current_item'] = sanitize_title( wp_unslash( $_REQUEST['current_item'] ) );
 			}
 		}
 		 
@@ -412,6 +414,7 @@ class MLATagCloud {
 		}
 
 		$tags = MLAShortcode_Support::mla_get_terms( $arguments );
+		$arguments['echo'] = 'true' === strtolower( $arguments['echo'] );
 
 		// Invalid taxonomy names return WP_Error
 		if ( is_wp_error( $tags ) ) {
@@ -421,7 +424,7 @@ class MLATagCloud {
 				return array( $cloud );
 			}
 
-			if ( empty($arguments['echo']) ) {
+			if ( empty( $arguments['echo'] ) ) {
 				return $cloud;
 			}
 
@@ -464,7 +467,7 @@ class MLATagCloud {
 				}
 			}
 
-			if ( empty($arguments['echo']) ) {
+			if ( empty( $arguments['echo'] ) ) {
 				return $cloud;
 			}
 
@@ -516,7 +519,7 @@ class MLATagCloud {
 					return array( $cloud );
 				}
 
-				if ( empty($arguments['echo']) ) {
+				if ( empty( $arguments['echo'] ) ) {
 					return $cloud;
 				}
 
@@ -667,8 +670,11 @@ class MLATagCloud {
 		}
 
 		$width_string = strtolower( trim( $arguments['mla_itemwidth'] ) );
-		if ( 'none' != $width_string ) {
+		if ( 'none' !== $width_string ) {
 			switch ( $width_string ) {
+				case 'auto':
+				case 'inherit':
+					break;
 				case 'exact':
 					$margin_percent = 0;
 					// fallthru
@@ -682,15 +688,33 @@ class MLATagCloud {
 			}
 		} // $use_width
 
+		// Calculate cloud parameters
+		$spread = $max_scaled_count - $min_scaled_count;
+		if ( $spread <= 0 ) {
+			$spread = 1;
+		}
+
+		// Sanitize input values
 		$float = strtolower( $arguments['mla_float'] );
 		if ( ! in_array( $float, array( 'left', 'none', 'right' ) ) ) {
 			$float = is_rtl() ? 'right' : 'left';
 		}
 
-		// Calculate cloud parameters
-		$spread = $max_scaled_count - $min_scaled_count;
-		if ( $spread <= 0 ) {
-			$spread = 1;
+		$arguments['smallest'] = (integer) $arguments['smallest'];
+		$arguments['largest'] = (integer) $arguments['largest'];
+		$arguments['separator'] = wp_kses( $arguments['separator'], 'post' );
+		$arguments['single_text'] = esc_attr( $arguments['single_text'] );
+		$arguments['multiple_text'] = esc_attr( $arguments['multiple_text'] );
+		$arguments['current_item_class'] = sanitize_html_class( $arguments['current_item_class'] );
+
+		$arguments['unit'] = strtolower( $arguments['unit'] );
+		if ( ! in_array( $arguments['unit'], array( 'pt', 'px', 'em', '%' ) ) ) {
+			$arguments['unit'] = 'pt';
+		}
+		
+		$arguments['link'] = strtolower( $arguments['link'] );
+		if ( ! in_array( $arguments['link'], array( 'current', 'view', 'edit', 'span', 'none' ) ) ) {
+			$arguments['link'] = 'view';
 		}
 
 		$font_spread = $arguments['largest'] - $arguments['smallest'];
@@ -1001,13 +1025,13 @@ class MLATagCloud {
 			}
 
 			if ( ! empty( $item_values['current_item_class'] ) ) {
-				$class_attributes = $item_values['current_item_class'];
+				$class_attributes = sanitize_html_class( $item_values['current_item_class'] );
 			} else {
 				$class_attributes = '';
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$class_attributes .= ' ' . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) );
+				$class_attributes .= ' ' . sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) );
 			}
 
 			if ( ! empty( $class_attributes ) ) {
@@ -1123,7 +1147,7 @@ class MLATagCloud {
 			} // switch format
 		}
 
-		if ( 'array' === $arguments['mla_output'] || empty($arguments['echo']) ) {
+		if ( 'array' === $arguments['mla_output'] || empty( $arguments['echo'] ) ) {
 			return $cloud;
 		}
 

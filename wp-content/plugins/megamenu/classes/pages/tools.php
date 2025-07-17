@@ -129,8 +129,8 @@ if ( ! class_exists( 'Mega_Menu_Tools' ) ) :
 
 							<input type='submit' class='button button-primary' value='<?php _e( 'Clear CSS Cache', 'megamenu' ); ?>' />
 
-							<?php if ( get_transient( 'megamenu_css_last_updated' ) ) : ?>
-								<p><em><small><?php echo sprintf( __( 'The menu CSS was last updated on %s', 'megamenu' ), date( 'l jS F Y H:i:s', get_transient( 'megamenu_css_last_updated' ) ) ); ?><small><em></p>
+							<?php if ( $date = get_option( 'megamenu_css_last_updated' ) ) : ?>
+								<p><em><small><?php echo sprintf( __( 'The menu CSS was last updated on %s', 'megamenu' ), date( 'l jS F Y H:i:s', $date ) ); ?><small><em></p>
 							<?php endif; ?>
 						</form>
 					</td>

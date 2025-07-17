@@ -133,6 +133,31 @@ mla_shortcode_slug="tag-cloud"
 	/* see mla_term_list() in media-library-assistant/includes/class-mla-shortcode-support.php */
 </style>
 
+<!-- template="term-list-checklist-div-style" -->
+<!-- mla_description="CSS Styles for the 'checklist,div' output format" -->
+<!-- mla_shortcode_slug="term-list" -->
+<style type='text/css'>
+	#[+selector+] {
+		height: 14em;
+		border: 1px solid #ddd;
+		overflow-y: scroll;
+		margin: auto;
+		width: 100%;
+	}
+
+	#[+selector+] .term-list-item {
+		text-align: left;
+	}
+	#[+selector+] .term-list-caption {
+		margin-left: 0;
+		vertical-align: top;
+	}
+
+	#[+selector+]-div .term-list-checklist {
+		list-style: none;
+	}
+</style>
+
 <!-- template="term-list-ul-arguments-markup" -->
 mla_shortcode_slug="term-list"
 <!-- template="term-list-ul-open-markup" -->
@@ -179,6 +204,27 @@ mla_shortcode_slug="term-list"
 
 <!-- template="term-list-checklist-close-markup" -->
 </[+itemtag+]>
+
+<!-- template="term-list-checklist-div-description-markup" -->
+For the "checklist,div" output format, this template wraps the list in a DIV tag to enable CSS styling.
+<!-- template="term-list-checklist-div-arguments-markup" -->
+mla_shortcode_slug="term-list"
+<!-- template="term-list-checklist-div-open-markup" -->
+<div id='[+selector+]-div' class='term-list term-list-taxonomy-[+taxonomy+]'>
+<[+itemtag+] id='[+selector+]' class='term-list term-list-checklist term-list-taxonomy-[+taxonomy+]'>
+
+<!-- template="term-list-checklist-div-item-markup" -->
+	<[+termtag+] class='term-list-term term-list-checklist-term level-[+current_level+] [+popular+]' id='[+termtag_id+]'><label class='selectit'><input name='[+thename+]' id='in-[+termtag_id+]' type='checkbox' value='[+thevalue+]' [+selected+]>[+thelabel+]</label>[+children+]</[+termtag+]>
+
+<!-- template="term-list-checklist-div-child-open-markup" -->
+<[+itemtag+] id='[+selector+]-[+current_level+]' class='term-list term-list-checklist term-list-taxonomy-[+taxonomy+]'>
+
+<!-- template="term-list-checklist-div-child-close-markup" -->
+</[+itemtag+]>
+
+<!-- template="term-list-checklist-div-close-markup" -->
+</[+itemtag+]>
+</div>
 
 <!-- template="custom-list-style" -->
 <!-- mla_shortcode_slug="custom-list" -->

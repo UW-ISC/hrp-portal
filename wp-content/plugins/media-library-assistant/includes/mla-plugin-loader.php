@@ -56,7 +56,7 @@ function mla_plugin_loader_reporting_action () {
 require_once( MLA_PLUGIN_PATH . 'tests/class-mla-tests.php' );
 
 $mla_plugin_loader_error_messages .= MLATest::min_php_version( '5.3' );
-$mla_plugin_loader_error_messages .= MLATest::min_WordPress_version( '4.1.0' );
+$mla_plugin_loader_error_messages .= MLATest::min_WordPress_version( '4.7' );
 
 if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	add_action( 'admin_notices', 'mla_plugin_loader_reporting_action' );

@@ -1696,7 +1696,7 @@ class MLA_List_Table extends WP_List_Table {
 		}
 
 		if ( current_user_can( 'edit_post', $item->ID ) ) {
-			$set_parent = "<br>\n" . sprintf( '<a class="hide-if-no-js" id="mla-child-%2$s" onclick="mla.inlineEditAttachment.tableParentOpen( \'%1$s\',\'%2$s\',\'%3$s\' ); return false;" href="#the-list">%4$s</a><br>', /*%1$s*/ $item->post_parent, /*%2$s*/ $item->ID, /*%3$s*/ _draft_or_post_title( $item ), /*%4$s*/ __( 'Set Parent', 'media-library-assistant' ) );
+			$set_parent = "<br>\n" . sprintf( '<a class="hide-if-no-js" id="mla-child-%2$s" onclick="mla.inlineEditAttachment.tableParentOpen( \'%1$s\',\'%2$s\',\'%3$s\' ); return false;" href="#the-list">%4$s</a><br>', /*%1$s*/ $item->post_parent, /*%2$s*/ $item->ID, /*%3$s*/ esc_attr( _draft_or_post_title( $item ) ), /*%4$s*/ __( 'Set Parent', 'media-library-assistant' ) );
 		} else {
 			$set_parent = '';
 		}

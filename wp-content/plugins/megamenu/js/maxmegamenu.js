@@ -68,9 +68,9 @@
             if (plugin.settings.mobile_direction !== 'vertical') {
                 return;
             }
-
+            
             $(".mega-menu-item-has-children.mega-expand-on-mobile > a.mega-menu-link", $menu).each(function() {
-                plugin.showPanel($(this));
+                plugin.showPanel($(this), true);
             });
 
             if ( plugin.settings.mobile_state == 'expand_all' ) {
@@ -89,7 +89,7 @@
                 ];
 
                 $menu.find(activeItemSelectors.join(', ')).each(function() {
-                    plugin.showPanel($(this));
+                    plugin.showPanel($(this), true);
                 });
             }
         }
@@ -130,7 +130,7 @@
                 plugin.hideSiblingPanels(anchor, true);
             }
 
-            if ((plugin.isMobileView() && $menu.hasClass("mega-keyboard-navigation")) || plugin.settings.vertical_behaviour === "accordion") {
+            if ((plugin.isMobileView() && $wrap.hasClass("mega-keyboard-navigation")) || plugin.settings.vertical_behaviour === "accordion") {
                 plugin.hideSiblingPanels(anchor, false);
             }
 
@@ -216,15 +216,23 @@
 
         plugin.calculateDynamicSubmenuWidths = function(anchor) {
             // apply dynamic width and sub menu position (only to top level mega menus)
-            if (anchor.parent().hasClass("mega-menu-megamenu") && anchor.parent().parent().hasClass("max-mega-menu") && plugin.settings.panel_width && $(plugin.settings.panel_width).length > 0) {
+            if (anchor.parent().hasClass("mega-menu-megamenu") && anchor.parent().parent().hasClass("max-mega-menu") && plugin.settings.panel_width ) {
                 if (plugin.isDesktopView()) {
                     var submenu_offset = $menu.offset();
                     var target_offset = $(plugin.settings.panel_width).offset();
 
-                    anchor.siblings(".mega-sub-menu").css({
-                        width: $(plugin.settings.panel_width).outerWidth(),
-                        left: (target_offset.left - submenu_offset.left) + "px"
-                    });
+                    if ( plugin.settings.panel_width == '100vw' ) {
+                        target_offset = $('body').offset();
+
+                        anchor.siblings(".mega-sub-menu").css({
+                            left: (target_offset.left - submenu_offset.left) + "px"
+                        });
+                    } else if ( $(plugin.settings.panel_width).length > 0 ) {
+                        anchor.siblings(".mega-sub-menu").css({
+                            width: $(plugin.settings.panel_width).outerWidth(),
+                            left: (target_offset.left - submenu_offset.left) + "px"
+                        });
+                    }
                 } else {
                     anchor.siblings(".mega-sub-menu").css({
                         width: "",
@@ -262,6 +270,13 @@
         };
 
         plugin.bindClickEvents = function() {
+
+            if ( $wrap.data('has-click-events') === true ) {
+                return;
+            }
+
+            $wrap.data('has-click-events', true);
+
             var dragging = false;
 
             $(document).on({
@@ -396,6 +411,7 @@
 
                 if (keyCode === tab_key) {
                     $wrap.addClass("mega-keyboard-navigation");
+                    plugin.bindClickEvents(); // Windows Narrator ignores the Enter keypress, so ensure click events are available when pressing tab
                 }
             });
 
@@ -470,7 +486,7 @@
                     }
                 }
 
-                if ( keyCode === enter_key ) {
+                if ( keyCode === enter_key ) { // ignored by windows narrator
 
                     // pressing enter on an arrow will toggle the sub menu
                     if ( active_link.is(".mega-indicator") ) {
@@ -487,11 +503,6 @@
 
                         // when clicking on the parent of a hidden submenu, follow the link
                         if ( plugin.isMobileView() && active_link.parent().is(".mega-hide-sub-menu-on-mobile") ) {
-                            return;
-                        }
-
-                        // when the arrow has been moved (i.e. it is clickable and visible, don't show the sub menu - just follow the link)
-                        if ( active_link.is("[href]") && active_link.siblings(".mega-indicator[tabindex]:visible").length !== 0 ) {
                             return;
                         }
 
@@ -609,12 +620,18 @@
         };
 
         plugin.unbindAllEvents = function() {
-            $("ul.mega-sub-menu, li.mega-menu-item, li.mega-menu-row, li.mega-menu-column, a.mega-menu-link, .mega-indicator", $menu).off();
+            $("ul.mega-sub-menu, li.mega-menu-item, li.mega-menu-row, li.mega-menu-column, a.mega-menu-link, .mega-indicator", $menu).off().unbind();
         };
 
         plugin.unbindClickEvents = function() {
+            if ( $wrap.hasClass('mega-keyboard-navigation') ) {
+                return;
+            }
+
             // collapsable parents always have a click event
             $("> a.mega-menu-link", items_with_submenus).not(collapse_children_parents).off("click.megamenu touchend.megamenu");
+
+            $wrap.data('has-click-events', false);
         };
 
         plugin.unbindHoverEvents = function() {
@@ -670,7 +687,7 @@
         };
 
         plugin.reverseRightAlignedItems = function() {
-            if ( ! $("body").hasClass("rtl") && $menu.hasClass("mega-menu-horizontal") ) {
+            if ( ! $("body").hasClass("rtl") && $menu.hasClass("mega-menu-horizontal") && $menu.css("display") !== 'flex' ) {
                 $menu.append($menu.children("li.mega-item-align-right").get().reverse());
             }
         };
