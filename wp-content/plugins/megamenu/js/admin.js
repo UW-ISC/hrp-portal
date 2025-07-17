@@ -1191,8 +1191,8 @@ jQuery(function($) {
                 });
             });
 
-        $(".item-title", menu_item).append(button);
-
+        $(".item-title", menu_item).first().append(button);
+        
         if (megamenu.css_prefix === "true") {
             var custom_css_classes = menu_item.find(".edit-menu-item-classes");
             var css_prefix = $("<span>").addClass("mm_prefix").html(megamenu.css_prefix_message);
@@ -1215,7 +1215,7 @@ jQuery(function($) {
                     alert(megamenu.save_menu);
                 });
 
-            $(".item-title", menu_item).append(button);
+            $(".item-title", menu_item).first().append(button);
         }
     });
 

@@ -1160,7 +1160,7 @@ The task of dividing a large <code>[mla_gallery]</code> into two or more pages i
 </p>
 <h4>Simple Date Parameters</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports five parameters for filtering the gallery display by year, month, week and day. For more complex date and time filters, see the "date query" feature in the next section below.
+The <code>[mla_gallery]</code> shortcode supports six parameters for filtering the gallery display by year, month, week and day. For more complex date and time filters, see the "date query" feature in the next section below.
 </p>
 <table>
 <tr>
@@ -1183,9 +1183,33 @@ The <code>[mla_gallery]</code> shortcode supports five parameters for filtering 
 <td class="mla-doc-table-label">m</td>
 <td>the 6-digit year and month by which to filter the gallery, e.g., <code>m=202101</code>.</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">meta_date_key</td>
+<td>the name of a custom field (replacing the "Uploaded on" date) by which to filter the gallery.</td>
+</tr>
 </table>
 <p>
-These five parameters always use the "Uploaded on" date, stored in the <code>post_date</code> column of the <code>wp_posts</code> database table. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+The five date parameters use the "Uploaded on" date, stored in the <code>post_date</code> column of the <code>wp_posts</code> database table unless the <code>meta_date_key</code> parameter is present. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+</p>
+<p>
+The "Uploaded on" values from the wp_posts table is in a valid date format (YYYY-MM-DD HH:MM:SS). For custom fields, a variety of common formats are acceptable. For example, you can use a mapping rule to source the custom field from:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">exif:DateTimeOriginal</td>
+<td>YYYY:MM:DD HH:MM:SS</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">iptc:DateCreated</td>
+<td>YYYYMMDD</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">xmp:CreateDate</td>
+<td>YYYY-MM-DD HH:MM:SS  two digit month and day, 24-hour clock</td>
+</tr>
+</table>
+<p>
+You can use the timestamp and date field-level option/format values to convert many other formats to one of the valid formats illustrated above.
 </p>
 <p>
 You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items uploaded in the current year. Code something like <code>year="{+current_timestamp,timestamp( Y )+}"</code>.
@@ -1193,7 +1217,10 @@ You can use the <code>current_timestamp</code>, <code>current_datetime</code> an
 </p>
 <h4>Date and Time Queries, the "date query"</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
+The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date' (default), 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
+</p>
+<p>
+You can add the <code>meta_date_key</code> parameter (described in the preceding subsection) to the shortcode (<strong>outside</strong> the date_query) to replace 'post_date' with a custom field for the query. Do not code the <code>column</code> parameter inside the date query if you use the <code>meta_date_key</code> parameter.
 </p>
 <p>
 As the <a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">Codex date_query documentation</a> suggests, "before" and "after" values can use any of the <a href="http://php.net/strtotime" title="PHP Date and Time Formats">PHP strtotime()-compatible string values</a>, which are quite powerful. For example, you can use relative values such as <code>'after' => 'second tuesday of last month'</code>. Careful study of the PHP documentation can be most rewarding. You can use <code>mla_debug=true</code> to see how PHP and WordPress translate your query to specific date-time values.
@@ -2552,15 +2579,21 @@ The default term list output is an unordered list of term names surrounded by hy
 <td>Returns HTML "input", "type=checkbox" elements enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">checklist,div</td>
+<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">array</td>
 <td>Returns a PHP array of list hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.</td>
 </tr>
 </table>
 <p>
-A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.
+The list, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own. 
 </p>
 <p>
-The list, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>.
+A separate parameter, <code>echo=true</code>, allows you to echo list output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.
+</p>
+<p>
 <a name="term_list_output_structure"></a>
 </p>
 <h4>Term List Output Structure</h4>
@@ -3527,7 +3560,7 @@ The values' display format is determined by the <strong>"mla_output"</strong> pa
 </tr>
 <tr>
 <td class="mla-doc-table-label">flat,div</td>
-<td>Adding the ",div" qualifier to the flat output format will wrap the hyperlink tags in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. This output adds style and markup template processing to the output. Default templates are provided, and you can specify custom templates of your own. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.</td>
+<td>Adding the ",div" qualifier to the flat output format will wrap the hyperlink tags in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">ulist</td>
@@ -3555,7 +3588,7 @@ The values' display format is determined by the <strong>"mla_output"</strong> pa
 </tr>
 <tr>
 <td class="mla-doc-table-label">checklist,div</td>
-<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list. This output adds style and markup template processing to the output. Default templates are provided, and you can specify custom templates of your own. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.</td>
+<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list. For this format, the "Row Open" and "Row Close" markup template sections are not used.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">array</td>
@@ -3563,13 +3596,13 @@ The values' display format is determined by the <strong>"mla_output"</strong> pa
 </tr>
 </table>
 <p>
-A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code.
-</p>
-<p>
-The list, grid, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>.
+The flat,div, list, grid, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own.
 </p>
 <p>
 The <code>[mla_custom_list]</code> shortcode also supports <a href="#cf_list_pagination_parameters">mla_output pagination formats</a>: "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode.
+</p>
+<p>
+A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code.
 </p>
 <p>
 <a name="cf_list_items"></a>

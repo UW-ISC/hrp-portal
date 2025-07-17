@@ -309,19 +309,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 		 */
 		public function get_megamenu_grid_html( $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) {
 
-			$css_version = get_transient( 'megamenu_css_version' );
-
 			$return = "<div id='megamenu-grid'>";
-
-			if ( $css_version && version_compare( $css_version, '2.3.9', '<=' ) ) {
-				$link    = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __( 'Mega Menu' ) . ' > ' . __( 'Tools' ) . '</a>';
-				$return .= "<div class='notice notice-success'><p>";
-				$return .= sprintf( __( 'Your menu CSS needs to be updated first. Please go to %s and Clear the CSS Cache (you will only need to do this once).', 'megamenu' ), $link );
-				$return .= '</p></div>';
-				$return .= '</div>';
-
-				return $return;
-			}
 
 			$widget_manager = new Mega_Menu_Widget_Manager();
 
@@ -772,23 +760,11 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 
 			if ( $menu_item_depth > 0 ) {
-				$css_version = get_transient( 'megamenu_css_version' );
-				$notice      = '';
-
-				if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
-					$link    = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __( 'Mega Menu' ) . ' > ' . __( 'Tools' ) . '</a>';
-					$notice  = "<div class='notice notice-success'><p>";
-					$notice .= sprintf( __( 'Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).', 'megamenu' ), $link );
-					$notice .= '</p></div>';
-					$notice .= '</div><br />';
-				}
-
 				$return .= '        <tr>';
 				$return .= '            <td class="mega-name">';
 				$return .= __( 'Collapse sub menu', 'megamenu' );
 				$return .= '            </td>';
 				$return .= '            <td class="mega-value">';
-				$return .= $notice;
 				$return .= '                <input type="checkbox" name="settings[collapse_children]" value="true" ' . checked( $menu_item_meta['collapse_children'], 'true', false ) . ' />';
 				$return .= '                <em>' . __( 'Only applies to menu items displayed within mega sub menus.', 'megamenu' ) . '</em>';
 				$return .= '            </td>';

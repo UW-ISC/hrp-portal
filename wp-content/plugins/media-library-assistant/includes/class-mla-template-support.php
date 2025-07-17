@@ -92,7 +92,7 @@ class MLATemplate_Support {
 				),
 				'term-list' => array(
 					'label' => 'Term List',
-					'default_names' => array( 'term-list' ),
+					'default_names' => array( 'term-list', 'term-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -226,7 +226,7 @@ class MLATemplate_Support {
 				),
 				'term-list' => array(
 					'label' => 'Term List',
-					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist' ),
+					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist', 'term-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -392,7 +392,7 @@ class MLATemplate_Support {
 				),
 				'term-list' => array(
 					'label' => _x( 'Term List', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'term-list' ),
+					'default_names' => array( 'term-list', 'term-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
@@ -526,7 +526,7 @@ class MLATemplate_Support {
 				),
 				'term-list' => array(
 					'label' => _x( 'Term List', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist' ),
+					'default_names' => array( 'term-list-ul', 'term-list-dl', 'term-list-dropdown', 'term-list-checklist', 'term-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
