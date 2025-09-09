@@ -3,7 +3,7 @@
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
-Version: 2.3.7
+Version: 2.3.8
 Author URI: http://www.cozmoslabs.com
 Text Domain: wck
 Domain Path: /languages
@@ -28,19 +28,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 define( 'WCK_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) );
 define( 'WCK_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
-define( 'WCK_PLUGIN_VERSION', '2.7.1' );
+define( 'WCK_PLUGIN_VERSION', '2.7.2' );
 
 /* ready for localization */
-add_action( 'init', 'wck_load_textdomain' );
-function wck_load_textdomain(){
+function wck_load_textdomain() {
 	$current_theme = wp_get_theme();
-	if (!empty($current_theme->stylesheet) && file_exists(get_theme_root() . '/' . $current_theme->stylesheet . '/local_wck_lang'))
-		load_plugin_textdomain('wck', false, basename(dirname(__FILE__)) . '/../../themes/' . $current_theme->stylesheet . '/local_wck_lang');
+	if( !empty( $current_theme->stylesheet ) && file_exists( get_theme_root().'/'. $current_theme->stylesheet .'/local_wck_lang' ) )
+		load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ).'/../../themes/'.$current_theme->stylesheet.'/local_wck_lang' );
 	else
-		load_plugin_textdomain('wck', false, basename(dirname(__FILE__)) . '/languages');
+		load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ) . '/languages' );
 }
-
-
+add_action( 'init', 'wck_load_textdomain');
 
 /* include Custom Fields Creator API */
 require_once('wordpress-creation-kit-api/wordpress-creation-kit.php');
@@ -50,17 +48,19 @@ if( file_exists( dirname(__FILE__).'/inc/class_notices.php' ) )
     require_once('inc/class_notices.php');
 
 /* Create the WCK Page only for admins ( 'capability' => 'edit_theme_options' ) */
-$args = array(							
-			'page_title' => __( 'Wordpress Creation Kit', 'wck' ),
-			'menu_title' => 'WCK',
-			'capability' => 'edit_theme_options',
-			'menu_slug' => 'wck-page',									
-			'page_type' => 'menu_page',
-			'position' => '30.27',
-			'priority' => 7,
-			'icon_url' => plugins_url('/images/wck-menu-item.png', __FILE__)
-		);
-new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+	$args = array(
+				'page_title' => __( 'Wordpress Creation Kit', 'wck' ),
+				'menu_title' => 'WCK',
+				'capability' => 'edit_theme_options',
+				'menu_slug' => 'wck-page',
+				'page_type' => 'menu_page',
+				'position' => '30.27',
+				'priority' => 7,
+				'icon_url' => plugins_url('/images/wck-menu-item.png', __FILE__)
+			);
+	new WCK_Page_Creator( $args );
+} );
 
 /* Remove the automatically created submenu page */
 add_action('admin_menu', 'wck_remove_wck_submenu_page', 11);
@@ -167,18 +167,75 @@ function wck_maybe_unserialize() {
 	}
 }
 
-/* check for updates */
-if (file_exists (WCK_PLUGIN_DIR.'/update/update-checker.php')){
-	require_once ( WCK_PLUGIN_DIR.'/update/update-checker.php');
-	(array)$wck_serial = get_option('wck_serial');
-	if( !empty( $wck_serial[0] ) )
-		$wck_serial = urlencode( $wck_serial[0]['serial-number'] );
+function wck_get_serial_number(){
+	$wck_serial = get_option('wck_serial');
+
+	if( is_array( $wck_serial ) ){
+		if( !empty( $wck_serial[0] ) && !empty( $wck_serial[0]['serial-number'] ) )
+			$wck_serial = urlencode( $wck_serial[0]['serial-number'] );
+	}
+
 	if(empty($wck_serial) || $wck_serial == '') $wck_serial = '';
-	
-	if (file_exists ( WCK_PLUGIN_DIR . '/wordpress-creation-kit-api/wck-fep/wck-fep.php' )){
-		$wck_update = new wck_PluginUpdateChecker('http://updatemetadata.cozmoslabs.com/?localSerialNumber='.$wck_serial.'&uniqueproduct=WCKP', __FILE__, 'wck-pro');
+
+	return $wck_serial;
+}
+
+function wck_get_version_details(){
+
+	if (!function_exists('get_plugin_data')) {
+		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+	}
+
+	$plugin_data = get_plugin_data(WCK_PLUGIN_DIR . '/wck.php', false);
+	$wck_plugin_version = ($plugin_data && $plugin_data['Version']) ? $plugin_data['Version'] : '2.7.2';
+
+	if (file_exists(WCK_PLUGIN_DIR . '/wordpress-creation-kit-api/wck-fep/wck-fep.php')) {
+		$wck_version_name = 'WordPress Creation Kit Pro';
+		$wck_cl_plugin_id = '16093';
 	} else {
-		$wck_update = new wck_PluginUpdateChecker('http://updatemetadata.cozmoslabs.com/?localSerialNumber='.$wck_serial.'&uniqueproduct=WCKH', __FILE__, 'wck-hobby');
+		$wck_version_name = 'WordPress Creation Kit Hobbyist';
+		$wck_cl_plugin_id = '17447';
+	}
+
+	//adjust for Unlimited version based on the serial number
+	if( $wck_version_name === 'WordPress Creation Kit Pro' ) {
+		$wck_serial = wck_get_serial_number();
+		if ( !empty( $wck_serial ) && strpos($wck_serial, 'WCKPL') !== false) {
+			$wck_version_name = 'WordPress Creation Kit Pro Unlimited';
+			$wck_cl_plugin_id = '20913';
+		}
+	}
+
+	return array(
+		'wck_version_name' => $wck_version_name,
+		'wck_cl_plugin_id' => $wck_cl_plugin_id,
+		'wck_plugin_version' => $wck_plugin_version
+	);
+}
+
+/* check for updates */
+if ( file_exists(WCK_PLUGIN_DIR.'/update/update-checker.php') ) {
+	require_once ( WCK_PLUGIN_DIR.'/update/update-checker.php');
+
+	if ( class_exists('WCK_EDD_SL_Plugin_Updater') ) {
+
+		add_action('init', function () {
+
+			$wck_serial = wck_get_serial_number();
+			$version_details = wck_get_version_details();
+
+			// setup the updater
+			$wck_edd_updater = new WCK_EDD_SL_Plugin_Updater('https://cozmoslabs.com', WCK_PLUGIN_DIR . '/wck.php', array(
+					'version' => $version_details['wck_plugin_version'],   // current version number
+					'license' => $wck_serial,
+					'item_name' => $version_details['wck_version_name'],      // name of this plugin
+					'item_id' => $version_details['wck_cl_plugin_id'],
+					'author' => 'Cozmoslabs',         // author of this plugin
+					'beta' => false
+				)
+			);
+		});
+
 	}
 }
 

@@ -1,18 +1,18 @@
 <?php
 /* Creates Custom Post Types for WordPress */
-
-
-$args = array(
-    'page_title'  => __( 'WCK Post Type Creator', 'wck' ),
-    'menu_title'  => __( 'Post Type Creator', 'wck' ),
-    'capability'  => 'edit_theme_options',
-    'menu_slug'   => 'cptc-page',
-    'page_type'   => 'submenu_page',
-    'parent_slug' => 'wck-page',
-    'priority'    => 8,
-    'page_icon'   => plugins_url('/images/wck-32x32.png', __FILE__)
-);
-$cptc_page = new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+    $args = array(
+        'page_title' => __('WCK Post Type Creator', 'wck'),
+        'menu_title' => __('Post Type Creator', 'wck'),
+        'capability' => 'edit_theme_options',
+        'menu_slug' => 'cptc-page',
+        'page_type' => 'submenu_page',
+        'parent_slug' => 'wck-page',
+        'priority' => 8,
+        'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+    );
+    new WCK_Page_Creator($args);
+});
 
 
 /* Add Scripts */

@@ -2277,7 +2277,7 @@ class MLA_WPML_Table {
 					SELECT f.lang_code, f.flag, f.from_template, l.name
 					FROM {$wpdb->prefix}icl_flags f
 						JOIN {$wpdb->prefix}icl_languages_translations l ON f.lang_code = l.language_code
-					WHERE l.display_language_code = %s AND f.lang_code IN( %s )", $sitepress->get_admin_language(), wpml_prepare_in( $language_codes ) );
+					WHERE l.display_language_code = %s AND f.lang_code IN( " . wpml_prepare_in( $language_codes ) . " )", $sitepress->get_admin_language() );
 				$results = $wpdb->get_results( $query ); // phpcs:ignore
 
 				$wp_upload_dir = wp_upload_dir();
