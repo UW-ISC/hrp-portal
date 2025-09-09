@@ -3,8 +3,8 @@ Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispi
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 Requires at least: 3.1
-Tested up to: 6.7.1
-Stable tag: 2.3.7
+Tested up to: 6.8.2
+Stable tag: 2.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,9 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.3.8 =
+* Fix a deprecated message regarding textdomain
+
 = 2.3.7 =
 * Fix a deprecated message regarding textdomain
 

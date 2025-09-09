@@ -1,4 +1,7 @@
 <?php __("", "wck"); ?>
+<?php __("WCK Custom Meta Boxes", "wck"); ?>
+<?php __("Custom Meta Box", "wck"); ?>
+<?php __("Add New", "wck"); ?>
 <?php __("Add New Meta Box", "wck"); ?>
 <?php __("Edit Meta Box", "wck"); ?>
 <?php __("New Meta Box", "wck"); ?>
@@ -80,10 +83,10 @@
 <?php __("Meta Box Fields", "wck"); ?>
 <?php __("Enter below the arguments for the meta box.", "wck"); ?>
 <?php __("Required phone number format: ", "wck"); ?>
-<?php __("Choose a different %s as this one contains spaces\n", "wck"); ?>
-<?php __("Choose a different %s as this one is reserved\n", "wck"); ?>
-<?php __("Choose a different %s as this one contains uppercase letters\n", "wck"); ?>
 <?php __("Choose a different %s as this one already exists\n", "wck"); ?>
+<?php __("Choose a different %s as this one contains uppercase letters\n", "wck"); ?>
+<?php __("Choose a different %s as this one is reserved\n", "wck"); ?>
+<?php __("Choose a different %s as this one contains spaces\n", "wck"); ?>
 <?php __("Choose a different Field Title as this one is reserved\n", "wck"); ?>
 <?php __("Id", "wck"); ?>
 <?php __("Nested Repeater", "wck"); ?>
@@ -108,9 +111,9 @@
 <?php __(" field value must be less than or equal to ", "wck"); ?>
 <?php __("To update the meta information on posts to the new unserialized structure go to %1$sthis page%2$s and follow the instructions. Please make a backup of your database first! %3$sDismiss%4$s", "wck"); ?>
 <?php __("Processing Unserialized Fields", "wck"); ?>
+<?php __("The process has finished.", "wck"); ?>
 <?php __("The process has started, please be patient. This could take several minutes. You will be automatically redirected when the process is finished.", "wck"); ?>
 <?php __("%d posts of %d processed", "wck"); ?>
-<?php __("The process has finished.", "wck"); ?>
 <?php __("WCK Post Type Creator", "wck"); ?>
 <?php __("Post Type Creator", "wck"); ?>
 <?php __("Post type", "wck"); ?>
@@ -200,10 +203,10 @@
 <?php __("For simplicity you are required to introduce only the Singular Label and Plural Label from wchich the rest of the labels will be formed.<br />For a more detailed control of the labels you just have to click the \"Show Advanced Label Options\" link and all the availabel labels will be displayed.", "wck"); ?>
 <?php __("Advanced Options", "wck"); ?>
 <?php __("The Advanced Options are set to the most common defaults for custom post types. To display them click the \"Show Advanced Options\" link.", "wck"); ?>
-<?php __("Post Type name must not contain any spaces\n", "wck"); ?>
-<?php __("Post Type name must not contain any capital letters\n", "wck"); ?>
-<?php __("Post Type name must not contain any hyphens\n", "wck"); ?>
 <?php __("Please chose a different Post Type name as this one is reserved\n", "wck"); ?>
+<?php __("Post Type name must not contain any hyphens\n", "wck"); ?>
+<?php __("Post Type name must not contain any capital letters\n", "wck"); ?>
+<?php __("Post Type name must not contain any spaces\n", "wck"); ?>
 <?php __("WCK Taxonomy Creator", "wck"); ?>
 <?php __("Taxonomy Creator", "wck"); ?>
 <?php __("Taxonomy", "wck"); ?>
@@ -243,9 +246,9 @@
 <?php __("Whether to show the taxonomy in the quick/bulk edit panel.", "wck"); ?>
 <?php __("Make this taxonomy available via WP REST API ", "wck"); ?>
 <?php __("Custom Taxonomy Creation", "wck"); ?>
-<?php __("Taxonomy name must not contain any spaces\n", "wck"); ?>
-<?php __("Tanomony name must not contain any capital letters\n", "wck"); ?>
 <?php __("Please chose a different Tanomony name as this one is reserved\n", "wck"); ?>
+<?php __("Tanomony name must not contain any capital letters\n", "wck"); ?>
+<?php __("Taxonomy name must not contain any spaces\n", "wck"); ?>
 <?php __("WCK Custom Taxonomy Creator allows you to easily create custom taxonomy for Wordpress without any programming knowledge.<br />Most of the common options for creating a taxonomy are displayed by default while the advanced and label options are just one click away.", "wck"); ?>
 <?php __("For simplicity you are required to introduce only the Singular Label and Plural Label from wchich the rest of the labels will be formed.<br />For a more detailed control of the labels you just have to click the \"Show Advanced Label Options\" link and all the availabel labels will be displayed", "wck"); ?>
 <?php __("The Advanced Options are set to the most common defaults for taxonomies. To display them click the \"Show Advanced Options\" link.", "wck"); ?>
@@ -358,13 +361,11 @@
 <?php __("(Note:changing the slug when you already have a lot of existing entries may result in unexpected behavior.)", "wck"); ?>
 <?php __("Option Page updated.", "wck"); ?>
 <?php __("Option Field updated.", "wck"); ?>
-<?php __("Choose a different Option Name as this one contains spaces\n", "wck"); ?>
-<?php __("Choose a different Option Name as this one has Uppercase letters\n", "wck"); ?>
 <?php __("Choose a different Option Name as this one already exists\n", "wck"); ?>
+<?php __("Choose a different Option Name as this one has Uppercase letters\n", "wck"); ?>
+<?php __("Choose a different Option Name as this one contains spaces\n", "wck"); ?>
 <?php __("Start Here & General Settings", "wck"); ?>
 <?php __("Start and Settings", "wck"); ?>
-<?php __("Serial Number", "wck"); ?>
-<?php __("Please enter your serial number. (e.g. WCKPRO-11-SN-251r55baa4fbe7bf595b2aabb8d72985)", "wck"); ?>
 <?php __("Register Your Version", "wck"); ?>
 <?php __("Custom Post Type Creator", "wck"); ?>
 <?php __("Custom Taxonomy Creator", "wck"); ?>
@@ -374,36 +375,34 @@
 <?php __("Enter your Google Maps API key ( <a href=\"https://console.developers.google.com/flows/enableapi?apiid=maps_backend\" target=\"_blank\">Get your API key</a> )", "wck"); ?>
 <?php __("Extra Settings", "wck"); ?>
 <?php __("<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has serious security and performance issues. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0", "wck"); ?>
+<?php __("Version %s", "wck"); ?>
 <?php __("Welcome to %s", "wck"); ?>
-<?php __("WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ", "wck"); ?>
 <?php __("Quick Start-Up Guide", "wck"); ?>
 <?php __("WordPress Creation Kit Pro has support for a wide list of custom fields: WYSIWYG Editor, Upload Field, Date, User, Country, Text Input, Textarea, Drop-Down, Select, Checkboxes, Radio Buttons", "wck"); ?>
-<?php __("Access documentation <a href=\"http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Fields_Creator\" target=\"_blank\">here</a> about how to display them in your templates.", "wck"); ?>
 <?php __("Create & manage all your custom content types", "wck"); ?>
-<?php __("Access documentation <a href=\"http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Post_Type_Creator\" target=\"_blank\">here</a> about how to display them in your templates.", "wck"); ?>
 <?php __("Create new taxonomies for filtering your content", "wck"); ?>
-<?php __("Access documentation <a href=\"http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Taxonomy_Creator\" target=\"_blank\">here</a> about how to display them in your templates.", "wck"); ?>
-<?php __("Swift Templates (available in the <a href=\"http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS\" target=\"_blank\">PRO</a> version)", "wck"); ?>
 <?php __("Build your front-end templates directly from the WordPress admin UI, without writing any PHP code.", "wck"); ?>
-<?php __("Access documentation <a href=\"http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Swift_Templates\" target=\"_blank\">here</a> on how to easily display registered custom post types, custom fields and taxonomies in your theme.", "wck"); ?>
-<?php __("Front-End Posting (available in the <a href=\"http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS\" target=\"_blank\">PRO</a> version)", "wck"); ?>
 <?php __("Create and edit posts/pages or custom posts directly from the front-end.", "wck"); ?>
 <?php __("Available shortcodes:", "wck"); ?>
 <?php __("[fep form_name=\"front-end-post-name\"] - displays your form in the front-end", "wck"); ?>
 <?php __("[fep-dashboard] - the quick-dashboard allows: simple profile updates, editing/deletion of posts, pages and custom post types.", "wck"); ?>
 <?php __("[fep-lilo] - login/logout/register widget with the simple usage of a shortcode. Can be added in a page or text widget.", "wck"); ?>
-<?php __("Access documentation <a href=\"http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/frontend-posting/\" target=\"_blank\">here</a> about how to display them in your templates.", "wck"); ?>
-<?php __("Option Pages (available in the <a href=\"http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS\" target=\"_blank\">PRO</a> version)", "wck"); ?>
 <?php __("The Options Page Creator Allows you to create a new menu item called \"Options\"(for example) which can hold advanced custom field groups. Perfect for theme options or a simple UI for your custom plugin (like a simple testimonials section in the front-end).", "wck"); ?>
-<?php __("Please enter your serial number to receive access to automatic updates and support. Need a license key? <a href=\"http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase\" target=\"_blank\">Get One Here</a>.", "wck"); ?>
-<?php __("Oops! Our serial verification server is down. Please try again later.", "wck"); ?>
-<?php __("Oops! It seems the serial number you entered was not found in our database. To find out what's your serial number log-in to <a href=\"http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal\" target=\"_blank\">your account page</a> over at Cozmoslabs.com", "wck"); ?>
-<?php __("Wohoo! Your serial number is valid and you have access to automatic updates.", "wck"); ?>
-<?php __("It seems your serial number has <strong>expired</strong>. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href=\"http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal\" target=\"_blank\"><strong>your account page</strong></a>.", "wck"); ?>
-<?php __("Your WordPress Creation Kit serial number is about to expire. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href=\"http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal\" target=\"_blank\"><strong>your account page</strong></a>.", "wck"); ?>
-<?php __("<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>", "wck"); ?>
-<?php __("<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>", "wck"); ?>
 <?php __("<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>", "wck"); ?>
+<?php __("<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>", "wck"); ?>
+<?php __("<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s</p>", "wck"); ?>
+<?php __("<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>", "wck"); ?>
+<?php __("License key", "wck"); ?>
+<?php __("Activate License", "wck"); ?>
+<?php __("Deactivate License", "wck"); ?>
+<?php __("Active on this site", "wck"); ?>
+<?php __("Enter and activate your license key. Your license key can be found in your %sCozmoslabs account%s. ", "wck"); ?>
+<?php __("Your %s license has reached its activation limit.", "wck"); ?>
+<?php __("%sUpgrade now%s for unlimited activations and extra features like multiple registration and edit profile forms, userlisting, custom redirects and more.", "wck"); ?>
+<?php __("Your %s license has expired.", "wck"); ?>
+<?php __("Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support.", "wck"); ?>
+<?php __("Your %s license is about to expire on %s", "wck"); ?>
+<?php __("Please %sRenew Your Licence%s to continue receiving access to product downloads, automatic updates and support.", "wck"); ?>
 <?php __("Add New Swift Template", "wck"); ?>
 <?php __("Edit Swift Template", "wck"); ?>
 <?php __("New Swift Template", "wck"); ?>
@@ -412,8 +411,11 @@
 <?php __("No Swift Templates found", "wck"); ?>
 <?php __("No Swift Templates found in Trash", "wck"); ?>
 <?php __("Swift Template Shortcode", "wck"); ?>
-<?php __("Save", "wck"); ?>
+<?php __("If you enjoy using <strong> WordPress Creation Kit </strong> please <a href=\"%1$s\" target=\"_blank\">rate us on WordPress.org</a> to help us reach more people. More happy users means more features, less bugs and better support for everyone. ", "wck"); ?>
 <?php __("Add Entry", "wck"); ?>
+<?php __("Save", "wck"); ?>
+<?php __("Save Changes", "wck"); ?>
+<?php __("Cancel", "wck"); ?>
 <?php __("Content", "wck"); ?>
 <?php __("Delete", "wck"); ?>
 <?php __("Map Markers", "wck"); ?>
@@ -423,13 +425,15 @@
 <?php __("You are not allowed to do this.", "wck"); ?>
 <?php __("Syncronize WCK", "wck"); ?>
 <?php __("Syncronize WCK Translation", "wck"); ?>
-<?php __("Search Location", "wck"); ?>
 <?php __("In order for the map field to work it will need a Google Maps API key. Please insert your API key <a href=\"%s\">here</a>.", "wck"); ?>
+<?php __("Search Location", "wck"); ?>
 <?php __("Upload ", "wck"); ?>
 <?php __("Wrong form for this post type", "wck"); ?>
 <?php __("You are not allowed to edit this post.", "wck"); ?>
 <?php __("My Profile", "wck"); ?>
 <?php __("My ", "wck"); ?>
+<?php __("Welcome %1$s! ", "wck"); ?>
+<?php __("Logout", "wck"); ?>
 <?php __("User:", "wck"); ?>
 <?php __("Password:", "wck"); ?>
 <?php __("Log in", "wck"); ?>
@@ -440,18 +444,16 @@
 <?php __("Email:", "wck"); ?>
 <?php __("Confirm Password:", "wck"); ?>
 <?php __("Back to login.", "wck"); ?>
-<?php __("Welcome %1$s! ", "wck"); ?>
-<?php __("Logout", "wck"); ?>
 <?php __("Password Confirm:", "wck"); ?>
 <?php __("Update", "wck"); ?>
-<?php __("Please enter a username.", "wck"); ?>
-<?php __("This username is invalid because it uses illegal characters. Please enter a valid username.", "wck"); ?>
 <?php __("This username is already registered, please choose another one.", "wck"); ?>
-<?php __("Please type your e-mail address.", "wck"); ?>
-<?php __("The email address isn&#8217;t correct.", "wck"); ?>
+<?php __("This username is invalid because it uses illegal characters. Please enter a valid username.", "wck"); ?>
+<?php __("Please enter a username.", "wck"); ?>
 <?php __("This email is already registered, please choose another one.", "wck"); ?>
-<?php __("Please enter a password.", "wck"); ?>
+<?php __("The email address isn&#8217;t correct.", "wck"); ?>
+<?php __("Please type your e-mail address.", "wck"); ?>
 <?php __("The passwords do not match.", "wck"); ?>
+<?php __("Please enter a password.", "wck"); ?>
 <?php __("Query Arguments", "wck"); ?>
 <?php __("Value", "wck"); ?>
 <?php __("The value of the selected query argument. Parameters normaly passed as arrays (some tax args, meta_query, etc) are not supported in the UI. Use the <b>wck_stp_archive_query_args</b> filter for those.  ", "wck"); ?>

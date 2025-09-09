@@ -9,30 +9,34 @@ function wck_free_to_pro_print_scripts($hook){
 }
 
 /* Create the WCK "Front End Posting" Page only for admins ( 'capability' => 'edit_theme_options' ) */
-$args = array(					
-			'page_title' => __( 'Front End Posting', 'wck' ),
-			'menu_title' => __( 'Front End Posting', 'wck' ),
-			'capability' => 'edit_theme_options',
-			'menu_slug' => 'free-to-pro-fep',									
-			'page_type' => 'submenu_page',
-			'parent_slug' => 'wck-page',
-			'priority' => 15,
-			'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
-		);
-$sas_page = new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+    $args = array(
+                'page_title' => __( 'Front End Posting', 'wck' ),
+                'menu_title' => __( 'Front End Posting', 'wck' ),
+                'capability' => 'edit_theme_options',
+                'menu_slug' => 'free-to-pro-fep',
+                'page_type' => 'submenu_page',
+                'parent_slug' => 'wck-page',
+                'priority' => 15,
+                'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+            );
+    new WCK_Page_Creator( $args );
+});
 
 /* Create the WCK "Swift Templates" Page only for admins ( 'capability' => 'edit_theme_options' ) */
-$args = array(					
-			'page_title' => __( 'Swift Templates', 'wck' ),
-			'menu_title' => __( 'Swift Templates', 'wck' ),
-			'capability' => 'edit_theme_options',
-			'menu_slug' => 'free-to-pro-stp',									
-			'page_type' => 'submenu_page',
-			'parent_slug' => 'wck-page',
-			'priority' => 17,
-			'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
-		);
-$sas_page = new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+    $args = array(
+                'page_title' => __( 'Swift Templates', 'wck' ),
+                'menu_title' => __( 'Swift Templates', 'wck' ),
+                'capability' => 'edit_theme_options',
+                'menu_slug' => 'free-to-pro-stp',
+                'page_type' => 'submenu_page',
+                'parent_slug' => 'wck-page',
+                'priority' => 17,
+                'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+            );
+    new WCK_Page_Creator( $args );
+});
 
 /**
  * Function that adds content to the "Swift Templates" page for the free version

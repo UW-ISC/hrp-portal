@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.7
 Tested up to: 6.8.2
-Stable tag: 3.27
+Stable tag: 3.28
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -199,6 +199,13 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.28 =
+* Fix: **IMPORTANT: For the `[mla_term_list]` shortcode, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.**
+* Fix: IMPORTANT: An arbitrary file deletion security risk in the Media/Assistant submenu table has been mitigated.
+* Fix: When WPML is active, the flag images have been restored to the Media/Assistant submenu table column headers.
+* Fix: For the "MLA Gallery Download Checklist" example plugin (v1.01), an explicit check for ZIP archive support has been added to prevent a "Critical Site Error" occurance.
+* Fix: The `screen_options_show_screen` filter for the Settings/Media Library Assistant page has been updated to avoid a defect in Sugar Calendar Lite v3.8.0 (fixed in v3.8.1).
+
 = 3.27 =
 * New: For the `[mla_term_list]` shortcode, **the `checklist,div` output format wraps the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list.** More information in the Settings/Media Library Assistant Documentation tab.
 * New: EXIF metadata is extracted and available for AVIF files; requires ImageMagick version 7.0.25 or later and Imagick PHP support.
@@ -382,8 +389,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.27 =
-IMPORTANT: Security fixes. Shortcode enhancements for term list checklists and custom field date queries, AVIF metadata support. Three enhancements and five fixes in all.
+= 3.28 =
+IMPORTANT: Security mitigation and [mla_term_list] critical error fix. WPML Media/Assistant fix. Five fixes in all.
 
 == Acknowledgements ==
 
