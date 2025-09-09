@@ -9823,7 +9823,11 @@ select.input-group-lg > .input-group-btn > .btn {
     box-shadow: inset 0 -1px 0 #D7D9E2;
     width: 100%;
 }
-
+@media (max-width: 1474px){
+    .wpdt-c .tab-nav {
+        overflow: scroll;
+    }
+}
 .wpdt-c .tab-nav li {
     display: inline-block;
     vertical-align: top;

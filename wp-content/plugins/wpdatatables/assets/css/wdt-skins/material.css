@@ -62,18 +62,6 @@
     color: rgba(0, 0, 0, 1);
 }
 
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_asc:before {
-    font-family: 'wpDataTablesIcons';
-    display: inline-block;
-    content: '\f175';
-    padding-right: 10px;
-    opacity: 1;
-}
-
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_desc:before,
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_desc:before,
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_desc:before,
@@ -81,20 +69,21 @@
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_desc:before {
     font-family: 'wpDataTablesIcons';
     display: inline-block;
-    content: '\f176';
+    content: '\f175';
     padding-right: 10px;
     opacity: 1;
 }
 
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:before,
-.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:before {
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:before,
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:before,
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:before,
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:before,
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_asc:before {
     font-family: 'wpDataTablesIcons';
     display: inline-block;
     content: '\f176';
     padding-right: 10px;
-    opacity: 0.6;
+    opacity: 1;
 }
 
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper table.wpDataTable > tbody > tr > td {

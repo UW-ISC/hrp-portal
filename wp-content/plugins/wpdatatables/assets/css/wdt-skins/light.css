@@ -30,7 +30,6 @@
     background-color: #f0f0f0; /* th active/hover background color */
 }
 
-.wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable thead th.sorting:after,
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after,
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc:after {
     border: 5px solid transparent;
