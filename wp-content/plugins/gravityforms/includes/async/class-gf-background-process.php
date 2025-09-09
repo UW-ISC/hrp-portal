@@ -546,7 +546,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 		global $wpdb;
 
 		if ( is_multisite() ) {
-			$status = $wpdb->get_var(
+			$status = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT meta_value FROM $wpdb->sitemeta WHERE meta_key = %s AND site_id = %d LIMIT 1",
 					$this->get_status_key(),
@@ -554,7 +554,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 				)
 			);
 		} else {
-			$status = $wpdb->get_var(
+			$status = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1",
 					$this->get_status_key()
@@ -851,7 +851,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 			$args[] = $limit;
 		}
 
-		return $wpdb->get_results(
+		return $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$args
@@ -950,6 +950,11 @@ abstract class GF_Background_Process extends WP_Async_Request {
 		do {
 			$batch = $this->get_batch();
 
+			if ( ! is_object( $batch ) ) {
+				$this->log_debug( __METHOD__ . '(): Aborting. Getting the next batch returned empty or an invalid value.' );
+				break;
+			}
+
 			if ( is_multisite() ) {
 				$current_blog_id = get_current_blog_id();
 				if ( $current_blog_id !== $batch->blog_id ) {
@@ -978,7 +983,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 
 			$task_num = 0;
 
-			add_action( 'shutdown', array( $this, 'shutdown_error_handler' ) );
+			add_action( 'shutdown', array( $this, 'shutdown_error_handler' ), 0 );
 			foreach ( $batch->data as $key => $task ) {
 				$this->increment_task_attempts( $batch, $key, $task );
 				$attempt_num = $this->supports_attempts ? sprintf( ' Attempt number: %d.', rgar( $task, 'attempts', 1 ) ) : '';
@@ -1014,7 +1019,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 					break;
 				}
 			}
-			remove_action( 'shutdown', array( $this, 'shutdown_error_handler' ) );
+			remove_action( 'shutdown', array( $this, 'shutdown_error_handler' ), 0 );
 
 			$this->log_debug( sprintf( '%s(): Batch completed for %s.', __METHOD__, $this->action ) );
 
@@ -1558,7 +1563,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 	 * @return string
 	 */
 	public function get_chain_id() {
-		if ( empty( $this->chain_id ) && wp_doing_ajax() && rgar( $_REQUEST, 'action' ) === $this->identifier ) {
+		if ( empty( $this->chain_id ) && wp_doing_ajax() && rgar( $_REQUEST, 'action' ) === $this->identifier ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			check_ajax_referer( $this->identifier, 'nonce' );
 
 			if ( ! empty( $_GET[ $this->get_chain_id_arg_name() ] ) ) {
@@ -1731,7 +1736,7 @@ abstract class GF_Background_Process extends WP_Async_Request {
 			$key .= 'blog_id_' . $blog_id . '_';
 		}
 
-		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE {$column} LIKE %s", $wpdb->esc_like( $key ) . '%' ) );
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE {$column} LIKE %s", $wpdb->esc_like( $key ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$this->log_debug( sprintf( '%s(): %d batch(es) deleted with prefix %s.', __METHOD__, $result, $key ) );
 
