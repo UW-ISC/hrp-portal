@@ -105,6 +105,35 @@ class GFFormSettings {
 	 */
 	public static function form_settings_fields( $form ) {
 
+		// Handles the deprecation notice for the confirmation ready classes in the CSS class field of form settings.
+		$deprecated_confirmation_classes_field_notice = function( $value, $field ) use ( $form ) {
+			if ( GFCommon::is_legacy_markup_enabled_og( $form ) ){
+				return false;
+			}
+
+			$deprecated_confirmation_classes = [
+				'gf_confirmation_simple_yellow',
+				'gf_confirmation_simple_gray',
+				'gf_confirmation_yellow_gradient',
+				'gf_confirmation_green_gradient',
+			];
+
+			if ( in_array( $value, $deprecated_confirmation_classes ) ) {
+				return '<div id="gfield-warning-deprecated" class="gform-alert gform-alert--notice gform-alert--inline" role="alert" style="margin-block-start: 1rem;">
+					<span class="gform-alert__icon gform-icon gform-icon--circle-notice-fine" aria-hidden="true"></span>
+					<div class="gform-alert__message-wrap">
+						<p class="gform-alert__message">' . esc_html__( 'This form uses the "' . $value . '" Ready Class, which will be removed in Gravity Forms 3.1. You can use a CSS code snippet instead.', 'gravityforms' ) .
+					   ' <a href="https://docs.gravityforms.com/migrating-your-forms-from-ready-classes/" target="_blank" title="' .
+					   esc_attr__( 'Deprecation of Ready Classes in Gravity Forms 3.1', 'gravityforms' ) . '">' .
+					   esc_html__( 'Learn more', 'gravityforms' ) .
+					   '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'gravityforms' ) . '</span>&nbsp;' .
+					   '<span class="gform-icon gform-icon--external-link"></span></a></p>
+					</div>
+				</div>';
+			}
+			return '';
+		};
+
 		$fields = array(
 			'form_basics' => array(
 				'title'  => esc_html__( 'Form Basics', 'gravityforms' ),
@@ -286,10 +315,11 @@ class GFFormSettings {
 						),
 					),
 					array(
-						'name'    => 'cssClass',
-						'type'    => 'text',
-						'label'   => esc_html__( 'CSS Class Name', 'gravityforms' ),
-						'tooltip' => gform_tooltip( 'form_css_class', '', true ),
+						'name'        => 'cssClass',
+						'type'        => 'text',
+						'after_input' => $deprecated_confirmation_classes_field_notice,
+						'label'       => esc_html__( 'CSS Class Name', 'gravityforms' ),
+						'tooltip'     => gform_tooltip( 'form_css_class', '', true ),
 					),
 				),
 			),
@@ -551,7 +581,7 @@ class GFFormSettings {
 			),
 		);
 
-		if ( self::show_legacy_markup_setting() ) {
+		if ( self::legacy_markup_enabled_or_posted( $form ) ) {
 			$fields['form_options']['fields'][] = array(
 				'name'          => 'markupVersion',
 				'type'          => 'toggle',
@@ -626,6 +656,26 @@ class GFFormSettings {
 	}
 
 	/**
+	 * The Settings API runs the settings field method before processing the postback,
+	 * so we have to run this hack to ensure we're respecting the posted value on initial load.
+	 *
+	 * @todo - Remove this and fix the Settings API order-of-operations.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $form The form to check.
+	 *
+	 * @return bool
+	 */
+	public static function legacy_markup_enabled_or_posted( $form ) {
+		if ( $_POST && empty( $_POST['_gform_setting_markupVersion'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, 
+			return apply_filters( 'gform_show_legacy_markup_setting', false );
+		}
+
+		return apply_filters( 'gform_show_legacy_markup_setting', GFCommon::is_legacy_markup_enabled( $form ) );
+	}
+
+	/**
 	 * Determine whether to show the legacy markup setting.
 	 *
 	 * @since 2.7.15
@@ -691,6 +741,52 @@ class GFFormSettings {
 		</div>';
 	}
 
+	/**
+	 * Displays a warning if confirmation deprecated CSS Ready Classes are used in the form settings.
+	 *
+	 * This method checks if the form uses any deprecated CSS Ready Classes and displays
+	 * a warning message. It also ensures the warning is not shown if the user has dismissed it.
+	 *
+	 * @since 2.9.15
+	 *
+	 * @param array $form The form object being checked for deprecated classes.
+	 *
+	 * @return string|false The HTML for the warning message or false if no warning is needed.
+	 */
+	public static function deprecated_classes_warning( $form ) {
+		if ( GFCommon::is_legacy_markup_enabled_og( $form ) ){
+			return false;
+		}
+
+		$deprecated_confirmation_classes = [
+			'gf_confirmation_simple_yellow',
+			'gf_confirmation_simple_gray',
+			'gf_confirmation_yellow_gradient',
+			'gf_confirmation_green_gradient',
+		];
+
+		if ( isset( $form['cssClass'] ) ) {
+			$field_classes = explode( ' ', $form['cssClass'] );
+			foreach ( $field_classes as $class ) {
+				if ( in_array( $class, $deprecated_confirmation_classes ) ) {
+					return '<div class="gform-alert" data-js="gform-alert" style="grid-column: 1/-1;">
+						<span class="gform-alert__icon gform-icon gform-icon--campaign" aria-hidden="true"></span>
+						<div class="gform-alert__message-wrap">
+							<p class="gform-alert__message">' . esc_html__( 'This form uses a deprecated CSS Ready Class, which will be removed in Gravity Forms 3.1.', 'gravityforms' ) . '</p>
+							<a class="gform-alert__cta gform-button gform-button--white gform-button--size-xs" href="https://docs.gravityforms.com/migrating-your-forms-from-ready-classes/" target="_blank">'
+						   	. esc_html__( 'Learn More', 'gravityforms' ) .
+						   	'<span class="screen-reader-text">' . esc_html__('about deprecated ready classes', 'gravityforms') . '</span>
+							<span class="screen-reader-text">' . esc_html__('(opens in a new tab)', 'gravityforms') . '</span>&nbsp;
+							<span class="gform-icon gform-icon--external-link"></span>
+							</a>
+						</div>
+					</div>';
+
+				}
+			}
+		}
+		return '';
+	}
 
 
 	// # SETTINGS RENDERER ---------------------------------------------------------------------------------------------
@@ -790,6 +886,12 @@ class GFFormSettings {
 
 				},
 				'before_fields' => function() use ( &$form ) {
+
+					// Ensure form is not empty and display form settings warning accordingly.
+					$notice = self::deprecated_classes_warning( $form );
+					if ( ! empty( $notice ) ) {
+						echo $notice; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
 
 					?>
 
@@ -1005,11 +1107,11 @@ class GFFormSettings {
 		wp_print_styles( array( 'jquery-ui-styles', 'gform_admin', 'gform_settings', 'wp-pointer' ) );
 
 		$form         = GFFormsModel::get_form_meta( rgget( 'id' ) );
-		$current_tab  = rgempty( 'subview', $_GET ) ? 'settings' : rgget( 'subview' );
+		$current_tab  = rgempty( 'subview', $_GET ) ? 'settings' : rgget( 'subview' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$setting_tabs = GFFormSettings::get_tabs( $form['id'] );
 
 		// If theme_layer is set in $_GET, we're on a theme layer and should use it as the current tab slug
-		if ( ! rgempty( 'theme_layer', $_GET ) ) {
+		if ( ! rgempty( 'theme_layer', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$current_tab = rgget( 'theme_layer' );
 		}
 
@@ -1024,12 +1126,12 @@ class GFFormSettings {
 
 		?>
 
-		<div class="wrap gforms_edit_form gforms_form_settings_wrap <?php echo GFCommon::get_browser_class() ?>">
+		<div class="wrap gforms_edit_form gforms_form_settings_wrap <?php echo esc_attr( GFCommon::get_browser_class() ) ?>">
 
 			<?php
 				GFSettings::page_header_bar();
 				GFForms::top_toolbar();
-				echo GFCommon::get_remote_message();
+				echo GFCommon::get_remote_message(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				GFCommon::notices_section();
 			?>
 
@@ -1069,7 +1171,7 @@ class GFFormSettings {
 							'<a href="%s"%s><span class="icon">%s</span> <span class="label">%s</span></a>',
 							esc_url( $url ),
 							$current_tab === $tab['name'] ? ' class="active"' : '',
-							$icon_markup,
+							$icon_markup, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							esc_html( $tab['label'] )
 						);
 					}
@@ -1254,7 +1356,7 @@ class GFFormSettings {
 	 * @return void
 	 */
 	public static function output( $a ) {
-		echo $a;
+		echo $a; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -1283,7 +1385,7 @@ class GFFormSettings {
 		$script_str .= sprintf( 'function GetConditionalLogicFields(){return %s;}', json_encode( $conditional_logic_fields ) ) . PHP_EOL;
 
 		if ( ! empty( $script_str ) && $echo ) {
-			echo $script_str;
+			echo $script_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		return $script_str;

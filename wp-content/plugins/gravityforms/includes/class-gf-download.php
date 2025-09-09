@@ -13,9 +13,9 @@ class GF_Download {
 	 * @since 2.0
 	 */
 	public static function maybe_process() {
-		if ( isset( $_GET['gf-download'] ) ) {
+		if ( isset( $_GET['gf-download'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-			$file     = $_GET['gf-download'];
+			$file     = $_GET['gf-download']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			$form_id  = rgget( 'form-id' );
 			$field_id = rgget( 'field-id' );
 
@@ -111,7 +111,19 @@ class GF_Download {
 			$content_type        = self::get_content_type( $file_path );
 			$content_disposition = rgget( 'dl' ) ? 'attachment' : 'inline';
 
-			nocache_headers();
+			/**
+			 * Allows the nocache_headers() to be overridden.
+			 *
+			 * @since 2.9.15
+			 *
+			 * @param bool   $enable  If the nocache_headers() should be called. Default true.
+			 * @param int    $form_id The ID of the form used to download files.
+			 * @param string $file     The file to be downloaded.
+			 */
+			if ( apply_filters( 'gform_enable_download_nocache_headers', true, $form_id, $file ) ) {
+				nocache_headers();
+			}
+
 			header( 'X-Robots-Tag: noindex', true );
 			header( 'Content-Type: ' . $content_type );
 			header( 'Content-Description: File Transfer' );
@@ -169,7 +181,7 @@ class GF_Download {
 
 		while ( ! @feof( $handle ) ) {
 			$buffer = @fread( $handle, $chunksize );
-			echo $buffer;
+			echo $buffer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 			if ( $retbytes ) {
 				$cnt += strlen( $buffer );
