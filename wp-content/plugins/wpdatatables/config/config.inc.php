@@ -8,14 +8,14 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.3');
+define('WDT_CURRENT_VERSION', '7.3.1');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
 define('WDT_INITIAL_STARTER_VERSION', '6.5');
 
 // Number of active plugin installs for Amelia
-define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '70,000+');
+define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '80,000+');
 // Number of appointments for Amelia
 define('AMELIA_NUMBER_OF_APPOINTMENTS', '900,000+');
 /**

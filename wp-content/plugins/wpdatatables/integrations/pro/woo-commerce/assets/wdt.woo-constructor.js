@@ -313,7 +313,7 @@ const metaQueryMappings = {
             constructedWooCommerceData['customFieldColumns'] = updatedEntries;
         }
         cf_column_counter--;
-        $(this).closest('.wdt-wp-query-cf-template').remove();
+        $(this).closest('.wdt-woo-commerce-cf-template').remove();
 
         renderWooTablePreview();
     });

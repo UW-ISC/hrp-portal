@@ -1606,6 +1606,9 @@ var singleClick = false;
                                 if (!tableDescription.serverSide && oSettings.aiDisplay.length >= oSettings._iDisplayLength && !tableDescription.groupingEnabled) {
                                     position = parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value) === undefined ? 0 : oSettings.aiDisplayMaster.indexOf(parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value));
                                     checkPosition = true;
+                                } else if (!tableDescription.serverSide && tableDescription.groupingEnabled && !$(tableDescription.selector + ' tbody tr')[0].classList.contains('odd')) {
+                                    position = parseInt($(tableDescription.selector + ' tbody tr')[1].attributes[1].value) === undefined ? 0 : oSettings.aiDisplayMaster.indexOf(parseInt($(tableDescription.selector + ' tbody tr')[1].attributes[1].value));
+                                    checkPosition = true;
                                 }
                                 if (oSettings.aaSorting[0][1] === 'desc' && transformValueRules[0].includes('{' + oSettings.aoColumns[oSettings.aaSorting[0][0]].name + '.value}') && checkPosition && !tableDescription.serverSide) {
                                     if (position + 1 === oSettings.aiDisplay.length) {
@@ -1631,10 +1634,10 @@ var singleClick = false;
                                                     checkPositionFilterHelper = true;
                                                 }
                                             }
-                                            if (!tableDescription.serverSide && checkPositionFilterHelper && !checkPositionFilter) {
+                                           if (!tableDescription.serverSide && checkPositionFilterHelper && !checkPositionFilter) {
                                                 position = m;
-                                                if (oSettings._iDisplayLength - $(tableDescription.selector + ' tbody tr').length != 0) {
-                                                    position = oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length;
+                                                if ((oSettings._iDisplayLength - $(tableDescription.selector + ' tbody tr').length) > 0 ) {
+                                                    position = (oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length) < 0 ? 0 : oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length;
                                                     checkPositionFilter = true;
                                                 } else {
                                                     position = oSettings._iDisplayStart;

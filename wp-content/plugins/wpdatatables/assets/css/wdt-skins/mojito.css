@@ -370,10 +370,10 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-mojito .w
     opacity: 1;
 }
 
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:after,
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:after,
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:after,
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after {
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:after {
     font-family: 'wpDataTablesIcons';
     display: inline-block;
     content: '\f176';
