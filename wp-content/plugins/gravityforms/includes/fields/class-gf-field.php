@@ -89,7 +89,7 @@ class GF_Field extends stdClass implements ArrayAccess {
 		}
 
 		if ( ! self::$deprecation_notice_fired ) {
-			_deprecated_function( "Array access to the field object is now deprecated. Further notices will be suppressed. \$field['" . $offset . "']", '2.0', 'the object operator e.g. $field->' . $offset );
+			_deprecated_function( "Array access to the field object is now deprecated. Further notices will be suppressed. \$field['" . esc_attr( $offset ) . "']", '2.0', 'the object operator e.g. $field->' . esc_attr( $offset ) );
 			self::$deprecation_notice_fired = true;
 		}
 	}
@@ -1011,25 +1011,28 @@ class GF_Field extends stdClass implements ArrayAccess {
 	/**
 	 * Retrieve the input value on submission.
 	 *
+	 * @since 1.9
+	 * @since 2.9.17 Updated to return null if the field failed state validation.
+	 *
 	 * @param string    $standard_name            The input name used when accessing the $_POST.
 	 * @param string    $custom_name              The dynamic population parameter name.
 	 * @param array     $field_values             The dynamic population parameter names with their corresponding values to be populated.
 	 * @param bool|true $get_from_post_global_var Whether to get the value from the $_POST array as opposed to $field_values.
 	 *
-	 * @return array|string
+	 * @return array|string|null
 	 */
 	public function get_input_value_submission( $standard_name, $custom_name = '', $field_values = array(), $get_from_post_global_var = true ) {
 
 		$form_id = $this->formId;
-		if ( ! empty( $_POST[ 'is_submit_' . $form_id ] ) && $get_from_post_global_var ) {
-			$value = rgpost( $standard_name );
-			$value = GFFormsModel::maybe_trim_input( $value, $form_id, $this );
+		if ( ! empty( $_POST[ 'is_submit_' . $form_id ] ) && $get_from_post_global_var ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$value = $this->get_context_property( 'failed_state_validation' ) ? null : rgpost( $standard_name );
 
-			return $value;
+			return GFFormsModel::maybe_trim_input( $value, $form_id, $this );
 		} elseif ( $this->allowsPrepopulate ) {
 			return GFFormsModel::get_parameter_value( $custom_name, $field_values, $this );
 		}
 
+		return null;
 	}
 
 
@@ -1175,19 +1178,40 @@ class GF_Field extends stdClass implements ArrayAccess {
 	 *
 	 * Return a value that's safe to display for the context of the given $format.
 	 *
+	 * @since 1.9
+	 * @since 2.9.14 Updated to display an inline error message on the entry detail page for array-based values.
+	 *
 	 * @param string|array $value    The field value.
 	 * @param string       $currency The entry currency code.
 	 * @param bool|false   $use_text When processing choice based fields should the choice text be returned instead of the value.
 	 * @param string       $format   The format requested for the location the merge is being used. Possible values: html, text or url.
 	 * @param string       $media    The location where the value will be displayed. Possible values: screen or email.
 	 *
-	 * @return string
+	 * @return string|false
 	 */
 	public function get_value_entry_detail( $value, $currency = '', $use_text = false, $format = 'html', $media = 'screen' ) {
 
 		if ( is_array( $value ) ) {
-			_doing_it_wrong( __METHOD__, 'Override this method to handle array values', '2.0' );
-			return $value;
+			if ( ! $this->is_entry_detail() ) {
+				// Returning false for {all_fields}, so the field is omitted from the output even when the empty modifier is used.
+				return $media === 'email' ? false : '';
+			}
+
+			$class = get_class( $this );
+			if ( $class === GF_Field::class ) {
+				$error_message = sprintf( esc_html__( 'Field value cannot be displayed. Please activate the add-on that includes the `%s` field type.', 'gravityforms' ), $this->type );
+			} else {
+				$error_message = sprintf( esc_html__( 'Field value cannot be displayed. If you are the developer of the `%s` field type, please implement `%s::get_value_entry_detail()` to define how the value is displayed.', 'gravityforms' ), $this->type, $class );
+			}
+
+			return '<div class="error-alert-container alert-container">
+						<div class="gform-alert gform-alert--error">
+							<span class="gform-alert__icon gform-icon gform-icon--circle-close" aria-hidden="true"></span>
+							<div class="gform-alert__message-wrap">
+								<p class="gform-alert__message">' . $error_message . '</p>
+							</div>
+						</div>
+					</div>';
 		}
 
 		if ( $format === 'html' ) {

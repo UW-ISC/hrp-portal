@@ -706,7 +706,9 @@ function gformDeleteUploadedFile(formId, fieldId, deleteButton){
 
     var fileIndex = jQuery(deleteButton).parent().index();
 
-    parent.find(".ginput_preview").eq(fileIndex).remove();
+    var filePreview = jQuery( deleteButton ).closest( '.ginput_preview' )[0];
+    var fileId = filePreview.id;
+    filePreview.remove();
 
     //displaying single file upload field
     parent.find('input[type="file"],.validation_message,#extensions_message_' + formId + '_' + fieldId).removeClass("gform_hidden");
@@ -728,10 +730,15 @@ function gformDeleteUploadedFile(formId, fieldId, deleteButton){
             if( $multfile.length > 0 ) {
                 files[inputName].splice(fileIndex, 1);
                 var settings = $multfile.data('settings');
-                var max = settings.gf_vars.max_files;
-                jQuery("#" + settings.gf_vars.message_id).html('');
-                if(files[inputName].length < max)
-                    gfMultiFileUploader.toggleDisabled(settings, false);
+                var count = files[ inputName ].length;
+                if ( count === 0 ) {
+                    jQuery( '#' + settings.gf_vars.message_id ).html('');
+                } else {
+                    jQuery( '#error_' + fileId ).remove(); // Removing the file-specific validation message.
+                    var max = settings.gf_vars.max_files;
+                    if ( count < max )
+                        gfMultiFileUploader.toggleDisabled( settings, false );
+                }
 
             } else {
                 files[inputName] = null;
@@ -1277,7 +1284,7 @@ function gformToggleCheckboxes( toggleElement ) {
 	var checked,
         $toggleElement        = jQuery( toggleElement ),
         toggleElementCheckbox = $toggleElement.is( 'input[type="checkbox"]' ),
-        $toggle               = toggleElementCheckbox ? $toggleElement.parent() : $toggleElement.prev(),
+        $toggle               = $toggleElement.parent(),
 	    $toggleLabel          = $toggle.find( 'label' ),
 	    $checkboxes           = $toggle.parent().find( '.gchoice:not( .gchoice_select_all )' ),
 	    formId         = gf_get_form_id_by_html_id( $toggle.parents( '.gfield' ).attr( 'id' ) ),
@@ -1421,9 +1428,15 @@ function gformAddListItem( addButton, max ) {
 
 function gformDeleteListItem( deleteButton, max ) {
 
-    var $deleteButton = jQuery( deleteButton ),
-        $group        = $deleteButton.parents( '.gfield_list_group' ),
-        $container    = $group.parents( '.gfield_list_container' );
+	var $deleteButton = jQuery( deleteButton );
+	if ( $deleteButton.prop( 'disabled' ) ) {
+		return;
+	} else {
+		$deleteButton.prop( 'disabled', true );
+	}
+
+	var $group     = $deleteButton.parents( '.gfield_list_group' ),
+		$container = $group.parents( '.gfield_list_container' );
 
     $group.remove();
 
@@ -1479,7 +1492,11 @@ function gformToggleIcons( $container, max ) {
         $addButtons = $container.find( '.add_list_item' ),
         isLegacy    =  typeof gf_legacy !== 'undefined' && gf_legacy.is_legacy;
 
-    $container.find( '.delete_list_item' ).css( 'visibility', groupCount == 1 ? 'hidden' : 'visible' );
+	if ( groupCount === 1 ) {
+		$container.find( '.delete_list_item' ).prop( 'disabled', true ).css( 'visibility', 'hidden' );
+	} else {
+		$container.find( '.delete_list_item' ).prop( 'disabled', false ).css( 'visibility', 'visible' );
+	}
 
     if ( max > 0 && groupCount >= max ) {
 
@@ -3003,6 +3020,7 @@ function gformValidateFileSize( field, max_file_size ) {
 
 			if (file.percent == 100) {
 				if (response.status && response.status == 'ok') {
+					response.data.id = file.id;
 					addFile(fieldId, response.data);
 				} else {
 					addMessage(up.settings.gf_vars.message_id, strings.unknown_error + ': ' + file.name);
