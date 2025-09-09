@@ -14,7 +14,7 @@
  * https://wordpress.org/support/topic/select-multiple-files-for-download/
  * 
  * @package MLA Gallery Download Checklist
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -22,7 +22,7 @@ Plugin Name: MLA Gallery Download Checklist
 Plugin URI: http://davidlingren.com/
 Description: Generate HTML form elements and download checked items as a ZIP archive
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2024 David Lingren
@@ -55,7 +55,7 @@ class MLAGalleryDownloadChecklist {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.00';
+	const PLUGIN_VERSION = '1.01';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -257,6 +257,56 @@ class MLAGalleryDownloadChecklist {
 	}
 
 	/**
+	 * Passes PHP errors between mla_error_handler
+	 * and mla_download_checklist_action
+	 *
+	 * @since 1.01
+	 *
+	 * @var	array
+	 */
+	private static $mla_errors = array();
+
+	/**
+	 * Intercept ZIP Archive errors
+	 * 
+	 * @since 1.01
+	 *
+	 * @param	int		the level of the error raised
+	 * @param	string	the error message
+	 * @param	string	the filename that the error was raised in
+	 * @param	int		the line number the error was raised at
+	 *
+	 * @return	boolean	true, to bypass PHP error handler
+	 */
+	public static function mla_error_handler( $type, $string, $file, $line ) {
+//error_log( 'DEBUG: mla_error_handler $type = ' . var_export( $type, true ), 0 );
+//error_log( 'DEBUG: mla_error_handler $string = ' . var_export( $string, true ), 0 );
+//error_log( 'DEBUG: mla_error_handler $file = ' . var_export( $file, true ), 0 );
+//error_log( 'DEBUG: mla_error_handler $line = ' . var_export( $line, true ), 0 );
+
+		switch ( $type ) {
+			case E_ERROR:
+				$level = 'E_ERROR';
+				break;
+			case E_WARNING:
+				$level = 'E_WARNING';
+				break;
+			case E_NOTICE:
+				$level = 'E_NOTICE';
+				break;
+			default:
+				$level = 'OTHER';
+		}
+
+		$path_info = pathinfo( $file );
+		$file_name = $path_info['basename'];
+		MLAGalleryDownloadChecklist::$mla_errors[] = "Line {$line}: {$level} ({$type}) {$string}";
+
+		/* Don't execute PHP internal error handler */
+		return true;
+	}
+
+	/**
 	 * Ajax handler to download an archie of Media Library items
 	 *
 	 * @since 1.00
@@ -316,22 +366,54 @@ class MLAGalleryDownloadChecklist {
 			@unlink( $archive_name );
 		}
 
-		$mla_error = '';
-		$zip = new ZipArchive();
-		if ( true !== $zip->open( $archive_name, ZIPARCHIVE::CREATE ) ) {
-			$mla_error = sprintf( 'ERROR: The ZIP archive ( %1$s ) could not be created.', $archive_name );
+		// Make sure we have ZIP support
+		if ( !class_exists( 'ZipArchive' ) ) {
+			$mla_error = sprintf( 'ERROR: The ZIP archive ( %1$s ) could not be created; no ZipArchive support.', $archive_name );
 		} else {
-			foreach( $file_names as $local_name => $file_name ) {
-				if ( true !== $zip->addFile( $file_name, $local_name ) ) {
-					$mla_error = sprintf( 'ERROR: The file ( %1$s ) could not be added to the ZIP archive.', $file_name );
-					break;
-				}
-			} // foreach file
+			$mla_error = '';
 
-			if ( true !== $zip->close() ) {
-				$mla_error = sprintf( 'ERROR: The ZIP archive ( %1$s ) could not be closed.', $archive_name );
+			set_error_handler( 'MLAGalleryDownloadChecklist::mla_error_handler' );
+			try {
+				$exception = NULL;
+				$zip = new ZipArchive();
+				MLACore::mla_debug_add( __LINE__ . " MLAGalleryDownloadChecklist::mla_download_checklist_action ZipArchive object created.", self::MLA_DEBUG_CATEGORY );
+				if ( true !== $zip->open( $archive_name, ZIPARCHIVE::CREATE ) ) {
+					$mla_error = sprintf( 'ERROR: The ZIP archive ( %1$s ) could not be created.', $archive_name );
+				} else {
+					foreach( $file_names as $local_name => $file_name ) {
+						if ( true !== $zip->addFile( $file_name, $local_name ) ) {
+							$mla_error = sprintf( 'ERROR: The file ( %1$s ) could not be added to the ZIP archive.', $file_name );
+							break;
+						}
+					} // foreach file
+		
+					if ( true !== $zip->close() ) {
+						$mla_error = sprintf( 'ERROR: The ZIP archive ( %1$s ) could not be closed.', $archive_name );
+					}
+				}
+
+				MLACore::mla_debug_add( __LINE__ . " MLAGalleryDownloadChecklist::mla_download_checklist_action ZIP Archive created.", self::MLA_DEBUG_CATEGORY );
+			} catch ( Throwable $e ) { // PHP 7
+				$exception = $e;
+				$exif_data = NULL;
+			} catch ( Exception $e ) { // PHP 5
+				$exception = $e;
+				$exif_data = NULL;
+			}
+			restore_error_handler();
+
+			if ( ! empty( $exception ) ) {
+				MLAGalleryDownloadChecklist::$mla_errors[] = sprintf( '(%1$s) %2$s', $exception->getCode(), $exception->getMessage() );
+			}
+
+			// Combine exceptions with PHP notice/warning/error messages
+			if ( ! empty( MLAGalleryDownloadChecklist::$mla_errors ) ) {
+				$mla_error = sprintf( 'ERROR: ZIP archive exception(s) = %1$s', var_export( MLAGalleryDownloadChecklist::$mla_errors, true ) );
+				MLAGalleryDownloadChecklist::$mla_errors = array();
 			}
 		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAGalleryDownloadChecklist::mla_download_checklist_action mla_error = " . $mla_error, self::MLA_DEBUG_CATEGORY );
 
 		if ( empty( $mla_error ) ) {
 			if ( file_exists( $archive_name ) ) {

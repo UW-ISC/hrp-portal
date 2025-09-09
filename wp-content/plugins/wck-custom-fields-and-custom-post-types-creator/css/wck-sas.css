@@ -57,3 +57,11 @@
 	margin-right: 0;
 	margin-left: 0;
 }
+
+#wck_serial .add-entry-button{
+	display: none;
+}
+
+#wck_serial .serial-notification{
+	margin-top: 15px;
+}

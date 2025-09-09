@@ -696,8 +696,15 @@ class MLASettings {
 	 *
 	 * @return	boolean	True to display "Screen Options", false to suppress them
 	 */
-	public static function mla_screen_options_show_screen_filter( $show_screen, $this_screen ) {
-		if ( self::$current_page_hook === $this_screen->base ) {
+	public static function mla_screen_options_show_screen_filter( $show_screen, $this_screen = NULL ) {
+		global $screen;
+		
+		// Avoid defect in Sugar Calendar Lite v3.8.0
+		if ( NULL === $this_screen ) {
+			$this_screen = $screen;
+		}
+		
+		if ( is_object( $this_screen ) && ( self::$current_page_hook === $this_screen->base ) ) {
 			if ( isset( $_REQUEST['mla_tab'] ) && in_array( $_REQUEST['mla_tab'], array( 'image', 'view', 'upload' ) ) ) {
 				return true;
 			}

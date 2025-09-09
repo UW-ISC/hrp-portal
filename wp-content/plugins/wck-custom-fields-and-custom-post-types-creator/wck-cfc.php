@@ -1032,7 +1032,7 @@ if( $wck_update_unserialized == 'yes' ) {
 /* add an admin page for the unserialized process */
 add_action('admin_menu', 'wck_register_update_unserialized_submenu_page');
 function wck_register_update_unserialized_submenu_page() {
-	add_submenu_page( null,	'WCK Unserialized',	'WCK Unserialized',	'manage_options', 'wck-unserialized', 'wck_unserialized_page_callback' );
+	add_submenu_page( '',	'WCK Unserialized',	'WCK Unserialized',	'manage_options', 'wck-unserialized', 'wck_unserialized_page_callback' );
 }
 
 /**

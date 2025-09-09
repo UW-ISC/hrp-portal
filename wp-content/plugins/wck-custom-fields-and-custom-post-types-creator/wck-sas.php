@@ -11,17 +11,19 @@ function wck_sas_print_scripts($hook){
 }
 
 /* Create the WCK "Start & Settings" Page only for admins ( 'capability' => 'edit_theme_options' ) */
-$args = array(					
-			'page_title' => __( 'Start Here & General Settings', 'wck' ),
-			'menu_title' => __( 'Start and Settings', 'wck' ),
-			'capability' => 'edit_theme_options',
-			'menu_slug' => 'sas-page',									
-			'page_type' => 'submenu_page',
-			'parent_slug' => 'wck-page',
-			'priority' => 7,
-			'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
-		);
-$sas_page = new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+    $args = array(
+                'page_title' => __( 'Start Here & General Settings', 'wck' ),
+                'menu_title' => __( 'Start and Settings', 'wck' ),
+                'capability' => 'edit_theme_options',
+                'menu_slug' => 'sas-page',
+                'page_type' => 'submenu_page',
+                'parent_slug' => 'wck-page',
+                'priority' => 7,
+                'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+            );
+    new WCK_Page_Creator( $args );
+});
 
 /* create the meta box only for admins ( 'capability' => 'edit_theme_options' ) */
 add_action( 'init', 'wck_sas_create_box', 11 );
@@ -31,7 +33,7 @@ function wck_sas_create_box(){
 		
 		/* set up the fields array */
 		$sas_serial_fields = array(
-			array( 'type' => 'text', 'title' => __( 'Serial Number', 'wck' ), 'slug' => 'serial-number', 'description' => __( 'Please enter your serial number. (e.g. WCKPRO-11-SN-251r55baa4fbe7bf595b2aabb8d72985)', 'wck' ), 'required' => true )
+            array( 'type' => 'html', 'html-content' => wck_register_version_form() ),
 		);
 		
 		/* set up the box arguments */
@@ -40,7 +42,7 @@ function wck_sas_create_box(){
 			'metabox_title' => __( 'Register Your Version', 'wck' ),
 			'post_type' => 'sas-page',
 			'meta_name' => 'wck_serial',
-			'meta_array' => $sas_serial_fields,	
+			'meta_array' => $sas_serial_fields,
 			'context' 	=> 'option',
 			'single' => true,
 			'sortable' => false
@@ -205,65 +207,6 @@ function wck_sas_quickintro($hook){
 	}
 }
 
-/* Notify user of when he enters his serial number. 
- * Also Check if serial is valid on meta_name creation and update 
- */
-add_action( "wck_after_add_form_wck_serial_element_0", 'wck_sas_serial_notification' );
-function wck_sas_serial_notification(){
-
-	wck_sas_check_serial_number();
-	$status = get_option('wck_serial_status');
-	
-	if ( $status == 'noserial') $notif = '<p class="serial-notification red">' . __( 'Please enter your serial number to receive access to automatic updates and support. Need a license key? <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase" target="_blank">Get One Here</a>.', 'wck' ) . ' </p>';
-
-	if ( $status == 'serverDown') $notif = '<p class="serial-notification yellow">' . __( 'Oops! Our serial verification server is down. Please try again later.', 'wck' ) . ' </p>';
-	
-	if ( $status == 'notFound') $notif = '<p class="serial-notification red">' . __( 'Oops! It seems the serial number you entered was not found in our database. To find out what\'s your serial number log-in to <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank">your account page</a> over at Cozmoslabs.com', 'wck' ) . ' </p>';
-	
-	if ( $status == 'found') $notif = '<p class="serial-notification green">' . __( 'Wohoo! Your serial number is valid and you have access to automatic updates.', 'wck' ) . ' </p>'; 
-	
-	if ( $status == 'expired') $notif = '<p class="serial-notification red">' . __( 'It seems your serial number has <strong>expired</strong>. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank"><strong>your account page</strong></a>.', 'wck' ) . ' </p>';
-
-    if ( strpos( $status, 'about' ) === 0 ) $notif = '<p class="serial-notification yellow">' . __( 'Your WordPress Creation Kit serial number is about to expire. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank"><strong>your account page</strong></a>.', 'wck' ) . ' </p>';
-
-    if( !empty( $notif ) )
-	    echo wp_kses_post( $notif );
-}
-
-/* Check if serial is valid on Start and Settings page load. 
- * We're tying to the admin_enque_scripts because it returns the current page $hook
- */
-add_action( 'admin_enqueue_scripts', 'wck_retest_serial_on_load');
-function wck_retest_serial_on_load($hook){
-	if('wck_page_sas-page' == $hook )
-		wck_sas_check_serial_number();
-}
-
-/* Checks local serial number against our serial-number database. */
-function wck_sas_check_serial_number(){
-	// take into account the Free version doesn't need an update check and serial. 
-	$wck_premium_update = WCK_PLUGIN_DIR.'/update/';
-	if (!file_exists($wck_premium_update . 'update-checker.php'))
-		return;
-		
-	$serial = get_option('wck_serial');
-	if( !empty( $serial[0] ) )
-		$serial = urlencode( $serial[0]['serial-number'] );
-	if(empty($serial) || $serial == '') {
-		update_option( 'wck_serial_status', 'noserial' ); //server down
-	} else {
-		$response = wp_remote_get( 'http://updatemetadata.cozmoslabs.com/checkserial/?serialNumberSent='.$serial );
-
-		if (is_wp_error($response)){
-			update_option( 'wck_serial_status', 'serverDown' ); //server down
-
-		}elseif( (trim($response['body']) != 'notFound') && (trim($response['body']) != 'found') && (trim($response['body']) != 'expired') && strpos( trim($response['body']), 'aboutToExpire') === false ){
-			update_option( 'wck_serial_status', 'serverDown' );  //unknown response parameter
-		}else{
-			update_option( 'wck_serial_status', trim($response['body']) ); //either found, notFound or expired
-		}
-	}
-}
 
 /**
  * Class that adds a notice when either the serial number wasn't found, or it has expired
@@ -342,33 +285,97 @@ class wck_add_serial_notices{
 // Verify if it's a premium version and display serial notifications
 $wck_premium_update = WCK_PLUGIN_DIR.'/update/';
 if (file_exists ($wck_premium_update . 'update-checker.php')) {
-    $wck_serial_status = get_option('wck_serial_status');
 
-     if (file_exists ( WCK_PLUGIN_DIR . '/wordpress-creation-kit-api/wck-fep/wck-fep.php' ))
-         $wck_version = 'pro';
-	 else
-         $wck_version = 'hobbyist';
+    add_action('admin_init', function() {
+        $wck_serial_status = get_option('wck_serial_status');
+        $license_details = get_option( 'wck_license_details', false );
 
-    if ($wck_serial_status == 'notFound' || $wck_serial_status == 'noserial' || $wck_serial_status == '') {
-        new wck_add_serial_notices('wck', sprintf(__('<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>', 'wck'), "<a href='admin.php?page=sas-page'>", "</a>", "<a href='https://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase' target='_blank' class='button-primary'>", "</a>"), 'wck_serial_status'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-    } elseif ($wck_serial_status == 'expired') {
-        /* on our plugin pages do not add the dismiss button for the expired notification*/
-        $wck_notifications = WCK_Plugin_Notifications::get_instance();
-        if( $wck_notifications->is_plugin_page() )
-            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s</p>', 'wck'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+        if (file_exists(WCK_PLUGIN_DIR . '/wordpress-creation-kit-api/wck-fep/wck-fep.php'))
+            $wck_version = 'pro';
         else
-            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>', 'wck'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-        new wck_add_serial_notices('wck_expired', sprintf( $message, "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank'>", "</a>", "<a href='". esc_url( "https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal") ."' target='_blank' class='button-primary'>", "</a>", "<a href='" . esc_url( add_query_arg('wck_expired_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
-    } elseif (strpos($wck_serial_status, 'aboutToExpire') === 0) {
-        $serial_status_parts = explode( '#', $wck_serial_status );
-        $date = $serial_status_parts[1];
-        new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='". esc_url( "https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal" ) ."' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . esc_url( add_query_arg('wck_about_to_expire_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+            $wck_version = 'hobbyist';
+
+        if ($wck_serial_status === 'notFound' || $wck_serial_status === 'noserial' || $wck_serial_status === 'missing' || empty( $wck_serial_status ) ) {
+            new wck_add_serial_notices('wck', sprintf(__('<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>', 'wck'), "<a href='admin.php?page=sas-page'>", "</a>", "<a href='https://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase' target='_blank' class='button-primary'>", "</a>"), 'wck_serial_status'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+        } elseif ($wck_serial_status == 'expired') {
+            /* on our plugin pages do not add the dismiss button for the expired notification*/
+            $wck_notifications = WCK_Plugin_Notifications::get_instance();
+            if ($wck_notifications->is_plugin_page())
+                $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s</p>', 'wck'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+            else
+                $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>', 'wck'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+            new wck_add_serial_notices('wck_expired', sprintf($message, "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank'>", "</a>", "<a href='" . esc_url("https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal") . "' target='_blank' class='button-primary'>", "</a>", "<a href='" . esc_url(add_query_arg('wck_expired_dismiss_notification', '0')) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
+        } elseif ( $wck_serial_status != 'expired' && ( !empty( $license_details ) && !empty( $license_details->expires ) && $license_details->expires !== 'lifetime' ) && ( ( !isset( $license_details->subscription_status ) || $license_details->subscription_status != 'active' ) && strtotime( $license_details->expires ) < strtotime( '+14 days' ) ) ) {
+            $date = date_i18n( get_option( 'date_format' ), strtotime( $license_details->expires ) );
+            new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='" . esc_url("https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal") . "' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . esc_url(add_query_arg('wck_about_to_expire_dismiss_notification', '0')) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status'); //phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+        }
+    });
+
+}
+
+
+function wck_register_version_form() {
+    $status          = get_option( 'wck_serial_status' );
+    $license         = wck_get_serial_number();
+    $license_details = get_option( 'wck_license_details', false );
+    $version_details = wck_get_version_details();
+
+    if( !empty( $license ) ){
+        // process license so it doesn't get displayed in back-end
+        $license_length = strlen( $license );
+        $license        = substr_replace( $license, '***************', 7, $license_length - 14 );
     }
 
-	/* change serial field type to password */
-	add_filter( 'wck_text_input_type_attribute_wck_serial_serial-number', 'wck_sas_change_serial_field_type' );
-	function wck_sas_change_serial_field_type( $type ){
-		return 'password';
-	}
+    ob_start();
+    ?>
+    <form method="post" action="<?php echo !is_multisite() ? 'options.php' : 'edit.php'; ?>">
+        <?php settings_fields( 'wck_serial' ); ?>
 
+
+        <label class="field-label" for="wck_serial"><?php esc_html_e( 'License key', 'wck' ); ?></label>
+
+        <div class="mb-right-column">
+            <input id="wck_serial" name="wck_serial" type="text" class="regular-text" value="<?php echo esc_attr( $license ); ?>" />
+            <?php wp_nonce_field( 'wck_license_nonce', 'wck_license_nonce' ); ?>
+
+            <?php if( $status !== false && $status == 'valid' ) {
+                $button_name =  'wck_edd_license_deactivate';
+                $button_value = __('Deactivate License', 'wck' );
+                echo '<span title="'. esc_html__( 'Active on this site', 'wck' ) .'" class="wck-active-license dashicons dashicons-yes"></span>';
+
+            } else {
+                $button_name =  'wck_edd_license_activate';
+                $button_value = __('Activate License', 'wck');
+            }
+            ?>
+            <input type="submit" class="button-secondary" name="<?php echo esc_attr( $button_name ); ?>" value="<?php echo esc_attr( $button_value ); ?>"/>
+
+        </div>
+
+
+    </form>
+
+    <?php if( $status != 'expired' && ( !empty( $license_details ) && !empty( $license_details->expires ) && $license_details->expires !== 'lifetime' ) && ( ( !isset( $license_details->subscription_status ) || $license_details->subscription_status != 'active' ) && strtotime( $license_details->expires ) < strtotime( '+14 days' ) ) ) : ?>
+        <div class="serial-notification yellow">
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Your %s license is about to expire on %s', 'wck' ), '<strong>' . $version_details['wck_version_name'] . '</strong>', '<strong>' . date_i18n( get_option( 'date_format' ), strtotime( $license_details->expires ) ) . '</strong>' ) ); ?>
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Please %sRenew Your Licence%s to continue receiving access to product downloads, automatic updates and support.', 'wck' ), "<a href='https://www.cozmoslabs.com/account/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=PBPro&utm_content=license-about-to-expire' target='_blank'>", "</a>" ) ); ?></p>
+        </div>
+    <?php elseif( $status == 'expired' ) : ?>
+        <div class="serial-notification red">
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Your %s license has expired.', 'wck' ), '<strong>' . $version_details['wck_version_name'] . '</strong>' ) ); ?>
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support.', 'wck' ), '<a href="https://www.cozmoslabs.com/account/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=PBPro&utm_content=license-expired" target="_blank">', '</a>' ) ); ?></p>
+        </div>
+    <?php elseif( $status == 'no_activations_left' ) : ?>
+        <div class="serial-notification red">
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Your %s license has reached its activation limit.', 'wck' ), '<strong>' . $version_details['wck_version_name'] . '</strong>' ) ); ?>
+            <p class="description"><?php echo wp_kses_post( sprintf( __( '%sUpgrade now%s for unlimited activations and extra features like multiple registration and edit profile forms, userlisting, custom redirects and more.', 'wck' ), '<a href="https://www.cozmoslabs.com/account/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=PBPro&utm_content=license-activation-limit" target="_blank">', '</a>' ) ); ?>
+        </div>
+    <?php elseif( empty( $license ) || $status != 'valid' ) : ?>
+        <div class="serial-notification">
+            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Enter and activate your license key. Your license key can be found in your %sCozmoslabs account%s. ', 'wck' ), '<a href="https://www.cozmoslabs.com/account/?utm_source=wckbackend&utm_medium=clientsite&utm_campaign=WCKPro&utm_content=license-missing" target="_blank">', '</a>' ) ); ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php
+    return ob_get_clean();
 }

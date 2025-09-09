@@ -2,17 +2,19 @@
 /* Creates Custom Taxonomies for WordPress */
 
 /* Create the CTC Page only for admins ( 'capability' => 'edit_theme_options' ) */
-$args = array(
-    'page_title' => __( 'WCK Taxonomy Creator', 'wck' ),
-    'menu_title' => __( 'Taxonomy Creator', 'wck' ),
-    'capability' => 'edit_theme_options',
-    'menu_slug' => 'ctc-page',
-    'page_type' => 'submenu_page',
-    'parent_slug' => 'wck-page',
-    'priority' => 9,
-    'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
-);
-new WCK_Page_Creator( $args );
+add_action( 'init', function(){
+    $args = array(
+        'page_title' => __( 'WCK Taxonomy Creator', 'wck' ),
+        'menu_title' => __( 'Taxonomy Creator', 'wck' ),
+        'capability' => 'edit_theme_options',
+        'menu_slug' => 'ctc-page',
+        'page_type' => 'submenu_page',
+        'parent_slug' => 'wck-page',
+        'priority' => 9,
+        'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+    );
+    new WCK_Page_Creator( $args );
+});
 
 /* create the meta box only for admins ( 'capability' => 'edit_theme_options' ) */
 add_action( 'init', 'wck_ctc_create_box', 11 );

@@ -884,15 +884,33 @@ class MLA {
 	
 				$file_name = stripslashes( $request['mla_download_file'] );
 				$match_name = str_replace( '\\', '/', $file_name );
-	
+
 				if ( $test_path ) {
 					$upload_dir = wp_upload_dir();
 					$allowed_path = str_replace( '\\', '/', $upload_dir['basedir'] );
+
+					if ( 0 !== strpos( $match_name, $allowed_path ) ) {
+						$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'download path out of bounds.', 'media-library-assistant' );
+					} 
+
+					// This is only allowed for the Media/assistant Download Bulk Action, so validate the path and file name
+					if ( isset( $request['mla_download_disposition'] ) && 'delete' === $request['mla_download_disposition'] ) {
+						$info = pathinfo( $match_name );
+
+						if ( $info['dirname'] !== $allowed_path ) {
+							$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'download path out of bounds.', 'media-library-assistant' );
+						} else {
+							$prefix = ( defined( MLA_OPTION_PREFIX ) ) ? MLA_OPTION_PREFIX : 'mla_';
+							$prefix .= 'attachments_' . date("Ymd_");
+
+							if ( ( 0 !== strpos( $info['filename'], $prefix ) ) || ( 'zip' !== $info['extension'] ) ){
+								$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'download path invalid.', 'media-library-assistant' );
+							} 
+						}
+					}
 				}
-	
-				if ( $test_path && ( 0 !== strpos( $match_name, $allowed_path ) ) ) {
-					$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'download path out of bounds.', 'media-library-assistant' );
-				} elseif ( false !== strpos( $match_name, '..' ) ) {
+				
+				if ( ( false !== strpos( $match_name, '..' ) ) || ( false !== strpos( $match_name, '/./' ) ) ) {
 					$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'download path invalid.', 'media-library-assistant' );
 				}
 			} else {
@@ -924,7 +942,7 @@ class MLA {
 				readfile( $file_name );
 			}
 
-			if ( isset( $request['mla_download_disposition'] ) && 'delete' == $request['mla_download_disposition'] ) {
+			if ( isset( $request['mla_download_disposition'] ) && 'delete' === $request['mla_download_disposition'] ) {
 				@unlink( $file_name );
 			}
 		} else {
