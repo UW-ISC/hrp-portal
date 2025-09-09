@@ -70,7 +70,6 @@
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff313131', endColorstr='#ff000000', GradientType=0) !important;
 }
 
-.wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable thead th.sorting:after,
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after,
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc:after {
     border-color: transparent;

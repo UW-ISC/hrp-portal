@@ -763,35 +763,31 @@ class WDTTools
     public static function getUpdateInfo()
     {
         return array(
-            'version' => '7.3',
-            'release_date' => '11.06.2025',
+            'version'  => get_option('wdtVersion'),
+            'release_date' => '20.08.2025',
             'features' => [
-                0 => [
-                    'text' => 'Added Index Column.',
-                    'link' => 'https://wpdatatables.com/documentation/column-features/index-column/'
-                ],
-                1 => [
-                    'text' => 'Add color option for Loader customization.',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Added loader to "Add to Cart" button in WooCommerce Tables.',
-                    'link' => ''
-                ],
             ],
             'improvements' => [
-                0 => [
-                    'text' => 'Upgraded Bootstrap Select to a higher version (security-checked).',
-                    'link' => ''
-                ],
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed issue with replacing the entire table - STRING columns.',
+                    'text' => 'Fixed issue with Transform Value not working when Row Grouping and filters are enabled.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with plugin deactivating due to invalid default value in SQL query.',
+                    'text' => 'Fixed issue with deleting Custom Fields during WooCommerce table creation wizard.',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Fixed issue with Gutenberg not loading the tables properly.',
+                    'link' => ''
+                ],
+                3 => [
+                    'text' => 'Fixed issue with Fixed header displaying column sorting arrows.',
+                    'link' => ''
+                ],
+                4 => [
+                    'text' => 'Fixed issue with the Global settings responsiveness.',
                     'link' => ''
                 ],
             ],

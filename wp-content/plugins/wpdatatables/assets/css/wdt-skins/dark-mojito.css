@@ -2674,11 +2674,10 @@ div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-columnVis
     opacity: 1;
 }
 
-.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:after,
-.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:after,
-.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:after,
-.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after {
-    font-family: 'wpDataTablesIcons';
+.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-dark-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-dapDataTablesIcons';
     display: inline-block;
     content: '\f176';
     padding-left: 10px;
@@ -2871,4 +2870,5 @@ div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-columnVis
 
 .wpdt-c.wdt-skin-dark-mojito .wdt-add-to-cart-button .wdt-woo-loader {
     display: none;
-}
+}rkmojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:after {
+     font-family: 'w
