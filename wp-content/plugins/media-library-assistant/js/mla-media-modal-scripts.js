@@ -1721,9 +1721,13 @@ this.listenTo( this, 'all', this.selectionEvent );
 				thisJQuery.find( '.category-tabs' ).show();
 
 				// Expand/collapse the meta box contents
-				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
-					$(this).siblings( 'td' ).slideToggle();
+				$( '.compat-field-' + taxonomy + ' span', context ).on( 'click', function() {
+					$(this).parents( 'th' ).siblings( 'td' ).slideToggle();
 				});
+
+//				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
+//					$(this).siblings( 'td' ).slideToggle();
+//				});
 
 				// Update the taxonomy terms, if changed, on the server when the mouse leaves the checklist area
 				thisJQuery.on( "mouseleave", function( e ) {
@@ -1998,9 +2002,13 @@ this.listenTo( this, 'all', this.selectionEvent );
 				var taxonomy = mlaModal.utility.parseTaxonomyId( $(this).attr('id') );
 
 				// Expand/collapse the meta box contents
-				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
-					$(this).siblings( 'td' ).slideToggle();
+				$( '.compat-field-' + taxonomy + ' span', context ).on( 'click', function() {
+					$(this).parents( 'th' ).siblings( 'td' ).slideToggle();
 				});
+
+//				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
+//					$(this).siblings( 'td' ).slideToggle();
+//				});
 
 				// Install support for flat taxonomies
 				mlaModal.tagBox.init( attachmentId, taxonomy, context );

@@ -715,39 +715,56 @@ class MLATermList {
 		$default_style = 'term-list';
 		$default_markup = 'term-list-ul';
 
+		$default_itemtag = 'ul';
+		$default_termtag = 'li';
+		$default_captiontag = '';
+
 		if ( $is_list = in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
 			if ( 'list' === $output_parameters[0] && 'dd' === $arguments['captiontag'] ) {
 				$default_markup = 'term-list-dl';
-				$arguments['itemtag'] = 'dl';
-				$arguments['termtag'] = 'dt';
+				$arguments['itemtag'] = $default_itemtag = 'dl';
+				$arguments['termtag'] = $default_termtag = 'dt';
+				$default_captiontag = 'dd';
 			} else {
 				$default_markup = 'term-list-ul';
-				$arguments['termtag'] = 'li';
-				$arguments['captiontag'] = '';
+				$arguments['termtag'] = $default_termtag;
+				$arguments['captiontag'] = $default_captiontag;
 
 				switch ( $output_parameters[0] ) {
-					case 'ulist':
-						$arguments['itemtag'] = 'ul';
-						break;
-					case 'olist':
-						$arguments['itemtag'] = 'ol';
-						break;
 					case 'dlist':
 						$default_markup = 'term-list-dl';
-						$arguments['itemtag'] = 'dl';
-						$arguments['termtag'] = 'dt';
-						$arguments['captiontag'] = 'dd';
+						$arguments['itemtag'] = $default_itemtag = 'dl';
+						$arguments['termtag'] = $default_termtag = 'dt';
+						$arguments['captiontag'] = $default_captiontag = 'dd';
 					break;
+					case 'olist':
+						$arguments['itemtag'] = $default_itemtag = 'ol';
+						break;
+					case 'ulist':
 					default:
-						$arguments['itemtag'] = 'ul';
+						$arguments['itemtag'] = $default_itemtag;
 				}
+			}
+
+			if ( ! empty( $attr['itemtag'] ) ) {
+				$arguments['itemtag'] = $attr['itemtag'];
+			}
+
+			if ( ! empty( $attr['termtag'] ) ) {
+				$arguments['termtag'] = $attr['termtag'];
+			}
+
+			if ( ! empty( $attr['captiontag'] ) ) {
+				$arguments['captiontag'] = $attr['captiontag'];
 			}
 		}
 
 		if ( $is_dropdown = 'dropdown' === $output_parameters[0] ) {
 			$default_markup = 'term-list-dropdown';
-			$arguments['itemtag'] = empty( $attr['itemtag'] ) ? 'select' : $attr['itemtag'];
-			$arguments['termtag'] = 'option';
+			$default_itemtag = 'select';
+			$default_termtag = 'option';
+			$arguments['itemtag'] = empty( $attr['itemtag'] ) ? $default_itemtag : $attr['itemtag'];
+			$arguments['termtag'] = empty( $attr['termtag'] ) ? $default_termtag : $attr['termtag'];
 		}
 
 		if ( $is_checklist = 'checklist' === $output_parameters[0] ) {
@@ -758,7 +775,7 @@ class MLATermList {
 					$default_markup = 'term-list-checklist';
 				}
 
-			$arguments['termtag'] = 'li';
+			$arguments['termtag'] = empty( $attr['termtag'] ) ? $default_termtag : $attr['termtag'];
 		}
 
 		$arguments['default_mla_style'] = $default_style;
@@ -1063,9 +1080,9 @@ class MLATermList {
 			'mla_markup' => $arguments['mla_markup'],
 			'taxonomy' => implode( '-', $arguments['taxonomy'] ),
 			'current_item' => ( is_array( $arguments[ $mla_item_parameter ] ) ) ? implode( ',', $arguments[ $mla_item_parameter ] ) : $arguments[ $mla_item_parameter ],
-			'itemtag' => tag_escape( $arguments['itemtag'] ),
-			'termtag' => tag_escape( $arguments['termtag'] ),
-			'captiontag' => tag_escape( $arguments['captiontag'] ),
+			'itemtag' => MLAShortcode_Support::mla_esc_tag( $arguments['itemtag'], $default_itemtag ),
+			'termtag' => MLAShortcode_Support::mla_esc_tag( $arguments['termtag'], $default_termtag ),
+			'captiontag' => MLAShortcode_Support::mla_esc_tag( $arguments['captiontag'], $default_captiontag ),
 			'multiple' => $arguments['mla_multi_select'] ? 'multiple' : '',
 			'itemtag_attributes' => '',
 			'itemtag_class' => 'term-list term-list-taxonomy-' . implode( '-', $arguments['taxonomy'] ), 

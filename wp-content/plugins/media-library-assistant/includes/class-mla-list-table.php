@@ -880,10 +880,10 @@ class MLA_List_Table extends WP_List_Table {
 			} // delete_post
 
 			if ( ! $this->is_trash ) {
-				$file = get_attached_file( $item->ID );
+				$file = wp_get_attachment_url( $item->ID );
 				$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $file ), 'mla_download_type' => $item->post_mime_type );
 
-				$actions['download'] = '<a href="' . $file . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
+				$actions['download'] = '<a href="' . $file . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;" download>' . __( 'Download', 'media-library-assistant' ) . '</a>';
 
 				$actions['view']  = '<a href="' . site_url( ) . '?attachment_id=' . $item->ID . '" rel="permalink" title="' . __( 'View', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'View', 'media-library-assistant' ) . '</a>';
 			}
