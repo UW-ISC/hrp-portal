@@ -699,16 +699,16 @@ class MLAModal_Ajax {
 //error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() query = ' . var_export( $query, true ), 0 );
 
 		if ( isset( $query['post_mime_type'] ) ) {
-			if ( 'detached' == $query['post_mime_type'] ) {
+			if ( 'detached' === $query['post_mime_type'] ) {
 				$query['detached'] = '1';
 				unset( $query['post_mime_type'] );
-			} elseif ( 'attached' == $query['post_mime_type'] ) {
+			} elseif ( 'attached' === $query['post_mime_type'] ) {
 				$query['detached'] = '0';
 				unset( $query['post_mime_type'] );
-			} elseif ( 'mine' == $query['post_mime_type'] ) {
+			} elseif ( 'mine' === $query['post_mime_type'] ) {
 				$query['author'] = get_current_user_id();
 				unset( $query['post_mime_type'] );
-			} elseif ( 'trash' == $query['post_mime_type'] ) {
+			} elseif ( 'trash' === $query['post_mime_type'] ) {
 				$query['status'] = 'trash';
 				unset( $query['post_mime_type'] );
 			} else {
@@ -724,7 +724,11 @@ class MLAModal_Ajax {
 
 		// Set Featured Image queries must use only images
 		if ( isset( $raw_query['mla_state'] ) && ( 'featured-image' === $raw_query['mla_state'] ) ) {
-			if ( 0 !== strpos( $query['post_mime_type'], 'image' ) ) {
+			if ( isset( $query['post_mime_type'] ) ) {
+				if ( 0 !== strpos( $query['post_mime_type'], 'image' ) ) {
+					$query['post_mime_type'] = 'image';
+				}
+			} else {
 				$query['post_mime_type'] = 'image';
 			}
 		}

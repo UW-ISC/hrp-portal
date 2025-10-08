@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2025-02-12 10:21+0000\n"
+"POT-Creation-Date: 2025-09-22 10:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,12 @@ msgid "Could not delete the MySQL export file."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Replace.php:733
+#: src/wp-migrate-db-pro/class/Common/Replace.php:737
+#: src/wp-migrate-db-pro/class/Common/Replace.php:738
+#: src/wp-migrate-db-pro/class/Common/Replace.php:739
+#: src/wp-migrate-db-pro/class/Common/Replace.php:745
+#: src/wp-migrate-db-pro/class/Common/Replace.php:746
+#: src/wp-migrate-db-pro/class/Common/Replace.php:747
 msgid ""
 "Failed attempting to do the recursive unserialize replace. Please contact "
 "support."
@@ -1057,12 +1063,14 @@ msgid "Failed to %s profile, state data is empty."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Properties/Properties.php:70
+#: src/wp-migrate-db-pro/class/Common/Properties/Properties.php:123
 msgid ""
 "Invalid content verification signature, please verify the connection "
 "information on the remote site and try again."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Properties/Properties.php:70
+#: src/wp-migrate-db-pro/class/Common/Properties/Properties.php:123
 #, php-format
 msgid " Remote URL: %s "
 msgstr ""
@@ -1320,11 +1328,19 @@ msgid "More Details »"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Util/Util.php:256
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:254
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:257
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:258
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:261
 #, php-format
 msgid "Scope: %s()."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Util/Util.php:257
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:255
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:258
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:259
+#: src/wp-migrate-db-pro/class/Common/Util/Util.php:262
 #, php-format
 msgid "WPMDB Error: Data cannot be unserialized. %s"
 msgstr ""
@@ -1402,28 +1418,33 @@ msgid "Help"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:237
+#: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:202
 msgid "Warning: Mixed Case Table Names"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:240
+#: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:205
 msgid ""
 "Whoa! We've detected that your <b>local</b> site has the MySQL setting "
 "<code>lower_case_table_names</code> set to <code>1</code>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:242
+#: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:207
 msgid ""
 "Whoa! We've detected that your <b>remote</b> site has the MySQL setting "
 "<code>lower_case_table_names</code> set to <code>1</code>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:245
+#: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:210
 msgid ""
 "As a result, uppercase characters in table names will be converted to "
 "lowercase during the migration."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:247
+#: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:212
 #, php-format
 msgid ""
 "You can read more about this in <a href=\"%s\">our documentation</a>, "
@@ -1503,11 +1524,26 @@ msgid "Please activate your license before updating."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:107
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:108
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:109
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:111
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:110
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:112
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:116
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:117
 #, php-format
 msgid "Remote server responded with %s and body of %s"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:150
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:151
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:152
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:153
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:155
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:154
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:156
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:160
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:161
 msgid "Unable to process payload."
 msgstr ""
 
@@ -1525,6 +1561,7 @@ msgid "Backups"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/UI/Template.php:129
+#: src/wp-migrate-db-pro/class/Pro/UI/Template.php:121
 #, php-format
 msgid ""
 "The version of the %1$s addon you have installed%2$s is out-of-date and will "
@@ -1534,6 +1571,7 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/UI/Template.php:132
+#: src/wp-migrate-db-pro/class/Pro/UI/Template.php:124
 #, php-format
 msgid ""
 "The version of the %1$s addon you have installed%2$s is out-of-date and will "
@@ -2096,6 +2134,7 @@ msgid "Could not determine payload filesize. File name: %s"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:349
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:356
 #, php-format
 msgid ""
 "File size of source and destination do not match: <br>%s<br>Destination "
@@ -2103,6 +2142,7 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:356
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:363
 #, php-format
 msgid ""
 "File MD5's do not match for file: %s \n"
@@ -2110,16 +2150,19 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:376
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:383
 #, php-format
 msgid "Could not write line to file. File name: %s"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:425
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:432
 #, php-format
 msgid "Could not create directory: %s"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:442
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:449
 #, php-format
 msgid ""
 "The `%s` file is not writable, please check the file permissions of the "
@@ -2127,6 +2170,7 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:487
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:494
 #, php-format
 msgid "Unable to rename part file %s"
 msgstr ""

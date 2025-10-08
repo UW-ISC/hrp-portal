@@ -289,7 +289,6 @@ class MLATagCloud {
 		$current_is_slug = in_array( $arguments['mla_item_value'], array( '{+slug+}', '[+slug+]' ) );
 
 		// Clean up the current_item to separate term_id from slug
-//		if ( ! empty( $arguments['current_item'] ) && is_numeric( $arguments['current_item'] ) ) {
 		if ( ! ( empty( $arguments['current_item'] ) || $current_is_slug ) ) {
 			$arguments['current_item'] = (integer) $arguments['current_item'];
 		}
@@ -334,6 +333,10 @@ class MLATagCloud {
 			$output_parameters[0] = 'flat';
 		}
 
+		$default_itemtag = 'dl';
+		$default_termtag = 'dt';
+		$default_captiontag = 'dd';
+
 		if ( $is_grid = 'grid' === $output_parameters[0] ) {
 			$default_style = MLACore::mla_get_option('default_tag_cloud_style');
 			$default_markup = MLACore::mla_get_option('default_tag_cloud_markup');
@@ -347,15 +350,15 @@ class MLATagCloud {
 			}
 
 			if ( empty( $attr['itemtag'] ) ) {
-				$arguments['itemtag'] = 'dl';
+				$arguments['itemtag'] = $default_itemtag;
 			}
 
 			if ( empty( $attr['termtag'] ) ) {
-				$arguments['termtag'] = 'dt';
+				$arguments['termtag'] = $default_termtag;
 			}
 
 			if ( empty( $attr['captiontag'] ) ) {
-				$arguments['captiontag'] = 'dd';
+				$arguments['captiontag'] = $default_captiontag;
 			}
 		}
 
@@ -364,28 +367,42 @@ class MLATagCloud {
 
 			if ( 'list' === $output_parameters[0] && 'dd' === $arguments['captiontag'] ) {
 				$default_markup = 'tag-cloud-dl';
-				$arguments['itemtag'] = 'dl';
-				$arguments['termtag'] = 'dt';
+				$arguments['itemtag'] = $default_itemtag;
+				$arguments['termtag'] = $default_termtag;
 			} else {
 				$default_markup = 'tag-cloud-ul';
 				$arguments['termtag'] = 'li';
 				$arguments['captiontag'] = '';
 
 				switch ( $output_parameters[0] ) {
-					case 'ulist':
-						$arguments['itemtag'] = 'ul';
-						break;
-					case 'olist':
-						$arguments['itemtag'] = 'ol';
-						break;
 					case 'dlist':
 						$default_markup = 'tag-cloud-dl';
-						$arguments['itemtag'] = 'dl';
-						$arguments['termtag'] = 'dt';
-						$arguments['captiontag'] = 'dd';
+						$arguments['itemtag'] = $default_itemtag;
+						$arguments['termtag'] = $default_termtag;
+						$arguments['captiontag'] = $default_captiontag;
 					break;
+					case 'olist':
+						$arguments['itemtag'] = $default_itemtag = 'ol';
+						$arguments['termtag'] = $default_termtag = 'li';
+						$arguments['captiontag'] = $default_captiontag = '';
+						break;
+					case 'ulist':
 					default:
-						$arguments['itemtag'] = 'ul';
+						$arguments['itemtag'] = $default_itemtag = 'ul';
+						$arguments['termtag'] = $default_termtag = 'li';
+						$arguments['captiontag'] = $default_captiontag = '';
+				}
+
+				if ( ! empty( $attr['itemtag'] ) ) {
+					$arguments['itemtag'] = $attr['itemtag'];
+				}
+	
+				if ( ! empty( $attr['termtag'] ) ) {
+					$arguments['termtag'] = $attr['termtag'];
+				}
+	
+				if ( ! empty( $attr['captiontag'] ) ) {
+					$arguments['captiontag'] = $attr['captiontag'];
 				}
 			}
 
@@ -730,9 +747,9 @@ class MLATagCloud {
 			'mla_markup' => $arguments['mla_markup'],
 			'taxonomy' => implode( '-', $arguments['taxonomy'] ),
 			'current_item' => $arguments['current_item'],
-			'itemtag' => tag_escape( $arguments['itemtag'] ),
-			'termtag' => tag_escape( $arguments['termtag'] ),
-			'captiontag' => tag_escape( $arguments['captiontag'] ),
+			'itemtag' => MLAShortcode_Support::mla_esc_tag( $arguments['itemtag'], $default_itemtag ),
+			'termtag' => MLAShortcode_Support::mla_esc_tag( $arguments['termtag'], $default_termtag ),
+			'captiontag' => MLAShortcode_Support::mla_esc_tag( $arguments['captiontag'], $default_captiontag ),
 			'columns' => $columns,
 			'itemwidth' => $width_string,
 			'margin' => $margin_string,

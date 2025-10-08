@@ -1155,39 +1155,56 @@ class MLACustomList {
 			}
 		}
 
+		$default_itemtag = 'dl';
+		$default_valuetag = 'dt';
+		$default_captiontag = 'dd';
+
 		if ( $is_grid = 'grid' === $arguments['mla_output'] ) {
 			$default_markup = 'custom-list-grid';
 
 			if ( empty( $attr['itemtag'] ) ) {
-				$arguments['itemtag'] = 'dl';
+				$arguments['itemtag'] = $default_itemtag;
 			}
 
-			if ( empty( $attr['termtag'] ) ) {
-				$arguments['termtag'] = 'dt';
+			if ( empty( $attr['valuetag'] ) ) {
+				$arguments['valuetag'] = $default_valuetag;
 			}
 
 			if ( empty( $attr['captiontag'] ) ) {
-				$arguments['captiontag'] = 'dd';
+				$arguments['captiontag'] = $default_captiontag;
 			}
 		}
 
 		if ( $is_list = in_array( $arguments['mla_output'], array( 'dlist', 'olist', 'ulist' ) ) ) {
-			$arguments['valuetag'] = 'li';
-			$arguments['captiontag'] = '';
-
 			switch ( $arguments['mla_output'] ) {
 				case 'dlist':
 					$default_markup = 'custom-list-dl';
-					$arguments['itemtag'] = 'dl';
-					$arguments['valuetag'] = 'dt';
-					$arguments['captiontag'] = 'dd';
+					$arguments['itemtag'] = $default_itemtag;
+					$arguments['valuetag'] = $default_valuetag;
+					$arguments['captiontag'] = $default_captiontag;
 				break;
 				case 'olist':
-					$arguments['itemtag'] = 'ol';
+					$arguments['itemtag'] = $default_itemtag = 'ol';
+					$arguments['valuetag'] = $default_valuetag = 'li';
+					$arguments['captiontag'] = $default_captiontag = '';
 					break;
 				case 'ulist':
 				default:
-					$arguments['itemtag'] = 'ul';
+					$arguments['itemtag'] = $default_itemtag = 'ul';
+					$arguments['valuetag'] = $default_valuetag = 'li';
+					$arguments['captiontag'] = $default_captiontag = '';
+			}
+
+			if ( ! empty( $attr['itemtag'] ) ) {
+				$arguments['itemtag'] = $attr['itemtag'];
+			}
+
+			if ( ! empty( $attr['valuetag'] ) ) {
+				$arguments['valuetag'] = $attr['valuetag'];
+			}
+
+			if ( ! empty( $attr['captiontag'] ) ) {
+				$arguments['captiontag'] = $attr['captiontag'];
 			}
 		}
 
@@ -1478,12 +1495,12 @@ class MLACustomList {
 			'mla_markup' => $arguments['mla_markup'],
 			'meta_key' => $arguments['meta_key'],
 			'current_item' => $arguments['current_item'],
-			'itemtag' => tag_escape( $arguments['itemtag'] ),
+			'itemtag' => MLAShortcode_Support::mla_esc_tag( $arguments['itemtag'], $default_itemtag ),
 			'itemtag_attributes' => '',
 			'itemtag_class' => 'custom-list custom-list-key-' . sanitize_title( $arguments['meta_key'] ), 
 			'itemtag_id' => $page_values['selector'],
-			'valuetag' => tag_escape( $arguments['valuetag'] ),
-			'captiontag' => tag_escape( $arguments['captiontag'] ),
+			'valuetag' => MLAShortcode_Support::mla_esc_tag( $arguments['valuetag'], $default_valuetag ),
+			'captiontag' => MLAShortcode_Support::mla_esc_tag( $arguments['captiontag'], $default_captiontag ),
 			'multiple' => $mla_multi_select ? 'multiple' : '',
 			'columns' => $columns,
 			'itemwidth' => $width_string,
@@ -1544,13 +1561,12 @@ class MLACustomList {
 
 		if ( empty( $arguments['mla_control_name'] ) ) {
 			if ( $is_checklist || $mla_multi_select ) {
-//				$mla_control_name = 'current_items[]';
 				$mla_control_name = 'current_item[]';
 			} else {
 				$mla_control_name = 'current_item';
 			}
 		} else {
-			$mla_control_name = $arguments['mla_control_name'];;
+			$mla_control_name = $arguments['mla_control_name'];
 		}
 
 		// Accumulate links for flat and array output
