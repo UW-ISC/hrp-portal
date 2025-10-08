@@ -3893,7 +3893,8 @@ class GFFormsModel {
 				// Convert the comma-delimited string into an array.
 				$field_value = $source_field->to_array( $field_value );
 			} elseif ( $source_field instanceof GF_Field_Consent ) {
-				$field_value = rgar( $field_value, $rule['fieldId'] . '.1' );
+				// Force $rule['fieldId'] to an int because a getCorrectDefaultFieldId() bug caused some rules based on the consent field to use the input ID instead of the field ID.
+				$field_value = rgar( $field_value, absint( $rule['fieldId'] ) . '.1' );
 			} elseif ( $source_field->get_input_type() != 'checkbox' && is_array( $field_value ) && $source_field->id != $rule['fieldId'] && is_array( $source_field->get_entry_inputs() ) ) {
 				// Get the specific input value from the full field value.
 				$field_value = rgar( $field_value, $rule['fieldId'] );
@@ -5599,17 +5600,25 @@ class GFFormsModel {
 
 		//ignore file upload when nothing was sent in the admin
 		//ignore post fields in the admin
-		$type = self::get_input_type( $field );
+		$type     = self::get_input_type( $field );
+		$is_admin = GFCommon::is_entry_detail();
 
-		if ( rgget( 'view' ) === 'entry' && $type === 'fileupload' && $field->is_submission_files_empty() ) {
+		if ( $is_admin && $type === 'fileupload' && $field->is_submission_files_empty() ) {
 			return;
-		} elseif ( rgget( 'view' ) === 'entry' && in_array( $field->type, array( 'post_category', 'post_title', 'post_content', 'post_excerpt', 'post_tags', 'post_custom_field', 'post_image' ) ) ) {
+		} elseif ( $is_admin && in_array(
+			$field->type,
+			array(
+				'post_category',
+				'post_title',
+				'post_content',
+				'post_excerpt',
+				'post_tags',
+				'post_custom_field',
+				'post_image',
+			)
+		) ) {
 			return;
 		}
-
-		$is_form_editor = GFCommon::is_form_editor();
-		$is_entry_detail = GFCommon::is_entry_detail();
-		$is_admin = $is_form_editor || $is_entry_detail;
 
 		if ( empty( $value ) && $field->is_administrative() && ! $is_admin ) {
 			$value = self::get_default_value( $field, $input_id );

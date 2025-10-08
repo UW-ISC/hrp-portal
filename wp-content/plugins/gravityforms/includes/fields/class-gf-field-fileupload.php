@@ -899,7 +899,7 @@ class GF_Field_FileUpload extends GF_Field {
 			// Merge with existing files (entry detail edit page or an add-on edit entry page).
 			if ( ! empty( $uploaded_files ) ) {
 				$array = json_decode( $value, true );
-				if ( empty( $array ) ) {
+				if ( empty( $array ) || ! is_array( $array ) ) {
 					$value = $uploaded_files;
 				} else {
 					$value = array_unique( array_merge( $array, $uploaded_files ) );
@@ -1538,7 +1538,7 @@ class GF_Field_FileUpload extends GF_Field {
 			'new'      => array(),
 		);
 
-		$files_input = rgar( $_FILES, $input_name );
+		$files_input = rgar( $_FILES, $input_name ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $files_input['error'] ) ) {
 			$this->set_submission_files( $files );
 
@@ -1933,7 +1933,7 @@ class GF_Field_FileUpload extends GF_Field {
 		}
 
 		$is_not_file_input = $standard_name !== 'input_' . absint( $this->id ); // Needed for Post Image field.
-		$is_submission     = ! empty( $_POST[ 'is_submit_' . absint( $this->formId ) ] ) && $get_from_post_global_var;
+		$is_submission     = ! empty( $_POST[ 'is_submit_' . absint( $this->formId ) ] ) && $get_from_post_global_var; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( $is_not_file_input || $is_submission ) {
 			return $value;
