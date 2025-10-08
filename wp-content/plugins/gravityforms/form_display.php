@@ -1,5 +1,7 @@
 <?php
 
+use Gravity_Forms\Gravity_Forms\Honeypot;
+
 if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
@@ -1359,11 +1361,6 @@ class GFFormDisplay {
 			$form_string .= "<{$tag} id='gform_fields_{$form_id}' class='" . GFCommon::get_ul_classes( $form ) . "'>";
 
 			if ( is_array( $form['fields'] ) ) {
-
-				// Add honeypot field if Honeypot is enabled.
-				$honeypot_handler = GFForms::get_service_container()->get( Gravity_Forms\Gravity_Forms\Honeypot\GF_Honeypot_Service_Provider::GF_HONEYPOT_HANDLER );
-				$form             = $honeypot_handler->maybe_add_honeypot_field( $form );
-
 				$form_string .= self::get_fields( $form, $field_values, $submitted_values );
 			}
 			$form_string .= "</{$tag}>";
@@ -1594,6 +1591,7 @@ class GFFormDisplay {
 	 * Get the markup for a colletion of fields in a form. If $page_number is specified, only the markup for the fields on that page will be returned. Otherwise, the markup for all fields in the form will be returned.
 	 *
 	 * @since 2.9.5
+	 * @since 2.9.18 Made the honeypot the first field on the form.
 	 *
 	 * @param array $form             The current form object.
 	 * @param array $field_values     The array of field values to populate the form with.
@@ -1606,8 +1604,17 @@ class GFFormDisplay {
 
 		$fields = $page_number == 0 ? $form['fields'] : self::get_fields_by_page( $form, $page_number );
 
-		$markup = '';
+		$markup       = '';
+		$has_honeypot = false;
+
 		foreach ( $fields as $field ) {
+			if ( $field instanceof GF_Field_Honeypot ) {
+				if ( $has_honeypot ) {
+					continue;
+				} else {
+					$has_honeypot = true;
+				}
+			}
 
 			$field->set_context_property( 'rendering_form', true );
 			$field->conditionalLogicFields = self::get_conditional_logic_fields( $form, $field->id );
@@ -1628,13 +1635,29 @@ class GFFormDisplay {
 
 			$markup .= self::get_row_spacer( $field, $form );
 		}
-		return $markup;
+
+		if ( $has_honeypot || ( $page_number !== 0 && $page_number !== 1 ) ) {
+			return $markup;
+		}
+
+		/** @var Honeypot\GF_Honeypot_Handler $honeypot_handler */
+		$honeypot_handler = GFForms::get_service_container()->get( Honeypot\GF_Honeypot_Service_Provider::GF_HONEYPOT_HANDLER );
+
+		if ( ! $honeypot_handler->is_honeypot_enabled( $form ) ) {
+			return $markup;
+		}
+
+		// Adding the honeypot as the first field.
+		$honeypot_field = $honeypot_handler->get_honeypot_field( $form );
+		$field_value    = GFFormsModel::get_field_value( $honeypot_field );
+
+		return self::get_field( $honeypot_field, $field_value, false, $form ) . $markup;
 	}
 
 	/**
 	 * Gets the fields for a specific page in a form.
 	 *
-	 * since 2.9.5
+	 * @since 2.9.5
 	 *
 	 * @param array $form        The form object.
 	 * @param int   $page_number The page number to get fields for.
@@ -1642,16 +1665,19 @@ class GFFormDisplay {
 	 * @return array Returns an array of fields belonging to the specified page.
 	 */
 	public static function get_fields_by_page( $form, $page_number ) {
-
 		$fields = array();
 		foreach ( $form['fields'] as $field ) {
-			$belongs_to_page  = $field->pageNumber == $page_number;
-			$is_page_footer   = $field->type == 'page' && $field->pageNumber == $page_number + 1;
+			$field_page_number = absint( $field->pageNumber );
+			$belongs_to_page   = $field_page_number === $page_number;
+			$is_page_footer    = $field->type === 'page' && $field_page_number === $page_number + 1;
 
-			if ( $belongs_to_page || $is_page_footer ) {
+			if ( $belongs_to_page || $is_page_footer || ( $field instanceof GF_Field_Honeypot && ! empty( $fields ) ) ) {
 				$fields[] = $field;
+			} elseif ( ! empty( $fields ) ) {
+				break;
 			}
 		}
+
 		return $fields;
 	}
 
