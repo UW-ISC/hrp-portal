@@ -4,7 +4,7 @@ Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.7
 Tested up to: 6.8.2
-Stable tag: 3.28
+Stable tag: 3.29
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -199,6 +199,12 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.29 =
+* Fix: IMPORTANT: A Reflected Cross-Site Scripting security risk in all four shortcodes has been mitigated.
+* Fix: For the Media/Assistant submenu table, the "Download" rollover action has been repaired. This corrects a defect introduced in the MLA 3.28 update.
+* Fix: For the "Featured image" Media Manager Modal (popup) Window, a PHP warning when filtering the content with a custom field view/query has been eliminated.
+* Fix: For the "Attachment details" Media Manager Modal (popup) Window, toggling of the taxonomy term areas is restricted to clicking the taxonomy name (not the blank area to the left of the terms, if present).
+
 = 3.28 =
 * Fix: **IMPORTANT: For the `[mla_term_list]` shortcode, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.**
 * Fix: IMPORTANT: An arbitrary file deletion security risk in the Media/Assistant submenu table has been mitigated.
@@ -389,8 +395,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.28 =
-IMPORTANT: Security mitigation and [mla_term_list] critical error fix. WPML Media/Assistant fix. Five fixes in all.
+= 3.29 =
+IMPORTANT: Security mitigation in all four shortcodes. Media Manager Modal (popup) and Media/Assistant submenu table fixes. Four fixes in all.
 
 == Acknowledgements ==
 
