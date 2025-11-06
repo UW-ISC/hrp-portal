@@ -338,6 +338,9 @@ class GFEntryDetail {
 
 				$original_entry = $lead;
 
+				// Some field types won't access their submitted values if this is not set.
+				$_POST[ 'is_submit_' . $form_id ] = '1';
+
 				// Set files that have been uploaded to temp folder
 				GFFormsModel::set_uploaded_files( $form_id );
 
@@ -503,6 +506,7 @@ class GFEntryDetail {
 
 		?>
 		<script type="text/javascript">
+			var formId = <?php echo absint( $form_id ); ?>;
 
 			jQuery(document).ready(function () {
 				toggleNotificationOverride(true);
@@ -542,6 +546,11 @@ class GFEntryDetail {
 				if ($visiblePreviewFields.length == 0) {
 					jQuery('#preview_' + fieldId).hide();
 					jQuery('#upload_' + fieldId).show('slow');
+				}
+
+				var $multiFileContainer = jQuery( '#gform_multifile_upload_' + formId + '_' + fieldId );
+				if ( ! $multiFileContainer.hasClass( 'gform_fileupload_multifile' ) ) {
+					return;
 				}
 
 				var $input = jQuery( 'input[name="input_' + fieldId + '"]' );
