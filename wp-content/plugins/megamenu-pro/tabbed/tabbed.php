@@ -383,7 +383,7 @@ class Mega_Menu_Tabbed {
 
         $parent_megamenu_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
 
-        if ( is_array( $parent_megamenu_settings ) && isset( $parent_megamenu_settings['type'] ) && $parent_megamenu_settings['type'] != 'tabbed' ) {
+        if ( ! is_array( $parent_megamenu_settings ) || ! isset( $parent_megamenu_settings['type'] ) || $parent_megamenu_settings['type'] !== 'tabbed' ) {
             return $tabs;
         }
 

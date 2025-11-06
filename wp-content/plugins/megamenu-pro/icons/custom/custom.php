@@ -230,7 +230,7 @@ class Mega_Menu_Custom_Icon {
         $html .= "                    <option value='sub' " . selected( $icon_align, 'sub', false) . ">" . __("Sub", "megamenu-pro") . "</option>";
         $html .= "                    <option value='initial' " . selected( $icon_align, 'initial', false) . ">" . __("Initial", "megamenu-pro") . "</option>";
         $html .= "                    <option value='inherit' " . selected( $icon_align, 'inherit', false) . ">" . __("Inherit", "megamenu-pro") . "</option>";
-        $html .= "                <select>";
+        $html .= "                </select>";
         $html .= "            </td>";
         $html .= "        </tr>";
         $html .= "    </table>";

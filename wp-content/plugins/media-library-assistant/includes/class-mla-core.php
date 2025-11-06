@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.29';
+	const CURRENT_MLA_VERSION = '3.30';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -436,7 +436,7 @@ class MLACore {
 	 */
 	public static function initialize( ) {
 		//error_log( __LINE__ . ' DEBUG: MLACore::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
-		//if ( isset( $_SERVER['REQUEST_URI'] ) ) error_log( __LINE__ . ' DEBUG: MLACore::initialize $_SERVER[REQUEST_URI] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
+		// if ( isset( $_SERVER['REQUEST_URI'] ) ) error_log( __LINE__ . ' DEBUG: MLACore::initialize $_SERVER[REQUEST_URI] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
 		$text_domain = 'media-library-assistant';
 		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
@@ -1035,9 +1035,8 @@ class MLACore {
 			$template_key = preg_split( '#"#', $value[0] );
 			$template_key = $template_key[1];
 			$template_value = substr( $template, $value[1] + strlen( $value[0] ), $current_offset - ( $value[1] + strlen( $value[0] ) ) );
-			/*
-			 * Trim exactly one newline sequence from the start of the value
-			 */
+
+			// Trim exactly one newline sequence from the start of the value
 			if ( 0 === strpos( $template_value, "\r\n" ) ) {
 				$offset = 2;
 			} elseif ( 0 === strpos( $template_value, "\n\r" ) ) {
@@ -1052,9 +1051,7 @@ class MLACore {
 
 			$template_value = substr( $template_value, $offset );
 
-			/*
-			 * Trim exactly one newline sequence from the end of the value
-			 */
+			// Trim exactly one newline sequence from the end of the value
 			$length = strlen( $template_value );
 			if ( $length > 2) {
 				$postfix = substr( $template_value, ($length - 2), 2 );
@@ -1077,6 +1074,83 @@ class MLACore {
 		} // foreach $matches
 
 		return $template_array;
+	}
+
+	/**
+	 * Generates or retrieves the encryption key for named transfer items
+ 	 *
+	 * @since 3.30
+	 *
+	 * @return	string 32-byte random string for 'AES-256-CBC' encryption
+	 */
+	private static function _get_named_transfer_encryption_key() {
+		$option_value = MLACore::mla_get_option( MLACoreOptions::MLA_NAMED_TRANSFER_ITEM_KEY );
+		
+		if ( empty( $option_value ) || ( 32 !== strlen( (string) $option_value ) ) ) {
+			if( function_exists( 'random_bytes' ) ) {
+				$option_value = bin2hex( random_bytes(16) );
+			} elseif ( function_exists( 'openssl_random_pseudo_bytes' ) ) {
+				$secure = false;
+				$option_value = bin2hex( openssl_random_pseudo_bytes( 16, $secure ) );
+			} else {
+				$hex_characters = '0123456789abcdef';
+				$option_value = '';
+				for ( $i = 0; $i < 32; $i++ ) {
+					$option_value .= $hex_characters[ mt_rand( 0, 15 ) ];
+				}
+			}
+			
+			MLACore::mla_update_option( MLACoreOptions::MLA_NAMED_TRANSFER_ITEM_KEY, $option_value );
+		}
+
+		return $option_value;
+	}
+
+	/**
+	 * Encrypts a named transfer or stream image item
+ 	 *
+	 * @since 3.30
+	 *
+	 * @param	string	item name
+	 *
+	 * @return	string encrypted item name
+	 */
+	public static function mla_encrypt_item( $mla_item ) {
+		if ( function_exists( 'openssl_encrypt' ) ) {
+			$key = self::_get_named_transfer_encryption_key();
+			$ivLength = openssl_cipher_iv_length('AES-256-CBC');
+			$iv = openssl_random_pseudo_bytes( $ivLength );
+			$hex = bin2hex( $iv );
+			$mla_item = openssl_encrypt( $mla_item, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+			$hex = bin2hex( $mla_item );
+			$mla_item = base64_encode( $iv . $mla_item );
+		}
+
+		return $mla_item;
+	}
+
+	/**
+	 * Decrypts a named transfer or stream image item
+ 	 *
+	 * @since 3.30
+	 *
+	 * @param	string encrypted item name
+	 *
+	 * @return	string decrypted item name
+	 */
+	public static function mla_decrypt_item( $mla_item ) {
+		if ( function_exists( 'openssl_encrypt' ) ) {
+			$key = self::_get_named_transfer_encryption_key();
+	        $data = base64_decode( $mla_item );
+        	$ivLength = openssl_cipher_iv_length('AES-256-CBC');
+        	$iv = substr( $data, 0, $ivLength );
+			$hex = bin2hex( $iv );
+       		$ciphertext = substr( $data, $ivLength );
+			$hex = bin2hex( $ciphertext );
+        	$mla_item = openssl_decrypt( $ciphertext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+		}
+
+		return $mla_item;
 	}
 
 	/**

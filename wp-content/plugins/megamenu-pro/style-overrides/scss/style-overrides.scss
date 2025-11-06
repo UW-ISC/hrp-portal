@@ -118,22 +118,6 @@
 				    		@include background($custom_panel_background_from, $custom_panel_background_to);
 				    	}
 					}
-
-					@if $custom_panel_background_image != disabled {
-					    background-image: url($custom_panel_background_image);
-					}
-
-					@if $custom_panel_background_image_size != disabled {
-					    background-size: $custom_panel_background_image_size;
-					}
-
-					@if $custom_panel_background_image_position != disabled {
-					    background-position: $custom_panel_background_image_position;
-					}
-
-					@if $custom_panel_background_image_repeat != disabled {
-					    background-repeat: $custom_panel_background_image_repeat;
-					}
 				}
 
 				@if $custom_panel_width != disabled and unit($custom_panel_width) == 'px' {
@@ -151,6 +135,23 @@
 				}
 
 			    li#mega-menu-item-#{$id} {
+			    	> ul.mega-sub-menu {
+						@if $custom_panel_background_image != disabled {
+						    background-image: url($custom_panel_background_image);
+						}
+
+						@if $custom_panel_background_image_size != disabled {
+						    background-size: $custom_panel_background_image_size;
+						}
+
+						@if $custom_panel_background_image_position != disabled {
+						    background-position: $custom_panel_background_image_position;
+						}
+
+						@if $custom_panel_background_image_repeat != disabled {
+						    background-repeat: $custom_panel_background_image_repeat;
+						}
+			    	}
 
 			    	@if $custom_panel_horizontal_offset != disabled {
 			    		@include desktop {
@@ -201,22 +202,6 @@
 
 						@if $custom_panel_background_from != disabled and $custom_panel_background_to != disabled {
 					    	@include background($custom_panel_background_from, $custom_panel_background_to);
-						}
-
-						@if $custom_panel_background_image != disabled {
-						    background-image: url($custom_panel_background_image);
-						}
-
-						@if $custom_panel_background_image_size != disabled {
-						    background-size: $custom_panel_background_image_size;
-						}
-
-						@if $custom_panel_background_image_position != disabled {
-						    background-position: $custom_panel_background_image_position;
-						}
-
-						@if $custom_panel_background_image_repeat != disabled {
-						    background-repeat: $custom_panel_background_image_repeat;
 						}
 					}
 

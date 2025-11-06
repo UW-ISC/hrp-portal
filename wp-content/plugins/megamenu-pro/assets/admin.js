@@ -91,18 +91,9 @@ jQuery(document).ready(function($) {
             }
         }
 
-        $(".mm_colorpicker").spectrum({
-            preferredFormat: "rgb",
-            showInput: true,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            change: function(color) {
-                if (color.getAlpha() === 0) {
-                    $(this).siblings('div.chosen-color').html('transparent');
-                } else {
-                    $(this).siblings('div.chosen-color').html(color.toRgbString());
-                }
-            }
+        $('.mega-color-picker-input').customColorPicker({ 
+            defaultColor: '#DDDDDD', 
+            showCssVarPalette: false
         });
     });
 

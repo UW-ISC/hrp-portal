@@ -23,7 +23,6 @@ class Mega_Menu_Sticky {
         add_filter( 'megamenu_scss_variables', array( $this, 'add_sticky_scss_vars'), 10, 4 );
         add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_sticky_scss'), 10 );
         add_filter( 'megamenu_after_menu_item_settings', array( $this, 'add_menu_item_sticky_options'), 10, 6 );
-        add_filter( 'megamenu_submitted_settings_meta', array( $this, 'filter_submitted_settings'), 10);
         add_filter( 'megamenu_default_theme', array($this, 'add_theme_placeholders'), 10 );
         add_filter( 'megamenu_theme_editor_settings', array( $this, 'add_theme_editor_settings' ), 10 );
         add_filter( 'megamenu_location_settings', array( $this, 'add_location_settings' ), 10, 3 );
@@ -206,42 +205,6 @@ class Mega_Menu_Sticky {
         return $settings;
     }
 
-
-    /**
-     * Make sure 'sticky enabled' really is set to false if the checkbox is unchecked.
-     */
-    public function filter_submitted_settings( $settings ) {
-        if ( is_array( $settings ) ) {
-            foreach ( $settings as $location => $vars ) {
-                if ( ! isset( $vars['sticky_enabled'] ) ) {
-                    $settings[$location]['sticky_enabled'] = 'false';
-                }
-
-                if ( ! isset( $vars['sticky_mobile'] ) ) {
-                    $settings[$location]['sticky_mobile'] = 'false';
-                }
-
-                if ( ! isset( $vars['sticky_desktop'] ) ) {
-                    $settings[$location]['sticky_desktop'] = 'false';
-                }
-
-                if ( ! isset( $vars['sticky_expand'] ) ) {
-                    $settings[$location]['sticky_expand'] = 'false';
-                }
-
-                if ( ! isset( $vars['sticky_expand_mobile'] ) ) {
-                    $settings[$location]['sticky_expand_mobile'] = 'false';
-                }
-
-                if ( ! isset( $vars['sticky_hide_until_scroll_up'] ) ) {
-                    $settings[$location]['sticky_hide_until_scroll_up'] = 'false';
-                }
-            }
-        }
-
-        return $settings;
-    }
-    
 
     /**
      * Add sticky menu item visibility option to the individual menu item settings

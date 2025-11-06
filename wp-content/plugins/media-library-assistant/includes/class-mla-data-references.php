@@ -105,7 +105,9 @@ class MLAReferences {
 
 		$references['base_file'] = get_post_meta( $ID, '_wp_attached_file', true );
 		if ( !is_string( $references['base_file'] ) ) {
-			error_log( __LINE__ . " class-mla-data-references.php WARNING: _wp_attached_file is not a string for Item {$ID}. Value = " . var_export( $references['base_file'], true ), 0 );
+			/* translators: 1: ERROR tag 2: index */
+			MLACore::mla_debug_add( sprintf( _x( '%1$s: class-mla-data-references.php WARNING: _wp_attached_file is not a string for Item "%2$d". Value = %3$s.', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $ID, var_export( $references['base_file'], true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+//			error_log( __LINE__ . " class-mla-data-references.php WARNING: _wp_attached_file is not a string for Item {$ID}. Value = " . var_export( $references['base_file'], true ), 0 );
 			$references['base_file'] = 'invalid-wp-attached-file';
 		}
 

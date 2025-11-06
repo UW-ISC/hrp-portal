@@ -43,14 +43,17 @@ class MLA_Ajax {
 		}
 
 		// Defined here because the "admin_init" action is not called for item transfers
-		if ( 'mla_named_transfer' ==  $_REQUEST['action'] ) {
+		if ( 'mla_named_transfer' ===  $_REQUEST['action'] ) {
 			add_action( 'wp_ajax_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
 			add_action( 'wp_ajax_nopriv_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
+		} elseif ( 'mla_stream_file' ===  $_REQUEST['action'] ) {
+			add_action( 'wp_ajax_' . 'mla_stream_file', 'MLA_Ajax::mla_stream_file_ajax_action' );
+			add_action( 'wp_ajax_nopriv_' . 'mla_stream_file', 'MLA_Ajax::mla_stream_file_ajax_action' );
 		} else {
 			add_action( 'admin_init', 'MLA_Ajax::mla_admin_init_action' );
 		}
 
-		if ( 'query-attachments' ==  $_REQUEST['action'] ) {
+		if ( 'query-attachments' ===  $_REQUEST['action'] ) {
 			if ( ( MLACore::$mla_debug_level & 1 ) && ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_MMMW ) ) {
 				add_filter( 'posts_clauses', 'MLA_Ajax::mla_mmmw_query_posts_clauses_filter', 0x7FFFFFFF, 1 );
 				add_filter( 'posts_clauses_request', 'MLA_Ajax::mla_mmmw_query_posts_clauses_request_filter', 0x7FFFFFFF, 1 );
@@ -273,27 +276,33 @@ class MLA_Ajax {
 		if ( empty( $_REQUEST['mla_item'] ) ) {
 			$download_args['error'] = 'ERROR: mla_item argument not set.';
 		} else {
-			$item_name = sanitize_title( isset( $_REQUEST['mla_item'] ) ? wp_unslash( $_REQUEST['mla_item'] ) : '' );
-			$args = array(
-				'name'           => $item_name,
-				'post_type'      => 'attachment',
-				'post_status'    => 'inherit',
-				'posts_per_page' => 1
-			);
-
-			$items = get_posts( $args );
-
-			if( $items ) {
-				$file = get_attached_file( $items[0]->ID );
-				if ( !empty( $file ) ) {
-					$download_args['mla_download_file'] = $file;
-					$download_args['mla_download_type'] = $items[0]->post_mime_type;
-					
-					if ( !empty( $_REQUEST['mla_disposition'] ) ) {
-						$download_args['mla_disposition'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_disposition'] ) );
+			$args = explode( ',', isset( $_REQUEST['mla_item'] ) ? MLACore::mla_decrypt_item( wp_unslash( $_REQUEST['mla_item'] ) ) : '' );
+			if ( ! empty( $args ) && ( 3 === count($args) ) ) {
+				$item_name = sanitize_title( $args[0] );
+				$item_id = absint( $args[1] );
+				$item_date = sanitize_text_field( $args[2] );
+			} else {
+				$item_name = '';
+				$item_id = 0;
+				$item_date = '';
+			}
+			
+			$item = get_post( $item_id );
+			if( $item ) {
+				if ( ( $item_name === $item->post_name ) && ( $item_date === $item->post_date ) ) {
+					$file = get_attached_file( $item->ID );
+					if ( !empty( $file ) ) {
+						$download_args['mla_download_file'] = $file;
+						$download_args['mla_download_type'] = $item->post_mime_type;
+						
+						if ( !empty( $_REQUEST['mla_disposition'] ) ) {
+							$download_args['mla_disposition'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_disposition'] ) );
+						}
+					} else {
+						$download_args['error'] = 'ERROR: mla_item no attached file.';
 					}
 				} else {
-					$download_args['error'] = 'ERROR: mla_item no attached file.';
+					$download_args['error'] = 'ERROR: invalid mla_item.';
 				}
 			} else {
 				$download_args['error'] = 'ERROR: mla_item not found.';
@@ -306,6 +315,54 @@ class MLA_Ajax {
 		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_named_transfer_ajax_action failed. \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		echo "MLA_Ajax::mla_named_transfer_ajax_action failed.";
 		die();
+	} // mla_named_transfer_ajax_action
+
+	/**
+	 * Ajax handler to stream/view or download a Media Library item
+	 *
+	 * @since 2.63
+	 *
+	 * @return	void	echo HTML for file streaming or download, then exit()
+	 */
+	public static function mla_stream_file_ajax_action() {
+		if ( !class_exists( 'MLAImageProcessor' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-image-processor.php' );
+		}
+
+		MLAImageProcessor::$mla_debug = isset( $_REQUEST['mla_debug'] ) && 'log' == $_REQUEST['mla_debug'];
+			
+		if ( empty( $_REQUEST['mla_stream_file'] ) ) {
+			MLAImageProcessor::mla_image_processor_die( 'mla_stream_file argument not set', __LINE__, 500 );
+		}
+		
+		$args = explode( ',', MLACore::mla_decrypt_item( wp_unslash( $_REQUEST['mla_stream_file'] ) ) );
+		if ( ! empty( $args ) && ( 3 === count($args) ) ) {
+			$item_name = sanitize_title( $args[0] );
+			$item_id = absint( $args[1] );
+			$item_date = sanitize_text_field( $args[2] );
+		} else {
+			$item_name = '';
+			$item_id = 0;
+			$item_date = '';
+		}
+		
+		$item = get_post( $item_id );
+		if( $item ) {
+			if ( ( $item_name === $item->post_name ) && ( $item_date === $item->post_date ) ) {
+				$file = get_attached_file( $item->ID );
+				if ( ! empty( $file ) ) {
+					// Good to go
+					$_REQUEST['mla_stream_file'] = $file;
+					MLAImageProcessor::mla_process_stream_image();
+				} else {
+					MLAImageProcessor::mla_image_processor_die( 'mla_stream_file no attached file', __LINE__, 500 );
+				}
+			} else {
+				MLAImageProcessor::mla_image_processor_die( 'mla_stream_file argument invalid', __LINE__, 500 );
+			}
+		} else {
+			MLAImageProcessor::mla_image_processor_die( 'mla_stream_file item not found', __LINE__, 500 );
+		}
 	} // mla_named_transfer_ajax_action
 
 	/**
