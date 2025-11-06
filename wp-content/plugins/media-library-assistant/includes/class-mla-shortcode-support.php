@@ -1636,7 +1636,7 @@ class MLAShortcode_Support {
 				}
 			}
 
-			// Isolate the IGM tag inside the link, which may contain other attribute instances
+			// Isolate the IMG tag inside the link, which may contain other attribute instances
 			$match_count = preg_match( '#<img[^\>]+\>#', $item_values['pagelink'], $matches );
 			if ( ! ( ( $match_count === false ) || ( $match_count === 0 ) ) ) {
 				$img_tag = $matches[0];
@@ -1671,26 +1671,30 @@ class MLAShortcode_Support {
 				}
 			} // process <img> tag
 
-			// Create download and named transfer links with all Content Parameters
+			// Extract page, file and download URLs
+			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['pagelink'], $matches, PREG_OFFSET_CAPTURE );
+ 			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$item_values['pagelink_url'] = $matches[1][0][0];
+			} else {
+				$item_values['pagelink_url'] = '';
+			}
+
+			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['filelink'], $matches, PREG_OFFSET_CAPTURE );
+			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$item_values['filelink_url'] = $matches[1][0][0];
+			} else {
+				$item_values['filelink_url'] = '';
+			}
+
+			$item_values['downloadlink_url'] = $item_values['filelink_url'];
+			$item_values['downloadlink'] = preg_replace( '#<a( .*)href=#', '<a$1' . 'download href=', $item_values['filelink'] );
+
+			// Create AJAX-based Named Transfer link with all Content Parameters
 			$match_count = preg_match( '#href=\'([^\']+)\'#', $item_values['filelink'], $matches, PREG_OFFSET_CAPTURE );
 			if ( ! ( ( $match_count === false ) || ( $match_count === 0 ) ) ) {
-				/*/ Forced download link - NO LONGER ALLOWED, SEE BELOW
-				$args = array(
-					'mla_download_file' => urlencode( $item_values['base_dir'] . '/' . $item_values['base_file'] ),
-					'mla_download_type' => $item_values['mime_type']
-				);
-
-				if ( 'log' == $arguments['mla_debug'] ) {
-					$args['mla_debug'] = 'log';
-				}
-
-				$item_values['downloadlink_url'] = add_query_arg( $args, MLA_PLUGIN_URL . 'includes/mla-file-downloader.php' );
-				$item_values['downloadlink'] = preg_replace( '"' . $matches[0][0] . '"', sprintf( 'href=\'%1$s\'', $item_values['downloadlink_url'] ), $item_values['filelink'] ); // */
-
-				// AJAX-based Named Transfer link
 				$args = array(
 					'action' => 'mla_named_transfer',
-					'mla_item' => $attachment->post_name,
+					'mla_item' => urlencode( MLACore::mla_encrypt_item( sanitize_title( $attachment->post_name ) .  ',' . $attachment->ID . ',' . $attachment->post_date ) ),
 					'mla_disposition' => ( 'download' === $arguments['link'] ) ? 'attachment' : 'inline',
 				);
 
@@ -1701,23 +1705,7 @@ class MLAShortcode_Support {
 				$item_values['transferlink_url'] = add_query_arg( $args, admin_url( 'admin-ajax.php' ) );
 				$item_values['transferlink'] = preg_replace( '"' . $matches[0][0] . '"', sprintf( 'href=\'%1$s\'', $item_values['transferlink_url'] ), $item_values['filelink'] );
 
-				// AJAX-based Named Transfer link for forced downloads
-				$args = array(
-					'action' => 'mla_named_transfer',
-					'mla_item' => $attachment->post_name,
-					'mla_disposition' => 'attachment',
-				);
-
-				if ( 'log' == $arguments['mla_debug'] ) {
-					$args['mla_debug'] = 'log';
-				}
-
-				$item_values['downloadlink_url'] = add_query_arg( $args, admin_url( 'admin-ajax.php' ) );
-				$item_values['downloadlink'] = preg_replace( '"' . $matches[0][0] . '"', sprintf( 'href=\'%1$s\'', $item_values['transferlink_url'] ), $item_values['filelink'] );
 			} else {
-				$item_values['downloadlink_url'] = $item_values['filelink_url'];
-				$item_values['downloadlink'] = $item_values['filelink'];
-
 				$item_values['transferlink_url'] = $item_values['filelink_url'];
 				$item_values['transferlink'] = $item_values['filelink'];
 			}
@@ -1754,24 +1742,9 @@ class MLAShortcode_Support {
 					}
 			} // switch 'link'
 
-			// Replace link with AJAX-based item transfer using post slug
+			// Replace link with AJAX-based item transfer
 			if ( $arguments['mla_named_transfer'] ) {
 				$item_values['link'] = $item_values['transferlink'];
-			}
-
-			// Extract target and thumbnail fields
-			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['pagelink'], $matches, PREG_OFFSET_CAPTURE );
- 			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
-				$item_values['pagelink_url'] = $matches[1][0][0];
-			} else {
-				$item_values['pagelink_url'] = '';
-			}
-
-			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['filelink'], $matches, PREG_OFFSET_CAPTURE );
-			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
-				$item_values['filelink_url'] = $matches[1][0][0];
-			} else {
-				$item_values['filelink_url'] = '';
 			}
 
 			// Extract icon image tag and src URL
@@ -1868,9 +1841,12 @@ class MLAShortcode_Support {
 					if ( in_array( $extension, $arguments['mla_viewer_extensions'] ) ) {
 						// Default to an icon if thumbnail generation is not available
 						$icon_url = wp_mime_type_icon( $attachment->ID );
-						$upload_dir = wp_upload_dir();
+
+//						$upload_dir = wp_upload_dir();
 						$args = array(
-							'mla_stream_file' => urlencode( 'file://' . $upload_dir['basedir'] . '/' . $item_values['base_file'] ),
+//							'mla_stream_file' => urlencode( 'file://' . $upload_dir['basedir'] . '/' . $item_values['base_file'] ),
+							'action' => 'mla_stream_file',
+							'mla_stream_file' => urlencode( MLACore::mla_encrypt_item( sanitize_title( $attachment->post_name ) .  ',' . $attachment->ID . ',' . $attachment->post_date ) ),
 						);
 
 						if ( 'log' == $arguments['mla_debug'] ) {
@@ -1935,7 +1911,8 @@ class MLAShortcode_Support {
 								}
 
 								// For efficiency, image streaming is done outside WordPress
-								$icon_url = add_query_arg( $args, MLA_PLUGIN_URL . 'includes/mla-stream-image.php' );
+//								$icon_url = add_query_arg( $args, MLA_PLUGIN_URL . 'includes/mla-stream-image.php' );
+								$icon_url = add_query_arg( $args, admin_url( 'admin-ajax.php' ) );
 							}
 						}
 

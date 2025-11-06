@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.7
-Tested up to: 6.8.2
-Stable tag: 3.29
+Tested up to: 6.8.3
+Stable tag: 3.30
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -199,6 +199,12 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.30 =
+* New: For PDF documents, metadata embedded in compressed object streams is now extracted, processed and made available as "pdf:" data sources.
+* Fix: IMPORTANT: For the `[mla_gallery]` shortcode, the "mla_viewer" feature has been redesigned to mitigate an Unauthenticated Local File Read security issue. The feature now uses WordPress AJAX processing when PDF thumbnail images are not available, which is less efficient but secure.
+* Fix: IMPORTANT: For the `[mla_gallery]` shortcode, the "Transfer by Item Name" feature has been redesigned to mitigate an Insecure Direct Object Reference security issue. This fix also requires you to manually update the "MLA Item Transfer Pretty Links" example plugin if your site uses it.
+* Fix: IMPORTANT: The "MLA Item Transfer Pretty Links" example plugin has been updated to use the new "Transfer by Item Name" method. **You must manually update the example plugin** if your site uses it.
+
 = 3.29 =
 * Fix: IMPORTANT: A Reflected Cross-Site Scripting security risk in all four shortcodes has been mitigated.
 * Fix: For the Media/Assistant submenu table, the "Download" rollover action has been repaired. This corrects a defect introduced in the MLA 3.28 update.
@@ -222,30 +228,9 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: When Polylang is active, correct a defect in preserving terms for untranslated taxonomies during the Bulk "Map IPTC/EXIF/WP metadata" action.
 * Fix: For the "MLA Taxonomy Archive Redirect" example plugin (v1.01), correct defect preventing AJAX operations from running to completion.
 
-= 3.26 =
-* Fix: **IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.**
-
-= 3.25 =
-* New: The Settings/Media Library Assistant Image tab lets you add, view and manage Intermediate Size values for image items.
-* New: For the Settings/Media Library Assistant Uploads tab, the active/inactive status has been changed from views to a filter dropdown.
-* New: For the "MLA Path Mapping Example" plugin (v1.12), the Copy Term Definitions tool has been enhanced with an option to copy Term Meta values as well as term definitions.
-* New: A new example plugin, "MLA Taxonomy Archive Redirect", allows you to specify a post/page that replaces the theme's (empty) taxonomy archive page with a gallery display.
-* New: A new example plugin, "MLA ACF Support", adds MLA enhanced taxonomy support to the ACF Pro Gallery field type.
-* New: A new example plugin, "MLA Gallery Download Checklist", supports downloading a ZIP archive of items selected by checking boxes in an `[mla_gallery]` display.
-* New: For items attached to a parent post/page, the `parent:` field-level prefix gives access to values assigned to the item's parent.
-* New: The `author:` field-level prefix gives access to values assigned to the item's author in the "users" and "usermeta" database tables.
-* Fix: Some defects in the handling of "MLA enhanced taxonomy support" in the Media Manager Modal Window have been corrected.
-* Fix: When the Settings/Media Library Assistant Uploads feature is active, a defect that prevented the installation of Google Fonts has been corrected.
-* Fix: A defect in option deletion during plugin deletion has been corrected.
-* Fix: A defect in processing shortcode parameters with field-level datasources containing brackets, e.g., `{+size_bytes{medium}+}`, has been corrected.
-* Fix: Changed the timing of custom style and markup template loading to resolve WP 6.7 PHP Notice "Function _load_textdomain_just_in_time was called incorrectly". 
-* Fix: For the Media/Library Grid mode, an incompatibility with the Enhanced Media Library plugin has been eliminated.
-* Fix: An "Undefined variable" problem when accessing the `file_fize` field-level data source has been corrected.
-* Fix: Search box formatting in some Settings/Media Library Assistant tabs has been cleaned up.
-* Fix: For the "MLA Substitution Parameter Hooks Example" plugin (v1.16), the `parent:` and `author:` prefixes have been removed because they are now provided by the MLA core plugin.
-* Fix: For the "MLA Substitution Parameter Hooks Example" plugin (v1.16), the `parent_terms:` and `page_terms:` prefixes have been removed because they are provided by the MLA core plugin (since v3.14).
-
-= 3.00 - 3.24 =
+= 3.00 - 3.26 =
+* 3.26 - IMPORTANT: For the Polylang plugin, a defect that caused the famous "There Has Been a Critical Error on This Website" error has been corrected.
+* 3.25 - New tool for managing image Intermediate Sizes, taxonomy archive solution, new and enhanced example plugins and field-level data sources, WP 6.8 compatible. Eight enhancements, ten fixes in all.
 * 3.24 - IMPORTANT: Reflected Cross-Site Scripting security risks in three example plugins mitigated. Field-level data sources for very large images. REST support for Att. Categories and Att. Tags. Improved processing of the `mla_image_class` and `mla_image_alt` parameters. Two enhancements, two fixes in all.
 * 3.23 - For the [mla_gallery] shortcode, a defect regarding default post parent processing, e.g. when the shortcode has no explicit parameters, has been corrected.
 * 3.22 - IMPORTANT: Resolve "Fatal error: Uncaught TypeError: array_key_exists():" in `class-mla-options.php`. Delay localization of built-in style and markup templates until `init` action.
@@ -395,8 +380,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.29 =
-IMPORTANT: Security mitigation in all four shortcodes. Media Manager Modal (popup) and Media/Assistant submenu table fixes. Four fixes in all.
+= 3.30 =
+IMPORTANT: Security mitigations in [mla_gallery] shortcode. PDF metadata extraction from documents with compressed object streams. One enhancement, three fixes in all.
 
 == Acknowledgements ==
 

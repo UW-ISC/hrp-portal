@@ -713,7 +713,7 @@ The Link parameter specifies the target and type of link from the gallery item t
 </tr>
 <tr>
 <td class="mla-doc-table-label">download</td>
-<td>Link to the MLA "Transfer by Item Name" feature for this attachment with <code>mla_disposition=attachment</code>. Forces a file download instead of opening the file in the browser.  See the "Transfer by Item Name" section just below.</td>
+<td>Forces a file download instead of opening the file in the browser.  See also the "Transfer by Item Name" section just below.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large</td>
@@ -738,35 +738,13 @@ Note that the handling of `link=file` and `link=download` values can be altered 
 </p>
 <h4>Transfer by Item Name</h4>
 <p>
-The "mla_named_transfer" parameter activates a different approach to handling the <code>link=file</code> and <code>link=download</code> values. If you code <code>mla_named_transfer=true</code> each item will be identified by its <code>post_name</code> value instead of its directory and file name. When the gallery item link is clicked the post_name will be used to locate the file and send it to the browser. When used with <code>link=download</code> a file download is performed, otherwise the file will be opened in the browser.
+The "mla_named_transfer" parameter activates a different approach to handling the <code>link=file</code> and <code>link=download</code> values. If you code <code>mla_named_transfer=true</code> each item will be identified by its <code>post_name</code>, <code>ID</code> and <code>post_date</code> values instead of its directory and file name. When the gallery item link is clicked the post_name will be used to locate the file and send it to the browser. When used with <code>link=download</code> a file download is performed; for <code>link=file</code> the file will be opened in the browser. Both of these options are processed by an AJAX handler within MLA.
 </p>
 <p>
-The links generated for mla_named_transfer items are of the form:<br />
-&nbsp;<br /> 
-<code>http://mysite.com/wp-admin/admin-ajax.php?action=mla_named_transfer&amp;mla_item=item-name&amp;mla_disposition=inline</code><br />
-&nbsp;<br />
-Where the query arguments are:
+For security purposes, the identification parameters are encrypted in the file and download links and decrypted within the AJAX handler. Encryption is performed by PHP functions in the OpenSSL extension. The OpenSSL extension is "<strong>highly recommended</strong>" by WordPress and is required for <code>https:</code> connections. If the extension is missing the identification parameters cannot be encrypted but adding the ID and date values provides a small measure of security.
 </p>
-<table>
-<tr>
-<td class="mla-doc-table-label">action</td>
-<td>must be "mla_named_transfer".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item</td>
-<td>is the post_name/slug value for the item. This is the last, editable part of the item&rsquo;s permalink.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_disposition</td>
-<td>selects a "forced download" ( use "download" or "attachment" ) or "open in the bowser" ( use "file", "view" or "inline" ).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_debug</td>
-<td>add <code>mla_debug=log</code> to send diagnostic information to the error log. If you add <code>mla_debug=log</code> as a shortcode parameter it will be added to these links as well.</td>
-</tr>
-</table>
 <p>
-This alternate approach provides a small measure of security by obscuring the directory structure used to locate the file. It also makes it possible to generate SEO-friendly "pretty links" and use the <a href="https://codex.wordpress.org/Rewrite_API" title="Codex article: Rewrite API" target="_blank">WordPress Rewrite API</a> to translate the pretty links to the Transfer by Item Name syntax. The <a title="Find the Pretty Links Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Item+Transfer+Pretty+Links%22" class="mla-doc-bold-link">MLA Item Transfer Pretty Links</a> example plugin shows how this can be done.
+This alternate approach also obscures the directory structure used to locate the file and makes it possible to generate SEO-friendly "pretty links" and use the <a href="https://codex.wordpress.org/Rewrite_API" title="Codex article: Rewrite API" target="_blank">WordPress Rewrite API</a> to translate the pretty links to the Transfer by Item Name syntax. The <a title="Find the Pretty Links Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Item+Transfer+Pretty+Links%22" class="mla-doc-bold-link">MLA Item Transfer Pretty Links</a> example plugin shows how this can be done.
 <a name="mla_minimum"></a>
 </p>
 <h4>Minimum Gallery Size</h4>

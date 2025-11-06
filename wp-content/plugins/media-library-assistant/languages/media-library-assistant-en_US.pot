@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2024-10-27 17:03-0700\n"
+"POT-Creation-Date: 2025-09-24 18:50-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -842,6 +842,45 @@ msgstr ""
 msgid "Uploaded on"
 msgstr ""
 
+msgid "Enable Intermediate Image Size Support"
+msgstr ""
+
+msgid ""
+"Check/uncheck this option to enable/disable Intermediate Image Size Support, "
+"then click <strong>Save Changes</strong> to record the new setting."
+msgstr ""
+
+msgid "Image Sizes help."
+msgstr ""
+
+msgctxt "image_sizes_name"
+msgid "Thumbnail"
+msgstr ""
+
+msgctxt "image_sizes_description"
+msgid "WordPress reserved size"
+msgstr ""
+
+msgctxt "image_sizes_name"
+msgid "Medium"
+msgstr ""
+
+msgctxt "image_sizes_name"
+msgid "Medium Large"
+msgstr ""
+
+msgctxt "image_sizes_name"
+msgid "Large"
+msgstr ""
+
+msgctxt "image_sizes_name"
+msgid "Post Thumbnail"
+msgstr ""
+
+msgctxt "image_sizes_description"
+msgid "WordPress reserved size, requires theme support"
+msgstr ""
+
 msgid "Enable View and Post MIME Type Support"
 msgstr ""
 
@@ -1618,6 +1657,112 @@ msgstr ""
 msgid "Select Parent"
 msgstr ""
 
+msgctxt "list_table_column"
+msgid "Slug"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Width"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Height"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Crop"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Horizontal Position"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Vertical Position"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Status"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Source"
+msgstr ""
+
+msgid "Medium Large"
+msgstr ""
+
+#, php-format
+msgid "<br>Changing %1$s \"%2$s\" to valid value \"%3$s\""
+msgstr ""
+
+msgid "Slug"
+msgstr ""
+
+#, php-format
+msgid "%1$s: Could not add Slug \"%2$s\"; value already exists"
+msgstr ""
+
+#, php-format
+msgid "Edit size \"%1$s\"; added"
+msgstr ""
+
+#, php-format
+msgid "<br>Changing new %1$s \"%2$s\" to valid value \"%3$s\""
+msgstr ""
+
+#, php-format
+msgid "Edit view \"%1$s\"; no changes detected"
+msgstr ""
+
+#, php-format
+msgid "Edit view \"%1$s\"; updated"
+msgstr ""
+
+#, php-format
+msgid "Image size \"%1$s\" reverted to standard"
+msgstr ""
+
+#, php-format
+msgid "Image size \"%1$s\" deleted"
+msgstr ""
+
+#, php-format
+msgid "%1$s: Did not find image size \"%2$s\""
+msgstr ""
+
+msgctxt "table_image_size_singular"
+msgid "All"
+msgstr ""
+
+msgctxt "table_image_size_plural"
+msgid "All"
+msgstr ""
+
+msgctxt "table_image_size_singular"
+msgid "WordPress"
+msgstr ""
+
+msgctxt "table_image_size_plural"
+msgid "WordPress"
+msgstr ""
+
+msgctxt "table_image_size_singular"
+msgid "Other Theme/Plugin"
+msgstr ""
+
+msgctxt "table_image_size_plural"
+msgid "Other Theme/Plugin"
+msgstr ""
+
+msgctxt "table_image_size_singular"
+msgid "Custom"
+msgstr ""
+
+msgctxt "table_image_size_plural"
+msgid "Custom"
+msgstr ""
+
 msgid "All"
 msgstr ""
 
@@ -1939,14 +2084,6 @@ msgid "Icon Type"
 msgstr ""
 
 msgctxt "list_table_column"
-msgid "Source"
-msgstr ""
-
-msgctxt "list_table_column"
-msgid "Status"
-msgstr ""
-
-msgctxt "list_table_column"
 msgid "WordPress Type"
 msgstr ""
 
@@ -1960,10 +2097,6 @@ msgstr ""
 
 msgctxt "list_table_column"
 msgid "Std. Icon Type"
-msgstr ""
-
-msgctxt "list_table_column"
-msgid "Slug"
 msgstr ""
 
 msgctxt "list_table_column"
@@ -1998,30 +2131,7 @@ msgid "Ignoring specification for Post MIME Type; using slug"
 msgstr ""
 
 #, php-format
-msgid "<br>Changing %1$s \"%2$s\" to valid value \"%3$s\""
-msgstr ""
-
-msgid "Slug"
-msgstr ""
-
-#, php-format
-msgid "%1$s: Could not add Slug \"%2$s\"; value already exists"
-msgstr ""
-
-#, php-format
 msgid "Edit view \"%1$s\"; added"
-msgstr ""
-
-#, php-format
-msgid "<br>Changing new %1$s \"%2$s\" to valid value \"%3$s\""
-msgstr ""
-
-#, php-format
-msgid "Edit view \"%1$s\"; no changes detected"
-msgstr ""
-
-#, php-format
-msgid "Edit view \"%1$s\"; updated"
 msgstr ""
 
 #, php-format
@@ -2034,22 +2144,6 @@ msgstr ""
 
 #, php-format
 msgid "%1$s: Did not find view \"%2$s\""
-msgstr ""
-
-msgctxt "table_view_singular"
-msgid "Active"
-msgstr ""
-
-msgctxt "table_view_plural"
-msgid "Active"
-msgstr ""
-
-msgctxt "table_view_singular"
-msgid "Inactive"
-msgstr ""
-
-msgctxt "table_view_plural"
-msgid "Inactive"
 msgstr ""
 
 msgctxt "table_view_singular"
@@ -2934,6 +3028,22 @@ msgid "Installed"
 msgstr ""
 
 msgctxt "table_view_singular"
+msgid "Active"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Active"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Inactive"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Inactive"
+msgstr ""
+
+msgctxt "table_view_singular"
 msgid "Network"
 msgstr ""
 
@@ -2949,6 +3059,113 @@ msgctxt "table_view_plural"
 msgid "Uninstalled"
 msgstr ""
 
+msgid "Image settings saved."
+msgstr ""
+
+msgid "Top"
+msgstr ""
+
+msgid "Bottom"
+msgstr ""
+
+msgid "Edit Image Size"
+msgstr ""
+
+msgid ""
+"The &#8220;slug&#8221; is the URL-friendly, unique key for the image size. "
+"It must be all lowercase and contain only letters, numbers, periods (.), "
+"slashes (/) and hyphens (-)."
+msgstr ""
+
+msgid ""
+"The name is used for the size selection dropdown control and other display "
+"purposes."
+msgstr ""
+
+msgid "Width"
+msgstr ""
+
+msgid "A positive integer setting the maximum image width in pixels."
+msgstr ""
+
+msgid "Use zero or leave blank to set no limit."
+msgstr ""
+
+msgid "Height"
+msgstr ""
+
+msgid "A positive integer setting the maximum image height in pixels."
+msgstr ""
+
+msgid "Crop"
+msgstr ""
+
+msgid ""
+"Check this box if you want to crop the image to an exact width and height."
+msgstr ""
+
+msgid "Horizontal"
+msgstr ""
+
+msgid "Select a value for the crop location."
+msgstr ""
+
+msgid "Vertical"
+msgstr ""
+
+msgid "Check this box if you want to remove this entry from the list of sizes."
+msgstr ""
+
+msgid ""
+"The description can contain any documentation or notes you need to "
+"understand or use the item."
+msgstr ""
+
+#, php-format
+msgid "Edit Image Size \"%1$s\" cancelled."
+msgstr ""
+
+msgid "Image Size Support is disabled"
+msgstr ""
+
+msgid "Image Sizes Processing"
+msgstr ""
+
+msgid ""
+"In this tab you can manage the list of \"Intermediate Image Sizes\", which "
+"are used by WordPress to generate and access intermediate image sizes for "
+"Media Library items."
+msgstr ""
+
+msgid ""
+"You can find more information about managing image sizes by clicking the "
+"<strong>\"Help\"</strong> tab in the upper-right corner of this screen."
+msgstr ""
+
+msgid "Search Sizes"
+msgstr ""
+
+msgid "Image Size"
+msgstr ""
+
+msgid "Add Size"
+msgstr ""
+
+msgid "<strong>Quick Edit</strong>"
+msgstr ""
+
+msgid "No image slug found"
+msgstr ""
+
+msgid "List Image"
+msgstr ""
+
+msgid "Revert to standard item"
+msgstr ""
+
+msgid "Revert to Standard"
+msgstr ""
+
 msgid "IPTC/EXIF/WP mapping settings updated."
 msgstr ""
 
@@ -2956,6 +3173,10 @@ msgid "IPTC/EXIF/WP no mapping changes detected."
 msgstr ""
 
 msgid "updated."
+msgstr ""
+
+#, php-format
+msgid "Rule \"%1$s\"; reverted to standard"
 msgstr ""
 
 msgid "Notes for the IPTC/EXIF/WP tab submenu table."
@@ -3315,11 +3536,6 @@ msgid ""
 "Types returned by get_allowed_mime_types()."
 msgstr ""
 
-msgid ""
-"The description can contain any documentation or notes you need to "
-"understand or use the item."
-msgstr ""
-
 msgid "Known File Extension/MIME Type Associations"
 msgstr ""
 
@@ -3383,16 +3599,7 @@ msgstr ""
 msgid "Search Known Types"
 msgstr ""
 
-msgid "<strong>Quick Edit</strong>"
-msgstr ""
-
 msgid "No upload slug found"
-msgstr ""
-
-msgid "Revert to standard item"
-msgstr ""
-
-msgid "Revert to Standard"
 msgstr ""
 
 msgid "Delete/Revert Custom"
@@ -3504,6 +3711,9 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Image Sizes per page"
+msgstr ""
+
 msgid "Views per page"
 msgstr ""
 
@@ -3534,6 +3744,9 @@ msgid "Go to Bottom"
 msgstr ""
 
 msgid "General"
+msgstr ""
+
+msgid "Image"
 msgstr ""
 
 msgid "Views"
@@ -4048,12 +4261,6 @@ msgstr ""
 
 msgid ""
 "Pull down the Help menu and select Thumbnail Generation for setting details"
-msgstr ""
-
-msgid "Width"
-msgstr ""
-
-msgid "Height"
 msgstr ""
 
 msgid "Best Fit"

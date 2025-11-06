@@ -125,8 +125,11 @@
         visibility: hidden;
         border-left: 1px solid $tabbed_link_vertical_divider;
         padding: $panel_padding_top $panel_padding_right $panel_padding_bottom $panel_padding_left;
-        min-height: 100%;
         flex-direction: row;
+
+        @include desktop {
+            min-height: 100%;
+        }
     }
 
     &.mega-toggle-on > ul.mega-sub-menu {

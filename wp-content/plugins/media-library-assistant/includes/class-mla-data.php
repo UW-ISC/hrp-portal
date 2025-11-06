@@ -5581,7 +5581,11 @@ class MLAData {
 	 * @return	string	Printable representation of $data
 	 */
 	public static function mla_hex_dump( $data, $limit = 0, $bytes_per_row = 16, $offset = -1 ) {
-		if ( 0 == $limit ) {
+		if ( empty( $data ) ) {
+			return 'empty( $data )';
+		}
+		
+		if ( 0 === $limit ) {
 			$limit = strlen( $data );
 		}
 
@@ -5598,7 +5602,7 @@ class MLAData {
 		while ( $position < $limit ) {
 			$row_length = strlen( substr( $data, $position ) );
 
-			if ( 0 == $row_length ) {
+			if ( 0 === $row_length ) {
 				break;
 			}
 

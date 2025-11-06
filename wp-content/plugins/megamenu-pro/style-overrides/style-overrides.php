@@ -714,20 +714,8 @@ class Mega_Menu_Style_Overrides {
 		$enabled = isset( $menu_item_meta['styles']['enabled'][$key] ) ? 'enabled' : 'disabled';
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : '#333';
 
-        if ( $value == 'transparent' ) {
-            $value = 'rgba(0,0,0,0)';
-        }
+        $html = "    <input type='text' class='mega-color-picker-input' name='settings[styles][$enabled][$key]' value='{$value}' />";
 
-        if ( $value == 'rgba(0,0,0,0)' ) {
-            $value_text = 'transparent';
-        } else {
-            $value_text = $value;
-        }
-
-        $html  = "<div class='mm-picker-container'>";
-        $html .= "    <input type='text' class='mm_colorpicker' name='settings[styles][$enabled][$key]' value='{$value}' />";
-        $html .= "    <div class='chosen-color'>{$value_text}</div>";
-        $html .= "</div>";
 
 		return $html;
 
