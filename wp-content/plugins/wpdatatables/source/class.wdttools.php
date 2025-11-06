@@ -375,6 +375,8 @@ class WDTTools
             'deleteSelected_common' => __('Delete selected', 'wpdatatables'),
             'getJsonRoots_common' => __('JSON roots are found!', 'wpdatatables'),
             'errorText_common' => __('Unable to retrieve results', 'wpdatatables'),
+            'failedToLoadFormFields_common' => __('Failed to load form fields', 'wpdatatables'),
+            'invalidResponseServer_common' => __('Invalid response from server', 'wpdatatables'),
         );
     }
 
@@ -764,32 +766,24 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '20.08.2025',
+            'release_date' => '23.10.2025',
             'features' => [
+                0 => [
+                    'text' => 'Integration with IvyForms plugin for creating tables from form submissions.',
+                    'link' => 'https://wpdatatables.com/documentation/addons/ivyforms-integration/'
+                ],
             ],
             'improvements' => [
-            ],
-            'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed issue with Transform Value not working when Row Grouping and filters are enabled.',
+                    'text' => 'Upgraded PHPSpreadsheet library to a security-checked version.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with deleting Custom Fields during WooCommerce table creation wizard.',
+                    'text' => 'Added Greek and Italian translations.',
                     'link' => ''
                 ],
-                2 => [
-                    'text' => 'Fixed issue with Gutenberg not loading the tables properly.',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => 'Fixed issue with Fixed header displaying column sorting arrows.',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Fixed issue with the Global settings responsiveness.',
-                    'link' => ''
-                ],
+            ],
+            'bugfixes' => [
             ],
         );
     }
@@ -2388,6 +2382,11 @@ class WDTTools
                 return 'Serialized PHP array';
             case 'google_spreadsheet':
                 return 'Google sheet';
+            case 'ivyforms':
+                if (!class_exists('IvyForms\\Services\\API\\IvyFormsAPI')) {
+                    return 'Unknown';
+                }
+                return 'IvyForms';
             default:
                 if (in_array($tableType, WPDataTable::$allowedTableTypes)) {
                     return ucfirst($tableType);

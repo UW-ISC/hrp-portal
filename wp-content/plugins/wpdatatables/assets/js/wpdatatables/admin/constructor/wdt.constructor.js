@@ -261,6 +261,10 @@ var aceEditor = null;
                         var connection = (constructedTableData.connection !== '') ? '&connection=' + constructedTableData.connection : '&connection';
                         window.location.replace(window.location.pathname + '?page=wpdatatables-constructor&source' + connection);
                         break;
+                    case 'ivyforms':
+                        $('.wdt-preload-layer').animateFadeIn();
+                        window.location.replace(window.location.pathname + '?page=wpdatatables-constructor&source=ivyforms');
+                        break;
                     case 'manual':
                         $('div.wdt-constructor-step[data-step="1-1"]').animateFadeIn();
                         $('#wdt-constructor-number-of-columns').change().keyup();

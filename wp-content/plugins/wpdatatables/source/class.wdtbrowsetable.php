@@ -285,6 +285,7 @@ class WDTBrowseTable extends WP_List_Table
             case 'functions':
                 $return_string = '';
                 $simpleTableType = ($item['table_type'] == 'simple') ? '&simple' : '';
+                $ivyTableType = ($item['table_type'] == 'ivyforms') ? '=ivyforms' : '';
                 if (in_array($item['table_type'], WPDataTable::$allowedTableTypes)) {
                     $return_string = '<div class="wdt-function-flex"><a type="button" 
                                          class="wdt-duplicate-table" 
@@ -314,7 +315,7 @@ class WDTBrowseTable extends WP_List_Table
                                             data-table_id="' . esc_attr($item['id']) . '" 
                                             data-table_name="' . esc_attr($item['title']) . '" 
                                             data-toggle="tooltip" title="' . esc_attr__('Configure', 'wpdatatables') . '" 
-                                            href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . (int)$item['id'] . '" ><i class="wpdt-icon-cog"></i></a>';
+                                            href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . $ivyTableType . '&table_id=' . (int)$item['id'] . '" ><i class="wpdt-icon-cog"></i></a>';
                 }
                 $return_string .= ' <a type="button" 
                                        class="wdt-submit-delete" 
@@ -348,13 +349,14 @@ class WDTBrowseTable extends WP_List_Table
     function column_title($item)
     {
         $simpleTableType = ($item['table_type'] == 'simple') ? '&simple' : '';
+        $ivyTableType = ($item['table_type'] == 'ivyforms') ? '=ivyforms' : '';
         if (in_array($item['table_type'], WPDataTable::$allowedTableTypes)) {
 //            $actions = array(
 //                'edit' => '<a href="admin.php?page=wpdatatables-constructor&source&table_id=' . $item['id'] . '" title="' . __('Configure', 'wpdatatables') . '">' . __('Configure', 'wpdatatables') . '</a>',
 //                'trash' => '<a class="wdt-submit-delete" title="' . __('Delete', 'wpdatatables') . '" href="' . wp_nonce_url('admin.php?page=wpdatatables-administration&action=delete&table_id=' . $item['id'] . '', 'wdtDeleteTableNonce', 'wdtNonce') . '" rel="' . $item['id'] . '">' . __('Delete', 'wpdatatables') . '</a>'
 //            );
 
-            return '<a href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . (int)$item['id'] . '">' . esc_html($item['title']) . '</a> ';
+            return '<a href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . $ivyTableType . '&table_id=' . (int)$item['id'] . '">' . esc_html($item['title']) . '</a> ';
         } else {
             return esc_html($item['title']);
         }
