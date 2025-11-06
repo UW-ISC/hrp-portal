@@ -4,7 +4,7 @@
  * Plugin Name: Max Mega Menu - Pro Addon
  * Plugin URI:  https://www.megamenu.com
  * Description: Extends the free version of Max Mega Menu with additional functionality.
- * Version:     2.4.3
+ * Version:     2.4.4
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * Copyright:   2020 Tom Hemsley (https://www.megamenu.com)
@@ -24,7 +24,7 @@ class Mega_Menu_Pro {
 	/**
 	 * @var string
 	 */
-	public $version = '2.4.3';
+	public $version = '2.4.4';
 
 
 	/**
@@ -60,6 +60,8 @@ class Mega_Menu_Pro {
 		add_action( "megamenu_general_settings", array( $this, 'add_icons_settings_to_general_settings' ), 21 );
 		add_filter( "megamenu_submitted_settings", array( $this, 'populate_empty_checkbox_values'), 9 );
 		add_action( "set_transient_megamenu_css", array( $this, 'set_megamenu_pro_css_version' ), 10, 3);
+		add_filter( 'megamenu_scss_variables', array( $this, 'add_vars_to_scss'), 10, 4 );
+
 
 		$this->load();
 	}
@@ -240,8 +242,8 @@ class Mega_Menu_Pro {
 		wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery'), MEGAMENU_PRO_VERSION );
 
 		if ( is_plugin_active( 'megamenu/megamenu.php' ) ) {
-			wp_enqueue_script( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.js', array( 'jquery' ), MEGAMENU_VERSION );
-			wp_enqueue_style( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.css', false, MEGAMENU_VERSION );
+			wp_enqueue_script( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.js', array( 'jquery' ), MEGAMENU_VERSION );
+			wp_enqueue_style( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.css', false, MEGAMENU_VERSION );
 
 			if ( function_exists('wp_enqueue_code_editor') ) {
 				wp_deregister_style('codemirror');
@@ -495,6 +497,19 @@ class Mega_Menu_Pro {
 		}
 	}
 
+
+    /**
+     * Add css_type var if it doesn't exist already
+     */
+    public function add_vars_to_scss( $vars, $location, $theme, $menu_id ) {
+
+        if ( ! isset( $vars['css_type'] ) ) {
+            $vars['css_type'] = isset($theme['use_flex_css']) && $theme['use_flex_css'] == 'on' ? 'flex' : 'standard';
+        }
+
+        return $vars;
+
+    }
 }
 
 add_action( 'plugins_loaded', array( 'Mega_Menu_Pro', 'init' ), 11 );

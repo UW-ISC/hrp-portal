@@ -179,6 +179,11 @@ class MLACoreOptions {
 	const MLA_SEARCH_MEDIA_FILTER_DEFAULTS = 'search_media_filter_defaults';
 
 	/**
+	 * Provides a unique name for the named transfer item encryption key option
+	 */
+	const MLA_NAMED_TRANSFER_ITEM_KEY = 'named_transfer_item_key';
+
+	/**
 	 * Provides a "size" attribute value for the EXIF/Template Value field
 	 */
 	const MLA_EXIF_SIZE = 50;
@@ -1145,6 +1150,12 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to remove the <code>/wp-content/mla-backup</code> directory and its contents when the plugin is deleted.', 'media-library-assistant' )),
+
+			// This option provides a unique name for the named transfer item encryption key option
+			self::MLA_NAMED_TRANSFER_ITEM_KEY =>
+				array('tab' => '',
+					'type' => 'hidden', 
+					'std' => ''),
 
 			'template_header' =>
 				array('tab' => 'mla_gallery',

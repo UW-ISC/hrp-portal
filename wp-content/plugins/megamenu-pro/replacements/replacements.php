@@ -1156,20 +1156,7 @@ class Mega_Menu_Replacements {
 	 */
 	public function print_theme_color_option( $key, $value ) {
 
-		if ( $value == 'transparent' ) {
-			$value = 'rgba(0,0,0,0)';
-		}
-
-		if ( $value == 'rgba(0,0,0,0)' ) {
-			$value_text = 'transparent';
-		} else {
-			$value_text = $value;
-		}
-
-		$html  = "<div class='mm-picker-container'>";
-		$html .= "    <input type='text' class='mm_colorpicker' name='settings[replacements][search][$key]' value='{$value}' />";
-		$html .= "    <div class='chosen-color'>{$value_text}</div>";
-		$html .= "</div>";
+		$html = "    <input type='text' class='mega-color-picker-input' name='settings[replacements][search][$key]' value='{$value}' />";
 
 		return $html;
 

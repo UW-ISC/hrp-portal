@@ -5,6 +5,17 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.4.4 =
+
+* New: Use new color picker introduced in Max Mega Menu v3.6
+* Fix: Sticky menu height when using Flex CSS option
+* Fix: Sticky menu options get reset when saving the menu data on nav-menus.php
+* Fix: Tab Height on mobile
+* Fix: Allow sub menu background images to be applied to sub menus within mega menus
+* Fix: "Tab Content" tab incorreclty shows on child items when parent settings haven't been saved yet
+* Fix: Add min-width to custom icons when flex styling is used
+* Fix: Flex CSS Styling option now respects custom icon vertical align setting
+
 = 2.4.3 =
 
 * Fix: WordPress 6.8 PHP notice "Function _load_textdomain_just_in_time was called incorrectly"

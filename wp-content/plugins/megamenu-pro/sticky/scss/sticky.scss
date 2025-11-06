@@ -29,6 +29,7 @@
         @if $sticky_menu_height == on {
             @include desktop {
                 #{$menu} > li.mega-menu-item > a.mega-menu-link {
+                    min-height: $sticky_menu_item_link_height;
                     height: $sticky_menu_item_link_height;
                     line-height: $sticky_menu_item_link_height;
                 }
@@ -53,7 +54,7 @@
     @if $sticky_menu_height == on and $sticky_menu_transition == on {
         @include desktop {
             #{$menu} > li.mega-menu-item > a.mega-menu-link {
-                transition: height .25s ease-in-out, line-height .25s ease-in-out;
+                transition: height .25s ease-in-out, line-height .25s ease-in-out, min-height .25s ease-in-out;;
             }
             #{$menu} > li.mega-menu-item > a.mega-menu-logo > img.mega-menu-logo {
                 transition: all .25s ease-in-out;

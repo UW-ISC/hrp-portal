@@ -50,8 +50,23 @@
                             background-repeat: no-repeat;
                             width: $custom_icon_width;
                             height: $custom_icon_height;
-                            line-height: $custom_icon_height;
-                            vertical-align: $custom_icon_vertical_align;
+
+                            @if $css_type != flex {
+                                line-height: $custom_icon_height;
+                                vertical-align: $custom_icon_vertical_align;
+                            }
+
+                            @if $css_type == flex {
+
+                                min-width: $custom_icon_width;
+                                
+                                @if $custom_icon_vertical_align == top {
+                                    margin-bottom: auto;
+                                }
+                                @if $custom_icon_vertical_align == bottom {
+                                    margin-top: auto;
+                                }
+                            }
 
                             @media (-webkit-min-device-pixel-ratio: 2) {
                                 background-image: url($custom_icon_2x_url);
