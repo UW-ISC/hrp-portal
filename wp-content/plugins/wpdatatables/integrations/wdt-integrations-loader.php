@@ -22,6 +22,9 @@ class WDTIntegrationsLoader
         require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtBakeryBlock.php');
         require_once(WDT_STARTER_INTEGRATIONS_PATH . 'page-builders/wpbakery/wdtCustomBakery.php');
 
+        // Include IvyForms Integration
+        require_once(WDT_STARTER_INTEGRATIONS_PATH . '/ivyforms/ivyforms-integration.php');
+
         // Include Global Page Search
         if (is_file(WDT_STARTER_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php')) {
             require_once(WDT_STARTER_INTEGRATIONS_PATH . 'global-search-for-all-tables/wdt-global-search-all-tables-integration.php');

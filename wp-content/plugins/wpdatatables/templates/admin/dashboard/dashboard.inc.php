@@ -126,6 +126,7 @@
                         $lastTableData = WDTTools::getLastTableData('table');
                         $tableType = WDTTools::getConvertedTableType($lastTableData->table_type);
                         $simpleType = $lastTableData->table_type == 'simple' ? '&simple' : '';
+                        $ivyType = $lastTableData->table_type == 'ivyforms' ? '=ivyforms': '';
                         ?>
                         <div class="card-body wpdt-flex card-padding">
                             <div class="wdt-table-count text-center">
@@ -134,7 +135,7 @@
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-table-last-created">
-                                <a href="admin.php?page=wpdatatables-constructor&source<?php echo $simpleType ?>&table_id=<?php echo (int)$lastTableData->id; ?>"
+                                <a href="admin.php?page=wpdatatables-constructor&source<?php echo $simpleType . $ivyType ?>&table_id=<?php echo (int)$lastTableData->id; ?>"
                                    class="wdt-table-link">
                                     <?php echo esc_html($lastTableData->title) ?>
                                 </a>
@@ -266,17 +267,15 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            Minor update with improvements and bugfixes:
+                            New update with some exciting news:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issue with Transform Value not working when Row Grouping and filters are enabled.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with deleting Custom Fields during WooCommerce table creation wizard.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Gutenberg not loading the tables properly.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Fixed header displaying column sorting arrows.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with the Global settings responsiveness.</li>
-                                <li>Other small bug fixes.</li>
+                                <li><strong>Integration with IvyForms plugin</strong> for creating tables from form submissions.</li>
+                                <li><strong>Improvement:</strong> Upgraded PHPSpreadsheet library to a security-checked version.</li>
+                                <li><strong>Improvement:</strong> Added Greek and Italian translations.</li>
+                                <li>Other small bug fixes and stability improvements.</li>
                             </ul>
                         </div>
 
