@@ -1,5 +1,16 @@
-### 2.9.21.1
+### 2.8.22.1
+- Fixed a bug that prevents the "Embed Form" functionality from pre-selecting the correct form in WordPress 6.9.
+- API: Added the GF_Field::$is_payment property, so developers can indicate if a field is used to capture payments. This can be used by features (e.g. Save and Continue) to exclude the field without checking for specific field types.
+- Added a hook for `gform_before_delete_field` in the init_ajax() function.
+- Added security enhancements.
+
+### 2.9.22 | 2025-11-13
+- Added Stripe Membership and Stripe Event Sponsorship templates to the Template Library.
+- Added security enhancements.
+- Added copy buttons to the Consumer Key and Consumer Secret when adding a new REST API Key.
+- API: Deprecated the JS-based GFMergeTag, which will be removed in Gravity Forms 3.1 Use gform.mergeTags instead.
 - Fixed an issue introduced in 2.9.21 where the selected file is not saved for a single File Upload field when editing an existing entry.
+- API: Removed `GFFeedAddon::paypal_fulfillment()` legacy method.
 
 ### 2.9.21 | 2025-10-29
 - Added security enhancements.
