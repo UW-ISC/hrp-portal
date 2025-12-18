@@ -8,7 +8,7 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.3.2');
+define('WDT_CURRENT_VERSION', '7.3.3');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
@@ -59,8 +59,11 @@ define('WDT_JS_PATH', WDT_ROOT_URL . 'assets/js/'); // path to wpDataTables java
 define('WDT_INCLUDE_DATATABLES_CORE', true); // Whether to include link to jQuery DataTables plugin javascript to the generated page. Set to false if you already have DataTables included in your project (version used in wpDataTables is 1.9.1, newer version will be provided with updates).
 
 /** Store URL */
-define('WDT_STORE_URL', 'https://store.tms-plugins.com/');
-define('WDT_STORE_API_URL', 'https://store.tms-plugins.com/api/');
+define('WDT_STORE_URL', 'https://store.melograno.io/');
+define('WDT_STORE_API_URL', 'https://store.melograno.io/api/');
+
+/** Melograno Main URL */
+define('WDT_COMPANY_URL', 'https://melograno.io/');
 
 //[<-- Full version insertion #16 -->]//
 
@@ -97,5 +100,3 @@ if (defined('PHP_VERSION')) {
 } else {
     define('WDT_PHP_SERVER_VERSION', 0);
 }
-
-

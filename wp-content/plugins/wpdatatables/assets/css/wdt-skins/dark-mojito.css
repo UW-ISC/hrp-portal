@@ -2843,7 +2843,9 @@ div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-columnVis
 .wpdt-c.wdt-skin-dark-mojito .bootstrap-select .bs-searchbox:before {
     top: -10px;
 }
-
+.wpdt-c.wdt-skin-dark-mojito .bootstrap-select.editDialogInput .bs-searchbox:before {
+    top: 0;
+}
 .wpdt-c.wdt-skin-dark-mojito tfoot .bootstrap-select .bs-searchbox:before,
 .wpdt-c.wdt-skin-dark-mojito .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
     top: 10px;

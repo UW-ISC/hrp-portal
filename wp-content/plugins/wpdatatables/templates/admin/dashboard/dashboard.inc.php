@@ -267,15 +267,20 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with some exciting news:
+                            New update with improvements and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Integration with IvyForms plugin</strong> for creating tables from form submissions.</li>
-                                <li><strong>Improvement:</strong> Upgraded PHPSpreadsheet library to a security-checked version.</li>
-                                <li><strong>Improvement:</strong> Added Greek and Italian translations.</li>
-                                <li>Other small bug fixes and stability improvements.</li>
+                                <li><strong>Improvement:</strong> Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.</li>
+                                <li><strong>Improvement:</strong> Improved working with different types of Custom Fields (Date/Time/Numeric).</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Advanced Filtering in the header for Date Modal.</li>
+                                <li><strong>BugFix:</strong> Fixed inconsistent synchronization between Global Search and Column Filters in Column List.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Inline Editing for Dropdown Fields.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Custom Fields for Number filters.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Selectbox Filters when Horizontal Scrolling is enabled.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Save button override affecting the Airtable Add-On.</li>
+                                <li>Other small bug fixes</li>
                             </ul>
                         </div>
 
@@ -291,7 +296,7 @@
                         <ul class="actions">
                             <li class="m-b-0">
                                 <button class="wdt-card-header-link">
-                                    <a href="https://store.tms-plugins.com/login" target="_blank">
+                                    <a href="https://store.melograno.io/login" target="_blank">
                                         <?php esc_html_e('Manage your subscriptions', 'wpdatatables'); ?>
                                     </a>
                                 </button>
@@ -777,10 +782,10 @@
         </div>
         <div class="row">
             <h6 class="text-center wdt-footer-title">
-                <?php esc_html_e('Made by', 'wpdatatables'); ?>
-                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                <?php esc_html_e('Made by Melograno Venture Studio', 'wpdatatables'); ?>
+                <a href="<?php echo WDT_COMPANY_URL; ?>/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
                    target="_blank">
-                    <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
+                    <img src="<?php echo WDT_ASSETS_PATH; ?>img/Melograno-primary.svg" alt="" style="width: 28px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">

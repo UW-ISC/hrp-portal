@@ -964,6 +964,29 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
             //Added for fixed columns and fixed headers (height for showing selectbox)
             showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('shown.bs.select', function (e) {
+            // Fix width when using container: body
+            var bsContainer = jQuery('.bs-container').filter(function() {
+                return jQuery(this).find('select').is(select);
+            });
+            if (bsContainer.length > 0) {
+                bsContainer.css('width', 'auto');
+                bsContainer.css('min-width', '200px');
+                bsContainer.find('.dropdown-menu').css('min-width', '200px');
+            }
+
+            // Trigger search to load options immediately after dropdown is shown
+            var searchBox = select.parent().find('.bs-searchbox .form-control');
+            if (searchBox.length === 0) {
+                // When using container: body, find it in the body
+                var btnId = select.parent().find('button.dropdown-toggle').attr('aria-owns');
+                if (btnId) {
+                    searchBox = jQuery('#' + btnId).parent().find('.bs-searchbox .form-control');
+                }
+            }
+            if (searchBox.length > 0) {
+                searchBox.focus().val('').trigger('input').trigger('keyup');
+            }
         }).on('hide.bs.select', function (e) {
             //Added for fixed columns and fixed headers (when closing selectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
@@ -1181,6 +1204,29 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
             //Added for fixed columns and fixed headers (height for showing multiselectbox)
             showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('shown.bs.select', function (e) {
+            // Fix width when using container: body
+            var bsContainer = jQuery('.bs-container').filter(function() {
+                return jQuery(this).find('select').is(select);
+            });
+            if (bsContainer.length > 0) {
+                bsContainer.css('width', 'auto');
+                bsContainer.css('min-width', '200px');
+                bsContainer.find('.dropdown-menu').css('min-width', '200px');
+            }
+
+            // Trigger search to load options immediately after dropdown is shown
+            var searchBox = select.parent().find('.bs-searchbox .form-control');
+            if (searchBox.length === 0) {
+                // When using container: body, find it in the body
+                var btnId = select.parent().find('button.dropdown-toggle').attr('aria-owns');
+                if (btnId) {
+                    searchBox = jQuery('#' + btnId).parent().find('.bs-searchbox .form-control');
+                }
+            }
+            if (searchBox.length > 0) {
+                searchBox.focus().val('').trigger('input').trigger('keyup');
+            }
         }).on('hide.bs.select', function (e) {
             //Added for fixed columns and fixed headers (when closing multiselectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);

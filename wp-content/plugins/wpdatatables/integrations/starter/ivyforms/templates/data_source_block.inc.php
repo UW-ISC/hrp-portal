@@ -13,7 +13,9 @@ if ($ivyforms_installed) {
     if (defined('IVYFORMS_VERSION') && version_compare(IVYFORMS_VERSION, '0.5', '<')) {
         $ivyforms_needs_update = true;
     }
-    $integration_enabled = IvyFormsAPI::isIntegrationEnabled('wpdatatables');
+    if (method_exists('IvyForms\Services\API\IvyFormsAPI', 'isIntegrationEnabled')) {
+        $integration_enabled = IvyFormsAPI::isIntegrationEnabled('wpdatatables');
+    }
     if ($integration_enabled) {
         // Use only forms with wpDataTables integration enabled
         $forms = isset($forms_for_template) ? $forms_for_template : IvyFormsAPI::getFormsWithIntegrationEnabled('wpdatatables');

@@ -65,6 +65,7 @@ class EditingIntegration
     public static function adminEnqueueScripts()
     {
         wp_enqueue_script('wdt-inline-editing', WDT_EDIT_ROOT_URL . 'js/wdt.inlineEditing.js', array(), WDT_CURRENT_VERSION, true);
+        wp_localize_script('wdt-inline-editing', 'wpdatatables_inline_strings', WDTTools::getTranslationStringsInlineEditing());
     }
 
     public static function frontendEnqueueScripts($obj)

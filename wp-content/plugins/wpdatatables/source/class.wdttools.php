@@ -766,31 +766,54 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '23.10.2025',
+            'release_date' => '10.12.2025.',
             'features' => [
-                0 => [
-                    'text' => 'Integration with IvyForms plugin for creating tables from form submissions.',
-                    'link' => 'https://wpdatatables.com/documentation/addons/ivyforms-integration/'
-                ],
+//                0 => [
+//                    'text' => 'Integration with IvyForms plugin for creating tables from form submissions.',
+//                    'link' => ''
+//                ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Upgraded PHPSpreadsheet library to a security-checked version.',
+                    'text' => 'Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Added Greek and Italian translations.',
+                    'text' => 'Improved working with different types of Custom Fields (Date/Time/Numeric).',
                     'link' => ''
                 ],
             ],
             'bugfixes' => [
+                0 => [
+                    'text' => 'Fixed issue with Advanced Filtering in the header for Date Modal.',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Fixed inconsistent synchronization between Global Search and Column Filters in Column List.',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Fixed issue with Inline Editing for Dropdown Fields.',
+                    'link' => ''
+                ],
+                3 => [
+                    'text' => 'Fixed issue with Custom Fields for Number filters.',
+                    'link' => ''
+                ],
+                4 => [
+                    'text' => 'Fixed issue with Selectbox Filters when Horizontal Scrolling is enabled.',
+                    'link' => ''
+                ],
+                5 => [
+                    'text' => 'Fixed issue with Save button override affecting the Airtable Add-On.',
+                    'link' => ''
+                ],
             ],
         );
     }
 
     /**
-     * Helper function that returns all update info
-     * TODO (Update before new versions)
+     * Helper function that returns an array with deactivation info
      * @return array
      */
     public static function getDeactivationInfo()
