@@ -1087,18 +1087,68 @@ class WPQueryIntegration
                         $queryData->post_parent = intval($searchValue);
                         break;
                     default:
-                        if ($wdtParameters["exactFiltering"][$columnName] === 1) {
-                            $queryData->meta_query[] = array(
-                                'key' => $columnName,
-                                'value' => $searchValue,
-                                'compare' => '=',
-                            );
+                        // Check if this is a number range filter - special case
+                        $filterType = isset($wdtParameters['filterTypes'][$columnName]) ? $wdtParameters['filterTypes'][$columnName] : null;
+
+                        if ($filterType === 'number-range' && strpos($searchValue, '|') !== false) {
+                            list($left, $right) = explode('|', $searchValue);
+                            if ($left !== '' && $right !== '') {
+                                // Both min and max are set - use BETWEEN
+                                if (get_option('wdtNumberFormat') == 1) {
+                                    $left = str_replace(',', '.', str_replace('.', '', $left));
+                                    $right = str_replace(',', '.', str_replace('.', '', $right));
+                                } else {
+                                    $left = str_replace(',', '', $left);
+                                    $right = str_replace(',', '', $right);
+                                }
+                                $queryData->meta_query[] = array(
+                                    'key' => $columnName,
+                                    'value' => array((float)$left, (float)$right),
+                                    'type' => 'NUMERIC',
+                                    'compare' => 'BETWEEN',
+                                );
+                            } elseif ($left !== '') {
+                                // Only min is set
+                                if (get_option('wdtNumberFormat') == 1) {
+                                    $left = str_replace(',', '.', str_replace('.', '', $left));
+                                } else {
+                                    $left = str_replace(',', '', $left);
+                                }
+                                $queryData->meta_query[] = array(
+                                    'key' => $columnName,
+                                    'value' => (float)$left,
+                                    'type' => 'NUMERIC',
+                                    'compare' => '>=',
+                                );
+                            } elseif ($right !== '') {
+                                // Only max is set
+                                if (get_option('wdtNumberFormat') == 1) {
+                                    $right = str_replace(',', '.', str_replace('.', '', $right));
+                                } else {
+                                    $right = str_replace(',', '', $right);
+                                }
+                                $queryData->meta_query[] = array(
+                                    'key' => $columnName,
+                                    'value' => (float)$right,
+                                    'type' => 'NUMERIC',
+                                    'compare' => '<=',
+                                );
+                            }
                         } else {
-                            $queryData->meta_query[] = array(
-                                'key' => $columnName,
-                                'value' => $searchValue,
-                                'compare' => 'LIKE',
-                            );
+                            // Handle text-based filtering
+                            if ($wdtParameters["exactFiltering"][$columnName] === 1) {
+                                $queryData->meta_query[] = array(
+                                    'key' => $columnName,
+                                    'value' => $searchValue,
+                                    'compare' => '=',
+                                );
+                            } else {
+                                $queryData->meta_query[] = array(
+                                    'key' => $columnName,
+                                    'value' => $searchValue,
+                                    'compare' => 'LIKE',
+                                );
+                            }
                         }
                         break;
                 }
@@ -1417,7 +1467,6 @@ class WPQueryIntegration
 
         // Add custom fields
         $cfLookup = array_column($customFieldColumns, 'column_header', 'cf');
-        $customFields = get_post_meta($postId);
 
         // Add selected taxonomies
         foreach (array_keys($usedTaxonomies) as $taxonomy) {
@@ -1442,11 +1491,20 @@ class WPQueryIntegration
         foreach ($selectedCustomFields as $field) {
             $postData[$field] = null;
             $wdtParameters['columnTitles'][$field] = $wdtParameters['columnTitles'][$field] ?? $cfLookup[$field] ?? 'New column';
-        }
-        foreach ($customFields as $key => $values) {
-            if (in_array($key, $selectedCustomFields, true) && !empty($values)) {
-                $postData[$key] = implode(', ', $values);
+
+            // Use get_field() if available (ACF), otherwise fall back to get_post_meta()
+            if (function_exists('get_field')) {
+                $value = get_field($field, $postId);
+            } else {
+                $value = get_post_meta($postId, $field, true);
             }
+
+            // Convert arrays to strings
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+            }
+
+            $postData[$field] = ($value !== false && $value !== null && $value !== '') ? $value : '';
         }
     }
 }

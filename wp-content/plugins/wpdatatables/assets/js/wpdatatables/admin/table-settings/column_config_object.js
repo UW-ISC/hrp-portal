@@ -1952,7 +1952,7 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
                 .removeClass('inactive');
             if (!column.globalSearchColumn) {
                 column.globalSearchColumn = 1;
-                $columnBlock.find('i.wdt-toggle-global-search').removeClass('inactive');
+                jQuery(this).closest('.wdt-column-block').find('i.wdt-toggle-global-search').removeClass('inactive');
             }
         } else {
             column.filter_type = 'none';
@@ -2047,14 +2047,14 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
             column.globalSearchColumn = 0;
             jQuery(this)
                 .addClass('inactive');
-            $columnBlock.find('i.wdt-toggle-show-filters')
+            jQuery(this).closest('.wdt-column-block').find('i.wdt-toggle-show-filters')
                 .addClass('inactive');
             column.filter_type = "none";
         } else {
             column.globalSearchColumn = 1;
             jQuery(this)
                 .removeClass('inactive');
-            $columnBlock.find('i.wdt-toggle-show-filters')
+            jQuery(this).closest('.wdt-column-block').find('i.wdt-toggle-show-filters')
                 .removeClass('inactive');
             column.filter_type = "text";
         }
@@ -2090,6 +2090,7 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
         $columnBlock = jQuery(columnHtml).appendTo('#column-transform-value div.transform-value-shortcodes-container');
         $columnBlock.find('div.fg-line input').replaceWith('<span>' + '{' + this.orig_header + '.value}' + '</span>');
         $columnBlock.attr('data-orig_header', this.orig_header);
+        $columnBlock.find('.formula-remove-option').remove();
     }
 
     if (this.type == 'formula') {

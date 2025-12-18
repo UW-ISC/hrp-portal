@@ -428,10 +428,6 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                                     });
                                 }
 
-                                // Add the selected option if obj.params.value is not null
-                                if (obj.params.value !== null && obj.params.inputType === 'selectbox') {
-                                    $(obj.params.editSelector).append('<option selected value="' + obj.params.value + '">' + obj.params.value + '</option>');
-                                }
                                 $(obj.params.editSelector).on('changed.bs.select', function () {
                                     if (obj.params.inputType === 'selectbox') {
                                         $(obj.params.editSelector).data('changed', true);

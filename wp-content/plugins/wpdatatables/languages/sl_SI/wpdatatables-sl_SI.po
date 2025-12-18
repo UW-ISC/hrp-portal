@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wpdatatables\n"
-"POT-Creation-Date: 2025-10-23 14:15+0200\n"
-"PO-Revision-Date: 2025-10-23 14:15+0200\n"
+"POT-Creation-Date: 2025-12-11 12:17+0100\n"
+"PO-Revision-Date: 2025-12-11 12:17+0100\n"
 "Last-Translator: Bostjan Laba <bostjan@neolink.si>\n"
 "Language-Team: wpdatatables <cjbug@yandex.ru>\n"
 "Language: sl_SI\n"
@@ -69,19 +69,19 @@ msgstr ""
 msgid "Report with ID "
 msgstr ""
 
-#: reportbuilder/reportbuilder.php:462 reportbuilder/reportbuilder.php:476
-#: wdt-formidable-integration/wdt-formidable-integration.php:611
-#: wdt-formidable-integration/wdt-formidable-integration.php:625
-#: wdt-gravity-integration/wdt-gravity-integration.php:1641
-#: wdt-gravity-integration/wdt-gravity-integration.php:1655
-#: wdt-master-detail/wdt-master-detail.php:1830
-#: wdt-master-detail/wdt-master-detail.php:1844
-#: wdt-powerful-filters/wdt-powerful-filters.php:869
-#: wdt-powerful-filters/wdt-powerful-filters.php:883
+#: reportbuilder/reportbuilder.php:478 reportbuilder/reportbuilder.php:492
+#: wdt-formidable-integration/wdt-formidable-integration.php:626
+#: wdt-formidable-integration/wdt-formidable-integration.php:640
+#: wdt-gravity-integration/wdt-gravity-integration.php:1664
+#: wdt-gravity-integration/wdt-gravity-integration.php:1678
+#: wdt-master-detail/wdt-master-detail.php:1853
+#: wdt-master-detail/wdt-master-detail.php:1867
+#: wdt-powerful-filters/wdt-powerful-filters.php:892
+#: wdt-powerful-filters/wdt-powerful-filters.php:906
 msgid "settings"
 msgstr "nastavitve"
 
-#: reportbuilder/reportbuilder.php:465 reportbuilder/reportbuilder.php:481
+#: reportbuilder/reportbuilder.php:481 reportbuilder/reportbuilder.php:497
 #, fuzzy, php-format
 #| msgid ""
 #| "To receive automatic updates license activation is required. Please visit "
@@ -108,7 +108,7 @@ msgstr ""
 #: reportbuilder/templates/settings.tpl.php:19
 #: wpdatatables/controllers/wdt_admin.php:60
 #: wpdatatables/controllers/wdt_admin.php:61
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:313
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:319
 #: wpdatatables/templates/admin/settings/settings.inc.php:21
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:45
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:65
@@ -123,12 +123,12 @@ msgstr ""
 #: reportbuilder/source/class.admin.php:242
 #: reportbuilder/source/class.admin.php:737
 #: wpdatatables/source/class.wdttools.php:354
-#: wpdatatables/source/class.wdttools.php:386
-#: wpdatatables/source/class.wdttools.php:407
-#: wpdatatables/source/class.wdttools.php:446
-#: wpdatatables/source/class.wdttools.php:498
-#: wpdatatables/source/class.wdttools.php:642
-#: wpdatatables/source/class.wdttools.php:708
+#: wpdatatables/source/class.wdttools.php:388
+#: wpdatatables/source/class.wdttools.php:409
+#: wpdatatables/source/class.wdttools.php:448
+#: wpdatatables/source/class.wdttools.php:500
+#: wpdatatables/source/class.wdttools.php:644
+#: wpdatatables/source/class.wdttools.php:710
 msgid "Error!"
 msgstr "Napaka!"
 
@@ -144,18 +144,18 @@ msgstr ""
 
 #: reportbuilder/source/class.admin.php:736
 #: wpdatatables/source/class.wdttools.php:353
-#: wpdatatables/source/class.wdttools.php:385
-#: wpdatatables/source/class.wdttools.php:406
-#: wpdatatables/source/class.wdttools.php:445
-#: wpdatatables/source/class.wdttools.php:497
-#: wpdatatables/source/class.wdttools.php:641
-#: wpdatatables/source/class.wdttools.php:707
+#: wpdatatables/source/class.wdttools.php:387
+#: wpdatatables/source/class.wdttools.php:408
+#: wpdatatables/source/class.wdttools.php:447
+#: wpdatatables/source/class.wdttools.php:499
+#: wpdatatables/source/class.wdttools.php:643
+#: wpdatatables/source/class.wdttools.php:709
 msgid "Success!"
 msgstr "Uspeh!"
 
 #: reportbuilder/source/class.admin.php:738
 #: wpdatatables/source/class.wdttools.php:370
-#: wpdatatables/source/class.wdttools.php:447
+#: wpdatatables/source/class.wdttools.php:449
 msgid ""
 "<small>You've selected the <strong>'Replace rows with source data'</strong> "
 "option. This means that you're about to <strong>delete all the data</strong> "
@@ -169,7 +169,7 @@ msgstr ""
 
 #: reportbuilder/source/class.admin.php:739
 #: wpdatatables/source/class.wdttools.php:371
-#: wpdatatables/source/class.wdttools.php:448
+#: wpdatatables/source/class.wdttools.php:450
 msgid ""
 "<small>You've selected the <strong>'Add data to current table data'</strong> "
 "option. This means that you're about to <strong>add data</strong> from the "
@@ -183,7 +183,7 @@ msgstr ""
 
 #: reportbuilder/source/class.admin.php:740
 #: wpdatatables/source/class.wdttools.php:372
-#: wpdatatables/source/class.wdttools.php:449
+#: wpdatatables/source/class.wdttools.php:451
 msgid ""
 "<small>You've selected the <strong>'Replace entire table data'</strong> "
 "option. This means that you're about to <strong>delete your entire table "
@@ -198,46 +198,46 @@ msgstr ""
 
 #: reportbuilder/source/class.admin.php:741
 #: wpdatatables/source/class.wdttools.php:357
-#: wpdatatables/source/class.wdttools.php:389
-#: wpdatatables/source/class.wdttools.php:450
+#: wpdatatables/source/class.wdttools.php:391
+#: wpdatatables/source/class.wdttools.php:452
 msgid "Table name can not be empty! Please provide a name for your table."
 msgstr "Ime tabele ne more biti prazno! Navedite ime svoje mize."
 
 #: reportbuilder/source/class.admin.php:742
 #: wpdatatables/source/class.wdttools.php:360
-#: wpdatatables/source/class.wdttools.php:408
-#: wpdatatables/source/class.wdttools.php:451
+#: wpdatatables/source/class.wdttools.php:410
+#: wpdatatables/source/class.wdttools.php:453
 msgid "Table saved successfully!"
 msgstr "Tabela je uspešno shranjena!"
 
 #: reportbuilder/source/class.admin.php:743
 #: wpdatatables/source/class.wdttools.php:361
-#: wpdatatables/source/class.wdttools.php:452
+#: wpdatatables/source/class.wdttools.php:454
 msgid "Select an Excel or CSV file"
 msgstr "Izberite datoteko Excel ali CSV"
 
 #: reportbuilder/source/class.admin.php:744
 #: wpdatatables/source/class.wdttools.php:363
-#: wpdatatables/source/class.wdttools.php:453
-#: wpdatatables/source/class.wdttools.php:513
-#: wpdatatables/source/class.wdttools.php:625
-#: wpdatatables/source/class.wdttools.php:699
+#: wpdatatables/source/class.wdttools.php:455
+#: wpdatatables/source/class.wdttools.php:515
+#: wpdatatables/source/class.wdttools.php:627
+#: wpdatatables/source/class.wdttools.php:701
 msgid "Choose file"
 msgstr "Izberite datoteko"
 
 #: reportbuilder/source/class.admin.php:745
-#: wpdatatables/source/class.wdttools.php:393
-#: wpdatatables/source/class.wdttools.php:454
-#: wpdatatables/source/class.wdttools.php:752
+#: wpdatatables/source/class.wdttools.php:395
+#: wpdatatables/source/class.wdttools.php:456
+#: wpdatatables/source/class.wdttools.php:754
 #, fuzzy
 #| msgid "Select All"
 msgid "Select all"
 msgstr "Izberi vse"
 
 #: reportbuilder/source/class.admin.php:746
-#: wpdatatables/source/class.wdttools.php:394
-#: wpdatatables/source/class.wdttools.php:455
-#: wpdatatables/source/class.wdttools.php:753
+#: wpdatatables/source/class.wdttools.php:396
+#: wpdatatables/source/class.wdttools.php:457
+#: wpdatatables/source/class.wdttools.php:755
 #, fuzzy
 #| msgid "Select All"
 msgid "Deselect all"
@@ -245,25 +245,25 @@ msgstr "Izberi vse"
 
 #: reportbuilder/source/class.admin.php:747
 #: wpdatatables/source/class.wdttools.php:376
-#: wpdatatables/source/class.wdttools.php:456
+#: wpdatatables/source/class.wdttools.php:458
 msgid "JSON roots are found!"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:748
 #: wpdatatables/source/class.wdttools.php:377
-#: wpdatatables/source/class.wdttools.php:457
-#: wpdatatables/source/class.wdttools.php:503
-#: wpdatatables/source/class.wdttools.php:590
-#: wpdatatables/source/class.wdttools.php:685
+#: wpdatatables/source/class.wdttools.php:459
+#: wpdatatables/source/class.wdttools.php:505
+#: wpdatatables/source/class.wdttools.php:592
+#: wpdatatables/source/class.wdttools.php:687
 msgid "Unable to retrieve results"
 msgstr "Rezultatov ni mogoče pridobiti"
 
 #: reportbuilder/source/class.admin.php:749
-#: wpdatatables/source/class.wdttools.php:458
-#: wpdatatables/source/class.wdttools.php:504
-#: wpdatatables/source/class.wdttools.php:591
-#: wpdatatables/source/class.wdttools.php:674
-#: wpdatatables/source/class.wdttools.php:686
+#: wpdatatables/source/class.wdttools.php:460
+#: wpdatatables/source/class.wdttools.php:506
+#: wpdatatables/source/class.wdttools.php:593
+#: wpdatatables/source/class.wdttools.php:676
+#: wpdatatables/source/class.wdttools.php:688
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:2050
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:2070
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:2129
@@ -271,141 +271,141 @@ msgid "Nothing selected"
 msgstr "Nič izbranega"
 
 #: reportbuilder/source/class.admin.php:750
-#: wpdatatables/source/class.wdttools.php:459
-#: wpdatatables/source/class.wdttools.php:505
-#: wpdatatables/source/class.wdttools.php:526
-#: wpdatatables/source/class.wdttools.php:592
-#: wpdatatables/source/class.wdttools.php:657
-#: wpdatatables/source/class.wdttools.php:687
+#: wpdatatables/source/class.wdttools.php:461
+#: wpdatatables/source/class.wdttools.php:507
+#: wpdatatables/source/class.wdttools.php:528
+#: wpdatatables/source/class.wdttools.php:594
+#: wpdatatables/source/class.wdttools.php:659
+#: wpdatatables/source/class.wdttools.php:689
 msgid "Loading..."
 msgstr "Nalaganje..."
 
 #: reportbuilder/source/class.admin.php:751
-#: wpdatatables/source/class.wdttools.php:460
-#: wpdatatables/source/class.wdttools.php:506
-#: wpdatatables/source/class.wdttools.php:593
-#: wpdatatables/source/class.wdttools.php:688
+#: wpdatatables/source/class.wdttools.php:462
+#: wpdatatables/source/class.wdttools.php:508
+#: wpdatatables/source/class.wdttools.php:595
+#: wpdatatables/source/class.wdttools.php:690
 msgid "Currently selected"
 msgstr "Trenutno izbrano"
 
 #: reportbuilder/source/class.admin.php:752
-#: wpdatatables/source/class.wdttools.php:461
-#: wpdatatables/source/class.wdttools.php:507
-#: wpdatatables/source/class.wdttools.php:594
-#: wpdatatables/source/class.wdttools.php:689
+#: wpdatatables/source/class.wdttools.php:463
+#: wpdatatables/source/class.wdttools.php:509
+#: wpdatatables/source/class.wdttools.php:596
+#: wpdatatables/source/class.wdttools.php:691
 #: wpdatatables/templates/frontend/edit_dialog.inc.php:87
 msgid "Search..."
 msgstr "Išči..."
 
 #: reportbuilder/source/class.admin.php:753
-#: wpdatatables/source/class.wdttools.php:462
-#: wpdatatables/source/class.wdttools.php:508
-#: wpdatatables/source/class.wdttools.php:595
-#: wpdatatables/source/class.wdttools.php:690
-msgid "Start typing a search query"
-msgstr "Začnite vnašati iskalno poizvedbo"
-
-#: reportbuilder/source/class.admin.php:754
-#: wpdatatables/source/class.wdttools.php:463
-#: wpdatatables/source/class.wdttools.php:509
-#: wpdatatables/source/class.wdttools.php:596
-#: wpdatatables/source/class.wdttools.php:691
-msgid "No Results"
-msgstr "Ni rezultatov"
-
-#: reportbuilder/source/class.admin.php:755
 #: wpdatatables/source/class.wdttools.php:464
 #: wpdatatables/source/class.wdttools.php:510
 #: wpdatatables/source/class.wdttools.php:597
 #: wpdatatables/source/class.wdttools.php:692
+msgid "Start typing a search query"
+msgstr "Začnite vnašati iskalno poizvedbo"
+
+#: reportbuilder/source/class.admin.php:754
+#: wpdatatables/source/class.wdttools.php:465
+#: wpdatatables/source/class.wdttools.php:511
+#: wpdatatables/source/class.wdttools.php:598
+#: wpdatatables/source/class.wdttools.php:693
+msgid "No Results"
+msgstr "Ni rezultatov"
+
+#: reportbuilder/source/class.admin.php:755
+#: wpdatatables/source/class.wdttools.php:466
+#: wpdatatables/source/class.wdttools.php:512
+#: wpdatatables/source/class.wdttools.php:599
+#: wpdatatables/source/class.wdttools.php:694
 msgid "Please enter more characters"
 msgstr "Vnesite več znakov"
 
 #: reportbuilder/source/class.admin.php:756
-#: wpdatatables/source/class.wdttools.php:465
+#: wpdatatables/source/class.wdttools.php:467
 msgid "Google Maps API key is valid!"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:757
-#: wpdatatables/source/class.wdttools.php:466
+#: wpdatatables/source/class.wdttools.php:468
 #, fuzzy
 #| msgid "There was an error while trying to import table"
 msgid "There was an error while trying to save Google Maps API key!"
 msgstr "Pri poskusu uvoza tabele je prišlo do napake"
 
 #: reportbuilder/source/class.admin.php:758
-#: wpdatatables/source/class.wdttools.php:467
+#: wpdatatables/source/class.wdttools.php:469
 msgid "Google Maps API key is removed!"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:759
-#: wpdatatables/source/class.wdttools.php:468
+#: wpdatatables/source/class.wdttools.php:470
 msgid "API key is valid"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:760
 #: wpdatatables/integrations/starter/google-sheet-api/templates/add_google_sheet_api_configuration.inc.php:41
-#: wpdatatables/source/class.wdttools.php:469
+#: wpdatatables/source/class.wdttools.php:471
 #: wpdatatables/templates/admin/settings/tabs/charts.php:54
 msgid "Validate & Save"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:761
 #: wpdatatables/integrations/pro/folders/templates/browse_table_insert_card.inc.php:267
-#: wpdatatables/source/class.wdttools.php:470
-#: wpdatatables/source/class.wdttools.php:696
+#: wpdatatables/source/class.wdttools.php:472
+#: wpdatatables/source/class.wdttools.php:698
 #: wpdatatables/templates/admin/chart_wizard/steps/step3.inc.php:24
 #: wpdatatables/templates/admin/table-settings/remove_column_modal.inc.php:87
 msgid "Remove"
 msgstr "Odstrani"
 
 #: reportbuilder/source/class.admin.php:762
-#: wpdatatables/source/class.wdttools.php:471
+#: wpdatatables/source/class.wdttools.php:473
 msgid "API key is not valid!"
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:763
-#: wpdatatables/source/class.wdttools.php:472
+#: wpdatatables/source/class.wdttools.php:474
 msgid "Plugin settings saved successfully"
 msgstr "Nastavitve vtičnika so uspešno shranjene"
 
 #: reportbuilder/source/class.admin.php:764
 #: wpdatatables/source/class.wdttools.php:355
-#: wpdatatables/source/class.wdttools.php:473
+#: wpdatatables/source/class.wdttools.php:475
 msgid ""
 "Unable to save settings of plugin. Please try again or contact us over "
 "Support page."
 msgstr ""
 
 #: reportbuilder/source/class.admin.php:765
-#: wpdatatables/source/class.wdttools.php:474
+#: wpdatatables/source/class.wdttools.php:476
 msgid "The purchase code is invalid or it has expired"
 msgstr "Nabavna koda je neveljavna ali pa je potekla"
 
 #: reportbuilder/source/class.admin.php:766
-#: wpdatatables/source/class.wdttools.php:475
+#: wpdatatables/source/class.wdttools.php:477
 msgid "You have reached maximum number of registered domains"
 msgstr "Dosegli ste največje število registriranih domen"
 
 #: reportbuilder/source/class.admin.php:767
-#: wpdatatables/source/class.wdttools.php:476
+#: wpdatatables/source/class.wdttools.php:478
 msgid "It seems you don't have a valid purchase of wpDataTables"
 msgstr "Zdi se, da nimate veljavnega nakupa wpDataTables"
 
 #: reportbuilder/source/class.admin.php:768
-#: wpdatatables/source/class.wdttools.php:477
+#: wpdatatables/source/class.wdttools.php:479
 msgid ""
 "It seems you don't have a valid purchase of Powerful Filters for wpDataTables"
 msgstr "Zdi se, da nimate veljavnega nakupa zmogljivih filtrov za wpDataTables"
 
 #: reportbuilder/source/class.admin.php:769
-#: wpdatatables/source/class.wdttools.php:479
+#: wpdatatables/source/class.wdttools.php:481
 msgid ""
 "It seems you don't have a valid purchase of Report Builder for wpDataTables"
 msgstr "Zdi se, da nimate veljavnega nakupa Builderja poročil za wpDataTables"
 
 #: reportbuilder/source/class.admin.php:770
-#: wpdatatables/source/class.wdttools.php:481
+#: wpdatatables/source/class.wdttools.php:483
 msgid ""
 "It seems you don't have a valid purchase of Gravity Forms integration for "
 "wpDataTables"
@@ -413,7 +413,7 @@ msgstr ""
 "Zdi se, da nimate veljavnega nakupa integracije Gravity Forms za wpDataTables"
 
 #: reportbuilder/source/class.admin.php:771
-#: wpdatatables/source/class.wdttools.php:483
+#: wpdatatables/source/class.wdttools.php:485
 msgid ""
 "It seems you don't have a valid purchase of Formidable Forms integration for "
 "wpDataTables"
@@ -422,17 +422,17 @@ msgstr ""
 "wpDataTables"
 
 #: reportbuilder/source/class.admin.php:772
-#: wpdatatables/source/class.wdttools.php:485
+#: wpdatatables/source/class.wdttools.php:487
 msgid "Plugin has been activated"
 msgstr "Vtičnik je aktiviran"
 
 #: reportbuilder/source/class.admin.php:773
-#: wpdatatables/source/class.wdttools.php:486
+#: wpdatatables/source/class.wdttools.php:488
 msgid "Plugin has been deactivated"
 msgstr "Vtičnik je bil deaktiviran"
 
 #: reportbuilder/source/class.admin.php:774
-#: wpdatatables/source/class.wdttools.php:488
+#: wpdatatables/source/class.wdttools.php:490
 msgid "Activated with Envato"
 msgstr "Aktiviran z Envato"
 
@@ -441,13 +441,13 @@ msgstr "Aktiviran z Envato"
 #: wdt-formidable-integration/templates/activation.inc.php:96
 #: wdt-gravity-integration/templates/activation.inc.php:95
 #: wdt-powerful-filters/templates/activation.inc.php:95
-#: wpdatatables/source/class.wdttools.php:489
+#: wpdatatables/source/class.wdttools.php:491
 #: wpdatatables/templates/admin/settings/tabs/activation.php:133
 msgid "Activate with Envato"
 msgstr "Aktiviranje z Envato"
 
 #: reportbuilder/source/class.admin.php:776
-#: wpdatatables/source/class.wdttools.php:490
+#: wpdatatables/source/class.wdttools.php:492
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Vtičnika ni mogoče deaktivirati. Prosimo, poskusite znova kasneje."
 
@@ -475,7 +475,7 @@ msgstr "Izbriši"
 
 #: reportbuilder/source/class.admin.php:779
 #: wpdatatables/source/class.wdttools.php:346
-#: wpdatatables/source/class.wdttools.php:438
+#: wpdatatables/source/class.wdttools.php:440
 #: wpdatatables/source/class.wpdatatable.php:5204
 #: wpdatatables/source/class.wpdatatable.php:5291
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1278
@@ -523,7 +523,7 @@ msgstr ""
 #: reportbuilder/source/class.vcintegration.php:26
 #: reportbuilder/templates/activation.inc.php:8
 #: wpdatatables/templates/admin/addons/addons.inc.php:169
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:629
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:635
 msgid "Report Builder"
 msgstr "Graditelj poročil"
 
@@ -595,7 +595,6 @@ msgstr ""
 #: wdt-gravity-integration/templates/activation.inc.php:19
 #: wdt-master-detail/templates/activation.inc.php:18
 #: wdt-powerful-filters/templates/activation.inc.php:19
-#: wpdatatables/templates/admin/settings/tabs/activation.php:56
 msgid "TMS Store Purchase Code"
 msgstr "Koda nakupa trgovine TMS"
 
@@ -666,14 +665,14 @@ msgid "Deactivate "
 msgstr "Izklopite"
 
 #: reportbuilder/templates/admin_actions.tpl.php:6
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:319
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:325
 msgid "Configure"
 msgstr "Nastavi"
 
 #: reportbuilder/templates/admin_actions.tpl.php:7
 #: wpdatatables/templates/admin/addons/addons.inc.php:66
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:2005
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:517
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:523
 msgid "Download"
 msgstr ""
 
@@ -747,7 +746,7 @@ msgstr "Potrdite brisanje. Razveljavitve ni!"
 #: wdt-gravity-integration/templates/edit_modal.php:110
 #: wpdatatables/integrations/pro/folders/templates/browse_table_insert_card.inc.php:260
 #: wpdatatables/integrations/standard/formula-column/templates/formula_editor_modal.inc.php:80
-#: wpdatatables/source/class.wdttools.php:918
+#: wpdatatables/source/class.wdttools.php:947
 #: wpdatatables/templates/admin/browse/chart/duplicate_chart_modal.inc.php:44
 #: wpdatatables/templates/admin/browse/table/duplicate_table_modal.inc.php:62
 #: wpdatatables/templates/admin/chart_wizard/chart_wizard.inc.php:43
@@ -783,7 +782,7 @@ msgstr "Napaka"
 #: reportbuilder/templates/shortcodes_modal.inc.php:39
 #: wpdatatables/integrations/standard/foreign-key/templates/foreign_key_config.inc.php:99
 #: wpdatatables/source/class.wdttools.php:356
-#: wpdatatables/source/class.wdttools.php:578
+#: wpdatatables/source/class.wdttools.php:580
 #: wpdatatables/templates/admin/common/error_modal.inc.php:28
 msgid "Close"
 msgstr "Zapri"
@@ -1191,8 +1190,8 @@ msgid ""
 "version "
 msgstr ""
 
-#: wdt-formidable-integration/wdt-formidable-integration.php:614
-#: wdt-formidable-integration/wdt-formidable-integration.php:630
+#: wdt-formidable-integration/wdt-formidable-integration.php:629
+#: wdt-formidable-integration/wdt-formidable-integration.php:645
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1364,14 +1363,14 @@ msgstr ""
 "Poskušate naložiti tabelo neznanega tipa. Verjetno niste aktivirali dodatka, "
 "ki je potreben za uporabo te vrste tabel."
 
-#: wdt-gravity-integration/wdt-gravity-integration.php:1644
+#: wdt-gravity-integration/wdt-gravity-integration.php:1667
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
 "to activate Gravity Forms integration for wpDataTables."
 msgstr ""
 
-#: wdt-gravity-integration/wdt-gravity-integration.php:1660
+#: wdt-gravity-integration/wdt-gravity-integration.php:1683
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1631,8 +1630,8 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: wdt-master-detail/wdt-master-detail.php:1833
-#: wdt-master-detail/wdt-master-detail.php:1849
+#: wdt-master-detail/wdt-master-detail.php:1856
+#: wdt-master-detail/wdt-master-detail.php:1872
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1760,8 +1759,8 @@ msgstr ""
 msgid "Error: "
 msgstr ""
 
-#: wdt-powerful-filters/wdt-powerful-filters.php:872
-#: wdt-powerful-filters/wdt-powerful-filters.php:888
+#: wdt-powerful-filters/wdt-powerful-filters.php:895
+#: wdt-powerful-filters/wdt-powerful-filters.php:911
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1978,8 +1977,8 @@ msgstr "Vneseni ID stolpca ne obstaja."
 msgid "There was an error trying to delete row! Error: "
 msgstr "Pri poskusu brisanja vrstice je prišlo do napake! Napaka:"
 
-#: wpdatatables/controllers/wdt_functions.php:1971
-#: wpdatatables/controllers/wdt_functions.php:1989
+#: wpdatatables/controllers/wdt_functions.php:1993
+#: wpdatatables/controllers/wdt_functions.php:2011
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1988,7 +1987,7 @@ msgstr ""
 "Za prejemanje samodejnih posodobitev je potrebna aktivacija licence. "
 "Obiščite %s, da aktivirate wpDataTables."
 
-#: wpdatatables/controllers/wdt_functions.php:2057
+#: wpdatatables/controllers/wdt_functions.php:2079
 #, php-format
 msgid "By %s"
 msgstr ""
@@ -2173,7 +2172,7 @@ msgstr "Vrstica je bila izbrisana!"
 #: wpdatatables/integrations/pro/folders/templates/browse_table_insert_card.inc.php:271
 #: wpdatatables/integrations/standard/foreign-key/templates/foreign_key_config.inc.php:103
 #: wpdatatables/integrations/standard/formula-column/templates/formula_editor_modal.inc.php:84
-#: wpdatatables/source/class.wdttools.php:695
+#: wpdatatables/source/class.wdttools.php:697
 #: wpdatatables/templates/admin/table-settings/add_column_modal.inc.php:183
 #: wpdatatables/templates/admin/table-settings/columns_list_modal.inc.php:72
 msgid "Save"
@@ -2313,7 +2312,7 @@ msgstr "V glavi"
 
 #: wpdatatables/integrations/pro/query-builder/templates/custom_field_columns_block.inc.php:13
 #: wpdatatables/integrations/pro/woo-commerce/source/templates/woo_custom_field_columns_block.inc.php:13
-#: wpdatatables/source/class.wdttools.php:392
+#: wpdatatables/source/class.wdttools.php:394
 msgid "New column"
 msgstr "Nov stolpec"
 
@@ -2659,7 +2658,7 @@ msgstr "Trenutna barva strani"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:93
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:11
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:12
-#: wpdatatables/source/class.wdttools.php:715
+#: wpdatatables/source/class.wdttools.php:717
 #, fuzzy
 #| msgid "Current page color"
 msgid "Current User ID"
@@ -2674,8 +2673,8 @@ msgstr ""
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:95
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:13
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:14
-#: wpdatatables/source/class.wdttools.php:717
-#: wpdatatables/source/class.wdttools.php:718
+#: wpdatatables/source/class.wdttools.php:719
+#: wpdatatables/source/class.wdttools.php:720
 msgid "Current User First Name"
 msgstr ""
 
@@ -2690,7 +2689,7 @@ msgstr "Trenutno izbrano"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:97
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:15
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:16
-#: wpdatatables/source/class.wdttools.php:719
+#: wpdatatables/source/class.wdttools.php:721
 #, fuzzy
 #| msgid "Current page color"
 msgid "Current User Email"
@@ -2699,7 +2698,7 @@ msgstr "Trenutna barva strani"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:98
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:16
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:17
-#: wpdatatables/source/class.wdttools.php:720
+#: wpdatatables/source/class.wdttools.php:722
 #, fuzzy
 #| msgid "Current page color"
 msgid "Current User Login"
@@ -2708,7 +2707,7 @@ msgstr "Trenutna barva strani"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:99
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:17
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:18
-#: wpdatatables/source/class.wdttools.php:721
+#: wpdatatables/source/class.wdttools.php:723
 msgid "Current User IP Address"
 msgstr ""
 
@@ -2723,7 +2722,7 @@ msgstr "Datum čas"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:102
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:20
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:21
-#: wpdatatables/source/class.wdttools.php:722
+#: wpdatatables/source/class.wdttools.php:724
 #, fuzzy
 #| msgid "Current page color"
 msgid "Current Date"
@@ -2732,7 +2731,7 @@ msgstr "Trenutna barva strani"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:103
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:21
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:22
-#: wpdatatables/source/class.wdttools.php:723
+#: wpdatatables/source/class.wdttools.php:725
 #, fuzzy
 #| msgid "Datetime"
 msgid "Current Datetime"
@@ -2741,7 +2740,7 @@ msgstr "Datum čas"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:104
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:22
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:23
-#: wpdatatables/source/class.wdttools.php:724
+#: wpdatatables/source/class.wdttools.php:726
 #, fuzzy
 #| msgid "Current page color"
 msgid "Current Time"
@@ -2757,7 +2756,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:107
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:25
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:26
-#: wpdatatables/source/class.wdttools.php:725
+#: wpdatatables/source/class.wdttools.php:727
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR1%"
@@ -2766,7 +2765,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:108
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:26
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:27
-#: wpdatatables/source/class.wdttools.php:726
+#: wpdatatables/source/class.wdttools.php:728
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR2%"
@@ -2775,7 +2774,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:109
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:27
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:28
-#: wpdatatables/source/class.wdttools.php:727
+#: wpdatatables/source/class.wdttools.php:729
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR3%"
@@ -2784,7 +2783,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:110
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:28
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:29
-#: wpdatatables/source/class.wdttools.php:728
+#: wpdatatables/source/class.wdttools.php:730
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR4%"
@@ -2793,7 +2792,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:111
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:29
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:30
-#: wpdatatables/source/class.wdttools.php:729
+#: wpdatatables/source/class.wdttools.php:731
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR5%"
@@ -2802,7 +2801,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:112
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:30
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:31
-#: wpdatatables/source/class.wdttools.php:730
+#: wpdatatables/source/class.wdttools.php:732
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR6%"
@@ -2811,7 +2810,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:113
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:31
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:32
-#: wpdatatables/source/class.wdttools.php:731
+#: wpdatatables/source/class.wdttools.php:733
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR7%"
@@ -2820,7 +2819,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:114
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:32
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:33
-#: wpdatatables/source/class.wdttools.php:732
+#: wpdatatables/source/class.wdttools.php:734
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR8%"
@@ -2829,7 +2828,7 @@ msgstr "Imetniki mest"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:115
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:33
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:34
-#: wpdatatables/source/class.wdttools.php:733
+#: wpdatatables/source/class.wdttools.php:735
 #, fuzzy
 #| msgid "Placeholders"
 msgid "Placeholder %VAR9%"
@@ -2916,21 +2915,21 @@ msgstr "Podatki"
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:129
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:47
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:48
-#: wpdatatables/source/class.wdttools.php:743
+#: wpdatatables/source/class.wdttools.php:745
 msgid "HTTP User Agent"
 msgstr ""
 
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:130
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:48
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:49
-#: wpdatatables/source/class.wdttools.php:744
+#: wpdatatables/source/class.wdttools.php:746
 msgid "HTTP Refer URL"
 msgstr ""
 
 #: wpdatatables/integrations/standard/editing/templates/editing_column_settings_block.inc.php:131
 #: wpdatatables/integrations/standard/hidden-column/templates/add_column_modal_hidden_column_block.inc.php:49
 #: wpdatatables/integrations/standard/hidden-column/templates/constructor_hidden_column_block.inc.php:50
-#: wpdatatables/source/class.wdttools.php:745
+#: wpdatatables/source/class.wdttools.php:747
 msgid "Query Parameter (GET)"
 msgstr ""
 
@@ -3178,7 +3177,7 @@ msgid ""
 msgstr ""
 
 #: wpdatatables/integrations/standard/editing/templates/editing_table_settings_block.inc.php:254
-#: wpdatatables/source/class.wdttools.php:576
+#: wpdatatables/source/class.wdttools.php:578
 #: wpdatatables/source/class.wpdatatable.php:5008
 #: wpdatatables/source/class.wpdatatable.php:5018
 #: wpdatatables/source/class.wpdatatable.php:5024
@@ -3304,7 +3303,7 @@ msgstr "Tu lahko preglasite privzeto barvo celotnega stolpca"
 
 #: wpdatatables/integrations/standard/fixed-columns-and-headers/templates/table_settings_block.php:181
 #: wpdatatables/integrations/standard/fixed-columns-and-headers/templates/table_settings_block.php:189
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2173
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2151
 #, fuzzy
 #| msgid "Set column color"
 msgid "Index column"
@@ -3725,7 +3724,7 @@ msgid "Pick the vendor."
 msgstr "Izberite prodajalca."
 
 #: wpdatatables/integrations/standard/separate-db-connection/templates/separate_connection_form.php:46
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:337
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:343
 msgid "MySQL"
 msgstr "MySQL"
 
@@ -3961,7 +3960,7 @@ msgid "Define relations (joining rules) between post types"
 msgstr "Določite razmerja (pravila pridruževanja) med vrstami objav"
 
 #: wpdatatables/integrations/standard/sql-constructor/templates/constructor_1_3.inc.php:189
-#: wpdatatables/source/class.wdttools.php:1143
+#: wpdatatables/source/class.wdttools.php:1172
 msgid "Define post types relations"
 msgstr "Določite razmerja med vrstami objav"
 
@@ -4051,7 +4050,7 @@ msgid "Selected SQL columns"
 msgstr "Izbrani stolpci SQL"
 
 #: wpdatatables/integrations/standard/sql-constructor/templates/constructor_1_4.inc.php:172
-#: wpdatatables/source/class.wdttools.php:1201
+#: wpdatatables/source/class.wdttools.php:1230
 msgid "Define SQL tables relations"
 msgstr "Določite razmerja tabel SQL"
 
@@ -4217,81 +4216,81 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:243
+#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:242
 msgid ""
 "IvyForms must be active and wpDataTables integration must be enabled to "
 "display data."
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:250
+#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:249
 msgid "Error checking form integration settings: "
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:253
+#: wpdatatables/integrations/starter/ivyforms/ivyforms-integration.php:252
 msgid ""
 "wpDataTables integration is not enabled for this form. Please enable it in "
 "the form settings."
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:30
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:32
 msgid "IvyForms Plugin Required"
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:33
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:35
 msgid ""
 "To create data tables from IvyForms submissions, you need to install and "
 "activate the IvyForms plugin."
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:38
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:40
 msgid "Install & Activate IvyForms"
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:51
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:53
 msgid "IvyForms Plugin Update Required"
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:54
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:56
 msgid ""
 "Your IvyForms plugin version is outdated. Please update to version 0.5 or "
 "newer to use all features."
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:59
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:61
 msgid "Update IvyForms"
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:72
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:74
 #, fuzzy
 #| msgid "New wpDataTable Chart"
 msgid "Enable wpDataTables Integration"
 msgstr "Nov grafikon wpDataTable"
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:75
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:77
 msgid ""
 "The wpDataTables integration is currently disabled in IvyForms settings. "
 "Please enable it to create data tables from form submissions."
 msgstr ""
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:81
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:83
 #, fuzzy
 #| msgid "Integer"
 msgid "Enable Integration"
 msgstr "Integer"
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:90
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:92
 #, fuzzy
 #| msgid "Choose this option"
 msgid "Choose an Ivy Form"
 msgstr "Izberite to možnost"
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:97
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:99
 #, fuzzy
 #| msgid "Choose this option"
 msgid "Choose a form"
 msgstr "Izberite to možnost"
 
-#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:105
+#: wpdatatables/integrations/starter/ivyforms/templates/data_source_block.inc.php:107
 msgid "No forms with wpDataTables integration enabled"
 msgstr ""
 
@@ -4318,8 +4317,8 @@ msgid "From Date"
 msgstr "Datum"
 
 #: wpdatatables/integrations/starter/ivyforms/templates/ivyforms_tab_panel.inc.php:17
-#: wpdatatables/source/class.wdttools.php:543
-#: wpdatatables/source/class.wdttools.php:598
+#: wpdatatables/source/class.wdttools.php:545
+#: wpdatatables/source/class.wdttools.php:600
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:1098
 msgid "From"
 msgstr "Od"
@@ -4331,8 +4330,8 @@ msgid "To Date"
 msgstr "Datum"
 
 #: wpdatatables/integrations/starter/ivyforms/templates/ivyforms_tab_panel.inc.php:22
-#: wpdatatables/source/class.wdttools.php:544
-#: wpdatatables/source/class.wdttools.php:599
+#: wpdatatables/source/class.wdttools.php:546
+#: wpdatatables/source/class.wdttools.php:601
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:1106
 msgid "To"
 msgstr "Do"
@@ -4856,7 +4855,7 @@ msgstr "Naslov:"
 
 #: wpdatatables/source/class.wdtbrowsechartstable.php:33
 #: wpdatatables/source/class.wdtbrowsetable.php:86
-#: wpdatatables/source/class.wdttools.php:411
+#: wpdatatables/source/class.wdttools.php:413
 msgid "Shortcode"
 msgstr ""
 
@@ -4964,29 +4963,29 @@ msgid ""
 msgstr ""
 
 #: wpdatatables/source/class.wdttools.php:362
-#: wpdatatables/source/class.wdttools.php:512
-#: wpdatatables/source/class.wdttools.php:624
-#: wpdatatables/source/class.wdttools.php:698
+#: wpdatatables/source/class.wdttools.php:514
+#: wpdatatables/source/class.wdttools.php:626
+#: wpdatatables/source/class.wdttools.php:700
 msgid "Use selected file"
 msgstr "Uporabi izbrano datoteko"
 
 #: wpdatatables/source/class.wdttools.php:365
-#: wpdatatables/source/class.wdttools.php:499
+#: wpdatatables/source/class.wdttools.php:501
 msgid "Data has been saved!"
 msgstr "Podatki so shranjeni!"
 
 #: wpdatatables/source/class.wdttools.php:366
-#: wpdatatables/source/class.wdttools.php:500
+#: wpdatatables/source/class.wdttools.php:502
 msgid "There was an error trying to insert a new row!"
 msgstr "Pri poskusu vstavitve nove vrstice je prišlo do napake!"
 
 #: wpdatatables/source/class.wdttools.php:367
-#: wpdatatables/source/class.wdttools.php:501
+#: wpdatatables/source/class.wdttools.php:503
 msgid "There was an error trying to delete a row!"
 msgstr ""
 
 #: wpdatatables/source/class.wdttools.php:368
-#: wpdatatables/source/class.wdttools.php:502
+#: wpdatatables/source/class.wdttools.php:504
 msgid "Row has been deleted!"
 msgstr "Vrstica je bila izbrisana!"
 
@@ -4999,30 +4998,38 @@ msgstr ""
 "prilepite v datoteko ali v podporo."
 
 #: wpdatatables/source/class.wdttools.php:373
-#: wpdatatables/source/class.wdttools.php:409
+#: wpdatatables/source/class.wdttools.php:411
 #, fuzzy
 #| msgid "Search table"
 msgid "Clear table data"
 msgstr "Tabela iskanja"
 
-#: wpdatatables/source/class.wdttools.php:387
+#: wpdatatables/source/class.wdttools.php:378
+msgid "Failed to load form fields"
+msgstr ""
+
+#: wpdatatables/source/class.wdttools.php:379
+msgid "Invalid response from server"
+msgstr ""
+
+#: wpdatatables/source/class.wdttools.php:389
 msgid "Please upload or choose a file from Media Library!"
 msgstr "Prenesite ali izberite datoteko iz Knjižnice medijev!"
 
-#: wpdatatables/source/class.wdttools.php:388
-#: wpdatatables/source/class.wdttools.php:714
+#: wpdatatables/source/class.wdttools.php:390
+#: wpdatatables/source/class.wdttools.php:716
 msgid "Please select columns that you want to use in table"
 msgstr "Izberite stolpce, ki jih želite uporabiti v tabeli"
 
-#: wpdatatables/source/class.wdttools.php:390
+#: wpdatatables/source/class.wdttools.php:392
 msgid "Number of columns can not be empty or 0"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:391
+#: wpdatatables/source/class.wdttools.php:393
 msgid "Number of rows can not be empty or 0"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:395
+#: wpdatatables/source/class.wdttools.php:397
 #: wpdatatables/templates/admin/constructor/steps/constructor_1_1.inc.php:20
 #: wpdatatables/templates/admin/constructor/steps/constructor_1_1.inc.php:72
 #: wpdatatables/templates/admin/constructor/steps/constructor_2_2.inc.php:19
@@ -5033,60 +5040,60 @@ msgid ""
 "prefix is included."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:396
+#: wpdatatables/source/class.wdttools.php:398
 msgid "The database name must be less than 64 characters."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:397
+#: wpdatatables/source/class.wdttools.php:399
 msgid ""
 "The database name can only contain letters, numbers, and underscores. It "
 "cannot start with a number unless the prefix is included."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:399
-#: wpdatatables/source/class.wdttools.php:583
+#: wpdatatables/source/class.wdttools.php:401
+#: wpdatatables/source/class.wdttools.php:585
 msgid ""
 "All of the following fields must be filled out: Taxonomy, Tax Field and Tax "
 "Terms."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:410
+#: wpdatatables/source/class.wdttools.php:412
 #, fuzzy
 #| msgid "Start creating"
 msgid "Star rating"
 msgstr "Začnite ustvarjati"
 
-#: wpdatatables/source/class.wdttools.php:412
+#: wpdatatables/source/class.wdttools.php:414
 #, fuzzy
 #| msgid "HTML editor"
 msgid "HTML code"
 msgstr "HTML urejevalnik"
 
-#: wpdatatables/source/class.wdttools.php:413
+#: wpdatatables/source/class.wdttools.php:415
 msgid "Media"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:414
+#: wpdatatables/source/class.wdttools.php:416
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:300
 msgid "Link"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:415
+#: wpdatatables/source/class.wdttools.php:417
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:274
 msgid "Clip"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:416
+#: wpdatatables/source/class.wdttools.php:418
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:269
 msgid "Overflow"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:417
+#: wpdatatables/source/class.wdttools.php:419
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:264
 msgid "Wrap"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:418
+#: wpdatatables/source/class.wdttools.php:420
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:662
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:268
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:287
@@ -5094,649 +5101,649 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:419
+#: wpdatatables/source/class.wdttools.php:421
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:269
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:288
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:957
 msgid "Center"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:420
+#: wpdatatables/source/class.wdttools.php:422
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:270
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:289
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:956
 msgid "Right"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:421
+#: wpdatatables/source/class.wdttools.php:423
 msgid "Justify"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:422
+#: wpdatatables/source/class.wdttools.php:424
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:638
 msgid "Top"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:423
+#: wpdatatables/source/class.wdttools.php:425
 msgid "Middle"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:424
+#: wpdatatables/source/class.wdttools.php:426
 msgid "Bottom"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:425
+#: wpdatatables/source/class.wdttools.php:427
 #, fuzzy
 #| msgid "Insert after"
 msgid "Insert row above"
 msgstr "Vstavi po"
 
-#: wpdatatables/source/class.wdttools.php:426
+#: wpdatatables/source/class.wdttools.php:428
 #, fuzzy
 #| msgid "Set row color"
 msgid "Insert row below"
 msgstr "Nastavite barvo vrstice"
 
-#: wpdatatables/source/class.wdttools.php:427
+#: wpdatatables/source/class.wdttools.php:429
 #: wpdatatables/templates/admin/table-settings/custom_headers_row_block.inc.php:25
 #, fuzzy
 #| msgid "Remove rule"
 msgid "Remove row"
 msgstr "Odstrani pravilo"
 
-#: wpdatatables/source/class.wdttools.php:428
+#: wpdatatables/source/class.wdttools.php:430
 #, fuzzy
 #| msgid "Set column color"
 msgid "Insert column left"
 msgstr "Nastavite barvo stolpca"
 
-#: wpdatatables/source/class.wdttools.php:429
+#: wpdatatables/source/class.wdttools.php:431
 #, fuzzy
 #| msgid "Set column color"
 msgid "Insert column right"
 msgstr "Nastavite barvo stolpca"
 
-#: wpdatatables/source/class.wdttools.php:430
+#: wpdatatables/source/class.wdttools.php:432
 #: wpdatatables/templates/admin/table-settings/table_preview_block.inc.php:63
 msgid "Remove column"
 msgstr "Odstrani stolpec"
 
-#: wpdatatables/source/class.wdttools.php:431
+#: wpdatatables/source/class.wdttools.php:433
 #, fuzzy
 #| msgid "Align"
 msgid "Alignment"
 msgstr "Align"
 
-#: wpdatatables/source/class.wdttools.php:432
+#: wpdatatables/source/class.wdttools.php:434
 msgid "Cut"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:433
+#: wpdatatables/source/class.wdttools.php:435
 #, fuzzy
 #| msgid "Insert after"
 msgid "Insert custom"
 msgstr "Vstavi po"
 
-#: wpdatatables/source/class.wdttools.php:434
+#: wpdatatables/source/class.wdttools.php:436
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:93
 msgid "Undo"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:435
+#: wpdatatables/source/class.wdttools.php:437
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:97
 msgid "Redo"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:436
+#: wpdatatables/source/class.wdttools.php:438
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:257
 msgid "Text wrapping"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:437
+#: wpdatatables/source/class.wdttools.php:439
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:285
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:328
 msgid "Merge cells"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:511
-#: wpdatatables/source/class.wdttools.php:623
-#: wpdatatables/source/class.wdttools.php:697
+#: wpdatatables/source/class.wdttools.php:513
+#: wpdatatables/source/class.wdttools.php:625
+#: wpdatatables/source/class.wdttools.php:699
 msgid "Select a file to use in table"
 msgstr "Izberite datoteko, ki jo želite uporabiti v tabeli"
 
-#: wpdatatables/source/class.wdttools.php:514
+#: wpdatatables/source/class.wdttools.php:516
 msgid "Add new entry"
 msgstr "Dodaj nov vnos"
 
-#: wpdatatables/source/class.wdttools.php:515
+#: wpdatatables/source/class.wdttools.php:517
 msgid "Duplicate entry"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:516
+#: wpdatatables/source/class.wdttools.php:518
 msgid "Edit entry"
 msgstr "Urejanje vnosa"
 
-#: wpdatatables/source/class.wdttools.php:517
-#: wpdatatables/source/class.wdttools.php:681
+#: wpdatatables/source/class.wdttools.php:519
+#: wpdatatables/source/class.wdttools.php:683
 msgid "Please provide a valid e-mail address for field"
 msgstr "V polje vnesite veljaven e-poštni naslov"
 
-#: wpdatatables/source/class.wdttools.php:518
-#: wpdatatables/source/class.wdttools.php:682
+#: wpdatatables/source/class.wdttools.php:520
+#: wpdatatables/source/class.wdttools.php:684
 msgid "Please provide a valid URL link for field"
 msgstr "Navedite veljavno povezavo URL za polje"
 
-#: wpdatatables/source/class.wdttools.php:519
-#: wpdatatables/source/class.wdttools.php:683
+#: wpdatatables/source/class.wdttools.php:521
+#: wpdatatables/source/class.wdttools.php:685
 msgid " field cannot be empty!"
 msgstr "polje ne more biti prazno!"
 
-#: wpdatatables/source/class.wdttools.php:520
-#: wpdatatables/source/class.wdttools.php:651
+#: wpdatatables/source/class.wdttools.php:522
+#: wpdatatables/source/class.wdttools.php:653
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Prikazuje _START_ do _END_ od _TOTAL_ navedb"
 
-#: wpdatatables/source/class.wdttools.php:521
-#: wpdatatables/source/class.wdttools.php:652
+#: wpdatatables/source/class.wdttools.php:523
+#: wpdatatables/source/class.wdttools.php:654
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Prikazuje 0 do 0 od 0 postavk"
 
-#: wpdatatables/source/class.wdttools.php:522
-#: wpdatatables/source/class.wdttools.php:653
+#: wpdatatables/source/class.wdttools.php:524
+#: wpdatatables/source/class.wdttools.php:655
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtrirano od _MAX_ vseh izpisov)"
 
-#: wpdatatables/source/class.wdttools.php:524
-#: wpdatatables/source/class.wdttools.php:655
+#: wpdatatables/source/class.wdttools.php:526
+#: wpdatatables/source/class.wdttools.php:657
 msgid ","
 msgstr ","
 
-#: wpdatatables/source/class.wdttools.php:525
-#: wpdatatables/source/class.wdttools.php:529
-#: wpdatatables/source/class.wdttools.php:530
-#: wpdatatables/source/class.wdttools.php:656
-#: wpdatatables/source/class.wdttools.php:660
-#: wpdatatables/source/class.wdttools.php:661
+#: wpdatatables/source/class.wdttools.php:527
+#: wpdatatables/source/class.wdttools.php:531
+#: wpdatatables/source/class.wdttools.php:532
+#: wpdatatables/source/class.wdttools.php:658
+#: wpdatatables/source/class.wdttools.php:662
+#: wpdatatables/source/class.wdttools.php:663
 msgid "Show _MENU_ entries"
 msgstr "Prikaži _MENU_ postavke"
 
-#: wpdatatables/source/class.wdttools.php:527
-#: wpdatatables/source/class.wdttools.php:658
+#: wpdatatables/source/class.wdttools.php:529
+#: wpdatatables/source/class.wdttools.php:660
 msgid "Processing..."
 msgstr "Obdelujem..."
 
-#: wpdatatables/source/class.wdttools.php:528
-#: wpdatatables/source/class.wdttools.php:659
+#: wpdatatables/source/class.wdttools.php:530
+#: wpdatatables/source/class.wdttools.php:661
 msgid "Search: "
 msgstr "Iskanje:"
 
-#: wpdatatables/source/class.wdttools.php:531
-#: wpdatatables/source/class.wdttools.php:662
+#: wpdatatables/source/class.wdttools.php:533
+#: wpdatatables/source/class.wdttools.php:664
 msgid "No data available in table"
 msgstr "V tabeli ni na voljo podatkov"
 
-#: wpdatatables/source/class.wdttools.php:532
-#: wpdatatables/source/class.wdttools.php:663
+#: wpdatatables/source/class.wdttools.php:534
+#: wpdatatables/source/class.wdttools.php:665
 msgid "No matching records found"
 msgstr "Ujemljivih zapisov ni mogoče najti"
 
-#: wpdatatables/source/class.wdttools.php:534
-#: wpdatatables/source/class.wdttools.php:665
+#: wpdatatables/source/class.wdttools.php:536
+#: wpdatatables/source/class.wdttools.php:667
 msgid ": activate to sort column ascending"
 msgstr ": aktivirate, da razvrstite stolpec po naraščajočem stolpcu"
 
-#: wpdatatables/source/class.wdttools.php:535
-#: wpdatatables/source/class.wdttools.php:666
+#: wpdatatables/source/class.wdttools.php:537
+#: wpdatatables/source/class.wdttools.php:668
 msgid ": activate to sort column descending"
 msgstr ": aktiviranje za razvrščanje stolpca po padajočem"
 
-#: wpdatatables/source/class.wdttools.php:538
-#: wpdatatables/source/class.wdttools.php:669
+#: wpdatatables/source/class.wdttools.php:540
+#: wpdatatables/source/class.wdttools.php:671
 msgid "First"
 msgstr "Prvi"
 
-#: wpdatatables/source/class.wdttools.php:539
-#: wpdatatables/source/class.wdttools.php:670
+#: wpdatatables/source/class.wdttools.php:541
+#: wpdatatables/source/class.wdttools.php:672
 msgid "Last"
 msgstr "Zadnji"
 
-#: wpdatatables/source/class.wdttools.php:540
-#: wpdatatables/source/class.wdttools.php:671
+#: wpdatatables/source/class.wdttools.php:542
+#: wpdatatables/source/class.wdttools.php:673
 #: wpdatatables/templates/frontend/edit_dialog.inc.php:195
 msgid "Next"
 msgstr "Naprej"
 
-#: wpdatatables/source/class.wdttools.php:541
-#: wpdatatables/source/class.wdttools.php:672
+#: wpdatatables/source/class.wdttools.php:543
+#: wpdatatables/source/class.wdttools.php:674
 msgid "Previous"
 msgstr "Prejšnje"
 
-#: wpdatatables/source/class.wdttools.php:545
+#: wpdatatables/source/class.wdttools.php:547
 msgid "At least one show/hide sorting icon must be enabled!"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:546
+#: wpdatatables/source/class.wdttools.php:548
 #, fuzzy
 #| msgid "First"
 msgid "Navigate to First page"
 msgstr "Prvi"
 
-#: wpdatatables/source/class.wdttools.php:547
+#: wpdatatables/source/class.wdttools.php:549
 #, fuzzy
 #| msgid "Last"
 msgid "Navigate to Last page"
 msgstr "Zadnji"
 
-#: wpdatatables/source/class.wdttools.php:548
+#: wpdatatables/source/class.wdttools.php:550
 #, fuzzy
 #| msgid "Next "
 msgid "Navigate to Next page"
 msgstr "Naslednji"
 
-#: wpdatatables/source/class.wdttools.php:549
+#: wpdatatables/source/class.wdttools.php:551
 #, fuzzy
 #| msgid "Previous"
 msgid "Navigate to Previous page"
 msgstr "Prejšnje"
 
-#: wpdatatables/source/class.wdttools.php:550
+#: wpdatatables/source/class.wdttools.php:552
 #, fuzzy
 #| msgid "wpDataTable"
 msgid "Navigate to wpDataTable Page "
 msgstr "wpDataTable"
 
-#: wpdatatables/source/class.wdttools.php:551
+#: wpdatatables/source/class.wdttools.php:553
 msgid "Spacer"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:552
+#: wpdatatables/source/class.wdttools.php:554
 #, fuzzy
 #| msgid "Print"
 msgid "Print table"
 msgstr "Tiskaj"
 
-#: wpdatatables/source/class.wdttools.php:553
+#: wpdatatables/source/class.wdttools.php:555
 #, fuzzy
 #| msgid "Export chart"
 msgid "Export table"
 msgstr "Izvozi grafikon"
 
-#: wpdatatables/source/class.wdttools.php:554
+#: wpdatatables/source/class.wdttools.php:556
 #: wpdatatables/source/class.wpdatatable.php:5323
 msgid "New entry"
 msgstr "Nov vnos"
 
-#: wpdatatables/source/class.wdttools.php:555
+#: wpdatatables/source/class.wdttools.php:557
 #, fuzzy
 #| msgid "Delete"
 msgid "Delete row"
 msgstr "Izbriši"
 
-#: wpdatatables/source/class.wdttools.php:556
+#: wpdatatables/source/class.wdttools.php:558
 #, fuzzy
 #| msgid "Editor roles"
 msgid "Edit row"
 msgstr "Vloge urednika"
 
-#: wpdatatables/source/class.wdttools.php:557
+#: wpdatatables/source/class.wdttools.php:559
 #, fuzzy
 #| msgid "Duplicate"
 msgid "Duplicate row"
 msgstr "Podvoji"
 
-#: wpdatatables/source/class.wdttools.php:558
+#: wpdatatables/source/class.wdttools.php:560
 #: wpdatatables/source/class.wpdatatable.php:5103
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1181
 #: wpdatatables/templates/frontend/filter_form.inc.php:41
 msgid "Clear filters"
 msgstr "Počistite filtre"
 
-#: wpdatatables/source/class.wdttools.php:559
+#: wpdatatables/source/class.wdttools.php:561
 #, fuzzy
 #| msgid "Columns visibility"
 msgid "Column visibility"
 msgstr "Vidnost stolpcev"
 
-#: wpdatatables/source/class.wdttools.php:560
+#: wpdatatables/source/class.wdttools.php:562
 #, fuzzy
 #| msgid "Showing 0 to 0 of 0 entries"
 msgid "Showing 0 to 0 of 0 entries _COLUMN_ _DATA_"
 msgstr "Prikazuje 0 do 0 od 0 postavk"
 
-#: wpdatatables/source/class.wdttools.php:561
+#: wpdatatables/source/class.wdttools.php:563
 #, fuzzy
 #| msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgid "Showing _START_ to _END_ of _TOTAL_ entries _COLUMN_ _DATA_"
 msgstr "Prikazuje _START_ do _END_ od _TOTAL_ navedb"
 
-#: wpdatatables/source/class.wdttools.php:562
+#: wpdatatables/source/class.wdttools.php:564
 msgid "Master Detail"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:563
+#: wpdatatables/source/class.wdttools.php:565
 msgid "Global Search Table Input Field"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:564
+#: wpdatatables/source/class.wdttools.php:566
 #, fuzzy
 #| msgid "Choose a name for your table"
 msgid "Choose how to export table"
 msgstr "Izberite ime za mizo"
 
-#: wpdatatables/source/class.wdttools.php:565
+#: wpdatatables/source/class.wdttools.php:567
 msgid "Option to either display or hide columns"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:566
+#: wpdatatables/source/class.wdttools.php:568
 msgid "Open dropdown menu for show rows per page"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:567
+#: wpdatatables/source/class.wdttools.php:569
 msgid "for "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:568
+#: wpdatatables/source/class.wdttools.php:570
 #, fuzzy
 #| msgid "Open column settings"
 msgid " column searching for "
 msgstr "Odprite nastavitve stolpcev"
 
-#: wpdatatables/source/class.wdttools.php:569
+#: wpdatatables/source/class.wdttools.php:571
 #, fuzzy
 #| msgid "Value from column"
 msgid "value from "
 msgstr "Vrednost iz stolpca"
 
-#: wpdatatables/source/class.wdttools.php:570
+#: wpdatatables/source/class.wdttools.php:572
 #, fuzzy
 #| msgid "Display value"
 msgid " value to "
 msgstr "Prikazna vrednost"
 
-#: wpdatatables/source/class.wdttools.php:571
+#: wpdatatables/source/class.wdttools.php:573
 msgid " and for "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:572
+#: wpdatatables/source/class.wdttools.php:574
 msgid " and for Global search of value "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:573
+#: wpdatatables/source/class.wdttools.php:575
 #, fuzzy
 #| msgid "Global search"
 msgid "for Global search of value "
 msgstr "Globalno iskanje"
 
-#: wpdatatables/source/class.wdttools.php:574
+#: wpdatatables/source/class.wdttools.php:576
 msgid "Length menu:"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:575
+#: wpdatatables/source/class.wdttools.php:577
 #, fuzzy
 #| msgid "Search table"
 msgid "Search table:"
 msgstr "Tabela iskanja"
 
-#: wpdatatables/source/class.wdttools.php:577
+#: wpdatatables/source/class.wdttools.php:579
 msgid ""
 "Invalid format of custom rows per page. Please enter a valid format like "
 "\"1,2,3,4\". If you use the number 0, it must be in the format 0 without any "
 "preceding zeros."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:579
+#: wpdatatables/source/class.wdttools.php:581
 msgid "Error adding products to cart."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:580
+#: wpdatatables/source/class.wdttools.php:582
 #, fuzzy
 #| msgid "Please select columns that you want to use in table"
 msgid "Please select products to add to the cart."
 msgstr "Izberite stolpce, ki jih želite uporabiti v tabeli"
 
-#: wpdatatables/source/class.wdttools.php:581
+#: wpdatatables/source/class.wdttools.php:583
 msgid "Error fetching cart info."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:582
+#: wpdatatables/source/class.wdttools.php:584
 msgid ""
 "Could not add this product to cart - the stock of this product could be "
 "limited."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:600
+#: wpdatatables/source/class.wdttools.php:602
 #, fuzzy
 #| msgid "Date format"
 msgid "Date from"
 msgstr "Format datuma"
 
-#: wpdatatables/source/class.wdttools.php:601
+#: wpdatatables/source/class.wdttools.php:603
 #, fuzzy
 #| msgid "Date"
 msgid "Date to"
 msgstr "Datum"
 
-#: wpdatatables/source/class.wdttools.php:602
+#: wpdatatables/source/class.wdttools.php:604
 #, fuzzy
 #| msgid "DateTime"
 msgid "DateTime from"
 msgstr "Datum čas"
 
-#: wpdatatables/source/class.wdttools.php:603
+#: wpdatatables/source/class.wdttools.php:605
 #, fuzzy
 #| msgid "DateTime"
 msgid "DateTime to"
 msgstr "Datum čas"
 
-#: wpdatatables/source/class.wdttools.php:604
+#: wpdatatables/source/class.wdttools.php:606
 #, fuzzy
 #| msgid "Time format"
 msgid "Time from"
 msgstr "Časovna oblika"
 
-#: wpdatatables/source/class.wdttools.php:605
+#: wpdatatables/source/class.wdttools.php:607
 #, fuzzy
 #| msgid "Time"
 msgid "Time to"
 msgstr "Datum in čas"
 
-#: wpdatatables/source/class.wdttools.php:606
+#: wpdatatables/source/class.wdttools.php:608
 #, fuzzy
 #| msgid "Filter in form"
 msgid "Filter input for "
 msgstr "Filtrirajte v obliki"
 
-#: wpdatatables/source/class.wdttools.php:607
+#: wpdatatables/source/class.wdttools.php:609
 msgid "Filter input for number range filter "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:608
+#: wpdatatables/source/class.wdttools.php:610
 #, fuzzy
 #| msgid "Date input format"
 msgid "Filter input for date picker "
 msgstr "Oblika vnosa datuma"
 
-#: wpdatatables/source/class.wdttools.php:609
+#: wpdatatables/source/class.wdttools.php:611
 msgid "Filter input for datetime picker "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:610
+#: wpdatatables/source/class.wdttools.php:612
 #, fuzzy
 #| msgid "Filter in form"
 msgid "Filter input for time picker "
 msgstr "Filtrirajte v obliki"
 
-#: wpdatatables/source/class.wdttools.php:611
+#: wpdatatables/source/class.wdttools.php:613
 #, fuzzy
 #| msgid "Filter in form"
 msgid "Filter checkbox for "
 msgstr "Filtrirajte v obliki"
 
-#: wpdatatables/source/class.wdttools.php:612
+#: wpdatatables/source/class.wdttools.php:614
 msgid "Minimum Value: "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:613
+#: wpdatatables/source/class.wdttools.php:615
 #, fuzzy
 #| msgid "Display value"
 msgid "Maximum Value: "
 msgstr "Prikazna vrednost"
 
-#: wpdatatables/source/class.wdttools.php:614
+#: wpdatatables/source/class.wdttools.php:616
 #, fuzzy
 #| msgid "Duplicate option"
 msgid "MultiSelectBox option"
 msgstr "Podvojena možnost"
 
-#: wpdatatables/source/class.wdttools.php:615
+#: wpdatatables/source/class.wdttools.php:617
 #, fuzzy
 #| msgid "Duplicate option"
 msgid "SelectBox option"
 msgstr "Podvojena možnost"
 
-#: wpdatatables/source/class.wdttools.php:616
+#: wpdatatables/source/class.wdttools.php:618
 msgid "This is divider between searchbox input and options to select"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:626
+#: wpdatatables/source/class.wdttools.php:628
 msgid "Browse"
 msgstr "Prebrskaj"
 
-#: wpdatatables/source/class.wdttools.php:627
+#: wpdatatables/source/class.wdttools.php:629
 msgid "detach"
 msgstr "loči"
 
-#: wpdatatables/source/class.wdttools.php:634
+#: wpdatatables/source/class.wdttools.php:636
 msgid "You have entered invalid value. Press ESC to cancel."
 msgstr "Vnesli ste neveljavno vrednost. Za preklic pritisnite ESC."
 
-#: wpdatatables/source/class.wdttools.php:643
+#: wpdatatables/source/class.wdttools.php:645
 msgid "Row details"
 msgstr "Podrobnosti o vrstici"
 
-#: wpdatatables/source/class.wdttools.php:644
+#: wpdatatables/source/class.wdttools.php:646
 msgid "Choose an option in previous filters"
 msgstr "Izberite možnost v prejšnjih filtrih"
 
-#: wpdatatables/source/class.wdttools.php:684
+#: wpdatatables/source/class.wdttools.php:686
 msgid "You can't edit this field"
 msgstr "Tega polja ne morete urediti"
 
-#: wpdatatables/source/class.wdttools.php:693
+#: wpdatatables/source/class.wdttools.php:695
 #: wpdatatables/templates/frontend/edit_dialog.inc.php:115
 msgid "Select file"
 msgstr "Izberite datoteko"
 
-#: wpdatatables/source/class.wdttools.php:694
+#: wpdatatables/source/class.wdttools.php:696
 #: wpdatatables/templates/frontend/edit_dialog.inc.php:116
 msgid "Change"
 msgstr "Spremeni"
 
-#: wpdatatables/source/class.wdttools.php:700
+#: wpdatatables/source/class.wdttools.php:702
 #, fuzzy
 #| msgid "In-line editing"
 msgid "Inline editing of the cell "
 msgstr "Redno urejanje"
 
-#: wpdatatables/source/class.wdttools.php:709
+#: wpdatatables/source/class.wdttools.php:711
 msgid "Column has been added!"
 msgstr "Stolpec je dodan!"
 
-#: wpdatatables/source/class.wdttools.php:710
+#: wpdatatables/source/class.wdttools.php:712
 msgid "Column header cannot be empty!"
 msgstr "Glava stolpca ne more biti prazna!"
 
-#: wpdatatables/source/class.wdttools.php:711
+#: wpdatatables/source/class.wdttools.php:713
 msgid "Type value is out-of-range!"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:712
+#: wpdatatables/source/class.wdttools.php:714
 msgid "Please confirm column deletion!"
 msgstr "Potrdite brisanje stolpca!"
 
-#: wpdatatables/source/class.wdttools.php:713
+#: wpdatatables/source/class.wdttools.php:715
 msgid "Column has been removed!"
 msgstr "Stolpec je bil odstranjen!"
 
-#: wpdatatables/source/class.wdttools.php:716
+#: wpdatatables/source/class.wdttools.php:718
 #, fuzzy
 #| msgid "Currently selected"
 msgid "Current User Name"
 msgstr "Trenutno izbrano"
 
-#: wpdatatables/source/class.wdttools.php:734
+#: wpdatatables/source/class.wdttools.php:736
 msgid "Post/Page ID"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:735
+#: wpdatatables/source/class.wdttools.php:737
 msgid "Post/Page Title"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:736
+#: wpdatatables/source/class.wdttools.php:738
 msgid "Post/Page Category"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:737
+#: wpdatatables/source/class.wdttools.php:739
 msgid "Post/Page Meta Value"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:738
+#: wpdatatables/source/class.wdttools.php:740
 msgid "Post/Page Meta Value as string"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:739
+#: wpdatatables/source/class.wdttools.php:741
 msgid "Post/Page Tags"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:740
+#: wpdatatables/source/class.wdttools.php:742
 msgid "Post/Page Terms"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:741
+#: wpdatatables/source/class.wdttools.php:743
 msgid "Login URL"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:742
+#: wpdatatables/source/class.wdttools.php:744
 msgid "Current URL"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:754
+#: wpdatatables/source/class.wdttools.php:756
 msgid "Save chart"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:795
+#: wpdatatables/source/class.wdttools.php:824
 msgid "QUICK FEEDBACK"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:796
+#: wpdatatables/source/class.wdttools.php:825
 msgid ""
 "If you have a moment, please let us know why you are deactivating the "
 "wpDataTables plugin:"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:797
+#: wpdatatables/source/class.wdttools.php:826
 #, fuzzy
 #| msgid "Please select wpDataTable from the dropdown."
 msgid "Please select one option from the following list: "
 msgstr "Izberite wpDataTable s spustnega menija."
 
-#: wpdatatables/source/class.wdttools.php:914
+#: wpdatatables/source/class.wdttools.php:943
 msgid "The field cannot be empty!"
 msgstr "Polje ne more biti prazno!"
 
-#: wpdatatables/source/class.wdttools.php:915
+#: wpdatatables/source/class.wdttools.php:944
 msgid "Please choose the chart type."
 msgstr "Izberite vrsto grafikona."
 
-#: wpdatatables/source/class.wdttools.php:916
+#: wpdatatables/source/class.wdttools.php:945
 msgid "Please select wpDataTable from the dropdown."
 msgstr "Izberite wpDataTable s spustnega menija."
 
-#: wpdatatables/source/class.wdttools.php:917
+#: wpdatatables/source/class.wdttools.php:946
 msgid "Columns field cannot be empty."
 msgstr "Polje stolpcev ne more biti prazno."
 
-#: wpdatatables/source/class.wdttools.php:919
+#: wpdatatables/source/class.wdttools.php:948
 msgid ""
 "The tutorial is not canceled, closed, or end properly. Please cancel it by "
 "clicking on the Cancel button."
@@ -5744,159 +5751,159 @@ msgstr ""
 "Vadnica ni preklicana, zaprta ali se ne konča pravilno. Prekličite ga s "
 "klikom na gumb Prekliči."
 
-#: wpdatatables/source/class.wdttools.php:920
+#: wpdatatables/source/class.wdttools.php:949
 msgid "Please check the data source that you use for this table."
 msgstr "Preverite vir podatkov, ki ga uporabljate za to tabelo."
 
-#: wpdatatables/source/class.wdttools.php:921
+#: wpdatatables/source/class.wdttools.php:950
 msgid "Finish Tutorial"
 msgstr "Dokončaj vadnico"
 
-#: wpdatatables/source/class.wdttools.php:922
+#: wpdatatables/source/class.wdttools.php:951
 msgid "Continue"
 msgstr "Nadaljuj"
 
-#: wpdatatables/source/class.wdttools.php:923
+#: wpdatatables/source/class.wdttools.php:952
 msgid "Start"
 msgstr "Začetek"
 
-#: wpdatatables/source/class.wdttools.php:924
+#: wpdatatables/source/class.wdttools.php:953
 msgid "Skip Tutorial"
 msgstr "Preskoči vadnico"
 
-#: wpdatatables/source/class.wdttools.php:927
-#: wpdatatables/source/class.wdttools.php:993
-#: wpdatatables/source/class.wdttools.php:1039
-#: wpdatatables/source/class.wdttools.php:1073
-#: wpdatatables/source/class.wdttools.php:1115
-#: wpdatatables/source/class.wdttools.php:1177
-#: wpdatatables/source/class.wdttools.php:1235
+#: wpdatatables/source/class.wdttools.php:956
+#: wpdatatables/source/class.wdttools.php:1022
+#: wpdatatables/source/class.wdttools.php:1068
+#: wpdatatables/source/class.wdttools.php:1102
+#: wpdatatables/source/class.wdttools.php:1144
+#: wpdatatables/source/class.wdttools.php:1206
+#: wpdatatables/source/class.wdttools.php:1264
 msgid "Welcome to the tutorial!"
 msgstr "Dobrodošli na vadnici!"
 
-#: wpdatatables/source/class.wdttools.php:928
-#: wpdatatables/source/class.wdttools.php:994
-#: wpdatatables/source/class.wdttools.php:1040
-#: wpdatatables/source/class.wdttools.php:1074
-#: wpdatatables/source/class.wdttools.php:1116
-#: wpdatatables/source/class.wdttools.php:1178
-#: wpdatatables/source/class.wdttools.php:1236
+#: wpdatatables/source/class.wdttools.php:957
+#: wpdatatables/source/class.wdttools.php:1023
+#: wpdatatables/source/class.wdttools.php:1069
+#: wpdatatables/source/class.wdttools.php:1103
+#: wpdatatables/source/class.wdttools.php:1145
+#: wpdatatables/source/class.wdttools.php:1207
+#: wpdatatables/source/class.wdttools.php:1265
 msgid "Hello "
 msgstr "Pozdravljeni "
 
-#: wpdatatables/source/class.wdttools.php:928
+#: wpdatatables/source/class.wdttools.php:957
 msgid ""
 ", in this tutorial, we will show you how to create a simple table from "
 "scratch by choosing a custom number of columns and rows. How to customize "
 "each cell, merge cells and a lot more."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:931
+#: wpdatatables/source/class.wdttools.php:960
 msgid " Let's create a new wpDataTable from scratch!"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:932
-#: wpdatatables/source/class.wdttools.php:998
-#: wpdatatables/source/class.wdttools.php:1120
+#: wpdatatables/source/class.wdttools.php:961
+#: wpdatatables/source/class.wdttools.php:1027
+#: wpdatatables/source/class.wdttools.php:1149
 msgid "Click on 'Create a Table' to access the wpDataTables Table Wizard."
 msgstr "Kliknite »Ustvari tabelo« za dostop do čarovnika tabele wpDataTables."
 
-#: wpdatatables/source/class.wdttools.php:935
-#: wpdatatables/source/class.wdttools.php:1047
-#: wpdatatables/source/class.wdttools.php:1081
-#: wpdatatables/source/class.wdttools.php:1123
-#: wpdatatables/source/class.wdttools.php:1185
+#: wpdatatables/source/class.wdttools.php:964
+#: wpdatatables/source/class.wdttools.php:1076
+#: wpdatatables/source/class.wdttools.php:1110
+#: wpdatatables/source/class.wdttools.php:1152
+#: wpdatatables/source/class.wdttools.php:1214
 msgid "Choose this option"
 msgstr "Izberite to možnost"
 
-#: wpdatatables/source/class.wdttools.php:936
+#: wpdatatables/source/class.wdttools.php:965
 msgid "Please select 'Create a simple table from scratch'."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:939
-#: wpdatatables/source/class.wdttools.php:1005
-#: wpdatatables/source/class.wdttools.php:1085
-#: wpdatatables/source/class.wdttools.php:1127
-#: wpdatatables/source/class.wdttools.php:1189
+#: wpdatatables/source/class.wdttools.php:968
+#: wpdatatables/source/class.wdttools.php:1034
+#: wpdatatables/source/class.wdttools.php:1114
+#: wpdatatables/source/class.wdttools.php:1156
+#: wpdatatables/source/class.wdttools.php:1218
 msgid "Click Next"
 msgstr "Kliknite Naprej"
 
-#: wpdatatables/source/class.wdttools.php:940
-#: wpdatatables/source/class.wdttools.php:1006
+#: wpdatatables/source/class.wdttools.php:969
+#: wpdatatables/source/class.wdttools.php:1035
 msgid "Please click the 'Next' button to continue."
 msgstr "Za nadaljevanje kliknite gumb »Naprej«."
 
-#: wpdatatables/source/class.wdttools.php:943
+#: wpdatatables/source/class.wdttools.php:972
 msgid "Welcome to the Simple table wizard!"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:944
+#: wpdatatables/source/class.wdttools.php:973
 msgid "Please click 'Continue' button to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:947
-#: wpdatatables/source/class.wdttools.php:1193
+#: wpdatatables/source/class.wdttools.php:976
+#: wpdatatables/source/class.wdttools.php:1222
 msgid "Choose a name for your table"
 msgstr "Izberite ime za mizo"
 
-#: wpdatatables/source/class.wdttools.php:948
+#: wpdatatables/source/class.wdttools.php:977
 msgid "After inserting table name, click 'Continue' to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:951
+#: wpdatatables/source/class.wdttools.php:980
 msgid "Choose the number of columns for your table"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:952
+#: wpdatatables/source/class.wdttools.php:981
 msgid ""
 "Please choose how many columns it will have. Remember that you can always "
 "add or reduce the number of columns later. Click 'Continue' when you finish."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:955
+#: wpdatatables/source/class.wdttools.php:984
 msgid "Choose the number of rows for your table."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:956
+#: wpdatatables/source/class.wdttools.php:985
 msgid ""
 "Please choose how many rows it will have. Remember that you can always add "
 "or reduce the number of rows later. Click 'Continue' when you finish."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:959
+#: wpdatatables/source/class.wdttools.php:988
 msgid "Click on the 'Generate Table' button"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:960
+#: wpdatatables/source/class.wdttools.php:989
 msgid "When you click on the button, the empty table will be ready for you. "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:963
+#: wpdatatables/source/class.wdttools.php:992
 msgid "We are generating the table..."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:964
+#: wpdatatables/source/class.wdttools.php:993
 msgid "Please, when you see the table, click 'Continue' to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:967
+#: wpdatatables/source/class.wdttools.php:996
 msgid ""
 "Nice job! You just configured your table and it is ready to fill it with "
 "data."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:968
+#: wpdatatables/source/class.wdttools.php:997
 msgid ""
 "Now we will guide you on how to insert data and check table layout throw "
 "Simple table editor, table toolbar and table preview. Please click "
 "'Continue' to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:971
+#: wpdatatables/source/class.wdttools.php:1000
 msgid "This is Simple table editor"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:972
+#: wpdatatables/source/class.wdttools.php:1001
 msgid ""
 "Here you can populate your table with data. <br><br>You can move around the "
 "cells using keyboard arrows and the Tab button. <br><br>Rearrange columns or "
@@ -5905,11 +5912,11 @@ msgid ""
 "line of the row header. Click 'Continue' to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:975
+#: wpdatatables/source/class.wdttools.php:1004
 msgid "Check out the Simple table toolbar"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:976
+#: wpdatatables/source/class.wdttools.php:1005
 msgid ""
 "Here you can style and insert custom data for each cell or range of cells. "
 "You can add or delete columns and rows, merge cells, customize sections by "
@@ -5917,39 +5924,39 @@ msgid ""
 "ratings or custom HTML code."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:979
+#: wpdatatables/source/class.wdttools.php:1008
 msgid "Responsive table views"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:980
+#: wpdatatables/source/class.wdttools.php:1009
 msgid ""
 "You can switch between Desktop, Tablet or Mobile devices by clicking on the "
 "tab that you need, so you can make sure your table looks excellent across "
 "all devices. "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:983
+#: wpdatatables/source/class.wdttools.php:1012
 msgid "Real-time preview"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:984
+#: wpdatatables/source/class.wdttools.php:1013
 msgid ""
 "Here you will see how your table will look like on the page. Please click "
 "'Continue' to move on."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:987
+#: wpdatatables/source/class.wdttools.php:1016
 msgid "Congrats! Your table is ready."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:988
+#: wpdatatables/source/class.wdttools.php:1017
 msgid ""
 "Now you can copy the shortcode for this table, and check out how it looks on "
 "your website when you paste it to a post or page. You can always come back "
 "and edit the table as you like."
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:994
+#: wpdatatables/source/class.wdttools.php:1023
 msgid ""
 ", in this tutorial we will show you how to create a wpDataTable linked to an "
 "existing data source. \"Linked\" in this context means that if you create a "
@@ -5963,36 +5970,36 @@ msgstr ""
 "te datoteke vsakič, ko se naloži, in tako poskrbel, da se vse spremembe "
 "vrednosti tabele takoj odražajo v tabeli."
 
-#: wpdatatables/source/class.wdttools.php:997
-#: wpdatatables/source/class.wdttools.php:1043
-#: wpdatatables/source/class.wdttools.php:1077
-#: wpdatatables/source/class.wdttools.php:1119
-#: wpdatatables/source/class.wdttools.php:1181
+#: wpdatatables/source/class.wdttools.php:1026
+#: wpdatatables/source/class.wdttools.php:1072
+#: wpdatatables/source/class.wdttools.php:1106
+#: wpdatatables/source/class.wdttools.php:1148
+#: wpdatatables/source/class.wdttools.php:1210
 msgid "Let's create a new wpDataTable!"
 msgstr "Ustvarimo novo wpDataTable!"
 
-#: wpdatatables/source/class.wdttools.php:1001
+#: wpdatatables/source/class.wdttools.php:1030
 msgid "Choose this option."
 msgstr "Izberite to možnost."
 
-#: wpdatatables/source/class.wdttools.php:1002
+#: wpdatatables/source/class.wdttools.php:1031
 msgid "Please select 'Create a table linked to an existing data source'."
 msgstr "Izberite „Ustvari tabelo, povezano z obstoječim virom podatkov“."
 
-#: wpdatatables/source/class.wdttools.php:1009
+#: wpdatatables/source/class.wdttools.php:1038
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:147
 msgid "Input data source type"
 msgstr "Vrsta vhodnih podatkovnih podatkov"
 
-#: wpdatatables/source/class.wdttools.php:1010
+#: wpdatatables/source/class.wdttools.php:1039
 msgid "Please select a data source type that you need."
 msgstr "Izberite vrsto vira podatkov, ki jo potrebujete."
 
-#: wpdatatables/source/class.wdttools.php:1013
+#: wpdatatables/source/class.wdttools.php:1042
 msgid "Select Data source type"
 msgstr "Izberite Vrsta vira podatkov"
 
-#: wpdatatables/source/class.wdttools.php:1014
+#: wpdatatables/source/class.wdttools.php:1043
 msgid ""
 "Please choose the data source that you need (SQL, Excel, CSV, JSON, Google "
 "Spreadsheet, or PHP array) and then click 'Continue' button."
@@ -6000,14 +6007,14 @@ msgstr ""
 "Izberite vir podatkov, ki ga potrebujete (SQL, Excel, CSV, JSON, Google "
 "Spreadsheet ali array PHP) in kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1017
+#: wpdatatables/source/class.wdttools.php:1046
 #: wpdatatables/templates/admin/constructor/steps/constructor_1_2.inc.php:8
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:196
 msgid "Input file path or URL"
 msgstr "Pot ali URL vhodne datoteke"
 
-#: wpdatatables/source/class.wdttools.php:1018
-#: wpdatatables/source/class.wdttools.php:1090
+#: wpdatatables/source/class.wdttools.php:1047
+#: wpdatatables/source/class.wdttools.php:1119
 msgid ""
 "Upload your file or provide the full URL here. When you finish click "
 "'Continue' button."
@@ -6015,19 +6022,19 @@ msgstr ""
 "Naložite datoteko ali navedite celoten URL tukaj. Ko končate, kliknite gumb "
 "»Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1021
+#: wpdatatables/source/class.wdttools.php:1050
 msgid "Write SQL query"
 msgstr "Napišite poizvedbo SQL"
 
-#: wpdatatables/source/class.wdttools.php:1022
+#: wpdatatables/source/class.wdttools.php:1051
 msgid "Please write your custom SQL query and then click 'Continue' button."
 msgstr "Vnesite svojo poizvedbo po meri in kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1025
+#: wpdatatables/source/class.wdttools.php:1054
 msgid "Click Save Changes"
 msgstr "Kliknite Shrani spremembe"
 
-#: wpdatatables/source/class.wdttools.php:1026
+#: wpdatatables/source/class.wdttools.php:1055
 msgid ""
 "Please click on the 'Save Changes' button to create a table.<br><br> If you "
 "get an error message after button click and you are not able to solve it, "
@@ -6041,11 +6048,11 @@ msgstr ""
 "uporabljate za izdelavo te tabele, in kopirajte sporočilo o napaki in "
 "kliknite Preskoči vadnico."
 
-#: wpdatatables/source/class.wdttools.php:1029
+#: wpdatatables/source/class.wdttools.php:1058
 msgid "The table is creating..."
 msgstr "Tabela ustvarja ..."
 
-#: wpdatatables/source/class.wdttools.php:1030
+#: wpdatatables/source/class.wdttools.php:1059
 msgid ""
 "Now the table is creating. Wait until you see it in the background and then "
 "click 'Continue'."
@@ -6053,11 +6060,11 @@ msgstr ""
 "Zdaj tabela ustvarja. Počakajte, da ga vidite v ozadju in kliknite "
 "»Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1033
+#: wpdatatables/source/class.wdttools.php:1062
 msgid "Nice job! You just created your first wpDataTable!"
 msgstr "Dobro opravljeno! Pravkar ste ustvarili svoj prvi wpDataTable!"
 
-#: wpdatatables/source/class.wdttools.php:1034
+#: wpdatatables/source/class.wdttools.php:1063
 msgid ""
 "Now you can copy the shortcode for this table, and check out how it looks on "
 "your website when you paste it to a post or page."
@@ -6065,7 +6072,7 @@ msgstr ""
 "Zdaj lahko kopirate bližnjico za to tabelo in preverite, kako je videti na "
 "vašem spletnem mestu, ko jo prilepite v objavo ali stran."
 
-#: wpdatatables/source/class.wdttools.php:1040
+#: wpdatatables/source/class.wdttools.php:1069
 msgid ""
 ", in this tutorial we will show you how to create a table manually, fully in "
 "WordPress dashboard."
@@ -6073,35 +6080,35 @@ msgstr ""
 ", v tej vadnici vam bomo pokazali, kako ročno ustvariti tabelo v celoti na "
 "nadzorni plošči WordPress."
 
-#: wpdatatables/source/class.wdttools.php:1044
-#: wpdatatables/source/class.wdttools.php:1078
-#: wpdatatables/source/class.wdttools.php:1182
+#: wpdatatables/source/class.wdttools.php:1073
+#: wpdatatables/source/class.wdttools.php:1107
+#: wpdatatables/source/class.wdttools.php:1211
 msgid "Click on 'Create a Table' to access wpDataTables Table Wizard."
 msgstr "Kliknite »Ustvari tabelo« za dostop do wpDataTables Table Wizard."
 
-#: wpdatatables/source/class.wdttools.php:1048
+#: wpdatatables/source/class.wdttools.php:1077
 msgid "Please select 'Create a table manually' to proceed."
 msgstr "Za nadaljevanje izberite 'Ročno ustvari tabelo'."
 
-#: wpdatatables/source/class.wdttools.php:1051
+#: wpdatatables/source/class.wdttools.php:1080
 msgid "Click NEXT"
 msgstr "Kliknite NASTAV"
 
-#: wpdatatables/source/class.wdttools.php:1052
-#: wpdatatables/source/class.wdttools.php:1086
-#: wpdatatables/source/class.wdttools.php:1094
-#: wpdatatables/source/class.wdttools.php:1128
-#: wpdatatables/source/class.wdttools.php:1156
-#: wpdatatables/source/class.wdttools.php:1190
-#: wpdatatables/source/class.wdttools.php:1214
+#: wpdatatables/source/class.wdttools.php:1081
+#: wpdatatables/source/class.wdttools.php:1115
+#: wpdatatables/source/class.wdttools.php:1123
+#: wpdatatables/source/class.wdttools.php:1157
+#: wpdatatables/source/class.wdttools.php:1185
+#: wpdatatables/source/class.wdttools.php:1219
+#: wpdatatables/source/class.wdttools.php:1243
 msgid "Please click 'Next' button to continue."
 msgstr "Za nadaljevanje kliknite gumb »Naprej«."
 
-#: wpdatatables/source/class.wdttools.php:1055
+#: wpdatatables/source/class.wdttools.php:1084
 msgid "Welcome to manual table constructor"
 msgstr "Dobrodošli pri ročnem konstruktorju miz"
 
-#: wpdatatables/source/class.wdttools.php:1056
+#: wpdatatables/source/class.wdttools.php:1085
 msgid ""
 "This table constructor will help you to create a table from scratch. "
 "<br><br>  Click 'Continue' to set section by section."
@@ -6109,11 +6116,11 @@ msgstr ""
 "Ta konstruktor tabel vam bo pomagal ustvariti tabelo iz nič. <br><br> Za "
 "nastavitev razdelka kliknite »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1059
+#: wpdatatables/source/class.wdttools.php:1088
 msgid "Choose names and number of columns."
 msgstr "Izberite imena in število stolpcev."
 
-#: wpdatatables/source/class.wdttools.php:1060
+#: wpdatatables/source/class.wdttools.php:1089
 msgid ""
 "Give your table a name and choose how many columns it will have.<br><br>  "
 "Click the 'Continue' button when you’re ready to move forward."
@@ -6121,11 +6128,11 @@ msgstr ""
 "Dajte tabeli ime in izberite, koliko stolpcev bo imel. <br><br> Ko ste "
 "pripravljeni za premik naprej, kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1063
+#: wpdatatables/source/class.wdttools.php:1092
 msgid "Column creating wizard"
 msgstr "Čarovnik za ustvarjanje stolpca"
 
-#: wpdatatables/source/class.wdttools.php:1064
+#: wpdatatables/source/class.wdttools.php:1093
 msgid ""
 "Here you can set the name, choose the type for each column, drag and drop to "
 "reorder them or remove a column.<br><br>  When you set everything, click the "
@@ -6135,14 +6142,14 @@ msgstr ""
 "spustite, da jih preuredite ali odstranite stolpec. <br><br> Ko nastavite "
 "vse, kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1067
+#: wpdatatables/source/class.wdttools.php:1096
 msgid "Congrats! You just configured your table."
 msgstr "Čestitke! Pravkar ste konfigurirali svojo mizo."
 
-#: wpdatatables/source/class.wdttools.php:1068
-#: wpdatatables/source/class.wdttools.php:1110
-#: wpdatatables/source/class.wdttools.php:1172
-#: wpdatatables/source/class.wdttools.php:1230
+#: wpdatatables/source/class.wdttools.php:1097
+#: wpdatatables/source/class.wdttools.php:1139
+#: wpdatatables/source/class.wdttools.php:1201
+#: wpdatatables/source/class.wdttools.php:1259
 msgid ""
 "To start working with it, finish the tutorial, click on the 'Create the "
 "table' button and choose in which editor you would like to open it. "
@@ -6150,7 +6157,7 @@ msgstr ""
 "Če želite začeti delati z njo, zaključite vadnico, kliknite gumb 'Ustvari "
 "tabelo' in izberite, v katerem urejevalniku ga želite odpreti."
 
-#: wpdatatables/source/class.wdttools.php:1074
+#: wpdatatables/source/class.wdttools.php:1103
 msgid ""
 ",  this tutorial will show you how to create a table by importing data from "
 "the existing data source."
@@ -6158,28 +6165,28 @@ msgstr ""
 ", vam bo v tej vadnici prikazano, kako ustvariti tabelo z uvozom podatkov iz "
 "obstoječega vira podatkov."
 
-#: wpdatatables/source/class.wdttools.php:1082
+#: wpdatatables/source/class.wdttools.php:1111
 msgid ""
 "Please select 'Create a table by importing data from a data source' to "
 "proceed."
 msgstr ""
 "Za nadaljevanje izberite »Ustvari tabelo z uvozom podatkov iz vira podatkov«."
 
-#: wpdatatables/source/class.wdttools.php:1089
+#: wpdatatables/source/class.wdttools.php:1118
 msgid "Choose your data source"
 msgstr "Izberite vir podatkov"
 
-#: wpdatatables/source/class.wdttools.php:1093
-#: wpdatatables/source/class.wdttools.php:1155
-#: wpdatatables/source/class.wdttools.php:1213
+#: wpdatatables/source/class.wdttools.php:1122
+#: wpdatatables/source/class.wdttools.php:1184
+#: wpdatatables/source/class.wdttools.php:1242
 msgid "Click 'Next'"
 msgstr "Kliknite »Naprej«"
 
-#: wpdatatables/source/class.wdttools.php:1097
+#: wpdatatables/source/class.wdttools.php:1126
 msgid "Now you can edit your table in the manual constructor"
 msgstr "Zdaj lahko uredite tabelo v ročnem konstruktorju"
 
-#: wpdatatables/source/class.wdttools.php:1098
+#: wpdatatables/source/class.wdttools.php:1127
 msgid ""
 "This constructor will show you columns that will be saved in the database "
 "based on your file.<br><br>  Click 'Continue' button to check section by "
@@ -6189,23 +6196,23 @@ msgstr ""
 "podlagi vaše datoteke. <br><br> Kliknite gumb »Nadaljuj«, da preverite "
 "razdelek po razdelku."
 
-#: wpdatatables/source/class.wdttools.php:1101
-#: wpdatatables/source/class.wdttools.php:1131
+#: wpdatatables/source/class.wdttools.php:1130
+#: wpdatatables/source/class.wdttools.php:1160
 msgid "Choose a name for your table."
 msgstr "Izberite ime za mizo."
 
-#: wpdatatables/source/class.wdttools.php:1102
-#: wpdatatables/source/class.wdttools.php:1132
-#: wpdatatables/source/class.wdttools.php:1194
-#: wpdatatables/source/class.wdttools.php:1252
+#: wpdatatables/source/class.wdttools.php:1131
+#: wpdatatables/source/class.wdttools.php:1161
+#: wpdatatables/source/class.wdttools.php:1223
+#: wpdatatables/source/class.wdttools.php:1281
 msgid "Click 'Continue' button when you’re ready to move forward."
 msgstr "Ko ste pripravljeni za premik naprej, kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1105
+#: wpdatatables/source/class.wdttools.php:1134
 msgid "Welcome to Column Creating Wizard."
 msgstr "Dobrodošli v Čarovniku za ustvarjanje stolpcev."
 
-#: wpdatatables/source/class.wdttools.php:1106
+#: wpdatatables/source/class.wdttools.php:1135
 msgid ""
 "Your data preview is here. You can change the name and type for each column, "
 "drag and drop to reorder them, remove or add a column.<br><br>  When you set "
@@ -6215,13 +6222,13 @@ msgstr ""
 "stolpec, povlečete in spustite, da jih preuredite, odstranite ali dodate "
 "stolpec. <br><br> Ko nastavite vse, kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1109
-#: wpdatatables/source/class.wdttools.php:1171
-#: wpdatatables/source/class.wdttools.php:1229
+#: wpdatatables/source/class.wdttools.php:1138
+#: wpdatatables/source/class.wdttools.php:1200
+#: wpdatatables/source/class.wdttools.php:1258
 msgid "Congrats! You are ready to create the table!"
 msgstr "Čestitke! Pripravljeni ste za izdelavo mize!"
 
-#: wpdatatables/source/class.wdttools.php:1116
+#: wpdatatables/source/class.wdttools.php:1145
 msgid ""
 ", in this tutorial, we will show you how to create a table by generating a "
 "query from WordPress posts."
@@ -6229,16 +6236,16 @@ msgstr ""
 ", v tej vadnici vam bomo pokazali, kako ustvariti tabelo tako, da ustvarite "
 "poizvedbo iz WordPress objav."
 
-#: wpdatatables/source/class.wdttools.php:1124
+#: wpdatatables/source/class.wdttools.php:1153
 msgid "Please select 'Generate a query to the WordPress database' to proceed."
 msgstr ""
 "Za nadaljevanje izberite 'Ustvari poizvedbo v zbirki podatkov WordPress'."
 
-#: wpdatatables/source/class.wdttools.php:1135
+#: wpdatatables/source/class.wdttools.php:1164
 msgid "Welcome to MySQL query generator."
 msgstr "Dobrodošli v MySQL generatorju poizvedb."
 
-#: wpdatatables/source/class.wdttools.php:1136
+#: wpdatatables/source/class.wdttools.php:1165
 msgid ""
 "Choose one or more post types from the lefthand side for your table, either "
 "by dragging and dropping the post type names or by selecting post types and "
@@ -6257,11 +6264,11 @@ msgstr ""
 "povlečete ali spustite ali pa izberete in kliknete desno puščico. Ko "
 "končate, kliknite »Nadaljuj«, da se premaknete naprej."
 
-#: wpdatatables/source/class.wdttools.php:1139
+#: wpdatatables/source/class.wdttools.php:1168
 msgid "Choose relations"
 msgstr "Izberite odnose"
 
-#: wpdatatables/source/class.wdttools.php:1140
+#: wpdatatables/source/class.wdttools.php:1169
 msgid ""
 "Define relations (joining rules) between post types.<br><br>  Click "
 "'Continue' button when you’re ready to move forward."
@@ -6269,7 +6276,7 @@ msgstr ""
 "Določite razmerja (pravila pridruževanja) med vrstami objav. <br><br> Ko ste "
 "pripravljeni za premik naprej, kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1144
+#: wpdatatables/source/class.wdttools.php:1173
 msgid ""
 "When you define it toggle checkbox to have an inner join, uncheck to have "
 "left join. <br><br> Click 'Continue' button when you’re ready to move "
@@ -6279,11 +6286,11 @@ msgstr ""
 "levo. <br><br> Ko ste pripravljeni za premik naprej, kliknite gumb "
 "»Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1147
+#: wpdatatables/source/class.wdttools.php:1176
 msgid "Set the conditions between the columns"
 msgstr "Nastavite pogoje med stolpci"
 
-#: wpdatatables/source/class.wdttools.php:1148
+#: wpdatatables/source/class.wdttools.php:1177
 msgid ""
 "Add and define conditions between columns in your table by clicking the '+ "
 "Add Condition' button.<br><br>  When you are ready, click 'Continue' button "
@@ -6293,11 +6300,11 @@ msgstr ""
 "pogoj. <br><br> Ko ste pripravljeni, kliknite gumb 'Nadaljuj' za premik "
 "naprej."
 
-#: wpdatatables/source/class.wdttools.php:1151
+#: wpdatatables/source/class.wdttools.php:1180
 msgid "Set the grouping rules"
 msgstr "Nastavite pravila razvrščanja"
 
-#: wpdatatables/source/class.wdttools.php:1152
+#: wpdatatables/source/class.wdttools.php:1181
 msgid ""
 "By the '+ Add Grouping' button, you can define the column grouping rules for "
 "the table.<br><br>  Once you're done, click \"Continue\" button to move on."
@@ -6306,12 +6313,12 @@ msgstr ""
 "stolpcev za tabelo. <br><br> Ko končate, za nadaljevanje kliknite gumb "
 "»Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1159
-#: wpdatatables/source/class.wdttools.php:1217
+#: wpdatatables/source/class.wdttools.php:1188
+#: wpdatatables/source/class.wdttools.php:1246
 msgid "We are creating your query..."
 msgstr "Ustvarjamo poizvedbo ..."
 
-#: wpdatatables/source/class.wdttools.php:1160
+#: wpdatatables/source/class.wdttools.php:1189
 msgid ""
 "Please wait until wpDataTables query constructor builds the query for you. "
 "Once done, it will show five lines of data as a preview. <br><br>Click "
@@ -6321,12 +6328,12 @@ msgstr ""
 "konča, bo v predogledu prikazalo pet vrstic podatkov. <br><br> Kliknite gumb "
 "»Nadaljuj«, ko ga vidite v ozadju."
 
-#: wpdatatables/source/class.wdttools.php:1163
-#: wpdatatables/source/class.wdttools.php:1221
+#: wpdatatables/source/class.wdttools.php:1192
+#: wpdatatables/source/class.wdttools.php:1250
 msgid "Your query preview is ready!"
 msgstr "Predogled vaše poizvedbe je pripravljen!"
 
-#: wpdatatables/source/class.wdttools.php:1164
+#: wpdatatables/source/class.wdttools.php:1193
 msgid ""
 "Here you see the query that wpDataTables generated for you. If you are not "
 "completely satisfied with it, you can edit it straight from this window."
@@ -6336,11 +6343,11 @@ msgstr ""
 "popolnoma zadovoljni, ga lahko uredite neposredno iz tega okna. <br><br> Za "
 "nadaljevanje kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1167
+#: wpdatatables/source/class.wdttools.php:1196
 msgid "Preview of the first 5 rows."
 msgstr "Predogled prvih 5 vrstic."
 
-#: wpdatatables/source/class.wdttools.php:1168
+#: wpdatatables/source/class.wdttools.php:1197
 msgid ""
 "Here you can see the first few rows the MySQL server returns using the query "
 "provided. If you see “No data”, it means that the MySQL server could not "
@@ -6356,7 +6363,7 @@ msgstr ""
 "kliknite »Preskoči vadnico« in poskusite ustvariti novo. <br><br> Če je vse "
 "v redu, za nadaljevanje kliknite 'NEXT'."
 
-#: wpdatatables/source/class.wdttools.php:1178
+#: wpdatatables/source/class.wdttools.php:1207
 msgid ""
 ", this tutorial will show you how to create a table by generating a query "
 "from the MySQL database."
@@ -6364,15 +6371,15 @@ msgstr ""
 ", vam bo v tej vadnici prikazano, kako ustvariti tabelo tako, da ustvarite "
 "poizvedbo iz baze podatkov MySQL."
 
-#: wpdatatables/source/class.wdttools.php:1186
+#: wpdatatables/source/class.wdttools.php:1215
 msgid "Please select 'Generate a query to the MySQL database' to proceed."
 msgstr "Za nadaljevanje izberite 'Ustvari poizvedbo v zbirki podatkov MySQL'."
 
-#: wpdatatables/source/class.wdttools.php:1197
+#: wpdatatables/source/class.wdttools.php:1226
 msgid "Welcome to MySQL query generator"
 msgstr "Dobrodošli v MySQL generatorju poizvedb"
 
-#: wpdatatables/source/class.wdttools.php:1198
+#: wpdatatables/source/class.wdttools.php:1227
 msgid ""
 "Here you can choose one or more MySQL tables as data sources for your new "
 "wpDataTable, either by dragging and dropping the table names or by selecting "
@@ -6390,7 +6397,7 @@ msgstr ""
 "desno puščico, da jih premaknete v razdelek »Izbrani stolpci SQL«. <br><br> "
 "Ko končate, kliknite gumb 'Nadaljuj' za premik naprej."
 
-#: wpdatatables/source/class.wdttools.php:1202
+#: wpdatatables/source/class.wdttools.php:1231
 msgid ""
 "Once you configure the relations, mark the checkbox for using an inner join "
 "rule, or uncheck to use left join.<br><br> When you finish, click 'Continue' "
@@ -6400,11 +6407,11 @@ msgstr ""
 "pravila pridruževanja ali počistite polje, če želite uporabiti levo "
 "združitev. <br><br> Ko končate, kliknite gumb 'Nadaljuj' za premik naprej."
 
-#: wpdatatables/source/class.wdttools.php:1205
+#: wpdatatables/source/class.wdttools.php:1234
 msgid "Set conditions between the columns."
 msgstr "Nastavite pogoje med stolpci."
 
-#: wpdatatables/source/class.wdttools.php:1206
+#: wpdatatables/source/class.wdttools.php:1235
 msgid ""
 "Add and define conditions between columns in your table by clicking on the "
 "button '+ Add Condition'.<br><br> When you finish, click on 'Continue' "
@@ -6413,11 +6420,11 @@ msgstr ""
 "Dodajte in določite pogoje med stolpci v tabeli s klikom na gumb \"+ Dodaj "
 "pogoj\". <br><br> Ko končate, kliknite gumb 'Nadaljuj' za premik naprej."
 
-#: wpdatatables/source/class.wdttools.php:1209
+#: wpdatatables/source/class.wdttools.php:1238
 msgid "Set grouping rules"
 msgstr "Nastavite pravila grupiranja"
 
-#: wpdatatables/source/class.wdttools.php:1210
+#: wpdatatables/source/class.wdttools.php:1239
 msgid ""
 "By the '+ Add Grouping' button, you can define the column grouping rules for "
 "the table.<br><br> Once you're done, click \"Continue\" button to move on."
@@ -6426,7 +6433,7 @@ msgstr ""
 "stolpcev za tabelo. <br><br> Ko končate, za nadaljevanje kliknite gumb "
 "»Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1218
+#: wpdatatables/source/class.wdttools.php:1247
 msgid ""
 "Please wait until wpDataTables query constructor builds the query for you. "
 "Once done, it will show five lines of data as a preview.<br><br> Click "
@@ -6436,7 +6443,7 @@ msgstr ""
 "konča, bo v predogledu prikazalo pet vrstic podatkov. <br><br> Kliknite gumb "
 "»Nadaljuj«, ko ga vidite v ozadju."
 
-#: wpdatatables/source/class.wdttools.php:1222
+#: wpdatatables/source/class.wdttools.php:1251
 msgid ""
 "Here you see the query that wpDataTables generated for you. If you are not "
 "completely satisfied with it, you can edit it straight from this window."
@@ -6446,11 +6453,11 @@ msgstr ""
 "popolnoma zadovoljni, ga lahko uredite neposredno iz tega okna. <br><br> Za "
 "premik naprej kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1225
+#: wpdatatables/source/class.wdttools.php:1254
 msgid "Preview of the first 5 rows"
 msgstr "Predogled prvih 5 vrstic"
 
-#: wpdatatables/source/class.wdttools.php:1226
+#: wpdatatables/source/class.wdttools.php:1255
 msgid ""
 "Here you can see the first few rows the MySQL server returns using the query "
 "provided. If you see “No data”, it means that the MySQL server could not "
@@ -6466,7 +6473,7 @@ msgstr ""
 "kliknite »Preskoči vadnico« in poskusite ustvariti novo. <br> Če je vse v "
 "redu, za nadaljevanje kliknite »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1236
+#: wpdatatables/source/class.wdttools.php:1265
 msgid ""
 ", in this tutorial we will show you how to create a chart in wpDataTables "
 "plugin."
@@ -6474,20 +6481,20 @@ msgstr ""
 ", v tej vadnici vam bomo pokazali, kako ustvariti grafikon v vtičniku "
 "wpDataTables."
 
-#: wpdatatables/source/class.wdttools.php:1239
+#: wpdatatables/source/class.wdttools.php:1268
 msgid "Let's create a new wpDataTables Chart!"
 msgstr "Ustvarimo novo shemo wpDataTables!"
 
-#: wpdatatables/source/class.wdttools.php:1240
+#: wpdatatables/source/class.wdttools.php:1269
 msgid "Click on 'Create a Chart' to access the wpDataTables Chart Wizard."
 msgstr ""
 "Kliknite »Ustvari grafikon« za dostop do čarovnika za grafikone wpDataTables."
 
-#: wpdatatables/source/class.wdttools.php:1243
+#: wpdatatables/source/class.wdttools.php:1272
 msgid "Welcome to the Chart Wizard!"
 msgstr "Dobrodošli v Čarovniku za grafikone!"
 
-#: wpdatatables/source/class.wdttools.php:1244
+#: wpdatatables/source/class.wdttools.php:1273
 msgid ""
 "You are at the first step now; we will introduce you the wpDataTables Chart "
 "Wizard section by section.<br><br> Click 'Continue' button to move forward."
@@ -6495,11 +6502,11 @@ msgstr ""
 "Zdaj ste na prvem koraku; vam bomo predstavili poglavje čarovnika za "
 "grafikone wpDataTables. <br><br> Za premik naprej kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1247
+#: wpdatatables/source/class.wdttools.php:1276
 msgid "Follow the steps in the Chart Wizard"
 msgstr "Sledite korakom v čarovniku Chart"
 
-#: wpdatatables/source/class.wdttools.php:1248
+#: wpdatatables/source/class.wdttools.php:1277
 msgid ""
 "By following these steps, you will finish building your chart in the Chart "
 "Wizard. The current step will always be highlighted in blue.<br><br> Click "
@@ -6509,15 +6516,15 @@ msgstr ""
 "grafikone. Trenutni korak bo vedno označen z modro barvo. <br><br> Za premik "
 "naprej kliknite gumb »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1251
+#: wpdatatables/source/class.wdttools.php:1280
 msgid "Choose a name for your Chart"
 msgstr "Izberite ime za grafikon"
 
-#: wpdatatables/source/class.wdttools.php:1255
+#: wpdatatables/source/class.wdttools.php:1284
 msgid "In wpDataTables you can find several charts render engines."
 msgstr "V wpDataTables lahko najdete več grafikonov."
 
-#: wpdatatables/source/class.wdttools.php:1256
+#: wpdatatables/source/class.wdttools.php:1285
 msgid ""
 "Click on the dropdown, and you will see several options that you can choose "
 "from. <br><br>To continue, click on the dropdown."
@@ -6525,11 +6532,11 @@ msgstr ""
 "Kliknite na spustni meni in videli boste več možnosti, med katerimi lahko "
 "izbirate. <br><br> Za nadaljevanje kliknite spustni meni."
 
-#: wpdatatables/source/class.wdttools.php:1259
+#: wpdatatables/source/class.wdttools.php:1288
 msgid "Choose your desired chart engine."
 msgstr "Izberite želeni motor grafikona."
 
-#: wpdatatables/source/class.wdttools.php:1260
+#: wpdatatables/source/class.wdttools.php:1289
 msgid ""
 "By clicking on one of the three options, you will choose the engine that "
 "will render your chart.<br><br> When you finish, please click 'Continue' "
@@ -6538,11 +6545,11 @@ msgstr ""
 "S klikom na eno od treh možnosti boste izbrali motor, ki bo upodobil vaš "
 "grafikon. <br><br> Ko končate, kliknite »Nadaljuj«, da se premaknete naprej."
 
-#: wpdatatables/source/class.wdttools.php:1263
+#: wpdatatables/source/class.wdttools.php:1292
 msgid "Different charts types based on the engine you choose. "
 msgstr "Različne vrste grafikonov glede na izbrani motor."
 
-#: wpdatatables/source/class.wdttools.php:1264
+#: wpdatatables/source/class.wdttools.php:1293
 msgid ""
 "Here you can choose a chart type. Please, click on the chart type that you "
 "prefer.<br><br> When you finish, please click 'Continue' button to move "
@@ -6551,15 +6558,15 @@ msgstr ""
 "Tu lahko izberete vrsto grafikona. Prosimo, kliknite želeno vrsto grafikona. "
 "<br><br> Ko končate, kliknite »Nadaljuj«, da se premaknete naprej."
 
-#: wpdatatables/source/class.wdttools.php:1267
+#: wpdatatables/source/class.wdttools.php:1296
 msgid "The first step is finished!"
 msgstr "Prvi korak je končan!"
 
-#: wpdatatables/source/class.wdttools.php:1268
+#: wpdatatables/source/class.wdttools.php:1297
 msgid "Let's move on. Please, click 'Next' to continue."
 msgstr "Gremo naprej. Za nadaljevanje kliknite »Naprej«."
 
-#: wpdatatables/source/class.wdttools.php:1271
+#: wpdatatables/source/class.wdttools.php:1300
 msgid ""
 "Now you need to choose a wpDataTable based on which we will build a chart "
 "for you"
@@ -6567,7 +6574,7 @@ msgstr ""
 "Zdaj morate izbrati wpDataTable, na podlagi katerega bomo izdelali grafikon "
 "za vas"
 
-#: wpdatatables/source/class.wdttools.php:1272
+#: wpdatatables/source/class.wdttools.php:1301
 msgid ""
 "Click on the dropdown, and all your tables will be listed. The columns of "
 "the table that you choose will be used for creating the chart.<br><br>If you "
@@ -6579,11 +6586,11 @@ msgstr ""
 "ustvarili wpDataTable, kliknite gumb 'Skip Tutorial' in ustvarite "
 "wpDataTable, ki bi vseboval podatke, ki jih želite najprej vizualizirati."
 
-#: wpdatatables/source/class.wdttools.php:1275
+#: wpdatatables/source/class.wdttools.php:1304
 msgid "Pick your wpDataTable"
 msgstr "Izberite svoj wpDataTable"
 
-#: wpdatatables/source/class.wdttools.php:1276
+#: wpdatatables/source/class.wdttools.php:1305
 msgid ""
 "Pick a wpDataTable from which you want to render a chart and when you "
 "finish, please click 'Continue' to move on."
@@ -6591,20 +6598,20 @@ msgstr ""
 "Izberite wpDataTable, iz katerega želite upodobiti grafikon, in ko končate, "
 "za nadaljevanje kliknite »Nadaljuj«."
 
-#: wpdatatables/source/class.wdttools.php:1279
+#: wpdatatables/source/class.wdttools.php:1308
 msgid "The second step is finished!"
 msgstr "Drugi korak je končan!"
 
-#: wpdatatables/source/class.wdttools.php:1280
+#: wpdatatables/source/class.wdttools.php:1309
 msgid ""
 "Let's see what is coming up next. <br><br> Please, click 'Next' to continue."
 msgstr "Poglejmo, kaj sledi. <br><br> Za nadaljevanje kliknite »Naprej«."
 
-#: wpdatatables/source/class.wdttools.php:1283
+#: wpdatatables/source/class.wdttools.php:1312
 msgid "Just a heads up!"
 msgstr "Samo glave navzgor!"
 
-#: wpdatatables/source/class.wdttools.php:1284
+#: wpdatatables/source/class.wdttools.php:1313
 msgid ""
 "Here you will choose from which columns you will create a chart.<br><br> "
 "Please click 'Continue' button to move forward."
@@ -6612,30 +6619,30 @@ msgstr ""
 "Tu boste izbrali, iz katerih stolpcev boste ustvarili grafikon. <br><br> Za "
 "premik naprej kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1287
+#: wpdatatables/source/class.wdttools.php:1316
 msgid "Meet the wpDataTable Column Blocks"
 msgstr "Spoznajte stolpne bloke wpDataTable"
 
-#: wpdatatables/source/class.wdttools.php:1288
+#: wpdatatables/source/class.wdttools.php:1317
 msgid ""
 "Here you will choose columns you want to use in the chart. Drag and drop it, "
 "or click on the arrow to move the desired column to the 'Columns used in the "
 "chart' section.<br><br> When you finish please, click 'Continue.'"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:1291
+#: wpdatatables/source/class.wdttools.php:1320
 msgid "Well done!"
 msgstr "Dobro opravljeno!"
 
-#: wpdatatables/source/class.wdttools.php:1292
+#: wpdatatables/source/class.wdttools.php:1321
 msgid "Just two more steps to go. Please click 'Next' to continue."
 msgstr "Samo še dva koraka. Za nadaljevanje kliknite »Naprej«."
 
-#: wpdatatables/source/class.wdttools.php:1295
+#: wpdatatables/source/class.wdttools.php:1324
 msgid "Chart settings and chart preview."
 msgstr "Nastavitve grafikona in predogled grafikona."
 
-#: wpdatatables/source/class.wdttools.php:1296
+#: wpdatatables/source/class.wdttools.php:1325
 msgid ""
 "Here you can adjust chart settings, different parameters are grouped in "
 "section; adjusting the parameters will be reflected in the preview of your "
@@ -6647,11 +6654,11 @@ msgstr ""
 "realnem času na desni strani. <br><br> Za premik naprej kliknite gumb "
 "'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1299
+#: wpdatatables/source/class.wdttools.php:1328
 msgid "In this sidebar, you can find the chart settings section."
 msgstr "Na tej stranski vrstici najdete razdelek z nastavitvami grafikona."
 
-#: wpdatatables/source/class.wdttools.php:1300
+#: wpdatatables/source/class.wdttools.php:1329
 msgid ""
 "By clicking on each section, you can set your desired parameters per section."
 "<br><br> Please click 'Continue' button to move on."
@@ -6659,11 +6666,11 @@ msgstr ""
 "S klikom na posamezen razdelek lahko nastavite želene parametre na odsek. "
 "<br><br> Za nadaljevanje kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1303
+#: wpdatatables/source/class.wdttools.php:1332
 msgid "Here are the available chart options"
 msgstr "Tu so na voljo možnosti grafikona"
 
-#: wpdatatables/source/class.wdttools.php:1304
+#: wpdatatables/source/class.wdttools.php:1333
 msgid ""
 "Set different chart options for the chosen section to get your desired chart "
 "look.<br><br> Please click 'Continue' button to move on."
@@ -6671,11 +6678,11 @@ msgstr ""
 "Nastavite različne možnosti grafikona za izbrani razdelek, da dobite želeni "
 "videz grafikona. <br><br> Za nadaljevanje kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1307
+#: wpdatatables/source/class.wdttools.php:1336
 msgid "How your chart will look like on the page of your website"
 msgstr "Kako bo izgledal vaš grafikon na strani vašega spletnega mesta"
 
-#: wpdatatables/source/class.wdttools.php:1308
+#: wpdatatables/source/class.wdttools.php:1337
 msgid ""
 "Here you can see a preview of your chart based on the settings you have "
 "chosen.<br><br> Please click 'Continue' button to move on."
@@ -6683,11 +6690,11 @@ msgstr ""
 "Tu lahko vidite predogled grafikona glede na izbrane nastavitve. <br><br> Za "
 "nadaljevanje kliknite gumb 'Nadaljuj'."
 
-#: wpdatatables/source/class.wdttools.php:1311
+#: wpdatatables/source/class.wdttools.php:1340
 msgid "You can save your chart now"
 msgstr "Zdaj lahko shranite svoj grafikon"
 
-#: wpdatatables/source/class.wdttools.php:1312
+#: wpdatatables/source/class.wdttools.php:1341
 msgid ""
 "If you are satisfied with your chart appearance, click on the 'Save chart' "
 "button and all your settings for this chart will be saved in the database."
@@ -6695,11 +6702,11 @@ msgstr ""
 "Če ste zadovoljni z izgledom grafikona, kliknite gumb 'Shrani grafikon' in "
 "vse vaše nastavitve tega grafikona bodo shranjene v bazi podatkov."
 
-#: wpdatatables/source/class.wdttools.php:1315
+#: wpdatatables/source/class.wdttools.php:1344
 msgid "Congrats! Your first chart is ready!"
 msgstr "Čestitke! Vaš prvi grafikon je pripravljen!"
 
-#: wpdatatables/source/class.wdttools.php:1316
+#: wpdatatables/source/class.wdttools.php:1345
 msgid ""
 "Now you can copy the shortcode for this chart and paste it in any WP post or "
 "page. <br><br>You may now finish this tutorial. "
@@ -6707,19 +6714,19 @@ msgstr ""
 "Zdaj lahko kopirate kratko kodo tega grafikona in jo prilepite v katero koli "
 "objavo ali stran WP. <br><br> Zdaj lahko končate to vadnico."
 
-#: wpdatatables/source/class.wdttools.php:2426
+#: wpdatatables/source/class.wdttools.php:2455
 msgid "User do not have permissions to delete this row! "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:2428
+#: wpdatatables/source/class.wdttools.php:2457
 msgid "User do not have permission to update data!"
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:2450
+#: wpdatatables/source/class.wdttools.php:2479
 msgid "User does not have permissions to delete this row! "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:2452
+#: wpdatatables/source/class.wdttools.php:2481
 msgid "User does not have permission to update data!"
 msgstr ""
 
@@ -6823,12 +6830,12 @@ msgid ""
 msgstr ""
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:52
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:498
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:504
 msgid "Free"
 msgstr ""
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:57
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:505
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:511
 msgid "Forminator Forms integration for wpDataTables"
 msgstr ""
 
@@ -6840,12 +6847,12 @@ msgid ""
 msgstr ""
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:73
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:522
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:563
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:605
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:646
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:688
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:729
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:528
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:569
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:611
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:652
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:694
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:735
 msgid "Learn more"
 msgstr "Preberi več"
 
@@ -6855,12 +6862,12 @@ msgstr "Preberi več"
 #: wpdatatables/templates/admin/addons/addons.inc.php:189
 #: wpdatatables/templates/admin/addons/addons.inc.php:227
 #: wpdatatables/templates/admin/addons/addons.inc.php:263
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:529
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:571
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:613
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:654
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:696
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:737
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:535
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:577
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:619
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:660
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:702
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:743
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:284
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:306
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:325
@@ -6875,12 +6882,12 @@ msgid "NEW"
 msgstr "NOVO"
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:97
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:546
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:552
 msgid "Master Detail Tables for wpDataTables"
 msgstr "Glavne podrobne tabele za wpDataTables"
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:100
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:550
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:556
 msgid ""
 "A wpDataTables addon which allows showing additional details for a specific "
 "row in a popup or a separate page or post."
@@ -6901,16 +6908,16 @@ msgstr "Nauči se več "
 #: wpdatatables/templates/admin/addons/addons.inc.php:183
 #: wpdatatables/templates/admin/addons/addons.inc.php:221
 #: wpdatatables/templates/admin/addons/addons.inc.php:257
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:559
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:601
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:642
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:684
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:725
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:565
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:607
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:648
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:690
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:731
 msgid "Purchase"
 msgstr "Nakup"
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:135
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:588
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:594
 msgid "Powerful Filters for wpDataTables"
 msgstr "Zmogljivi filtri za wpDataTables"
 
@@ -6925,7 +6932,7 @@ msgstr ""
 "tabele, preden uporabnik določi iskalne vrednosti."
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:172
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:633
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:639
 msgid ""
 "A unique tool that allows you to generate almost any Word DOCX and Excel "
 "XLSX documents filled in with actual data from your database."
@@ -6934,12 +6941,12 @@ msgstr ""
 "DOCX in Excel XLSX, napolnjenih z dejanskimi podatki iz vaše baze podatkov."
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:205
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:671
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:677
 msgid "Formidable Forms integration for wpDataTables"
 msgstr "Zapletena oblika integracije za wpDataTables"
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:208
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:675
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:681
 msgid ""
 "Tool that adds \"Formidable Form\" as a new table type and allows you to "
 "create wpDataTables from Formidable Forms entries data."
@@ -6948,12 +6955,12 @@ msgstr ""
 "ustvarjanje wpDataTables iz podatkov vnosov v Formidable Forms."
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:241
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:712
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:718
 msgid "Gravity Forms integration for wpDataTables"
 msgstr "Gravity Forms integracija za wpDataTables"
 
 #: wpdatatables/templates/admin/addons/addons.inc.php:244
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:716
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:722
 msgid ""
 "Tool that adds \"Gravity Form\" as a new table type and allows you to create "
 "wpDataTables from Gravity Forms entries data."
@@ -11428,19 +11435,19 @@ msgstr "Trenutno uporabljate"
 msgid "Version "
 msgstr "Različica"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:288
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:294
 msgid "You are a premium user!"
 msgstr "Ste premium uporabnik!"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:294
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:300
 msgid "Manage your subscriptions"
 msgstr "Upravljajte svoje naročnine"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:301
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:307
 msgid "Thank you for choosing wpDataTables Premium"
 msgstr "Zahvaljujemo se vam, da ste izbrali wpDataTables Premium"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:303
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:309
 msgid ""
 "Enjoy using our premium features and professional support that we provide "
 "through our "
@@ -11448,39 +11455,39 @@ msgstr ""
 "Uživajte v uporabi naših vrhunskih funkcij in strokovne podpore, ki jo "
 "ponujamo z našo"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:305
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:311
 msgid " ticketing system."
 msgstr "sistem vozovnic."
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:327
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:333
 msgid "Basic system info:"
 msgstr "Osnovne informacije o sistemu:"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:330
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:336
 msgid "PHP"
 msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:347
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:353
 msgid "Zip extension "
 msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:357
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:363
 msgid "Curl extension "
 msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:369
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:375
 msgid "View Full System Info"
 msgstr "Oglejte si popolne informacije o sistemu"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:378
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:384
 msgid "News Blog"
 msgstr "Blog novic"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:383
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:389
 msgid "Checkout useful articles from wpdatatables.com"
 msgstr "Oglejte si uporabne članke s spletnega mesta wpdatatables.com"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:469
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:475
 msgid ""
 "Never miss notifications about new cool features, promotions,\n"
 "                                    giveaways or freebies – subscribe to our "
@@ -11493,11 +11500,11 @@ msgstr ""
 "                                    približno 1 sporočilo na mesec in nikoli "
 "neželeno!"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:486
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:492
 msgid "wpDataTables Addons"
 msgstr "wpDataTables Addons"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:488
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:494
 msgid ""
 "While wpDataTables itself provides quite a large amount of features and "
 "unlimited customisation, flexibility, you can achieve even more with our "
@@ -11507,19 +11514,19 @@ msgstr ""
 "prilagajanje, prilagodljivost, lahko z našimi premium dodatki dosežete še "
 "več."
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:490
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:496
 msgid ""
 "(except Forminator Forms integration which is free and can be used with Lite "
 "version as well, all others requires wpDataTables Premium version)"
 msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:509
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:515
 msgid ""
 "Tool that adds \"Forminator Form\" as a new table type and allows you to "
 "create wpDataTables from Forminator Forms submissions."
 msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:592
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:598
 msgid ""
 "An add-on for wpDataTables that provides powerful filtering features: "
 "cascade filtering, applying filters on button click, hide table before "
@@ -11529,34 +11536,34 @@ msgstr ""
 "filtriranje, nanašanje filtrov na klik gumba, skrivanje tabele pred "
 "filtriranjem."
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:748
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:754
 #, fuzzy
 #| msgid "Need booking plugin?"
 msgid "Need a booking plugin?"
 msgstr "Potrebujete vtičnik za rezervacije?"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:757
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:763
 msgid "Appointments and Events WordPress Booking Plugin"
 msgstr "Sestanki in dogodki WordPress Vtičnik za rezervacijo"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:763
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:769
 msgid "Rating: 4.8 - ‎123 reviews"
 msgstr "Ocena: 4.8 - 123 pregledov"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:768
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:774
 msgid "Learn More"
 msgstr "Preberi več"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:779
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:785
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:241
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2617
 #: wpdatatables/templates/admin/support/support.inc.php:87
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:560
 #: wpdatatables/templates/admin/welcome_page/welcome_page.inc.php:368
-msgid "Made by"
-msgstr "Narejeno v"
+msgid "Made by Melograno Venture Studio"
+msgstr ""
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:790
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:796
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:253
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2629
 #: wpdatatables/templates/admin/support/support.inc.php:45
@@ -11567,7 +11574,7 @@ msgstr "Narejeno v"
 msgid "Documentation"
 msgstr "Dokumentacija"
 
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:794
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:800
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:257
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2633
 #: wpdatatables/templates/admin/support/support.inc.php:24
@@ -11810,7 +11817,7 @@ msgid "New Premium features"
 msgstr ""
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:173
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1800
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1778
 #, fuzzy
 #| msgid "Report Builder"
 msgid "WP Post Builder"
@@ -11818,15 +11825,15 @@ msgstr "Graditelj poročil"
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:174
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:197
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1778
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1801
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1824
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1847
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1870
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1756
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1779
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1802
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1825
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1848
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2130
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2152
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2174
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2394
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2417
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2372
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2395
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:127
 #: wpdatatables/templates/admin/welcome_page/welcome_page.inc.php:164
 #: wpdatatables/templates/admin/welcome_page/welcome_page.inc.php:174
@@ -11834,7 +11841,7 @@ msgid "NEW!"
 msgstr ""
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:196
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1823
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1801
 #, fuzzy
 #| msgid "Integer"
 msgid "WooCommerce Integration"
@@ -12141,278 +12148,278 @@ msgid "Advanced Features"
 msgstr "Napredni filter"
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1403
-msgid "Full WCAG compatibility"
-msgstr ""
-
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1425
 msgid "Caching data"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1447
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1425
 msgid "Auto-update cache data"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1469
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1447
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:78
 msgid "Responsive"
 msgstr "Odziven"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1491
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1469
 msgid "Calculating totals, minimum, maximum and average values"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1513
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1491
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:242
 msgid "Server-side processing"
 msgstr "Obdelava na strani strežnika"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1535
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1513
 msgid "Advanced filtering"
 msgstr "Napredno filtriranje"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1557
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1535
 msgid "Pre-filtering tables through URL"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1579
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1557
 #, fuzzy
 #| msgid "Store value"
 msgid "Transform Value"
 msgstr "Trgovinska vrednost"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1601
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1579
 #, fuzzy
 #| msgid "Conditional formatting"
 msgid "Conditional Formatting"
 msgstr "Pogojno oblikovanje"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1623
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1601
 msgid "Global time format with seconds"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1645
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1623
 #, fuzzy
 #| msgid "Custom filter label"
 msgid "Customize tables"
 msgstr "Oznaka filtra po meri"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1667
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1645
 #, fuzzy
 #| msgid "Column header"
 msgid "Rotate column headers"
 msgstr "Glava stolpca"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1689
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1667
 #, fuzzy
 #| msgid "Creating tables from Excel files"
 msgid "Update manual tables from source files"
 msgstr "Ustvarjanje tabel iz datotek Excela"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1711
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1689
 msgid "Making dynamic SQL Queries with placeholders"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1733
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1711
 #, fuzzy
 #| msgid "Displayed header"
 msgid "Fixed Headers"
 msgstr "Prikazana glava"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1755
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1733
 #, fuzzy
 #| msgid "Add column"
 msgid "Fixed Columns"
 msgstr "Dodaj stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1777
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1755
 #, fuzzy
 #| msgid "Formidable Forms integration for wpDataTables"
 msgid "Folders / Categories for tables"
 msgstr "Zapletena oblika integracije za wpDataTables"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1846
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1824
 msgid "Custom Fields Integration for WP Posts Builder Tables"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1869
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1847
 msgid "Custom Fields Integration for WooCommerce Product Tables"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1893
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1871
 #, fuzzy
 #| msgid "Column header"
 msgid "Datatable column types and features"
 msgstr "Glava stolpca"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1899
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1877
 #, fuzzy
 #| msgid "Add column"
 msgid "String columns"
 msgstr "Dodaj stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1920
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1898
 #, fuzzy
 #| msgid "Set column color"
 msgid "Integer columns"
 msgstr "Nastavite barvo stolpca"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1941
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1919
 #, fuzzy
 #| msgid "Add column"
 msgid "Float columns"
 msgstr "Dodaj stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1962
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1940
 #, fuzzy
 #| msgid "New column"
 msgid "Date columns"
 msgstr "Nov stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1983
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1961
 #, fuzzy
 #| msgid "DateTime"
 msgid "DateTime columns"
 msgstr "Datum čas"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2004
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:1982
 #, fuzzy
 #| msgid "Add column"
 msgid "Time columns"
 msgstr "Dodaj stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2025
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2003
 #, fuzzy
 #| msgid "New column"
 msgid "Image columns"
 msgstr "Nov stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2046
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2024
 #, fuzzy
 #| msgid "URL link"
 msgid "URL links columns"
 msgstr "URL povezava"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2067
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2045
 #, fuzzy
 #| msgid "Add column"
 msgid "Hiding columns"
 msgstr "Dodaj stolpec"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2088
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2066
 msgid "Currency/price, percentage and other column types"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2109
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2087
 #, fuzzy
 #| msgid "Color and font settings"
 msgid "Coloring and styling columns"
 msgstr "Nastavitve barve in pisave"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2130
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2108
 #, fuzzy
 #| msgid "Formula for calculation"
 msgid "Formula (calculated) columns"
 msgstr "Formula za izračun"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2151
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2129
 msgid "Hidden (Dynamic) columns"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2197
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2175
 #, fuzzy
 #| msgid "Creating Google charts"
 msgid "Creating dynamic charts"
 msgstr "Ustvarjanje Google lestvic"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2203
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2181
 msgid "Editing existing charts"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2224
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2202
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:563
 msgid "Responsive design"
 msgstr "Odzivno oblikovanje"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2245
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2223
 #, fuzzy
 #| msgid "Set grouping rules"
 msgid "Grouping rows"
 msgstr "Nastavite pravila grupiranja"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2266
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2244
 #, fuzzy
 #| msgid "Column Customization"
 msgid "Customize options"
 msgstr "Prilagajanje stolpcev"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2287
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2265
 #, fuzzy
 #| msgid "Gauge chart"
 msgid "Google charts"
 msgstr "Merilni grafikon"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2308
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2286
 msgid "Chart.js"
 msgstr "Chart.js"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2329
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2307
 #, fuzzy
 #| msgid "Follow table filtering"
 msgid "Follow table filtering in charts"
 msgstr "Sledite filtriranju tabel"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2350
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2328
 #, fuzzy
 #| msgid "Charts"
 msgid "ApexCharts"
 msgstr "Grafikoni"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2371
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2349
 #, fuzzy
 #| msgid "Highcharts"
 msgid "HighCharts"
 msgstr "Highcharts"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2393
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2371
 #, fuzzy
 #| msgid "Creating charts with Highcharts"
 msgid "Creating charts with Highstock"
 msgstr "Ustvarjanje grafikonov z Highchartsi"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2416
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2394
 msgid "Folders / Categories for charts"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2440
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2418
 #, fuzzy
 #| msgid "Integer"
 msgid "Integrations"
 msgstr "Integer"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2447
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2425
 msgid "IvyForms"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2469
-msgid "Visual Composer"
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2447
+msgid "WPBakery"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2491
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2469
 msgid "Avada Website Builder"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2513
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2491
 #, fuzzy
 #| msgid "Report Builder"
 msgid "Divi Builder"
 msgstr "Graditelj poročil"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2535
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2513
 msgid "Elementor"
 msgstr ""
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2557
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2535
 msgid "Gutenberg blocks"
+msgstr ""
+
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2557
+msgid "Full WCAG compatibility"
 msgstr ""
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2581
@@ -12502,14 +12509,28 @@ msgstr "Če še vedno ne najdete kode za nakup, se obrnite na našo podporo"
 msgid "here."
 msgstr "tukaj."
 
+#: wpdatatables/templates/admin/settings/tabs/activation.php:56
+#, fuzzy
+#| msgid "TMS Store Purchase Code"
+msgid "Melograno Store Purchase Code"
+msgstr "Koda nakupa trgovine TMS"
+
 #: wpdatatables/templates/admin/settings/tabs/activation.php:58
+#, fuzzy
+#| msgid ""
+#| "If your brought the plugin directly on our website or in the Lite "
+#| "version, enter TMS Store purchase code to enable auto updates."
 msgid ""
 "If you bought the plugin directly on our website or in the Lite version, "
-"enter your TMS Store purchase code to enable auto updates."
+"enter your Melograno Store purchase code to enable auto updates."
 msgstr ""
+"Če ste vtičnik vnesli neposredno na našem spletnem mestu ali v različici "
+"Lite, vnesite kodo nakupa TMS Store, da omogočite samodejne posodobitve."
 
 #: wpdatatables/templates/admin/settings/tabs/activation.php:72
-msgid "Please enter your wpDataTables TMS Store Purchase Code"
+#, fuzzy
+#| msgid "Please enter your wpDataTables TMS Store Purchase Code"
+msgid "Please enter your wpDataTables Melograno Store Purchase Code"
 msgstr "Vnesite kodo za nakup wpDataTables TMS Store"
 
 #: wpdatatables/templates/admin/settings/tabs/activation.php:116
@@ -16469,6 +16490,9 @@ msgid ""
 "The wpDataTables plugin is disabled on your site until you fix the issue."
 msgstr ""
 
+#~ msgid "Made by"
+#~ msgstr "Narejeno v"
+
 #~ msgid ""
 #~ "No data fetched!  <br/> If you are trying to save table for the first "
 #~ "time, please enter some date before saving so table could be set "
@@ -16857,13 +16881,6 @@ msgstr ""
 #~ "določeno vrstico v pojavnem oknu ali na ločeni strani ali objavi. "
 #~ "Priročno, kadar bi želeli ohraniti manj stolpcev v tabeli, hkrati pa "
 #~ "uporabniku omogočiti dostop do vseh podrobnosti o določenih vnosih."
-
-#~ msgid ""
-#~ "If your brought the plugin directly on our website or in the Lite "
-#~ "version, enter TMS Store purchase code to enable auto updates."
-#~ msgstr ""
-#~ "Če ste vtičnik vnesli neposredno na našem spletnem mestu ali v različici "
-#~ "Lite, vnesite kodo nakupa TMS Store, da omogočite samodejne posodobitve."
 
 #~ msgid ""
 #~ "While wpDataTables itself provides quite a large amount of features and "

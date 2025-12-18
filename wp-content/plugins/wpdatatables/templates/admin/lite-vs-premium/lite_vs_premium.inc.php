@@ -1400,28 +1400,6 @@ $folderPathStandard = WDT_STANDARD_INTEGRATIONS_PATH;
                             </tr>
                             <tr>
                                 <td data-title="Features">
-                                    <?php esc_html_e('Full WCAG compatibility', 'wpdatatables'); ?>
-                                    <hr>
-                                </td>
-                                <td data-title="Premium" class="text-center bg-blue-starter">
-                                    <i class="wpdt-icon-check-full"></i>
-                                    <hr>
-                                </td>
-                                <td data-title="Premium" class="text-center bg-blue-standard">
-                                    <i class="wpdt-icon-check-full"></i>
-                                    <hr>
-                                </td>
-                                <td data-title="Premium" class="text-center bg-blue-pro">
-                                    <i class="wpdt-icon-check-full"></i>
-                                    <hr>
-                                </td>
-                                <td data-title="Premium" class="text-center bg-blue-dev">
-                                    <i class="wpdt-icon-check-full"></i>
-                                    <hr>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-title="Features">
                                     <?php esc_html_e('Caching data', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
@@ -2466,7 +2444,7 @@ $folderPathStandard = WDT_STANDARD_INTEGRATIONS_PATH;
                             </tr>
                             <tr>
                                 <td data-title="Features">
-                                    <?php esc_html_e('Visual Composer', 'wpdatatables'); ?>
+                                    <?php esc_html_e('WPBakery', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue-starter">
@@ -2574,6 +2552,28 @@ $folderPathStandard = WDT_STANDARD_INTEGRATIONS_PATH;
                                     <hr>
                                 </td>
                             </tr>
+                            <tr>
+                                <td data-title="Features">
+                                    <?php esc_html_e('Full WCAG compatibility', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-starter">
+                                    <i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-standard">
+                                    <i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro">
+                                    <i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-dev">
+                                    <i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
 
                             </tbody>
                         </table>
@@ -2614,10 +2614,10 @@ $folderPathStandard = WDT_STANDARD_INTEGRATIONS_PATH;
 
         <div class="row">
             <h6 class="text-center wdt-footer-title">
-                <?php esc_html_e('Made by', 'wpdatatables'); ?>
-                <a href="https://tmsproducts.io/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
+                <?php esc_html_e('Made by Melograno Venture Studio', 'wpdatatables'); ?>
+                <a href="<?php echo WDT_COMPANY_URL; ?>/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful"
                    target="_blank">
-                    <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
+                    <img src="<?php echo WDT_ASSETS_PATH; ?>img/Melograno-primary.svg" alt="" style="width: 28px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
