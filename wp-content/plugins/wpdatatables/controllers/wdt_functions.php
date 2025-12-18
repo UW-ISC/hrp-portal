@@ -1907,16 +1907,31 @@ function wdtCheckUpdate($transient)
         return $transient;
     }
 
-    $purchaseCode = get_option('wdtPurchaseCodeStore');
+    // Fetch transient for the plugin update data
+    $updateData = get_transient('wdt_update_data');
+    $currentTime = time();
 
-    $envatoTokenEmail = get_option('wdtEnvatoTokenEmail');
+    // If no update data exists or the last check was more than a day ago, fetch new data
+    if (!$updateData || ($currentTime - $updateData['last_checked']) > DAY_IN_SECONDS) {
+        $purchaseCode = get_option('wdtPurchaseCodeStore');
+        $envatoTokenEmail = get_option('wdtEnvatoTokenEmail');
 
-    // Get the remote info
-    $remoteInformation = WDTTools::getRemoteInformation('wpdatatables', $purchaseCode, $envatoTokenEmail);
+        // Get the remote info
+        $remoteInformation = WDTTools::getRemoteInformation('wpdatatables', $purchaseCode, $envatoTokenEmail);
 
-    // If a newer version is available, add the update
-    if ($remoteInformation && version_compare(WDT_CURRENT_VERSION, $remoteInformation->new_version, '<')) {
-        $transient->response[$wdtPluginSlug] = $remoteInformation;
+        if ($remoteInformation) {
+            // Store the new data in the transient
+            $updateData = [
+                'last_checked' => $currentTime,
+                'remote_info'  => $remoteInformation,
+            ];
+            set_transient('wdt_update_data', $updateData, DAY_IN_SECONDS);
+        }
+    }
+
+    // Check if a newer version is available
+    if (isset($updateData['remote_info']) && version_compare(WDT_CURRENT_VERSION, $updateData['remote_info']->new_version, '<')) {
+        $transient->response[$wdtPluginSlug] = $updateData['remote_info'];
     }
 
     return $transient;
@@ -1943,11 +1958,18 @@ function wdtCheckInfo($response, $action, $args)
         return $response;
     }
 
-    $purchaseCode = get_option('wdtPurchaseCodeStore');
-
-    $envatoTokenEmail = get_option('wdtEnvatoTokenEmail');
-
     if ($args->slug === $wdtPluginSlug) {
+        // Try to get cached update data first
+        $updateData = get_transient('wdt_update_data');
+
+        if ($updateData && isset($updateData['remote_info'])) {
+            return $updateData['remote_info'];
+        }
+
+        // If no cached data, fetch fresh data
+        $purchaseCode = get_option('wdtPurchaseCodeStore');
+        $envatoTokenEmail = get_option('wdtEnvatoTokenEmail');
+
         return WDTTools::getRemoteInformation('wpdatatables', $purchaseCode, $envatoTokenEmail);
     }
 

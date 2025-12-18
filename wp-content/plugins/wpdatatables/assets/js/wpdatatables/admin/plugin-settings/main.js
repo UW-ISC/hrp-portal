@@ -1048,7 +1048,7 @@
 
             if (valid !== null && slug === 'wpdatatables') {
 
-                // Remove query parameters sent back from TMS Store
+                // Remove query parameters sent back from Melograno Store
                 let redirectURL = this.removeURLParameter(window.location.href, 'valid');
                 redirectURL = this.removeURLParameter(redirectURL, 'slug');
                 redirectURL = this.removeURLParameter(redirectURL, 'domainRegistered');

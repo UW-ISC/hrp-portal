@@ -1323,8 +1323,59 @@ class WDTColumn
     {
         global $wpdb;
         $parentTable = $this->getParentTable();
-        $parentTableContent = WDTTools::applyPlaceholders($parentTable->getTableContent());
         $columnOrigHeader = $this->getOriginalHeader();
+
+        // Handle WP Posts Query tables
+        if ($parentTable->getTableType() === 'wp_posts_query') {
+            $wpQueryParams = json_decode($parentTable->getTableContent(), true);
+            $customFieldColumns = isset($wpQueryParams['customFieldColumns']) ? $wpQueryParams['customFieldColumns'] : array();
+            $isCustomField = false;
+
+            // Check if this is a custom field
+            if (!empty($customFieldColumns)) {
+                foreach ($customFieldColumns as $customFieldColumn) {
+                    if (isset($customFieldColumn['cf']) && $customFieldColumn['cf'] === $columnOrigHeader) {
+                        $isCustomField = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($isCustomField) {
+                // Get min value from post meta
+                $minValue = $wpdb->get_var($wpdb->prepare(
+                    "SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) 
+                     FROM {$wpdb->postmeta} 
+                     WHERE meta_key = %s 
+                     AND meta_value REGEXP '^-?[0-9]+\.?[0-9]*$'",
+                    $columnOrigHeader
+                ));
+                return $minValue !== null ? (float)$minValue : 0;
+            } else {
+                // For standard post fields, get all posts and find min
+                $posts = get_posts(array_merge($wpQueryParams, array('posts_per_page' => -1, 'fields' => 'ids')));
+                $minValue = null;
+                foreach ($posts as $postId) {
+                    $value = null;
+                    switch ($columnOrigHeader) {
+                        case 'ID':
+                        case 'comment_count':
+                        case 'menu_order':
+                        case 'post_parent':
+                            $post = get_post($postId);
+                            $value = (float)$post->{$columnOrigHeader};
+                            break;
+                    }
+                    if ($value !== null && ($minValue === null || $value < $minValue)) {
+                        $minValue = $value;
+                    }
+                }
+                return $minValue !== null ? $minValue : 0;
+            }
+        }
+
+        // Original SQL-based logic for other table types
+        $parentTableContent = WDTTools::applyPlaceholders($parentTable->getTableContent());
         $vendor = Connection::getVendor($parentTable->connection);
 
         $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
@@ -1357,8 +1408,59 @@ class WDTColumn
     {
         global $wpdb;
         $parentTable = $this->getParentTable();
-        $parentTableContent = WDTTools::applyPlaceholders($parentTable->getTableContent());
         $columnOrigHeader = $this->getOriginalHeader();
+
+        // Handle WP Posts Query tables
+        if ($parentTable->getTableType() === 'wp_posts_query') {
+            $wpQueryParams = json_decode($parentTable->getTableContent(), true);
+            $customFieldColumns = isset($wpQueryParams['customFieldColumns']) ? $wpQueryParams['customFieldColumns'] : array();
+            $isCustomField = false;
+
+            // Check if this is a custom field
+            if (!empty($customFieldColumns)) {
+                foreach ($customFieldColumns as $customFieldColumn) {
+                    if (isset($customFieldColumn['cf']) && $customFieldColumn['cf'] === $columnOrigHeader) {
+                        $isCustomField = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($isCustomField) {
+                // Get max value from post meta
+                $maxValue = $wpdb->get_var($wpdb->prepare(
+                    "SELECT MAX(CAST(meta_value AS DECIMAL(10,2))) 
+                     FROM {$wpdb->postmeta} 
+                     WHERE meta_key = %s 
+                     AND meta_value REGEXP '^-?[0-9]+\.?[0-9]*$'",
+                    $columnOrigHeader
+                ));
+                return $maxValue !== null ? (float)$maxValue : 0;
+            } else {
+                // For standard post fields, get all posts and find max
+                $posts = get_posts(array_merge($wpQueryParams, array('posts_per_page' => -1, 'fields' => 'ids')));
+                $maxValue = null;
+                foreach ($posts as $postId) {
+                    $value = null;
+                    switch ($columnOrigHeader) {
+                        case 'ID':
+                        case 'comment_count':
+                        case 'menu_order':
+                        case 'post_parent':
+                            $post = get_post($postId);
+                            $value = (float)$post->{$columnOrigHeader};
+                            break;
+                    }
+                    if ($value !== null && ($maxValue === null || $value > $maxValue)) {
+                        $maxValue = $value;
+                    }
+                }
+                return $maxValue !== null ? $maxValue : 0;
+            }
+        }
+
+        // Original SQL-based logic for other table types
+        $parentTableContent = WDTTools::applyPlaceholders($parentTable->getTableContent());
         $vendor = Connection::getVendor($parentTable->connection);
 
         $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);

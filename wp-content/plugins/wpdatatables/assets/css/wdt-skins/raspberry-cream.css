@@ -2765,6 +2765,10 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     top: -10px;
 }
 
+.wpdt-c.wdt-skin-raspberry-cream .bootstrap-select.editDialogInput .bs-searchbox:before {
+    top: 0;
+}
+
 .wpdt-c.wdt-skin-raspberry-cream tfoot .bootstrap-select .bs-searchbox:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTableFilterBox .bootstrap-select .bs-searchbox:before {
     top: 10px;

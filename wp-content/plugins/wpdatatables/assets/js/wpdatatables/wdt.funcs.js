@@ -610,6 +610,7 @@ function showDateTimePickerForFixedHeaderAndColumns(dateData, filterElem, timePi
         jQuery(".bootstrap-datetimepicker-widget").css('inset', topPos + ' ' + rightPos + ' ' + bottomPos + ' ' + leftPos);
     } else {
         jQuery(".bootstrap-datetimepicker-widget").css('inset', topPos + ' ' + rightPos + ' ' + bottomPos + ' ' + leftPos);
+        jQuery('.dtfh-floatingparenthead').css('overflow', 'visible');
     }
 }
 

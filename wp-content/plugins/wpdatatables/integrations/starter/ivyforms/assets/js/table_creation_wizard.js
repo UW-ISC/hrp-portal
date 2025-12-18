@@ -35,7 +35,7 @@
                 $('#wdt-ivyforms-form-picker').selectpicker('val', '');
                 $('#wdt-ivyforms-form-column-picker').selectpicker('val', '');
                 $('#wdt-ivyforms-column-container').addClass('hidden');
-                if ($(this).val() !== 'forminator' && $(this).val() !== 'gravity' && $(this).val() !== 'formidable') {
+                if ($(this).val() !== 'forminator' && $(this).val() !== 'gravity' && $(this).val() !== 'formidable' && $(this).val() !== 'airtable') {
                     $('.wdt-apply').off().bind('click', applyButtonEvent);
                 }
             }

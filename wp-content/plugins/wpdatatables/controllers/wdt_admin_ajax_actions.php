@@ -1061,7 +1061,7 @@ function wdtActivatePlugin()
 
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters('wpdatatables_curlopt_ssl_verifypeer', 1));
 
-    // Response from the TMS Store
+    // Response from the Melograno Store
     $response = json_decode(curl_exec($ch));
 
     curl_close($ch);
@@ -1161,7 +1161,7 @@ function wdtDeactivatePlugin()
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    // Response from the TMS Store
+    // Response from the Melograno Store
     $response = json_decode(curl_exec($ch));
 
     curl_close($ch);

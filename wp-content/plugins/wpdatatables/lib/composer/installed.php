@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'tmsplugins/wpdatatables',
+        'name' => 'melograno/wpdatatables',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '93d176884fa5bbc18057c3b3b6e0745ef11bca47',
+        'reference' => '586abc7f270504a0141c6d355ad951ddfc7f9924',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -82,6 +82,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'melograno/wpdatatables' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '586abc7f270504a0141c6d355ad951ddfc7f9924',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'myclabs/php-enum' => array(
             'pretty_version' => '1.8.5',
             'version' => '1.8.5.0',
@@ -142,15 +151,6 @@
             'reference' => '6d857f4d76bd4b343eac26d6b539585d2bc56493',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'tmsplugins/wpdatatables' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '93d176884fa5bbc18057c3b3b6e0745ef11bca47',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
