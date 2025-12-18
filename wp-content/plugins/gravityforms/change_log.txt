@@ -1,8 +1,27 @@
-### 2.8.22.1
-- Fixed a bug that prevents the "Embed Form" functionality from pre-selecting the correct form in WordPress 6.9.
-- API: Added the GF_Field::$is_payment property, so developers can indicate if a field is used to capture payments. This can be used by features (e.g. Save and Continue) to exclude the field without checking for specific field types.
-- Added a hook for `gform_before_delete_field` in the init_ajax() function.
+### 2.9.24.1
+- Added the `gform_pre_log_message` action hook to allow developers to do an action before a message is logged, whether or not logging is enabled. Credit: Gravity Wiz Team.
+- Added alt attribute to the QR code image in the REST API settings for improved accessibility.
+- Fixed an issue where a programmatic submission of a multipage form page progresses to the next page when the next button is hidden/disabled by conditional logic.
+- Fixed contrast errors triggered by save buttons and error messages throughout the settings pages.
+- Fixed PHP warnings that occur when editing a page that includes a scheduled form with an end date in the past.
+
+### 2.9.24 | 2025-12-10
 - Added security enhancements.
+- Updated the background processor to dispatch queued tasks on shutdown to improve performance.
+- Updated messages about functionality that will be removed or deprecated in future versions to 4.0 instead of 3.1, to reflect our new [version numbering system](https://docs.gravityforms.com/version-numbering/).
+- Updated the logic that determines whether an update — including for add-ons — can be installed automatically, to ensure compatibility with the change to the [version numbering system](https://docs.gravityforms.com/version-numbering/).
+- Updated the minimum WordPress version (for support) on the System Status page to 6.8.
+- Fixed deprecation notices for the `seems_utf8()` function in WordPress 6.9.
+- Fixed an issue where some uploaded files are not attached to notifications when stored outside the default form/year/month folders.
+- Removed the invalid maxlength attribute from class-gf-field-time.php.
+
+### 2.9.23 | 2025-11-25
+- Added a check for minimum requirements compatibility when an update is available.
+- Added a hook for [`gform_before_delete_field`](https://docs.gravityforms.com/gform_before_delete_field/) in the init_ajax() function.
+- Added security enhancements.
+- Fixed a bug that prevents the "Embed Form" functionality from pre-selecting the correct form in WordPress 6.9.
+- Fixed a bug that prevents the Results page from displaying in WordPress 6.9.
+- API: Added the GF_Field::$is_payment property, so developers can indicate if a field is used to capture payments. This can be used by features (e.g. Save and Continue) to exclude the field without checking for specific field types.
 
 ### 2.9.22 | 2025-11-13
 - Added Stripe Membership and Stripe Event Sponsorship templates to the Template Library.
