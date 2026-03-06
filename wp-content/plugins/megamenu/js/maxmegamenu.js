@@ -836,9 +836,30 @@
             }
         };
 
+        plugin.doConsoleChecks = function() {
+            if (plugin.settings.mobile_force_width != "false" && ! $(plugin.settings.mobile_force_width).length && ( plugin.settings.effect_mobile === "slide" || plugin.settings.effect_mobile === "disabled" ) ) {
+                console.warn('Max Mega Menu #' + $wrap.attr('id') + ': Mobile Force Width element (' + plugin.settings.mobile_force_width + ') not found');
+            }
+
+            const cssWidthRegex = /^((\d+(\.\d+)?(px|%|em|rem|vw|vh|ch|ex|cm|mm|in|pt|pc))|auto)$/i;
+
+            if (plugin.settings.panel_width !== undefined && ! cssWidthRegex.test(plugin.settings.panel_width) && ! $(plugin.settings.panel_width).length ) {
+                console.warn('Max Mega Menu #' + $wrap.attr('id') + ': Panel Width (Outer) element (' + plugin.settings.panel_width + ') not found');
+            }
+
+            if (plugin.settings.panel_inner_width !== undefined && ! cssWidthRegex.test(plugin.settings.panel_inner_width) && ! $(plugin.settings.panel_inner_width).length ) {
+                console.warn('Max Mega Menu #' + $wrap.attr('id') + ': Panel Width (Inner) element (' + plugin.settings.panel_inner_width + ') not found');
+            }
+        }
+
         plugin.init = function() {
             $menu.triggerHandler("before_mega_menu_init");
             plugin.settings = $.extend({}, defaults, options);
+
+            if (window.console) {
+                plugin.doConsoleChecks();
+            }
+
             $menu.removeClass("mega-no-js");
 
             plugin.initToggleBar();

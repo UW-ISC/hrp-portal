@@ -49,7 +49,7 @@ if ( ! $license_key_only ) {
         
     <div id="ure_tabs-1">
     <div id="ure-settings-form">
-        <form method="post" action="<?php echo $link; ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >   
+        <form method="post" action="<?php echo esc_url( $link ); ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >   
             <table id="ure_settings">
 <?php
 if ( ! $license_key_only ) {
@@ -130,7 +130,7 @@ if ( ! $license_key_only ) {
 ?>
     
     <div id="ure_tabs-2">
-        <form name="ure_additional_modules" method="post" action="<?php echo $link; ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
+        <form name="ure_additional_modules" method="post" action="<?php echo esc_url( $link ); ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
             <table id="ure_addons">
 <?php
 if ( ! $multisite ) {
@@ -162,10 +162,11 @@ if ( ! $multisite ) {
 ?>
     
     <div id="ure_tabs-3">
-        <form name="ure_default_roles" method="post" action="<?php echo $link; ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
+        <form name="ure_default_roles" method="post" action="<?php echo esc_url( $link ); ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
 <?php 
     if ( ! $multisite ) {
         esc_html_e( 'Primary default role: ', 'user-role-editor' );
+        // User input is not used - ignore Plugin Check warning
         echo $view->role_default_html;
 ?>
         <hr>
@@ -183,7 +184,7 @@ if ( ! $multisite ) {
 ?>
         <hr>
         <?php wp_nonce_field( 'user-role-editor' ); ?>
-            <input type="hidden" name="ure_tab_idx" value="<?php echo $tabs_index[3]; ?>" />
+            <input type="hidden" name="ure_tab_idx" value="<?php echo (int) $tabs_index[3]; ?>" />
             <p class="submit">
                 <input type="submit" class="button-primary" name="ure_default_roles_update" value="<?php esc_html_e( 'Save', 'user-role-editor' ) ?>" />
             </p>
@@ -195,7 +196,7 @@ if ( ! $multisite ) {
 ?>
     <div id="ure_tabs-4">
         <div id="ure-settings-form-ms">
-            <form name="ure_settings_ms" method="post" action="<?php echo $link; ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
+            <form name="ure_settings_ms" method="post" action="<?php echo esc_url( $link ); ?>?page=settings-<?php echo URE_PLUGIN_FILE; ?>" >
                 <table id="ure_settings_ms">
 <?php
     if ( $lib->is_super_admin() ) {
@@ -215,7 +216,7 @@ if ( ! $multisite ) {
 ?>                    
                 </table>
 <?php wp_nonce_field( 'user-role-editor' ); ?>   
-                <input type="hidden" name="ure_tab_idx" value="<?php echo $tabs_index[4]; ?>" />
+                <input type="hidden" name="ure_tab_idx" value="<?php echo (int) $tabs_index[4]; ?>" />
             <p class="submit">
                 <input type="submit" class="button-primary" name="ure_settings_ms_update" value="<?php esc_html_e( 'Save', 'user-role-editor' ); ?>" />
             </p>                  
@@ -250,7 +251,7 @@ if ( ! $multisite ) {
     $ure_tab_idx = (int) $ure_tab_idx;
     if ($ure_tab_idx>0 && $ure_tab_idx<=count($tabs_index)) {
 ?>
-        $('#ure_tabs').tabs('option', 'active', <?php echo $ure_tab_idx; ?>);
+        $('#ure_tabs').tabs('option', 'active', <?php echo (int) $ure_tab_idx; ?>);
 <?php
     }
 ?>               

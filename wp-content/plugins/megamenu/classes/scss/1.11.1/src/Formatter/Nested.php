@@ -10,10 +10,10 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Formatter;
+namespace MMMScssPhp\ScssPhp\Formatter;
 
-use ScssPhp\ScssPhp\Formatter;
-use ScssPhp\ScssPhp\Type;
+use MMMScssPhp\ScssPhp\Formatter;
+use MMMScssPhp\ScssPhp\Type;
 
 /**
  * Nested formatter

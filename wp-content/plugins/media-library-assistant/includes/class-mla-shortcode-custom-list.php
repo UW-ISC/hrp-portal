@@ -46,7 +46,7 @@ class MLACustomList {
 		);
 
 	/**
-	 * Data selection parameters for [mla_tag_cloud], [mla_term_list]
+	 * Data selection parameters for [mla_custom_list]
 	 *
 	 * @since 3.13
 	 *
@@ -363,7 +363,6 @@ class MLACustomList {
 		// Ignore option- all,any_terms,no_terms
 		if ( -1 !== $item_values['count'] ) {
 			$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
-
 		}
 
 		if ( ! empty( $arguments['mla_rollover_text'] ) ) {
@@ -471,8 +470,9 @@ class MLACustomList {
 
 		$link_type = $arguments['mla_output'];
 
-		// Handle 'previous_page', 'next_page', and 'paginate_links'
+		// Handle true pagination outputs
 		if ( in_array( $link_type, array( 'previous_page', 'next_page', 'paginate_links' ) ) ) {
+			// posts_per_page and numberposts are used in mla_process_pagination_output_types
 			if ( isset( $attr['limit'] ) ) {
 				$arguments['posts_per_page'] = $attr['limit'];
 				$arguments['numberposts'] = $attr['limit'];
@@ -545,7 +545,7 @@ class MLACustomList {
 			return false;
 		}
 
-		if ( !empty( $target ) ) {
+		if ( ! empty( $target ) ) {
 			$item_values = $markup_values;
 			$item_values['index'] = '1';
 			$item_values['key'] = 0;
@@ -710,8 +710,7 @@ class MLACustomList {
 		$item_template = '';
 		$close_template = '';
 
-//		if ( $is_flat_div || $is_list || $is_dropdown || $is_checklist ) {
-		if ( !empty( $markup_values['mla_markup'] ) ) {
+		if ( ! ( ( $is_flat && ! $is_flat_div ) || empty( $markup_values['mla_markup'] ) ) ) {
 			$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'custom-list', 'markup', 'open' );
 			if ( empty( $open_template ) ) {
 				$open_template = '';
@@ -730,7 +729,7 @@ class MLACustomList {
 
 		// Look for gallery-level markup substitution parameters
 		$new_text = $open_template . $close_template;
-		if ( !empty( $new_text ) ) {
+		if ( ! empty( $new_text ) ) {
 			$markup_values = MLAData::mla_expand_field_level_parameters( $new_text, $attr, $markup_values );
 
 			$markup_values = apply_filters( 'mla_custom_list_open_values', $markup_values );
@@ -809,6 +808,15 @@ class MLACustomList {
 	public static function mla_custom_list( $attr ) {
 		global $post;
 
+		// Make sure $attr is an array, even if it's empty
+		if ( is_string( $attr ) ) {
+			$attr = shortcode_parse_atts( $attr );
+		}
+
+		if ( empty( $attr ) ) {
+			$attr = array();
+		}
+
 		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
 			$post = MLAShortcode_Support::mla_get_default_post();
@@ -847,7 +855,6 @@ class MLACustomList {
 			'meta_value' => '',
 			'mla_output' => 'flat',
 			'mla_output_qualifier' => '',
-			'echo' => false,
 
 			'show_count' => false,
 			'current_item' => '',
@@ -905,6 +912,7 @@ class MLACustomList {
 			'mla_paginate_type' => 'plain',
 
 			'mla_debug' => false,
+			'echo' => false,
 			),
 			self::$item_specific_arguments
 		);
@@ -912,10 +920,7 @@ class MLACustomList {
 		// Filter the attributes before $mla_item_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_custom_list_raw_attributes', $attr );
 
-		/*
-		 * The current_item parameter can be changed to support
-		 * multiple lists per page.
-		 */
+		// The current_item parameter can be changed to support multiple lists per page.
 		if ( ! isset( $attr['mla_item_parameter'] ) ) {
 			$attr['mla_item_parameter'] = $defaults['mla_item_parameter'];
 		}
@@ -940,10 +945,7 @@ class MLACustomList {
 			}
 		}
 
-		/*
-		 * The mla_custom_list_current parameter can be changed to support
-		 * multiple galleries per page.
-		 */
+		// The mla_custom_list_current parameter can be changed to support multiple galleries per page.
 		if ( ! isset( $attr['mla_page_parameter'] ) ) {
 			$attr['mla_page_parameter'] = $defaults['mla_page_parameter'];
 		}
@@ -963,7 +965,7 @@ class MLACustomList {
 		}
 
 		// Determine markup template to get template-based argument values
-		if ( !empty( $attr['mla_markup'] ) ) {
+		if ( ! empty( $attr['mla_markup'] ) ) {
 			$template = $attr['mla_markup'];
 			if ( ! MLATemplate_Support::mla_fetch_custom_template( $template, 'custom-list', 'markup', '[exists]' ) ) {
 				$template = NULL;
@@ -973,7 +975,7 @@ class MLACustomList {
 		}
 
 		// Apply default arguments set in the markup template
-		if ( !empty( $template ) ) {
+		if ( ! empty( $template ) ) {
 			$arguments = MLATemplate_Support::mla_fetch_custom_template( $template, 'custom-list', 'markup', 'arguments' );
 			if ( ! empty( $arguments ) ) {
 				$attr = wp_parse_args( $attr, MLAShortcode_Support::mla_validate_attributes( array(), $arguments ) );
@@ -1083,8 +1085,7 @@ class MLACustomList {
 			if ( isset( $attr[ $mla_page_parameter ] ) ) {
 				$arguments[ $mla_page_parameter ] = $attr[ $mla_page_parameter ];
 			} else {
-				$arguments[ $mla_page_parameter ] = $defaults['mla_page_parameter'];
-
+				$arguments[ $mla_page_parameter ] = $defaults['mla_custom_list_current'];
 			}
 		}
 
@@ -1289,7 +1290,7 @@ class MLACustomList {
 
 		$show_empty = false;
 		if ( 0 === $found_rows ) {
-			if ( !empty( $arguments['mla_control_name'] ) ) {
+			if ( ! empty( $arguments['mla_control_name'] ) ) {
 				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
 				$mla_control_name = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
 	
@@ -1675,54 +1676,14 @@ class MLACustomList {
 	 * Alternative to WordPress meta query that provides
 	 * an accurate count of attachments associated with each value.
 	 *
-	 * meta_key - string containing one custom field name. Default ''.
-	 *
-	 * fields - string with fields for the SQL SELECT clause, e.g.,
-	 *          'm.meta_key, m.meta_value'
-	 *          ', COUNT(p.ID) AS `count`' will be added to the end unless no_count=true
-	 *          'm.meta_id, m.post_id, m.meta_key, m.meta_value, COUNT(p.ID) AS `count`'
-	 *
-	 * post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.
-	 *
-	 * post_type - The post type(s) of the items to include in the term-specific counts.
-	 * The default is "attachment". 
-	 *
-	 * post_status - The post status value(s) of the items to include in the term-specific counts.
-	 * The default is "inherit".
-	 *
-	 * ids - A comma-separated list of attachment ID values for an item-specific cloud.
-	 *
-	 * no_count - 'true', 'false' (default) to suppress term-specific attachment-counting process.
-	 *
-	 * include - An array or comma-delimited string of field values to include
-	 * in the return array.
-	 *
-	 * exclude - An array or comma-delimited string of field values to exclude
-	 * from the return array. If 'include' is non-empty, 'exclude' is ignored.
-	 *
-	 * minimum - minimum number of attachments a value must have to be included. Default 0.
-	 *
-	 * number - maximum number of value objects to return. Values are ordered by count,
-	 * descending and then by meta_value before this number is applied. Default 0.
-	 *
-	 * orderby - 'count', 'meta_value' (default), 'none', 'random'
-	 *
-	 * order - 'ASC' (default), 'DESC'
-	 *
-	 * no_orderby - 'true', 'false' (default) to suppress ALL sorting clauses else false.
-	 *
-	 * preserve_case - 'true', 'false' (default) to make orderby case-sensitive.
-	 *
-	 * limit - final number of term objects to return, for pagination. Default 0.
-	 *
-	 * offset - number of term objects to skip, for pagination. Default 0.
+	 * See class-mla-shortcodes.php for attributes accepted by this function.
 	 *
 	 * @since 3.13
 	 *
 	 * @param	array	taxonomies to search and query parameters
 	 *
 	 * @return	array	array of term objects, empty if none found
-	 */
+	 */	
 	public static function mla_get_custom_values( $attr ) {
 		global $wpdb;
 
@@ -1993,7 +1954,7 @@ class MLACustomList {
 		}
 
 		$query =  join(' ', $query);
-		$values = $wpdb->get_results(	$query ); // phpcs:ignore
+		$values = $wpdb->get_results( $query ); // phpcs:ignore
 		if ( ! isset( $found_rows ) ) {
 			$found_rows = $wpdb->num_rows;
 		}
@@ -2004,6 +1965,7 @@ class MLACustomList {
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug last_error', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_error, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug num_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->num_rows, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug found_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $found_rows, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug values', 'media-library-assistant' ) . '</strong> = ' . var_export( $values, true ) );
 		}
 
 		$values['found_rows'] = $found_rows;

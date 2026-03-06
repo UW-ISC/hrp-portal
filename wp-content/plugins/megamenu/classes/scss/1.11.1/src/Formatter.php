@@ -10,10 +10,10 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp;
+namespace MMMScssPhp\ScssPhp;
 
-use ScssPhp\ScssPhp\Formatter\OutputBlock;
-use ScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
+use MMMScssPhp\ScssPhp\Formatter\OutputBlock;
+use MMMScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
 
 /**
  * Base formatter

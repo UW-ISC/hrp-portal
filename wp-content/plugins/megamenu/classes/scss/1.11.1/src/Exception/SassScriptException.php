@@ -1,6 +1,6 @@
 <?php
 
-namespace ScssPhp\ScssPhp\Exception;
+namespace MMMScssPhp\ScssPhp\Exception;
 
 /**
  * An exception thrown by SassScript.

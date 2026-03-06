@@ -10,9 +10,9 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Formatter;
+namespace MMMScssPhp\ScssPhp\Formatter;
 
-use ScssPhp\ScssPhp\Formatter;
+use MMMScssPhp\ScssPhp\Formatter;
 
 /**
  * Compressed formatter

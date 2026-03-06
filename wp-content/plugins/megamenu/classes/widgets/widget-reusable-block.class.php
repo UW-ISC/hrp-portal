@@ -66,7 +66,10 @@ if ( ! class_exists( 'Mega_Menu_Widget_Reusable_Block' ) ) :
 		public function update( $new_instance, $old_instance ) {
 			$instance          = array();
 			$instance['block'] = ! empty( $new_instance['block'] ) ? $new_instance['block'] : 0;
-			$instance['title']    = strip_tags( $new_instance['title'] );
+			
+			if ( isset ( $new_instance['title'] ) ) {
+				$instance['title'] = strip_tags( $new_instance['title'] );
+			}
 
 			return $instance;
 		}

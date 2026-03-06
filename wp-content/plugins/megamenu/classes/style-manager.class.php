@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // disable direct access
 }
 
-use ScssPhp\ScssPhp\Compiler;
+use MMMScssPhp\ScssPhp\Compiler;
 
 if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
@@ -802,11 +802,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 */
 		public function generate_css_for_location_new( $location, $theme, $menu_id ) {
 
-			if ( is_readable( MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php' ) && ! class_exists( 'ScssPhp\ScssPhp\Compiler' ) ) { 
+			if ( is_readable( MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php' ) && ! class_exists( 'MMMScssPhp\ScssPhp\Compiler' ) ) { 
 				require_once MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php';
 			}
 
-			$scssc = new \ScssPhp\ScssPhp\Compiler();
+			$scssc = new \MMMScssPhp\ScssPhp\Compiler();
 			$scssc->setCharset(false);
 			
 			$import_paths = apply_filters(

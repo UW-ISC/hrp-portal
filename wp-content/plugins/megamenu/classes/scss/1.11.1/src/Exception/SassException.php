@@ -1,6 +1,6 @@
 <?php
 
-namespace ScssPhp\ScssPhp\Exception;
+namespace MMMScssPhp\ScssPhp\Exception;
 
 interface SassException
 {

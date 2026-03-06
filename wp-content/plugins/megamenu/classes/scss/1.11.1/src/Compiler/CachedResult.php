@@ -10,9 +10,9 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Compiler;
+namespace MMMScssPhp\ScssPhp\Compiler;
 
-use ScssPhp\ScssPhp\CompilationResult;
+use MMMScssPhp\ScssPhp\CompilationResult;
 
 /**
  * @internal

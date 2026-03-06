@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2025-09-24 18:50-0700\n"
+"POT-Creation-Date: 2025-12-25 16:08-0800\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -289,8 +289,8 @@ msgstr ""
 msgid ""
 "Enter the position of the Media/Assistant submenu entry.<br>&nbsp;&nbsp;0 = "
 "natural order (at bottom),&nbsp;&nbsp;&nbsp;&nbsp;1 - 4 = at top<br>&nbsp;"
-"&nbsp;6-9 = after \"Library\",&nbsp;&nbsp;&nbsp;&nbsp;11-16 = after \"Add New"
-"\""
+"&nbsp;6-9 = after \"Library\",&nbsp;&nbsp;&nbsp;&nbsp;11-14 = after \"Add "
+"Media File\""
 msgstr ""
 
 msgid "Display Media/Library"
@@ -850,6 +850,31 @@ msgid ""
 "then click <strong>Save Changes</strong> to record the new setting."
 msgstr ""
 
+msgid "Big Image Threshold Option"
+msgstr ""
+
+msgid "Use default (2560)"
+msgstr ""
+
+msgid "Set threshold"
+msgstr ""
+
+msgid "Disable"
+msgstr ""
+
+msgid ""
+"Set the &ldquo;BIG image&rdquo; threshold option. You can use the WordPress "
+"default value, set a custom value or disable scaling entirely."
+msgstr ""
+
+msgid "BIG image threshold"
+msgstr ""
+
+msgid ""
+"Set the &ldquo;BIG image&rdquo; threshold value. If the original image width "
+"or height is above the threshold, it will be scaled down."
+msgstr ""
+
 msgid "Image Sizes help."
 msgstr ""
 
@@ -1289,6 +1314,13 @@ msgctxt "error_log"
 msgid " %1$s: mla_query_posts_clauses_request_filter = \"%2$s\"."
 msgstr ""
 
+#, php-format
+msgctxt "error_log"
+msgid ""
+"%1$s: class-mla-data-references.php WARNING: _wp_attached_file is not a "
+"string for Item \"%2$d\". Value = %3$s."
+msgstr ""
+
 msgid "ORPHAN"
 msgstr ""
 
@@ -1693,7 +1725,7 @@ msgid "Medium Large"
 msgstr ""
 
 #, php-format
-msgid "<br>Changing %1$s \"%2$s\" to valid value \"%3$s\""
+msgid "Changing %1$s \"%2$s\" to valid value \"%3$s\""
 msgstr ""
 
 msgid "Slug"
@@ -1708,7 +1740,7 @@ msgid "Edit size \"%1$s\"; added"
 msgstr ""
 
 #, php-format
-msgid "<br>Changing new %1$s \"%2$s\" to valid value \"%3$s\""
+msgid "Changing new %1$s \"%2$s\" to valid value \"%3$s\""
 msgstr ""
 
 #, php-format
@@ -1810,10 +1842,13 @@ msgstr ""
 msgid "Delete Permanently"
 msgstr ""
 
+msgid "View"
+msgstr ""
+
 msgid "Download"
 msgstr ""
 
-msgid "View"
+msgid "Download Original"
 msgstr ""
 
 msgid "File name"
@@ -3151,9 +3186,6 @@ msgstr ""
 msgid "Add Size"
 msgstr ""
 
-msgid "<strong>Quick Edit</strong>"
-msgstr ""
-
 msgid "No image slug found"
 msgstr ""
 
@@ -3505,6 +3537,14 @@ msgctxt "table_view_plural"
 msgid "Custom Field List"
 msgstr ""
 
+msgctxt "table_view_singular"
+msgid "Archive List"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Archive List"
+msgstr ""
+
 msgid "Upload MIME Type settings saved."
 msgstr ""
 
@@ -3814,6 +3854,11 @@ msgstr ""
 msgid "enhanced version of the WordPress [gallery] shortcode."
 msgstr ""
 
+msgid ""
+"provides flat/cloud, unordered and ordered lists as well as dropdown "
+"controls of date-based values such as Uploaded date and custom field values."
+msgstr ""
+
 msgid "enhanced version of the WordPress Tag Cloud."
 msgstr ""
 
@@ -3823,8 +3868,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"provides flat lists, dropdown controls and checkbox lists of custom field "
-"values."
+"provides flat/cloud, unordered and ordered lists as well as dropdown "
+"controls and checkbox lists of custom field values."
 msgstr ""
 
 msgid "Shortcodes made available by this plugin"
@@ -3974,6 +4019,24 @@ msgstr ""
 msgid "Settings imported; %1$s updated, %2$s unchanged."
 msgstr ""
 
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "mla_archive_list REQUEST"
+msgstr ""
+
+msgid "mla_archive_list shortcode attributes"
+msgstr ""
+
+msgid "mla_archive_list shortcode content"
+msgstr ""
+
+msgid "mla_archive_list validated attributes"
+msgstr ""
+
 msgid "mla_debug attributes"
 msgstr ""
 
@@ -3984,12 +4047,6 @@ msgid "mla_debug query"
 msgstr ""
 
 msgid "mla_debug results"
-msgstr ""
-
-msgid "Previous"
-msgstr ""
-
-msgid "Next"
 msgstr ""
 
 msgid "mla_custom_list REQUEST"
@@ -4034,10 +4091,16 @@ msgstr ""
 msgid "mla_debug found_rows"
 msgstr ""
 
+msgid "mla_debug values"
+msgstr ""
+
 msgid "mla_debug REQUEST"
 msgstr ""
 
-msgid "mla_debug attributes_errors"
+msgid "mla_debug attributes_errors[raw]"
+msgstr ""
+
+msgid "mla_debug attributes_errors[escaped]"
 msgstr ""
 
 msgid "mla_debug empty gallery"
@@ -4322,6 +4385,6 @@ msgstr ""
 
 msgid ""
 "Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] "
-"[mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick "
-"edit."
+"[mla_term_list], [mla_custom_list], [mla_archive_list], taxonomy support, "
+"IPTC/EXIF/XMP/PDF processing, bulk/quick edit."
 msgstr ""

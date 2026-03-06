@@ -19,11 +19,11 @@ class URE_Settings {
             'ure_settings_ms_update', 
             'ure_default_roles_update',
             'ure_settings_tools_exec');
-        foreach($update_buttons as $update_button) {
-            if (!isset($_POST[$update_button])) {
+        foreach( $update_buttons as $update_button ) {
+            if ( !isset( $_POST[$update_button] ) ) {
                 continue;
             }
-            if (!wp_verify_nonce($_POST['_wpnonce'], 'user-role-editor')) {
+            if ( !wp_verify_nonce($_POST['_wpnonce'], 'user-role-editor') ) {
                 wp_die('Security check failed');
             }
             $action = $update_button;
@@ -202,7 +202,7 @@ class URE_Settings {
             }
             echo '<label for="wp_role_' . $role_id .'"><input type="checkbox"	id="wp_role_' . $role_id . 
                 '" name="wp_role_' . $role_id . '" value="' . $role_id . '"' . $checked .' />&nbsp;' . 
-                $role['name'] . '</label><br />';
+                esc_html( $role['name'] ) . '</label><br />';
           }		
            
     }

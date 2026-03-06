@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.30';
+	const CURRENT_MLA_VERSION = '3.33';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -285,7 +285,7 @@ class MLACore {
 	const MLA_ADMIN_SINGLE_ADD = 'single_item_add';
 
 	/**
-	 * Action name; gives a context for the 'download-zip'/'mla_download_file nonce
+	 * Action name; gives a context for the 'download-zip'/'mla_download_file' nonce
 	 *
 	 * @since 3.00
 	 *
@@ -435,8 +435,9 @@ class MLACore {
 	 * @return	void
 	 */
 	public static function initialize( ) {
-		//error_log( __LINE__ . ' DEBUG: MLACore::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		// error_log( __LINE__ . ' DEBUG: MLACore::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		// if ( isset( $_SERVER['REQUEST_URI'] ) ) error_log( __LINE__ . ' DEBUG: MLACore::initialize $_SERVER[REQUEST_URI] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
+
 		$text_domain = 'media-library-assistant';
 		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
@@ -452,7 +453,9 @@ class MLACore {
 		 */
 		load_textdomain( $text_domain, trailingslashit( WP_LANG_DIR ) . $text_domain . '/' . $text_domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $text_domain, false, MLA_PLUGIN_BASENAME . '/languages/' );
+
 		MLACoreOptions::mla_localize_option_definitions_array();
+		MLAObjects::mla_build_taxonomies();
 
 		if ( 'disabled' == MLACore::mla_get_option( MLACoreOptions::MLA_FEATURED_IN_TUNING ) ) {
 			MLACore::$process_featured_in = false;
@@ -681,27 +684,10 @@ class MLACore {
 	 * @return	void
 	 */
 	public static function mla_plugins_loaded_action(){
-	/*	$text_domain = 'media-library-assistant';
-		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
-		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
-
-		if ( is_admin() && 'en_US' === $locale ) {
-			$result = unload_textdomain( $text_domain );
-		}
-
-		/*
-		 * To override the plugin's translation files for one, some or all strings,
-		 * create a sub-directory named 'media-library-assistant' in the WordPress
-		 * WP_LANG_DIR (e.g., /wp-content/languages) directory.
-		 * /
-		load_textdomain( $text_domain, trailingslashit( WP_LANG_DIR ) . $text_domain . '/' . $text_domain . '-' . $locale . '.mo' );
-		load_plugin_textdomain( $text_domain, false, MLA_PLUGIN_BASENAME . '/languages/' );
-
-		// This must/will be repeated in class-mla-tests.php to reflect translations
-		MLACoreOptions::mla_localize_option_definitions_array();
+		// error_log( __LINE__ . ' DEBUG: MLACore::mla_plugins_loaded_action', 0 );
 
 		MLACore::$original_php_log = ini_get( 'error_log' );
-		MLACore::$original_php_reporting = sprintf( '0x%1$04X', error_reporting() ); // */
+		MLACore::$original_php_reporting = sprintf( '0x%1$04X', error_reporting() );
 
 		// Do not process debug options unless MLA_DEBUG_LEVEL is set in wp-config.php
 		if ( MLA_DEBUG_LEVEL & 1 ) {
@@ -2196,16 +2182,15 @@ class MLA_Checklist_Walker extends Walker_Category {
 
 // Custom Taxonomies and WordPress objects.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-objects.php' );
-add_action( 'init', 'MLAObjects::mla_build_taxonomies', 5 );
-add_action( 'init', 'MLAObjects::initialize', 0x7FFFFFFF );
+add_action( 'init', 'MLAObjects::initialize', 0x800 ); // 0x7FFFFFFF );
 
 // MIME Type functions; some filters required in all modes.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-mime-types.php' );
-add_action( 'init', 'MLAMime::initialize', 0x7FFFFFFF );
+add_action( 'init', 'MLAMime::initialize', 0x800 ); // 0x7FFFFFFF );
 
 // Intermediate image sizes functions; some filters required in all modes.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-image-sizes.php' );
-add_action( 'init', 'MLAImage_Size::initialize', 0x7FFFFFFF );
+add_action( 'init', 'MLAImage_Size::initialize', 0x800 ); // 0x7FFFFFFF );
 
 // Admin Columns plugin support
 add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );

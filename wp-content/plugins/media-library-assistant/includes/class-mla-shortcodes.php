@@ -40,6 +40,7 @@ class MLAShortcodes {
 		add_shortcode( 'mla_tag_cloud', 'MLAShortcodes::mla_tag_cloud_shortcode' );
 		add_shortcode( 'mla_term_list', 'MLAShortcodes::mla_term_list_shortcode' );
 		add_shortcode( 'mla_custom_list', 'MLAShortcodes::mla_custom_list_shortcode' );
+		add_shortcode( 'mla_archive_list', 'MLAShortcodes::mla_archive_list_shortcode' );
 
 		// Avoid wptexturize defect.
 		if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
@@ -220,7 +221,7 @@ class MLAShortcodes {
 	 * @param array $attr Attributes of the shortcode.
 	 * @param string $content Optional content for enclosing shortcodes
 	 *
-	 * @return string HTML content to display the custom fiekd list.
+	 * @return string HTML content to display the custom field list.
 	 */
 	public static function mla_custom_list_shortcode( $attr, $content = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
@@ -238,13 +239,14 @@ class MLAShortcodes {
 	 * The MLA Custom Field List support function.
 	 *
 	 * This is a variation on the [mla_tag_cloud] and [mla_term_list] shortcodes, composing
-	 * a cloud, list or dropdown ontrol based on custom field values.
+	 * a cloud, list or dropdown control based on custom field values.
 	 *
 	 * @since 3.11
 	 *
 	 * @param array $attr Attributes of the shortcode.
 	 *
-	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, term list markup as a string or an array of links, depending on 'mla_output' attribute.
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure.
+	 *     Otherwise, custom field list markup as a string or an array of links, depending on 'mla_output' attribute.
 	 */
 	public static function mla_custom_list( $attr ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
@@ -256,6 +258,54 @@ class MLAShortcodes {
 		}
 
 		return MLACustomList::mla_custom_list( $attr );
+	}
+
+	/**
+	 * The MLA Archive List shortcode.
+	 *
+	 * Compatibility shim for MLAArchiveList::mla_archive_list_shortcode
+	 *
+	 * @since 3.31
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 * @param string $content Optional content for enclosing shortcodes
+	 *
+	 * @return string HTML content to display the archive list.
+	 */
+	public static function mla_archive_list_shortcode( $attr, $content = NULL ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+
+		if ( !class_exists( 'MLAArchiveList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-archive-list.php';
+		}
+
+		return MLAArchiveList::mla_archive_list_shortcode( $attr, $content );
+	}
+
+	/**
+	 * The MLA Archive List support function.
+	 *
+	 * This is a variation on the [mla_custom_list] shortcode, composing
+	 * a list, dropdown control or pagination control based on WordPress or custom field date values.
+	 *
+	 * @since 3.31
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 *
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, archive list markup as a string or an array of links, depending on 'archive_output' attribute.
+	 */
+	public static function mla_archive_list( $attr ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+
+		if ( !class_exists( 'MLAArchiveList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-archive-list.php';
+		}
+
+		return MLAArchiveList::mla_archive_list( $attr );
 	}
 
 	/**
@@ -357,6 +407,69 @@ class MLAShortcodes {
 		}
 
 		return MLAShortcode_Support::mla_get_terms( $attr );
+	}
+
+	/**
+	 * Retrieve the names and attachment counts for one or more custom fields
+	 *
+	 * meta_key - string containing one custom field name. Default ''.
+	 *
+	 * fields - string with fields for the SQL SELECT clause, e.g.,
+	 *          'm.meta_key, m.meta_value'
+	 *          ', COUNT(p.ID) AS `count`' will be added to the end unless no_count=true
+	 *          'm.meta_id, m.post_id, m.meta_key, m.meta_value, COUNT(p.ID) AS `count`'
+	 *
+	 * post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.
+	 *
+	 * post_type - The post type(s) of the items to include in the term-specific counts.
+	 * The default is "attachment". 
+	 *
+	 * post_status - The post status value(s) of the items to include in the term-specific counts.
+	 * The default is "inherit".
+	 *
+	 * ids - A comma-separated list of attachment ID values for an item-specific cloud.
+	 *
+	 * no_count - 'true', 'false' (default) to suppress term-specific attachment-counting process.
+	 *
+	 * include - An array or comma-delimited string of field values to include
+	 * in the return array.
+	 *
+	 * exclude - An array or comma-delimited string of field values to exclude
+	 * from the return array. If 'include' is non-empty, 'exclude' is ignored.
+	 *
+	 * minimum - minimum number of attachments a value must have to be included. Default 0.
+	 *
+	 * number - maximum number of value objects to return. Values are ordered by count,
+	 * descending and then by meta_value before this number is applied. Default 0.
+	 *
+	 * orderby - 'count', 'meta_value' (default), 'none', 'random'
+	 *
+	 * order - 'ASC' (default), 'DESC'
+	 *
+	 * no_orderby - 'true', 'false' (default) to suppress ALL sorting clauses else false.
+	 *
+	 * preserve_case - 'true', 'false' (default) to make orderby case-sensitive.
+	 *
+	 * limit - final number of term objects to return, for pagination. Default 0.
+	 *
+	 * offset - number of term objects to skip, for pagination. Default 0.
+	 *
+	 * @since 3.31
+	 *
+	 * @param	array	data selection parameters as documented above
+	 *
+	 * @return	array	array( meta_value, count ) of custom field objects, empty if none found
+	 */
+	public static function mla_get_custom_values( $attr ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+
+		if ( !class_exists( 'MLACustomList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-custom-list.php';
+		}
+
+		return MLACustomList::mla_get_custom_values( $attr );
 	}
 
 	/**

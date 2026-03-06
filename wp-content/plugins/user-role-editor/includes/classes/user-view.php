@@ -62,9 +62,9 @@ class URE_User_View extends URE_View {
             $anchor_start = '';
             $anchor_end = '';
         }
-        $user_info = ' <span style="font-weight: bold;">' . $anchor_start . $this->user_to_edit->user_login;
+        $user_info = ' <span style="font-weight: bold;">' . $anchor_start . esc_html( $this->user_to_edit->user_login );
         if ($this->user_to_edit->display_name !== $this->user_to_edit->user_login) {
-            $user_info .= ' (' . $this->user_to_edit->display_name . ')';
+            $user_info .= ' ('. esc_html( $this->user_to_edit->display_name ) .')';
         }
         $user_info .= $anchor_end . '</span>';
         if (is_multisite() && $this->lib->is_super_admin($this->user_to_edit->ID)) {
@@ -188,7 +188,7 @@ class URE_User_View extends URE_View {
         $dynamic_roles = bbp_get_dynamic_roles();
         $bbp_user_role = bbp_get_user_role($this->user_to_edit->ID);
         if (!empty($bbp_user_role)) {
-            echo $dynamic_roles[$bbp_user_role]['name']; 
+            echo esc_html( $dynamic_roles[$bbp_user_role]['name'] );
         }
     }
 ?>

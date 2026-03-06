@@ -10,7 +10,7 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Exception;
+namespace MMMScssPhp\ScssPhp\Exception;
 
 @trigger_error(sprintf('The "%s" class is deprecated.', ServerException::class), E_USER_DEPRECATED);
 

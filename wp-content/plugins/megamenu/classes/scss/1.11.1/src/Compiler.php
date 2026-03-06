@@ -10,34 +10,34 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp;
+namespace MMMScssPhp\ScssPhp;
 
-use ScssPhp\ScssPhp\Base\Range;
-use ScssPhp\ScssPhp\Block\AtRootBlock;
-use ScssPhp\ScssPhp\Block\CallableBlock;
-use ScssPhp\ScssPhp\Block\DirectiveBlock;
-use ScssPhp\ScssPhp\Block\EachBlock;
-use ScssPhp\ScssPhp\Block\ElseBlock;
-use ScssPhp\ScssPhp\Block\ElseifBlock;
-use ScssPhp\ScssPhp\Block\ForBlock;
-use ScssPhp\ScssPhp\Block\IfBlock;
-use ScssPhp\ScssPhp\Block\MediaBlock;
-use ScssPhp\ScssPhp\Block\NestedPropertyBlock;
-use ScssPhp\ScssPhp\Block\WhileBlock;
-use ScssPhp\ScssPhp\Compiler\CachedResult;
-use ScssPhp\ScssPhp\Compiler\Environment;
-use ScssPhp\ScssPhp\Exception\CompilerException;
-use ScssPhp\ScssPhp\Exception\ParserException;
-use ScssPhp\ScssPhp\Exception\SassException;
-use ScssPhp\ScssPhp\Exception\SassScriptException;
-use ScssPhp\ScssPhp\Formatter\Compressed;
-use ScssPhp\ScssPhp\Formatter\Expanded;
-use ScssPhp\ScssPhp\Formatter\OutputBlock;
-use ScssPhp\ScssPhp\Logger\LoggerInterface;
-use ScssPhp\ScssPhp\Logger\StreamLogger;
-use ScssPhp\ScssPhp\Node\Number;
-use ScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
-use ScssPhp\ScssPhp\Util\Path;
+use MMMScssPhp\ScssPhp\Base\Range;
+use MMMScssPhp\ScssPhp\Block\AtRootBlock;
+use MMMScssPhp\ScssPhp\Block\CallableBlock;
+use MMMScssPhp\ScssPhp\Block\DirectiveBlock;
+use MMMScssPhp\ScssPhp\Block\EachBlock;
+use MMMScssPhp\ScssPhp\Block\ElseBlock;
+use MMMScssPhp\ScssPhp\Block\ElseifBlock;
+use MMMScssPhp\ScssPhp\Block\ForBlock;
+use MMMScssPhp\ScssPhp\Block\IfBlock;
+use MMMScssPhp\ScssPhp\Block\MediaBlock;
+use MMMScssPhp\ScssPhp\Block\NestedPropertyBlock;
+use MMMScssPhp\ScssPhp\Block\WhileBlock;
+use MMMScssPhp\ScssPhp\Compiler\CachedResult;
+use MMMScssPhp\ScssPhp\Compiler\Environment;
+use MMMScssPhp\ScssPhp\Exception\CompilerException;
+use MMMScssPhp\ScssPhp\Exception\ParserException;
+use MMMScssPhp\ScssPhp\Exception\SassException;
+use MMMScssPhp\ScssPhp\Exception\SassScriptException;
+use MMMScssPhp\ScssPhp\Formatter\Compressed;
+use MMMScssPhp\ScssPhp\Formatter\Expanded;
+use MMMScssPhp\ScssPhp\Formatter\OutputBlock;
+use MMMScssPhp\ScssPhp\Logger\LoggerInterface;
+use MMMScssPhp\ScssPhp\Logger\StreamLogger;
+use MMMScssPhp\ScssPhp\Node\Number;
+use MMMScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
+use MMMScssPhp\ScssPhp\Util\Path;
 
 /**
  * The scss compiler and parser.
