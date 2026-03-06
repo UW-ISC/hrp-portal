@@ -159,8 +159,11 @@ class GFFormDisplay {
 			$abort_with_confirmation = gf_apply_filters( array( 'gform_abort_submission_with_confirmation', $form['id'] ), false, $form );
 
 			if ( $abort_with_confirmation ) {
-
-				GFCommon::log_debug( 'GFFormDisplay::process_form(): Aborting early via gform_abort_submission_with_confirmation filter.' );
+				if ( $saving_for_later ) {
+					GFCommon::log_debug( __METHOD__ . '(): Aborting save for later via gform_abort_submission_with_confirmation filter.' );
+				} else {
+					GFCommon::log_debug( __METHOD__ . '(): Aborting early via gform_abort_submission_with_confirmation filter.' );
+				}
 
 				// Display confirmation but doesn't process the form. Useful for spam filters.
 				$confirmation = self::handle_confirmation( $form, $lead, $ajax );
@@ -1850,6 +1853,9 @@ class GFFormDisplay {
 			$footer .= "<input type='hidden' class='gform_hidden' name='gform_submission_speeds' value='" . esc_attr( $honeypot_handler->get_submission_speeds_json( $form_id ) ) . "' />";
 		}
 
+		$currency_code      = GFCommon::get_currency();
+		$encrypted_currency = GFCommon::openssl_encrypt( $currency_code );
+
 		$footer .= "
             <input type='hidden' class='gform_hidden' name='gform_submission_method' data-js='gform_submission_method_{$form_id}' value='" . self::get_submission_method( $submission_method ) . "' />
             <input type='hidden' class='gform_hidden' name='gform_theme' data-js='gform_theme_{$form_id}' id='gform_theme_{$form_id}' value='" . esc_attr( $theme ) . "' />
@@ -1857,6 +1863,7 @@ class GFFormDisplay {
             <input type='hidden' class='gform_hidden' name='is_submit_{$form_id}' value='1' />
             <input type='hidden' class='gform_hidden' name='gform_submit' value='{$form_id}' />
             {$save_inputs}
+            <input type='hidden' class='gform_hidden' name='gform_currency' data-currency='{$currency_code}' value='{$encrypted_currency}' />
             <input type='hidden' class='gform_hidden' name='gform_unique_id' value='" . esc_attr( $unique_id ) . "' />
             <input type='hidden' class='gform_hidden' name='state_{$form_id}' value='" . self::get_state( $form, $field_values ) . "' />
             <input type='hidden' autocomplete='off' class='gform_hidden' name='gform_target_page_number_{$form_id}' id='gform_target_page_number_{$form_id}' value='" . esc_attr( $next_page ) . "' />
@@ -1949,7 +1956,7 @@ class GFFormDisplay {
 		$lead_id = gf_apply_filters( array( 'gform_entry_id_pre_save_lead', $form_id ), null, $form );
 
 		if ( ! empty( $lead_id ) ) {
-			GFCommon::log_debug( __METHOD__ . '(): The gform_entry_id_pre_save_lead filter was used to set the entry ID to ' . var_export( $lead_id, true ) );
+			GFCommon::log_debug( __METHOD__ . '(): The gform_entry_id_pre_save_lead filter was used to set the entry ID to ' . var_export( $lead_id, true ) ); // phpcs:ignore QITStandard.PHP.DebugCode.DebugFunctionFound
 
 			if ( empty( $lead ) ) {
 				$lead = array();
@@ -1993,6 +2000,9 @@ class GFFormDisplay {
 			do_action( 'gform_entry_created', $lead, $form );
 			GFCommon::log_debug( __METHOD__ . '(): Completed gform_entry_created.' );
 		}
+
+		// Adding JS Logging statements if available.
+		self::log_browser_session( $form_id, $lead['id'] );
 
 		$gform_entry_post_save_args = array( 'gform_entry_post_save', $form_id );
 		if ( gf_has_filter( $gform_entry_post_save_args ) ) {
@@ -2057,6 +2067,40 @@ class GFFormDisplay {
 
 		//display confirmation message or redirect to confirmation page
 		return self::handle_confirmation( $form, $lead, $ajax );
+	}
+
+	/**
+	 * Logs browser session data if available.
+	 *
+	 * @since 2.9.26
+	 *
+	 * @param int $form_id The form id
+	 * @param int $entry_id The entry id
+	 *
+	 * @return void
+	 */
+	private static function log_browser_session( $form_id, $entry_id ) {
+		$is_logging_enabled = class_exists( 'GFLogging' ) && GFLogging::is_enabled( 'gravityforms-browser' );
+		if ( ! $is_logging_enabled ) {
+			return;
+		}
+
+		$data = rgpost( 'js_log' );
+		if ( empty( $data ) || ! is_string( $data ) ) {
+			return;
+		}
+
+		// Strip ANSI escapes for terminals
+		$data = preg_replace( '/\x1B\[[0-?]*[ -\/]*[@-~]/u', '', $data );
+
+		// Other basic sanitization.
+		$data = sanitize_textarea_field( $data );
+		if ( empty( $data ) ) {
+			return;
+		}
+
+		GFLogging::include_logger();
+		GFLogging::log_message( 'gravityforms-browser', "------ Form #{$form_id}, Entry #{$entry_id} -------\n" . $data . "\n", KLogger::DEBUG );
 	}
 
 	/**
@@ -3909,6 +3953,21 @@ class GFFormDisplay {
 			$mask   = $field->inputMaskValue;
 			$script = "jQuery('#input_{$form['id']}_{$field->id}').mask('" . esc_js( $mask ) . "').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );";
 
+			/**
+			 * Filters the input mask initialization script for a field.
+			 *
+			 * @since unknown
+			 * @deprecated next
+			 * @remove-in 3.0
+			 *
+			 * @param string $script   The mask initialization script.
+			 * @param int    $form_id  The form ID.
+			 * @param int    $field_id The field ID.
+			 * @param string $mask     The input mask value.
+			 */
+			if ( gf_has_filter( array( 'gform_input_mask_script', $form['id'] ) ) ) {
+				trigger_error( 'gform_input_mask_script is deprecated and will be removed in version 3.0.', E_USER_DEPRECATED ); // phpcs:ignore QITStandard.PHP.DebugCode.DebugFunctionFound
+			}
 			$script_str .= gf_apply_filters( array( 'gform_input_mask_script', $form['id'] ), $script, $form['id'], $field->id, $mask );
 		}
 
@@ -5012,7 +5071,7 @@ class GFFormDisplay {
 
 			return new WP_Error( 'invalid_email' );
 		}
-		$resume_token       = rgpost( 'gform_resume_token' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, 
+		$resume_token       = rgpost( 'gform_resume_token' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing,
 		$submission_details = GFFormsModel::get_draft_submission_values( $resume_token );
 		$submission_json    = $submission_details['submission'];
 		$submission         = json_decode( $submission_json, true );

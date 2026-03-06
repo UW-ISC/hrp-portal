@@ -710,8 +710,8 @@ function gformDeleteUploadedFile(formId, fieldId, deleteButton){
     var fileId = filePreview.id;
     filePreview.remove();
 
-    //displaying single file upload field
-    parent.find('input[type="file"],.validation_message,#extensions_message_' + formId + '_' + fieldId).removeClass("gform_hidden");
+    //removing the gform_hidden class
+    parent.find('.validation_message,#extensions_message_' + formId + '_' + fieldId).removeClass("gform_hidden");
 
     //displaying post image label
     parent.find(".ginput_post_image_file").show();
