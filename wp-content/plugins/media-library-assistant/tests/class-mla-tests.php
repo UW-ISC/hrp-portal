@@ -48,9 +48,6 @@ class MLATest {
 		if ( ! empty( $php_reporting ) ) {
 			@error_reporting( 0 + $php_reporting );
 		}
-
-		// This is the earliest effective place to localize values in other plugin components
-		MLACoreOptions::mla_localize_option_definitions_array();
 	}
 
 	/**

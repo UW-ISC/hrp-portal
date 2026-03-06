@@ -117,6 +117,10 @@ var jQuery;
 
 			$( '#mla-set-parent-div' ).show();
 
+			// Avoid Upload New Media screen disabling by WordPress 6.9+
+			$( '#mla-set-parent-cancel' ).prop( 'disabled', false );
+			$( '#mla-set-parent-submit' ).prop( 'disabled', false );
+			
 			$( '#mla-set-parent-input ' ).focus().on( 'keyup', function( event ){
 				if ( event.which == 27 ) {
 					mla.setParent.close();

@@ -10,10 +10,10 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp;
+namespace MMMScssPhp\ScssPhp;
 
 use Exception;
-use ScssPhp\ScssPhp\Version;
+use MMMScssPhp\ScssPhp\Version;
 
 /**
  * The scss cache manager.

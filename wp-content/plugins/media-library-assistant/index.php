@@ -7,18 +7,18 @@
  *
  * @package   Media Library Assistant
  * @author    David Lingren
- * @copyright 2025 David Lingren
+ * @copyright 2026 David Lingren
  * @license   GPL-2.0-or-later
- * @version   3.30
+ * @version   3.33
  */
 
 /*
 Plugin Name: Media Library Assistant
 Plugin URI: http://davidlingren.com/#two
-Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
-Version: 3.30
+Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], [mla_custom_list], [mla_archive_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
+Version: 3.33
 Requires at least: 4.7
-Requires PHP: 5.3
+Requires PHP: 7.4
 Author: David Lingren
 Author URI: http://davidlingren.com/
 License: GPLv2 or later
@@ -26,8 +26,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: media-library-assistant
 Domain Path: /languages
 
-Copyright 2011-2025 David Lingren
-
+Copyright 2011-2026 David Lingren
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -48,7 +47,7 @@ defined( 'ABSPATH' ) or die();
 // Translation strings for the plugin data in the comment block above; MUST MATCH
 if ( false ) {
 	/* translators: Description of the plugin/theme */
-	__ ( 'Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.', 'media-library-assistant' );
+	__ ( 'Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], [mla_custom_list], [mla_archive_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.', 'media-library-assistant' );
 	/* translators: Name of the plugin/theme */
 	__ ( 'Media Library Assistant', 'media-library-assistant' );
 }
@@ -114,9 +113,10 @@ $mla_name_conflict_candidates =
 		'ACP_Addon_MLA_Editing_Model_Media_Title' => 'class',
 		'ACP_Addon_MLA_Column_Parent' => 'class',
 		'ACP_Addon_MLA_Column_Date' => 'class',
+		'MLA_Media' => 'class',
 		'MLA_Ajax' => 'class',
-		'MLACore' => 'class',
 		'MLACoreOptions' => 'class',
+		'MLACore' => 'class',
 		'MLA_Checklist_Walker' => 'class',
 		'MLAAVIF' => 'class',
 		'MLAOffice' => 'class',
@@ -129,6 +129,7 @@ $mla_name_conflict_candidates =
 		'MLAFileDownloader' => 'class',
 		'MLAImageProcessor' => 'class',
 		'MLAMutex' => 'class',
+		'MLAImage_Size' => 'class',
 		'MLA_List_Table' => 'class',
 		'MLA' => 'class',
 		'MLAModal_Ajax' => 'class',
@@ -144,7 +145,10 @@ $mla_name_conflict_candidates =
 		'MLA_Custom_Field_Query' => 'class',
 		'MLASettings_Documentation' => 'class',
 		'MLA_Example_List_Table' => 'class',
+		'MLA_Upgrader_Skin_53' => 'class',
 		'MLA_Upgrader_Skin' => 'class',
+		'MLASettings_Image' => 'class',
+		'MLA_Image_List_Table' => 'class',
 		'MLASettings_IPTCEXIF' => 'class',
 		'MLA_IPTC_EXIF_List_Table' => 'class',
 		'MLA_IPTC_EXIF_Query' => 'class',
@@ -157,11 +161,16 @@ $mla_name_conflict_candidates =
 		'MLASettings_View' => 'class',
 		'MLA_View_List_Table' => 'class',
 		'MLASettings' => 'class',
+		'MLAArchiveList' => 'class',
+		'MLACustomList' => 'class',
 		'MLAShortcode_Support' => 'class',
+		'MLATagCloud' => 'class',
+		'MLATermList' => 'class',
 		'MLAShortcodes' => 'class',
 		'MLATemplate_Support' => 'class',
 		'MLA_Thumbnail' => 'class',
 		'MLA_WPML' => 'class',
+		'MLA_WPML_Shortcodes' => 'class',
 		'MLA_WPML_List_Table' => 'class',
 		'MLA_WPML_Table' => 'class',
 		'MLATest' => 'class',

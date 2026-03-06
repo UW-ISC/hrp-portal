@@ -428,16 +428,17 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (456, green, null),
 			// (789, blue, 90%),());
 			if ( count( $menu_toggle_blocks ) ) {
-
-				$list = '(';
+				$blocks = array();
 
 				foreach ( $menu_toggle_blocks as $id => $vals ) {
-					$list .= '(' . implode( ',', $vals ) . '),';
+					$blocks[] = '(' . implode( ',', $vals ) . ')';
 				}
 
-				// Always add an empty list item to meke sure there are always at least 2 items in the list
-				// Lists with a single item are not treated the same way by SASS
-				$list .= '());';
+				if ( defined( 'MEGAMENU_SCSS_COMPILER_COMPAT') && MEGAMENU_SCSS_COMPILER_COMPAT ) {
+					$blocks[] = '()'; // add empty list item to ensure list is treated as a list in scssphp 0.0.12
+				}
+
+				$list = '(' . implode(',', $blocks) . ')';
 
 				$vars['menu_toggle_blocks'] = $list;
 
@@ -490,15 +491,17 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (789, blue, 90%),());
 			if ( count( $spacer_blocks ) ) {
 
-				$list = '(';
+				$blocks = array();
 
 				foreach ( $spacer_blocks as $id => $vals ) {
-					$list .= '(' . implode( ',', $vals ) . '),';
+					$blocks[] = '(' . implode( ',', $vals ) . ')';
 				}
 
-				// Always add an empty list item to meke sure there are always at least 2 items in the list
-				// Lists with a single item are not treated the same way by SASS
-				$list .= '());';
+				if ( defined( 'MEGAMENU_SCSS_COMPILER_COMPAT') && MEGAMENU_SCSS_COMPILER_COMPAT ) {
+					$blocks[] = '()'; // add empty list item to ensure list is treated as a list in scssphp 0.0.12
+				}
+
+				$list = '(' . implode(',', $blocks) . ')';
 
 				$vars['spacer_toggle_blocks'] = $list;
 
@@ -551,16 +554,17 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (456, green, null),
 			// (789, blue, 90%),());
 			if ( count( $menu_toggle_animated_blocks ) ) {
-
-				$list = '(';
+				$blocks = array();
 
 				foreach ( $menu_toggle_animated_blocks as $id => $vals ) {
-					$list .= '(' . implode( ',', $vals ) . '),';
+					$blocks[] = '(' . implode( ',', $vals ) . ')';
 				}
 
-				// Always add an empty list item to meke sure there are always at least 2 items in the list
-				// Lists with a single item are not treated the same way by SASS
-				$list .= '());';
+				if ( defined( 'MEGAMENU_SCSS_COMPILER_COMPAT') && MEGAMENU_SCSS_COMPILER_COMPAT ) {
+					$blocks[] = '()'; // add empty list item to ensure list is treated as a list in scssphp 0.0.12
+				}
+				
+				$list = '(' . implode(',', $blocks) . ')';
 
 				$vars['menu_toggle_animated_blocks'] = $list;
 

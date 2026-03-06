@@ -253,6 +253,8 @@ class MLAModal_Ajax {
 	 * @return	array	updated descriptors for the "compat-attachment-fields"
 	 */
 	public static function mla_attachment_fields_to_edit_filter( $form_fields, $post ) {
+		static $log_error = true;
+		
 		$id = $post->ID;
 
 		/*
@@ -294,7 +296,19 @@ class MLAModal_Ajax {
 					 * use term names for flat taxonomies and term_ids for hierarchical.
 					 */
 					$post_id = $post->ID;
-					$label = $field['labels']->name;
+
+					if ( empty( $field['labels'] ) || empty( $field['labels']->name ) ) {
+						if ( $log_error ) {
+							$log_error = false;
+							MLACore::mla_debug_add( __LINE__ . " DEBUG: MLAModal_Ajax::mla_attachment_fields_to_edit_filter( {$id} ) \$field = " . var_export( $field, true ), 0x400 );
+							MLACore::mla_debug_add( __LINE__ . " DEBUG: MLAModal_Ajax::mla_attachment_fields_to_edit_filter( {$key} ) \$value = " . var_export( $value, true ), 0x400 );
+						}
+
+						$label = ! empty( $field['label'] ) ? $field['label'] : $key;
+					} else {
+						$label = $field['labels']->name;
+					}
+
 					$terms = get_object_term_cache( $post_id, $key );
 
 					if ( false === $terms ) {
@@ -406,7 +420,7 @@ class MLAModal_Ajax {
 				if ( $use_checklist ) {
 					if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) ) {
 						unset( $requested[ $index ] );
-						$label = $value->label;
+						$label = ! empty( $value->label ) ? $value->label : $key;
 						$terms = get_object_term_cache( $post_id, $key );
 
 						if ( false === $terms ) {
@@ -458,7 +472,7 @@ class MLAModal_Ajax {
 				} /* use_checklist */ else { // flat
 					if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_TAG_METABOX ) ) {
 						unset( $requested[ $index ] );
-						$label = $value->label;
+						$label = ! empty( $value->label ) ? $value->label : $key;
 						$terms = get_object_term_cache( $post_id, $key );
 
 						if ( false === $terms ) {
@@ -590,7 +604,7 @@ class MLAModal_Ajax {
 
 		do_action( 'mla_media_modal_begin_update_compat_fields', $post );
 
-		$prefix = isset( $_REQUEST['prefix'] ) ? sanitize_title( $_REQUEST['prefix'] ) : '';
+		$prefix = isset( $_REQUEST['prefix'] ) ? sanitize_title( wp_unslash( $_REQUEST['prefix'] ) ) : '';
 		$taxonomies = array();
 		$results = array();
 

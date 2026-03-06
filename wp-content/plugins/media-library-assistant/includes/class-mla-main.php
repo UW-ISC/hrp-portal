@@ -195,14 +195,8 @@ class MLA {
 			exit();
 		}
 
-		$bulk_action = '';
-		if ( isset( $_REQUEST['action'] ) && 'download-zip' == $_REQUEST['action']) {
-			$bulk_action = 'download-zip';
-		} elseif ( isset( $_REQUEST['action2'] ) && 'download-zip' == $_REQUEST['action2']) {
-			$bulk_action = 'download-zip';
-		}
-
-		if ( 'download-zip' === $bulk_action ) {
+		$bulk_action = self::_current_bulk_action();
+		if ( ( 'download-zip' === $bulk_action ) || ( 'download-original' === $bulk_action ) ) {
 			check_admin_referer( 'bulk-attachments' );
 			// Exits after redirect unless it returns an error
 			$_REQUEST['mla_zip_archive_error_message'] =  self::_process_zip_archive_download( $_REQUEST );
@@ -539,6 +533,13 @@ class MLA {
 			$menu_title = MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_MENU_TITLE, true );
 		}
 
+		// If we are suppressing the Media/Library submenu, force Media/Assistant to come first
+		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_LIBRARY ) ) {
+			$menu_position = 4;
+		} else {
+			$menu_position = (integer) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
+		}
+
 		$hook = add_submenu_page( 'upload.php', $page_title, $menu_title, 'upload_files', MLACore::ADMIN_PAGE_SLUG, 'MLA::mla_render_admin_page' );
 		add_action( 'load-' . $hook, 'MLA::mla_add_menu_options' );
 		add_action( 'load-' . $hook, 'MLA::mla_add_help_tab' );
@@ -547,32 +548,25 @@ class MLA {
 		$taxonomies = get_object_taxonomies( 'attachment', 'objects' );
 		if ( !empty( $taxonomies ) ) {
 			foreach ( $taxonomies as $tax_name => $tax_object ) {
-				/*
-				 * The page_hook we need for taxonomy edits is slightly different
-				 */
+				// The page_hook we need for taxonomy edits is slightly different
 				$hook = 'edit-' . $tax_name;
 				self::$page_hooks[ $hook ] = 't_' . $tax_name;
 			} // foreach $taxonomies
 
-			/*
-			 * Load here, not 'load-edit-tags.php', to put our tab after the defaults
-			 */
+			// Load here, not 'load-edit-tags.php', to put our tab after the defaults
 			add_action( 'admin_head-edit-tags.php', 'MLA::mla_add_help_tab' );
 		}
 
-		/*
-		 * If we are suppressing the Media/Library submenu, force Media/Assistant to come first
-		 */
-		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_LIBRARY ) ) {
-			$menu_position = 4;
-		} else {
-			$menu_position = (integer) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
-		}
-
 		if ( $menu_position && !empty( $submenu['upload.php'] ) ) {
+			if ( version_compare( get_bloginfo( 'version' ), '5.3', '>=' ) ) {
+				$menu_slug = MLACore::ADMIN_PAGE_SLUG;
+			} else {
+				$menu_slug = 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG;
+			}
+
 			foreach ( $submenu['upload.php'] as $menu_order => $menu_item ) {
 				if ( MLACore::ADMIN_PAGE_SLUG == $menu_item[2] ) {
-					$menu_item[2] = 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG;
+					$menu_item[2] = $menu_slug;
 					$submenu['upload.php'][$menu_position] = $menu_item;
 					unset( $submenu['upload.php'][$menu_order] );
 					ksort( $submenu['upload.php'] );
@@ -1006,8 +1000,20 @@ class MLA {
 
 		// Create unique local names in case the same file name appears in multiple year/month/ directories.
 		$file_names = array();
+		$download_original = 'download-original' === self::_current_bulk_action();
+
 		foreach ( $request['cb_attachment'] as $index => $post_id ) {
-			$file_name = get_attached_file( $post_id );
+			$file_name = false;
+
+			// WP 5.3+ produces "scaled" images without metadata; we need the original.
+			if ( $download_original && function_exists( 'wp_get_original_image_path' ) ) {
+				$file_name = wp_get_original_image_path( $post_id );
+			}
+
+			if ( false === $file_name ) {
+				$file_name = get_attached_file( $post_id );
+			}
+
 			$path_info = pathinfo( $file_name  );
 			$local_name = $path_info['basename'];
 			$suffix = 0;
@@ -2664,7 +2670,7 @@ class MLA {
 		$action = false;
 
 		if ( isset( $_REQUEST['action'] ) ) {
-			if ( -1 != $_REQUEST['action'] ) {
+			if ( "-1" !== $_REQUEST['action'] ) {
 				return sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 			} else {
 				$action = 'none';
@@ -2672,7 +2678,7 @@ class MLA {
 		} // isset action
 
 		if ( isset( $_REQUEST['action2'] ) ) {
-			if ( -1 != $_REQUEST['action2'] ) {
+			if ( "-1" !== $_REQUEST['action2'] ) {
 				return sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) );
 			} else {
 				$action = 'none';

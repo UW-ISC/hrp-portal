@@ -22,7 +22,7 @@
 
 @mixin background($from, $to) {
     @if $to == $from {
-        background: $to;
+        background-color: $to;
     } @else {
         background: linear-gradient(to bottom, $from, $to);
     }

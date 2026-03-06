@@ -570,7 +570,7 @@ class MLASettings_Upload {
 			'search_url' => MLACore::mla_nonce_url( '?page=mla-settings-menu-upload&mla_tab=upload&mla-optional-uploads-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'Search Known Types' => __( 'Search Known Types', 'media-library-assistant' ),
 			'colspan' => $MLAListUploadTable->get_column_count(),
-			'Quick Edit' => __( '<strong>Quick Edit</strong>', 'media-library-assistant' ),
+			'Quick Edit' => '<strong>' . __( 'Quick Edit', 'media-library-assistant' ) . '</strong>',
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
 			'Update' => __( 'Update', 'media-library-assistant' ),
 			'Bulk Edit' => __( 'Bulk Edit', 'media-library-assistant' ),

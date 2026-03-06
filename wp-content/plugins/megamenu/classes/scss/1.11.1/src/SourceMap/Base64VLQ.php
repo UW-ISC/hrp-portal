@@ -10,7 +10,7 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\SourceMap;
+namespace MMMScssPhp\ScssPhp\SourceMap;
 
 /**
  * Base 64 VLQ

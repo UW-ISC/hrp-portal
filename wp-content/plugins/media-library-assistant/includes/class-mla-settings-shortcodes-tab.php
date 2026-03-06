@@ -893,7 +893,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 		// View arguments - see also mla_tabulate_template_items
 		if ( isset( $_REQUEST['mla_template_view'] ) ) {
 			$field = sanitize_text_field( wp_unslash( $_REQUEST['mla_template_view'] ) );
-			if ( in_array( $field, array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list', 'custom-list' ) ) ) {
+			if ( in_array( $field, array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list', 'custom-list', 'archive-list' ) ) ) {
 				$submenu_arguments['mla_template_view'] = $field;
 			}
 		}
@@ -1758,6 +1758,9 @@ class MLA_Template_Query {
 				case 'custom-list':
 					$found = 'custom-list' === $value['shortcode'];
 					break;
+				case 'archive-list':
+					$found = 'archive-list' === $value['shortcode'];
+					break;
 				default:
 					$found = true;
 			}// $view
@@ -1980,7 +1983,6 @@ class MLA_Template_Query {
 		}
 
 		$items = self::mla_query_template_items( $request, 0, 0 );
-
 		$template_items = array(
 			'all' => array(
 				'singular' => _x( 'All', 'table_view_singular', 'media-library-assistant' ),
@@ -2010,6 +2012,10 @@ class MLA_Template_Query {
 				'singular' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
 				'plural' => _x( 'Custom Field List', 'table_view_plural', 'media-library-assistant' ),
 				'count' => 0 ),
+			'archive-list' => array(
+				'singular' => _x( 'Archive List', 'table_view_singular', 'media-library-assistant' ),
+				'plural' => _x( 'Archive List', 'table_view_plural', 'media-library-assistant' ),
+				'count' => 0 ),
 		);
 
 		foreach ( $items as $value ) {
@@ -2038,6 +2044,9 @@ class MLA_Template_Query {
 					break;
 				case 'custom-list':
 					$template_items[ 'custom-list' ]['count']++;
+					break;
+				case 'archive-list':
+					$template_items[ 'archive-list' ]['count']++;
 					break;
 				default:
 					break;

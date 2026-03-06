@@ -32,6 +32,8 @@ class MLAObjects {
 	 * @return	void
 	 */
 	public static function mla_build_taxonomies( ) {
+		// error_log( __LINE__ . ' DEBUG: MLAObjects::mla_build_taxonomies', 0 );
+
 		if ( MLACore::mla_taxonomy_support('attachment_category') ) {
 			$object_type = apply_filters( 'mla_attachment_category_types', array(
 				'attachment',
@@ -113,6 +115,8 @@ class MLAObjects {
 	 * @return	void
 	 */
 	private static function _add_taxonomy_support( ) {
+		//error_log( __LINE__ . ' DEBUG: MLAObjects::_add_taxonomy_support', 0 );
+		
 		MLACore::mla_initialize_tax_checked_on_top();
 		$taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'names' );
 		foreach ( $taxonomies as $tax_name ) {

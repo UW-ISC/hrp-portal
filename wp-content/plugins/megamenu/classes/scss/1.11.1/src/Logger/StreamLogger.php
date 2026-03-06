@@ -10,7 +10,7 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Logger;
+namespace MMMScssPhp\ScssPhp\Logger;
 
 /**
  * A logger that prints to a PHP stream (for instance stderr)

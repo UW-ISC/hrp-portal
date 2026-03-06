@@ -58,15 +58,15 @@
  * https://wordpress.org/support/topic/cleaning-up-url-queries-in-paginated-gallery-pages/
  *
  * @package MLA UI Elements Example
- * @version 2.06
+ * @version 2.07
  */
 
 /*
 Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
-Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
+Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes.
 Author: David Lingren
-Version: 2.06
+Version: 2.07
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2022 David Lingren
@@ -100,7 +100,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.06';
+	const PLUGIN_VERSION = '2.07';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -395,16 +395,18 @@ class MLAUIElementsExample {
 	 * @param	array	the shortcode parameters passed in to the shortcode
 	 */
 	public static function mla_gallery_attributes( $shortcode_attributes ) {
-		// Look for date archive option
-		$archive_parameter_name = !empty( $shortcode_attributes['archive_parameter_name'] ) ? $shortcode_attributes['archive_parameter_name'] : false;
-		if ( $archive_parameter_name ) {
-			if ( empty( $shortcode_attributes['add_filters_to'] ) ) {
-				$shortcode_attributes['add_filters_to'] = 'any';
+		// Look for date archive option but only without [mla_archive_list] shortcode	
+		if ( !class_exists( 'MLAArchiveList' ) ) {
+			$archive_parameter_name = !empty( $shortcode_attributes['archive_parameter_name'] ) ? $shortcode_attributes['archive_parameter_name'] : false;
+			if ( $archive_parameter_name ) {
+				if ( empty( $shortcode_attributes['add_filters_to'] ) ) {
+					$shortcode_attributes['add_filters_to'] = 'any';
+				}
+
+				unset( $shortcode_attributes['archive_parameter_name'] );
 			}
-			
-			unset( $shortcode_attributes['archive_parameter_name'] );
-		}
-			
+		}			
+
 		// Only process shortcodes that allow filters
 		if ( empty( $shortcode_attributes['add_filters_to'] ) ) {
 			return $shortcode_attributes;

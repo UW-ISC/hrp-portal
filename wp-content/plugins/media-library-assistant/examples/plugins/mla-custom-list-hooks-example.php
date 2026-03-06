@@ -1,13 +1,13 @@
 <?php
 /**
- * Provides an example of hooking the filters provided by the [mla_tag_cloud] shortcode
+ * Provides an example of hooking the filters provided by the [mla_custom_list] shortcode
  *
  * In this example, the CSS style attributes for each cloud item are modified to include a "color" attribute,
  * giving each term a color related to its associated count. The example documents ALL the filters
- * available in the [mla_tag_cloud] shortcode.
+ * available in the [mla_custom_list] shortcode.
  *
  * @package MLA Custom List Hooks Example
- * @version 1.03
+ * @version 1.00
  */
 
 /*
@@ -35,7 +35,7 @@ Copyright 2023 David Lingren
 */
 
 /**
- * Class MLA Custom List Hooks Example hooks all of the filters provided by the [mla_tag_cloud] shortcode
+ * Class MLA Custom List Hooks Example hooks all of the filters provided by the [mla_custom_list] shortcode
  *
  * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
  * else inside a class means this is the only name you have to worry about.
@@ -58,8 +58,8 @@ class MLACustomListHooksExample {
 
 		/*
 		 * add parameters:
-		 * $tag - name of the hook you're filtering; defined by [mla_tag_cloud]
-		 * $function_to_add - function to be called when [mla_tag_cloud] applies the filter
+		 * $tag - name of the hook you're filtering; defined by [mla_custom_list]
+		 * $function_to_add - function to be called when [mla_custom_list] applies the filter
 		 * $priority - default 10; lower runs earlier, higher runs later
 		 * $accepted_args - number of arguments your function accepts
 		 *
@@ -118,7 +118,7 @@ class MLACustomListHooksExample {
 	 * before they pass through the logic to handle the 'mla_page_parameter' and "request:" prefix processing.
 	 *
 	 * The $shortcode_attributes array is where you will find any of your own parameters that are coded in the
-	 * shortcode, e.g., [mla_tag_cloud my_parameter="my value"].
+	 * shortcode, e.g., [mla_custom_list my_parameter="my value"].
 	 *
 	 * @since 1.00
 	 *
@@ -132,8 +132,8 @@ class MLACustomListHooksExample {
 
 		/*
 		 * Note that the global $post; object is available here and in all later filters.
-		 * It contains the post/page on which the [mla_tag_cloud] appears.
-		 * Some [mla_tag_cloud] invocations are not associated with a post/page; these will
+		 * It contains the post/page on which the [mla_custom_list] appears.
+		 * Some [mla_custom_list] invocations are not associated with a post/page; these will
 		 * have a substitute $post object with $post->ID == 0.
 		 */
 		global $post;
@@ -149,7 +149,7 @@ class MLACustomListHooksExample {
 	 * before they are merged with the default arguments used for the gallery display.
 	 *
 	 * The $shortcode_attributes array is where you will find any of your own parameters that are coded in the
-	 * shortcode, e.g., [mla_tag_cloud my_parameter="my value"].
+	 * shortcode, e.g., [mla_custom_list my_parameter="my value"].
 	 *
 	 * @since 1.00
 	 * @uses MLACustomListHooksExample::$shortcode_attributes
@@ -371,7 +371,7 @@ class MLACustomListHooksExample {
 
 		/*
 		 * You can use the WordPress globals like $wp_query, $wpdb and $table_prefix as well.
-		 * Note that $wp_query contains values for the post/page query, NOT the [mla_tag_cloud] query.
+		 * Note that $wp_query contains values for the post/page query, NOT the [mla_custom_list] query.
 		 */
 		global $wp_query;
 		//error_log( __LINE__ . ' MLACustomListHooksExample::mla_custom_list_style_values $wp_query->query = ' . var_export( $wp_query->query, true ), 0 );
@@ -403,7 +403,7 @@ class MLACustomListHooksExample {
 	 * MLA Custom List Style Parse
 	 *
 	 * The "Parse" series of filters gives you a chance to modify or replace the HTML markup
-	 * that will be added to the [mla_tag_cloud] output. It is called just after the values array
+	 * that will be added to the [mla_custom_list] output. It is called just after the values array
 	 * (updated in the corresponding "Values" filter) is combined (parsed) with the template.
 	 * You can modify the HTML markup already prepared or start over with the template and the
 	 * substitution values.
@@ -539,7 +539,7 @@ class MLACustomListHooksExample {
 
 		/*
 		 * For this example, we will color the "heat map" of cloud item size values. We use a shortcode parameter of our
-		 * own to do this on a gallery-by-gallery basis, leaving other [mla_tag_cloud] instances untouched.
+		 * own to do this on a gallery-by-gallery basis, leaving other [mla_custom_list] instances untouched.
 		 */
 		if ( isset( self::$shortcode_attributes['my_filter'] ) && 'color cloud' == self::$shortcode_attributes['my_filter'] ) {
 			// Calculate red, green and blue so smallest items are red, middle items are green and biggest items are blue

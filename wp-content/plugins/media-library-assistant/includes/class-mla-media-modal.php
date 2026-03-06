@@ -712,6 +712,7 @@ class MLAModal {
 
 			$page_values = array(
 				'Search Terms' => __( 'Search Terms', 'media-library-assistant' ),
+				'Filter' => __( 'Filter by term', 'media-library-assistant' ),
 				'filter_dropdown' => $filter_dropdown,
 				'filter_style' => $filter_style,
 				'Search' => __( 'Search', 'media-library-assistant' ),

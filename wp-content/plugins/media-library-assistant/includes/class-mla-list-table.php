@@ -880,12 +880,17 @@ class MLA_List_Table extends WP_List_Table {
 			} // delete_post
 
 			if ( ! $this->is_trash ) {
-				$file = wp_get_attachment_url( $item->ID );
-				$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $file ), 'mla_download_type' => $item->post_mime_type );
-
-				$actions['download'] = '<a href="' . $file . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;" download>' . __( 'Download', 'media-library-assistant' ) . '</a>';
-
 				$actions['view']  = '<a href="' . site_url( ) . '?attachment_id=' . $item->ID . '" rel="permalink" title="' . __( 'View', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'View', 'media-library-assistant' ) . '</a>';
+
+				$file = wp_get_attachment_url( $item->ID );
+				if ( $file ) {
+					$actions['download'] = '<a href="' . esc_url( $file ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;" download>' . __( 'Download', 'media-library-assistant' ) . '</a>';
+				}
+
+				$original = wp_get_original_image_url( $item->ID );
+				if ( $original !== $file ) {
+					$actions['download-original'] = '<a href="' . esc_url( $original ) . '" title="' . __( 'Download Original', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;" download>' . __( 'Download Original', 'media-library-assistant' ) . '</a>';
+				}
 			}
 
 			$actions = apply_filters( 'mla_list_table_build_rollover_actions', $actions, $item, $column );
@@ -2039,6 +2044,7 @@ class MLA_List_Table extends WP_List_Table {
 
 		if ( class_exists( 'ZipArchive' ) ) {
 			$actions[ 'download-zip' ] = __( 'Download', 'media-library-assistant' );
+			$actions[ 'download-original' ] = __( 'Download Original', 'media-library-assistant' );
 		}
 		
 		return apply_filters( 'mla_list_table_get_bulk_actions', $actions );

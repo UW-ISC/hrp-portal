@@ -277,7 +277,8 @@
                         order: 1;
                     }
 
-                    &:nth-child(1 of .mega-item-align-right) {
+                    /** Apply to first item with .mega-item-align-right class **/
+                    &.mega-item-align-right:not(.mega-item-align-right ~ .mega-item-align-right) {
                         margin-left: auto;
                     }
                 }

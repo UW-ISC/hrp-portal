@@ -10,9 +10,9 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp;
+namespace MMMScssPhp\ScssPhp;
 
-use ScssPhp\ScssPhp\Node\Number;
+use MMMScssPhp\ScssPhp\Node\Number;
 
 final class ValueConverter
 {

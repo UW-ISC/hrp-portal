@@ -1241,7 +1241,7 @@ class MLAMime {
 
 		if ( $slug != $request['slug'] ) {
 			/* translators: 1: element name 2: bad_value 3: good_value */
-			$messages .= sprintf( __( '<br>' . 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
+			$messages .= sprintf( '<br>' . __( 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 		}
 
 		// Make sure new slug is unique
@@ -1328,7 +1328,7 @@ class MLAMime {
 		if ( $slug != $original_slug ) {
 			if ( $slug != $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
-				$messages .= sprintf( __( '<br>' . 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
+				$messages .= sprintf( '<br>' . __( 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
 			// Make sure new slug is unique
@@ -2362,7 +2362,7 @@ class MLAMime {
 			$slug = pathinfo( 'X.' . strtolower( trim( $request['slug'] ) ), PATHINFO_EXTENSION );
 			if ( $slug != $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
-				$messages .= sprintf( __( '<br>' . 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Extension', 'media-library-assistant' ), $request['slug'], $slug );
+				$messages .= sprintf( '<br>' . __( 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Extension', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
 			/*
@@ -2484,7 +2484,7 @@ class MLAMime {
 		if ( $slug != $original_slug ) {
 			if ( $slug != $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
-				$messages .= sprintf( __( '<br>' . 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Extension', 'media-library-assistant' ), $request['slug'], $slug );
+				$messages .= sprintf( '<br>' . __( 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Extension', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
 			// Make sure new slug is unique
