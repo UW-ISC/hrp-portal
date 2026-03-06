@@ -10,24 +10,24 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp;
+namespace MMMScssPhp\ScssPhp;
 
-use ScssPhp\ScssPhp\Block\AtRootBlock;
-use ScssPhp\ScssPhp\Block\CallableBlock;
-use ScssPhp\ScssPhp\Block\ContentBlock;
-use ScssPhp\ScssPhp\Block\DirectiveBlock;
-use ScssPhp\ScssPhp\Block\EachBlock;
-use ScssPhp\ScssPhp\Block\ElseBlock;
-use ScssPhp\ScssPhp\Block\ElseifBlock;
-use ScssPhp\ScssPhp\Block\ForBlock;
-use ScssPhp\ScssPhp\Block\IfBlock;
-use ScssPhp\ScssPhp\Block\MediaBlock;
-use ScssPhp\ScssPhp\Block\NestedPropertyBlock;
-use ScssPhp\ScssPhp\Block\WhileBlock;
-use ScssPhp\ScssPhp\Exception\ParserException;
-use ScssPhp\ScssPhp\Logger\LoggerInterface;
-use ScssPhp\ScssPhp\Logger\QuietLogger;
-use ScssPhp\ScssPhp\Node\Number;
+use MMMScssPhp\ScssPhp\Block\AtRootBlock;
+use MMMScssPhp\ScssPhp\Block\CallableBlock;
+use MMMScssPhp\ScssPhp\Block\ContentBlock;
+use MMMScssPhp\ScssPhp\Block\DirectiveBlock;
+use MMMScssPhp\ScssPhp\Block\EachBlock;
+use MMMScssPhp\ScssPhp\Block\ElseBlock;
+use MMMScssPhp\ScssPhp\Block\ElseifBlock;
+use MMMScssPhp\ScssPhp\Block\ForBlock;
+use MMMScssPhp\ScssPhp\Block\IfBlock;
+use MMMScssPhp\ScssPhp\Block\MediaBlock;
+use MMMScssPhp\ScssPhp\Block\NestedPropertyBlock;
+use MMMScssPhp\ScssPhp\Block\WhileBlock;
+use MMMScssPhp\ScssPhp\Exception\ParserException;
+use MMMScssPhp\ScssPhp\Logger\LoggerInterface;
+use MMMScssPhp\ScssPhp\Logger\QuietLogger;
+use MMMScssPhp\ScssPhp\Node\Number;
 
 /**
  * Parser

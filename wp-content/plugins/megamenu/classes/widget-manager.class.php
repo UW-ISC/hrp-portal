@@ -364,6 +364,7 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 		}
 
+
 		/**
 		 * Moves a widget to a new position
 		 *
@@ -379,20 +380,16 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 				return;
 			}
 
-			$grid                = isset( $_POST['grid'] ) ? $_POST['grid'] : false;
+			$grid = isset( $_POST['grid'] ) ? $_POST['grid'] : false;
 			$parent_menu_item_id = absint( $_POST['parent_menu_item'] );
+			$saved = false;
 
-			$saved = true;
-
-			$existing_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
-
-			if ( is_array( $grid ) ) {
-
+			if ( is_array( $grid ) && get_post_type( $parent_menu_item_id ) == 'nav_menu_item' ) {
+				$existing_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
 				$submitted_settings = array_merge( $existing_settings, array( 'grid' => $grid ) );
-
+				update_post_meta( $parent_menu_item_id, '_megamenu', $submitted_settings );
+				$saved = true;
 			}
-
-			update_post_meta( $parent_menu_item_id, '_megamenu', $submitted_settings );
 
 			if ( $saved ) {
 				$this->send_json_success( sprintf( __( 'Saved (%s)', 'megamenu' ), json_encode( $grid ) ) );

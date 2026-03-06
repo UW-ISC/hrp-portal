@@ -338,6 +338,16 @@ class MLACoreOptions {
 	const MLA_ENABLE_IMAGE_SIZES = 'enable_image_sizes';
 
 	/**
+	 * Provides a unique name for the Big Image Threshold Option
+	 */
+	const MLA_IMAGE_THRESHOLD_OPTION = 'image_threshold_option';
+
+	/**
+	 * Provides a unique name for the Enable Intermediate Image Sizes option
+	 */
+	const MLA_IMAGE_THRESHOLD_VALUE = 'image_threshold_value';
+
+	/**
 	 * Provides a unique name for the Post MIME Types option
 	 */
 	const MLA_POST_MIME_TYPES = 'post_mime_types';
@@ -530,6 +540,8 @@ class MLACoreOptions {
 	 * @return	void
 	 */
 	public static function mla_localize_option_definitions_array() {
+		// error_log( __LINE__ . ' DEBUG: MLACoreOptions::mla_localize_option_definitions_array', 0 );
+		
 		self::$mla_option_definitions = array (
 			// This option records the highest MLA version so-far installed
 			self::MLA_VERSION_OPTION =>
@@ -711,7 +723,7 @@ class MLACoreOptions {
 					'autoload' => true,
 					'std' => '0',
 					'size' => 2,
-					'help' => __( 'Enter the position of the Media/Assistant submenu entry.<br>&nbsp;&nbsp;0 = natural order (at bottom),&nbsp;&nbsp;&nbsp;&nbsp;1 - 4 = at top<br>&nbsp;&nbsp;6-9 = after "Library",&nbsp;&nbsp;&nbsp;&nbsp;11-16 = after "Add New"', 'media-library-assistant' )),
+					'help' => __( 'Enter the position of the Media/Assistant submenu entry.<br>&nbsp;&nbsp;0 = natural order (at bottom),&nbsp;&nbsp;&nbsp;&nbsp;1 - 4 = at top<br>&nbsp;&nbsp;6-9 = after "Library",&nbsp;&nbsp;&nbsp;&nbsp;11-14 = after "Add Media File"', 'media-library-assistant' )),
 
 			self::MLA_SCREEN_DISPLAY_LIBRARY =>
 				array('tab' => 'general',
@@ -1450,6 +1462,24 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check/uncheck this option to enable/disable Intermediate Image Size Support, then click <strong>Save Changes</strong> to record the new setting.', 'media-library-assistant' ) ),
+
+			self::MLA_IMAGE_THRESHOLD_OPTION =>
+				array('tab' => 'image',
+					'name' => __( 'Big Image Threshold Option', 'media-library-assistant' ),
+					'type' => 'select',
+					'autoload' => true,
+					'std' => 'default',
+					'options' => array('default', 'set', 'disable' ),
+					'texts' => array( __( 'Use default (2560)', 'media-library-assistant' ), __( 'Set threshold', 'media-library-assistant' ), __( 'Disable', 'media-library-assistant' ) ),
+					'help' => __( 'Set the &ldquo;BIG image&rdquo; threshold option. You can use the WordPress default value, set a custom value or disable scaling entirely.', 'media-library-assistant' )),
+
+			self::MLA_IMAGE_THRESHOLD_VALUE =>
+				array('tab' => 'image',
+					'name' => __( 'BIG image threshold', 'media-library-assistant' ),
+					'type' => 'text',
+					'std' => '2560',
+					'size' => 6,
+					'help' => __( 'Set the &ldquo;BIG image&rdquo; threshold value. If the original image width or height is above the threshold, it will be scaled down.', 'media-library-assistant' )),
 
 			self::MLA_IMAGE_SIZES =>
 				array('tab' => '',

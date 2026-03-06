@@ -69,6 +69,7 @@ There are four where-used reporting categories and you can turn them on or off w
 <p>Once you&#8217;ve selected the items you want, pick an action from the dropdown list and click Apply to perform the action on the selected items. The available actions will vary depending on the file type/status view you have picked.</p>
 <p>If you have enabled Trash support (define MEDIA_TRASH in wp-config.php) you can use bulk actions to move items to and from the Trash or delete them permanently.</p>
 <p>The "Download" action (available if your server has ZIP archive support) lets you prepare a ZIP archive containing the selected items and transfer it to your browser.</p>
+<p>The "Download Original" action (available if your server has ZIP archive support) lets you prepare a ZIP archive containing the selected items and transfer it to your browser. If the item has been scaled or rotated, this action downloads the original (unaltered) file.</p>
 <p>When using Bulk Edit, you can change the metadata (author, parent, taxonomy terms) for all selected attachments at once. To remove an attachment from the grouping, just click the x next to its name in the left column of the Bulk Edit area.</p>
 <p>Below the list of selected attachments are four buttons. You can click the "Cancel" button to close the Bulk Edit Area without altering any of the selected attachments.</p>
 <p>To clear out any settings you no longer want you can click the "Reset" button to remove term assignments and other values, leaving an empty/blank Bulk Edit Area.</p>

@@ -10,11 +10,11 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\Block;
+namespace MMMScssPhp\ScssPhp\Block;
 
-use ScssPhp\ScssPhp\Block;
-use ScssPhp\ScssPhp\Compiler\Environment;
-use ScssPhp\ScssPhp\Type;
+use MMMScssPhp\ScssPhp\Block;
+use MMMScssPhp\ScssPhp\Compiler\Environment;
+use MMMScssPhp\ScssPhp\Type;
 
 /**
  * @internal

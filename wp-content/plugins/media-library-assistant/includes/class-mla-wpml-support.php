@@ -417,12 +417,24 @@ class MLA_WPML {
 				$new_item = WPML_Media::create_duplicate_attachment( $mla_item_ID, $mla_parent_ID, $lang );
 			} else {
 				global $sitepress, $wpdb, $wpml_language_resolution;
-				$media_attachment_duplication = new WPML_Media_Attachments_Duplication(
-					$sitepress,
-					new WPML_Model_Attachments( $sitepress, wpml_get_post_status_helper() ),
-					$wpdb,
-					$wpml_language_resolution
-				);
+
+				if ( version_compare( WPML_VERSION, '4.8.0', '>=' ) ) {
+					$media_attachment_duplication = new WPML_Media_Attachments_Duplication(
+						$sitepress,
+						new WPML_Model_Attachments( $sitepress, wpml_get_post_status_helper() ),
+						$wpdb,
+						$wpml_language_resolution,
+						new \WPML\MediaTranslation\PostWithMediaFilesFactory(),
+						WPML\Container\make( WPML\Core\BackgroundTask\Service\BackgroundTaskService::class )
+					);
+				} else {
+					$media_attachment_duplication = new WPML_Media_Attachments_Duplication(
+						$sitepress,
+						new WPML_Model_Attachments( $sitepress, wpml_get_post_status_helper() ),
+						$wpdb,
+						$wpml_language_resolution
+					);
+				}
 
 				$new_item = $media_attachment_duplication->create_duplicate_attachment( $mla_item_ID, $mla_parent_ID, $lang );
 			}

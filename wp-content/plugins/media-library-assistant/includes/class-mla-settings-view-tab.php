@@ -390,7 +390,7 @@ class MLASettings_View {
 			'The description can' => __( 'The description can contain any documentation or notes you need to understand or use the item.', 'media-library-assistant' ),
 			'Add View' => __( 'Add View', 'media-library-assistant' ),
 			'colspan' => $MLAListViewTable->get_column_count(),
-			'Quick Edit' => __( '<strong>Quick Edit</strong>', 'media-library-assistant' ),
+			'Quick Edit' => '<strong>' . __( 'Quick Edit', 'media-library-assistant' ) . '</strong>',
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
 			'Update' => __( 'Update', 'media-library-assistant' ),
 			'Bulk Edit' => __( 'Bulk Edit', 'media-library-assistant' ),

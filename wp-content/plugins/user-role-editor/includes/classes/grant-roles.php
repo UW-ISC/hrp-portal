@@ -328,7 +328,7 @@ class URE_Grant_Roles {
             return $answer;
         }
                 
-        $users = $_POST['users'];        
+        $users =  isset( $_POST['users'] ) ? $_POST['users'] : false;
         if ( !self::validate_users( $users ) ) {
             $answer = array('result'=>'error', 'message'=>esc_html__('Can not edit user or invalid data at the users list', 'user-role-editor') );
             return $answer;
@@ -367,41 +367,33 @@ class URE_Grant_Roles {
     // end of grant_roles()
     
     
-    public static function get_user_roles() {
-
-        if ( !current_user_can( 'promote_users' ) ) {
-            $answer = array('result'=>'error', 'message'=>esc_html__('Not enough permissions', 'user-role-editor'));
-            return $answer;
-        }
+    private static function get_user_roles( $user_id ) {
         
-        $lib = URE_Lib::get_instance();
-        $user_id = (int) $lib->get_request_var('user_id', 'post', 'int');
-        if (empty($user_id)) {
-            $answer = array('result'=>'error', 'message'=>esc_html__('Wrong request, valid user ID was missed', 'user-role-editor'));
+        $answer = array('primary_role'=>'', 'other_roles'=>array() );
+        if ( empty($user_id) ) {            
             return $answer;
         }
     
         $user = get_user_by('id', $user_id);
-        if (empty($user)) {
-            $answer = array('result'=>'error', 'message'=>esc_html__('Requested user does not exist', 'user-role-editor'));
+        if ( empty( $user ) ) {
             return $answer;
         }
         
         $other_roles = array_values($user->roles);
         $primary_role = array_shift($other_roles);
         
-        $answer = array('result'=>'success', 'primary_role'=>$primary_role, 'other_roles'=>$other_roles, 'message'=>'User roles were sent');
+        $answer = array('primary_role'=>$primary_role, 'other_roles'=>$other_roles );
         
         return $answer;
     }
     // end of get_user_roles()
-    
-    
-    
-    private function select_primary_role_html() {
         
+    
+    private static function select_primary_role_html( $primary_role ) {
+        
+        $lib = URE_Lib::get_instance();
         $select_primary_role = apply_filters('ure_users_select_primary_role', true);
-        if (!$select_primary_role && !$this->lib->is_super_admin()) {
+        if (!$select_primary_role && !$lib->is_super_admin()) {
             return;
         }
 ?>        
@@ -411,7 +403,7 @@ class URE_Grant_Roles {
         <select name="primary_role" id="primary_role">
 <?php            
         // print the full list of roles with the primary one selected.
-        wp_dropdown_roles('');
+        wp_dropdown_roles( $primary_role );
         echo '<option value="'. self::NO_ROLE_FOR_THIS_SITE .'">' . esc_html__('&mdash; No role for this site &mdash;', 'user-role-editor') . '</option>'. PHP_EOL;
 ?>        
         </select>
@@ -421,7 +413,8 @@ class URE_Grant_Roles {
     // end of select_primary_role_html()
             
     
-    private function select_other_roles_html() {
+    private static function select_other_roles_html( $other_roles ) {
+        $lib = URE_Lib::get_instance();
 ?>        
         <div id="other_roles_container">
             <span style="font-weight: bold;">
@@ -433,15 +426,16 @@ class URE_Grant_Roles {
         // Is PolyLang plugin active?
         $use_pll = function_exists('pll__');    
         
-        $show_admin_role = $this->lib->show_admin_role_allowed();        
-        $roles = $this->lib->get_all_editable_roles(); 
+        $show_admin_role = $lib->show_admin_role_allowed();        
+        $roles = $lib->get_all_editable_roles(); 
         foreach ($roles as $role_id => $role) {
             if (!$show_admin_role && $role_id=='administrator') {
                 continue;
             }
+            $selected = ( in_array( $role_id, $other_roles ) ) ? 'checked="checked"': '';
             $role_name = $use_pll ? pll__( $role['name'] ) : $role['name'];
             echo '<label for="wp_role_' . $role_id . '"><input type="checkbox"	id="wp_role_' . $role_id .
-                 '" name="ure_roles[]" value="' . $role_id . '" />&nbsp;' .
+                 '" name="ure_roles[]" value="' . $role_id . '" '. $selected .'/>&nbsp;' .
             esc_html( $role_name ) .' ('. $role_id .')</label><br />'. PHP_EOL;
         }
 ?>
@@ -450,6 +444,27 @@ class URE_Grant_Roles {
     }
     // end of select_other_roles_html()
     
+       
+    public static function get_dialog_html() {
+        
+        if ( !current_user_can('promote_users') ) {
+            $answer = array('result'=>'error', 'message'=>esc_html__('Not enough permissions', 'user-role-editor'));
+            return $answer;
+        }
+        
+        $lib = URE_Lib::get_instance();
+        $user_id = $lib->get_request_var('user_id', 'post', 'int');
+        $data = self::get_user_roles( $user_id );
+        ob_start();
+        self::select_primary_role_html( $data['primary_role'] );
+        self::select_other_roles_html( $data['other_roles'] );
+        $output = ob_get_clean();
+        $answer = array('result'=>'success', 'message'=>'Grant roles dialog HTML', 'html'=>$output );
+        
+        return $answer;
+    }
+    // end of get_dialog_html()
+
     
     private function get_roles_options_list() {
         
@@ -460,15 +475,17 @@ class URE_Grant_Roles {
         return $output;
     }
     // end of get_roles_options_list()
-    
-    
-    public function show_roles_manage_html() {
+
+        
+    public function show_roles_manage_html( $which ) {
                       
         if ( !current_user_can( 'promote_users' ) ) {
             return;
         }
-        $button_number =  (self::$counter>0) ? '_2': '';
+        $button_number =  ( $which==='bottom') ? '_2': '';
+        // escaped for secure output already
         $roles_options_list = self::get_roles_options_list();
+        ob_start();
 ?>        
         &nbsp;&nbsp;
         <input type="button" name="ure_grant_roles<?php echo $button_number;?>" id="ure_grant_roles<?php echo $button_number;?>" class="button"
@@ -492,21 +509,16 @@ class URE_Grant_Roles {
 
         
 <?php
-    if (self::$counter==0) {
+        if ( $which==='bottom' ) {
 ?>
             <div id="ure_grant_roles_dialog" class="ure-dialog">
-                <div id="ure_grant_roles_content">
-<?php                
-                $this->select_primary_role_html();
-                $this->select_other_roles_html();
-?>                
-                </div>
+                <div id="ure_grant_roles_container"></div>
             </div>
 <?php
-        URE_View::output_task_status_div();
-        self::$counter++;
-    }
-        
+         URE_View::output_task_status_div();
+        }
+        $output = ob_get_clean();
+        echo $output;
     }
     // end of show_grant_roles_html()
     

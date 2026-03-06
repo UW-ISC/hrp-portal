@@ -179,7 +179,7 @@ p.submit.mla-settings-submit {
 <li><a href="#muie_per_page"><strong>The [muie_per_page] shortcode</strong></a></li>
 <li><a href="#muie_assigned_items_count"><strong>The [muie_assigned_items_count] shortcode</strong></a></li>
 <li><a href="#muie_text_box"><strong>The [muie_text_box] shortcode</strong></a></li>
-<li><a href="#muie_archive_list"><strong>The [muie_archive_list] shortcode</strong></a></li>
+<li><a href="#muie_archive_list"><strong>The [muie_archive_list] shortcode: DEPRECATED</strong></a></li>
 <li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#archive_type">Archive Type</a></li>
 <li><a href="#archive_source">Archive Source</a></li>
@@ -446,7 +446,10 @@ The shortcode is meant to be placed in an HTML form that lets the user enter cri
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>The [muie_archive_list] shortcode</h3>
+<h3>The [muie_archive_list] shortcode: DEPRECATED</h3>
+<p>
+<strong>THIS SHORTCODE HAS BEEN REPLACED BY THE <code>[MLA_ARCHIVE_LIST]</code> SHORTCODE IN MLA v3.31</strong>. Please do not use it in new applications, and consider replacing it in existing applications. The <code>[mla_archive_list]</code> shortcode contains many bug fixes and additional features not implemented in this shortcode.
+</p>
 <p>
 The [muie_archive_list] shortcode function displays date-oriented values in a variety of formats; flat text, link lists, dropdown controls and "pagination"-like links. The archive list works with year, month, week and day values. MLA Archive List enhancements for lists and controls include:
 </p>

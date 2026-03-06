@@ -10,9 +10,9 @@
  * @link http://scssphp.github.io/scssphp
  */
 
-namespace ScssPhp\ScssPhp\SourceMap;
+namespace MMMScssPhp\ScssPhp\SourceMap;
 
-use ScssPhp\ScssPhp\Exception\CompilerException;
+use MMMScssPhp\ScssPhp\Exception\CompilerException;
 
 /**
  * Source Map Generator

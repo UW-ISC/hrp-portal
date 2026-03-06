@@ -459,12 +459,8 @@
             }
 
             @include desktop {
-                @for $of from 1 through 12 {
-                    @for $cols from 1 through $of {
-                        > ul.mega-sub-menu > li.mega-menu-columns-#{$cols}-of-#{$of} {
-                            width: (100% / $of) * $cols;
-                        }
-                    }
+                > ul.mega-sub-menu > li.mega-menu-column {
+                    width: calc(var(--span) / var(--columns) * 100%);
                 }
             }
 
@@ -523,12 +519,8 @@
             }
 
             @include desktop {
-                @for $of from 1 through 12 {
-                    @for $cols from 1 through $of {
-                        li.mega-menu-columns-#{$cols}-of-#{$of} {
-                            width: (100% / $of) * $cols;
-                        }
-                    }
+                li.mega-menu-column-standard {
+                    width: calc(var(--span) / var(--columns) * 100%)
                 }
             }
 

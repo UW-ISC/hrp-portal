@@ -41,7 +41,7 @@ class URE_Tools {
             <?php wp_nonce_field('user-role-editor'); ?>
             <input type="hidden" name="ure_settings_tools_exec" value="1" />
             <input type="hidden" name="ure_reset_roles_exec" value="1" />
-            <input type="hidden" name="ure_tab_idx" value="<?php echo $tab_idx; ?>" />
+            <input type="hidden" name="ure_tab_idx" value="<?php echo (int) $tab_idx; ?>" />
         </form>                
     </div>    
 

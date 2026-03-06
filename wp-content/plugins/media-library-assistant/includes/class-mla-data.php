@@ -100,8 +100,9 @@ class MLAData {
 				$template_content = substr( $template_content, 11, $template_length - (11 + 2) );
 				$template_content = self::_expand_field_level_template( $template_content, $markup_values, true );
 
-				foreach ( $template_content as $value )
+				foreach ( $template_content as $value ) {
 					$result[] = $value;
+				}
 
 				$offset = $start + $template_length;
 			} else { // found template
@@ -139,7 +140,8 @@ class MLAData {
 					if ( is_scalar( $value ) ) {
 						$value = trim( $value );
 					} elseif ( is_array( $value ) && 'array' === $option ) {
-						// no change
+						// no change, return the first array found
+						return $value;
 					} elseif ( ! empty( $value ) ) {
 						$value = var_export( $value, true );
 					}
@@ -157,15 +159,9 @@ class MLAData {
 				$final[] = var_export( $element, true );
 			}
 		}
-
-		if ( 1 == count( $final ) ) {
-			// Don't flatten a string value key
-			if ( isset( $final[0] ) ) {
-				$final = $final[0];
-			}
-		}
-
-		return $final;
+		
+		// No arrays were found or the option was not 'array'; final contains only strings
+		return implode( '', $final );
 	}
 
 	/**
@@ -3189,14 +3185,13 @@ class MLAData {
 	 * @return	string	UTF-8 encoded string
 	 */
 	private static function _bin_to_utf8( $string ) {
-		if ( seems_utf8( $string ) ) {
+		if ( function_exists('wp_is_valid_utf8') ) {
+			if ( wp_is_valid_utf8( $string ) ) {
+				return $string;
+			}
+		} elseif ( seems_utf8( $string ) ) {
 			return $string;
 		}
-
-		/* utf8_encode() is deprecated in PHP 8.2
-		if (function_exists('utf8_encode')) {
-			return utf8_encode( $string );
-		} // */
 
 		if (function_exists('mb_convert_encoding')) {
 			return mb_convert_encoding( $string, 'UTF-8', 'ISO-8859-1' );

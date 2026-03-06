@@ -34,6 +34,10 @@ class MLAImage_Size {
 		if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_IMAGE_SIZES ) ) {
 			add_filter( 'image_size_names_choose', 'MLAImage_Size::mla_setup_image_size_names' );
 			self::mla_setup_image_sizes();
+
+			if ( 'default' !== MLACore::mla_get_option( MLACoreOptions::MLA_IMAGE_THRESHOLD_OPTION ) ) {
+				add_filter( 'big_image_size_threshold', 'MLAImage_Size::mla_set_image_threshold', 0x7FFFFFFF, 1 );
+			}
 		}
 	} // initialize
 
@@ -120,6 +124,27 @@ class MLAImage_Size {
 			} // source === custom
 		}
 	} // mla_setup_image_sizes
+
+	/**
+	 * Initialize the custom Image Size Names
+	 *
+	 * Defined as public because it's a filter.
+	 *
+	 * @since 3.25
+	 *
+	 * @param	array	Image Size names, keyed by the size slug
+	 */
+	public static function mla_set_image_threshold( $threshold ) {
+		$option = MLACore::mla_get_option( MLACoreOptions::MLA_IMAGE_THRESHOLD_OPTION );
+
+		if ( 'disable' === $option ) {
+			return false;
+		} elseif ( 'set' === $option ) {
+			$threshold = absint( MLACore::mla_get_option( MLACoreOptions::MLA_IMAGE_THRESHOLD_VALUE ) );
+		}
+		
+		return $threshold;
+	} // mla_set_image_threshold
 
 	/**
 	 * Initialize the custom Image Size Names
@@ -762,7 +787,7 @@ class MLAImage_Size {
 		$slug = sanitize_title( $request['slug'] );
 		if ( $slug !== $request['slug'] ) {
 			/* translators: 1: element name 2: bad_value 3: good_value */
-			$messages .= sprintf( __( '<br>' . 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
+			$messages .= sprintf( '<br>' . __( 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 		}
 
 		// Make sure new slug is unique
@@ -872,7 +897,7 @@ class MLAImage_Size {
 		if ( $slug !== $original_slug ) {
 			if ( $slug !== $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
-				$messages .= sprintf( __( '<br>' . 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
+				$messages .= sprintf( '<br>' . __( 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
 			// Make sure new slug is unique

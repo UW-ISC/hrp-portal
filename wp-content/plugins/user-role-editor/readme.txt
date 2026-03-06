@@ -2,8 +2,8 @@
 Contributors: shinephp
 Tags: user, role, editor, security, access
 Requires at least: 4.4
-Tested up to: 6.8
-Stable tag: 4.64.5
+Tested up to: 6.9
+Stable tag: 4.64.6
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,13 +81,16 @@ https://translate.wordpress.org/projects/wp-plugins/user-role-editor/
 
 
 == Changelog =
+
+= [4.64.6] 01.12.2025 =
+* Update: Marked as compatible with WordPress 6.9
+* Update: Minor code enhancements according to the "Plugin Check" tool recommendations.
+* Update: "Users->Grant Roles" HTML code download optimization to exclude cases when URE's "Grant Roles" data flickers or stays visible while Users page is opening.
+
 = [4.64.5] 16.04.2025 =
 * Update: Marked as compatible with WordPress 6.8
 * Update: Minor changes were applied to the CSS/JS loading code to minimize "Plugin Check" tool warnings.
 * Plugin headers were extended at role-editor.php and readme.txt files according to wordpress.org recommendations.
-
-= [4.64.4] 15.12.2024 =
-* Security Fix: Users - "Add Role", "Revoke Role" buttons: Cross-Site request forgery to privilege escalation was possible due to missed nonce validation. This issue was discovered and responsibly reported by vgo0.
 
 File changelog.txt contains the full list of changes.
 
@@ -99,6 +102,7 @@ I am ready to answer on your questions about plugin usage. Use [plugin page comm
 
 == Upgrade Notice ==
 
-= [4.64.5] 16.04.2025 =
-* Update: Marked as compatible with WordPress 6.8
-* Update: Minor changes were applied to the CSS/JS loading code to minimize "Plugin Check" tool warnings.
+= [4.64.6] 01.12.2025 =
+* Update: Marked as compatible with WordPress 6.9
+* Update: Minor code enhancements according to the "Plugin Check" tool recommendations.
+* Update: "Users->Grant Roles" HTML code download optimization to exclude cases when URE's "Grant Roles" data flickers or stays visible while Users page is opening.

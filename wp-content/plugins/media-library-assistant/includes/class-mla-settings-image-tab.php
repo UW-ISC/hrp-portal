@@ -154,16 +154,14 @@ class MLASettings_Image {
 		$item['width'] = isset( $_REQUEST['width'] ) ? absint( $_REQUEST['width'] ) : 0;
 		$item['height'] = isset( $_REQUEST['height'] ) ? absint( $_REQUEST['height'] ) : 0;
 		$item['crop'] = isset( $_REQUEST['crop'] );
+		$item['horizontal'] = isset( $_REQUEST['horizontal'] ) ? sanitize_title( wp_unslash( $_REQUEST['horizontal'] ) ) : '';
+		$item['vertical'] = isset( $_REQUEST['vertical'] ) ? sanitize_title( wp_unslash( $_REQUEST['vertical'] ) ) : '';
 
-		if ( in_array( $_REQUEST['horizontal'], array( 'left', 'right' ) ) ) {
-			$item['horizontal'] = sanitize_title( wp_unslash( $_REQUEST['horizontal'] ) );
-		} else {
+		if ( ! in_array( $item['horizontal'], array( 'left', 'right' ) ) ) {
 			$item['horizontal'] = 'center';
 		}
 
-		if ( in_array( $_REQUEST['vertical'], array( 'top', 'bottom' ) ) ) {
-			$item['vertical'] = sanitize_title( wp_unslash( $_REQUEST['vertical'] ) );
-		} else {
+		if ( ! in_array( $item['vertical'], array( 'top', 'bottom' ) ) ) {
 			$item['vertical'] = 'center';
 		}
 
@@ -193,16 +191,14 @@ class MLASettings_Image {
 		$item['width'] = isset( $_REQUEST['mla_image_item']['width'] ) ? absint( $_REQUEST['mla_image_item']['width'] ) : 0;
 		$item['height'] = isset( $_REQUEST['mla_image_item']['height'] ) ? absint( $_REQUEST['mla_image_item']['height'] ) : 0;
 		$item['crop'] = isset( $_REQUEST['mla_image_item']['crop'] );
+		$item['horizontal'] = isset( $_REQUEST['mla_image_item']['horizontal'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['horizontal'] ) ) : '';
+		$item['vertical'] = isset( $_REQUEST['mla_image_item']['vertical'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['vertical'] ) ) : '';
 
-		if ( in_array( $_REQUEST['mla_image_item']['horizontal'], array( 'left', 'right' ) ) ) {
-			$item['horizontal'] = sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['horizontal'] ) );
-		} else {
+		if ( ! in_array( $item['mla_image_item']['horizontal'], array( 'left', 'right' ) ) ) {
 			$item['horizontal'] = 'center';
 		}
 
-		if ( in_array( $_REQUEST['mla_image_item']['vertical'], array( 'top', 'bottom' ) ) ) {
-			$item['vertical'] = sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['vertical'] ) );
-		} else {
+		if ( ! in_array( $item['mla_image_item']['vertical'], array( 'top', 'bottom' ) ) ) {
 			$item['vertical'] = 'center';
 		}
 
@@ -343,10 +339,10 @@ class MLASettings_Image {
 								$request['crop'] = '1' === $_REQUEST['crop'];
 							}
 							if ( isset( $_REQUEST['horizontal'] ) && '-1' !== $_REQUEST['horizontal'] ) {
-								$request['horizontal'] = $_REQUEST['horizontal'];
+								$request['horizontal'] = sanitize_title( wp_unslash( $_REQUEST['horizontal'] ) );
 							}
 							if ( isset( $_REQUEST['vertical'] ) && '-1' !== $_REQUEST['vertical'] ) {
-								$request['vertical'] = $_REQUEST['vertical'];
+								$request['vertical'] = sanitize_title( wp_unslash( $_REQUEST['vertical'] ) );
 							}
 							if ( isset( $_REQUEST['disabled'] ) && '-1' !== $_REQUEST['disabled'] ) {
 								$request['disabled'] = '1' === $_REQUEST['disabled'];
@@ -502,7 +498,7 @@ class MLASettings_Image {
 			's' => isset( $_REQUEST['s'] ) ? esc_attr( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) : '',
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
-			/* translators: %s: add new Image */
+			/* translators: %s: Image Size*/
 			'Add New Size' => sprintf( __( 'Add New %1$s', 'media-library-assistant' ), __( 'Image Size', 'media-library-assistant' ) ),
 			'Slug' => __( 'Slug', 'media-library-assistant' ),
 			'The slug' => __( 'The &#8220;slug&#8221; is the URL-friendly, unique key for the image size. It must be all lowercase and contain only letters, numbers, periods (.), slashes (/) and hyphens (-).', 'media-library-assistant' ),
@@ -535,7 +531,7 @@ class MLASettings_Image {
 			'The description' => __( 'The description can contain any documentation or notes you need to understand or use the item.', 'media-library-assistant' ),
 			'Add Size' => __( 'Add Size', 'media-library-assistant' ),
 			'colspan' => $MLAListImageTable->get_column_count(),
-			'Quick Edit' => __( '<strong>Quick Edit</strong>', 'media-library-assistant' ),
+			'Quick Edit' => '<strong>' . __( 'Quick Edit', 'media-library-assistant' ) . '</strong>',
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
 			'Update' => __( 'Update', 'media-library-assistant' ),
 			'Bulk Edit' => __( 'Bulk Edit', 'media-library-assistant' ),
@@ -1158,7 +1154,7 @@ class MLA_Image_List_Table extends WP_List_Table {
 	 */
 	function get_bulk_actions( ) {
 		$actions = array();
-		$view = isset( $_REQUEST['mla_image_view'] ) ? $_REQUEST['mla_image_view'] : 'all';
+		$view = isset( $_REQUEST['mla_image_view'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_view'] ) ) : 'all';
 
 		$actions['edit'] = __( 'Edit', 'media-library-assistant' );
 		
