@@ -2365,7 +2365,7 @@ class GFAPI {
 			}
 		}
 
-		gf_feed_processor()->save()->dispatch();
+		gf_feed_processor()->save()->dispatch_on_shutdown();
 
 		return $entry;
 	}
