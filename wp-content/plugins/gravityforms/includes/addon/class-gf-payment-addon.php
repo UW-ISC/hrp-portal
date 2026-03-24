@@ -496,7 +496,7 @@ abstract class GFPaymentAddOn extends GFFeedAddOn {
              * Fired every time the entry payment status changes.
              *
              * @since 2.9.20
-             * @since next Added the $previous_status parameter.
+             * @since 2.9.29 Added the $previous_status parameter.
              *
              * @param array  $entry           The entry whose payment status has changed.
              * @param string $previous_status The previous status of the entry before the change.

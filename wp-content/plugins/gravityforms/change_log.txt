@@ -1,10 +1,22 @@
-### 2.9.28.1
+### 2.9.30 | 2026-03-19
+- Added [`gform_field_sidebar_messages`](https://docs.gravityforms.com/gform_field_sidebar_messages/) filter to allow customization of the field sidebar messages in the form editor.
+- Fixed some display issues in the dashboard with WordPress 7.0-beta.
+- Fixed a PHP fatal error that occurs when a payment add-on processes a submission with a choice-based pricing field where the selected choice value includes a pipe character followed by non-numeric characters.
+- Fixed an issue where gravityforms.js could reset the gform.instances object, usually when scripts are optimized by the theme or another plugin, resulting in a JS error on form display or submission.
+- AF: Fixed duplicate `SHOW TABLES LIKE 'wp_gf_addon_feed'` queries.
+- API: Fixed an issue where the form object is included in the REST API form submission response.
+
+### 2.9.29 | 2026-03-10
 - Added security enhancements.
 - Added support for a new notification event (Payment Processing - stale) that allows notifications to be sent when payments are taking an unusually long time to process. This will be initially available in the upcoming Stripe Add-on v.7.0.
+- Added [`gform/ajax/pre_display_confirmation`](https://docs.gravityforms.com/gform-ajax-pre_display_confirmation/) filter to displayConfirmation() in ajax.js.
+- Fixed some display issues in the dashboard with WordPress 7.0-beta.
+- Fixed an issue where saving for later via the save and continue feature is not aborted when honeypot validation fails and the honeypot is set to "Create an entry and mark it as spam".
+- Updated the multi-file upload field trash icon to meet the WCAG 2.1 color contrast standards.
+- Updated form title handling in the form switcher to prevent issues with special characters.
+- API: Fixed field map default choices not populating on new feeds and empty value selection not saving on existing feeds.
 - API: Changed the third parameter of `GFCommon::get_lead_field_display()` from `$currency` (string) to `$entry` (array).
 - API: Changed the second parameter of `GF_Field::get_value_entry_detail()` from `$currency` (string) to `$entry` (array).
-- Fixed an issue where saving for later via the save and continue feature is not aborted when honeypot validation fails and the honeypot is set to "Create an entry and mark it as spam".
-- Added [`gform/ajax/pre_display_confirmation`](https://docs.gravityforms.com/gform-ajax-pre_display_confirmation/) filter to displayConfirmation() in ajax.js.
 
 ### 2.9.28 | 2026-02-19
 - Fixed an issue where the File Upload field includes `gform_hidden` class even when the input is not hidden.
