@@ -30,6 +30,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 		function start_lvl( &$output, $depth = 0, $args = array() ) {
 			$style = "";
 			$role = "";
+			$id_attr = "";
 
 			if ( $this->currentItem !== null ) {
 				$id = $this->currentItem->ID;
@@ -41,14 +42,18 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					}
 				}
 
-				if ( is_array( $classes ) && ( in_array( 'menu-row', $classes ) || in_array( 'menu-grid', $classes ) ) ) {
+				if ( is_array($classes) && array_intersect( array('menu-row', 'menu-grid'), $classes ) ) {
 					$role = " role='presentation'";
+				}
+
+				if ( is_array($classes) && ! array_intersect( array('menu-row', 'menu-column'), $classes ) ) {
+					$id_attr = " id='mega-sub-menu-{$id}'";
 				}
 			}
 			
 			$indent = str_repeat( "\t", $depth );
 
-			$output .= "\n$indent<ul class=\"mega-sub-menu\"{$style}{$role}>\n";
+			$output .= "\n$indent<ul class=\"mega-sub-menu\"{$style}{$role}{$id_attr}>\n";
 		}
 
 		/**
@@ -159,11 +164,11 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				$atts['target'] = ! empty( $item->target ) ? $item->target : '';
 				$atts['class']  = '';
 				$atts['rel']    = ! empty( $item->xfn ) ? $item->xfn : '';
+				$atts['href'] = ! empty( $item->url ) ? $item->url : '';
 
-				if ( isset( $settings['disable_link'] ) && $settings['disable_link'] != 'true' ) {
-					$atts['href'] = ! empty( $item->url ) ? $item->url : '';
-				} else {
-					$atts['tabindex'] = 0;
+				if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
+					unset( $atts['href'] );
+					$atts['tabindex'] = "0";
 				}
 
 				if ( isset( $settings['icon'] ) && $settings['icon'] != 'disabled' && $settings['icon'] != 'custom' ) {
@@ -174,9 +179,10 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$atts['class'] = 'mega-custom-icon';
 				}
 
-				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
+				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && ( $item->parent_submenu_type == 'flyout' || $item->parent_submenu_type == 'tabbed') ) {
 
 					$atts['aria-expanded'] = 'false';
+					$atts['aria-controls'] = 'mega-sub-menu-' . $item->ID;
 
 					if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
 						$atts['aria-expanded'] = 'true';
@@ -184,16 +190,11 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 						$atts['role'] = 'button';
-						//$atts['aria-controls'] = 'mega-sub-menu-' . $item->ID;
 					}
 				}
 
 				if ( is_array( $classes ) && in_array( 'current-menu-item', $classes ) ) {
 					$atts['aria-current'] = 'page';
-				}
-
-				if ( $depth == 0 ) {
-					$atts['tabindex'] = '0';
 				}
 
 				if ( isset( $settings['hide_text'] ) && $settings['hide_text'] == 'true' ) {

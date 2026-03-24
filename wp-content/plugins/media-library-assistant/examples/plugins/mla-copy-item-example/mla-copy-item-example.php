@@ -13,7 +13,7 @@
  * https://wordpress.org/support/topic/option-to-copy-an-image/
  *
  * @package MLA Copy Item Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -21,7 +21,7 @@ Plugin Name: MLA Copy Item Example
 Plugin URI: http://davidlingren.com/
 Description: Adds "Copy" action to Media/Assistant submenu Bulk Actions dropdown
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
@@ -406,8 +406,8 @@ class MLACopyItemExample {
 			unset( $_GET['post_mime_type'] );
 			unset( $_REQUEST['meta_query'] );
 			unset( $_GET['meta_query'] );
-			unset( $_REQUEST['meta_slug'] );
-			unset( $_GET['meta_slug'] );
+			unset( $_REQUEST['shortcode_query'] );
+			unset( $_GET['shortcode_query'] );
 
 			// Clear the "extra_nav" controls and the Search Media box
 			unset( $_REQUEST['m'] );

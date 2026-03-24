@@ -333,6 +333,10 @@ class MLA_List_Table extends WP_List_Table {
 			}
 		}
 
+		if ( isset( $_REQUEST['shortcode_query'] ) ) {
+			$submenu_arguments['shortcode_query'] = urlencode( wp_kses( wp_unslash( $_REQUEST['shortcode_query'] ), 'post' ) );
+		}
+
 		if ( isset( $_REQUEST['meta_query'] ) ) {
 			$submenu_arguments['meta_query'] = urlencode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ) );
 		}
@@ -1956,10 +1960,18 @@ class MLA_List_Table extends WP_List_Table {
 				$query['post_mime_type'] = urlencode( $query['post_mime_type'] );
 			}
 
+			if ( isset( $query['shortcode_query'] ) ) {
+				$query['shortcode_query'] = urlencode( wp_json_encode( $query['shortcode_query'] ) );
+			}
+
 			if ( isset( $query['meta_query'] ) ) {
-				$query['meta_slug'] = $view_slug;
 				$query['meta_query'] = urlencode( wp_json_encode( $query['meta_query'] ) );
 			}
+
+			// These are added automatically by mla_prepare_view_query, so they don't have to be in the URL
+			unset( $query['cache_results'] );
+			unset( $query['update_post_meta_cache'] );
+			unset( $query['update_post_term_cache'] );
 
 			return "<a href='" . add_query_arg( $query, $base_url ) . "'$class>" . sprintf( translate_nooped_plural( $nooped_plural, $total_items, 'media-library-assistant' ), number_format_i18n( $total_items ) ) . '</a>';
 		}
@@ -1985,15 +1997,22 @@ class MLA_List_Table extends WP_List_Table {
 			$current_view = 'mine';
 		} elseif ( $this->is_trash ) {
 			$current_view = 'trash';
-		} elseif ( empty( $_REQUEST['post_mime_type'] ) ) {
+		} else {
+			$current_view = 'all';
+			
+			if ( !empty( $_REQUEST['post_mime_type'] ) ) {
+				$current_view = sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) );
+			}
+				
+			if ( isset( $_REQUEST['shortcode_query'] ) ) {
+				$query = json_decode( wp_kses( wp_unslash( $_REQUEST['shortcode_query'] ), 'post' ), true );
+				$current_view = $query['slug'];
+			}
+				
 			if ( isset( $_REQUEST['meta_query'] ) ) {
 				$query = json_decode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ), true );
 				$current_view = $query['slug'];
-			} else {
-				$current_view = 'all';
 			}
-		} else {
-			$current_view = sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) );
 		}
 
 		$mla_types = MLAMime::mla_query_view_items( array( 'orderby' => 'menu_order' ), 0, 0 );

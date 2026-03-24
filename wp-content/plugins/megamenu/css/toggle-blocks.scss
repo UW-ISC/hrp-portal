@@ -17,56 +17,46 @@
 
             @if type-of($id) == number {
 
-                .mega-toggle-block-#{$id} {
+                .mega-toggle-block-#{$id} button.mega-toggle-standard {
                     cursor: pointer;
-                    
+                    color: $text_color;
+                    font-size: $text_size;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 5px;
+
                     @if $icon_position == before {
-                        &:before {
-                            content: $closed_icon;
-                            font-family: 'dashicons';
-                            font-size: $icon_size;
-                            color: $icon_color;
-                            margin: 0 5px 0 0;
-                        }
-                    } @else {
-                        &:after {
-                            content: $closed_icon;
-                            font-family: 'dashicons';
-                            font-size: $icon_size;
-                            color: $icon_color;
-                            margin: 0 0 0 5px;
-                        }
+                        flex-direction: row-reverse;
                     }
 
-                    .mega-toggle-label {
-                        color: $text_color;
-                        font-size: $text_size;
+                    .mega-toggle-label-open {
+                        display: none;
+                    }
+                    
+                    .mega-toggle-label-closed {
+                        display: flex;
+                    }
 
-                        .mega-toggle-label-open {
-                            display: none;
-                        }
-                        
-                        .mega-toggle-label-closed {
-                            display: inline;
-                        }
+                    &:after {
+                        display: inline-block;
+                        content: $closed_icon;
+                        font-family: 'dashicons';
+                        font-size: $icon_size;
+                        color: $icon_color;
                     }
                 }
 
                 &.mega-menu-open {
 
-                    .mega-toggle-block-#{$id} {
-                        @if $icon_position == before {
-                            &:before {
-                                content: $open_icon;
-                            }
-                        } @else {
-                            &:after {
-                                content: $open_icon;
-                            }
+                    .mega-toggle-block-#{$id} button {
+
+                        &:after {
+                            content: $open_icon;
                         }
 
                         .mega-toggle-label-open {
-                            display: inline;
+                            display: flex;
                         }
                         .mega-toggle-label-closed {
                             display: none;

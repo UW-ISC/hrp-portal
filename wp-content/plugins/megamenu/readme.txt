@@ -1,9 +1,9 @@
 === Max Mega Menu ===
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
-Requires at least: 5.0
+Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 3.6.2
+Stable tag: 3.8
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,25 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.8.1 =
+
+* Accessibility fix: Ensure IDs are applied to all necessary sub menus
+* Accessibility fix: Remove unnecessary instances of tabindex attribute
+
+= 3.8 =
+
+* Fix: PHP warning
+* Accessibility Improvement: Add aria-controls attribute to menu items with sub menus
+* Accessibility Improvement: Ensure any open sub menus are closed when the next top level menu item is tabbed to
+* Accessibility Improvement: Add aria-controls and aria-haspopup attributes to mobile toggle block
+* Accessibility Improvement: Apply focus to first item in mobile sub menu when opened
+* Accessibility Improvement: Trap focus within off canvas mobile menu when using keyboard navigation
+* Accessibility Improvement: Allow escape key to be used on the mobile close button to close menu
+* Accessibility Improvement: Restore focus to menu toggle block when closing mobile menu
+* Accessibility Improvement: Add aria-controls attribute to mobile menu close button
+* Accessibility Improvement: Add role, aria-modal and aria-hidden attributes to off canvas mobile menu
+* Improvement: Refactor Mobile Toggle (Standard) CSS to use flex styling
 
 = 3.7 =
 
