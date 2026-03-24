@@ -927,9 +927,7 @@ class MLAMime {
 			return array ();
 		}
 
-		/*
-		 * Sort and filter the list
-		 */
+		// Sort and filter the list
 		$keyword = isset( $request['s'] ) ? $request['s'] : '';
 		$index = 0;
 		$sorted_types = array();
@@ -1256,6 +1254,10 @@ class MLAMime {
 
 			if ( isset( $result['mime']['error'] ) ) {
 				$errors .= $result['mime']['error'];
+			}
+
+			if ( isset( $result['shortcode']['error'] ) ) {
+				$errors .= $result['shortcode']['error'];
 			}
 
 			if ( isset( $result['custom']['error'] ) ) {

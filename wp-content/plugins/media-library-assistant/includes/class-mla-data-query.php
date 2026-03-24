@@ -363,7 +363,7 @@ class MLAQuery {
 	 * @return	integer	Number of attachment posts
 	 */
 	public static function mla_count_list_table_items( $request, $offset = NULL, $count = NULL ) {
-		if ( NULL !== $offset && NULL !== $count ) {
+	if ( NULL !== $offset && NULL !== $count ) {
 			$request = self::_prepare_list_table_query( $request, $offset, $count );
 			$request = apply_filters( 'mla_list_table_query_final_terms', $request );
 
@@ -415,26 +415,20 @@ class MLAQuery {
 
 		$attachments = self::$mla_list_table_items->posts;
 		foreach ( $attachments as $index => $attachment ) {
-			/*
-			 * Add parent data
-			 */
+			// Add parent data
 			$parent_data = self::mla_fetch_attachment_parent_data( $attachment->post_parent );
 			foreach ( $parent_data as $parent_key => $parent_value ) {
 				$attachments[ $index ]->{$parent_key} = $parent_value;
 			}
 
-			/*
-			 * Add meta data
-			 */
+			// Add meta data
 			$meta_data = self::mla_fetch_attachment_metadata( $attachment->ID );
 			foreach ( $meta_data as $meta_key => $meta_value ) {
 				$attachments[ $index ]->{$meta_key} = $meta_value;
 			}
 		}
 
-		/*
-		 * Add references
-		 */
+		// Add references
 		self::mla_attachment_array_fetch_references( $attachments );
 
 		return $attachments;
@@ -1084,6 +1078,7 @@ class MLAQuery {
 					break;
 				case 'tax_query':
 				case 'meta_query':
+				case 'shortcode_query':
 					if ( ! empty( $value ) ) {
 						if ( is_array( $value ) ) {
 							$clean_request[ $key ] = $value;
@@ -1426,6 +1421,22 @@ class MLAQuery {
 		global $wpdb;
 		static $wpmf_pre_get_posts_priority = false, $wpmf_pre_get_posts1_priority = false;
 
+		if ( ! empty( $request['shortcode_query'] ) ) {
+			$query = $request['shortcode_query']['shortcode'];
+
+			add_shortcode( 'mla_shortcode_query', 'MLAQuery::mla_shortcode_query_shortcode' );
+
+			$query['mla_alt_shortcode'] = 'mla_shortcode_query';
+			$query['cache_results'] = false;
+			$query['update_post_meta_cache'] = false;
+			$query['update_post_term_cache'] = false;
+
+			$raw_results = MLAShortcodes::mla_gallery_shortcode( $query );
+			$request['post__in'] = explode( ',', $raw_results );
+
+			remove_shortcode( 'mla_shortcode_query' );
+		}
+
 		add_filter( 'posts_search', 'MLAQuery::mla_query_posts_search_filter' );
 		add_filter( 'posts_where', 'MLAQuery::mla_query_posts_where_filter' );
 		add_filter( 'posts_join', 'MLAQuery::mla_query_posts_join_filter' );
@@ -1500,6 +1511,24 @@ class MLAQuery {
 		remove_filter( 'posts_search', 'MLAQuery::mla_query_posts_search_filter' );
 
 		return $results;
+	}
+
+	/**
+	 * Intercepts results of a table view shortcode queryto apply [mla_gallery] capabilities
+	 *
+	 * @since 3.34
+	 *
+	 * @param array $attr Attributes of the shortcode
+	 * @param string $content Optional content for enclosing shortcodes
+	 *
+	 * @return string comma-separated ID values of attachments matching the shortcode query.
+	 */
+	public static function mla_shortcode_query_shortcode( $attr, $content = NULL ) {
+	if ( isset( $attr['ids']) ) {
+			return $attr['ids'];
+		}
+		
+		return '';
 	}
 
 	/**

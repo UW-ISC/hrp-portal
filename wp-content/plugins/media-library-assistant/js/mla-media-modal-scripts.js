@@ -1379,6 +1379,7 @@ console.log( 'listening to controller events' );
 				 */
 				query = {
 					id: attachmentId,
+					mla_admin_nonce: mlaModal.settings.ajaxNonce,
 				};
 				query[ taxonomy ] = termList;
 
@@ -1766,6 +1767,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					query = {
 						id: attachmentId,
 						prefix: data.prefix,
+						mla_admin_nonce: mlaModal.settings.ajaxNonce,
 					};
 					query[ taxonomy ] = termList;
 

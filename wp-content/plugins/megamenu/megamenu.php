@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.7
+ * Version:     3.8.1
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.7';
+		public $version = '3.8.1';
 
 
 		/**
@@ -559,8 +559,18 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 		    	$label = esc_attr( do_shortcode( $menu_theme['close_icon_label'] ) );
 
-		        // Append close button after the closing </ul> tag
-		        return apply_filters("megamenu_close_button", "<button class='mega-close' aria-label='" . esc_attr( $label ) . "'></button>", $args, $menu_settings);
+				$html = "<button class='mega-close'></button>";
+
+				$processor = new WP_HTML_Tag_Processor( $html );
+
+				if ( $processor->next_tag( 'button' ) ) {
+				    $processor->set_attribute( 'aria-controls', 'mega-menu-' . $args['theme_location'] );
+				    $processor->set_attribute( 'aria-label', $label );
+				}
+
+				$button_html = $processor->get_updated_html();
+
+				return apply_filters( "megamenu_close_button", $button_html, $args, $menu_settings );
 		    }
 
 		    return "";

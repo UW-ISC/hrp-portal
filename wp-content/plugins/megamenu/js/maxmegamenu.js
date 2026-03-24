@@ -168,7 +168,7 @@
                     return true;
                 }
 
-                if (plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right") {
+                if ( plugin.isMobileOffCanvas() ) {
                     return plugin.settings.mobile_direction !== "horizontal";
                 }
             }
@@ -387,23 +387,47 @@
             });
         };
 
+        plugin.isMobileOffCanvas = function() {
+            return plugin.settings.effect_mobile === 'slide_left' || plugin.settings.effect_mobile === 'slide_right';
+        }
+
         plugin.bindKeyboardEvents = function() {
-            var tab_key = 9;
-            var escape_key = 27;
-            var enter_key = 13;
-            var left_arrow_key = 37;
-            var up_arrow_key = 38;
-            var right_arrow_key = 39;
-            var down_arrow_key = 40;
-            var space_key = 32;
+            const tab_key = 9;
+            const escape_key = 27;
+            const enter_key = 13;
+            const left_arrow_key = 37;
+            const up_arrow_key = 38;
+            const right_arrow_key = 39;
+            const down_arrow_key = 40;
+            const space_key = 32;
+            const $firstFocusable = $menu.find("a.mega-menu-link").first();
+            const $lastFocusable = $wrap.find("button.mega-close").first();
 
             var isMobileOffCanvasHorizontal = function() {
-                return plugin.isMobileView() && ( plugin.settings.effect_mobile === 'slide_right' || plugin.settings.effect_mobile === '' )  && plugin.settings.mobile_direction === 'horizontal';
+                return plugin.isMobileOffCanvas() && plugin.settings.mobile_direction === 'horizontal';
             }
 
             var shouldTrapFocusInCurrentSubMenu = function() {
                 return isMobileOffCanvasHorizontal() && ( keyCode === up_arrow_key || keyCode === down_arrow_key || keyCode === tab_key );
             }
+
+            $lastFocusable.on('keydown.megamenu', function(e) {
+                var keyCode = e.keyCode || e.which;
+
+                if ( plugin.isMobileView() && plugin.isMobileOffCanvas() && keyCode === tab_key && ! e.shiftKey ) {
+                    e.preventDefault();
+                    $firstFocusable.trigger('focus');
+                }
+            });
+
+            $firstFocusable.on('keydown.megamenu', function(e) {
+                var keyCode = e.keyCode || e.which;
+
+                if ( plugin.isMobileView() && plugin.isMobileOffCanvas() && keyCode === tab_key && e.shiftKey) {
+                    e.preventDefault();
+                    $lastFocusable.trigger('focus');
+                }
+            });
 
             $wrap.on("keyup.megamenu", ".max-mega-menu, .mega-menu-toggle", function(e) {
                 var keyCode = e.keyCode || e.which;
@@ -412,10 +436,14 @@
                 if (keyCode === tab_key) {
                     $wrap.addClass("mega-keyboard-navigation");
                     plugin.bindClickEvents(); // Windows Narrator ignores the Enter keypress, so ensure click events are available when pressing tab
+
+                    if ( plugin.isDesktopView() && keyCode === tab_key && active_link.is(".mega-menu-link") && active_link.parent().parent().hasClass('max-mega-menu') ) {
+                        plugin.hideAllPanels();
+                    }
                 }
             });
 
-            $wrap.on("keydown.megamenu", "a.mega-menu-link, .mega-indicator, .mega-menu-toggle-block, .mega-menu-toggle-animated-block button", function(e) {
+            $wrap.on("keydown.megamenu", "a.mega-menu-link, .mega-indicator, .mega-menu-toggle-block, .mega-menu-toggle-animated-block button, button.mega-close", function(e) {
 
                 if ( ! $wrap.hasClass("mega-keyboard-navigation") ) {
                     return;
@@ -457,31 +485,34 @@
                             var nearest_parent_of_focused_item_li = focused_menu_item.closest('.mega-toggle-on');
                             var nearest_parent_of_focused_item_a = $("> a.mega-menu-link", nearest_parent_of_focused_item_li);
                             plugin.hidePanel(nearest_parent_of_focused_item_a);
-                            nearest_parent_of_focused_item_a.focus();
+                            nearest_parent_of_focused_item_a.trigger('focus');
                         }
 
                         if ( focused_menu_item.closest('.mega-menu-megamenu.mega-toggle-on').length !== 0 ) {
                             var nearest_parent_of_focused_item_li = focused_menu_item.closest('.mega-menu-megamenu.mega-toggle-on');
                             var nearest_parent_of_focused_item_a = $("> a.mega-menu-link", nearest_parent_of_focused_item_li);
                             plugin.hidePanel(nearest_parent_of_focused_item_a);
-                            nearest_parent_of_focused_item_a.focus();
+                            nearest_parent_of_focused_item_a.trigger('focus');
                         }
                     }
 
                     if ( plugin.isMobileView() && ! submenu_open ) {
                         plugin.hideMobileMenu();
-                        $(".mega-menu-toggle-block, button.mega-toggle-animated", $toggle_bar).first().focus();
                     }
                 }
 
                 if ( keyCode === space_key || keyCode === enter_key ) {
-                    if ( active_link.is(".mega-menu-toggle-block, .mega-menu-toggle-animated-block button") ) {
+                    if ( active_link.is(".mega-menu-toggle-block button, .mega-menu-toggle-animated-block button") ) {
                         e.preventDefault();
                         
                         if ( $toggle_bar.hasClass("mega-menu-open") ) {
                             plugin.hideMobileMenu();
                         } else {
                             plugin.showMobileMenu();
+
+                            html_body_class_timeout = setTimeout(function() {
+                                $menu.find("a.mega-menu-link").first().trigger('focus');
+                            }, plugin.settings.effect_speed_mobile);
                         }
                     }
                 }
@@ -533,7 +564,7 @@
                     // if the menu doesn't have focus, focus the first menu item
                     if ( focused_item.length === 0) {
                         e.preventDefault();
-                        $("> li.mega-menu-item:visible", $menu).find("> a.mega-menu-link, .mega-search span[role=button]").first().focus();
+                        $("> li.mega-menu-item:visible", $menu).find("> a.mega-menu-link, .mega-search span[role=button]").first().trigger('focus');
                         return;
                     }
 
@@ -557,7 +588,7 @@
 
                     if ( next_item_to_focus.length !== 0 ) {
                         e.preventDefault();
-                        next_item_to_focus.focus();
+                        next_item_to_focus.trigger('focus');
                     }
                     
                 }
@@ -584,7 +615,7 @@
                     }
 
                     plugin.hideAllPanels();
-                    next_top_level_item.focus();
+                    next_top_level_item.trigger('focus');
                 }
 
                 if ( shouldGoToPreviousTopLevelItem() ) {
@@ -601,7 +632,7 @@
                     }
 
                     plugin.hideAllPanels();
-                    prev_top_level_item.focus();
+                    prev_top_level_item.trigger('focus');
                 }
             });
 
@@ -714,16 +745,27 @@
             plugin.reverseRightAlignedItems();
             plugin.hideAllPanels();
             plugin.hideMobileMenu(true);
+            $menu.removeAttr('role');
+            $menu.removeAttr('aria-modal');
+            $menu.removeAttr('aria-hidden');
         };
 
         plugin.switchToMobile = function() {
             $menu.data("view", "mobile");
+
+            if (plugin.isMobileOffCanvas() && $toggle_bar.is(":visible") ) {
+                $menu.attr('role', 'dialog');
+                $menu.attr('aria-modal', 'true');
+                $menu.attr('aria-hidden', 'true');
+            }
+
             plugin.bindMegaMenuEvents();
             plugin.initIndicators();
             plugin.reverseRightAlignedItems();
             plugin.addClearClassesToMobileItems();
             plugin.hideAllPanels();
             plugin.expandMobileSubMenus();
+
         };
 
         plugin.initToggleBar = function() {
@@ -764,10 +806,16 @@
                 return;
             }
 
+            $menu.attr("aria-hidden", "true");
+
             html_body_class_timeout = setTimeout(function() {
                 $("body").removeClass($menu.attr("id") + "-mobile-open");
                 $("html").removeClass($menu.attr("id") + "-off-canvas-open");
             }, plugin.settings.effect_speed_mobile);
+
+            if ($wrap.hasClass("mega-keyboard-navigation")) {
+                $(".mega-menu-toggle-block button, button.mega-toggle-animated", $toggle_bar).first().trigger('focus');
+            }
 
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "false");
 
@@ -791,11 +839,12 @@
                 $toggle_bar.removeClass("mega-menu-open");
             }
 
+            
             $menu.triggerHandler("mmm:hideMobileMenu");
         };
 
         plugin.showMobileMenu = function() {
-            if ( ! $toggle_bar.is(":visible")) {
+            if ( ! $toggle_bar.is(":visible") ) {
                 return;
             }
 
@@ -805,11 +854,9 @@
 
             plugin.expandMobileSubMenus();
 
-            if ( plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right" ) {
+            if ( plugin.isMobileOffCanvas() ) {
                 $("html").addClass($menu.attr("id") + "-off-canvas-open");
             }
-
-            $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "true");
 
             if (plugin.settings.effect_mobile === "slide") {
                 $menu.animate({"height":"show"}, plugin.settings.effect_speed_mobile, function() {
@@ -817,10 +864,13 @@
                 });
             }
 
+            $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "true");
+
             $toggle_bar.addClass("mega-menu-open");
 
             plugin.toggleBarForceWidth();
 
+            $menu.attr("aria-hidden", "false");
             $menu.triggerHandler("mmm:showMobileMenu");
         };
 

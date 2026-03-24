@@ -108,8 +108,11 @@ class MLAPDF {
 	 */
 	private static function _parse_pdf_integer( &$source_string, $length ) {
 		$output = 0;
-		for ($index = 0; $index < $length; ) {
-			$output = ( $output << 8 ) + ord( $source_string[ $index++ ] );
+
+		if ( $length ) {
+			for ($index = 0; $index < $length; ) {
+				$output = ( $output << 8 ) + ord( $source_string[ $index++ ] );
+			}
 		}
 
 		return $output;
@@ -228,6 +231,8 @@ class MLAPDF {
 
 			if ( empty( $xref_stream ) ) {
 				$length = 0;
+			} else {
+				$length = strlen( $xref_stream );
 			}
 		} else {
 			$length = 0;
@@ -243,11 +248,20 @@ class MLAPDF {
 		$object_ids = array();
 		$subsections = explode( ' ', $index_string );
 		while ( 1 < count( $subsections ) ) {
-			$first_object = (integer) array_shift( $subsections );
+		$first_object = (integer) array_shift( $subsections );
 			$object_count = (integer) array_shift( $subsections );
 			while ( $object_count-- ) {
 				$object_ids[] = $first_object++;
 			}
+		}
+
+		$computed_length = $length / count( $object_ids );
+
+		// Validate the stream length against the expected length; if they don't match, the stream is corrupt and will be ignored
+		if ( $entry_length !== $computed_length ) {
+			/* translators: 1: ERROR tag 2: entry length 3: computed length */
+			MLACore::mla_debug_add( sprintf( _x( '%1$s: _parse_pdf_xref_stream entry length %2$d does not match computed length %3$d.', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $entry_length, $computed_length ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+			return $length;
 		}
 
 		$xref_entries = array();

@@ -2810,6 +2810,7 @@ class MLA_IPTC_EXIF_Query {
 						$old_rule['hierarchical'] = $new_rule['hierarchical'];
 						$old_rule['parent'] = $new_rule['parent'];
 						$old_rule['delimiters'] = $new_rule['delimiters'];
+						$old_rule['option'] = $new_rule['option'];
 						break;
 					case 'custom':
 						$old_rule['format'] = $new_rule['format'];

@@ -3,8 +3,8 @@ Contributors: Atlas_Gondal
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWT3BFURG6SGS&source=url
 Tags: extract urls, export urls, links, get links, get urls, custom post type urls, see links, extract title, export title, export post title, export title and url, export category, utilities, export, csv
 Requires at least: 3.1
-Tested up to: 6.7.1
-Stable tag: 5.0
+Tested up to: 6.9.1
+Stable tag: 5.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -137,6 +137,10 @@ Yes. The plugin requires a PHP version 5.4 or higher and Wordpress version 3.1.0
 
 == Changelog ==
 
+= 5.1 =
+* Improvement - strengthened csv file name to prevent unauthorized discovery
+* Compatibility - tested with Wordpress 6.9.1
+
 = 5.0 =
 * New - additional export fields added (status, category urls, tag urls)
 * New - allows multiple post status selection
@@ -241,8 +245,6 @@ Yes. The plugin requires a PHP version 5.4 or higher and Wordpress version 3.1.0
 
 == Upgrade Notice ==
 
-= 5.0 =
-* New - additional export fields added (status, category urls, tag urls)
-* New - allows multiple post status selection
-* Improvement - few backend refinements to improve performance
-* Compatibility - tested with Wordpress 6.7.1
+= 5.1 =
+* Improvement - strengthened csv file name to prevent unauthorized discovery
+* Compatibility - tested with Wordpress 6.9.1

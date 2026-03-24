@@ -197,11 +197,19 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Changelog ==
 
+= 3.34 =
+* New: For the Media/Assistant submenu page, **custom table views** can be composed with all of the data selection parameters of the `[mla_gallery]` shortcode. More information in the "Library Views/Post MIME Type Processing" section of the Settings/Media Library Assistant Documentation tab.
+* Fix: IMPORTANT: For the Media Manager Modal (popup) Window, a Missing Authorization security risk has been mitigated.
+* Fix: A defect in parsing metadata arrays for mapping rules has been corrected.
+* Fix: A defect in handling PDF metadata parsing of documents with corrupted cross-reference streams has been corrected.
+* Fix: A PHP Warning message in the "execute" rollover action on the Settings/Media Library Assistant IPTC/EXIF/WP tab has been eliminated.
+
 = 3.33 =
 * Fix: IMPORTANT: For the `[mla_tag_cloud]` and `[mla_term_list]` shortcodes, an SQL injection security risk has been mitigated.
 * Fix: A  WPML support defect causing a critical site error when duplicating an attachment in a new language has been corrected.
 * Fix: For all of the shortcodes, a defect in handling relative paths in pagination output formats has been corrected.
 * Fix: The priority of the hooks MLA adds to the "init" action has been adjusted to avoid a taxonomy registration conflict with the "Breadcrumb NavXT" plugin.
+
 = 3.32 =
 * Fix: A defect with taxonomy labels in the MMMW ATTACHMENT DETAILS pane causing a PHP "Undefined variable $label" message has been corrected.
 
@@ -377,8 +385,8 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Upgrade Notice ==
 
-= 3.33 =
-IMPORTANT: Security fix for [mla_tag_cloud] and [mla_term_list], relative path fix for pagination controls and WPML fix. Four fixes in all.
+= 3.34 =
+IMPORTANT:  Security fix for the Media Manager Modal (popup) Window. New custom table views for the Media/Assistant admin page. Metadata parsing fixes. One enhancement and four fixes in all.
 
 == Acknowledgements ==
 

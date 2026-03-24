@@ -9247,6 +9247,16 @@ WordPress uses <em><strong>Post MIME Types</strong></em> (a terrible name; they 
 <p>
 The first time it is invoked, MLA will retrieve the current list of Post MIME Types and use it to initialize the list. MLA will add any custom items it finds added to the list by other plugins and code. Once the list is initialized, MLA's list will be used and other plugins and code will have no effect. You can disable MLA handling of the list by clearing the <em><strong>Enable View and Post MIME Type Support</strong></em> checkbox at the bottom of the screen and clicking "Save Changes".
 </p>
+<p>
+The "Post MIME Type" and "Table View" checkboxes determine how the view will be used:
+</p>
+<ul class="mla_settings">
+<li>Check the "Post MIME Type" box if you want to add the view to the list of MIME types returned by wp_get_mime_types().</li>
+<li>Check the "Table View" box if you want to add the view to the list of Media/Assistant table views.</li>
+</ul>
+<p>
+You can inactivate/disable a view while retaining its settings for future use by unchecking both of the boxes.
+</p>
 <h4>Post MIME Type</h4>
 <p>
 The Post MIME Type list uses the Slug, Singular Label and Plural Label values. The Slug is most important; it uniquely identifies the list entry. The Slug value must be all lowercase and contain only letters, numbers, periods (.), slashes (/) and hyphens (-). For &ldquo;Post MIME Type&rdquo; items, the slug is also the MIME type specification and must be a single, valid MIME specification, e.g., &ldquo;image&rdquo; or &ldquo;image/jpeg&rdquo;. The labels are displayed in various admin screens.
@@ -9265,7 +9275,11 @@ Within WordPress, the Post MIME Types list is returned from <code>/wp-includes/p
 The Table View list adds several enhancements to the Post MIME Type list. In the Specification field you can select several MIME types with a comma-separated list, e.g., "audio,video". Wildcard specifications are also supported. For example, "*/mpeg" to select audio and video mpeg formats or "application/*ms*" to select all Microsoft application formats (Word, Excel, etc.). In the Menu Order field you can enter numeric values to re-arrange the order in which the list entries are displayed in, for example, the Media/Assistant screen.
 </p>
 <p>
-The Table View list also supports custom field queries. A custom field query has four parts:
+If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media/Library "grid" view and Media Manager/Add Media "media items" drop down lists.
+</p>
+<h4>Table View - Custom Field Queries</h4>
+<p>
+The Table View list also supports custom field queries. A custom field query has four parts, entered in the Specification text box:
 </p>
 <ol>
 <li>A prefix, "custom:"</li>
@@ -9286,8 +9300,25 @@ There are two special forms of the custom field specification used to test for t
 <p>
 You can add one or more MIME filters to a custom field query. For example, to limit the view to image items you can code something like <code>image,custom:Color=red</code>. Because the comma is used as a delimiter for multiple MIME types as well as within some forms of the custom field query, <strong>the custom field query must be the last (or only) element of the specification</strong>. For example, <code>audio,video,custom:Artist,Patron=smith,jones</code>.
 </p>
+<h4>Table View - Shortcode Queries</h4>
 <p>
-If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media Manager/Add Media "media items" drop down list.
+You can use all of the data selection power of [mla_gallery] to compose a view based on (for example) taxonomy, date or custom field queries. The [mla_gallery] code will compile the list of items for the view and display them in the Media/Assistant submenu table. Note that the "shortcode" does not play any role in formatting the table display, so MLA-specific parameters such as mla_caption and mla_link_href are not processed.A shortcode query has two parts, entered in the Specification text box:
+</p>
+<ol>
+<li>A prefix, "shortcode:"</li>
+<li>A space-separated list of one or more data selection parameters</li>
+</ol>
+<p>
+For example, you can compose a view for a simple taxonomy query as <code>shortcode:attachment_category=abc</code>. You can extend this example to show PDF documents matching the term:
+</p>
+<p>
+<code>shortcode:post_mime_type=application/pdf attachment_category=abc</code>
+</p>
+<p>
+For convenience, you can add one or more MIME filters to a shortcode query. For example, you can code something like <code>application/pdf,shortcode:attachment_category=abc</code>. Because the comma is used as a delimiter for multiple MIME types, <strong>the custom field query must be the last (or only) element of the specification</strong>. For example, <code>audio,video,shortcode:attachment_category=abc</code>.
+</p>
+<p>
+The Specification text box contains a simple one-line string value. For specifications with several parameters or complex queries this can be hard to enter and maintain. If you need more room for your parameters you can define a custom markup template and use the Arguments section to hold the parameters (if you only use the template for the view specification you can leave the other sections empty). Once you have the template, the specification can be something like <code>shortcode:mla_markup=abc-pdfs</code> where <code>abc-pdfs</code> is the markup template name.
 <a name="mla_uploads"></a>
 </p>
 <p>

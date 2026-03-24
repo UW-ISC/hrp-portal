@@ -85,10 +85,7 @@ if ( ! class_exists( 'Mega_Menu_Widget_Reusable_Block' ) ) :
 		public function form( $instance ) {
 			$block_id = ! empty( $instance['block'] ) ? absint( $instance['block'] ) : 0;
 
-			if ( isset( $instance['title'] ) ) {
-				$title = $instance['title'];
-			}
-
+			$title = isset( $instance['title'] ) ? $instance['title'] : '';
 
 			$posts = get_posts(
 				array(
