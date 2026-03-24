@@ -8,7 +8,7 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.3.3');
+define('WDT_CURRENT_VERSION', '7.3.4');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
