@@ -1618,8 +1618,8 @@ class MLAOptions {
 
 				$iptc_value = apply_filters( 'mla_mapping_iptc_value', $iptc_value, $setting_key, $post->ID, 'iptc_exif_taxonomy_mapping', $attachment_metadata );
 
-				if ( 'template:' == substr( $setting_value['exif_value'], 0, 9 ) ) {
-					$data_value = array(
+				if ( 'template:' === substr( $setting_value['exif_value'], 0, 9 ) ) {
+				$data_value = array(
 						'name' => $setting_key,
 						'data_source' => 'template',
 						'meta_name' => substr( $setting_value['exif_value'], 9 ),

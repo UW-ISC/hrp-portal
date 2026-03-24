@@ -140,7 +140,7 @@ class MLAData {
 					if ( is_scalar( $value ) ) {
 						$value = trim( $value );
 					} elseif ( is_array( $value ) && 'array' === $option ) {
-						// no change, return the first array found
+						// return the first embedded array found
 						return $value;
 					} elseif ( ! empty( $value ) ) {
 						$value = var_export( $value, true );
@@ -155,13 +155,25 @@ class MLAData {
 						}
 					}
 				}
+
+				if ( 'array' === $option ) {
+					// no embedded arrays found, return the original array
+					return $element;
+				}
 			} elseif ( ! empty( $element ) ) {
 				$final[] = var_export( $element, true );
 			}
+		} // foreach result
+
+		// single-element array, return as string
+		if ( 1 == count( $final ) ) {
+			// Don't flatten a string value key
+			if ( isset( $final[0] ) ) {
+				$final = $final[0];
+			}
 		}
-		
-		// No arrays were found or the option was not 'array'; final contains only strings
-		return implode( '', $final );
+
+		return $final;
 	}
 
 	/**
@@ -2865,7 +2877,7 @@ class MLAData {
 		}
 
 		$results = MLAAVIF::mla_extract_AVIF_metadata( $path );
-		MLACore::mla_debug_add( __LINE__ . ' mla_extract_AVIF_metadata() = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		MLACore::mla_debug_add( __LINE__ . ' mla_extract_AVIF_metadata() = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 	
 		return $results;
 

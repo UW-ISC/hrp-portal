@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.33';
+	const CURRENT_MLA_VERSION = '3.34';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -1424,6 +1424,11 @@ class MLACore {
 			$query['post_mime_type'] = $specification['mime']['value'];
 		}
 		
+		if ( !empty( $specification['shortcode'] ) ) {
+			$shortcode_query = array( 'slug' => $slug, 'shortcode' => $specification['shortcode']['value'] );
+			$query['shortcode_query'] = $shortcode_query;
+		}
+		
 		if ( !empty( $specification['custom'] ) ) {
 			$meta_query = array( 'slug' => $slug , 'relation' => 'OR', 'patterns' => array () );
 			switch( $specification['custom']['option'] ) {
@@ -1483,12 +1488,22 @@ class MLACore {
 		}
 //error_log( __LINE__ . ' MLACore::mla_parse_view_specification specification = ' . var_export( $specification, true ), 0 );
 
-		$result = array( 'mime' => NULL, 'custom' => NULL );
+		$result = array( 'mime' => NULL, 'custom' => NULL, 'shortcode' => NULL );
 
 		// look for custom field query, must be at the end of the specification
 		$custom_offset = strpos( $specification, 'custom:' );
 		if ( false === $custom_offset ) {
-			$result['mime'] = array( 'prefix' => 'mime', 'name' => '', 'value' => $specification, 'option' => '' );
+			$shortcode_offset = strpos( $specification, 'shortcode:' );
+
+			if ( false === $shortcode_offset ) {
+				$result['mime'] = array( 'prefix' => 'mime', 'name' => '', 'value' => $specification, 'option' => '' );
+			} else {
+				$result['shortcode'] = array( 'prefix' => 'shortcode', 'name' => '', 'value' => substr( $specification, $shortcode_offset ), 'option' => '' );
+				if ( 0 < $shortcode_offset ) {
+					// A MIME specification can precede the shortcode
+					$result['mime'] = array( 'prefix' => 'mime', 'name' => '', 'value' => substr( $specification, 0, $shortcode_offset - 1 ), 'option' => '' );
+				}
+			}
 		} else {
 			$result['custom'] = array( 'prefix' => 'custom', 'name' => '', 'value' => substr( $specification, $custom_offset ), 'option' => '' );
 
@@ -1499,6 +1514,11 @@ class MLACore {
 		}
 //error_log( __LINE__ . ' MLACore::mla_parse_view_specification result = ' . var_export( $result, true ), 0 );
 		
+		if ( !empty( $result['shortcode'] ) ) {
+			$tail = substr( $result['shortcode']['value'], strlen( 'shortcode:' ) );
+			$result['shortcode']['value'] = MLAShortcode_Support::mla_validate_attributes( $tail );
+		}
+
 		if ( !empty( $result['custom'] ) ) {
 			$match_count = preg_match( '/^(.+):(.+)/', $result['custom']['value'], $matches );
 			$result['custom']['value'] = '';
@@ -1554,7 +1574,7 @@ class MLACore {
 			foreach ( (array) $mime_types as $raw_mime_type ) {
 				$no_wildcards = str_replace( '*', 'X', $raw_mime_type );
 				$clean_mime_type = sanitize_mime_type( $no_wildcards );
-				if ( $clean_mime_type != $no_wildcards ) {
+				if ( $clean_mime_type !== $no_wildcards ) {
 					/* translators: 1: ERROR tag 2: raw_mime_type */
 					$result['mime']['error'] = '<br>' . sprintf( __( '%1$s: Bad specification part "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $raw_mime_type );
 				}

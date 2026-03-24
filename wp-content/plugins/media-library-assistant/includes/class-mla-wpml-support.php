@@ -2148,15 +2148,28 @@ class MLA_WPML_Table {
 	public function mla_wpml_media_view_upload_page_count_filter( $count, $lang ) {
 		global $sitepress;
 
-		if ( isset( $_GET['meta_slug'] ) ) {
+		//check for custom table views
+		$current_view = '';
+
+		if ( isset( $_GET['shortcode_query'] ) ) {
+			$query = json_decode( wp_kses( wp_unslash( $_GET['shortcode_query'] ), 'post' ), true );
+			$current_view = $query['slug'];
+		}
+
+		if ( isset( $_GET['meta_query'] ) ) {
+			$query = json_decode( wp_kses( wp_unslash( $_GET['meta_query'] ), 'post' ), true );
+			$current_view = $query['slug'];
+		}
+
+		if ( ! empty( $current_view ) ) {
 			$save_lang = $sitepress->get_current_language();
 			$sitepress->switch_lang( $lang['code'] );
-			$meta_view = $this->mla_list_table->mla_get_view( sanitize_text_field( wp_unslash( $_GET['meta_slug'] ) ), '' );
+			$current_view = $this->mla_list_table->mla_get_view( $current_view, '' );
 			$sitepress->switch_lang( $save_lang );
 
-			if ( false !== $meta_view ) {
+			if ( false !== $current_view ) {
 				// extract the count value
-				$href_count = preg_match( '/class="count">\(([^\)]*)\)/', $meta_view, $href_matches );	
+				$href_count = preg_match( '/class="count">\(([^\)]*)\)/', $current_view, $href_matches );	
 				if ( $href_count ) {
 					$count = array( $href_matches[1] );
 				}

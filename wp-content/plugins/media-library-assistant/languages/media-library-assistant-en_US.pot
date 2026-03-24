@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2025-12-25 16:08-0800\n"
+"POT-Creation-Date: 2026-03-06 11:03-0800\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -1161,6 +1161,13 @@ msgstr ""
 
 #, php-format
 msgctxt "error_log"
+msgid ""
+"%1$s: _parse_pdf_xref_stream entry length %2$d does not match computed "
+"length %3$d."
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
 msgid "%1$s: _build_pdf_indirect_objects bad value at $index = \"%2$d\"."
 msgstr ""
 
@@ -2086,6 +2093,9 @@ msgid "Search Terms"
 msgstr ""
 
 msgid "There are no taxonomies to search"
+msgstr ""
+
+msgid "Filter by term"
 msgstr ""
 
 msgid "All phrases"

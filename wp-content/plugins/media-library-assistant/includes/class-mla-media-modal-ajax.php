@@ -254,7 +254,7 @@ class MLAModal_Ajax {
 	 */
 	public static function mla_attachment_fields_to_edit_filter( $form_fields, $post ) {
 		static $log_error = true;
-		
+
 		$id = $post->ID;
 
 		/*
@@ -597,6 +597,12 @@ class MLAModal_Ajax {
 		if ( empty( $_REQUEST['id'] ) || ! $post_id = absint( $_REQUEST['id'] ) ) {
 			wp_send_json_error();
 		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error();
+		}
+
+		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $post ) ) {
 			$post = get_post( $post_id ); // for filters and wp_popular_terms_checklist

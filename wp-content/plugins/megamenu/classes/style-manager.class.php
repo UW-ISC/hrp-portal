@@ -594,7 +594,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			delete_option( 'megamenu_failed_to_write_css_to_filesystem' );
 
-			WP_Filesystem();
+			WP_Filesystem(false, $dir);
 
 			if ( ! $wp_filesystem->is_dir( $dir ) ) {
 				$wp_filesystem->mkdir( $dir );
@@ -1170,7 +1170,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$upload_dir = wp_upload_dir();
 			$dir        = trailingslashit( $upload_dir['basedir'] ) . 'maxmegamenu/';
 
-			WP_Filesystem();
+			WP_Filesystem(false, $dir);
 			$wp_filesystem->rmdir( $dir, true );
 
 			delete_transient( $this->get_transient_key() );

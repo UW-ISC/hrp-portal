@@ -27,11 +27,11 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html' ) );
 			add_action( 'megamenu_output_admin_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html' ), 10, 2 );
-			add_action( 'megamenu_output_public_toggle_block_menu_toggle', array( $this, 'output_menu_public_toggle_block_html' ), 10, 2 );
+			add_action( 'megamenu_output_public_toggle_block_menu_toggle', array( $this, 'output_menu_public_toggle_block_html' ), 10, 3 );
 
 			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html' ) );
 			add_action( 'megamenu_output_admin_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html' ), 10, 2 );
-			add_action( 'megamenu_output_public_toggle_block_menu_toggle_animated', array( $this, 'output_menu_public_toggle_block_animated_html' ), 10, 2 );
+			add_action( 'megamenu_output_public_toggle_block_menu_toggle_animated', array( $this, 'output_menu_public_toggle_block_animated_html' ), 10, 3 );
 
 			add_action( 'wp_ajax_mm_get_toggle_block_spacer', array( $this, 'output_spacer_block_html' ) );
 			add_action( 'megamenu_output_admin_toggle_block_spacer', array( $this, 'output_spacer_block_html' ), 10, 2 );
@@ -55,7 +55,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @param array $settings
 		 * @return string
 		 */
-		public function output_menu_public_toggle_block_html( $html, $settings ) {
+		public function output_menu_public_toggle_block_html( $html, $settings, $args ) {
 			$closed_text = isset( $settings['closed_text'] ) ? do_shortcode( stripslashes( $settings['closed_text'] ) ) : 'MENU';
 			$open_text   = isset( $settings['open_text'] ) ? do_shortcode( stripslashes( $settings['open_text'] ) ) : 'MENU';
 
@@ -63,9 +63,9 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		    $css_version = Mega_Menu_Style_Manager::get_css_version();
 		    // Only use button HTML if CSS version is >= 3.5.1
 		    if ( version_compare( $css_version, '3.5.1', '>=' ) ) {
-		    	$html = "<button class='mega-toggle-standard mega-toggle-label' aria-expanded='false'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
+		    	$html = "<button class='mega-toggle-standard mega-toggle-label' aria-haspopup='true' aria-expanded='false' aria-controls='mega-menu-" . esc_attr($args['theme_location']) . "'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
 		    } else {
-		    	$html = "<span class='mega-toggle-label' role='button' aria-expanded='false'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
+		    	$html = "<span class='mega-toggle-label' role='button' aria-haspopup='true' aria-expanded='false'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
 		    }
 
 			return apply_filters( 'megamenu_toggle_menu_toggle_html', $html );
@@ -234,10 +234,6 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				'id'    => "mega-toggle-block-{$block_id}",
 			);
 
-			if ( isset( $block['type'] ) && $block['type'] == 'menu_toggle' ) {
-				$atts['tabindex'] = '0';
-			}
-
 			$attributes = apply_filters( 'megamenu_toggle_block_attributes', $atts, $block, $content, $nav_menu, $args, $theme_id );
 
 			$block_html .= '<div';
@@ -245,9 +241,8 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			foreach ( $attributes as $attribute => $val ) {
 				$block_html .= ' ' . $attribute . "='" . esc_attr( $val ) . "'";
 			}
-
 			$block_html .= '>';
-			$block_html .= apply_filters( "megamenu_output_public_toggle_block_{$block['type']}", '', $block );
+			$block_html .= apply_filters( "megamenu_output_public_toggle_block_{$block['type']}", '', $block, $args );
 			$block_html .= '</div>';
 
 			return $block_html;
@@ -799,11 +794,11 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @param array $settings
 		 * @return string
 		 */
-		public function output_menu_public_toggle_block_animated_html( $html, $settings ) {
+		public function output_menu_public_toggle_block_animated_html( $html, $settings, $args ) {
 			$style = isset( $settings['style'] ) ? $settings['style'] : 'slider';
 			$label = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : 'Toggle Menu';
 
-			$html = '<button aria-label="' . esc_attr( $label ) . '" class="mega-toggle-animated mega-toggle-animated-' . esc_attr( $style ) . '" type="button" aria-expanded="false">
+			$html = '<button aria-label="' . esc_attr( $label ) . '" class="mega-toggle-animated mega-toggle-animated-' . esc_attr( $style ) . '" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="mega-menu-' . esc_attr($args['theme_location']) . '">
                   <span class="mega-toggle-animated-box">
                     <span class="mega-toggle-animated-inner"></span>
                   </span>
