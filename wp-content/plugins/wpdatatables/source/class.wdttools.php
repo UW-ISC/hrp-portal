@@ -766,46 +766,26 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '10.12.2025.',
+            'release_date' => '11.03.2026.',
             'features' => [
+                0 => [
+                    'text' => 'Added wpDataTables capabilities for viewing tables and charts.',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.',
+                    'link' => ''
+                ],
+            ],
+            'improvements' => [
 //                0 => [
-//                    'text' => 'Integration with IvyForms plugin for creating tables from form submissions.',
+//                    'text' => 'Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.',
 //                    'link' => ''
 //                ],
             ],
-            'improvements' => [
-                0 => [
-                    'text' => 'Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.',
-                    'link' => ''
-                ],
-                1 => [
-                    'text' => 'Improved working with different types of Custom Fields (Date/Time/Numeric).',
-                    'link' => ''
-                ],
-            ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed issue with Advanced Filtering in the header for Date Modal.',
-                    'link' => ''
-                ],
-                1 => [
-                    'text' => 'Fixed inconsistent synchronization between Global Search and Column Filters in Column List.',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Fixed issue with Inline Editing for Dropdown Fields.',
-                    'link' => ''
-                ],
-                3 => [
-                    'text' => 'Fixed issue with Custom Fields for Number filters.',
-                    'link' => ''
-                ],
-                4 => [
-                    'text' => 'Fixed issue with Selectbox Filters when Horizontal Scrolling is enabled.',
-                    'link' => ''
-                ],
-                5 => [
-                    'text' => 'Fixed issue with Save button override affecting the Airtable Add-On.',
+                    'text' => 'Fixed vulnerability issue with Local File Inclusion (LFI).',
                     'link' => ''
                 ],
             ],

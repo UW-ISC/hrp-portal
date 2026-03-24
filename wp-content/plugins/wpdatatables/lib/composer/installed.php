@@ -3,7 +3,7 @@
         'name' => 'melograno/wpdatatables',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '586abc7f270504a0141c6d355ad951ddfc7f9924',
+        'reference' => '1edf136ee1e89209fc9cbee06ff064d5e4cd615a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -85,7 +85,7 @@
         'melograno/wpdatatables' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '586abc7f270504a0141c6d355ad951ddfc7f9924',
+            'reference' => '1edf136ee1e89209fc9cbee06ff064d5e4cd615a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

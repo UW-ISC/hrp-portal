@@ -26,6 +26,23 @@ class WDTSettingsController
                 }
             } elseif ($key !== 'wdtSeparateCon') {
                 $setting = sanitize_text_field($setting);
+            } elseif ($key === 'wdtInterfaceLanguage') {
+                // Security Fix: Prevent Path Traversal / LFI for language file (CVE-2026-28039)
+                if (!empty($setting)) {
+                    // Only allow basename (no directory traversal)
+                    $setting = basename(sanitize_text_field($setting));
+
+                    // Verify it's a valid language file
+                    if (substr($setting, -8) !== '.inc.php') {
+                        $setting = ''; // Invalid format, reject it
+                    } else {
+                        // Double-check the file exists in the lang directory
+                        $langPath = WDT_ROOT_PATH . 'source/lang/' . $setting;
+                        if (!file_exists($langPath) || !is_file($langPath)) {
+                            $setting = ''; // File doesn't exist, reject it
+                        }
+                    }
+                }
             }
         }
         return $settings;

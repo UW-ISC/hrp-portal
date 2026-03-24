@@ -929,6 +929,12 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null)
     if (!$id) {
         return false;
     }
+
+    // Check permissions - user must have access to view this chart
+    if (!WDTPermissionsEnforcer::canUserViewChart($id)) {
+        return esc_html__('You do not have permission to view this chart.', 'wpdatatables');
+    }
+
     try {
         $dbChartData = WPDataChart::getChartDataById($id);
         if (!$dbChartData) {
@@ -1452,6 +1458,11 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
         return false;
     }
 
+    // Check permissions - user must have access to view this table
+    if (!WDTPermissionsEnforcer::canUserViewTable($id)) {
+        return esc_html__('You do not have permission to view this table.', 'wpdatatables');
+    }
+
     do_action('wpdatatables_before_render_table_config_data', $id);
 
     $tableData = WDTConfigController::loadTableFromDB($id);
@@ -1923,7 +1934,7 @@ function wdtCheckUpdate($transient)
             // Store the new data in the transient
             $updateData = [
                 'last_checked' => $currentTime,
-                'remote_info'  => $remoteInformation,
+                'remote_info' => $remoteInformation,
             ];
             set_transient('wdt_update_data', $updateData, DAY_IN_SECONDS);
         }

@@ -9,9 +9,9 @@
 }
 
 .elementor-element .icon .wpdt-table-logo:before {
-    background-image: url('../../../../assets/img/logo-large.png');
+    background-image: url('../../../../../assets/img/logo-large.png');
 }
 
 .elementor-element .icon .wpdt-chart-logo:before {
-    background-image: url('../../../../assets/img/chart-icon.png');
+    background-image: url('../../../../../assets/img/chart-icon.png');
 }

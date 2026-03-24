@@ -71,6 +71,16 @@ function wdtAdminMenu()
         'wpdatatables-system-info',
         'wdtSystemInfo'
     );
+    if (current_user_can('manage_options')) {
+        add_submenu_page(
+            'wpdatatables-dashboard',
+            __('Permissions', 'wpdatatables'),
+            __('Permissions', 'wpdatatables'),
+            'manage_options',
+            'wpdatatables_permissions',
+            ['WDTPermissionsAdmin', 'renderPage']
+        );
+    }
     add_submenu_page(
         get_option('wdtGettingStartedPageStatus') ? '' : 'wpdatatables-dashboard',
         __('Getting Started', 'wpdatatables'),
@@ -139,6 +149,7 @@ function wdtAdminEnqueue($hook)
         'wpdatatables_page_wpdatatables-settings',
         'wpdatatables_page_wpdatatables-support',
         'wpdatatables_page_wpdatatables-system-info',
+        'wpdatatables_page_wpdatatables_permissions',
         'admin_page_wpdatatables-getting-started',
         'wpdatatables_page_wpdatatables-getting-started',
         'admin_page_wpdatatables-welcome-page',
@@ -161,6 +172,7 @@ function wdtAdminEnqueue($hook)
     wp_register_style('wdt-dragula', WDT_CSS_PATH . 'dragula/dragula.min.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-browse-css', WDT_CSS_PATH . 'admin/browse.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-wpdatatables', WDT_CSS_PATH . 'wpdatatables.min.css', array(), WDT_CURRENT_VERSION);
+    wp_register_style('wdt-permissions-css', WDT_CSS_PATH . 'admin/permissions.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_style('wdt-admin', WDT_CSS_PATH . 'admin/admin.css', array(), WDT_CURRENT_VERSION);
 
@@ -205,6 +217,9 @@ function wdtAdminEnqueue($hook)
             break;
         case 'wpdatatables_page_wpdatatables-settings':
             wdtSettingsEnqueue();
+            break;
+        case 'wpdatatables_page_wpdatatables_permissions':
+            wdtPermissionsEnqueue();
             break;
         case 'wpdatatables_page_wpdatatables-support':
             wdtSupportEnqueue();
@@ -458,6 +473,19 @@ function wdtSettingsEnqueue()
 
     do_action_deprecated('wdt_enqueue_on_settings_page', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_settings_page');
     do_action('wpdatatables_enqueue_on_settings_page');
+}
+
+/**
+ * Enqueue JS and CSS files for the Permissions Page
+ */
+function wdtPermissionsEnqueue()
+{
+    WDTTools::wdtUIKitEnqueue();
+
+    wp_enqueue_style('wdt-permissions-css');
+    wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-doc-js');
+    wp_enqueue_script('wdt-funcs-js');
 }
 
 /**

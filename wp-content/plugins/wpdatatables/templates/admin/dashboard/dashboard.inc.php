@@ -272,14 +272,9 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Improvement:</strong> Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.</li>
-                                <li><strong>Improvement:</strong> Improved working with different types of Custom Fields (Date/Time/Numeric).</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Advanced Filtering in the header for Date Modal.</li>
-                                <li><strong>BugFix:</strong> Fixed inconsistent synchronization between Global Search and Column Filters in Column List.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Inline Editing for Dropdown Fields.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Custom Fields for Number filters.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Selectbox Filters when Horizontal Scrolling is enabled.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Save button override affecting the Airtable Add-On.</li>
+                                <li><strong>Feature:</strong> Added wpDataTables capabilities for viewing tables and charts.</li>
+                                <li><strong>Feature:</strong> Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.</li>
+                                <li><strong>BugFix:</strong> Fixed vulnerability issue with Local File Inclusion (LFI).</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

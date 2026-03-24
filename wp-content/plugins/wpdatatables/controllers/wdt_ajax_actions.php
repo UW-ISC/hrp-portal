@@ -19,6 +19,11 @@ function wdtGetAjaxData()
         exit();
     }
 
+    // Check permissions - user must have access to view this table
+    if (!WDTPermissionsEnforcer::canUserViewTable($id)) {
+        exit();
+    }
+
     do_action('wpdatatables_get_ajax_data', $id);
 
     $tableData = WDTConfigController::loadTableFromDB($id);
@@ -1174,7 +1179,7 @@ function wdtDoShortcode()
     $shortcode .= 'id=' . $formData;
     $shortcode .= ']';
 
-   $output = do_shortcode($shortcode);
+    $output = do_shortcode($shortcode);
 
     ob_start();
     WPDataTable::renderModal();
