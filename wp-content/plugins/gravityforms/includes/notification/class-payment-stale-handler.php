@@ -12,7 +12,7 @@ use GFAPI;
 /**
  * Class Payment_Stale_Handler
  *
- * @since next
+ * @since 2.9.29
  *
  * Provides functionality for handling stale payment notifications.
  */
@@ -23,7 +23,7 @@ class Payment_Stale_Handler {
 	 * This cron will run hourly and check for entries with a payment status of "Processing" that are older than a specified threshold (default is 60 minutes).
 	 * For each of those entries, it will send a notification and update the entry meta to indicate that the stale notification has been processed.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @return void
 	 */
@@ -40,7 +40,7 @@ class Payment_Stale_Handler {
 	/**
 	 * Deactivates the cron for processing stale payment notifications. This function is hooked to the 'gform_uninstalling' action and will run when Gravity Forms is uninstalled, to clean up the scheduled cron job.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @return void
 	 */
@@ -63,7 +63,7 @@ class Payment_Stale_Handler {
 	 * Processes stale payment notifications. This function is hooked to the 'gform_stale_payment_cron' and will run hourly to check for entries with a payment status of "Processing" that are older than a specified threshold (default is 60 minutes).
 	 * For each of those entries, it will send a notification and update the entry meta to indicate that the stale notification has been processed.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @return void
 	 */
@@ -96,7 +96,7 @@ class Payment_Stale_Handler {
 	/**
 	 * Retrieves entries that are considered to have a "stale" payment. These are entries with a payment status of "Processing" that are older than a specified threshold (default is 60 minutes).
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @return array Returns an array of entries that are considered to have a "stale" payment.
 	 */
@@ -105,7 +105,7 @@ class Payment_Stale_Handler {
 		/**
 		 * Filters the threshold for considering an entry with a "Processing" payment status as stale. Defaults to 60 minutes.
 		 *
-		 * @since next
+		 * @since 2.9.29
 		 *
 		 * @param int $threshold_minutes The threshold time in minutes.
 		 *
@@ -131,7 +131,7 @@ class Payment_Stale_Handler {
 	/**
 	 * Retrieves the notifications for a form that are configured to be sent for the "payment_stale" event.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $form The form object to retrieve the notifications for.
 	 *
@@ -146,7 +146,7 @@ class Payment_Stale_Handler {
 	/**
 	 * Checks if the form has at least one active stale payment notification configured.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $form The form object to check for stale payment notifications.
 	 *
@@ -171,7 +171,7 @@ class Payment_Stale_Handler {
 	 * This function retrieves the notifications for the form that are configured to be sent for the "payment_stale" event and sends them.
 	 * It also updates the entry meta to indicate that the stale notification has been processed for this entry, which will prevent the cron from sending multiple notifications for the same entry.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $entry The entry object for which to send the stale payment notification.
 	 *
@@ -192,7 +192,7 @@ class Payment_Stale_Handler {
 	 * When an entry's payment status is updated to "Processing" and the form has an active stale payment notification, it enables the stale payment notification functionality by ensuring the cron job is scheduled
 	 * and adding an entry meta to include this entry in the stale payment notification cron process.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param $entry The entry object for which the payment status has changed.
 	 *
@@ -221,7 +221,7 @@ class Payment_Stale_Handler {
 	 * If it hasn't, it adds an entry meta to indicate that the stale payment notification needs to be processed for this entry.
 	 * This function should be called when an entry's payment status is updated to "Processing".
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $entry The entry object for which to maybe add the stale payment notification meta.
 	 *
@@ -244,7 +244,7 @@ class Payment_Stale_Handler {
 	/**
 	 * Updates the entry meta to indicate that the stale payment notification has been processed for the given entry. This will prevent the cron from sending multiple notifications for the same entry.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $entry The entry object for which to update the stale payment notification meta.
 	 *
@@ -261,7 +261,7 @@ class Payment_Stale_Handler {
 	 * Removes the entry meta that indicates that the stale payment notification needs to be processed for this entry.
 	 * This function should be called when an entry's payment status is updated from "Processing" to any other status, to prevent the cron from sending a stale payment notification for this entry.
 	 *
-	 * @since next
+	 * @since 2.9.29
 	 *
 	 * @param array $entry The entry object for which to remove the stale payment notification meta.
 	 *
