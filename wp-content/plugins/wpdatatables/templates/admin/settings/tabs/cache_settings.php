@@ -75,9 +75,10 @@ global $wpdb;
                             <li>Paste the SQL query: <strong>SELECT table_id, updated_time, log_errors FROM <?php echo $wpdb->prefix; ?>wpdatatables_cache</strong></li>
                             <li>Click <strong>"Save Changes"</strong> so wpDataTables could read the table structure.</li>
                             <li>Check the log_errors column to see when an error happened and the cause of the error.</li>
-                            <li>If you are facing some issues, please export this table in CSV and provide it to our support agents on our support platform, where you can contact us using this
-                                <a href="https://tmsplugins.ticksy.com/"
-                                   target="_blank"><?php esc_html_e('link', 'wpdatatables'); ?></a>.
+                            <li>If you are facing some issues, please export this table in CSV and reach out to our support at our 
+                                <a href="https://store.melograno.io/"
+                                   target="_blank"
+                                   rel="noopener noreferrer"><?php esc_html_e('store', 'wpdatatables'); ?></a>.
                             </li>
                         </ul>
                     </span>

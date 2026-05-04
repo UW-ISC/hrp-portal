@@ -73,9 +73,9 @@
                 <div class="card m-b-16">
                     <div class="card-body card-padding wdt-support-img">
                         <h5 class="wdt-large-title m-t-0 card-title"><?php esc_html_e('Still need help?', 'wpdatatables'); ?></h5>
-                        <p class="card-text m-b-28"><?php esc_html_e('We provide proffesional support to all our users via our tiketing system.', 'wpdatatables'); ?></p>
-                        <a href="https://tmsplugins.ticksy.com/" target="_blank" rel=”nofollow” class="btn btn-primary"><i
-                                    class="wpdt-icon-envelope"></i><?php esc_html_e('Submit a ticket', 'wpdatatables'); ?>
+                        <p class="card-text m-b-28"><?php esc_html_e('We provide professional support to all our users via our store.', 'wpdatatables'); ?></p>
+                        <a href="https://store.melograno.io/login" target="_blank" rel="nofollow" class="btn btn-primary"><i
+                                    class="wpdt-icon-envelope"></i><?php esc_html_e('Log in to submit a ticket', 'wpdatatables'); ?>
                         </a>
                     </div>
                 </div>

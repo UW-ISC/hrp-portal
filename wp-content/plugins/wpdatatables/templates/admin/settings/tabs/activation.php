@@ -24,8 +24,9 @@
                 <li><?php esc_html_e('Use the password and email to log in to the store page,', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('Copy the purchase code from your dashboard page on the store and paste it below.', 'wpdatatables'); ?></li>
                 <li><?php esc_html_e('If you still cannot find the purchase code please contact our support ', 'wpdatatables'); ?> <a
-                            href="https://tmsplugins.ticksy.com/"
-                            target="_blank"><?php esc_html_e('here.', 'wpdatatables'); ?></a></li>
+                            href="https://store.melograno.io/"
+                            target="_blank"
+                            rel="noopener noreferrer"><?php esc_html_e('here.', 'wpdatatables'); ?></a></li>
                </ul>
             </span>
             </div>

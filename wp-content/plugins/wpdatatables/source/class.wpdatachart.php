@@ -4,6 +4,8 @@ defined('ABSPATH') or die('Access denied.');
 
 class WPDataChart
 {
+    protected static $_chartAutoloaderRegistered = false;
+
     protected $_id = NULL;
     protected $_wpdatatable_id = NULL;
     protected $_engine = '';
@@ -533,30 +535,84 @@ class WPDataChart
      */
     public static function build($constructedChartData, $loadFromDB = false)
     {
-        // Security Fix: Whitelist valid chart engines to prevent LFI
-        $validEngines = array('google', 'chartjs', 'highcharts', 'apexcharts');
-
+        $chartEngineMap = self::getChartEngineMap();
         $engine = isset($constructedChartData['engine']) ? strtolower(sanitize_text_field($constructedChartData['engine'])) : 'google';
 
-        if (!in_array($engine, $validEngines, true)) {
-            // Invalid engine, default to google
+        if (!isset($chartEngineMap[$engine])) {
             $engine = 'google';
         }
 
-        $wdtChart = 'Wdt' . ucfirst($engine) . 'Chart' . '\Wdt' . ucfirst($engine) . 'Chart';
-        $chartClassFileName = 'class.' . $engine . '.wpdatachart.php';
-        if ($constructedChartData['engine'] == 'highcharts') {
-            require_once(WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php');
-        } else if ($constructedChartData['engine'] == 'highstock') {
-            require_once(WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php');
-            require_once(WDT_HS_ROOT_PATH . 'source/class.highstock.wpdatachart.php');
-        } else if ($constructedChartData['engine'] == 'apexcharts') {
-            require_once(WDT_AC_ROOT_PATH . 'source/class.apexcharts.wpdatachart.php');
-        } else {
-            require_once(WDT_ROOT_PATH . 'source/' . $chartClassFileName);
+        self::registerChartAutoloader();
+
+        $chartClass = $chartEngineMap[$engine];
+        if (!class_exists($chartClass, true)) {
+            $chartClass = $chartEngineMap['google'];
+            if (!class_exists($chartClass, true)) {
+                throw new Exception('Unable to load chart class for engine: ' . $engine);
+            }
+            $engine = 'google';
         }
 
-        return new $wdtChart($constructedChartData, $loadFromDB);
+        $constructedChartData['engine'] = $engine;
+
+        return new $chartClass($constructedChartData, $loadFromDB);
+    }
+
+    /**
+     * Maps supported chart engine keys to class names.
+     *
+     * @return array
+     */
+    protected static function getChartEngineMap()
+    {
+        return array(
+            'google' => 'WdtGoogleChart\\WdtGoogleChart',
+            'chartjs' => 'WdtChartjsChart\\WdtChartjsChart',
+            'highcharts' => 'WdtHighchartsChart\\WdtHighchartsChart',
+            'apexcharts' => 'WdtApexchartsChart\\WdtApexchartsChart',
+            'highstock' => 'WdtHighStockChart\\WdtHighstockChart',
+        );
+    }
+
+    /**
+     * Registers a class-map based autoloader for supported chart engines.
+     *
+     * @return void
+     */
+    protected static function registerChartAutoloader()
+    {
+        if (self::$_chartAutoloaderRegistered) {
+            return;
+        }
+
+        spl_autoload_register(function ($className) {
+            static $classMap = null;
+
+            if (null === $classMap) {
+                $classMap = array(
+                    'WdtGoogleChart\\WdtGoogleChart' => WDT_ROOT_PATH . 'source/class.google.wpdatachart.php',
+                    'WdtChartjsChart\\WdtChartjsChart' => WDT_ROOT_PATH . 'source/class.chartjs.wpdatachart.php',
+                );
+
+                if (defined('WDT_HC_ROOT_PATH')) {
+                    $classMap['WdtHighchartsChart\\WdtHighchartsChart'] = WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php';
+                }
+
+                if (defined('WDT_AC_ROOT_PATH')) {
+                    $classMap['WdtApexchartsChart\\WdtApexchartsChart'] = WDT_AC_ROOT_PATH . 'source/class.apexcharts.wpdatachart.php';
+                }
+
+                if (defined('WDT_HS_ROOT_PATH')) {
+                    $classMap['WdtHighStockChart\\WdtHighstockChart'] = WDT_HS_ROOT_PATH . 'source/class.highstock.wpdatachart.php';
+                }
+            }
+
+            if (isset($classMap[$className]) && file_exists($classMap[$className])) {
+                require_once $classMap[$className];
+            }
+        });
+
+        self::$_chartAutoloaderRegistered = true;
     }
 
     /**
