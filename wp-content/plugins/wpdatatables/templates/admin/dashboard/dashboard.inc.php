@@ -272,10 +272,10 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added wpDataTables capabilities for viewing tables and charts.</li>
-                                <li><strong>Feature:</strong> Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.</li>
-                                <li><strong>BugFix:</strong> Fixed vulnerability issue with Local File Inclusion (LFI).</li>
-                                <li>Other small bug fixes</li>
+                                <li><strong>Improvement:</strong> Improved security by preventing stored cross-site scripting via CSV/Excel data import.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with HighChart Stock library not working properly.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with HighCharts stable version not working properly on the front-end.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with chart autoloader not working properly.</li>
                             </ul>
                         </div>
 
@@ -302,8 +302,8 @@
                         <h5 class="card-title"><?php esc_html_e('Thank you for choosing wpDataTables Premium', 'wpdatatables'); ?></h5>
                         <p class="card-text m-b-0">
                             <?php esc_html_e('Enjoy using our premium features and professional support that we provide through our ', 'wpdatatables'); ?>
-                            <a href="https://tmsplugins.ticksy.com/"
-                               target="_blank"><?php esc_html_e(' ticketing system.'); ?></a>
+                            <a href="https://store.melograno.io/"
+                               target="_blank"><?php esc_html_e(' store.'); ?></a>
                         </p>
                     </div>
                 </div>

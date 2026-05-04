@@ -766,26 +766,34 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '11.03.2026.',
+            'release_date' => '24.04.2026.',
             'features' => [
-                0 => [
-                    'text' => 'Added wpDataTables capabilities for viewing tables and charts.',
-                    'link' => ''
-                ],
-                1 => [
-                    'text' => 'Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.',
-                    'link' => ''
-                ],
+                // 0 => [
+                //     'text' => 'Added wpDataTables capabilities for viewing tables and charts.',
+                //     'link' => ''
+                // ],
+                // 1 => [
+                //     'text' => 'Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.',
+                //     'link' => ''
+                // ],
             ],
             'improvements' => [
-//                0 => [
-//                    'text' => 'Improved performance by setting a transient to check on updates every 24 hours instead of on every page load.',
-//                    'link' => ''
-//                ],
+               0 => [
+                   'text' => 'Improved security by preventing stored cross-site scripting via CSV/Excel data import.',
+                   'link' => ''
+               ],
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed vulnerability issue with Local File Inclusion (LFI).',
+                    'text' => 'Fixed issue with HighChart Stock library not working properly.',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Fixed issue with HighCharts stable version not working properly on the front-end.',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Fixed issue with chart autoloader not working properly.',
                     'link' => ''
                 ],
             ],

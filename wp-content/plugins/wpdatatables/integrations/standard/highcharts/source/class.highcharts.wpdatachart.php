@@ -1063,21 +1063,20 @@ class WdtHighchartsChart extends WPDataChart
             $this->setCredits((bool)(WDTTools::defineDefaultValue($constructedChartData, 'credits', true)));
             $this->setCreditsHref(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_href', 'https://www.highcharts.com')));
             $this->setCreditsText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com')));
+        }
 
-            // Script paths depending on "stable version"
-            if (get_option('wdtHighChartStableVersion')) {
-                $this->setLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts.js');
-                $this->setMoreLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-more.js');
-                $this->setThreeDLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-3D.js');
-                $this->setCylinderLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-cylinder.js');
-                $this->setHeatMapLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-heatmap.js');
-                $this->setFunnelLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel.js');
-                $this->setFunnel3DLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel3D.js');
-                $this->setTreeMapLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-treemap.js');
-                $this->setExportingLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting.js');
-                $this->setExportingDataLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting-data.js');
-                $this->setAccessibilityLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-accessibility.js');
-            }
+        if (get_option('wdtHighChartStableVersion')) {
+            $this->setLibSource(WDT_HC_ASSETS_URL . 'js/highcharts.js');
+            $this->setMoreLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-more.js');
+            $this->setThreeDLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-3D.js');
+            $this->setCylinderLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-cylinder.js');
+            $this->setHeatMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-heatmap.js');
+            $this->setFunnelLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel.js');
+            $this->setFunnel3DLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel3D.js');
+            $this->setTreeMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-treemap.js');
+            $this->setExportingLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting.js');
+            $this->setExportingDataLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting-data.js');
+            $this->setAccessibilityLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-accessibility.js');
         }
 
     }
@@ -1657,3 +1656,4 @@ class WdtHighchartsChart extends WPDataChart
         return parent::setChartRenderData($chartData);
     }
 }
+

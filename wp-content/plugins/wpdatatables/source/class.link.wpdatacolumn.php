@@ -42,61 +42,80 @@ class LinkWDTColumn extends WDTColumn
      */
     public function prepareCellOutput($content)
     {
-        $targetAttribute = $this->getLinkTargetAttribute();
-        $nofollowAttribute = $this->getLinkNofollowAttribute() == 1 ? ' nofollow ' : '';
-        $noreferrerAttribute = $this->getLinkNoreferrerAttribute() == 1 ? ' noreferrer ' : '';
-        $sponsoredAttribute = $this->getLinkSponsoredAttribute() == 1 ? ' sponsored ' : '';
-        $rel = $nofollowAttribute . $noreferrerAttribute . $sponsoredAttribute;
-        $buttonClass = $this->getLinkButtonClass();
+        $targetAttribute = esc_attr($this->getLinkTargetAttribute());
+        $nofollowAttribute = ( 1 === (int) $this->getLinkNofollowAttribute() ) ? 'nofollow' : '';
+        $noreferrerAttribute = ( 1 === (int) $this->getLinkNoreferrerAttribute() ) ? 'noreferrer' : '';
+        $sponsoredAttribute = ( 1 === (int) $this->getLinkSponsoredAttribute() ) ? 'sponsored' : '';
+        $rel_parts = array_filter(
+            array($nofollowAttribute, $noreferrerAttribute, $sponsoredAttribute)
+        );
+        $rel_esc = esc_attr(implode(' ', $rel_parts));
+        $buttonClass_esc = esc_attr($this->getLinkButtonClass());
 
         $content = apply_filters('wpdatatables_filter_link_cell_before_formatting', $content, $this->getParentTable()->getWpId());
 
         if (is_null($content)) {
             $formattedValue = '';
-        } else {
-            if (strpos($content, '||') !== false) {
-                list($link, $content) = explode('||', $content);
-                $buttonLabel = $this->getLinkButtonLabel() !== '' ? $this->getLinkButtonLabel() : $content;
+        } elseif (strpos($content, '||') !== false) {
+            $parts = explode('||', $content, 2);
+            $linkPart = isset($parts[0]) ? trim($parts[0]) : '';
+            $textPart = isset($parts[1]) ? trim($parts[1]) : '';
+            $href = esc_url($linkPart);
+            $data_content_esc = esc_attr($textPart);
+            $text_html = esc_html($textPart);
+            $buttonLabel = '' !== $this->getLinkButtonLabel() ? $this->getLinkButtonLabel() : $textPart;
+            $buttonLabel_html = esc_html($buttonLabel);
 
-                if ($this->getLinkButtonAttribute() == 1 && $content !== '') {
-                    $formattedValue = "<a data-content='{$content}' href='{$link}' rel='{$rel}' target='{$targetAttribute}'><button class='{$buttonClass}'>{$buttonLabel}</button></a>";
-                } else {
-                    $formattedValue = "<a data-content='{$content}' href='{$link}' rel='{$rel}' target='{$targetAttribute}'>{$content}</a>";
-                }
+            if ('' === $href) {
+                $formattedValue = esc_html($content);
+            } elseif ( 1 === (int) $this->getLinkButtonAttribute() && '' !== $textPart ) {
+                $formattedValue = '<a data-content="' . $data_content_esc . '" href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '"><button class="' . $buttonClass_esc . '">' . $buttonLabel_html . '</button></a>';
             } else {
-                if ($this->_inputType == 'attachment') {
-                    $buttonLabel = $this->getLinkButtonLabel() !== '' ? $this->getLinkButtonLabel() : $content;
-                    if (!empty($content)) {
-                        if ($this->getLinkButtonAttribute() == 1) {
-                            if ($this->getLinkButtonLabel() !== '') {
-                                $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'><button class='{$buttonClass}'>{$buttonLabel}</button></a>";
-                            } else {
-                                $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'><button class='{$buttonClass}'>{$this->_title}</button></a>";
-                            }
-                        } else {
-                            $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'>{$this->_title}</a>";
-                        }
+                $formattedValue = '<a data-content="' . $data_content_esc . '" href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '">' . $text_html . '</a>';
+            }
+        } elseif ( 'attachment' === $this->_inputType ) {
+            $buttonLabel = '' !== $this->getLinkButtonLabel() ? $this->getLinkButtonLabel() : $content;
+            $buttonLabel_html = esc_html($buttonLabel);
+            $title_html = esc_html($this->_title);
+            if ( empty($content) ) {
+                $formattedValue = '';
+            } else {
+                $href = esc_url(trim($content));
+                if ( '' === $href ) {
+                    $formattedValue = esc_html($content);
+                } elseif ( 1 === (int) $this->getLinkButtonAttribute() ) {
+                    if ( '' !== $this->getLinkButtonLabel() ) {
+                        $formattedValue = '<a href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '"><button class="' . $buttonClass_esc . '">' . $buttonLabel_html . '</button></a>';
                     } else {
-                        $formattedValue = '';
+                        $formattedValue = '<a href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '"><button class="' . $buttonClass_esc . '">' . $title_html . '</button></a>';
                     }
                 } else {
-                    if ($this->getLinkButtonAttribute() == 1 && $content === null) {
-                        $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'>{$content}</a>";
-                    } else {
-                        if ($this->getLinkButtonAttribute() == 1 && $content !== '') {
-                            $buttonLabel = $this->getLinkButtonLabel() !== '' ? $this->getLinkButtonLabel() : $content;
-                            $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'><button class='{$buttonClass}'>{$buttonLabel}</button></a>";
-                        } else {
-                            if ($content == '') {
-                                return null;
-                            } else {
-                                $formattedValue = "<a href='{$content}' rel='{$rel}' target='{$targetAttribute}'>{$content}</a>";
-                            }
-                        }
-                    }
+                    $formattedValue = '<a href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '">' . $title_html . '</a>';
                 }
             }
+        } elseif ( 1 === (int) $this->getLinkButtonAttribute() && '' === $content ) {
+            $formattedValue = '';
+        } elseif ( 1 === (int) $this->getLinkButtonAttribute() && '' !== $content ) {
+            $href = esc_url(trim($content));
+            $buttonLabel = '' !== $this->getLinkButtonLabel() ? $this->getLinkButtonLabel() : $content;
+            $buttonLabel_html = esc_html($buttonLabel);
+            if ( '' === $href ) {
+                $formattedValue = $buttonLabel_html;
+            } else {
+                $formattedValue = '<a href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '"><button class="' . $buttonClass_esc . '">' . $buttonLabel_html . '</button></a>';
+            }
+        } elseif ( '' === $content ) {
+            $formattedValue = '';
+        } else {
+            $href = esc_url(trim($content));
+            $text_html = esc_html($content);
+            if ( '' === $href ) {
+                $formattedValue = $text_html;
+            } else {
+                $formattedValue = '<a href="' . $href . '" rel="' . $rel_esc . '" target="' . $targetAttribute . '">' . $text_html . '</a>';
+            }
         }
+
         return apply_filters('wpdatatables_filter_link_cell', $formattedValue, $this->getParentTable()->getWpId());
     }
 

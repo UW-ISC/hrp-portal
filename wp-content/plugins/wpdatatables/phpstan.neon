@@ -1,0 +1,14 @@
+includes:
+    - lib/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    customRulesetUsed: true
+    tmpDir: /tmp/phpstan
+    phpVersion: 70400
+    paths:
+        - admin
+        - config
+        - controllers
+        - integrations
+        - source
+        - wpdatatables.php

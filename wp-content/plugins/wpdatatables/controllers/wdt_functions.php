@@ -374,6 +374,9 @@ function wdtActivationCreateTables()
     if (get_option('wdtBootstrapUpdateNotice') === false) {
         update_option('wdtBootstrapUpdateNotice', 'yes');
     }
+    if (get_option('wdtHighchartsCdnNotice') === false) {
+        update_option('wdtHighchartsCdnNotice', 'yes');
+    }
     delete_option('wdtGeneratedTablesCount');
 
     do_action('wpdatatables_after_activation_method');
@@ -463,6 +466,7 @@ function wdtUninstallDelete()
         delete_option('wdtGoogleApiMapsValidated');
         delete_option('wdtHideUpdateModal');
         delete_option('wdtBootstrapUpdateNotice');
+        delete_option('wdtHighchartsCdnNotice');
         delete_option('wdtGlobalTableLoader');
         delete_option('wdtGlobalChartLoader');
 
@@ -574,6 +578,13 @@ function wdtAdminRatingMessages()
     $diffIntrval = round(($datetimeCurrentDate->format('U') - $datetimeInstallDate->format('U')) / (60 * 60 * 24));
     $systemInfoPage = get_site_url() . '/wp-admin/admin.php?page=wpdatatables-system-info';
 
+    // Highcharts CDN notice
+    if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false && get_option('wdtHighchartsCdnNotice') == "yes") {
+        echo '<div class="notice notice-info is-dismissible wpdt-highcharts-cdn-notice">
+            <p class="wpdt-highcharts-cdn"><strong style="color: #ffa63a; font-size: 16px;">Upcoming change! </strong> Highcharts CDN usage will change in the next update. Scripts will no longer be loaded via CDN, only the stable version will be included.</p>
+        </div>';
+    }
+
     if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false &&
         get_option('wdtBootstrapUpdateNotice') == "yes") {
         echo '<div class="notice notice-info is-dismissible wpdt-bootstrap-update-notice">
@@ -674,8 +685,9 @@ add_action('wp_ajax_wdtSaveDeactivationinfo', 'wdtSaveDeactivationinfo');
 function wdtEnqueueDeactivationModal()
 {
     if ((strpos($_SERVER['REQUEST_URI'], 'plugins.php') !== false)) {
-        wp_enqueue_script('wdt-deactivate-info-js', WDT_ROOT_URL . 'assets/js/deactivation/deactivation-modal.js', array(), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-deactivate-info-js', WDT_ROOT_URL . 'assets/js/deactivation/deactivation-modal.js', array('jquery', 'wp-i18n'), WDT_CURRENT_VERSION, true);
         wp_localize_script('wdt-deactivate-info-js', 'wpdatatables_deactivate_info', WDTTools::getDeactivationInfo());
+        wp_set_script_translations('wdt-deactivate-info-js', 'wpdatatables', WDT_ROOT_PATH . 'languages');
     }
 }
 
@@ -775,14 +787,25 @@ add_action('wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice');
 /**
  * Remove Amelia promo notice message
  **/
+
 function wdtRemoveAmeliaPromoNotice()
 {
     update_option('wdtShowAmeliaBanner', 'no');
     echo json_encode(array("success"));
     exit;
 }
-
 add_action('wp_ajax_wdt_remove_promo_amelia_notice', 'wdtRemoveAmeliaPromoNotice');
+
+/**
+ * Remove Highcharts CDN notice message
+ */
+function wdtRemoveHighchartsCdnNotice()
+{
+    update_option('wdtHighchartsCdnNotice', 'no');
+    echo json_encode(array("success"));
+    exit;
+}
+add_action('wp_ajax_wdt_remove_highcharts_cdn_notice', 'wdtRemoveHighchartsCdnNotice');
 
 /**
  * Remove Simple Table alert message
@@ -2029,7 +2052,7 @@ function wdtAddMessageOnUpdate($reply, $package, $updater)
     return $reply;
 }
 
-add_filter('upgrader_pre_download', 'wdtAddMessageOnUpdate', 10, 4);
+add_filter('upgrader_pre_download', 'wdtAddMessageOnUpdate', 10, 3);
 
 /**
  * Redirect on Welcome page after activate plugin

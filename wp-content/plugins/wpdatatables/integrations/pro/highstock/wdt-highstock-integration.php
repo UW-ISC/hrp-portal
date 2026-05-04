@@ -49,6 +49,16 @@ class HighStockIntegration
 
     public static function enqueueScripts()
     {
+        if (!wp_script_is('wdt-highcharts', 'registered')) {
+            if (defined('WDT_HC_ASSETS_URL') && get_option('wdtHighChartStableVersion')) {
+                $high_chart_lib_source = WDT_HC_ASSETS_URL . 'js/highcharts.js';
+            } else {
+                $high_chart_lib_source = '//code.highcharts.com/highcharts.js';
+            }
+
+            wp_register_script('wdt-highcharts', $high_chart_lib_source, array(), WDT_CURRENT_VERSION, true);
+        }
+
         $highChartStockSource = get_option('wdtHighChartStableVersion') ? WDT_HS_ASSETS_URL . 'js/highcharts-stock.js' : '//code.highcharts.com/stock/modules/stock.js';
         wp_enqueue_script('wdt-highstock', $highChartStockSource, array('wdt-highcharts'), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-wp-highstock', WDT_HS_ASSETS_URL . 'js/wdt.highstock.js', array('wdt-highcharts'), WDT_CURRENT_VERSION, true);

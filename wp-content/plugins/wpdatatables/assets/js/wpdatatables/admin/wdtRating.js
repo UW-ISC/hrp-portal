@@ -129,5 +129,23 @@
                 }
             });
         })
+
+        $('.wpdt-highcharts-cdn-notice .notice-dismiss').on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: ajaxurl,
+                method: "POST",
+                data: {
+                    'action': 'wdt_remove_highcharts_cdn_notice'
+                },
+                dataType: "json",
+                async: !0,
+                success: function (e) {
+                    if (e == "success") {
+                        $('.wpdt-highcharts-cdn-notice').slideUp('fast');
+                    }
+                }
+            });
+        })
     });
 })(jQuery);

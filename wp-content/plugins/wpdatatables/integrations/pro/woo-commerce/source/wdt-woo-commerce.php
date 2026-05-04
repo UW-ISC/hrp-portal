@@ -206,10 +206,10 @@ class WooCommerceIntegration extends WPQueryIntegration
      * @param $content
      * @param $wdtParameters
      *
-     * @return true
+     * @return void
      * @throws WDTException
      */
-    public static function wooCommerceBasedConstruct($wpDataTable, $content, $wdtParameters): bool
+    public static function wooCommerceBasedConstruct($wpDataTable, $content, $wdtParameters): void
     {
         $queryData = json_decode($content);
         $queryData = self::sanitizePostsQueryData($queryData);
@@ -235,9 +235,8 @@ class WooCommerceIntegration extends WPQueryIntegration
 
             $query = self::buildQuery($queryData);
             $productTableColumns = self::getWooCommerceTableColumns($query, $wdtParameters, $customFieldColumns);
-            return $wpDataTable->arrayBasedConstruct($productTableColumns, $wdtParameters);
+            $wpDataTable->arrayBasedConstruct($productTableColumns, $wdtParameters);
         }
-        return true;
     }
 
     /**
@@ -659,7 +658,7 @@ class WooCommerceIntegration extends WPQueryIntegration
                 }
 
                 if (!$matches) {
-                    $metaFields = ['_wc_review_count', '_wc_avertage_rating', '_stock_status'];
+                    $metaFields = ['_wc_review_count', '_wc_average_rating', '_stock_status'];
                     foreach ($metaFields as $field) {
                         $metaValue = get_post_meta($postID, $field, true);
                         if ($metaValue != '' && stripos((string)$metaValue, $globalSearchValue) !== false) {

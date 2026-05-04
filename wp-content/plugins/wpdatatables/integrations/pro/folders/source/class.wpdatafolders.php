@@ -80,7 +80,7 @@ class WPDataFolders
         // Edit Folder
         add_action('wp_ajax_wpdatatables_rename_folder', [$this, 'renameFolder']);
         // Delete Folder
-        add_action('wp_ajax_wpdatatables_delete_folder', [$this, 'deleteFolder']);
+        add_action('wp_ajax_wpdatatables_delete_folder', [$this, 'deleteFolder'], 10, 6);
         // Remove Folder
         add_action('wp_ajax_wpdatatables_remove_folder_tag', [$this, 'removeFolderTag']);
 

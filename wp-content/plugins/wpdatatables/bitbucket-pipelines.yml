@@ -1,0 +1,26 @@
+image: php:8.3-cli-alpine
+
+definitions:
+  caches:
+    phpstan: /tmp/phpstan
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Build
+          image: composer:2
+          size: 2x
+          caches:
+            - composer
+          script:
+            - composer install --ignore-platform-reqs --prefer-dist --no-progress --no-interaction --optimize-autoloader --apcu-autoloader
+          artifacts:
+            - lib/**
+      - step:
+          name: PHPSTAN
+          caches:
+            - phpstan
+          script:
+            - lib/bin/phpstan clear-result-cache || true
+            - lib/bin/phpstan analyse -c phpstan.neon --memory-limit=-1 --no-progress
