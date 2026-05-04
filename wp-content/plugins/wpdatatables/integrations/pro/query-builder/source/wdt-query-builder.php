@@ -473,9 +473,9 @@ class WPQueryIntegration
      * @param $content
      * @param $wdtParameters
      *
-     * @return mixed|void
+     * @return void
      */
-    public static function wpPostsBasedConstruct($wpDataTable, $content, $wdtParameters)
+    public static function wpPostsBasedConstruct($wpDataTable, $content, $wdtParameters): void
     {
         $queryData = json_decode($content);
         $queryData = self::sanitizePostsQueryData($queryData);
@@ -501,7 +501,7 @@ class WPQueryIntegration
             $query = self::buildQuery($queryData);
             $postTableColumns = self::getPostTableColumns($query, $wdtParameters, $customFieldColumns);
 
-            return $wpDataTable->arrayBasedConstruct($postTableColumns, $wdtParameters);
+            $wpDataTable->arrayBasedConstruct($postTableColumns, $wdtParameters);
         }
     }
 

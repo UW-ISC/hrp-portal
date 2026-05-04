@@ -1591,7 +1591,7 @@ wpdt-c button#wdt-add-data-browse-button {
     color: #ffffff;
     text-decoration: underline;
 }
-
+.wpdt-c .wpdt-highcharts-cdn-notice .notice-dismiss:before,
 .wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss:before,
 .wpdt-c .wpdt-forminator-news-notice .notice-dismiss:before,
 .wpdt-c .wpdt-md-news-notice .notice-dismiss:before {
@@ -2150,10 +2150,16 @@ wpdt-c button#wdt-add-data-browse-button {
 .wdt-remove {
     display: none;
 }
-
+.wpdt-c .wpdt-highcharts-cdn,
 .wpdt-c .wpdt-bootstrap-update {
     margin: 10px 0 !important;
     font-size: 14px;
+}
+
+.wpdt-c .wpdt-highcharts-cdn-notice {
+    background: #1670c9;
+    color: #ffffff;
+    border-left-color: #091D70 !important;
 }
 
 .wpdt-c .wpdt-bootstrap-update-notice {
@@ -2335,7 +2341,7 @@ wpdt-c button#wdt-add-data-browse-button {
     margin-bottom: 5px;
 }
 
-#wdt-deactivation-modal .wdt-ticksy-description {
+#wdt-deactivation-modal .wdt-store-description {
     background: #fcdcdc;
     font-size: 14px;
     font-weight: bold;

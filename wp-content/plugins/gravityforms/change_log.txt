@@ -1,3 +1,41 @@
+### 2.10.1 | 2026-04-30
+- Added security enhancements.
+- Fixed a PHP deprecation notice that occurs when duplicating a duplicate confirmation.
+- Fixed an acessibility issue where the Post Image field does not have a label in the frontend when no Image Metadata option is selected.
+- Updated the default error message displayed when the new AJAX submission process encounters a 403 error.
+- Updated the system report to indicate if Background Notifications is enabled.
+- API: Added the [gform/ajax/pre_display_error](https://docs.gravityforms.com/gform-ajax-pre_display_error/) filter allowing customization of the error message displayed when the new AJAX submission process encounters an error.
+
+### 2.10.0 | 2026-04-16
+- Note: Under the new [versioning system](https://docs.gravityforms.com/version-numbering/) this is a minor release.
+- Added Agency Project Inquiry Form and School Enrollment Form templates to the templates library.
+- Added edit action links to the Entries list table.
+- Added logging when personal data is exported or deleted and when uploaded files are deleted.
+- Added support for configuring custom confirmations to be used for spam submissions.
+- Added support for toggling the Multiple Files setting on File Upload fields (only those added to forms from this point onwards) even when the field has entry values.
+- Added the Background Notifications setting to the Forms > Settings page. Enabled by default for new installs, it sends notifications via a separate request, improving form submission performance, so the confirmation can be displayed before sending is completed.
+- Fixed an issue where the default data is shown instead of the saved data when you edit an existing API key.
+- Fixed an issue with the Simple Contact form template that could result in column layout problems.
+- Fixed a JavaScript error that occurs when a form has pricing fields and is using page conditional logic.
+- Fixed a bug that prevents the About page from loading correctly when the site's language is not English.
+- Fixed an incorrect calculation result when the formula includes the merge tag for a choice-based pricing field and the selected choice has a price of zero.
+- Fixed deprecation notices on the entry list page and feed settings page with PHP 8.5+.
+- Fixed the accessibility of add-on icons on settings pages.
+- Updated save and continue and resending entry notifications to support background notifications.
+- API: Added `GFAPI::send_notification()` for sending a given notification (supports background notifications).
+- API: Set the `storageType` property of new File Upload fields and existing fields with Multiple Files enabled to `json`, so both the single and multi-file uploaders store their values in the same way.
+- API: Updated the new AJAX submission process to allow the submission result to be modified before markup is reloaded via the new [gform/ajax/post_submission_request](https://docs.gravityforms.com/gform-ajax-post_submission_request/) filter.
+
+
+### 2.9.31 | 2026-04-02
+- Added security enhancements.
+- Fixed an issue with new AJAX and multi-page forms where the gform_unique_id input is not populated when the value is generated server-side during pagination.
+- Fixed a JavaScript error that occurs when attempting to delete an uploaded file from a Post Image field.
+- Fixed an issue with the single File Upload field where a file count validation error occurs if the existing file is not removed when a new file is selected.
+- Fixed a broken link on Import Forms page.
+- Fixed an issue where the complex validation message for the Date field used default English labels instead of the customized placeholders.
+- API: deprecated `GFCommon::get_lead_field_display()` and added `GFField::get_value_all_fields_merge_tag()`.
+
 ### 2.9.30 | 2026-03-19
 - Added [`gform_field_sidebar_messages`](https://docs.gravityforms.com/gform_field_sidebar_messages/) filter to allow customization of the field sidebar messages in the form editor.
 - Fixed some display issues in the dashboard with WordPress 7.0-beta.

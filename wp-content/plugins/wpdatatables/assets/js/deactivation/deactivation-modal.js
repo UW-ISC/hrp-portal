@@ -23,8 +23,8 @@
             var textarea = $('<textarea>').addClass('wdt-textarea');
             var wdtNonce = wpdatatables_deactivate_info.wdt_nonce;
             var modalTicket = $('<div>').attr('id', 'wdt-deactivation-modal-ticket');
-            var ticksyText = $('<div>').text('Have you reached out to our support team? ').addClass('wdt-ticksy-description');
-            var ticksyLink = $('<a>').text('Submit ticket').attr('href', 'https://tmsplugins.ticksy.com/submit/#100004195').attr('target', '_blank').addClass('wdt-submit-ticket');
+            var storeText = $('<div>').text(wp.i18n.__('Have you reached out to our support team? ', 'wpdatatables')).addClass('wdt-store-description');
+            var storeLink = $('<a>').text(wp.i18n.__('Submit ticket', 'wpdatatables')).attr('href', 'https://store.melograno.io/').attr('target', '_blank').attr('rel', 'noopener noreferrer').addClass('wdt-submit-ticket');
 
             var modalFooter = $('<div>').attr('id', 'wdt-deactivation-modal-footer');
             var submitButton = $('<a class="btn btn-primary wdt-submit">').text('Submit & Deactivate');
@@ -34,8 +34,8 @@
             modalHeader.append(logo, title, closeBtn);
             modalFooter.append(submitButton, closeButton);
             modalOptions.append(updateList);
-            ticksyText.append(ticksyLink)
-            modalTicket.append(ticksyText);
+            storeText.append(storeLink)
+            modalTicket.append(storeText);
             modal.append(modalHeader, caption, modalOptions, modalTicket, improveTitle, textarea, modalFooter);
             backdrop.append(wdtNonce);
             // Append the modal to the body
@@ -45,8 +45,8 @@
             backdrop.show();
             modal.show();
 
-            ticksyText.hide()
-            ticksyLink.hide();
+            storeText.hide()
+            storeLink.hide();
             textarea.hide();
             improveTitle.hide();
 
@@ -121,8 +121,8 @@
                 $(this).prop('checked', true);
                 var $option = $('#wdt-deactivation-modal-options input:checked')[0].id;
                 var $data = wpdatatables_deactivate_info;
-                ticksyText.hide()
-                ticksyLink.hide();
+                storeText.hide()
+                storeLink.hide();
                 textarea.hide();
                 improveTitle.hide();
 
@@ -135,8 +135,8 @@
                                 improveTitle[0].innerText = item.input_placeholder;
                             }
                             if(item.alert != '') {
-                                ticksyText.show()
-                                ticksyLink.show();
+                                storeText.show()
+                                storeLink.show();
                                 improveTitle[0].innerText = item.input_placeholder;
                             }
                         }

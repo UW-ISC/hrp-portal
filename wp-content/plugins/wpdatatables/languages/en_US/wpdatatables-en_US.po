@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wpdatatables\n"
-"POT-Creation-Date: 2026-03-11 16:40+0100\n"
-"PO-Revision-Date: 2026-03-11 16:44+0100\n"
+"POT-Creation-Date: 2026-04-20 13:35+0200\n"
+"PO-Revision-Date: 2026-04-20 13:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: wpdatatables <cjbug@yandex.ru>\n"
 "Language: en\n"
@@ -261,14 +261,14 @@ msgstr ""
 msgid "There was an error trying to delete row! Error: "
 msgstr ""
 
-#: controllers/wdt_functions.php:2004 controllers/wdt_functions.php:2022
+#: controllers/wdt_functions.php:2026 controllers/wdt_functions.php:2044
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
 "to activate wpDataTables."
 msgstr ""
 
-#: controllers/wdt_functions.php:2090
+#: controllers/wdt_functions.php:2112
 #, php-format
 msgid "By %s"
 msgstr ""
@@ -431,7 +431,7 @@ msgstr ""
 
 #: integrations/pro/folders/templates/browse_table_insert_card.inc.php:260
 #: integrations/standard/formula-column/templates/formula_editor_modal.inc.php:80
-#: source/class.wdttools.php:927
+#: source/class.wdttools.php:931
 #: templates/admin/browse/chart/duplicate_chart_modal.inc.php:44
 #: templates/admin/browse/table/duplicate_table_modal.inc.php:62
 #: templates/admin/chart_wizard/chart_wizard.inc.php:43
@@ -629,10 +629,10 @@ msgid ""
 msgstr ""
 
 #: integrations/pro/woo-commerce/source/templates/add_to_cart_block.inc.php:13
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:993
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1001
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1062
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1073
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:992
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1000
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1061
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1072
 msgid "Add to cart"
 msgstr ""
 
@@ -676,25 +676,25 @@ msgid ""
 "the WooCommerce plugin activated, which is required to use this table type."
 msgstr ""
 
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:887
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:886
 msgid "Invalid variations selected."
 msgstr ""
 
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:910
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:909
 msgid "Invalid product or quantity."
 msgstr ""
 
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:980
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1044
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:979
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1043
 msgid "Choose an option"
 msgstr ""
 
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1057
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1070
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1056
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1069
 msgid "Quantity"
 msgstr ""
 
-#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1207
+#: integrations/pro/woo-commerce/source/wdt-woo-commerce.php:1206
 msgid ""
 "Please install and activate the WooCommerce plugin to use this table type."
 msgstr ""
@@ -2041,7 +2041,7 @@ msgid "Define relations (joining rules) between post types"
 msgstr ""
 
 #: integrations/standard/sql-constructor/templates/constructor_1_3.inc.php:189
-#: source/class.wdttools.php:1152
+#: source/class.wdttools.php:1156
 msgid "Define post types relations"
 msgstr ""
 
@@ -2129,7 +2129,7 @@ msgid "Selected SQL columns"
 msgstr ""
 
 #: integrations/standard/sql-constructor/templates/constructor_1_4.inc.php:172
-#: source/class.wdttools.php:1210
+#: source/class.wdttools.php:1214
 msgid "Define SQL tables relations"
 msgstr ""
 
@@ -2247,7 +2247,6 @@ msgstr ""
 #: integrations/starter/google-sheet-api/templates/add_google_sheet_api_configuration.inc.php:19
 #: integrations/starter/google-sheet-api/templates/add_google_sheet_api_configuration.inc.php:56
 #: templates/admin/settings/tabs/cache_settings.php:32
-#: templates/admin/settings/tabs/cache_settings.php:80
 msgid "link"
 msgstr ""
 
@@ -3860,182 +3859,182 @@ msgstr ""
 msgid "Save chart"
 msgstr ""
 
-#: source/class.wdttools.php:804
+#: source/class.wdttools.php:808
 msgid "QUICK FEEDBACK"
 msgstr ""
 
-#: source/class.wdttools.php:805
+#: source/class.wdttools.php:809
 msgid ""
 "If you have a moment, please let us know why you are deactivating the "
 "wpDataTables plugin:"
 msgstr ""
 
-#: source/class.wdttools.php:806
+#: source/class.wdttools.php:810
 msgid "Please select one option from the following list: "
 msgstr ""
 
-#: source/class.wdttools.php:923
+#: source/class.wdttools.php:927
 msgid "The field cannot be empty!"
 msgstr ""
 
-#: source/class.wdttools.php:924
+#: source/class.wdttools.php:928
 msgid "Please choose the chart type."
 msgstr ""
 
-#: source/class.wdttools.php:925
+#: source/class.wdttools.php:929
 msgid "Please select wpDataTable from the dropdown."
 msgstr ""
 
-#: source/class.wdttools.php:926
+#: source/class.wdttools.php:930
 msgid "Columns field cannot be empty."
 msgstr ""
 
-#: source/class.wdttools.php:928
+#: source/class.wdttools.php:932
 msgid ""
 "The tutorial is not canceled, closed, or end properly. Please cancel it by "
 "clicking on the Cancel button."
 msgstr ""
 
-#: source/class.wdttools.php:929
+#: source/class.wdttools.php:933
 msgid "Please check the data source that you use for this table."
 msgstr ""
 
-#: source/class.wdttools.php:930
+#: source/class.wdttools.php:934
 msgid "Finish Tutorial"
 msgstr ""
 
-#: source/class.wdttools.php:931
+#: source/class.wdttools.php:935
 msgid "Continue"
 msgstr ""
 
-#: source/class.wdttools.php:932
+#: source/class.wdttools.php:936
 msgid "Start"
 msgstr ""
 
-#: source/class.wdttools.php:933
+#: source/class.wdttools.php:937
 msgid "Skip Tutorial"
 msgstr ""
 
-#: source/class.wdttools.php:936 source/class.wdttools.php:1002
-#: source/class.wdttools.php:1048 source/class.wdttools.php:1082
-#: source/class.wdttools.php:1124 source/class.wdttools.php:1186
-#: source/class.wdttools.php:1244
+#: source/class.wdttools.php:940 source/class.wdttools.php:1006
+#: source/class.wdttools.php:1052 source/class.wdttools.php:1086
+#: source/class.wdttools.php:1128 source/class.wdttools.php:1190
+#: source/class.wdttools.php:1248
 msgid "Welcome to the tutorial!"
 msgstr ""
 
-#: source/class.wdttools.php:937 source/class.wdttools.php:1003
-#: source/class.wdttools.php:1049 source/class.wdttools.php:1083
-#: source/class.wdttools.php:1125 source/class.wdttools.php:1187
-#: source/class.wdttools.php:1245
+#: source/class.wdttools.php:941 source/class.wdttools.php:1007
+#: source/class.wdttools.php:1053 source/class.wdttools.php:1087
+#: source/class.wdttools.php:1129 source/class.wdttools.php:1191
+#: source/class.wdttools.php:1249
 msgid "Hello "
 msgstr ""
 
-#: source/class.wdttools.php:937
+#: source/class.wdttools.php:941
 msgid ""
 ", in this tutorial, we will show you how to create a simple table from "
 "scratch by choosing a custom number of columns and rows. How to customize "
 "each cell, merge cells and a lot more."
 msgstr ""
 
-#: source/class.wdttools.php:940
+#: source/class.wdttools.php:944
 msgid " Let's create a new wpDataTable from scratch!"
 msgstr ""
 
-#: source/class.wdttools.php:941 source/class.wdttools.php:1007
-#: source/class.wdttools.php:1129
+#: source/class.wdttools.php:945 source/class.wdttools.php:1011
+#: source/class.wdttools.php:1133
 msgid "Click on 'Create a Table' to access the wpDataTables Table Wizard."
 msgstr ""
 
-#: source/class.wdttools.php:944 source/class.wdttools.php:1056
-#: source/class.wdttools.php:1090 source/class.wdttools.php:1132
-#: source/class.wdttools.php:1194
+#: source/class.wdttools.php:948 source/class.wdttools.php:1060
+#: source/class.wdttools.php:1094 source/class.wdttools.php:1136
+#: source/class.wdttools.php:1198
 msgid "Choose this option"
 msgstr ""
 
-#: source/class.wdttools.php:945
+#: source/class.wdttools.php:949
 msgid "Please select 'Create a simple table from scratch'."
 msgstr ""
 
-#: source/class.wdttools.php:948 source/class.wdttools.php:1014
-#: source/class.wdttools.php:1094 source/class.wdttools.php:1136
-#: source/class.wdttools.php:1198
+#: source/class.wdttools.php:952 source/class.wdttools.php:1018
+#: source/class.wdttools.php:1098 source/class.wdttools.php:1140
+#: source/class.wdttools.php:1202
 msgid "Click Next"
 msgstr ""
 
-#: source/class.wdttools.php:949 source/class.wdttools.php:1015
+#: source/class.wdttools.php:953 source/class.wdttools.php:1019
 msgid "Please click the 'Next' button to continue."
 msgstr ""
 
-#: source/class.wdttools.php:952
+#: source/class.wdttools.php:956
 msgid "Welcome to the Simple table wizard!"
 msgstr ""
 
-#: source/class.wdttools.php:953
+#: source/class.wdttools.php:957
 msgid "Please click 'Continue' button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:956 source/class.wdttools.php:1202
+#: source/class.wdttools.php:960 source/class.wdttools.php:1206
 msgid "Choose a name for your table"
 msgstr ""
 
-#: source/class.wdttools.php:957
+#: source/class.wdttools.php:961
 msgid "After inserting table name, click 'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:960
+#: source/class.wdttools.php:964
 msgid "Choose the number of columns for your table"
 msgstr ""
 
-#: source/class.wdttools.php:961
+#: source/class.wdttools.php:965
 msgid ""
 "Please choose how many columns it will have. Remember that you can always "
 "add or reduce the number of columns later. Click 'Continue' when you finish."
 msgstr ""
 
-#: source/class.wdttools.php:964
+#: source/class.wdttools.php:968
 msgid "Choose the number of rows for your table."
 msgstr ""
 
-#: source/class.wdttools.php:965
+#: source/class.wdttools.php:969
 msgid ""
 "Please choose how many rows it will have. Remember that you can always add "
 "or reduce the number of rows later. Click 'Continue' when you finish."
 msgstr ""
 
-#: source/class.wdttools.php:968
+#: source/class.wdttools.php:972
 msgid "Click on the 'Generate Table' button"
 msgstr ""
 
-#: source/class.wdttools.php:969
+#: source/class.wdttools.php:973
 msgid "When you click on the button, the empty table will be ready for you. "
 msgstr ""
 
-#: source/class.wdttools.php:972
+#: source/class.wdttools.php:976
 msgid "We are generating the table..."
 msgstr ""
 
-#: source/class.wdttools.php:973
+#: source/class.wdttools.php:977
 msgid "Please, when you see the table, click 'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:976
+#: source/class.wdttools.php:980
 msgid ""
 "Nice job! You just configured your table and it is ready to fill it with "
 "data."
 msgstr ""
 
-#: source/class.wdttools.php:977
+#: source/class.wdttools.php:981
 msgid ""
 "Now we will guide you on how to insert data and check table layout throw "
 "Simple table editor, table toolbar and table preview. Please click "
 "'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:980
+#: source/class.wdttools.php:984
 msgid "This is Simple table editor"
 msgstr ""
 
-#: source/class.wdttools.php:981
+#: source/class.wdttools.php:985
 msgid ""
 "Here you can populate your table with data. <br><br>You can move around the "
 "cells using keyboard arrows and the Tab button. <br><br>Rearrange columns or "
@@ -4044,11 +4043,11 @@ msgid ""
 "line of the row header. Click 'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:984
+#: source/class.wdttools.php:988
 msgid "Check out the Simple table toolbar"
 msgstr ""
 
-#: source/class.wdttools.php:985
+#: source/class.wdttools.php:989
 msgid ""
 "Here you can style and insert custom data for each cell or range of cells. "
 "You can add or delete columns and rows, merge cells, customize sections by "
@@ -4056,39 +4055,39 @@ msgid ""
 "ratings or custom HTML code."
 msgstr ""
 
-#: source/class.wdttools.php:988
+#: source/class.wdttools.php:992
 msgid "Responsive table views"
 msgstr ""
 
-#: source/class.wdttools.php:989
+#: source/class.wdttools.php:993
 msgid ""
 "You can switch between Desktop, Tablet or Mobile devices by clicking on the "
 "tab that you need, so you can make sure your table looks excellent across "
 "all devices. "
 msgstr ""
 
-#: source/class.wdttools.php:992
+#: source/class.wdttools.php:996
 msgid "Real-time preview"
 msgstr ""
 
-#: source/class.wdttools.php:993
+#: source/class.wdttools.php:997
 msgid ""
 "Here you will see how your table will look like on the page. Please click "
 "'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:996
+#: source/class.wdttools.php:1000
 msgid "Congrats! Your table is ready."
 msgstr ""
 
-#: source/class.wdttools.php:997
+#: source/class.wdttools.php:1001
 msgid ""
 "Now you can copy the shortcode for this table, and check out how it looks on "
 "your website when you paste it to a post or page. You can always come back "
 "and edit the table as you like."
 msgstr ""
 
-#: source/class.wdttools.php:1003
+#: source/class.wdttools.php:1007
 msgid ""
 ", in this tutorial we will show you how to create a wpDataTable linked to an "
 "existing data source. \"Linked\" in this context means that if you create a "
@@ -4097,64 +4096,64 @@ msgid ""
 "reflected in the table."
 msgstr ""
 
-#: source/class.wdttools.php:1006 source/class.wdttools.php:1052
-#: source/class.wdttools.php:1086 source/class.wdttools.php:1128
-#: source/class.wdttools.php:1190
+#: source/class.wdttools.php:1010 source/class.wdttools.php:1056
+#: source/class.wdttools.php:1090 source/class.wdttools.php:1132
+#: source/class.wdttools.php:1194
 msgid "Let's create a new wpDataTable!"
 msgstr ""
 
-#: source/class.wdttools.php:1010
+#: source/class.wdttools.php:1014
 msgid "Choose this option."
 msgstr ""
 
-#: source/class.wdttools.php:1011
+#: source/class.wdttools.php:1015
 msgid "Please select 'Create a table linked to an existing data source'."
 msgstr ""
 
-#: source/class.wdttools.php:1018
+#: source/class.wdttools.php:1022
 #: templates/admin/table-settings/table_settings_block.inc.php:147
 msgid "Input data source type"
 msgstr ""
 
-#: source/class.wdttools.php:1019
+#: source/class.wdttools.php:1023
 msgid "Please select a data source type that you need."
 msgstr ""
 
-#: source/class.wdttools.php:1022
+#: source/class.wdttools.php:1026
 msgid "Select Data source type"
 msgstr ""
 
-#: source/class.wdttools.php:1023
+#: source/class.wdttools.php:1027
 msgid ""
 "Please choose the data source that you need (SQL, Excel, CSV, JSON, Google "
 "Spreadsheet, or PHP array) and then click 'Continue' button."
 msgstr ""
 
-#: source/class.wdttools.php:1026
+#: source/class.wdttools.php:1030
 #: templates/admin/constructor/steps/constructor_1_2.inc.php:8
 #: templates/admin/table-settings/table_settings_block.inc.php:196
 msgid "Input file path or URL"
 msgstr ""
 
-#: source/class.wdttools.php:1027 source/class.wdttools.php:1099
+#: source/class.wdttools.php:1031 source/class.wdttools.php:1103
 msgid ""
 "Upload your file or provide the full URL here. When you finish click "
 "'Continue' button."
 msgstr ""
 
-#: source/class.wdttools.php:1030
+#: source/class.wdttools.php:1034
 msgid "Write SQL query"
 msgstr ""
 
-#: source/class.wdttools.php:1031
+#: source/class.wdttools.php:1035
 msgid "Please write your custom SQL query and then click 'Continue' button."
 msgstr ""
 
-#: source/class.wdttools.php:1034
+#: source/class.wdttools.php:1038
 msgid "Click Save Changes"
 msgstr ""
 
-#: source/class.wdttools.php:1035
+#: source/class.wdttools.php:1039
 msgid ""
 "Please click on the 'Save Changes' button to create a table.<br><br> If you "
 "get an error message after button click and you are not able to solve it, "
@@ -4163,166 +4162,166 @@ msgid ""
 "click Skip tutorial."
 msgstr ""
 
-#: source/class.wdttools.php:1038
+#: source/class.wdttools.php:1042
 msgid "The table is creating..."
 msgstr ""
 
-#: source/class.wdttools.php:1039
+#: source/class.wdttools.php:1043
 msgid ""
 "Now the table is creating. Wait until you see it in the background and then "
 "click 'Continue'."
 msgstr ""
 
-#: source/class.wdttools.php:1042
+#: source/class.wdttools.php:1046
 msgid "Nice job! You just created your first wpDataTable!"
 msgstr ""
 
-#: source/class.wdttools.php:1043
+#: source/class.wdttools.php:1047
 msgid ""
 "Now you can copy the shortcode for this table, and check out how it looks on "
 "your website when you paste it to a post or page."
 msgstr ""
 
-#: source/class.wdttools.php:1049
+#: source/class.wdttools.php:1053
 msgid ""
 ", in this tutorial we will show you how to create a table manually, fully in "
 "WordPress dashboard."
 msgstr ""
 
-#: source/class.wdttools.php:1053 source/class.wdttools.php:1087
-#: source/class.wdttools.php:1191
+#: source/class.wdttools.php:1057 source/class.wdttools.php:1091
+#: source/class.wdttools.php:1195
 msgid "Click on 'Create a Table' to access wpDataTables Table Wizard."
 msgstr ""
 
-#: source/class.wdttools.php:1057
+#: source/class.wdttools.php:1061
 msgid "Please select 'Create a table manually' to proceed."
 msgstr ""
 
-#: source/class.wdttools.php:1060
+#: source/class.wdttools.php:1064
 msgid "Click NEXT"
 msgstr ""
 
-#: source/class.wdttools.php:1061 source/class.wdttools.php:1095
-#: source/class.wdttools.php:1103 source/class.wdttools.php:1137
-#: source/class.wdttools.php:1165 source/class.wdttools.php:1199
-#: source/class.wdttools.php:1223
+#: source/class.wdttools.php:1065 source/class.wdttools.php:1099
+#: source/class.wdttools.php:1107 source/class.wdttools.php:1141
+#: source/class.wdttools.php:1169 source/class.wdttools.php:1203
+#: source/class.wdttools.php:1227
 msgid "Please click 'Next' button to continue."
 msgstr ""
 
-#: source/class.wdttools.php:1064
+#: source/class.wdttools.php:1068
 msgid "Welcome to manual table constructor"
 msgstr ""
 
-#: source/class.wdttools.php:1065
+#: source/class.wdttools.php:1069
 msgid ""
 "This table constructor will help you to create a table from scratch. "
 "<br><br>  Click 'Continue' to set section by section."
 msgstr ""
 
-#: source/class.wdttools.php:1068
+#: source/class.wdttools.php:1072
 msgid "Choose names and number of columns."
 msgstr ""
 
-#: source/class.wdttools.php:1069
+#: source/class.wdttools.php:1073
 msgid ""
 "Give your table a name and choose how many columns it will have.<br><br>  "
 "Click the 'Continue' button when you’re ready to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1072
+#: source/class.wdttools.php:1076
 msgid "Column creating wizard"
 msgstr ""
 
-#: source/class.wdttools.php:1073
+#: source/class.wdttools.php:1077
 msgid ""
 "Here you can set the name, choose the type for each column, drag and drop to "
 "reorder them or remove a column.<br><br>  When you set everything, click the "
 "'Continue' button."
 msgstr ""
 
-#: source/class.wdttools.php:1076
+#: source/class.wdttools.php:1080
 msgid "Congrats! You just configured your table."
 msgstr ""
 
-#: source/class.wdttools.php:1077 source/class.wdttools.php:1119
-#: source/class.wdttools.php:1181 source/class.wdttools.php:1239
+#: source/class.wdttools.php:1081 source/class.wdttools.php:1123
+#: source/class.wdttools.php:1185 source/class.wdttools.php:1243
 msgid ""
 "To start working with it, finish the tutorial, click on the 'Create the "
 "table' button and choose in which editor you would like to open it. "
 msgstr ""
 
-#: source/class.wdttools.php:1083
+#: source/class.wdttools.php:1087
 msgid ""
 ",  this tutorial will show you how to create a table by importing data from "
 "the existing data source."
 msgstr ""
 
-#: source/class.wdttools.php:1091
+#: source/class.wdttools.php:1095
 msgid ""
 "Please select 'Create a table by importing data from a data source' to "
 "proceed."
 msgstr ""
 
-#: source/class.wdttools.php:1098
+#: source/class.wdttools.php:1102
 msgid "Choose your data source"
 msgstr ""
 
-#: source/class.wdttools.php:1102 source/class.wdttools.php:1164
-#: source/class.wdttools.php:1222
+#: source/class.wdttools.php:1106 source/class.wdttools.php:1168
+#: source/class.wdttools.php:1226
 msgid "Click 'Next'"
 msgstr ""
 
-#: source/class.wdttools.php:1106
+#: source/class.wdttools.php:1110
 msgid "Now you can edit your table in the manual constructor"
 msgstr ""
 
-#: source/class.wdttools.php:1107
+#: source/class.wdttools.php:1111
 msgid ""
 "This constructor will show you columns that will be saved in the database "
 "based on your file.<br><br>  Click 'Continue' button to check section by "
 "section."
 msgstr ""
 
-#: source/class.wdttools.php:1110 source/class.wdttools.php:1140
+#: source/class.wdttools.php:1114 source/class.wdttools.php:1144
 msgid "Choose a name for your table."
 msgstr ""
 
-#: source/class.wdttools.php:1111 source/class.wdttools.php:1141
-#: source/class.wdttools.php:1203 source/class.wdttools.php:1261
+#: source/class.wdttools.php:1115 source/class.wdttools.php:1145
+#: source/class.wdttools.php:1207 source/class.wdttools.php:1265
 msgid "Click 'Continue' button when you’re ready to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1114
+#: source/class.wdttools.php:1118
 msgid "Welcome to Column Creating Wizard."
 msgstr ""
 
-#: source/class.wdttools.php:1115
+#: source/class.wdttools.php:1119
 msgid ""
 "Your data preview is here. You can change the name and type for each column, "
 "drag and drop to reorder them, remove or add a column.<br><br>  When you set "
 "everything, click 'Continue' button."
 msgstr ""
 
-#: source/class.wdttools.php:1118 source/class.wdttools.php:1180
-#: source/class.wdttools.php:1238
+#: source/class.wdttools.php:1122 source/class.wdttools.php:1184
+#: source/class.wdttools.php:1242
 msgid "Congrats! You are ready to create the table!"
 msgstr ""
 
-#: source/class.wdttools.php:1125
+#: source/class.wdttools.php:1129
 msgid ""
 ", in this tutorial, we will show you how to create a table by generating a "
 "query from WordPress posts."
 msgstr ""
 
-#: source/class.wdttools.php:1133
+#: source/class.wdttools.php:1137
 msgid "Please select 'Generate a query to the WordPress database' to proceed."
 msgstr ""
 
-#: source/class.wdttools.php:1144
+#: source/class.wdttools.php:1148
 msgid "Welcome to MySQL query generator."
 msgstr ""
 
-#: source/class.wdttools.php:1145
+#: source/class.wdttools.php:1149
 msgid ""
 "Choose one or more post types from the lefthand side for your table, either "
 "by dragging and dropping the post type names or by selecting post types and "
@@ -4334,71 +4333,71 @@ msgid ""
 "forward."
 msgstr ""
 
-#: source/class.wdttools.php:1148
+#: source/class.wdttools.php:1152
 msgid "Choose relations"
 msgstr ""
 
-#: source/class.wdttools.php:1149
+#: source/class.wdttools.php:1153
 msgid ""
 "Define relations (joining rules) between post types.<br><br>  Click "
 "'Continue' button when you’re ready to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1153
+#: source/class.wdttools.php:1157
 msgid ""
 "When you define it toggle checkbox to have an inner join, uncheck to have "
 "left join. <br><br> Click 'Continue' button when you’re ready to move "
 "forward."
 msgstr ""
 
-#: source/class.wdttools.php:1156
+#: source/class.wdttools.php:1160
 msgid "Set the conditions between the columns"
 msgstr ""
 
-#: source/class.wdttools.php:1157
+#: source/class.wdttools.php:1161
 msgid ""
 "Add and define conditions between columns in your table by clicking the '+ "
 "Add Condition' button.<br><br>  When you are ready, click 'Continue' button "
 "to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1160
+#: source/class.wdttools.php:1164
 msgid "Set the grouping rules"
 msgstr ""
 
-#: source/class.wdttools.php:1161
+#: source/class.wdttools.php:1165
 msgid ""
 "By the '+ Add Grouping' button, you can define the column grouping rules for "
 "the table.<br><br>  Once you're done, click \"Continue\" button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1168 source/class.wdttools.php:1226
+#: source/class.wdttools.php:1172 source/class.wdttools.php:1230
 msgid "We are creating your query..."
 msgstr ""
 
-#: source/class.wdttools.php:1169
+#: source/class.wdttools.php:1173
 msgid ""
 "Please wait until wpDataTables query constructor builds the query for you. "
 "Once done, it will show five lines of data as a preview. <br><br>Click "
 "'Continue' button when you see it in the background."
 msgstr ""
 
-#: source/class.wdttools.php:1172 source/class.wdttools.php:1230
+#: source/class.wdttools.php:1176 source/class.wdttools.php:1234
 msgid "Your query preview is ready!"
 msgstr ""
 
-#: source/class.wdttools.php:1173
+#: source/class.wdttools.php:1177
 msgid ""
 "Here you see the query that wpDataTables generated for you. If you are not "
 "completely satisfied with it, you can edit it straight from this window."
 "<br><br> Click \"Continue\" button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1176
+#: source/class.wdttools.php:1180
 msgid "Preview of the first 5 rows."
 msgstr ""
 
-#: source/class.wdttools.php:1177
+#: source/class.wdttools.php:1181
 msgid ""
 "Here you can see the first few rows the MySQL server returns using the query "
 "provided. If you see “No data”, it means that the MySQL server could not "
@@ -4408,21 +4407,21 @@ msgid ""
 "<br><br>If everything is fine, please click 'NEXT' to continue."
 msgstr ""
 
-#: source/class.wdttools.php:1187
+#: source/class.wdttools.php:1191
 msgid ""
 ", this tutorial will show you how to create a table by generating a query "
 "from the MySQL database."
 msgstr ""
 
-#: source/class.wdttools.php:1195
+#: source/class.wdttools.php:1199
 msgid "Please select 'Generate a query to the MySQL database' to proceed."
 msgstr ""
 
-#: source/class.wdttools.php:1206
+#: source/class.wdttools.php:1210
 msgid "Welcome to MySQL query generator"
 msgstr ""
 
-#: source/class.wdttools.php:1207
+#: source/class.wdttools.php:1211
 msgid ""
 "Here you can choose one or more MySQL tables as data sources for your new "
 "wpDataTable, either by dragging and dropping the table names or by selecting "
@@ -4433,53 +4432,53 @@ msgid ""
 "section.<br><br> When you finish, click 'Continue' button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1211
+#: source/class.wdttools.php:1215
 msgid ""
 "Once you configure the relations, mark the checkbox for using an inner join "
 "rule, or uncheck to use left join.<br><br> When you finish, click 'Continue' "
 "button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1214
+#: source/class.wdttools.php:1218
 msgid "Set conditions between the columns."
 msgstr ""
 
-#: source/class.wdttools.php:1215
+#: source/class.wdttools.php:1219
 msgid ""
 "Add and define conditions between columns in your table by clicking on the "
 "button '+ Add Condition'.<br><br> When you finish, click on 'Continue' "
 "button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1218
+#: source/class.wdttools.php:1222
 msgid "Set grouping rules"
 msgstr ""
 
-#: source/class.wdttools.php:1219
+#: source/class.wdttools.php:1223
 msgid ""
 "By the '+ Add Grouping' button, you can define the column grouping rules for "
 "the table.<br><br> Once you're done, click \"Continue\" button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1227
+#: source/class.wdttools.php:1231
 msgid ""
 "Please wait until wpDataTables query constructor builds the query for you. "
 "Once done, it will show five lines of data as a preview.<br><br> Click "
 "'Continue' button when you see it in the background."
 msgstr ""
 
-#: source/class.wdttools.php:1231
+#: source/class.wdttools.php:1235
 msgid ""
 "Here you see the query that wpDataTables generated for you. If you are not "
 "completely satisfied with it, you can edit it straight from this window."
 "<br><br> Click 'Continue' button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1234
+#: source/class.wdttools.php:1238
 msgid "Preview of the first 5 rows"
 msgstr ""
 
-#: source/class.wdttools.php:1235
+#: source/class.wdttools.php:1239
 msgid ""
 "Here you can see the first few rows the MySQL server returns using the query "
 "provided. If you see “No data”, it means that the MySQL server could not "
@@ -4489,92 +4488,92 @@ msgid ""
 "<br>If everything is fine, please click 'Continue' to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1245
+#: source/class.wdttools.php:1249
 msgid ""
 ", in this tutorial we will show you how to create a chart in wpDataTables "
 "plugin."
 msgstr ""
 
-#: source/class.wdttools.php:1248
+#: source/class.wdttools.php:1252
 msgid "Let's create a new wpDataTables Chart!"
 msgstr ""
 
-#: source/class.wdttools.php:1249
+#: source/class.wdttools.php:1253
 msgid "Click on 'Create a Chart' to access the wpDataTables Chart Wizard."
 msgstr ""
 
-#: source/class.wdttools.php:1252
+#: source/class.wdttools.php:1256
 msgid "Welcome to the Chart Wizard!"
 msgstr ""
 
-#: source/class.wdttools.php:1253
+#: source/class.wdttools.php:1257
 msgid ""
 "You are at the first step now; we will introduce you the wpDataTables Chart "
 "Wizard section by section.<br><br> Click 'Continue' button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1256
+#: source/class.wdttools.php:1260
 msgid "Follow the steps in the Chart Wizard"
 msgstr ""
 
-#: source/class.wdttools.php:1257
+#: source/class.wdttools.php:1261
 msgid ""
 "By following these steps, you will finish building your chart in the Chart "
 "Wizard. The current step will always be highlighted in blue.<br><br> Click "
 "'Continue' button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1260
+#: source/class.wdttools.php:1264
 msgid "Choose a name for your Chart"
 msgstr ""
 
-#: source/class.wdttools.php:1264
+#: source/class.wdttools.php:1268
 msgid "In wpDataTables you can find several charts render engines."
 msgstr ""
 
-#: source/class.wdttools.php:1265
+#: source/class.wdttools.php:1269
 msgid ""
 "Click on the dropdown, and you will see several options that you can choose "
 "from. <br><br>To continue, click on the dropdown."
 msgstr ""
 
-#: source/class.wdttools.php:1268
+#: source/class.wdttools.php:1272
 msgid "Choose your desired chart engine."
 msgstr ""
 
-#: source/class.wdttools.php:1269
+#: source/class.wdttools.php:1273
 msgid ""
 "By clicking on one of the three options, you will choose the engine that "
 "will render your chart.<br><br> When you finish, please click 'Continue' "
 "button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1272
+#: source/class.wdttools.php:1276
 msgid "Different charts types based on the engine you choose. "
 msgstr ""
 
-#: source/class.wdttools.php:1273
+#: source/class.wdttools.php:1277
 msgid ""
 "Here you can choose a chart type. Please, click on the chart type that you "
 "prefer.<br><br> When you finish, please click 'Continue' button to move "
 "forward."
 msgstr ""
 
-#: source/class.wdttools.php:1276
+#: source/class.wdttools.php:1280
 msgid "The first step is finished!"
 msgstr ""
 
-#: source/class.wdttools.php:1277
+#: source/class.wdttools.php:1281
 msgid "Let's move on. Please, click 'Next' to continue."
 msgstr ""
 
-#: source/class.wdttools.php:1280
+#: source/class.wdttools.php:1284
 msgid ""
 "Now you need to choose a wpDataTable based on which we will build a chart "
 "for you"
 msgstr ""
 
-#: source/class.wdttools.php:1281
+#: source/class.wdttools.php:1285
 msgid ""
 "Click on the dropdown, and all your tables will be listed. The columns of "
 "the table that you choose will be used for creating the chart.<br><br>If you "
@@ -4582,59 +4581,59 @@ msgid ""
 "button and create wpDataTable that would contain the data to visualize first."
 msgstr ""
 
-#: source/class.wdttools.php:1284
+#: source/class.wdttools.php:1288
 msgid "Pick your wpDataTable"
 msgstr ""
 
-#: source/class.wdttools.php:1285
+#: source/class.wdttools.php:1289
 msgid ""
 "Pick a wpDataTable from which you want to render a chart and when you "
 "finish, please click 'Continue' to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1288
+#: source/class.wdttools.php:1292
 msgid "The second step is finished!"
 msgstr ""
 
-#: source/class.wdttools.php:1289
+#: source/class.wdttools.php:1293
 msgid ""
 "Let's see what is coming up next. <br><br> Please, click 'Next' to continue."
 msgstr ""
 
-#: source/class.wdttools.php:1292
+#: source/class.wdttools.php:1296
 msgid "Just a heads up!"
 msgstr ""
 
-#: source/class.wdttools.php:1293
+#: source/class.wdttools.php:1297
 msgid ""
 "Here you will choose from which columns you will create a chart.<br><br> "
 "Please click 'Continue' button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1296
+#: source/class.wdttools.php:1300
 msgid "Meet the wpDataTable Column Blocks"
 msgstr ""
 
-#: source/class.wdttools.php:1297
+#: source/class.wdttools.php:1301
 msgid ""
 "Here you will choose columns you want to use in the chart. Drag and drop it, "
 "or click on the arrow to move the desired column to the 'Columns used in the "
 "chart' section.<br><br> When you finish please, click 'Continue.'"
 msgstr ""
 
-#: source/class.wdttools.php:1300
+#: source/class.wdttools.php:1304
 msgid "Well done!"
 msgstr ""
 
-#: source/class.wdttools.php:1301
+#: source/class.wdttools.php:1305
 msgid "Just two more steps to go. Please click 'Next' to continue."
 msgstr ""
 
-#: source/class.wdttools.php:1304
+#: source/class.wdttools.php:1308
 msgid "Chart settings and chart preview."
 msgstr ""
 
-#: source/class.wdttools.php:1305
+#: source/class.wdttools.php:1309
 msgid ""
 "Here you can adjust chart settings, different parameters are grouped in "
 "section; adjusting the parameters will be reflected in the preview of your "
@@ -4642,77 +4641,77 @@ msgid ""
 "button to move forward."
 msgstr ""
 
-#: source/class.wdttools.php:1308
+#: source/class.wdttools.php:1312
 msgid "In this sidebar, you can find the chart settings section."
 msgstr ""
 
-#: source/class.wdttools.php:1309
+#: source/class.wdttools.php:1313
 msgid ""
 "By clicking on each section, you can set your desired parameters per section."
 "<br><br> Please click 'Continue' button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1312
+#: source/class.wdttools.php:1316
 msgid "Here are the available chart options"
 msgstr ""
 
-#: source/class.wdttools.php:1313
+#: source/class.wdttools.php:1317
 msgid ""
 "Set different chart options for the chosen section to get your desired chart "
 "look.<br><br> Please click 'Continue' button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1316
+#: source/class.wdttools.php:1320
 msgid "How your chart will look like on the page of your website"
 msgstr ""
 
-#: source/class.wdttools.php:1317
+#: source/class.wdttools.php:1321
 msgid ""
 "Here you can see a preview of your chart based on the settings you have "
 "chosen.<br><br> Please click 'Continue' button to move on."
 msgstr ""
 
-#: source/class.wdttools.php:1320
+#: source/class.wdttools.php:1324
 msgid "You can save your chart now"
 msgstr ""
 
-#: source/class.wdttools.php:1321
+#: source/class.wdttools.php:1325
 msgid ""
 "If you are satisfied with your chart appearance, click on the 'Save chart' "
 "button and all your settings for this chart will be saved in the database."
 msgstr ""
 
-#: source/class.wdttools.php:1324
+#: source/class.wdttools.php:1328
 msgid "Congrats! Your first chart is ready!"
 msgstr ""
 
-#: source/class.wdttools.php:1325
+#: source/class.wdttools.php:1329
 msgid ""
 "Now you can copy the shortcode for this chart and paste it in any WP post or "
 "page. <br><br>You may now finish this tutorial. "
 msgstr ""
 
-#: source/class.wdttools.php:2435
+#: source/class.wdttools.php:2439
 msgid "User do not have permissions to delete this row! "
 msgstr ""
 
-#: source/class.wdttools.php:2437
+#: source/class.wdttools.php:2441
 msgid "User do not have permission to update data!"
 msgstr ""
 
-#: source/class.wdttools.php:2459
+#: source/class.wdttools.php:2463
 msgid "User does not have permissions to delete this row! "
 msgstr ""
 
-#: source/class.wdttools.php:2461
+#: source/class.wdttools.php:2465
 msgid "User does not have permission to update data!"
 msgstr ""
 
-#: source/class.wpdatachart.php:751
+#: source/class.wpdatachart.php:794
 msgid "Only one column can be of type String"
 msgstr ""
 
-#: source/class.wpdatachart.php:754
+#: source/class.wpdatachart.php:797
 msgid "You are mixing data types (several date axes and several number)"
 msgstr ""
 
@@ -9190,7 +9189,7 @@ msgid ""
 msgstr ""
 
 #: templates/admin/dashboard/dashboard.inc.php:306
-msgid " ticketing system."
+msgid " store."
 msgstr ""
 
 #: templates/admin/dashboard/dashboard.inc.php:320
@@ -10263,6 +10262,10 @@ msgid ""
 "on this"
 msgstr ""
 
+#: templates/admin/settings/tabs/cache_settings.php:80
+msgid "store"
+msgstr ""
+
 #: templates/admin/settings/tabs/cache_settings.php:89
 msgid "Delete errors log"
 msgstr ""
@@ -11082,12 +11085,11 @@ msgid "Still need help?"
 msgstr ""
 
 #: templates/admin/support/support.inc.php:76
-msgid ""
-"We provide proffesional support to all our users via our tiketing system."
+msgid "We provide proffesional support to all our users via our store."
 msgstr ""
 
 #: templates/admin/support/support.inc.php:78
-msgid "Submit a ticket"
+msgid "Log in to submit a ticket"
 msgstr ""
 
 #: templates/admin/system-info/system_info.inc.php:22
