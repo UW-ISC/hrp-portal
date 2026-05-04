@@ -7,18 +7,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Mega_Menu_Widget_Elementor_Template' ) ) :
 
 	/**
-	 * Outputs an Elementor template
+	 * WordPress widget that outputs a saved Elementor template within a mega menu.
+	 *
+	 * @since   2.7.4
+	 * @package MegaMenu
 	 */
 	class Mega_Menu_Widget_Elementor_Template extends WP_Widget {
 
 		/**
 		 * Register widget with WordPress.
+		 *
+		 * @since  2.7.4
+		 * @return void
 		 */
 		public function __construct() {
 			parent::__construct(
 				'maxmegamenu_elementor_template', // Base ID
 				'Elementor Template', // Name
-				array( 'description' => __( 'Outputs a saved Elementor template.', 'megamenu' ) ) // Args
+				[ 'description' => __( 'Outputs a saved Elementor template.', 'megamenu' ) ] // Args
 			);
 		}
 
@@ -26,10 +32,11 @@ if ( ! class_exists( 'Mega_Menu_Widget_Elementor_Template' ) ) :
 		/**
 		 * Front-end display of widget.
 		 *
-		 * @since 2.7.4
-		 * @see WP_Widget::widget()
-		 * @param array   $args     Widget arguments.
-		 * @param array   $instance Saved values from database.
+		 * @since  2.7.4
+		 * @see    WP_Widget::widget()
+		 * @param  array $args     Widget arguments.
+		 * @param  array $instance Saved values from database.
+		 * @return void
 		 */
 		public function widget( $args, $instance ) {
 			if ( empty( $instance['template_id'] ) || ! get_post_type( $instance['template_id'] ) ) {
@@ -56,14 +63,14 @@ if ( ! class_exists( 'Mega_Menu_Widget_Elementor_Template' ) ) :
 		/**
 		 * Sanitize widget form values as they are saved.
 		 *
-		 * @since 2.7.4
-		 * @see WP_Widget::update()
-		 * @param array   $new_instance Values just sent to be saved.
-		 * @param array   $old_instance Previously saved values from database.
+		 * @since  2.7.4
+		 * @see    WP_Widget::update()
+		 * @param  array $new_instance Values just sent to be saved.
+		 * @param  array $old_instance Previously saved values from database.
 		 * @return array Updated safe values to be saved.
 		 */
 		public function update( $new_instance, $old_instance ) {
-			$instance                = array();
+			$instance                = [];
 			$instance['template_id'] = ! empty( $new_instance['template_id'] ) ? $new_instance['template_id'] : 0;
 
 			return $instance;
@@ -73,9 +80,10 @@ if ( ! class_exists( 'Mega_Menu_Widget_Elementor_Template' ) ) :
 		/**
 		 * Back-end widget form.
 		 *
-		 * @since 2.7.4
-		 * @see WP_Widget::form()
-		 * @param array   $instance Previously saved values from database.
+		 * @since  2.7.4
+		 * @see    WP_Widget::form()
+		 * @param  array $instance Previously saved values from database.
+		 * @return void
 		 */
 		public function form( $instance ) {
 			$template_id = ! empty( $instance['template_id'] ) ? absint( $instance['template_id'] ) : 0;
@@ -83,11 +91,11 @@ if ( ! class_exists( 'Mega_Menu_Widget_Elementor_Template' ) ) :
 			$widget_title = $template_id ? get_post_field( 'post_title', $template_id ) : '';
 
 			$posts = get_posts(
-				array(
+				[
 					'post_type'   => 'elementor_library',
 					'post_status' => 'publish',
 					'numberposts' => -1,
-				)
+				]
 			);
 
 			// No blocks found.

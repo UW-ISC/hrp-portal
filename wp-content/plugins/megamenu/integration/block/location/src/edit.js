@@ -4,6 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
+import { createInterpolateElement } from '@wordpress/element';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -52,9 +53,19 @@ export default function Edit( { setAttributes, attributes, isSelected } ) {
     } );
 
     if ( options.length === 1 ) {
+        const menuLocationsUrl =
+            window.max_mega_menu_block_admin?.menu_locations_url || '#';
         return (
             <div {...useBlockProps()}>
-                {__('No locations found. Go to Mega Menu > Menu Locations to create a new menu location.', 'megamenu')}
+                {createInterpolateElement(
+                    __(
+                        'No locations found. Go to <a>Mega Menu > Menu Locations</a> to create a new menu location.',
+                        'megamenu'
+                    ),
+                    {
+                        a: <a href={menuLocationsUrl} />,
+                    }
+                )}
             </div>
         );
     }

@@ -2,10 +2,11 @@
 <!-- invoked as /wp-admin/upload.php?page=mla-menu -->
 <!-- template="mla-thumbnail-generation" -->
 <!-- title="Thumbnail Generation" order="95" -->
-<p>Media Library Assistant lets you assign a "Featured Image" to your Media Library items. For non-image items such as PDF documents this image can be used as the <code>mla_viewer</code> thumbnail image, avoiding the overhead of generating the image each time the gallery is composed. The "Thumbnail" Bulk Action makes it easy to generate thumbnail images and assign them to their corresponding non-image Media Library items.</p>
-<p>WordPress 4.7 and later generates thumbnail images for PDF documents as they are uploaded to the Media Library. You can use MLA's thumbnail generation feature to create WordPress style thumbnails for documents you added to the Media Library before updating to version 4.7. Just select the "WP" Type radio button.
+<p>WordPress 4.7 and later generates thumbnail images for PDF documents as they are uploaded to the Media Library. You can use MLA's "WP" thumbnail generation feature to create or modify WordPress-style thumbnails for PDF documents.
 </p>
-<p>You can use the following fields to control the thumbnail generation process:</p>
+<p>As an alternative to WordPress-style thumbnails, MLA lets you assign a "Featured Image" to your Media Library non-image items such as PDF documents. The "JPG" and "PNG" types generate thumbnails as Media Library items and assign them as Featured Images to their corresponding non-image items, although you can use any Media Library image as the Featured Image.</p>
+<p>You can find more information regarding thumbnail generation in the Documentation section by clicking the link in the "For more information" list on the right.</p>
+<p>You can use the following fields to control the thumbnail generation parameters:</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">Width</td>
@@ -13,11 +14,11 @@
 </tr>
 <tr>
 <td class="mla-doc-table-label">Height</td>
-<td>the maximum width in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.</td>
+<td>the maximum height in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Best Fit</td>
-<td>retain page proportions when both height and width are explicitly stated. If unchecked, the image will be stretched as required to exactly fit the height and width. If checked, the image will be reduced in size to fit within the bounds, but proportions will be preserved. For example, a typical page is 612 pixels wide and 792 pixels tall. If you set width and height to 300 and set best fit to true, the thumbnail will be reduced to 231 pixels wide by 300 pixels tall.</td>
+<td>retain page proportions when both height and width are explicitly stated. If unchecked, the image will be stretched as required to exactly fit the height and width. If checked, the image will be reduced in size to fit within the bounds, but proportions will be preserved.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Page</td>
@@ -25,30 +26,38 @@
 </tr>
 <tr>
 <td class="mla-doc-table-label">Resolution</td>
-<td>the pixels/inch resolution (default "128" for WP 4.7+, "72" for earlier versions) of the page before reduction. If you set this to a higher number, such as 300, you will improve thumbnail quality at the expense of additional processing time.</td>
+<td>the pixels/inch resolution (default "128" for WP 4.7+, "72" for earlier versions) of the page before reduction.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Quality</td>
-<td>the compression quality (default 90) of the final page. You can set this to a value between 1 and 100 to get smaller files at the expense of image quality; 1 is smallest/worst and 100 is largest/best.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Type</td>
-<td>the MIME type, "JPG" (image/jpeg, default) or "PNG" (image/png), of the final thumbnail. You can, for example, set this to "PNG" to retain a transparent background instead of the white jpeg background.
-<div style="font-size:8px; line-height:8px">&nbsp;</div>
-You can select "WP" to generate WordPress-style thumbnails (for PDF documents) like those for new uploads as of WP 4.7. These are part of the PDF item itself, not a separate item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Existing Items</td>
-<td>the action to take if an item already has a thumbnail. Select "<strong>Keep</strong>" to retain the thumbnail and not generate anything. Select "<strong>Ignore</strong>" to generate and assign a new thumbnail, leaving the old item unchanged. Select "<strong>Trash</strong>" to generate and assign a new thumbnail, moving the old item to the Media Trash (if defined) or deleting it. Select "<strong>Delete</strong>" to generate and assign a new thumbnail, permanently deleting the old item.
-<div style="font-size:8px; line-height:8px">&nbsp;</div>
-You can select "Delete" to replace WordPress-style thumbnails (Type "WP") like those for new uploads as of WP 4.7. The existing thumbnails will be deleted and new thumbnails generated.
-</td>
+<td>the compression quality (default 90) of the final page.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Suffix</td>
-<td>the suffix added to the source item's Title to create the thumbnail's Title. Suffix is ignored when generating WordPress-style thumbnails.</td>
+<td>the suffix added to the source item's Title to create the thumbnail's Title. Suffix is ignored when generating WordPress-style thumbnails (Type "WP").</td>
 </tr>
 </table>
-<p>After you click Generate Thumbnails, the Media/Assistant submenu table will be refreshed to display all the new items generated and added to the Media Library. You can use Quick Edit and Bulk Edit to make additional changes to the new items.</p>
+<p>You can use the following fields to control the thumbnail type and handling of existing thumbnails:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">Type</td>
+<td>the MIME type, <strong>"JPG"</strong> (image/jpeg, default) or <strong>"PNG"</strong> (image/png), of the final thumbnail. For these types, a new image file is generated and added as a Media Library item.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+Select <strong>"WP"</strong> to generate WordPress-style thumbnails (for PDF documents). These are part of the PDF item itself, not a separate item.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+Select <strong>"None"</strong> to skip the generation of a new thumbnail.</td>
+<tr>
+<td class="mla-doc-table-label">Existing Features</td>
+<td>the action to take if an item already has a Featured Image. Select "<strong>Keep</strong>" to retain the Featured Image and not generate anything. Select "<strong>Ignore</strong>" to leave the old Featured Image, if any, unchanged. Select "<strong>Remove</strong>" to remove the old Featured Image but leaving the old image in the Media Library. Select "<strong>Trash</strong>" (if available) to remove the old Featured Image and move the old image item to the Media Trash. Select "<strong>Delete</strong>" to remove the old Featured Image and permanently delete the old image item.
+</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Existing Thumbnails</td>
+<td>the action to take if an item already has a native WordPress-style thumbnail (Type "WP"). Select "<strong>Keep</strong>" to retain the thumbnail and not generate anything. Select "<strong>Ignore</strong>" to leave the old thumbnail, if any, unchanged. Select <strong>"Delete"</strong> to delete the old thumbnail.
+</td>
+</tr>
+</table>
+<p>After you click Generate Thumbnails, the Media/Assistant submenu table will be refreshed to display the new thumbnails and any new Featured Image items generated and added to the Media Library. You can use Quick Edit and Bulk Edit to make additional changes to any new Featured Image items.</p>
 <!-- template="sidebar" -->
+<p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#thumbnail_generation" target="_blank">MLA Documentation for Thumbnail Generation Support (Media/Assistant Bulk Action)</a></p>
 <p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#thumbnail_substitution" target="_blank">MLA Documentation for Thumbnail Substitution Support, mla_viewer</a></p>

@@ -172,7 +172,7 @@ class MLA_Thumbnail {
 	 * @param	string	$bulk_action	the requested action.
 	 */
 	public static function mla_list_table_begin_bulk_action( $item_content, $bulk_action ) {
-		if ( self::MLA_GFI_ACTION != $bulk_action ) {
+		if ( self::MLA_GFI_ACTION !== $bulk_action ) {
 			return $item_content;
 		}
 
@@ -182,6 +182,10 @@ class MLA_Thumbnail {
 
 		if ( empty( $request_options['existing_thumbnails'] ) ) {
 			$request_options['existing_thumbnails'] = 'keep';
+		}
+
+		if ( empty( $request_options['existing_features'] ) ) {
+			$request_options['existing_features'] = 'keep';
 		}
 
 		foreach ( $request_options as $key => $value ) {
@@ -252,35 +256,28 @@ class MLA_Thumbnail {
 	}
 
 	/**
-	 * Generate WordPress-style (4.7+) thumbnail image
+	 * Delete WordPress-style (4.7+) thumbnail image files and sizes metadata
 	 *
-	 * Adapted from /wp-admin/includes/image.php function wp_generate_attachment_metadata()
-	 *
-	 * @since 2.40
+	 * @since 3.35
 	 *
 	 * @param string $post_id ID of the source item
 	 * @param string $file Source file path and name
-	 * @param array $args Image file information, based on $_FILE in PHP uploads 
-	 * @param array $old_sizes Existing WordPress-style thumbnail images to be deleted
-	 *
-	 * @return array Sizes specifications for attachment metadata
 	 */
-	private static function _generate_wordpress_thumbnail( $post_id, $file, $args, $old_sizes = NULL ) {
+	private static function _remove_wordpress_thumbnail( $post_id, $file ) {
 		// Get the metadata for the original (PDF) attachment.
 		$item_data = wp_get_attachment_metadata( $post_id );
-		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail( $post_id, $file ) item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		if ( !is_array( $item_data ) ) {
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_remove_wordpress_thumbnail( $post_id, $file ) item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		if ( ! is_array( $item_data ) ) {
 			$item_data = array();
 		}
 
-		// Make the file path relative to the upload dir.
-		$item_relative_path = _wp_relative_upload_path( $file );
-		if ( $item_relative_path !== $args['name'] ) {
-			self::$bulk_action_options['item_subdir'] = '/' . substr( $item_relative_path, 0, ( strpos( $item_relative_path, $args['name'] ) -1 ) );
+		if ( ! empty( $item_data['sizes'] ) ) {
+			$old_sizes = $item_data['sizes'];
+			unset( $item_data['sizes'] );
 		} else {
-			self::$bulk_action_options['item_subdir'] = NULL;
+			return; // nothing to deletee
 		}
-		
+
 		// Try to remove intermediate images if there are any
 		if ( is_array( $old_sizes ) ) {
 			foreach ( $old_sizes as $size => $sizeinfo ) {
@@ -296,6 +293,42 @@ class MLA_Thumbnail {
 			}
 		}
 
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_remove_wordpress_thumbnail updated item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		wp_update_attachment_metadata( $post_id, $item_data );
+	} // _remove_wordpress_thumbnail
+
+	/**
+	 * Generate WordPress-style (4.7+) thumbnail image
+	 *
+	 * Adapted from /wp-admin/includes/image.php function wp_generate_attachment_metadata()
+	 *
+	 * @since 2.40
+	 *
+	 * @param string $post_id ID of the source item
+	 * @param string $file Source file path and name
+	 * @param array $args Image file information, based on $_FILE in PHP uploads 
+	 *
+	 * @return mixed Boolean true if generation succeeds or error message if it fails
+	 */
+	private static function _generate_wordpress_thumbnail( $post_id, $file, $args ) {
+		// Remove any existing WordPress-style thumbnail images and sizes metadata
+		self::_remove_wordpress_thumbnail( $post_id, $file, $args );
+	
+		// Get the metadata for the original (PDF) attachment.
+		$item_data = wp_get_attachment_metadata( $post_id );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail( $post_id, $file ) item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		if ( !is_array( $item_data ) ) {
+			$item_data = array();
+		}
+
+		// Make the file path relative to the upload dir.
+		$item_relative_path = _wp_relative_upload_path( $file );
+		if ( $item_relative_path !== $args['name'] ) {
+			self::$bulk_action_options['item_subdir'] = '/' . substr( $item_relative_path, 0, ( strpos( $item_relative_path, $args['name'] ) -1 ) );
+		} else {
+			self::$bulk_action_options['item_subdir'] = NULL;
+		}
+		
 		$fallback_sizes = array(
 			'thumbnail',
 			'medium',
@@ -389,47 +422,6 @@ class MLA_Thumbnail {
 		/* translators: 1: post ID */
 		$item_prefix = sprintf( __( 'Item %1$d', 'media-library-assistant' ), $post_id ) . ', ';
 
-		// If there is a real thumbnail image, no generation is required or allowed except for PDFs
-		$old_sizes = NULL;
-		$thumbnail = image_downsize( $post_id, 'thumbnail' );
-		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action image_downsize( {$post_id} ) thumbnail = " . var_export( $thumbnail, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		if ( ! empty( $thumbnail ) ) {
-			// Special case - allow replacement of WordPress-style thumbnails for PDFs, etc.
-			if ( 'delete' === self::$bulk_action_options['existing_thumbnails'] && 'WordPress' === self::$bulk_action_options['type'] ) {
-				if ( ! wp_attachment_is_image( $post_id ) ) {
-					$meta = wp_get_attachment_metadata( $post_id );
-					if ( ! empty( $meta['sizes'] ) ) {
-						$old_sizes = $meta['sizes'];
-					}
-				}
-			}
-			
-			if ( empty( $old_sizes ) ) {
-				return array( 'message' => $item_prefix . __( 'has native thumbnail.', 'media-library-assistant' ) );
-			}
-		}
-
-		// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
-		$thumbnail = get_post_thumbnail_id( $post_id );
-		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action get_post_thumbnail_id( {$post_id} ) thumbnail = " . var_export( $thumbnail, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		if ( ! empty( $thumbnail ) ) {
-			switch ( self::$bulk_action_options['existing_thumbnails'] ) {
-				case 'ignore':
-					break;
-				case 'trash':
-					delete_post_thumbnail( $post_id ); 
-					wp_delete_post( absint( $thumbnail ), false );
-					break;
-				case 'delete':
-					delete_post_thumbnail( $post_id ); 
-					wp_delete_post( absint( $thumbnail ), true );
-					break;
-				case 'keep':
-				default:
-					return array( 'message' => $item_prefix . __( 'Featured Image retained.', 'media-library-assistant' ) );
-			}
-		}
-
 		// Validate the file existance and type
 		$file = get_attached_file( $post_id );
 		if ( empty( $file ) ) {
@@ -441,6 +433,53 @@ class MLA_Thumbnail {
 			return array( 'message' => $item_prefix . __( 'unsupported file type.', 'media-library-assistant' ) );
 		}
 
+		// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
+		$feature_id = get_post_thumbnail_id( $post_id );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action get_post_thumbnail_id( {$post_id} ) feature ID = " . var_export( $feature_id, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		if ( ! empty( $feature_id ) ) {
+			switch ( self::$bulk_action_options['existing_features'] ) {
+				case 'ignore':
+					break;
+				case 'remove':
+					delete_post_thumbnail( $post_id );
+					$feature_id = false;
+					break;
+				case 'trash':
+					delete_post_thumbnail( $post_id ); 
+					wp_delete_post( absint( $feature_id ), false );
+					$feature_id = false;
+					break;
+				case 'delete':
+					delete_post_thumbnail( $post_id ); 
+					wp_delete_post( absint( $feature_id ), true );
+					$feature_id = false;
+					break;
+				case 'keep':
+				default:
+					return array( 'message' => $item_prefix . __( 'Featured Image retained.', 'media-library-assistant' ) );
+			}
+		}
+
+		$thumbnail = image_downsize( $post_id, 'thumbnail' );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action image_downsize( {$post_id} ) thumbnail = " . var_export( $thumbnail, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		if ( ! empty( $thumbnail ) ) {
+			switch ( self::$bulk_action_options['existing_thumbnails'] ) {
+				case 'ignore':
+					break;
+				case 'delete':
+					self::_remove_wordpress_thumbnail( $post_id, $file );
+					break;
+				case 'keep':
+				default:
+					return array( 'message' => $item_prefix . __( 'Native thumbnail retained.', 'media-library-assistant' ) );
+			}
+		}
+
+		if ( 'None' === self::$bulk_action_options['type'] ) {
+				/* translators: 1: Item post ID */
+				return array( 'message' => sprintf( __( '%1$sNo thumbnail generated.', 'media-library-assistant' ), $item_prefix ) );
+		}
+
 		// Generate a thumbnail
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-image-processor.php' );
 		$results = MLAImageProcessor::mla_handle_thumbnail_sideload( $file, self::$bulk_action_options );
@@ -450,7 +489,7 @@ class MLA_Thumbnail {
 		}
 
 		if ( 'WordPress' === self::$bulk_action_options['type'] ) {
-			$results = self::_generate_wordpress_thumbnail( $post_id, $file, $results, $old_sizes );
+			$results = self::_generate_wordpress_thumbnail( $post_id, $file, $results );
 
 			if ( true === $results ) {
 				/* translators: 1: Item post ID */
@@ -513,8 +552,9 @@ class MLA_Thumbnail {
 		wp_update_attachment_metadata( $item_id, $item_data );
 
 		// Assign the new item as the source item's Featured Image
-		delete_post_thumbnail( $post_id );
-		set_post_thumbnail( $post_id, $item_id );
+		if ( false === $feature_id ) {
+			set_post_thumbnail( $post_id, $item_id );
+		}
 
 		MLA_Thumbnail::$bulk_action_includes[] = $item_id;
 
@@ -631,6 +671,12 @@ class MLA_Thumbnail {
 			$wp_help = '';
 		}
 
+		if ( EMPTY_TRASH_DAYS && MEDIA_TRASH ) {
+			$trash_style = '';
+		} else {
+			$trash_style = 'style="display: none"';
+		}
+
 		$page_values = array(
 			'colspan' => $item_values['colspan'],
 			'Generate Thumbnails' => __( 'Generate Thumbnails', 'media-library-assistant' ),
@@ -645,10 +691,14 @@ class MLA_Thumbnail {
 			'WP Style' => $wp_style,
 			'WP Checked' => $wp_checked,
 			'JPG Checked' => $jpg_checked,
+			'None' => __( 'None', 'media-library-assistant' ),
 			'WP Help' => $wp_help,
-			'Existing Items' => __( 'Existing Items', 'media-library-assistant' ),
+			'Existing Features' => __( 'Existing Features', 'media-library-assistant' ),
+			'Existing Thumbnails' => __( 'Existing Thumbnails', 'media-library-assistant' ),
 			'Keep' => __( 'Keep', 'media-library-assistant' ),
 			'Ignore' => __( 'Ignore', 'media-library-assistant' ),
+			'Remove' => __( 'Remove', 'media-library-assistant' ),
+			'Trash Style' => $trash_style,
 			'Trash' => __( 'Trash', 'media-library-assistant' ),
 			'Delete' => __( 'Delete', 'media-library-assistant' ),
 			'Suffix' => __( 'Suffix', 'media-library-assistant' ),

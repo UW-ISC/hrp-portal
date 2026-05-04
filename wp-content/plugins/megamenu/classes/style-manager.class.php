@@ -4,23 +4,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // disable direct access
 }
 
-use MMMScssPhp\ScssPhp\Compiler;
-
 if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 	/**
+	 * Manages the plugin's CSS generation, caching, and enqueueing, including
+	 * SCSS compilation, filesystem storage, and PolyLang/WPML language support.
 	 *
+	 * @since   1.0
+	 * @package MegaMenu
 	 */
 	final class Mega_Menu_Style_Manager {
 
 		/**
+		 * Saved plugin settings from the database.
 		 *
+		 * @var array
 		 */
-		var $settings = array();
+		public $settings = [];
 
 
 		/**
-		 * Constructor
+		 * When true, {@see delete_cache_after_nav_menu_locations_save} will run on shutdown.
+		 *
+		 * @var bool
+		 */
+		private $pending_delete_cache_after_nav_menu_locations = false;
+
+
+		/**
+		 * Constructor. Loads settings from the database.
 		 *
 		 * @since 1.0
 		 */
@@ -30,46 +42,54 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Setup actions
+		 * Register all WordPress actions and filters used by the style manager.
 		 *
 		 * @since 1.0
+		 * @return void
 		 */
 		public function setup_actions() {
-			add_action( 'megamenu_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-			add_action( 'megamenu_enqueue_styles', array( $this, 'enqueue_styles' ) );
+			add_action( 'megamenu_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+			add_action( 'megamenu_enqueue_styles', [ $this, 'enqueue_styles' ] );
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 999 );
-			add_action( 'wp_head', array( $this, 'head_css' ), 9999 );
-			add_action( 'megamenu_delete_cache', array( $this, 'delete_cache' ) );
-			add_action( 'megamenu_delete_cache', array( $this, 'clear_external_caches' ) );
-			add_action( 'after_switch_theme', array( $this, 'delete_cache' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 999 );
+			add_action( 'wp_head', [ $this, 'head_css' ], 9999 );
+			add_action( 'megamenu_delete_cache', [ $this, 'delete_cache' ] );
+			add_action( 'megamenu_delete_cache', [ $this, 'clear_external_caches' ] );
+			add_action( 'after_switch_theme', [ $this, 'delete_cache' ] );
 
-			add_action( 'megamenu_head_css', array( $this, 'head_css' ), 999 );
+			add_filter( 'pre_set_theme_mod_nav_menu_locations', [ $this, 'schedule_delete_cache_on_nav_menu_locations_change' ], 10, 2 );
+
+			add_action( 'megamenu_head_css', [ $this, 'head_css' ], 999 );
 
 			// PolyLang
 			if ( function_exists( 'pll_current_language' ) ) {
-				add_filter( 'megamenu_css_transient_key', array( $this, 'polylang_transient_key' ) );
-				add_filter( 'megamenu_css_filename', array( $this, 'polylang_css_filename' ) );
-				add_action( 'megamenu_after_delete_cache', array( $this, 'polylang_delete_cache' ) );
+				add_filter( 'megamenu_css_transient_key', [ $this, 'polylang_transient_key' ] );
+				add_filter( 'megamenu_css_filename', [ $this, 'polylang_css_filename' ] );
+				add_action( 'megamenu_after_delete_cache', [ $this, 'polylang_delete_cache' ] );
 			} elseif ( defined( 'ICL_LANGUAGE_CODE' ) ) { // WPML
-				add_filter( 'megamenu_css_transient_key', array( $this, 'wpml_transient_key' ) );
-				add_filter( 'megamenu_css_filename', array( $this, 'wpml_css_filename' ) );
-				add_action( 'megamenu_after_delete_cache', array( $this, 'wpml_delete_cache' ) );
+				add_filter( 'megamenu_css_transient_key', [ $this, 'wpml_transient_key' ] );
+				add_filter( 'megamenu_css_filename', [ $this, 'wpml_css_filename' ] );
+				add_action( 'megamenu_after_delete_cache', [ $this, 'wpml_delete_cache' ] );
 			}
 
-			add_filter( 'megamenu_scripts_in_footer', array( $this, 'scripts_in_footer' ) );
-			add_filter( "filesystem_method", array( $this, "use_direct_filesystem_method" ), 10, 4 );
+			add_filter( 'megamenu_scripts_in_footer', [ $this, 'scripts_in_footer' ] );
+			add_filter( "filesystem_method", [ $this, "use_direct_filesystem_method" ], 10, 4 );
 
 		}
 
 
 		/**
-		 * Always use the 'direct' filesystem method when creating/removing the style.css file
-		 * 
+		 * Always use the 'direct' filesystem method when writing the style.css file.
+		 *
 		 * @since 3.0.1
+		 * @param string $method                    Filesystem access method.
+		 * @param mixed  $args                      Optional arguments passed to the filesystem method.
+		 * @param string $context                   Full path to the directory that is tested for being writable.
+		 * @param bool   $allow_relaxed_file_ownership Whether to allow group file ownership.
+		 * @return string 'direct' within the plugin's upload directory, otherwise unchanged method.
 		 */
-		public function use_direct_filesystem_method( $method, $args, $context, $allow_relaxed_file_ownership ) { 
+		public function use_direct_filesystem_method( $method, $args, $context, $allow_relaxed_file_ownership ) {
 			if ( $method != 'direct' && str_contains( $context, "/maxmegamenu" ) ) {
 				return 'direct';
 			}
@@ -79,12 +99,12 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Determines whether to load JavaScript in footer or not, based on the configured option.
+		 * Determines whether to load JavaScript in the footer based on the configured option.
 		 *
 		 * @since 2.9
-		 * @return bool
+		 * @return bool True to load scripts in the footer, false to load in the head.
 		 */
-		function scripts_in_footer() {
+		public function scripts_in_footer() {
 			if ( isset( $this->settings['js'] ) && $this->settings['js'] == 'head' ) {
 				return false;
 			}
@@ -94,7 +114,67 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Clear plugin caches when CSS is updated or menu settings are changed
+		 * When menu-location assignments change, invalidate CSS if Max Mega Menu is enabled for an affected location.
+		 * Defer to `shutdown` so `nav_menu_locations` is saved before regeneration (see `set_theme_mod`).
+		 *
+		 * @param array|false $new_value New location => menu ID map.
+		 * @param array|false $old_value Previous map or false.
+		 * @return array Map passed through unchanged.
+		 */
+		public function schedule_delete_cache_on_nav_menu_locations_change( $new_value, $old_value ) {
+			if ( ! is_array( $new_value ) ) {
+				$new_value = [];
+			}
+			if ( ! is_array( $old_value ) ) {
+				$old_value = [];
+			}
+
+			$keys = array_unique( array_merge( array_keys( $old_value ), array_keys( $new_value ) ) );
+
+			foreach ( $keys as $location ) {
+				$old_id = isset( $old_value[ $location ] ) ? (int) $old_value[ $location ] : 0;
+				$new_id = isset( $new_value[ $location ] ) ? (int) $new_value[ $location ] : 0;
+
+				if ( $old_id === $new_id ) {
+					continue;
+				}
+
+				$mega = Mega_Menu_Location::find( $location );
+
+				if ( $mega && $mega->is_enabled() ) {
+					if ( ! $this->pending_delete_cache_after_nav_menu_locations ) {
+						$this->pending_delete_cache_after_nav_menu_locations = true;
+						add_action( 'shutdown', [ $this, 'delete_cache_after_nav_menu_locations_save' ], 999 );
+					}
+					break;
+				}
+			}
+
+			return $new_value;
+		}
+
+
+		/**
+		 * Run after theme mods are persisted so `get_nav_menu_locations()` matches the new assignments.
+		 *
+		 * @return void
+		 */
+		public function delete_cache_after_nav_menu_locations_save() {
+			if ( ! $this->pending_delete_cache_after_nav_menu_locations ) {
+				return;
+			}
+
+			$this->pending_delete_cache_after_nav_menu_locations = false;
+
+			do_action( 'megamenu_delete_cache' );
+		}
+
+
+		/**
+		 * Clear external plugin caches when CSS is updated or menu settings are changed.
+		 *
+		 * @since 2.0
+		 * @return void
 		 */
 		public function clear_external_caches() {
 			// Breeze: https://wordpress.org/plugins/breeze/
@@ -103,7 +183,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the version of MMM that was used to generate the current CSS file
+		 * Return the version of MMM that was used to generate the current CSS file.
+		 *
+		 * @since 1.0
+		 * @return string|false Plugin version string, or false if not set.
 		 */
 		public static function get_css_version() {
 			if ( $version = get_option('megamenu_css_version') ) {
@@ -115,7 +198,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the date when the menu CSS was last generated
+		 * Return the timestamp when the menu CSS was last generated.
+		 *
+		 * @since 1.0
+		 * @return int|false Unix timestamp, or false if not set.
 		 */
 		public static function get_css_last_updated() {
 			if ( $date = get_option('megamenu_css_last_updated') ) {
@@ -127,301 +213,30 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the default menu theme
-		 */
-		public function get_default_theme() {
-			return apply_filters(
-				'megamenu_default_theme',
-				array(
-					'title'                                => __( 'Default', 'megamenu' ),
-					'container_background_from'            => '#222',
-					'container_background_to'              => '#222',
-					'container_padding_left'               => '0px',
-					'container_padding_right'              => '0px',
-					'container_padding_top'                => '0px',
-					'container_padding_bottom'             => '0px',
-					'container_border_radius_top_left'     => '0px',
-					'container_border_radius_top_right'    => '0px',
-					'container_border_radius_bottom_left'  => '0px',
-					'container_border_radius_bottom_right' => '0px',
-					'arrow_up'                             => 'dash-f142',
-					'arrow_down'                           => 'dash-f140',
-					'arrow_left'                           => 'dash-f141',
-					'arrow_right'                          => 'dash-f139',
-					'close_icon'                           => 'dash-f158',
-					'close_icon_font_size'                 => '16px',
-					'close_icon_color'                     => '#fff',
-					'close_icon_label'                     => 'Close',
-					'font_size'                            => '14px', // deprecated
-					'font_color'                           => '#666', // deprecated
-					'font_family'                          => 'inherit', // deprecated
-					'menu_item_align'                      => 'left',
-					'menu_item_background_from'            => 'rgba(0,0,0,0)',
-					'menu_item_background_to'              => 'rgba(0,0,0,0)',
-					'menu_item_background_hover_from'      => '#333',
-					'menu_item_background_hover_to'        => '#333',
-					'menu_item_spacing'                    => '0px',
-					'menu_item_link_font'                  => 'inherit',
-					'menu_item_link_font_size'             => '14px',
-					'menu_item_link_height'                => '40px',
-					'menu_item_link_color'                 => '#ffffff',
-					'menu_item_link_weight'                => 'normal',
-					'menu_item_link_text_transform'        => 'none',
-					'menu_item_link_text_decoration'       => 'none',
-					'menu_item_link_text_align'            => 'left',
-					'menu_item_link_color_hover'           => '#ffffff',
-					'menu_item_link_weight_hover'          => 'normal',
-					'menu_item_link_text_decoration_hover' => 'none',
-					'menu_item_link_padding_left'          => '10px',
-					'menu_item_link_padding_right'         => '10px',
-					'menu_item_link_padding_top'           => '0px',
-					'menu_item_link_padding_bottom'        => '0px',
-					'menu_item_link_border_radius_top_left' => '0px',
-					'menu_item_link_border_radius_top_right' => '0px',
-					'menu_item_link_border_radius_bottom_left' => '0px',
-					'menu_item_link_border_radius_bottom_right' => '0px',
-					'menu_item_border_color'               => '#fff',
-					'menu_item_border_left'                => '0px',
-					'menu_item_border_right'               => '0px',
-					'menu_item_border_top'                 => '0px',
-					'menu_item_border_bottom'              => '0px',
-					'menu_item_border_color_hover'         => '#fff',
-					'menu_item_highlight_current'          => 'on',
-					'menu_item_divider'                    => 'off',
-					'menu_item_divider_color'              => 'rgba(255, 255, 255, 0.1)',
-					'menu_item_divider_glow_opacity'       => '0.1',
-					'panel_background_from'                => '#f1f1f1',
-					'panel_background_to'                  => '#f1f1f1',
-					'panel_width'                          => '100%',
-					'panel_inner_width'                    => '100%',
-					'panel_border_color'                   => '#fff',
-					'panel_border_left'                    => '0px',
-					'panel_border_right'                   => '0px',
-					'panel_border_top'                     => '0px',
-					'panel_border_bottom'                  => '0px',
-					'panel_border_radius_top_left'         => '0px',
-					'panel_border_radius_top_right'        => '0px',
-					'panel_border_radius_bottom_left'      => '0px',
-					'panel_border_radius_bottom_right'     => '0px',
-					'panel_header_color'                   => '#555',
-					'panel_header_text_transform'          => 'uppercase',
-					'panel_header_text_align'              => 'left',
-					'panel_header_font'                    => 'inherit',
-					'panel_header_font_size'               => '16px',
-					'panel_header_font_weight'             => 'bold',
-					'panel_header_text_decoration'         => 'none',
-					'panel_header_padding_top'             => '0px',
-					'panel_header_padding_right'           => '0px',
-					'panel_header_padding_bottom'          => '5px',
-					'panel_header_padding_left'            => '0px',
-					'panel_header_margin_top'              => '0px',
-					'panel_header_margin_right'            => '0px',
-					'panel_header_margin_bottom'           => '0px',
-					'panel_header_margin_left'             => '0px',
-					'panel_header_border_color'            => 'rgba(0,0,0,0)',
-					'panel_header_border_color_hover'      => 'rgba(0,0,0,0)',
-					'panel_header_border_left'             => '0px',
-					'panel_header_border_right'            => '0px',
-					'panel_header_border_top'              => '0px',
-					'panel_header_border_bottom'           => '0px',
-					'panel_padding_left'                   => '0px',
-					'panel_padding_right'                  => '0px',
-					'panel_padding_top'                    => '0px',
-					'panel_padding_bottom'                 => '0px',
-					'panel_widget_padding_left'            => '15px',
-					'panel_widget_padding_right'           => '15px',
-					'panel_widget_padding_top'             => '15px',
-					'panel_widget_padding_bottom'          => '15px',
-					'panel_font_size'                      => 'font_size',
-					'panel_font_color'                     => 'font_color',
-					'panel_font_family'                    => 'font_family',
-					'panel_second_level_font_color'        => 'panel_header_color',
-					'panel_second_level_font_color_hover'  => 'panel_header_color',
-					'panel_second_level_text_transform'    => 'panel_header_text_transform',
-					'panel_second_level_text_align'        => 'left',
-					'panel_second_level_font'              => 'panel_header_font',
-					'panel_second_level_font_size'         => 'panel_header_font_size',
-					'panel_second_level_font_weight'       => 'panel_header_font_weight',
-					'panel_second_level_font_weight_hover' => 'panel_header_font_weight',
-					'panel_second_level_text_decoration'   => 'panel_header_text_decoration',
-					'panel_second_level_text_decoration_hover' => 'panel_header_text_decoration',
-					'panel_second_level_background_hover_from' => 'rgba(0,0,0,0)',
-					'panel_second_level_background_hover_to' => 'rgba(0,0,0,0)',
-					'panel_second_level_padding_left'      => '0px',
-					'panel_second_level_padding_right'     => '0px',
-					'panel_second_level_padding_top'       => '0px',
-					'panel_second_level_padding_bottom'    => '0px',
-					'panel_second_level_margin_left'       => '0px',
-					'panel_second_level_margin_right'      => '0px',
-					'panel_second_level_margin_top'        => '0px',
-					'panel_second_level_margin_bottom'     => '0px',
-					'panel_second_level_border_color'      => 'rgba(0,0,0,0)',
-					'panel_second_level_border_color_hover' => 'rgba(0,0,0,0)',
-					'panel_second_level_border_left'       => '0px',
-					'panel_second_level_border_right'      => '0px',
-					'panel_second_level_border_top'        => '0px',
-					'panel_second_level_border_bottom'     => '0px',
-					'panel_third_level_font_color'         => 'panel_font_color',
-					'panel_third_level_font_color_hover'   => 'panel_font_color',
-					'panel_third_level_text_transform'     => 'none',
-					'panel_third_level_text_align'         => 'left',
-					'panel_third_level_font'               => 'panel_font_family',
-					'panel_third_level_font_size'          => 'panel_font_size',
-					'panel_third_level_font_weight'        => 'normal',
-					'panel_third_level_font_weight_hover'  => 'normal',
-					'panel_third_level_text_decoration'    => 'none',
-					'panel_third_level_text_decoration_hover' => 'none',
-					'panel_third_level_background_hover_from' => 'rgba(0,0,0,0)',
-					'panel_third_level_background_hover_to' => 'rgba(0,0,0,0)',
-					'panel_third_level_padding_left'       => '0px',
-					'panel_third_level_padding_right'      => '0px',
-					'panel_third_level_padding_top'        => '0px',
-					'panel_third_level_padding_bottom'     => '0px',
-					'panel_third_level_margin_left'        => '0px',
-					'panel_third_level_margin_right'       => '0px',
-					'panel_third_level_margin_top'         => '0px',
-					'panel_third_level_margin_bottom'      => '0px',
-					'panel_third_level_border_color'       => 'rgba(0,0,0,0)',
-					'panel_third_level_border_color_hover' => 'rgba(0,0,0,0)',
-					'panel_third_level_border_left'        => '0px',
-					'panel_third_level_border_right'       => '0px',
-					'panel_third_level_border_top'         => '0px',
-					'panel_third_level_border_bottom'      => '0px',
-					'flyout_width'                         => '250px',
-					'flyout_menu_background_from'          => '#f1f1f1',
-					'flyout_menu_background_to'            => '#f1f1f1',
-					'flyout_border_color'                  => '#ffffff',
-					'flyout_border_left'                   => '0px',
-					'flyout_border_right'                  => '0px',
-					'flyout_border_top'                    => '0px',
-					'flyout_border_bottom'                 => '0px',
-					'flyout_border_radius_top_left'        => '0px',
-					'flyout_border_radius_top_right'       => '0px',
-					'flyout_border_radius_bottom_left'     => '0px',
-					'flyout_border_radius_bottom_right'    => '0px',
-					'flyout_menu_item_divider'             => 'off',
-					'flyout_menu_item_divider_color'       => 'rgba(255, 255, 255, 0.1)',
-					'flyout_padding_top'                   => '0px',
-					'flyout_padding_right'                 => '0px',
-					'flyout_padding_bottom'                => '0px',
-					'flyout_padding_left'                  => '0px',
-					'flyout_link_padding_left'             => '10px',
-					'flyout_link_padding_right'            => '10px',
-					'flyout_link_padding_top'              => '0px',
-					'flyout_link_padding_bottom'           => '0px',
-					'flyout_link_weight'                   => 'normal',
-					'flyout_link_weight_hover'             => 'normal',
-					'flyout_link_height'                   => '35px',
-					'flyout_link_text_decoration'          => 'none',
-					'flyout_link_text_decoration_hover'    => 'none',
-					'flyout_background_from'               => '#f1f1f1',
-					'flyout_background_to'                 => '#f1f1f1',
-					'flyout_background_hover_from'         => '#dddddd',
-					'flyout_background_hover_to'           => '#dddddd',
-					'flyout_link_size'                     => 'font_size',
-					'flyout_link_color'                    => 'font_color',
-					'flyout_link_color_hover'              => 'font_color',
-					'flyout_link_family'                   => 'font_family',
-					'flyout_link_text_transform'           => 'none',
-					'responsive_breakpoint'                => '768px',
-					'responsive_text'                      => 'MENU', // deprecated
-					'line_height'                          => '1.7',
-					'z_index'                              => '999',
-					'shadow'                               => 'off',
-					'shadow_horizontal'                    => '0px',
-					'shadow_vertical'                      => '0px',
-					'shadow_blur'                          => '5px',
-					'shadow_spread'                        => '0px',
-					'shadow_color'                         => 'rgba(0, 0, 0, 0.1)',
-					'transitions'                          => 'off',
-					'keyboard_highlight_color'             => '#109cde',
-					'keyboard_highlight_width'             => '3px',
-					'keyboard_highlight_offset'            => '-3px',
-					'resets'                               => 'off',
-					'mobile_columns'                       => '1',
-					'toggle_background_from'               => 'container_background_from',
-					'toggle_background_to'                 => 'container_background_to',
-					'toggle_font_color'                    => 'rgb(221, 221, 221)', // deprecated
-					'toggle_bar_height'                    => '40px',
-					'toggle_bar_border_radius_top_left'    => '2px',
-					'toggle_bar_border_radius_top_right'   => '2px',
-					'toggle_bar_border_radius_bottom_left' => '2px',
-					'toggle_bar_border_radius_bottom_right' => '2px',
-					'mobile_menu_padding_left'             => '0px',
-					'mobile_menu_padding_right'            => '0px',
-					'mobile_menu_padding_top'              => '0px',
-					'mobile_menu_padding_bottom'           => '0px',
-					'mobile_menu_item_height'              => '40px',
-					'mobile_menu_overlay'                  => 'off',
-					'mobile_menu_force_width'              => 'off',
-					'mobile_menu_force_width_selector'     => 'body',
-					'mobile_background_from'               => 'container_background_from',
-					'mobile_background_to'                 => 'container_background_to',
-					'mobile_menu_item_link_font_size'      => 'menu_item_link_font_size',
-					'mobile_menu_item_link_color'          => 'menu_item_link_color',
-					'mobile_menu_item_link_text_align'     => 'menu_item_link_text_align',
-					'mobile_menu_item_link_color_hover'    => 'menu_item_link_color_hover',
-					'mobile_menu_item_background_hover_from' => 'menu_item_background_hover_from',
-					'mobile_menu_item_background_hover_to' => 'menu_item_background_hover_to',
-					'mobile_menu_off_canvas_width'         => '300px',
-					'disable_mobile_toggle'                => 'off',
-					'use_flex_css'                         => 'off',
-					'custom_css'                           => '/** Push menu onto new line **/ 
-#{$wrap} { 
-    clear: both; 
-}',
-				)
-			);
-		}
-
-
-		/**
+		 * Return the default menu theme settings array.
+		 * Delegates to Mega_Menu_Theme::get_default() for backward compatibility.
 		 *
 		 * @since 1.0
+		 * @return array Default theme settings.
 		 */
-		public function default_themes() {
-
-			$themes['default'] = $this->get_default_theme();
-
-			return apply_filters( 'megamenu_themes', $themes );
-		}
-
-		/**
-		 * Merge the saved themes (from options table) into array of complete themes
-		 *
-		 * @since 2.1
-		 */
-		private function merge_in_saved_themes( $all_themes ) {
-
-			if ( $saved_themes = max_mega_menu_get_themes() ) {
-				foreach ( $saved_themes as $key => $settings ) {
-					if ( isset( $all_themes[ $key ] ) ) {
-						// merge modifications to default themes
-						$all_themes[ $key ] = array_merge( $all_themes[ $key ], $saved_themes[ $key ] );
-					} else {
-						// add in new themes
-						$all_themes[ $key ] = $settings;
-					}
-				}
-			}
-
-			return $all_themes;
+		public function get_default_theme() {
+			return Mega_Menu_Theme::get_default()->settings;
 		}
 
 
 		/**
-		 * Populate all themes with all keys from the default theme
+		 * Return a filtered list of all themes (default + saved custom), fully merged.
+		 * Delegates to Mega_Menu_Theme::get_all() for backward compatibility.
 		 *
-		 * @since 2.1
+		 * @since 1.0
+		 * @return array Map of theme ID to settings array.
 		 */
-		private function ensure_all_themes_have_all_default_theme_settings( $all_themes ) {
+		public function get_themes() {
+			$theme_objects = Mega_Menu_Theme::get_all();
+			$themes        = [];
 
-			$default_theme = $this->get_default_theme();
-
-			$themes = array();
-
-			foreach ( $all_themes as $theme_id => $theme ) {
-				$themes[ $theme_id ] = array_merge( $default_theme, $theme );
+			foreach ( $theme_objects as $id => $theme ) {
+				$themes[ $id ] = $theme->settings;
 			}
 
 			return $themes;
@@ -429,62 +244,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * For backwards compatibility, copy old settings into new values
-		 *
-		 * @since 2.1
-		 */
-		private function process_theme_replacements( $all_themes ) {
-
-			foreach ( $all_themes as $key => $settings ) {
-				// process replacements
-				foreach ( $settings as $var => $val ) {
-					if ( ! is_array( $val ) && isset( $all_themes[ $key ][ $val ] ) ) {
-						$all_themes[ $key ][ $var ] = $all_themes[ $key ][ $val ];
-					}
-				}
-			}
-
-			return $all_themes;
-		}
-
-
-		/**
-		 * Return a filtered list of themes
-		 *
-		 * @since 1.0
-		 * @return array
-		 */
-		public function get_themes() {
-
-			$default_themes = $this->default_themes();
-
-			$all_themes = $this->merge_in_saved_themes( $default_themes );
-			$all_themes = $this->ensure_all_themes_have_all_default_theme_settings( $all_themes );
-			$all_themes = $this->process_theme_replacements( $all_themes );
-
-			uasort( $all_themes, array( $this, 'sort_by_title' ) );
-
-			return $all_themes;
-		}
-
-
-		/**
-		 * Sorts a 2d array by the 'title' key
-		 *
-		 * @since 1.0
-		 * @param array $a
-		 * @param array $b
-		 */
-		private function sort_by_title( $a, $b ) {
-			return strcmp( $a['title'], $b['title'] );
-		}
-
-
-		/**
-		 *
+		 * Whether the plugin is running in debug mode.
 		 *
 		 * @since 1.3.1
-		 * @return bool
+		 * @return bool True if MEGAMENU_DEBUG is defined and true.
 		 */
 		private function is_debug_mode() {
 			return ( defined( 'MEGAMENU_DEBUG' ) && MEGAMENU_DEBUG === true );
@@ -492,9 +255,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the menu CSS for use in inline CSS block. Use the cache if possible.
+		 * Return the menu CSS. Uses the transient cache when available.
 		 *
 		 * @since 1.3.1
+		 * @return string Compiled CSS string.
 		 */
 		public function get_css() {
 
@@ -507,12 +271,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Generate and cache the CSS for our menus.
-		 * The CSS is compiled by scssphp using the file located in /css/megamenu.scss
+		 * Generate and cache the CSS for all active menus.
+		 * CSS is compiled by scssphp using the file located in /css/megamenu.scss.
 		 *
 		 * @since 1.0
-		 * @return string
-		 * @param boolean $debug_mode (prints error messages to the CSS when enabled)
+		 * @return string Compiled CSS string, or an error comment if generation failed.
 		 */
 		public function generate_css() {
 
@@ -536,11 +299,9 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$css .= "/** Custom CSS should be added to Mega Menu > Menu Themes > Custom Styling **/\n\n";
 			$css .= ".mega-menu-last-modified-{$time} { content: '{$date}'; }\n\n";
 
-			foreach ( $this->settings as $location => $settings ) {
-				if ( isset( $settings['enabled'] ) && has_nav_menu( $location ) && ! $this->is_polylang_location( $location ) ) {
-					$theme        = $this->get_theme_settings_for_location( $location );
-					$menu_id      = $this->get_menu_id_for_location( $location );
-					$compiled_css = $this->generate_css_for_location( $location, $theme, $menu_id );
+			foreach ( Mega_Menu_Location::get_all() as $location ) {
+				if ( $location->is_enabled() && $location->get_menu_id() > 0 && ! $this->is_polylang_location( $location->id ) ) {
+					$compiled_css = $location->generate_css();
 
 					if ( ! is_wp_error( $compiled_css ) ) {
 						$css .= $compiled_css;
@@ -549,14 +310,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			}
 
 			if ( strlen( $css ) ) {
-				$scss_location = 'core';
-
-				foreach ( $this->get_possible_scss_file_locations() as $path ) {
-					if ( file_exists( $path ) && $path !== $this->get_default_scss_file_location() ) {
-						$scss_location = 'custom';
-					}
-				}
-
 				$css = apply_filters( 'megamenu_compiled_css', $css );
 
 				$css .= ".wp-block {}"; // hack required for loading CSS in site editor https://github.com/WordPress/gutenberg/issues/40603#issuecomment-1112807162
@@ -569,16 +322,22 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		}
 
 		/**
-		 * 
+		 * Whether the given location slug is a PolyLang-generated location.
+		 *
+		 * @since 1.9
+		 * @param string $location The menu location slug.
+		 * @return int|false Position of '___' separator if found, false otherwise.
 		 */
 		public function is_polylang_location( $location ) {
 			return strpos( $location, '___' );
 		}
 
 		/**
-		 * Saves the generated CSS to the uploads folder
+		 * Saves the generated CSS to the uploads folder.
 		 *
 		 * @since 1.6.1
+		 * @param string $css The compiled CSS to write.
+		 * @return void
 		 */
 		private function save_to_filesystem( $css ) {
 			global $wp_filesystem;
@@ -606,7 +365,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 				$method = $this->get_css_output_method();
 
-				if ( in_array( $method, array( 'disabled' ) ) ) {
+				if ( in_array( $method, [ 'disabled' ] ) ) {
 					return;
 				}
 
@@ -622,435 +381,55 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return an array of all the possible file path locations for the SCSS file
-		 * @since 2.2.3
-		 * @return array
-		 */
-		private function get_possible_scss_file_locations( $location = '', $theme = array(), $menu_id = 0 ) {
-
-
-			return apply_filters(
-				'megamenu_scss_locations',
-				array(
-					trailingslashit( get_stylesheet_directory() ) . trailingslashit( 'megamenu' ) . 'megamenu.scss', // child theme
-					trailingslashit( get_template_directory() ) . trailingslashit( 'megamenu' ) . 'megamenu.scss', // parent theme
-					$this->get_default_scss_file_location( $location, $theme, $menu_id ),
-				)
-			);
-		}
-
-
-		/**
-		 * Return the default SCSS file path
+		 * Return all possible file path locations where the SCSS file may be found.
 		 *
 		 * @since 2.2.3
-		 * @return string
+		 * @param string $location Menu location slug.
+		 * @param array  $theme    Theme settings array.
+		 * @param int    $menu_id  Menu term ID.
+		 * @return array Ordered list of absolute SCSS file paths to check.
 		 */
-		private function get_default_scss_file_location( $location = '', $theme = array(), $menu_id = 0 ) {
-			$use_flex_css = isset($theme['use_flex_css']) ? $theme['use_flex_css'] : 'off';
-
-			$filename = 'megamenu.scss';
-
-			if ( $use_flex_css == 'on' ) {
-				$filename = 'megamenu.flex.scss';
-			}
-
-			return MEGAMENU_PATH . trailingslashit( 'css' ) . $filename;
-		}
-
-
 		/**
-		 * Return the path to the megamenu.scss file, look for custom files before
-		 * loading the core version.
+		 * Before a theme is saved, attempt to compile it to verify it produces valid CSS.
+		 * Delegates to Mega_Menu_Theme for backward compatibility.
 		 *
-		 * @since 1.0
-		 * @return string
-		 */
-		private function load_scss_file( $location, $theme, $menu_id ) {
-
-			/**
-			 *  *** IMPORTANT NOTICE ***
-			 *
-			 * Allowing users to create their own versions of megamenu.scss was a poor design decision.
-			 *
-			 * The bundled SCSS file and the plugin code work in perfect harmony.
-			 *
-			 * When a user (or theme developer) creates their own copy of megamenu.scss it
-			 * _will_ become outdated as the plugin is updated and the menu HTML changes.
-			 *
-			 * Instead of using a custom SCSS file, override only the absolute minimum CSS in the
-			 * Mega Menu > Menu Themes > Custom Styling section.
-			 */
-			$scss  = file_get_contents( MEGAMENU_PATH . trailingslashit( 'css' ) . 'mixin.scss' );
-			$scss .= file_get_contents( MEGAMENU_PATH . trailingslashit( 'css' ) . 'reset.scss' );
-
-			$locations = $this->get_possible_scss_file_locations( $location, $theme, $menu_id );
-
-			foreach ( $locations as $path ) {
-
-				if ( file_exists( $path ) ) {
-
-					$scss .= file_get_contents( $path );
-					//break;
-					//
-					// @todo: add a break here. This is a known bug but some users may be relying on it.
-					// Add warning message to plugin to alert users about not using custom megamenu.scss files
-					// then fix the bug in a later release.
-				}
-			}
-
-			$scss .= file_get_contents( MEGAMENU_PATH . trailingslashit( 'css' ) . 'compatibility.scss' );
-
-			return apply_filters( 'megamenu_load_scss_file_contents', $scss );
-
-		}
-
-		/**
-		 * Before a theme is saved, attempt to generate the CSS to ensure it passes as valid SCSS
-		 *
-		 * @param array $theme
+		 * @since 1.3
+		 * @param array $theme Theme settings array to test.
+		 * @return string|WP_Error Compiled CSS on success, or WP_Error on failure.
 		 */
 		public function test_theme_compilation( $theme ) {
-			$menu_id = 0;
-
-			$menus = get_registered_nav_menus();
-
-			if ( count( $menus ) ) {
-				$locations = get_nav_menu_locations();
-
-				foreach ( $menus as $location => $description ) {
-					if ( isset( $locations[ $location ] ) ) {
-						$menu_id = $locations[ $location ];
-						continue;
-					}
-				}
-			}
-
-			return $this->generate_css_for_location( 'test', $theme, $menu_id );
-
+			return Mega_Menu_Theme::from_settings( $theme )->test_compilation();
 		}
 
 
 		/**
 		 * Compiles raw SCSS into CSS for a particular menu location.
+		 * Delegates to Mega_Menu_Location::generate_css() for backward compatibility.
 		 *
 		 * @since 1.3
-		 * @return mixed
-		 * @param array $settings
-		 * @param string $location
+		 * @param string $location The menu location slug.
+		 * @param array  $theme    Theme settings array.
+		 * @param int    $menu_id  Menu term ID.
+		 * @return string|WP_Error Compiled CSS on success, or WP_Error on failure.
 		 */
 		public function generate_css_for_location( $location, $theme, $menu_id ) {
-			if ( ( defined( 'MEGAMENU_PRO_VERSION' ) && version_compare( MEGAMENU_PRO_VERSION, '2.3.1' ) < 0 ) ||  ( defined( 'MEGAMENU_SCSS_COMPILER_COMPAT') && MEGAMENU_SCSS_COMPILER_COMPAT ) ) {
-				// use old compiler when < Pro v2.3.1 is installed
-				return $this->generate_css_for_location_old( $location, $theme, $menu_id );
-			} else {
-				return $this->generate_css_for_location_new( $location, $theme, $menu_id );
-			}
-		}
+			$location_obj = Mega_Menu_Location::find( $location );
 
-
-		/**
-		 * Compiles raw SCSS into CSS for a particular menu location.
-		 *
-		 * @since 1.3
-		 * @return mixed
-		 * @param array $settings
-		 * @param string $location
-		 */
-		public function generate_css_for_location_old( $location, $theme, $menu_id ) {
-
-			if ( is_readable( MEGAMENU_PATH . 'classes/scss/0.0.12/scss.inc.php' ) && ! class_exists( 'scssc' ) ) {
-				include_once MEGAMENU_PATH . 'classes/scss/0.0.12/scss.inc.php';
+			if ( ! $location_obj ) {
+				$location_obj = new Mega_Menu_Location( $location, $location );
 			}
 
-			$scssc = new scssc();
-			$scssc->setFormatter( 'scss_formatter' );
-
-			$import_paths = apply_filters(
-				'megamenu_scss_import_paths',
-				array(
-					trailingslashit( get_stylesheet_directory() ) . trailingslashit( 'megamenu' ),
-					trailingslashit( get_stylesheet_directory() ),
-					trailingslashit( get_template_directory() ) . trailingslashit( 'megamenu' ),
-					trailingslashit( get_template_directory() ),
-					trailingslashit( WP_PLUGIN_DIR ),
-				)
-			);
-
-			foreach ( $import_paths as $path ) {
-				$scssc->addImportPath( $path );
-			}
-
-			try {
-				return $scssc->compile( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) );
-			} catch ( Exception $e ) {
-				$message = __( 'Warning: CSS compilation failed. Please check your changes or revert the theme.', 'megamenu' );
-
-				return new WP_Error( 'scss_compile_fail', $message . '<br /><br />' . $e->getMessage() );
-			}
-
-		}
-
-
-		/**
-		 * Compiles raw SCSS into CSS for a particular menu location.
-		 *
-		 * @since 3.3
-		 * @return mixed
-		 * @param array $settings
-		 * @param string $location
-		 */
-		public function generate_css_for_location_new( $location, $theme, $menu_id ) {
-
-			if ( is_readable( MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php' ) && ! class_exists( 'MMMScssPhp\ScssPhp\Compiler' ) ) { 
-				require_once MEGAMENU_PATH . 'classes/scss/1.11.1/scss.inc.php';
-			}
-
-			$scssc = new \MMMScssPhp\ScssPhp\Compiler();
-			$scssc->setCharset(false);
-			
-			$import_paths = apply_filters(
-				'megamenu_scss_import_paths',
-				array(
-					trailingslashit( get_stylesheet_directory() ) . trailingslashit( 'megamenu' ),
-					trailingslashit( get_stylesheet_directory() ),
-					trailingslashit( get_template_directory() ) . trailingslashit( 'megamenu' ),
-					trailingslashit( get_template_directory() ),
-					trailingslashit( WP_PLUGIN_DIR ),
-				)
-			);
-
-			foreach ( $import_paths as $path ) {
-				$scssc->addImportPath( $path );
-			}
-
-			try {
-				if ( method_exists( $scssc, "compileString" ) ) {
-					return $scssc->compileString( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) )->getCss();
-				} else if ( method_exists( $scssc, "compile" ) ) { // using an older version of scssphp from a different plugin
-					return $scssc->compile( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) );
-				}
-			} catch ( Exception $e ) {
-				$message = __( 'Warning: CSS compilation failed. Please check your changes or revert the theme.', 'megamenu' );
-
-				return new WP_Error( 'scss_compile_fail', $message . '<br /><br />' . $e->getMessage() );
-			}
-
-		}
-
-
-		/**
-		 * Generates a SCSS string which includes the variables for a menu theme,
-		 * for a particular menu location.
-		 *
-		 * @since 1.3
-		 * @return string
-		 * @param string $theme
-		 * @param string $location
-		 * @param int $menu_id
-		 */
-		private function get_complete_scss_for_location( $location, $theme, $menu_id ) {
-
-			$sanitized_location = str_replace( apply_filters( 'megamenu_location_replacements', array( '-', ' ' ) ), '-', $location );
-
-			$wrap_selector = apply_filters( 'megamenu_scss_wrap_selector', "#mega-menu-wrap-{$sanitized_location}", $menu_id, $location );
-			$menu_selector = apply_filters( 'megamenu_scss_menu_selector', "#mega-menu-{$sanitized_location}", $menu_id, $location );
-
-			$vars['date']                 = "'" . date( 'l jS F Y H:i:s e' ) . "'";
-			$vars['time']                 = "'" . time() . "'";
-			$vars['wrap']                 = "'$wrap_selector'";
-			$vars['menu']                 = "'$menu_selector'";
-			$vars['location']             = "'$sanitized_location'";
-			$vars['menu_id']              = "'$menu_id'";
-			$vars['elementor_pro_active'] = 'false';
-			$vars['arrow_font']           = 'dashicons';
-			$vars['arrow_font_weight']    = 'normal';
-			$vars['close_icon_font']      = 'dashicons';
-			$vars['close_icon_font_weight'] = 'normal';
-			$vars['arrow_combinator']     = "'>'";
-			$vars['css_type']             = isset($theme['use_flex_css']) && $theme['use_flex_css'] == 'on' ? 'flex' : 'standard';
-
-			$current_theme = wp_get_theme();
-			$theme_id      = $current_theme->template;
-
-			$vars['wp_theme'] = strtolower( str_replace( array( '.', ' ' ), '_', $theme_id ) );
-
-			if ( empty( $vars['wp_theme'] ) ) {
-				$vars['wp_theme'] = 'unknown';
-			}
-
-			if ( ! function_exists( 'is_plugin_active' ) ) {
-				include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-			}
-
-			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'elementor-pro/elementor-pro.php' ) ) {
-				$vars['elementor_pro_active'] = 'true';
-			}
-
-			$settings = $this->get_menu_settings_for_location( $location );
-
-			if ( isset( $settings['effect_speed'] ) && absint( $settings['effect_speed'] ) > 0 ) {
-				$effect_speed = absint( $settings['effect_speed'] ) . 'ms';
-			} else {
-				$effect_speed = '200ms';
-			}
-
-			$vars['effect_speed'] = $effect_speed;
-
-			if ( isset( $settings['effect_speed_mobile'] ) && absint( $settings['effect_speed_mobile'] ) > 0 ) {
-				$effect_speed_mobile = absint( $settings['effect_speed_mobile'] ) . 'ms';
-			} else {
-				$effect_speed_mobile = '200ms';
-			}
-
-			$vars['effect_speed_mobile'] = $effect_speed_mobile;
-
-			if ( isset( $settings['effect_mobile'] ) ) {
-				$effect_mobile = $settings['effect_mobile'];
-			} else {
-				$effect_mobile = 'disabled';
-			}
-
-			$vars['effect_mobile'] = $effect_mobile;
-
-			foreach ( $theme as $name => $value ) {
-
-				if ( in_array( $name, array( 'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right', 'close_icon' ) ) ) {
-
-					$parts = explode( '-', $value );
-					$code  = end( $parts );
-
-					$arrow_icon = $code == 'disabled' ? "''" : "'\\" . $code . "'";
-
-					$vars[ $name ] = $arrow_icon;
-
-					continue;
-				}
-
-				if ( in_array( $name, array( 'menu_item_link_font', 'panel_font_family', 'panel_header_font', 'panel_second_level_font', 'panel_third_level_font', 'panel_third_level_font', 'flyout_link_family', 'tabbed_link_family' ) ) ) {
-
-					$vars[ $name ] = "'" . stripslashes( htmlspecialchars_decode( $value ) ) . "'";
-
-					// find font names that end with/contain a number, e.g. Baloo 2, and add extra quotes so that they still retain quotes when CSS is compiled.
-					$font_name_with_single_quotes = $vars[ $name ];
-					$font_name_with_no_quotes = str_replace( "'", "", $font_name_with_single_quotes );
-					$font_name_parts = explode( " ", $font_name_with_no_quotes );
-
-					if ( is_array( $font_name_parts) ) {
-						foreach ( $font_name_parts as $part ) {
-							if ( is_numeric ($part) ) {
-								$vars[ $name ] = "\"{$font_name_with_single_quotes}\"";
-								continue;
-							}
-						}
-					}
-
-					continue;
-				}
-
-				if ( in_array( $name, array( 'responsive_text' ) ) ) {
-
-					if ( strlen( $value ) ) {
-						$vars[ $name ] = "'" . do_shortcode( $value ) . "'";
-					} else {
-						$vars[ $name ] = "''";
-					}
-
-					continue;
-				}
-
-				if ( in_array( $name, array( 'panel_width', 'panel_inner_width', 'mobile_menu_force_width_selector' ) ) ) {
-					if ( preg_match( '/^\d/', $value ) !== 1 ) { // doesn't start with number (jQuery selector)
-						$vars[ $name ] = '100%';
-						continue;
-					}
-				}
-
-				if ( $name != 'custom_css' ) {
-					$vars[ $name ] = $value;
-				}
-			}
-
-			// Non-standard characters in the title will break CSS compilation, unset it here as it's not needed.
-			if ( isset( $vars['title'] ) ) {
-				unset( $vars['title'] );
-			}
-
-			$vars = apply_filters( 'megamenu_scss_variables', $vars, $location, $theme, $menu_id, $this->get_theme_id_for_location( $location ) );
-
-			$scss = '';
-
-			foreach ( $vars as $name => $value ) {
-				$scss .= '$' . $name . ': ' . $value . ";\n";
-			}
-
-			$scss .= $this->load_scss_file( $location, $theme, $menu_id );
-
-			$scss .= stripslashes( html_entity_decode( $theme['custom_css'], ENT_QUOTES ) );
-
-			return apply_filters( 'megamenu_scss', $scss, $location, $theme, $menu_id );
-
-		}
-
-
-		/**
-		 * Returns the menu ID for a specified menu location, defaults to 0
-		 *
-		 * @since 1.3
-		 */
-		private function get_menu_id_for_location( $location ) {
-			$locations = get_nav_menu_locations();
-			$menu_id   = isset( $locations[ $location ] ) ? $locations[ $location ] : 0;
-
-			return $menu_id;
-		}
-
-
-		/**
-		 * Returns the theme ID for a specified menu location, defaults to 'default'
-		 *
-		 * @since 2.1
-		 */
-		private function get_theme_id_for_location( $location ) {
-			$settings = $this->settings;
-			$theme_id = isset( $settings[ $location ]['theme'] ) ? $settings[ $location ]['theme'] : 'default';
-
-			return $theme_id;
-		}
-
-
-		/**
-		 * Returns the theme settings for a specified location. Defaults to the default theme.
-		 *
-		 * @since 1.3
-		 */
-		private function get_theme_settings_for_location( $location ) {
-			$theme_id       = $this->get_theme_id_for_location( $location );
-			$all_themes     = $this->get_themes();
-			$theme_settings = isset( $all_themes[ $theme_id ] ) ? $all_themes[ $theme_id ] : $all_themes['default'];
-
-			return $theme_settings;
-		}
-
-
-		/**
-		 * Returns the menu settings for a specified location.
-		 *
-		 * @since 2.2
-		 */
-		private function get_menu_settings_for_location( $location ) {
-			$settings          = $this->settings;
-			$location_settings = isset( $settings[ $location ] ) ? $settings[ $location ] : array();
-			return $location_settings;
+			return $location_obj->generate_css( Mega_Menu_Theme::from_settings( $theme ) );
 		}
 
 		/**
-		 * Enqueue public CSS and JS files required by Mega Menu
+		 * Enqueue public CSS files required by Mega Menu.
 		 *
 		 * @since 1.0
+		 * @return void
 		 */
 		public function enqueue_styles() {
-			if ( 'fs' === $this->get_css_output_method() ) {
+			if ( ! ( defined( 'MEGAMENU_PREVIEW' ) && MEGAMENU_PREVIEW ) && 'fs' === $this->get_css_output_method() ) {
 				$this->enqueue_fs_style();
 			}
 
@@ -1061,14 +440,15 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		}
 
 		/**
-		 * Enqueue public CSS and JS files required by Mega Menu
+		 * Enqueue public JavaScript files required by Mega Menu.
 		 *
 		 * @since 1.0
+		 * @return void
 		 */
 		public function enqueue_scripts() {
 			$js_path = MEGAMENU_BASE_URL . 'js/maxmegamenu.js';
 
-			$dependencies = apply_filters( 'megamenu_javascript_dependencies', array( 'jquery', 'hoverIntent' ) );
+			$dependencies = apply_filters( 'megamenu_javascript_dependencies', [ 'jquery', 'hoverIntent' ] );
 
 			$scripts_in_footer = apply_filters( 'megamenu_scripts_in_footer', true );
 
@@ -1085,7 +465,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			wp_enqueue_script( $handle, $js_path, $dependencies, MEGAMENU_VERSION, $scripts_in_footer );
 
-			$params = apply_filters( 'megamenu_javascript_localisation', array() );
+			$params = apply_filters( 'megamenu_javascript_localisation', [] );
 
 			if ( count( $params) ) {
 				wp_localize_script( $handle, 'megamenu', $params );
@@ -1095,9 +475,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Enqueue the stylesheet held on the filesystem.
+		 * Enqueue the stylesheet saved to the uploads filesystem.
 		 *
 		 * @since 1.6.1
+		 * @return void
 		 */
 		public function enqueue_fs_style() {
 
@@ -1120,9 +501,9 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$protocol = is_ssl() ? 'https://' : 'http://';
 
 				// ensure we're using the correct protocol.
-				$css_url = str_replace( array( 'http://', 'https://' ), $protocol, $css_url );
+				$css_url = str_replace( [ 'http://', 'https://' ], $protocol, $css_url );
 
-				wp_enqueue_style( 'megamenu', $css_url, false, substr( md5( filemtime( $filepath ) ), 0, 6 ) );
+				wp_enqueue_style( 'megamenu', $css_url, false, substr( md5( (string) filemtime( $filepath ) ), 0, 6 ) );
 
 			}
 
@@ -1130,8 +511,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
+		 * Store compiled CSS in the transient cache and update version/timestamp options.
 		 *
 		 * @since 1.6.1
+		 * @param string $css The compiled CSS to cache.
+		 * @return void
 		 */
 		private function set_cached_css( $css ) {
 			// set a far expiration date to prevent transient from being autoloaded.
@@ -1144,10 +528,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the cached css if it exists
+		 * Return the cached CSS if it exists.
 		 *
 		 * @since 1.9
-		 * @return mixed
+		 * @return string|false Cached CSS string, or false if the transient has expired.
 		 */
 		private function get_cached_css() {
 			return get_transient( $this->get_transient_key() );
@@ -1155,10 +539,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Delete the cached CSS
+		 * Delete the cached CSS and regenerate it.
 		 *
 		 * @since 1.9
-		 * @return mixed
+		 * @return true
 		 */
 		public function delete_cache() {
 			global $wp_filesystem;
@@ -1196,10 +580,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the filename to use for the stylesheet, ensuring the filename is unique
-		 * for multi site setups
+		 * Return the filename to use for the stylesheet.
+		 * The filename is filtered to be unique on multisite setups.
 		 *
 		 * @since 1.6.1
+		 * @return string CSS filename with .css extension.
 		 */
 		public function get_css_filename() {
 			return apply_filters( 'megamenu_css_filename', 'style' ) . '.css';
@@ -1207,18 +592,20 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Return the CSS output method, default to filesystem
+		 * Return the configured CSS output method.
 		 *
-		 * @return string
+		 * @since 1.0
+		 * @return string 'fs' (filesystem), 'head', or 'disabled'.
 		 */
 		private function get_css_output_method() {
 			return isset( $this->settings['css'] ) ? $this->settings['css'] : 'fs';
 		}
 
 		/**
-		 * Return the CSS output method, default to filesystem
+		 * Return the configured CSS type.
 		 *
-		 * @return string
+		 * @since 1.0
+		 * @return string 'standard' or 'flex'.
 		 */
 		private function get_css_type() {
 			return isset( $this->settings['css_type'] ) ? $this->settings['css_type'] : 'standard';
@@ -1226,30 +613,38 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Print CSS to <head>
+		 * Output the Mega Menu CSS inline in the <head>.
 		 *
 		 * @since 1.3.1
+		 * @return void
 		 */
 		public function head_css() {
 
+			if ( defined( 'MEGAMENU_PREVIEW' ) && MEGAMENU_PREVIEW ) {
+				$css = $this->get_css();
+				echo '<style class="megamenu-css">' . str_replace( [ '  ', "\n" ], '', $css ) . "</style>\n";
+				return;
+			}
+
 			$method = $this->get_css_output_method();
 
-			if ( in_array( $method, array( 'disabled', 'fs' ) ) ) {
-				echo "<style type=\"text/css\">/** Mega Menu CSS: {$method} **/</style>\n";
+			if ( in_array( $method, [ 'disabled', 'fs' ] ) ) {
+				echo '<style class="megamenu-css">/** Mega Menu CSS: ' . esc_html( $method ) . " **/</style>\n";
 				return;
 			}
 
 			$css = $this->get_css();
 
-			echo '<style type="text/css">' . str_replace( array( '  ', "\n" ), '', $css ) . "</style>\n";
+			echo '<style class="megamenu-css">' . str_replace( [ '  ', "\n" ], '', $css ) . "</style>\n";
 
 		}
 
 
 		/**
-		 * Delete language specific transients created when PolyLang is installed
+		 * Delete all language-specific CSS transients created when PolyLang is installed.
 		 *
 		 * @since 1.9
+		 * @return void
 		 */
 		public function polylang_delete_cache() {
 			global $polylang;
@@ -1261,10 +656,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Modify the CSS transient key to make it unique to the current language
+		 * Modify the CSS transient key to make it unique to the current PolyLang language.
 		 *
 		 * @since 1.9
-		 * @return string
+		 * @param string $key The base transient key.
+		 * @return string Language-suffixed transient key.
 		 */
 		public function polylang_transient_key( $key ) {
 
@@ -1279,10 +675,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Modify the CSS filename to make it unique to the current language
+		 * Modify the CSS filename to make it unique to the current PolyLang language.
 		 *
 		 * @since 1.9
-		 * @return string
+		 * @param string $filename The base CSS filename (without extension).
+		 * @return string Language-suffixed filename.
 		 */
 		public function polylang_css_filename( $filename ) {
 
@@ -1297,9 +694,10 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Delete language specific transients created when WPML is installed
+		 * Delete all language-specific CSS transients created when WPML is installed.
 		 *
 		 * @since 1.9
+		 * @return void
 		 */
 		public function wpml_delete_cache() {
 
@@ -1312,10 +710,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Modify the CSS transient key to make it unique to the current language
+		 * Modify the CSS transient key to make it unique to the current WPML language.
 		 *
 		 * @since 1.9
-		 * @return string
+		 * @param string $key The base transient key.
+		 * @return string Language-suffixed transient key.
 		 */
 		public function wpml_transient_key( $key ) {
 			$key .= '_' . ICL_LANGUAGE_CODE;
@@ -1325,10 +724,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Modify the CSS filename to make it unique to the current language
+		 * Modify the CSS filename to make it unique to the current WPML language.
 		 *
 		 * @since 1.9
-		 * @return string
+		 * @param string $filename The base CSS filename (without extension).
+		 * @return string Language-suffixed filename.
 		 */
 		public function wpml_css_filename( $filename ) {
 			$filename .= '_' . ICL_LANGUAGE_CODE;

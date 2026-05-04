@@ -7,28 +7,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Mega_Menu_General' ) ) :
 
 	/**
-	 * Handles the Mega Menu > Menu Settings page
+	 * Handles the Mega Menu > General Settings admin page.
+	 *
+	 * @since   1.0
+	 * @package MegaMenu
 	 */
 	class Mega_Menu_General {
 
 		/**
-		 * Constructor
+		 * Constructor. Registers form submission and tab hooks.
 		 *
-		 * @since 1.0
+		 * @since  1.0
+		 * @return void
 		 */
 		public function __construct() {
-			add_action( 'admin_post_megamenu_save_settings', array( $this, 'save_settings' ) );
+			add_action( 'admin_post_megamenu_save_settings', [ $this, 'save_settings' ] );
 
-			add_filter( 'megamenu_menu_tabs', array( $this, 'add_general_tab' ), 4 );
-			add_action( 'megamenu_page_general_settings', array( $this, 'general_settings_page' ) );
+			add_filter( 'megamenu_menu_tabs', [ $this, 'add_general_tab' ], 4 );
+			add_action( 'megamenu_page_general_settings', [ $this, 'general_settings_page' ] );
 		}
 
 
 		/**
-		 * Add the Menu Locations tab to our available tabs
+		 * Add the General Settings tab to the available admin tabs.
 		 *
-		 * @param array $tabs
-		 * @since 2.8
+		 * @since  2.8
+		 * @param  array $tabs Existing tabs.
+		 * @return array Tabs with the General Settings tab appended.
 		 */
 		public function add_general_tab( $tabs ) {
 			$tabs['general_settings'] = __( 'General Settings', 'megamenu' );
@@ -36,9 +41,11 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		}
 
 		/**
-		 * Sanitize multidimensional array
+		 * Recursively sanitize a multidimensional array.
 		 *
-		 * @since 2.7.5
+		 * @since  2.7.5
+		 * @param  array $array Array to sanitize (passed by reference).
+		 * @return array Sanitized array.
 		 */
 		public function sanitize_array( &$array ) {
 			foreach ( $array as &$value ) {
@@ -55,7 +62,8 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		/**
 		 * Save menu general settings.
 		 *
-		 * @since 1.0
+		 * @since  1.0
+		 * @return void
 		 */
 		public function save_settings() {
 			check_admin_referer( 'megamenu_save_settings' );
@@ -81,9 +89,11 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 
 
 		/**
-		 * Redirect and exit
+		 * Redirect and exit.
 		 *
-		 * @since 1.8
+		 * @since  1.8
+		 * @param  string $url URL to redirect to.
+		 * @return void
 		 */
 		public function redirect( $url ) {
 			wp_redirect( $url );
@@ -92,9 +102,11 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 
 
 		/**
-		 * Content for 'Settings' tab
+		 * Content for the General Settings tab.
 		 *
-		 * @since 1.4
+		 * @since  1.4
+		 * @param  array $saved_settings Saved plugin settings.
+		 * @return void
 		 */
 		public function general_settings_page( $saved_settings ) {
 
@@ -112,10 +124,10 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 
 				<h3 class='first'><?php esc_html_e( 'General Settings', 'megamenu' ); ?></h3>
 
-				<table>
+				<table class="mmm-settings-table">
 					<tr>
 						<td class='mega-name'>
-							<?php esc_html_e( 'CSS Output', 'megamenu' ); ?>
+							<div class='mega-name-title'><?php esc_html_e( 'CSS Output', 'megamenu' ); ?></div>
 							<div class='mega-description'>
 							</div>
 						</td>
@@ -136,7 +148,9 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 								<div class='head' style='display: <?php echo 'head' === $css ? 'block' : 'none'; ?>'><?php esc_html_e( 'CSS will be loaded from the cache in a &lt;style&gt; tag in the &lt;head&gt; of the page.', 'megamenu' ); ?></div>
 								<div class='disabled' style='display: <?php echo 'disabled' === $css ? 'block' : 'none'; ?>'>
 									<?php esc_html_e( 'CSS will not be output, you must enqueue the CSS for the menu manually.', 'megamenu' ); ?>
-									<div class='fail'><?php esc_html_e( 'Selecting this option will effectively disable the theme editor and many of the features available in Max Mega Menu and Max Mega Menu Pro. Only enable this option if you fully understand the consequences.', 'megamenu' ); ?>
+									<div class="notice notice-error is-dismissible">
+										<p><?php esc_html_e( 'Selecting this option will effectively disable the theme editor and many of the features available in Max Mega Menu and Max Mega Menu Pro. Only enable this option if you fully understand the consequences.', 'megamenu' ); ?></p>
+									</div>
 								</div>
 							</div>
 						</td>
@@ -145,7 +159,7 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 
 					<?php do_action( 'megamenu_general_settings', $saved_settings ); ?>
 
-					<?php submit_button(); ?>
+					<?php echo get_submit_button( '', 'primary button-compact' ); ?>
 			</form>
 		</div>
 

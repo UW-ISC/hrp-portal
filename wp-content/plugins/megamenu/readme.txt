@@ -2,9 +2,9 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 6.2
-Tested up to: 6.9
-Stable tag: 3.8
-Requires PHP: 5.6
+Tested up to: 7.0
+Stable tag: 3.9.2
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,8 +13,6 @@ An easy to use mega menu plugin. Written the WordPress way.
 == Description ==
 
 Max Mega Menu will automatically convert your existing menu into a mega menu. You can then add any WordPress widget to your menu, restyle your menu using the theme editor and change the menu behaviour using the built in settings. Max Mega Menu is a complete menu management plugin, perfect for taking control of your existing menu and turning it into a user-friendly, accessible and touch ready menu with just a few clicks.
-
-https://www.youtube.com/watch?v=44dJwP1AXT8
 
 Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 
@@ -131,6 +129,29 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.9.2.1 =
+
+* Fix: Editing widgets in Mega Menu - Standard Layout
+
+= 3.9.2 =
+
+* Reorganise the Menu Location settings tabs (split into Desktop / Mobile settings)
+* Remove the Location Description setting from the Menu Locations dialog, instead make the title directly editable on the Mega Menu > Menu Locations page
+* Fix: Ensure menu location checkbox settings can be disabled
+
+= 3.9.1 =
+
+* Fixed regression making it impossible to add Pro toggle blocks to toggle bar designer
+
+= 3.9 =
+
+This release aims to modernise and simplify all areas of the admin interface.
+
+* Admin related code refactored and hardened
+* Menu Locations are now shown as 'cards' and their appearance is now standardised across the plugin
+* Rename the "Sandbox" functionality to "Preview", expand its functionality and make it more prominent
+* Remove legacy code and scripts, fix all jQuery migrate issues
 
 = 3.8.1 =
 

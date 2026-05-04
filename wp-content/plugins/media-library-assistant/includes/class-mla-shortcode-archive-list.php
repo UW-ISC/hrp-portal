@@ -164,7 +164,7 @@ class MLAArchiveList {
 
 		if ( ( 1 > count( $items ) ) ) {
 			if ( ! empty( $markup_values['option_none_label'] ) ) {
-				$list = self::_process_shortcode_parameter( $markup_values['option_none_label'], $markup_values );
+				$list = MLAShortcode_Support::mla_process_shortcode_parameter( $markup_values['option_none_label'], $markup_values );
 			}
 
 			return false;
@@ -184,13 +184,13 @@ class MLAArchiveList {
 			$item_values = apply_filters( 'mla_archive_list_item_values', $item_values, 'paginate_prev' );
 
 			// these will add to the default classes
-			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( self::_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
+			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
 
-			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
+			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
 
-			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
+			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
 
-			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
+			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
 
 			if ( $item_values['append_current_item'] ) {
 				$new_url = self::_replace_query_parameter( $mla_archive_parameter, $item_values['current_value'], $new_base );
@@ -198,7 +198,7 @@ class MLAArchiveList {
 				$new_url = $new_base;
 			}
 
-			$prev_text = ( ! empty( $item_values['mla_prev_text'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['mla_prev_text'], $item_values ) ) : '&laquo; ' . __( 'Previous', 'media-library-assistant' );
+			$prev_text = ( ! empty( $item_values['mla_prev_text'] ) ) ? esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_prev_text'], $item_values ) ) : '&laquo; ' . __( 'Previous', 'media-library-assistant' );
 			$page_links[] = sprintf( '<a class="prev paginate-archive%1$s" %2$s%3$shref="%4$s">%5$s</a>',
 				/* %1$s */ $new_class,
 				/* %2$s */ $new_attributes,
@@ -212,13 +212,13 @@ class MLAArchiveList {
 			$item_values = apply_filters( 'mla_archive_list_item_values', $item_values, 'paginate_item' );
 
 			// these will add to the default classes
-			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( self::_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
+			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
 
-			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
+			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
 
-			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
+			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
 
-			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
+			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
 
 			if ( $key === $target_key ) {
 				// build current item span
@@ -257,20 +257,20 @@ class MLAArchiveList {
 			$item_values = apply_filters( 'mla_archive_list_item_values', $item_values, 'paginate_next' );
 
 			// these will add to the default classes
-			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( self::_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
+			$new_class = ( ! empty( $item_values['mla_link_class'] ) ) ? ' ' . sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) ) : '';
 
-			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
+			$new_attributes = ( ! empty( $item_values['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) ) . ' ' : '';
 
-			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
+			$new_base =  ( ! empty( $item_values['mla_link_href'] ) ) ? esc_url( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) ) : $item_values['page_url'];
 
-			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
+			$new_title = ( ! empty( $item_values['mla_rollover_text'] ) ) ? 'title="' . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) ) . '" ' : '';
 			if ( $item_values['append_current_item'] ) {
 				$new_url = self::_replace_query_parameter( $mla_archive_parameter, $item_values['current_value'], $new_base );
 			} else {
 				$new_url = $new_base;
 			}
 
-			$next_text = ( ! empty( $item_values['mla_next_text'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['mla_next_text'], $item_values ) ) : __( 'Next', 'media-library-assistant' ) . ' &raquo;';
+			$next_text = ( ! empty( $item_values['mla_next_text'] ) ) ? esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_next_text'], $item_values ) ) : __( 'Next', 'media-library-assistant' ) . ' &raquo;';
 			$page_links[] = sprintf( '<a class="next paginate-archive%1$s" %2$s%3$shref="%4$s">%5$s</a>',
 				/* %1$s */ $new_class,
 				/* %2$s */ $new_attributes,
@@ -291,23 +291,6 @@ class MLAArchiveList {
 		} // mla_paginate_type
 
 		return false;
-	}
-
-	/**
-	 * Handles brace/bracket escaping and parses template for a shortcode parameter
-	 *
-	 * @since 3.31
-	 *
-	 * @param string raw shortcode parameter, e.g., "text {+field+} {brackets} \\{braces\\}"
-	 * @param array  template substitution values, e.g., ('instance' => '1', ...  )
-	 *
-	 * @return string parameter with brackets, braces, substitution parameters and templates processed
-	 */
-	private static function _process_shortcode_parameter( $text, $markup_values ) {
-		$new_text = str_replace( '{\+', '\[\+', str_replace( '+\}', '+\\\\]', $text ) );
-		$new_text = str_replace( '{', '[', str_replace( '}', ']', $new_text ) );
-		$new_text = str_replace( '\[', '{', str_replace( '\]', '}', $new_text ) );
-		return MLAData::mla_parse_template( $new_text, $markup_values );
 	}
 
 	/**
@@ -344,7 +327,7 @@ class MLAArchiveList {
 
 		// Handle an empty, hidden archive
 		if ( ( 0 === $found_rows ) && $markup_values['hide_if_empty'] ) {
-			$option_none_label = self::_process_shortcode_parameter( $markup_values['option_none_label'], $markup_values );
+			$option_none_label = MLAShortcode_Support::mla_process_shortcode_parameter( $markup_values['option_none_label'], $markup_values );
 
 			if ( $is_list || $is_dropdown ) {
 				$list .= $option_none_label;
@@ -443,7 +426,7 @@ class MLAArchiveList {
 
 		// mla_nolink_text is used for pure pagination values
 		if ( ! empty( $item_default_values['option_none_label'] ) ) {
-			$arguments['mla_nolink_text'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
+			$arguments['mla_nolink_text'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
 		}
 
 		// Handle an empty, visible archive
@@ -452,19 +435,19 @@ class MLAArchiveList {
 			$attributes = array();
 
 			if ( ! empty( $item_default_values['option_none_value'] ) ) {
-				$item_default_values['current_value'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values ) );
+				$item_default_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values ) );
 			} else {
 				$item_default_values['current_value'] = 'no-archives';
 			}
 
 			if ( ! empty( $item_default_values['option_none_label'] ) ) {
-				$item_default_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
+				$item_default_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
 			} else {
 				$item_default_values['item_label'] = 'No archives';
 			}
 
 			if ( ! empty( $item_default_values['itemtag_id'] ) ) {
-				$item_default_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
+				$item_default_values['item_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
 				$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
 			}
 
@@ -473,7 +456,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_default_values['itemtag_class'] ) ) {
-				$item_default_values['item_class'] .= ' ' .  sanitize_html_class( self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
+				$item_default_values['item_class'] .= ' ' .  sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
 			}
 
 			$item_default_values['item_class'] = trim ( $item_default_values['item_class'] );
@@ -483,7 +466,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_default_values['itemtag_attributes'] ) ) {
-				$attributes[] = MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
+				$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
 			}
 
 			if ( ! empty( $attributes ) ) {
@@ -521,16 +504,16 @@ class MLAArchiveList {
 				// Apply the Display Content parameters
 				$attributes = array();
 
-				$item_default_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_all_label'], $item_default_values ) );
+				$item_default_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_all_label'], $item_default_values ) );
 
 				if ( ! empty( $item_default_values['option_all_value'] ) ) {
-					$item_default_values['current_value'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values ) );
+					$item_default_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values ) );
 				} else {
 					$item_default_values['current_value'] = '';
 				}
 
 				if ( ! empty( $item_default_values['itemtag_id'] ) ) {
-					$item_default_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
+					$item_default_values['item_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
 					$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
 				}
 
@@ -539,7 +522,7 @@ class MLAArchiveList {
 				}
 
 				if ( ! empty( $item_default_values['itemtag_class'] ) ) {
-					$item_default_values['item_class'] .= ' ' .  sanitize_html_class( self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
+					$item_default_values['item_class'] .= ' ' .  sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
 				}
 
 				$item_default_values['item_class'] = trim ( $item_default_values['item_class'] );
@@ -549,7 +532,7 @@ class MLAArchiveList {
 				}
 
 				if ( ! empty( $item_default_values['itemtag_attributes'] ) ) {
-					$attributes[] = MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
+					$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
 				}
 
 				if ( ! empty( $attributes ) ) {
@@ -727,7 +710,7 @@ class MLAArchiveList {
 			if ( ! empty( $item ) ) {
 				$items = array( $item );
 			} elseif ( ! empty( $item_default_values['option_none_label'] ) ) {
-				$list = self::_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values );
+				$list = MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values );
 				return false;
 			} else {
 				return false;
@@ -763,7 +746,7 @@ class MLAArchiveList {
 			$attributes = array();
 
 			if ( ! empty( $item_values['itemtag_id'] ) ) {
-				$item_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_id'], $item_values ) );
+				$item_values['item_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['itemtag_id'], $item_values ) );
 				$attributes[] = 'id="' . $item_values['item_id'] . '"';
 			}
 
@@ -772,7 +755,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_values['itemtag_class'] ) ) {
-				$item_values['item_class'] .= ' ' .  sanitize_html_class( self::_process_shortcode_parameter( $item_values['itemtag_class'], $item_values ) );
+				$item_values['item_class'] .= ' ' .  sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['itemtag_class'], $item_values ) );
 			}
 
 			$item_values['item_class'] = trim ( $item_values['item_class'] );
@@ -782,7 +765,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_values['itemtag_attributes'] ) ) {
-				$attributes[] = MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_attributes'], $item_values ) );
+				$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['itemtag_attributes'], $item_values ) );
 			}
 
 			if ( ! empty( $attributes ) ) {
@@ -790,11 +773,11 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_values['itemtag_value'] ) ) {
-				$item_values['current_value'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_value'], $item_values ) );
+				$item_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['itemtag_value'], $item_values ) );
 			}
 
 			if ( ! empty( $item_values['itemtag_label'] ) ) {
-				$item_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_label'], $item_values ) );
+				$item_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['itemtag_label'], $item_values ) );
 			} else {
 				$item_values['item_label'] = $item_values['current_label'];
 			}
@@ -803,21 +786,21 @@ class MLAArchiveList {
 			$attributes = array();
 
 			if ( ! empty( $item_values['mla_link_id'] ) ) {
-				$item_values['item_link_id'] = esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_id'], $item_values ) );
+				$item_values['item_link_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_id'], $item_values ) );
 				$attributes[] = 'id="' . $item_values['item_link_id'] . '"';
 			} elseif ( 'flat' === $item_values['mla_output'] && ! empty( $item_values['item_id'] ) ) {
 				$attributes[] = 'id="' . $item_values['item_id'] . '"';
 			}
 
 			if ( ! empty( $item_values['mla_link_class'] ) ) {
-				$item_values['item_link_class'] = sanitize_html_class( self::_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) );
+				$item_values['item_link_class'] = sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) );
 				$attributes[] = 'class="' . $item_values['item_link_class'] . '"';
 			} elseif ( 'flat' === $item_values['mla_output'] && ! empty( $item_values['item_class'] ) ) {
 				$attributes[] = 'class="' . $item_values['item_class'] . '"';
 			}
 
 			if ( ! empty( $item_values['mla_rollover_text'] ) ) {
-				$item_values['item_link_rollover'] = esc_attr( self::_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) );
+				$item_values['item_link_rollover'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_rollover_text'], $item_values ) );
 				$attributes[] = 'title="' . $item_values['item_link_rollover'] . '"';
 			}
 
@@ -830,7 +813,7 @@ class MLAArchiveList {
 			$attributes[] = 'style="' . $item_values['item_link_style'] . '"';
 
 			if ( ! empty( $item_values['mla_link_attributes'] ) ) {
-				$attributes[] = MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) );
+				$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_attributes'], $item_values ) );
 			}
 
 			if ( ! empty( $attributes ) ) {
@@ -838,7 +821,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_values['mla_link_text'] ) ) {
-				$item_values['item_link_text'] = esc_attr( self::_process_shortcode_parameter( $item_values['mla_link_text'], $item_values ) );
+				$item_values['item_link_text'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_text'], $item_values ) );
 			} else {
 				$item_values['item_link_text'] = $item_values['current_label'];
 			}
@@ -852,7 +835,7 @@ class MLAArchiveList {
 			}
 
 			if ( ! empty( $item_values['mla_link_href'] ) ) {
-				$item_values['link_url'] = esc_url( self::_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) );
+				$item_values['link_url'] = esc_url( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_href'], $item_values ) );
 			}
 
 			// currentlink, viewlink and thelink
@@ -1742,10 +1725,10 @@ class MLAArchiveList {
 		) );
 
 		// Expand list-level parameters
-		$list_values['listtag_name'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_name'], $list_values ) );
-		$list_values['listtag_id'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_id'], $list_values ) );
-		$list_values['listtag_class'] = sanitize_html_class( self::_process_shortcode_parameter( $list_values['listtag_class'], $list_values ) );
-		$list_values['listtag_attributes'] = MLAShortcode_Support::mla_esc_attr( self::_process_shortcode_parameter( $list_values['listtag_attributes'], $list_values ) );
+		$list_values['listtag_name'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $list_values['listtag_name'], $list_values ) );
+		$list_values['listtag_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $list_values['listtag_id'], $list_values ) );
+		$list_values['listtag_class'] = sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $list_values['listtag_class'], $list_values ) );
+		$list_values['listtag_attributes'] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $list_values['listtag_attributes'], $list_values ) );
 
 		// Load style template and initialize page-level values.
 		$use_mla_archive_list_style = $arguments['mla_style'] && ( 'none' !== strtolower( $arguments['mla_style'] ) );
