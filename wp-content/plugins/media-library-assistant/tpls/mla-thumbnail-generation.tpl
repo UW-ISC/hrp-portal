@@ -45,18 +45,29 @@
             <input type="radio" name="mla_thumbnail_options[type]" id="mla-thumbnail-options-jpg" [+JPG Checked+] value="image/jpeg" />
             JPG&nbsp;&nbsp;
             <input type="radio" name="mla_thumbnail_options[type]" id="mla-thumbnail-options-png" value="image/png" />
-            PNG
-			</label></td>
-              <td><label class="alignleft"> <span class="title">[+Existing Items+]</span>
-            <select name="mla_thumbnail_options[existing_thumbnails]" id="mla-thumbnail-options-existing">
+            PNG&nbsp;&nbsp;
+            <input type="radio" name="mla_thumbnail_options[type]" id="mla-thumbnail-options-none" value="None" />
+            [+None+]&nbsp;&nbsp;
+			        </label></td>
+              <td colspan=2>&nbsp;<label> <span class="title">[+Suffix+]</span>
+                <input name="mla_thumbnail_options[suffix]" id="mla-thumbnail-options-suffix" type="text" size="15" value="[+default_suffix+]" />
+              </label></td>
+			  </tr><tr>
+              <td><label class="alignleft"> <span class="title">[+Existing Features+]</span>
+            <select name="mla_thumbnail_options[existing_features]" id="mla-thumbnail-options-existing-features">
                 <option selected="selected" value="keep">[+Keep+]</option>
                 <option value="ignore">[+Ignore+]</option>
-                <option value="trash">[+Trash+]</option>
+                <option value="remove">[+Remove+]</option>
+                <option [+Trash Style+] value="trash">[+Trash+]</option>
                 <option value="delete">[+Delete+]</option>
             </select>
               </label></td>
-              <td><label> <span class="title">[+Suffix+]</span>
-                <input name="mla_thumbnail_options[suffix]" id="mla-thumbnail-options-suffix" type="text" size="15" value="[+default_suffix+]" />
+              <td colspan=2>&nbsp;<label class="alignleft"> <span class="title">[+Existing Thumbnails+]</span>
+            <select name="mla_thumbnail_options[existing_thumbnails]" id="mla-thumbnail-options-existing-thumbnails">
+                <option selected="selected" value="keep">[+Keep+]</option>
+                <option value="ignore">[+Ignore+]</option>
+                <option value="delete">[+Delete+]</option>
+            </select>
               </label></td>
 			  </tr></table>
 			  <p>&nbsp;&nbsp;[+WP Help+]</p>

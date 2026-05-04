@@ -883,20 +883,37 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 					mlaModal.settings.oldHeight = 0;
 					this.$window = $( window );
 
-					if ( 'object' === typeof this.attachmentsWrapper ) {
-						this.on( 'ready', this.adjustBrowser58, this );
-						this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser58, this ), 15 ) );
-					} else {
-						if ( 'object' === typeof this.attachments ) {
-							this.on( 'ready', this.adjustBrowser57, this );
-							this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser57, this ), 15 ) );
-						}
+					if ( 'object' === typeof this.attachmentsWrapper || 'object' === typeof this.attachments ) {
+						this.on( 'ready', this.adjustLayout, this );
+						this.$window.on( 'resize', _.debounce( _.bind( this.adjustLayout, this ), 15 ) );
 					}
 				}
 			},
 			
-			adjustBrowser58: function() {
-				var wrapper = this.attachmentsWrapper, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
+			adjustLayout: function() {
+				var wrapper = null, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
+
+				if ( 'object' === typeof this.attachmentsWrapper ) {
+					wrapper = this.attachmentsWrapper;
+				} else {
+					if ( 'object' === typeof this.attachments ) {
+						wrapper = this.attachments;	
+					}
+				}
+
+				if ( null === wrapper ) {
+					return;
+				}
+
+				totalWidth = toolbar.$el.width();
+				if ( totalWidth > 0 ) {
+					primaryWidth = toolbar.primary.$el.width();
+					secondaryWidth = toolbar.secondary.$el.width();
+
+					// 20px is the width of the hidden "spinner" span, 1px is a margin between primary and secondary
+					toolbar.secondary.$el.css( 'max-width', totalWidth - (primaryWidth + 20 + 1) + 'px' );
+					toolbar.primary.$el.css( 'max-width', (primaryWidth + 1) + 'px' );
+				}
 
 				primaryHeight = toolbar.primary.$el.height();
 				secondaryHeight = toolbar.secondary.$el.height();
@@ -913,26 +930,18 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				}
 			},
 			
-			adjustBrowser57: function() {
-				var attachments = this.attachments, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
-
-				primaryHeight = toolbar.primary.$el.height();
-				secondaryHeight = toolbar.secondary.$el.height();
-
-				if ( primaryHeight > secondaryHeight ) {
-					toolbarHeight = primaryHeight;
+			createToolbar: function() {
+				if ( mlaModal.settings.createToolbar70 ) {
+					this.createToolbar70();
 				} else {
-					toolbarHeight = secondaryHeight;
-				}
-
-				if ( ( 0 < toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
-					attachments.$el.css( 'top', toolbarHeight + 10 + 'px' );
-					mlaModal.settings.oldHeight = toolbarHeight;
+					this.createToolbar69();
 				}
 			},
 			
-			createToolbar: function() {
-				var filters, state = this.controller._state;
+			createToolbar69: function() {
+				var state = this.controller._state,
+					showFilterByType = -1 !== $.inArray( this.options.filters, [ 'uploaded', 'all' ] );
+;
 	
 				mlaModal.settings.state = state;
 				mlaModal.settings.$el = this.controller.$el;
@@ -955,23 +964,23 @@ console.log( 'listening to controller events' );
 
 				// Suppress the "Filter Media" heading
 				$( '.media-attachments-filter-heading', this.$el ).css( 'display', 'none' );
-				
-				if ( ( 'all' === filters ) && mlaModal.settings.enableMimeTypes ) {
-					this.toolbar.unset( 'filters', { silent: true } );
-					this.toolbar.set( 'filters', new wp.media.view.AttachmentFilters.Mla({
-						controller: this.controller,
-						model:      this.collection.props,
-						priority:   -80
-					}).render() );
-				}
 
-				if ( ( 'uploaded' === filters ) && mlaModal.settings.enableMimeTypes ) {
+				if ( showFilterByType && mlaModal.settings.enableMimeTypes ) {
 					this.toolbar.unset( 'filters', { silent: true } );
-					this.toolbar.set( 'filters', new wp.media.view.AttachmentFilters.MlaUploaded({
-						controller: this.controller,
-						model:      this.collection.props,
-						priority:   -80
-					}).render() );
+
+					if ( 'uploaded' === this.options.filters ) {
+						this.toolbar.set( 'filters', new wp.media.view.AttachmentFilters.MlaUploaded({
+							controller: this.controller,
+							model:      this.collection.props,
+							priority:   -80
+						}).render() );
+					} else {
+						this.toolbar.set( 'filters', new wp.media.view.AttachmentFilters.Mla({
+							controller: this.controller,
+							model:      this.collection.props,
+							priority:   -80
+						}).render() );
+					}
 				}
 
 				if ( this.options.search && mlaModal.settings.enableMonthsDropdown ) {
@@ -984,6 +993,15 @@ console.log( 'listening to controller events' );
 				}
 
 				if ( this.options.search && mlaModal.settings.enableTermsDropdown ) {
+					// MlaTerms is a <select>, a visually hidden label element needs to be rendered before.
+					this.toolbar.set( 'termsLabel', new wp.media.view.Label({
+						value: mlaModal.strings.filterByTermLabel,
+						attributes: {
+							'for':  'media-attachment-term-filters'
+						},
+						priority:   -50
+					}).render() );
+
 					this.toolbar.set( 'terms', new wp.media.view.AttachmentFilters.MlaTerms({
 						controller: this.controller,
 						model:      this.collection.props,
@@ -1009,7 +1027,185 @@ console.log( 'listening to controller events' );
 						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
 							controller: this.controller,
 							model:      this.collection.props,
-							priority:   -40
+							priority:   60
+						}).render() );
+					} else {
+						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
+							controller: this.controller,
+							model:      this.collection.props,
+							priority:   70
+						}).render() );
+					}
+				}
+			},
+
+			createToolbar70: function() {
+				var state = this.controller._state,
+					showFilterByType = -1 !== $.inArray( this.options.filters, [ 'uploaded', 'all' ] ),
+					filtersLabel, dateFilterLabel, termFilterLabel, termSearchLabel,
+					Filters, dateFilter, termFilter, termSearchButton,
+					filtersContainer, dateFilterContainer, termFilterContainer, termSearchContainer;
+
+				mlaModal.settings.state = state;
+				mlaModal.settings.$el = this.controller.$el;
+				if ( 'undefined' === typeof mlaModal.settings.query[ state ] ) {
+					mlaModal.settings.query[ state ] = _.clone( mlaModal.settings.query.initial );
+					mlaModal.settings.query[ state ].searchFields = _.clone( mlaModal.settings.query.initial.searchFields );
+				}
+
+				// Apply the original method to create the toolbar
+				mlaAttachmentsBrowser.prototype.createToolbar.apply( this, arguments );
+				mlaModal.utility.mlaAttachmentsBrowser = this;
+
+/*	for debug : trace every event triggered in the this.controller * /
+this.controller.off( null, this.toolbarEvent );
+this.controller.on( 'all', this.toolbarEvent );
+console.log( 'listening to controller events' );
+// */
+
+				if ( showFilterByType && mlaModal.settings.enableMimeTypes ) {
+					this.toolbar.unset( 'filters', { silent: true } );
+
+					// "Filters" is a <select>, a visually hidden label element needs to be rendered before.
+					filtersLabel = new wp.media.view.Label({
+						value: wp.media.view.l10n.filterByType,
+						attributes: {
+							'for':  'media-attachment-filters'
+						},
+						priority:   -80
+					});
+
+					if ( 'uploaded' === this.options.filters ) {
+						Filters = new wp.media.view.AttachmentFilters.MlaUploaded({
+							controller: this.controller,
+							model:      this.collection.props,
+						});
+					} else {
+						Filters = new wp.media.view.AttachmentFilters.Mla({
+							controller: this.controller,
+							model:      this.collection.props,
+						});
+					}
+
+					filtersContainer = wp.media.View.extend({
+						tagname: 'div',
+						className: 'media-filter-container type-filter',
+
+						initialize: function() {
+							this.views.add( [ filtersLabel, Filters ] );
+						}
+					});
+
+					this.toolbar.set( 'filters', new filtersContainer({
+						controller: this.controller,
+						model:      this.controller.props,
+						priority:   -80
+					}).render() );
+				}
+
+				if ( this.options.search && mlaModal.settings.enableMonthsDropdown ) {
+					this.toolbar.unset( 'dateFilters', { silent: true } );
+
+					// DateFilter is a <select>, a visually hidden label element needs to be rendered before.
+					dateFilterLabel = new wp.media.view.Label({
+						value: wp.media.view.l10n.filterByDate,
+						attributes: {
+							'for': 'media-attachment-date-filters'
+						},
+					});
+
+					dateFilter = new wp.media.view.AttachmentFilters.MlaMonths({
+						controller: this.controller,
+						model:      this.collection.props,
+					});
+
+					dateFilterContainer = wp.media.View.extend({
+						tagname: 'div',
+						className: 'media-filter-container date-filter',
+
+						initialize: function() {
+							this.views.add( [ dateFilterLabel, dateFilter ] );
+						}
+					});
+
+					this.toolbar.set( 'dateFilters', new dateFilterContainer({
+						controller: this.controller,
+						model:      this.collection.props,
+						priority:   -75
+					}).render() );
+				}
+
+				if ( this.options.search && mlaModal.settings.enableTermsDropdown ) {
+					// MlaTerms is a <select>, a visually hidden label element needs to be rendered before.
+					termFilterLabel = new wp.media.view.Label({
+						value: mlaModal.strings.filterByTermLabel,
+						attributes: {
+							'for': 'media-attachment-term-filters'
+						},
+					});
+
+					termFilter = new wp.media.view.AttachmentFilters.MlaTerms({
+						controller: this.controller,
+						model:      this.collection.props,
+					});
+
+					termFilterContainer = wp.media.View.extend({
+						tagname: 'div',
+						className: 'media-filter-container term-filter',
+
+						initialize: function() {
+							this.views.add( [ termFilterLabel, termFilter ] );
+						}
+					});
+
+					this.toolbar.set( 'terms', new termFilterContainer({
+						controller: this.controller,
+						model:      this.collection.props,
+						priority:   -50
+					}).render() );
+				}
+
+				if ( this.options.search && mlaModal.settings.enableTermsSearch ) {
+					// MlaTermsSearch is a <span>, an empty label element needs to be rendered for alignment.
+					termSearchLabel = new wp.media.view.Label({
+						value: '&nbsp;',
+						attributes: {
+							'for': 'mla-terms-search'
+						},
+					});
+
+					termSearchButton = new wp.media.view.MlaTermsSearch({
+						controller: this.controller,
+						model:      this.collection.props,
+					});
+
+					termSearchContainer = wp.media.View.extend({
+						tagname: 'div',
+						className: 'media-filter-container term-search-filter',
+
+						initialize: function() {
+							this.views.add( [ termSearchLabel, termSearchButton ] );
+						}
+					});
+
+					this.toolbar.set( 'termsSearch', new termSearchContainer({
+						controller: this.controller,
+						model:      this.collection.props,
+						priority:   -50
+					}).render() );
+				}
+
+				if ( this.options.search ) {
+					if ( mlaModal.settings.enableSearchBox ) {
+						this.controller.on( 'content:activate', this.hideDefaultSearch );
+						this.controller.on( 'edit:activate', this.hideDefaultSearch );
+						this.controller.on( 'router:render', this.hideDefaultSearch );
+						this.controller.on( 'uploader:ready', this.hideDefaultSearch );
+
+						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
+							controller: this.controller,
+							model:      this.collection.props,
+							priority:   60
 						}).render() );
 					} else {
 						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
@@ -1031,6 +1227,7 @@ console.log( 'listening to controller events' );
 
 				defaultSearch.hide();
 				defaultSearchLabel.hide();
+				mlaModal.utility.mlaAttachmentsBrowser.adjustLayout()
 			},
 
 			updateFilters: function( taxonomy, selectMarkup ) {

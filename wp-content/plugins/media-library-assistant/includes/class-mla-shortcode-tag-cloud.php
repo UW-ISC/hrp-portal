@@ -976,7 +976,7 @@ class MLATagCloud {
 			if ( empty( $arguments['mla_item_value'] ) ) {
 				$item_values['thevalue'] = $item_values['term_id'];
 			} else {
-				$item_values['thevalue'] = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_item_value'], $item_values );
+				$item_values['thevalue'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_item_value'], $item_values ), 'post' );
 			}
 
 			// Add current item and current page to query arguments
@@ -1024,7 +1024,7 @@ class MLATagCloud {
 			if ( $item_values['captiontag'] ) {
 				$item_values['caption'] = wptexturize( $tag->description );
 				if ( ! empty( $arguments['mla_caption'] ) ) {
-					$item_values['caption'] = wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) );
+					$item_values['caption'] = wp_kses( wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) ), 'post' );
 				}
 			} else {
 				$item_values['caption'] = '';

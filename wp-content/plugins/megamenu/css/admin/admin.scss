@@ -1,160 +1,1747 @@
-$light_blue: #0073aa;
-$light_grey: #f7f7f7;
-$mid_grey: #f1f1f1;
-$grey: #DFDFDF;
-$dark_grey: #999;
-$text_grey: #444;
-$white: #fff;
-$black: #000;
-$red: #D0011B;
-$orange: #ffb900;
-$green: #46b450;
-$header_height: 75px;
+@use 'sass:math' as math;
+@use 'sass:color' as color;
 
-@mixin tablet {
-    @media only screen and (max-width : 1200px) {
-        @content;
-    }
+// ---------------------------------------------------------------------------
+// Admin palette — consolidated neutrals/borders: `$line` (WP-ish UI borders),
+// `$line-ui` (slightly stronger / dividers), `$surface` / `$surface-raised` (fills).
+// Form fields: `--megamenu-form-control-border` on `body.maxmegamenu-admin` (default `$neutral` / #8c8f94).
+// Accent: `$wp-admin-theme-color` → WordPress `var(--wp-admin-theme-color)` on `body`.
+// `$admin-blue-dark` → `var(--wp-admin-theme-color-darker-20)` (tracks active admin color scheme).
+// `$icon-dim` covers dim icons and muted text (merged from `$text-muted`; were #787c82 vs #777).
+// `$neutral` = form-border grey only; icon/option tints use `$icon-dim`.
+// ---------------------------------------------------------------------------
+$white: white;
+$black: hsl(0deg 0% 0%);
+
+$wp-admin-theme-color: var(--wp-admin-theme-color);
+// Block editor “synced pattern” purple (see `wp-includes/css/dist/editor`); fallback matches core default.
+$wp-block-synced-color: var(--wp-block-synced-color, #7a00df);
+$admin-blue-dark: var(--wp-admin-theme-color-darker-20);
+
+$success: #46b450;
+
+$error: #d0011b;
+$error-link: #b32d2e;
+$error-link-hover: #8a2424;
+$error-surface: #ffdddd;
+$warning: #ffb900;
+
+$ink: #1d2327;
+$text: #444;
+$text-secondary: #646970;
+$text-placeholder: #a7aaad;
+$icon-dim: #787c82;
+$neutral: #8c8f94;
+
+$surface: #f6f7f7;
+$surface-raised: #f0f0f1;
+
+$line: #dcdcde;
+$line-ui: #c3c4c7;
+$line-strong: #50575e;
+$line-dark: #373737;
+
+// Native fields in plugin admin: `body.maxmegamenu-admin` sets `--megamenu-form-control-border` (#{$neutral}).
+$megamenu-form-control-border: var(--megamenu-form-control-border, #{$neutral});
+
+// Horizontal gap between settings-page rail nav and main canvas (matches dialog rail column width intent).
+$megamenu-settings-rail-gap: 24px;
+
+// Alpha / composed shadows (derived from $black; focus halos use `--wp-admin-theme-color--rgb`)
+// Five levels: feather (a05) → light (a07) → mid (a12) → strong (a22) → scrim (a45).
+// a04 merged into a05 (0.01 gap); a1 merged into a12 (0.02 gap); a18/white-zero unused → removed.
+$shadow-a05: rgba($black, 0.05);
+$shadow-a07: rgba($black, 0.07);
+$shadow-a12: rgba($black, 0.12);
+$shadow-a22: rgba($black, 0.22);
+$shadow-a45: rgba($black, 0.45);
+
+// Semantic elevation — four levels covering every shadow use in this file.
+$shadow-small:       0 1px 2px $shadow-a07;
+$shadow-small-hover: 0 1px 2px $shadow-a05, 0 4px 16px $shadow-a07;
+$shadow-large:       0 1px 2px $shadow-a12, 0 12px 48px -8px $shadow-a22;
+$shadow-large-hover: 0 4px 28px $shadow-a22;
+// Chevron for `.mega-toolbar-native-select` (inline-end; `+ 3px` nudges left vs a 10px baseline).
+$mega-toolbar-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%2350575e' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round' d='M2.75 4.5L6 7.75 9.25 4.5'/%3E%3C/svg%3E");
+// Modal chrome (Gutenberg / component-style dialogs)
+$modal-radius: 10px;
+$modal-padding-x: 36px;
+
+@function wp-admin-theme-rgba($alpha) {
+	@return #{'rgba(var(--wp-admin-theme-color--rgb), #{$alpha})'};
 }
 
-.rtl.nav-menus-php {
-	.mm_launch {
-		margin-left: 0;
-		margin-right: 10px;
+$focus-ring-blue-soft: wp-admin-theme-rgba(0.4);
+$focus-ring-blue-strong: wp-admin-theme-rgba(0.45);
+
+$mega-admin-icon-hit: 40px;
+$mega-admin-icon-glyph: 24px;
+
+// Standard `:focus-visible` ring for admin controls (color + offset; use inside `&:focus-visible { }`).
+@mixin mega-admin-focus-ring($color: $wp-admin-theme-color, $outline-offset: 2px) {
+	outline: 2px solid $color;
+	outline-offset: $outline-offset;
+}
+
+@mixin tablet {
+	@media only screen and (max-width: 1200px) {
+		@content;
+	}
+}
+
+@mixin megamenu-admin-icon-dashicon-child($size: $mega-admin-icon-glyph) {
+	.dashicons {
+		width: $size;
+		height: $size;
+		font-size: $size;
+		line-height: 1;
+		speak: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+@mixin megamenu-admin-ghost-icon-button-shell(
+	$hit: $mega-admin-icon-hit,
+	$icon: $mega-admin-icon-glyph
+) {
+	appearance: none;
+	-webkit-appearance: none;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	width: $hit;
+	height: $hit;
+	margin: 0;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-radius: 4px;
+	background: transparent;
+	cursor: pointer;
+	color: $icon-dim;
+	line-height: 1;
+	box-shadow: none;
+	text-shadow: none;
+	transition:
+		background 0.15s ease,
+		color 0.15s ease;
+
+	@include megamenu-admin-icon-dashicon-child($icon);
+}
+
+@mixin megamenu-admin-ghost-icon-button-states {
+	&:focus:not(:hover) {
+		color: $ink;
+		background: $surface-raised;
+	}
+
+	&:hover {
+		color: $ink;
+		background: rgba(var(--wp-admin-theme-color--rgb), 0.04);
+	}
+
+	&:focus-visible {
+		@include mega-admin-focus-ring;
+	}
+}
+
+// Square ghost control + centered Dashicon (no positioning — use in toolbars / footers).
+@mixin megamenu-admin-ghost-icon-button(
+	$hit: $mega-admin-icon-hit,
+	$icon: $mega-admin-icon-glyph
+) {
+	@include megamenu-admin-ghost-icon-button-shell($hit, $icon);
+	@include megamenu-admin-ghost-icon-button-states;
+}
+
+// Dashicon tile rendered on `::before` (menu icon grid); matches ghost button colors / radius / transitions.
+@mixin megamenu-admin-icon-pseudo-dashicon-tile(
+	$hit: $mega-admin-icon-hit,
+	$glyph: $mega-admin-icon-glyph
+) {
+	box-sizing: border-box;
+	width: $hit;
+	height: $hit;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	padding: 0;
+	border-radius: 4px;
+	background: transparent;
+	color: $icon-dim;
+	line-height: 1;
+	font-size: $glyph;
+	cursor: pointer;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transition:
+		background 0.15s ease,
+		color 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+// Shared close control: ghost icon button (header corner on menu item + location modals).
+@mixin megamenu-modal-close-button {
+	@include megamenu-admin-ghost-icon-button-shell;
+	@include megamenu-admin-ghost-icon-button-states;
+	position: absolute;
+	top: 14px;
+	right: 12px;
+	z-index: 2;
+}
+
+.megamenu-modal-close {
+	@include megamenu-modal-close-button;
+
+	.dashicons {
+		display: block;
+		pointer-events: none;
+	}
+}
+
+
+// Sliding underline shared by Menu Themes tabs and the location settings dialog.
+@mixin nav-tab-slider-indicator {
+	.nav-tab-slider {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 3px;
+		background-color: $wp-admin-theme-color;
+		border-radius: 2px;
+		transition: left 0.3s ease-out, width 0.3s ease-out;
+		z-index: 1;
+	}
+}
+
+// Column span control pill: grid `.mega-col-header > .mega-col-span` + standard `.mega-widget-title-action .mega-col-span`.
+@mixin mega-col-span-pill {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	flex: 0 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	padding: 3px 2px;
+	border-radius: 9999px;
+	box-sizing: border-box;
+	background: $white;
+	border: 1px solid $wp-admin-theme-color;
+	color: $wp-admin-theme-color;
+}
+
+// Shared vertical rail tabs: Appearance > Menus menu-item modal body + location settings modal.
+@mixin megamenu-dialog-side-tab(
+	$accent: $wp-admin-theme-color,
+	$active-bg: transparent
+) {
+	appearance: none;
+	-webkit-appearance: none;
+	margin: 0;
+	width: 100%;
+	display: block;
+	padding: 10px 12px;
+	box-sizing: border-box;
+	position: relative;
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 20px;
+	text-align: start;
+	color: $ink;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 0;
+	margin-bottom: 2px;
+	border-inline-start: 3px solid transparent;
+	background: transparent;
+
+	&:focus-visible {
+		@include mega-admin-focus-ring($accent);
+	}
+
+	&:hover {
+		background: $surface;
+		color: $ink;
+		border-color: transparent;
+	}
+
+	&.is-active {
+		color: $accent;
+		background: $active-bg;
+		border-color: transparent;
+		font-weight: 600;
+		box-shadow: none;
+		border-inline-start-color: $accent;
 
 		&:before {
-			margin-left: 2px;
-			margin-right: 0;
+			color: $accent;
+		}
+
+		&:after {
+			display: none;
 		}
 	}
-	#cboxContent .mm_tab_container {
-		float: right;
+}
+
+// Menu item modal: dashed “add widget to this column” slot (`.mega-col-add-widget`) — reused e.g. for “add another menu location”.
+@mixin mega-col-add-widget-appearance {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	box-sizing: border-box;
+	min-height: 32px;
+	padding: 6px 8px;
+	border: 1px dashed $line;
+	border-radius: 4px;
+	background: color.scale($surface, $lightness: 1%);
+	cursor: pointer;
+	color: $icon-dim;
+	transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+
+	.dashicons {
+		font-size: 18px;
+		width: 18px;
+		height: 18px;
+		line-height: 1;
+		opacity: 0.45;
+		transition: opacity 0.2s ease;
 	}
-	#cboxContent .mega_menu .mm_panel_options {
-		float: left;
+
+	&:hover,
+	&:focus-visible {
+		color: $wp-admin-theme-color;
+		border-color: $focus-ring-blue-strong;
+		background: $white;
+
+		.dashicons {
+			opacity: 1;
+		}
 	}
-	#cboxContent .mm_header_container .mm_title {
-		float: right;
+
+	&:focus-visible {
+		@include mega-admin-focus-ring;
 	}
-	#cboxContent table .mega-menu-item-align td.mega-value select {
-		float: right;
+}
+
+@mixin megamenu-dialog-rail-grid($column-gap: 0, $row-gap: 0) {
+	display: grid;
+	grid-template-columns: 230px 1fr;
+	grid-template-rows: minmax(0, 1fr);
+	align-items: stretch;
+	width: 100%;
+	box-sizing: border-box;
+	column-gap: $column-gap;
+	row-gap: $row-gap;
+}
+
+@mixin megamenu-dialog-tablist-shell {
+	grid-column: 1;
+	grid-row: 1;
+	width: 100%;
+	position: relative;
+	min-height: 0;
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: $white;
+}
+
+@mixin megamenu-dialog-panels-shell($overflow: auto) {
+	grid-column: 2;
+	grid-row: 1;
+	min-width: 0;
+	min-height: 0;
+	overflow: $overflow;
+	box-sizing: border-box;
+	position: relative;
+	background: $white;
+	border: 0;
+}
+
+// Tooltip bubble: any element with [data-mega-tooltip] (plain text and/or dual enabled/disabled). Always centered below the trigger.
+@mixin tooltip-popup-base {
+	&:before {
+		position: absolute;
+		content: attr(data-mega-tooltip);
+		top: calc(100% + 6px);
+		left: 50%;
+		transform: translateX(-50%);
+		background: $white;
+		color: $ink;
+		padding: 6px 10px;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 1.4;
+		border-radius: 2px;
+		border: 1px solid $line-strong;
+		box-shadow: $shadow-small;
+		margin-left: 0;
+		width: auto;
+		max-width: 280px;
+		white-space: nowrap;
+		box-sizing: border-box;
+		z-index: 101;
+		text-align: center;
 	}
-	#cboxContent table .mega-menu-item-align td.mega-value .mega-description {
-		float: right;
-		margin-right: 10px;
+
+	// Bordered chevron (not a filled triangle): rotated square so stroke meets the bubble border.
+	&:after {
+		content: "";
+		position: absolute;
+		top: calc(100% + 6px);
+		left: 50%;
+		width: 9px;
+		height: 9px;
+		margin: 0;
+		background: $white;
+		border-left: 1px solid $line-strong;
+		border-top: 1px solid $line-strong;
+		border-right: none;
+		border-bottom: none;
+		box-sizing: border-box;
+		transform: translate(-50%, -50%) rotate(45deg);
+		z-index: 102;
 	}
-	#cboxContent .mm_tab_container .mm_tab.active:after {
+
+	&:before,
+	&:after {
+		opacity: 0;
+		pointer-events: none;
+		text-align: center;
+		transition: opacity 0.3s ease;
+		transition-delay: 0.3s;
+	}
+
+	&:focus:before,
+	&:focus:after,
+	&:focus-visible:before,
+	&:focus-visible:after,
+	&:hover:before,
+	&:hover:after {
+		opacity: 1;
+	}
+}
+
+// Percent widths via nested @for — used by #megamenu-standard (data-columns) only.
+@mixin grid-col-widths($container-attr, $item-selector, $item-attr) {
+	@for $of from 1 through 12 {
+		@for $cols from 1 through $of {
+			&[#{$container-attr}='#{$of}'] #{$item-selector}[#{$item-attr}='#{$cols}'] {
+				width: math.percentage(math.div($cols, $of));
+			}
+		}
+	}
+}
+
+// Full-cell overlay used to visually disable table rows.
+@mixin disabled-row-overlay {
+	background: $surface;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	content: "";
+	opacity: 0.5;
+	z-index: 9;
+}
+
+// Small caps label above a native `<select>` (matches Menu Themes `.theme-selector-field .mega-short-desc`).
+@mixin mega-toolbar-field-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	color: $text;
+	display: block;
+	margin: 0 0 2px 1px;
+}
+
+// Theme editor only: custom chevron + chrome (dialogs use native / WP admin `<select>` styling).
+@mixin mega-toolbar-native-select {
+	-webkit-appearance: none;
+	appearance: none;
+	-moz-appearance: none;
+	box-sizing: border-box;
+	width: 300px;
+	max-width: 100%;
+	min-height: 40px;
+	margin: 0;
+	padding: 0 34px 0 10px;
+	border: 1px solid $megamenu-form-control-border;
+	border-radius: 4px;
+	background-color: $white;
+	background-image: $mega-toolbar-select-chevron;
+	background-repeat: no-repeat;
+	background-position: right calc(10px + 3px) center;
+	background-size: 12px 12px;
+	color: $text;
+	font-size: 14px;
+	line-height: 1.4;
+	font-weight: 400;
+	box-shadow: none;
+	cursor: pointer;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
+
+	&:hover,
+	&:focus {
+		color: $black;
+		background-color: $surface;
+		border-color: $neutral;
+		background-image: $mega-toolbar-select-chevron;
+	}
+
+	&:focus-visible {
+		@include mega-admin-focus-ring;
+		border-color: $wp-admin-theme-color;
+		background-image: $mega-toolbar-select-chevron;
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: default;
+		background-color: $surface;
+		border-color: $megamenu-form-control-border;
+		background-image: $mega-toolbar-select-chevron;
+	}
+}
+
+// Icon-only destructive control (widget form footer + toggle bar block settings).
+@mixin mega-admin-trash-icon-button {
+	appearance: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 4px;
+	background: transparent;
+	font: inherit;
+	cursor: pointer;
+	color: $error;
+	text-decoration: none;
+
+	.dashicons {
+		width: 20px;
+		height: 20px;
+		font-size: 20px;
+		line-height: 1;
+	}
+
+	&:hover,
+	&:focus-visible {
+		color: $error-link-hover;
+		background: $error-surface;
+	}
+
+	&:focus-visible {
+		@include mega-admin-focus-ring;
+	}
+}
+
+// Card chrome for theme editor fields (e.g. toggle block picker). Menu Themes `.theme_selector` in the dialog rail uses plain layout only (no card shell).
+@mixin mega-theme-editor-card-shell {
+	padding: 16px 20px;
+	border-radius: 8px;
+	border: 1px solid $megamenu-form-control-border;
+	background: $surface;
+	box-shadow: $shadow-small;
+	color: $text;
+	box-sizing: border-box;
+	transition: box-shadow 0.2s ease;
+
+	&:hover {
+		box-shadow: $shadow-small-hover;
+	}
+}
+
+body.maxmegamenu-admin .megamenu_outer_wrap table {
+
+	width: 100%;
+	border-collapse: collapse;
+
+	label {
+	    font-size: 0.9em;
+	    display: inline-block;
+	}
+
+	h5 {
+		font-size: 16px;
+		margin: 0;
+	}
+
+	.mega-radio-row {
+		// `td.mega-value` is a row flex container; without a full line basis, rows sit side-by-side.
+		flex: 1 1 100%;
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: 8px;
+		margin: 0;
+
+		input[type="radio"] {
+			margin: 0;
+			flex-shrink: 0;
+		}
+
+		label {
+			float: none;
+			position: static;
+			top: auto;
+			margin: 0;
+			font-size: 1em;
+			line-height: 1.4;
+		}
+	}
+
+	textarea,
+	input[type=text],
+	input[type=number],
+	select {
+		font-size: 12px;
+		min-height: 28px;
+		line-height: 26px;
+	}
+
+	textarea {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		font-family: monospace;
+		min-height: 150px;
+	}
+
+	input[type=number] {
+		height: auto;
+	}
+
+	input[name=export] {
+		margin-top: 20px;
+	}
+
+	input[type=text] {
+		min-width: 70px;
+		field-sizing: content;
+	}
+
+	input[type=text].wide {
+		width: 300px;
+	}
+
+	input[type=submit] {
+		width: auto;
+	}
+
+	input[type=checkbox] {
+		margin-top: 2px;
+		vertical-align: middle;
+	}
+
+	.wide input[type=text] {
+		width: 300px;
+	}
+	
+	.CodeMirror {
+		width: 100%;
+		height: auto;
+	    min-height: 150px;
+		border: 1px solid $megamenu-form-control-border;
+	}
+
+	div.CodeMirror span.CodeMirror-matchingbracket {
+		color: green;
+	}
+
+	.CodeMirror-scroll {
+		min-height: 150px;
+	}
+
+	th {
+		text-align: left;
+	}
+
+	td {
+		position: relative;
+		padding-bottom: 25px;
+		padding-top: 15px;
+
+		&.mega-name {
+			width: 33%;
+			line-height: 2em;
+			padding-right: 30px;
+			vertical-align: top;
+		}
+
+		&.mega-value {
+			min-width: 0;
+			padding-top: 20px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: flex-start;
+			gap: 10px;
+
+			> label {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				margin: 0;
+			}
+
+			// Custom icon (Pro): same label + `.mega-short-desc` + number + unit pattern as theme rows,
+			// but row layout so the unit stays on the line with the input (overrides column `> label` above).
+			> label.mega-desc-with-input {
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 6px;
+				float: none;
+				width: auto;
+				max-width: 100%;
+				min-width: 0;
+				box-sizing: border-box;
+
+				.mega-short-desc {
+					flex: 1 0 100%;
+					float: none;
+					width: auto;
+				}
+
+				// Keep digit-sized fields from stretching in the flex row (icon/logo width & height in Pro).
+				input[type='number'] {
+					flex: 0 0 auto;
+					width: auto;
+					min-width: 3.5em;
+					max-width: 6em;
+				}
+
+				.mega-after {
+					flex: 0 0 auto;
+					display: inline;
+					float: none;
+					margin: 0;
+					vertical-align: middle;
+					line-height: inherit;
+					height: auto;
+					border: 0;
+					background: none;
+					box-shadow: none;
+					padding: 0;
+				}
+			}
+
+			form {
+				width: 100%;
+			}
+
+			// Full-width blocks (e.g. Menu Locations card grid): flex row would otherwise shrink-wrap.
+			> p,
+			> .mega-location-cards-root {
+				flex: 1 1 100%;
+				width: 100%;
+				min-width: 0;
+				box-sizing: border-box;
+			}
+
+			.mega-description {
+				margin-top: 5px;
+			}
+
+			.mega-info {
+				flex: 1 1 100%;
+				display: block;
+				font-size: 0.9em;
+				color: $icon-dim;
+				line-height: 20px;
+				width: 100%;
+
+				&:before {
+					font: 400 20px/1 dashicons;
+					content: "\f348";
+					speak: none;
+					padding: 0;
+					margin-right: 6px;
+					display: inline-block;
+					vertical-align: top;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+				}
+			}
+
+			#megamenu-theme-textarea-custom_css {
+				flex: 1 1 100%;
+				width: 100%;
+				min-width: 0;
+				align-self: stretch;
+			}
+		}
+
+	}	
+
+
+	td.mega-name:has(.mega-description) .mega-name-title {
+		font-weight: 500;
+	}
+
+	.mega-description {
+		font-size: 13px;
+		color: $icon-dim;
+		line-height: 1.5em;
+		width: 80%;
+
+		p {
+			font-size: 12px;
+		}
+	}
+
+	ul.custom_styling_tips {
+		list-style-type: disc;
+		list-style-position: inside;
+
+		code {
+			margin: 10px 0 0 0;
+			font-size: 0.9em;
+		}
+	}
+
+	label.mega-error input {
+		border: 1px solid $error;
+		background: $error-surface;
+	}
+
+	label.mega-toggle_blocks {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+		cursor: auto;
+
+		.mega-value {
+		    padding-bottom: 0;
+		}
+
+		.mega-description {
+		    display: block;
+		    width: 100%;
+		    margin-top: 20px;
+		}
+
+		.toggle-bar-designer {
+			width: 100%;
+			max-width: 100%;
+			box-sizing: border-box;
+
+			.mega-blocks {
+				display: flex;
+				box-sizing: border-box;
+				width: 100%;
+				min-width: 0;
+			}
+
+			.mega-blocks .mega-left,
+			.mega-blocks .mega-center,
+			.mega-blocks .mega-right {
+			    box-sizing: border-box;
+			    border: 1px solid $line-ui;
+			    background: $surface;
+			    height: 60px;
+			    padding: 10px;
+			    margin-top: 15px;
+			    display: flex;
+			    flex-basis: 33.3333%;
+			}
+			.mega-blocks .mega-left {
+				border-right: 0px;
+				flex: 1;
+			}
+			.mega-blocks .mega-center {
+			    border-left: 1px dashed $line-ui;
+			    border-right: 1px dashed $line-ui;
+			    justify-content: center;
+			}
+			.mega-blocks .mega-right {
+			    border-left: 0px;
+			    flex: 1;
+			    justify-content: flex-end;
+			}
+			.mega-blocks .mega-right .block {
+			    margin: 0 0 0 5px;
+			}
+			.mega-blocks .block.mega-open .block-title {
+			    border-bottom: 1px solid $white;
+			    border-radius: 3px 3px 0 0;
+			}
+			.mega-blocks .block .block-title {
+			    padding: 0 10px;
+			    display: inline-block;
+			    height: 35px;
+			    line-height: 35px;
+			    font-size: 0.9em;
+			    background: $white;
+			    color: $text;
+			    cursor: move;
+			    border: 1px solid $line-ui;
+			    position: relative;
+			    z-index: 2;
+			    border-radius: 3px;
+			    text-align: left;
+			    box-sizing: border-box;
+			    white-space: nowrap;
+			}
+
+			.mega-blocks .block.ui-sortable-helper {
+			    width: auto !important;
+			}
+
+			.mega-blocks .block .block-title .dashicons {
+			    line-height: 35px;
+			    cursor: pointer;
+			    font-size: 20px;
+			}
+
+			.mega-blocks .block .block-settings {
+			    padding: 10px;
+			    display: none;
+			    width: 300px;
+			    vertical-align: top;
+			    background: $white;
+			    text-align: left;
+			    color: $text;
+			    position: absolute;
+			    left: 0px;
+			    top: 34px;
+			    z-index: 1;
+			    border: 1px solid $megamenu-form-control-border;
+
+			    .mega-custom-color-input-wrapper {
+			    	margin-left: auto;
+			    }
+			}
+
+			.mega-blocks .mega-right .block .block-settings {
+			    left: auto;
+			    right: 0;
+			}
+
+			.mega-blocks .block h3 {
+			    margin-top: 5px;
+			    border-bottom: 1px solid $line-ui;
+			    padding-bottom: 10px;
+			}
+
+			// Label text left, inputs grouped on the right (sentence case — no toolbar all-caps).
+			.block-settings label {
+				width: 100%;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 8px 12px;
+				box-sizing: border-box;
+				margin: 0 0 12px 0;
+				font-size: 13px;
+				font-weight: 400;
+				line-height: 1.4;
+				color: $text;
+				text-transform: none;
+			}
+
+			.block-settings label:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.block-settings label .mega-description {
+				flex: 1 0 100%;
+				width: 100%;
+				text-transform: none;
+				font-size: 12px;
+				font-weight: 400;
+				line-height: 1.45;
+				color: $icon-dim;
+				margin: 4px 0 0;
+			}
+
+			.block-settings label input,
+			.block-settings label select,
+			.block-settings label input[type='number'],
+			.block-settings label .icon_dropdown {
+				flex: 0 1 auto;
+				width: auto;
+				min-width: 0;
+				max-width: min(240px, 58%);
+				margin-left: auto;
+				box-sizing: border-box;
+				font-size: 14px;
+				font-weight: 400;
+				text-transform: none;
+				color: $text;
+			}
+
+			.block-settings label textarea {
+				flex: 0 1 auto;
+				width: auto;
+				min-width: 0;
+				max-width: min(100%, 320px);
+				min-height: 80px;
+				margin-left: auto;
+				box-sizing: border-box;
+				font-size: 14px;
+				font-weight: 400;
+				text-transform: none;
+				color: $text;
+			}
+
+			.block-settings label input[type='number'] {
+				height: 32px;
+				line-height: 32px;
+			}
+
+			.block-settings .mega-custom-color-input-wrapper {
+				flex: 0 1 auto;
+				margin-left: auto;
+				width: auto;
+				max-width: min(240px, 58%);
+			}
+
+			.block-settings label .mmm_image_selector {
+				flex: 0 1 auto;
+				margin-left: auto;
+				max-width: min(240px, 58%);
+			}
+
+			// Beat `.mega-blocks .block input[type=text] { width: 50%; }` — keep controls on the right, not half-bar width.
+			.mega-blocks .block .block-settings label input[type='text'],
+			.mega-blocks .block .block-settings label input[type='number'] {
+				width: auto;
+				max-width: min(240px, 58%);
+			}
+
+			.mega-blocks .block .block-settings label textarea {
+				width: auto;
+				max-width: min(100%, 320px);
+			}
+
+			.block-settings .mega-delete {
+				@include mega-admin-trash-icon-button;
+				margin-top: 12px;
+			}
+
+			.toggle-left {
+				border-right: 1px dashed $line-ui;
+			}
+
+			.toggle-right {
+			    border-left: 0px solid $line-ui;
+			    text-align: right;
+
+			}
+
+			.mega-blocks .block {
+			    position: relative;
+			    display: inline-block;
+			    vertical-align: top;
+			    margin: 0 5px 0 0;
+
+			    input[type=text] {
+				    width: 50%;
+				}
+			}
+		}
+	}
+
+
+	.mega-validation-message {
+	    display: none;
+	    font-size: 0.8em;
+	    color: $error;
+	}
+
+	label span.mega-short-desc {
+		font-size: 11px;
+		text-transform: uppercase;
+		color: $icon-dim;
+		display: block;
+		margin: 0 0 5px;
+	}
+
+	label.mega-copy_color {
+	    margin-right: 3px;
+
+	    span.mega-short-desc {
+		    visibility: hidden;
+		}
+
+		span.dashicons {
+		    opacity: 0.5;
+		    margin-top: 6px;
+		    font-size: 16px;
+		    cursor: pointer;
+		}
+	}
+
+	label:has(textarea) {
+		width: 100%;
+	}
+
+	// Menu item + sub-menu align rows: `select` + `.mega-description` on one line.
+	// Global `.mega-description { width: 80% }` above would force the description to ~80% of the cell,
+	// so it wraps below the select; override so both rows match.
+	.mega-menu-item-align,
+	.mega-sub-menu-align {
+		td.mega-value {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-start;
+			gap: 10px;
+
+			select {
+				float: none;
+				flex: 0 0 auto;
+			}
+
+			.mega-description {
+				float: none;
+				margin-left: 0;
+				margin-right: 0;
+				margin-top: 0;
+				width: auto;
+				max-width: 100%;
+				flex: 1 1 auto;
+				min-width: 0;
+			}
+		}
+	}
+
+}
+
+// Menu item modal: label column vertical padding (overrides global `.megamenu_outer_wrap table td`).
+body.maxmegamenu-admin .megamenu-menu-item-dialog .megamenu_outer_wrap table td.mega-name {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+// Pro "Styling" tab: name/enable column widths + row striping; dim name/value from checkbox via :has (no JS).
+body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap .megamenu_content.styling {
+	.mega-name {
+		width: 40%;
+	}
+
+	.mega-enable {
+		width: 1%;
+	}
+
+	td.mega-enable:after {
+		display: none;
+	}
+
+	tr:has(.override_toggle_enabled:checked) td:after {
+		display: none;
+	}
+
+	tr:has(.override_toggle_enabled:not(:checked)) td.mega-name,
+	tr:has(.override_toggle_enabled:not(:checked)) td.mega-value {
+		opacity: 0.45;
+		filter: grayscale(0.15);
+		transition: opacity 0.15s ease, filter 0.15s ease;
+	}
+
+	tr:has(.override_toggle_enabled:checked) td.mega-name,
+	tr:has(.override_toggle_enabled:checked) td.mega-value {
+		opacity: 1;
+		filter: none;
+	}
+
+	td {
+		position: relative;
+		padding: 10px;
+		vertical-align: middle;
+	}
+
+	td:after {
+		content: "";
+		background: $surface-raised;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0.5;
+		z-index: -1;
+		pointer-events: none;
+	}
+}
+
+body.rtl.maxmegamenu-admin.nav-menus-php {
+	.megamenu_launch {
+		margin-left: 0;
+		margin-right: 8px;
+	}
+	.megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail {
+		grid-template-columns: 1fr 230px;
+	}
+	.megamenu-menu-item-dialog .megamenu_outer_wrap .mega-tablist {
+		grid-column: 2;
+	}
+	.megamenu-menu-item-dialog .megamenu_outer_wrap .megamenu-dialog-panels {
+		grid-column: 1;
+	}
+	.megamenu-menu-item-dialog .megamenu-admin-modal__title {
+		flex-direction: row-reverse;
+	}
+	.megamenu-menu-item-dialog .megamenu_outer_wrap table .mega-menu-item-align td.mega-value,
+	.megamenu-menu-item-dialog .megamenu_outer_wrap table .mega-sub-menu-align td.mega-value {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 10px;
+
+		select {
+			float: none;
+			flex: 0 0 auto;
+		}
+
+		.mega-description {
+			float: none;
+			margin-left: 0;
+			margin-right: 0;
+			margin-top: 0;
+			width: auto;
+			max-width: 100%;
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+	}
+	.megamenu-menu-item-dialog .megamenu_outer_wrap .mega-tablist button.is-active:after {
 		right: auto;
 		left: 0;
 	}
-	#cboxContent .mega_menu .widget-title-action {
+	.megamenu-menu-item-dialog .megamenu_outer_wrap .mega_menu .mega-widget-title-action {
 		direction: ltr;
 	}
-	.mega_menu_meta_box div table td:nth-child(2) {
-		text-align: left;
+	.megamenu-admin-modal {
+		left: 0;
+		right: 160px;
 	}
 }
 
-body[class*='_page_maxmegamenu_'],
-body.toplevel_page_maxmegamenu,
-.nav-menus-php {
+body.folded.maxmegamenu-admin:not(.rtl) .megamenu-admin-modal {
+	left: 36px;
+	right: 0;
+}
 
-	.sp-container {
-		border: 1px solid #7e8993;
+body.rtl.folded.maxmegamenu-admin .megamenu-admin-modal {
+	left: 0;
+	right: 36px;
+}
+
+@media screen and (max-width: 782px) {
+	body.maxmegamenu-admin .megamenu-admin-modal {
+		left: 0 !important;
+		right: 0 !important;
+	}
+}
+
+body.rtl.maxmegamenu-admin .megamenu-admin-modal {
+	left: 0;
+	right: 160px;
+}
+
+body.maxmegamenu-admin .wp-media-buttons {
+	.button {
+		margin: 0;
+		padding: 0 8px;
 	}
 
-	input.button-primary.is-busy {
-		pointer-events: none;
-		background-size: 100px 100% !important;
-	    background-image: linear-gradient(-45deg,#007cba 28%,#006395 0,#006395 72%,#007cba 0) !important;
-	    border-color: #007cba !important;
-	    animation: busy-animation 2.5s linear infinite;
+	.button:has(.dashicons) {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
 	}
 
-	.mega-tooltip[data-tooltip],
-	.mega-tooltip[data-tooltip-enabled],
-	.mega-tooltip[data-tooltip-disabled] {
-		position: relative;
+	.button span.dashicons {
+		display: flex;
+		align-items: center;
+		font-size: 16px;
+	}
+}
 
-		&.mega-enabled:before {
-			content: attr(data-tooltip-enabled);
+// Icon-only admin buttons (e.g. Pro media selector): tighter horizontal padding than `.button-compact`.
+body.maxmegamenu-admin .button.button-compact.button-icon-only {
+	padding: 0 6px;
+}
+
+// Core accordion / postbox overflow would clip ::before/::after tooltips on the Menus screen.
+body.maxmegamenu-admin #mega_menu_meta_box,
+body.maxmegamenu-admin #mega_menu_meta_box-content,
+body.maxmegamenu-admin #mega_menu_meta_box-content > :first-child,
+body.maxmegamenu-admin #mega_menu_meta_box .accordion-section-content {
+	overflow: visible !important;
+}
+
+// Menu Locations tab: full-width intro stacks above the card grid (no table column layout).
+body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels .menu_settings.menu_settings_menu_locations {
+	> .mega-menu-locations-page-intro {
+		margin: 0 0 50px;
+		max-width: 100%;
+		box-sizing: border-box;
+
+		.mega-description {
+			margin: 0;
+			max-width: 52em;
+			color: $icon-dim;
+			font-size: 13px;
+			line-height: 1.5;
+
+			p {
+				margin: 0 0 1em;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
 		}
 
-		&.mega-disabled:before {
-			content: attr(data-tooltip-disabled);
+		.mega-menu-locations-page-intro__empty {
+			margin: 1em 0 0;
+			color: $icon-dim;
+			font-size: 13px;
+			line-height: 1.5;
+		}
+	}
+}
+
+// Location cards (Menu Locations + Max Mega Menu meta box on nav-menus.php): one root, optional `--meta` for narrow column.
+body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location-cards-root {
+	.mega-location-cards {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 24px;
+		width: 100%;
+
+		&:empty {
+			display: none;
 		}
 
-		&:before {
-			position: absolute;
-			content: attr(data-tooltip);
-			top: -32px;
-			background: $black;
-			color: $white;
-			padding: 3px 0;
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-			font-size: 10px;
-			font-weight: normal;
-			border-radius: 3px;
-			margin-left: -10px;
-			width: 160px;
-			z-index: 2;
+		@media screen and (max-width: 782px) {
+			grid-template-columns: minmax(0, 1fr);
 		}
 
-		&:after {
-			top: -8px;
-			left: 8px;
-			border: solid transparent;
-			content: " ";
-			height: 0;
-			width: 0;
-			position: absolute;
-			border-color: transparent;
-			border-top-color: $black;
-			border-width: 4px;
-			margin-left: -4px;
+		@media screen and (min-width: 1800px) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	// Same chrome as menu item modal `.mega-col-add-widget` (dashed add slot).
+	a.mega-location-add-card {
+		@include mega-col-add-widget-appearance;
+		height: 150px;
+		min-height: 150px;
+		gap: 6px;
+		text-decoration: none;
+		vertical-align: middle;
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+	.mega-location.postbox {
+		margin: 0;
+		min-width: 0;
+		border: 1px solid $line-ui;
+		border-radius: 4px;
+		box-shadow: $shadow-small;
+		background: $white;
+		font-size: 14px;
+
+		&:hover {
+			box-shadow: $shadow-small-hover;
 		}
 
-		&:before,
-		&:after {
+		&.mega-location--new-highlight {
+			animation: mm-mega-widget-selector-pulse 0.85s ease-in-out infinite;
+
+			@media (prefers-reduced-motion: reduce) {
+				animation-iteration-count: 2;
+			}
+		}
+
+		&.mega-location-mmm-off > .mega-inside > footer .wp-media-buttons .button,
+		&.mega-location-disabled > .mega-inside > footer .wp-media-buttons .button {
+			margin: 0;
+			opacity: 0.5;
+			filter: grayscale(1);
+		}
+
+		> .mega-inside {
+			margin: 0;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+
+		.mega-location__header {
+			padding: 0 0 10px;
+			border: 0;
+		}
+
+		.mega-location__header-row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+		}
+
+		.mega-location__title {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin: 0;
+			font-size: 16px;
+			font-weight: 600;
+			line-height: 1.35;
+			color: $ink;
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		.mega-location__title-icon {
+			flex-shrink: 0;
+			width: 22px;
+			height: 22px;
+			font-size: 22px;
+			line-height: 1;
+			color: $text-secondary;
+		}
+
+		.mega-location__title--editable .mega-location__title-cluster {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			min-width: 0;
+			flex: 0 0 auto;
+			cursor: pointer;
+		}
+
+		.mega-location__title--editable .mega-location__title-display {
+			min-width: 0;
+			flex: 0 1 auto;
+		}
+
+		.mega-location__title--editable .mega-location__title-text {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		/* Our `display: block` above beats UA `[hidden]` — restore hiding when editing. */
+		.mega-location__title--editable .mega-location__title-text[hidden] {
+			display: none;
+		}
+
+		.mega-location__title-edit {
+			@include megamenu-admin-ghost-icon-button-shell;
+			flex-shrink: 0;
 			opacity: 0;
-			pointer-events: none;
-			text-align: center;
-			transition: all 0.3s;
-			transition-delay: 0.3s;
+			transition: opacity 0.15s ease;
+
+			&:focus-visible {
+				@include mega-admin-focus-ring;
+			}
 		}
 
-		&:focus:before,
-		&:focus:after,
-		&:hover:before,
-		&:hover:after {
+		.mega-location__title--editable .mega-location__title-cluster:hover .mega-location__title-edit,
+		.mega-location__title--editable .mega-location__title-cluster:focus-within .mega-location__title-edit {
 			opacity: 1;
 		}
 
-	}
-}
+		.mega-location__title-cluster:has(.mega-location__title-edit-field:not([hidden])) .mega-location__title-edit {
+			display: none;
+		}
 
-.nav-menus-php {
-	#cboxOverlay {
-		left: 160px;
-	}
+		.mega-location-card-title-input {
+			box-sizing: border-box;
+			width: fit-content;
+			min-width: 3ch;
+			max-width: 100%;
+			margin: 0;
+			font-size: 16px;
+			font-weight: 600;
+			line-height: 1.35;
+			-webkit-field-sizing: content;
+			field-sizing: content;
+		}
 
-	#colorbox {
-		transform: translateX(80px);
-	}
+		.mega-location__header-actions {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			flex-shrink: 0;
+		}
 
-	&.mega-colorbox-open {
-		ul#adminmenu a.wp-has-current-submenu:after, 
-		ul#adminmenu>li.current>a.current:after {
-			border-right-color: #373737;
+		&[data-mega-location^="max_mega_menu_"] .mega-location__delete {
+			display: none;
+		}
+
+		&[data-mega-location^="max_mega_menu_"].mega-location-mmm-off .mega-location__delete {
+			display: inline-flex;
+		}
+
+		button.mega-location-delete-link {
+			display: inline-flex;
+			align-items: center;
+			margin: 0;
+			padding: 0 10px;
+			border: 0;
+			border-radius: 4px;
+			background: transparent;
+			color: $error-link;
+			font: inherit;
+			line-height: inherit;
+			text-align: inherit;
+			text-decoration: none;
+			cursor: pointer;
+			box-shadow: none;
+
+			&:hover,
+			&:focus {
+				color: $error-link-hover;
+			}
+
+			&[aria-disabled="true"] {
+				cursor: not-allowed;
+				opacity: 0.6;
+			}
+
+			.dashicons {
+				margin-right: 4px;
+				font-size: 18px;
+				width: 18px;
+				height: 18px;
+			}
+		}
+
+		.mega-location__meta {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			padding: 0 0 10px;
+			font-size: 13px;
+			line-height: 1.5;
+			color: $text-secondary;
+		}
+
+		.mega-location__meta p {
+			margin: 0;
+		}
+
+		.mega-location__assigned-link {
+			color: $wp-admin-theme-color;
+			font-weight: 400;
+			text-decoration: underline;
+			text-underline-offset: 2px;
+
+			&:hover,
+			&:focus {
+				color: $admin-blue-dark;
+			}
+		}
+
+		&.mega-location-disabled-assign-menu .mega-location__header-row .components-form-toggle {
+			opacity: 0.5;
+			pointer-events: none;
+			filter: grayscale(1);
+		}
+
+		> .mega-inside > footer.mega-location__footer {
+			display: flex;
+			padding: 15px 0 0;
+			border: 0;
+		}
+
+		footer.mega-location__footer .wp-media-buttons {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+			margin: 0;
+		}
+
+		button.megamenu-preview-open:disabled,
+		button.megamenu-preview-open[disabled] {
+			cursor: not-allowed;
 		}
 	}
 
-	#cboxContent {
+	&.mega-location-cards-root--meta {
+		.mega-location-cards {
+			grid-template-columns: minmax(0, 1fr);
+			align-items: start;
+		}
+
+		.mega-location.postbox {
+			&.mega-location-mmm-off > .mega-inside > footer.mega-location__footer {
+				max-height: 0;
+				min-height: 0;
+				padding-top: 0;
+				padding-bottom: 0;
+				gap: 0;
+				opacity: 0;
+				pointer-events: none;
+				visibility: hidden;
+				overflow: hidden;
+				transition:
+					max-height 0.35s ease,
+					padding 0.35s ease,
+					opacity 0.25s ease,
+					visibility 0s linear 0.35s;
+
+				@media (prefers-reduced-motion: reduce) {
+					transition-duration: 0.01ms;
+					transition-delay: 0s;
+				}
+
+				.wp-media-buttons .button {
+					opacity: 1;
+					filter: none;
+				}
+			}
+
+			> .mega-inside > footer.mega-location__footer {
+				max-height: 320px;
+				opacity: 1;
+				pointer-events: auto;
+				visibility: visible;
+				transition:
+					max-height 0.35s ease,
+					padding 0.35s ease,
+					opacity 0.28s ease,
+					visibility 0s linear;
+
+				@media (prefers-reduced-motion: reduce) {
+					transition-duration: 0.01ms;
+				}
+
+				.wp-media-buttons {
+					float: none;
+					clear: none;
+					width: 100%;
+					max-width: 100%;
+					box-sizing: border-box;
+					margin: 0;
+					gap: 10px;
+				}
+			}
+
+			.mega-location__header-row {
+				flex-wrap: nowrap;
+			}
+		}
+
+		.mega-location__assigned,
+		footer.mega-location__footer .delete,
+		.mega-location__delete,
+		button.mega-location-delete-link {
+			display: none !important;
+		}
+
+		.mega-location__meta:not(:has(.mega-location__description)) {
+			display: none !important;
+		}
+	}
+}
+
+// Plugin admin screens: white #wpwrap main canvas (Appearance > Menus keeps core WP chrome).
+body.maxmegamenu-admin:not(.nav-menus-php) #wpwrap {
+	background-color: $white;
+}
+
+// Lock document scroll while any mega admin dialog is open (menu item, preview, location settings, theme editor).
+// `html` + `body`: dialog-menu-item-settings.js; `body` only: dialog-preview.js, dialog-location-settings.js, theme-editor.js.
+html.megamenu-dialog-open,
+body.megamenu-dialog-open {
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+body.megamenu-dialog-open #wpwrap {
+	overflow: hidden;
+}
+
+body.maxmegamenu-admin.nav-menus-php {
+
+
+	&.megamenu-dialog-open {
+		ul#adminmenu a.wp-has-current-submenu:after,
+		ul#adminmenu>li.current>a.current:after {
+			border-right-color: $line-dark;
+		}
+	}
+
+	// Appearance > Menus: map pin before the "Display location" legend (core `.menu-theme-locations` fieldset).
+	.menu-theme-locations .menu-settings-group-name::before {
+		display: inline-block;
+		margin-inline-end: 5px;
+		font-family: dashicons;
+		font-size: 16px;
+		font-weight: normal;
+		font-style: normal;
+		line-height: 1;
+		vertical-align: -0.15em;
+		speak: never;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		content: "\f230"; // dashicons-location
+	}
+
+	.megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail {
+		flex: 1 1 auto;
+		width: 100%;
+		min-height: 0;
 		padding: 0;
 		user-select: none;
+		position: relative;
 
 		.CodeMirror {
 			user-select: auto;
+		}
+
+		// Custom HTML widget (core): constrain CodeMirror inside the menu-item widget form.
+		.mega-widget .custom-html-widget-fields .CodeMirror {
+			max-height: 150px;
+			min-height: 150px;
+			height: auto;
+		}
+
+		.mega-widget .custom-html-widget-fields .CodeMirror-scroll {
+			max-height: 150px;
+			min-height: 0;
 		}
 
 		.notice {
@@ -165,308 +1752,458 @@ body.toplevel_page_maxmegamenu,
 			}
 		}
 
-		.mm_tabs {
-			li.mm_tab_horizontal {
-				float: left;
+		.megamenu_tabs {
+			li.megamenu_tab_horizontal {
 				cursor: pointer;
 				font-size: 12px;
 				font-weight: normal;
 				padding: 3px 5px;
-				border: 0;
-				margin: 0 15px 0 0;
-				background: white;
-				color: #444;
+				margin: 0;
+				color: $text;
 				border-radius: 3px;
-				background: #f7f7f7;
-				border: 1px solid #DFDFDF;
+				background: $surface;
+				border: 1px solid $line;
 
 				&.active,
 				&:hover {
-					background: $light_blue;
-					border-color: $light_blue;
-					color: white;
+					background: $wp-admin-theme-color;
+					border-color: $wp-admin-theme-color;
+					color: $white;
 				}
 			}
 
 			&.horizontal {
-				width: 85%;
-				float: left;
-				margin-top: 10px;
-				margin-bottom: 20px;
+				width: auto;
+				max-width: 100%;
+				margin-top: 0;
+				margin-bottom: 0;
+				display: flex;
+				flex-flow: row wrap;
+				align-items: center;
+				gap: 8px 15px;
 			}
 		}
 
-
-		.filter_icons {
-			width: 14%;
-			float: right;
-			margin-top: 0;
-			font-size: 0.9em;
-		}
-
-		.mm_header_container {
-			float: left;
+		.megamenu_icon_tab_toolbar {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 12px 16px;
 			width: 100%;
-			border-bottom: 1px solid $mid_grey;
-			background: $mid_grey;
+			margin-top: 10px;
+			margin-bottom: 0;
+			box-sizing: border-box;
 
-			.mm_title {
-				padding: 0 20px;
-				font-size: 1.3em;
-			    align-items: center;
-			    display: inline-flex;
-			    line-height: 25px;
-				float: left;
-				height: $header_height;
+			.megamenu_tabs.horizontal {
+				flex: 1 1 auto;
+				min-width: 0;
+			}
 
-				br {
+			#filter_icons.filter_icons {
+				flex: 0 0 auto;
+				margin-left: auto;
+				min-height: 28px;
+			}
+
+			// Custom Icon sub-tab has no dashicons/FA grid — hide search (rel matches menu-item-manager `megamenu_tab_{$id}`).
+			&:has(li.megamenu_tab_horizontal.active[rel='megamenu_tab_custom']) {
+				.filter_icons,
+				#filter_icons.filter_icons {
 					display: none;
 				}
 			}
-
-			.mm_saving {
-				text-align: right;
-				padding: 0 20px;
-				display: none;
-				line-height: $header_height;
-				text-transform: uppercase;
-				color: $light_blue;
-				font-size: 11px;
-				font-weight: bold;
-				float: right;
-				background: $white;
-				position: absolute;
-				right: 54px;
-				
-				&:before {
-					color: $light_blue;
-					display: inline-block;
-					font: normal 20px/#{$header_height} 'dashicons';
-					speak: none;
-					-webkit-font-smoothing: antialiased;
-					-moz-osx-font-smoothing: grayscale;
-					vertical-align: top;
-					margin-right: 5px;
-					content: '\f463';
-					-webkit-animation: rotation 2s infinite linear;
-					animation: rotation 2s infinite linear;
-				}
-			}
-
 		}
 
-		.mm_tab_container {
-			width: 15%;
-			float: left;
-			position: relative;
-			height: 504px;
-			background: white;
-			-webkit-box-shadow: inset -10px 0px 7px -12px rgba(0, 0, 0, 0.2);
-			-moz-box-shadow: inset -10px 0px 7px -12px rgba(0, 0, 0, 0.2);
-			box-shadow: inset -10px 0px 7px -12px rgba(0, 0, 0, 0.2);
-
-			.mm_tab {
-				text-decoration: none;
-				color: $text_grey;
-				width: 100%;
-				display: block;
-				padding: 10px 10px 10px 15px;
-				box-sizing: border-box;
-				outline: 0;
-				position: relative;
-				transition: all 0.1s linear;
-				font-size: 12px;
-				cursor: pointer;
-			}
-
-			.mm_tab:hover {
-				background: $light_grey;
-			}
-
-			.mm_tab:before {
-				color: $dark_grey;
-				display: inline-block;
-				font-family: 'dashicons';
-				speak: none;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-				vertical-align: top;
-				margin-right: 10px;
-				content: '\f463';
-				font-size: 15px;
-				width: 14px;
-			}
-
-			.mm_tab.mega_menu:before {
-				content: "\f116";
-			}
-
-			.mm_tab.general_settings:before {
-				content: "\f111";
-			}
-			
-			.mm_tab.menu_icon:before {
-				content: "\f128";
-			}
-			.mm_tab.styling:before {
-				content: "\f540";
-			}
-			
-			.mm_tab.roles:before {
-				content: "\f110";
-			}
-			.mm_tab.active {
-				color: white;
-				background: $light_blue;
-
-				&:before {
-					color: white;
-				}
-				&:after {
-					right: 0;
-					border: solid 5px transparent;
-					content: " ";
-					height: 0;
-					width: 0;
-					position: absolute;
-					pointer-events: none;
-					border-right-color: white;
-					top: 50%;
-					margin-top: -5px;
-				}
-			}
-
-
+		.filter_icons {
+			width: auto;
+			min-width: 120px;
+			max-width: 220px;
+			font-size: 0.9em;
+			box-sizing: border-box;
 		}
 
 		p.submit {
-			margin-bottom: 0;
+			margin: 0;
+			padding-top: 16px;
 			padding-bottom: 20px;
 			position: sticky;
-		    bottom: 0;
-		    background: white;
+			bottom: 0;
+			z-index: 1;
+			background: $white;
 		}
 
-		.mm_content_container {
-			padding: 20px 20px 0 20px;
-			float: right;
-			height: 504px;
-			width: 85%;
-			overflow: auto;
-			box-sizing: border-box;
+		.megamenu-dialog-panels {
+			padding: 20px 32px 0;
+			width: auto;
+			height: auto;
+			align-self: stretch;
 			position: relative;
+
+			&:has(.mega-widget.open) {
+				isolation: isolate;
+				overflow: auto;
+				overscroll-behavior: contain;
+				height: 100%;
+				max-height: 100%;
+				min-height: 0;
+
+				// Transparent click-capture layer: prevents accidental clicks on the grid behind the
+				// open widget form. Visual dimming is handled by the box-shadow on `.mega-widget-inner`.
+				&::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					z-index: 40;
+					pointer-events: auto;
+					background: transparent;
+				}
+
+				// Anchor `.mega-widget-inner` to this panels element (override grid + WP widget positioning contexts).
+				// This ensures `position: absolute` on `.mega-widget-inner` resolves to the panels container.
+				.megamenu_content.mega_menu #megamenu-grid .mega-row {
+					position: static;
+				}
+
+				.megamenu_content.mega_menu #megamenu-grid .mega-row .mega-col {
+					position: static;
+				}
+
+				.megamenu_content.mega_menu .mega-widget.open {
+					position: static;
+				}
+			}
 		}
 
-		.mm_content.mega_menu {
-			#widgets,
-			#mm_widget_selector,
-			#mm_number_of_columns,
+		.megamenu_content.mega_menu {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+
+			#megamenu-standard,
 			#megamenu-grid {
 				display: none;
 			}
-		}
 
-		.mm_content.mega_menu[data-type='grid'] {
-			#megamenu-grid,
-			#mm_widget_selector {
+			// `mm_panel_options` matches megamenu-pro (columns + widget); visibility follows sub menu type.
+			.mega-submenu-toolbar > .mm_panel_options {
+				display: none;
+			}
+
+			&[data-type='grid'] {
+				#megamenu-grid {
+					display: block;
+				}
+
+				.mega-submenu-toolbar > .mm_panel_options {
+					display: flex;
+				}
+			}
+
+			&[data-type='megamenu'] {
+				.mega-submenu-toolbar > .mm_panel_options {
+					display: flex;
+				}
+
+				#megamenu-standard {
+					display: flex;
+				}
+
+				.mega-submenu-toolbar > .mm_panel_options select#mm_number_of_columns {
+					display: inline-block;
+					width: auto;
+					min-width: 120px;
+					max-width: 200px;
+				}
+			}
+
+			#megamenu-tabbed {
+				display: none;
+				margin-top: 20px;
+
+				p {
+					font-style: italic;
+				}
+			}
+
+			&[data-type='tabbed'] #megamenu-tabbed {
 				display: block;
 			}
-		}
 
-		.mm_content.mega_menu[data-type='megamenu'] {
-			#widgets,
-			#mm_widget_selector,
-			#mm_number_of_columns {
-				display: block !important;/* @todo remove !important once MMM Pro 1.7.1 is released */
+			&[data-type='tabbed'] .mega-submenu-toolbar > .mm_panel_options {
+				display: none;
 			}
-		}
 
-		.mm_content.mega_menu {
+			// Flyout: only the display-mode field stays in the top toolbar; hide columns + widget row.
+			&[data-type='flyout'] .mega-submenu-toolbar > .mm_panel_options {
+				display: none;
+			}
 
-			.mm_panel_options {
-				float: right;
+			.mega-submenu-toolbar {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-end;
+				column-gap: 16px;
+				row-gap: 12px;
+				width: 100%;
+				margin-bottom: 20px;
+				overflow: visible;
+
+				> label[for='mm_enable_mega_menu'] {
+					@include mega-toolbar-field-label;
+					flex: 0 0 100%;
+					width: 100%;
+				}
+
+				// Menu item modal: layout only — no `@include mega-toolbar-native-select` (theme editor only).
+				> select#mm_enable_mega_menu {
+					width: auto;
+					min-width: 200px;
+					max-width: min(360px, 100%);
+				}
+
+				> .mm_panel_options {
+					flex-flow: row nowrap;
+					align-items: flex-end;
+					justify-content: flex-end;
+					gap: 12px 16px;
+					min-width: 0;
+					margin-left: auto;
+					flex: 1 1 auto;
+
+					// Column count applies to Standard layout only (not Grid).
+					select#mm_number_of_columns {
+						display: none;
+					}
+
+					select#mm_widget_selector {
+						min-width: 200px;
+						max-width: 360px;
+						width: auto;
+						flex: 1 1 auto;
+					}
+
+					select#mm_widget_selector.mega-widget-selector-pulse {
+						border-radius: 4px;
+						animation: mm-mega-widget-selector-pulse 0.85s ease-in-out 2;
+
+						@media (prefers-reduced-motion: reduce) {
+							animation-iteration-count: 1;
+						}
+					}
+				}
+			}
+
+			> #megamenu-standard,
+			> #megamenu-grid {
+				width: 100%;
 			}
 
 			#megamenu-grid {
-				margin-top: 20px;
+				padding-bottom: 100px;
 
-				button.mega-add-row,
-				button.mega-add-column {
-					height: 23px;
-					min-height: 23px;
-					line-height: 22px;
-					font-size: 12px;
-					padding-left: 4px;
+				> .drop-area.ui-sortable-placeholder {
+					max-height: none !important;
+					min-height: 0;
+				}
 
-					.dashicons-plus {
-						margin-right: 4px;
-						line-height: 22px;
+				> .mega-row.ui-sortable-helper {
+					min-height: 0;
+					max-height: none;
+				}
+
+				&:not(.mega-grid--rows-sortable) .mega-row .mega-row-header {
+					cursor: default;
+
+					&:active {
+						cursor: default;
 					}
 				}
 
 				> .drop-area {
 					margin-top: 20px;
-					border: 1px dashed $dark_grey;
+					border: 1px dashed $line-ui;
+					background: $surface;
 					max-height: 100px !important;
+				}
+
+				// Primary add buttons: icon aligned with label (overrides `.mega-row-header .dashicons` on Column).
+				button.mega-add-row,
+				button.mega-add-column {
+					display: inline-flex;
+					align-items: center;
+					gap: 4px;
+
+					.dashicons {
+						color: $white;
+						line-height: 1;
+						width: 16px;
+						height: 16px;
+						font-size: 16px;
+						flex-shrink: 0;
+						margin: 0;
+					}
 				}
 
 				.mega-row {
 					width: 100%;
-					display: inline-block;
-					background-color: $light_grey;
-					border: 1px solid $grey;
-					clear: both;
-					padding: 10px 5px;
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					background-color: $surface;
+					border: 1px solid $line-ui;
+					border-radius: 4px;
+					box-shadow: $shadow-small;
+					padding: 20px;
 					margin-top: 20px;
 					box-sizing: border-box;
 					position: relative;
-					min-height: 100%;
 
 					&:first-child {
 						margin-top: 0;
 					}
 
-					.mega-row-header {
-						display: inline-block;
+					// `--row-tracks` / `--span` on `.mega-row` / `.mega-col`; `--mega-cols-gap-slots` = column count − 1 (JS)
+					// for gap-aware widths. Flex + explicit width matches grid track fractions and allows width transitions.
+					.mega-row-cols {
+						display: flex;
+						flex-direction: row;
+						flex-wrap: nowrap;
+						align-items: flex-start;
 						width: 100%;
-						padding: 5px 0;
+						min-width: 0;
+						gap: 8px;
 						box-sizing: border-box;
+
+						> .drop-area.ui-sortable-placeholder {
+							flex-shrink: 0;
+							max-height: none !important;
+							min-height: 0;
+						}
+
+						> .mega-col {
+							flex: 0 0 auto;
+							width: calc(
+								(100% - 8px * var(--mega-cols-gap-slots, 0)) * var(--span, 1) / var(--row-tracks, 12)
+							);
+							min-width: 0;
+							box-sizing: border-box;
+							transition: width 0.35s ease;
+
+							@media (prefers-reduced-motion: reduce) {
+								transition: none;
+							}
+						}
+					}
+
+					.mega-row-header {
+						display: flex;
+						flex-wrap: wrap;
+						align-items: center;
+						align-content: center;
+						gap: 8px;
+						width: 100%;
+						padding: 0 0 20px 0;
+						box-sizing: border-box;
+						cursor: grab;
+						user-select: none;
+
+						a {
+							cursor: pointer;
+						}
+
+						&:active {
+							cursor: grabbing;
+						}
 
 						.mega-disabled .dashicons {
 							opacity: 1;
 						}
 
-						.dashicons.mega-settings-open {
+						.mega-row-actions .dashicons.mega-settings-open {
 							opacity: 1;
+							color: $ink;
 						}
 
-						.dashicons {
-							opacity: 0.2;
-							transition: opacity 0.5s;
+						.mega-row-actions .dashicons {
+							opacity: 1;
+							color: $icon-dim;
+							transition: color 0.15s ease, background 0.15s ease;
 						}
 
-						.dashicons-plus {
-							opacity: 1;
-						}
-						
 						.mega-row-actions {
-							display: inline-block;
-							
-							.dashicons-trash {
+							order: 1;
+							display: flex;
+							flex-direction: row;
+							flex-wrap: nowrap;
+							align-items: center;
+							gap: 10px;
+							flex: 0 1 auto;
+
+							.mega-row-header__action--delete {
 								display: none;
-								color: #D0011B;
+								color: $error;
 							}
 						}
 
+						// Row toolbar: settings/trash are icon `button.dashicons.mega-row-header__action`; desktop/mobile
+						// use an inner `.dashicons` — use one box size so flex cross-axis alignment matches.
+						.mega-row-header__action {
+							appearance: none;
+							-webkit-appearance: none;
+							border: 0;
+							background: transparent;
+							padding: 0;
+							margin: 0;
+							cursor: pointer;
+							box-shadow: none;
+							color: inherit;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							flex-shrink: 0;
+							line-height: 1;
+
+							&:focus-visible {
+								@include mega-admin-focus-ring;
+							}
+
+							&.dashicons {
+								width: 16px;
+								height: 16px;
+								font-size: 16px;
+							}
+
+							.dashicons {
+								width: 16px;
+								height: 16px;
+								font-size: 16px;
+								line-height: 1;
+								display: block;
+							}
+
+						}
 
 						.mega-row-actions:hover .dashicons {
-							opacity: 1;
+							color: $ink;
+						}
+
+						.mega-row-settings {
+							order: 3;
+							flex: 1 1 100%;
+							width: 100%;
+						}
+
+						button.mega-add-column {
+							order: 2;
+							margin-left: auto;
+							cursor: pointer;
 						}
 					}
 
 					&[data-used-cols='0'] {
-						.mega-row-header .mega-row-actions .dashicons-trash {
-							display: inline-block;
+						.mega-row-header .mega-row-actions .mega-row-header__action--delete {
+							display: inline-flex;
 							opacity: 1;
 						}
 					}
@@ -485,27 +2222,6 @@ body.toplevel_page_maxmegamenu,
 						display: none;
 					}
 
-					&[data-row-is-full='true'] .mega-col-expand,
-					.mega-col[data-span='1'] .mega-col-contract {
-						pointer-events: none;
-						color: $grey;
-					}
-					
-					&[data-row-is-full='true'] {
-						.mega-col-expand {
-							pointer-events: none;
-							color: $grey;
-						}
-					}
-
-	                @for $of from 1 through 12 {
-	                    @for $cols from 1 through $of {
-	                        &[data-available-cols='#{$of}'] .mega-col[data-span='#{$cols}'] {
-	                            width: (100% / $of) * $cols;
-	                        }
-	                    }
-	                }
-
 					.notice {
 						margin: 10px 5px;
 					    cursor: pointer;
@@ -513,198 +2229,392 @@ body.toplevel_page_maxmegamenu,
 				}
 
 				.mega-col {
-					display: inline-block;
+					display: block;
 					position: relative;
-					vertical-align: top;
-					float: left;
-					transition: width 0.1s;
-					width: 100%;
+					min-width: 0;
+					box-sizing: border-box;
+
+					&.mega-col-add-target .mega-col-wrap {
+						border-color: $wp-admin-theme-color;
+						box-shadow: 0 0 0 1px $wp-admin-theme-color;
+					}
 
 					.mega-col-wrap {
 						background-color: $white;
-						border: 1px solid $grey;
-						margin: 3px;
-						padding: 8px;
+						border: 1px solid $line-ui;
+						border-radius: 2px;
+						box-shadow: $shadow-small;
+						margin: 0;
+						padding: 10px;
+						transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+						&:hover {
+							box-shadow: $shadow-small-hover;
+						}
 					}
 
 					.mega-col-widgets {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 10px;
 						min-height: 50px;
 
-						.widget {
+						.mega-col-add-widget {
+							@include mega-col-add-widget-appearance;
+							margin-top: auto;
+							border-color: $line-ui;
+							background: $white;
+							color: $ink;
+
+							.dashicons {
+								opacity: 0.85;
+								color: $icon-dim;
+							}
+
+							&:hover,
+							&:focus-visible {
+								color: $wp-admin-theme-color;
+								border-color: $wp-admin-theme-color;
+								background: $white;
+
+								.dashicons {
+									opacity: 1;
+									color: $wp-admin-theme-color;
+								}
+							}
+						}
+
+						.mega-widget {
 							float: none;
 							width: 100%;
 							border: 0;
-							margin: 3px 0;
+							margin: 0;
 
-							.widget-top {
-								background: $light_grey;
-								border: 1px solid $grey;
-								height: 42px;
+							&.mega-widget-added-pulse .mega-widget-top {
+								animation: mm-mega-widget-selector-pulse 0.85s ease-in-out infinite;
+
+								@media (prefers-reduced-motion: reduce) {
+									animation-iteration-count: 2;
+								}
 							}
 
-							&.open .widget-top {
-								border: 1px solid $dark_grey;
-								border-bottom: 0;
+							.mega-widget-top {
+								display: flex;
+								flex-direction: row;
+								flex-wrap: nowrap;
+								align-items: center;
+								gap: 8px;
+								min-height: 42px;
+								box-sizing: border-box;
+								padding: 4px 10px;
+								background: $white;
+								border: 1px solid $line-ui;
+								border-radius: 2px;
+								box-shadow: $shadow-small;
+								overflow: hidden;
+								transition:
+									border-color 0.15s ease,
+									box-shadow 0.15s ease;
 							}
 
-
-							&.open .widget-inner {
-								border: 1px solid $dark_grey;
+							&:hover .mega-widget-top {
+								border: 1px solid $text;
+								box-shadow: $shadow-small-hover;
 							}
 
-							.widget-title-action {
-								background: $light_grey;
+							&.open .mega-widget-top {
+								border: 1px solid $line-dark;
+							}
+
+							&.open .mega-widget-inner {
+								border: 1px solid $line-dark;
+							}
+
+							.mega-widget-title {
+								flex: 1 1 auto;
+								min-width: 0;
+								margin: 0;
+
+								h4 {
+									font-weight: normal;
+									margin: 0;
+									line-height: 1.35;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+								}
+
+								.mega-widget-desc {
+									font-weight: normal;
+									font-size: 11px;
+									color: $text-secondary;
+									font-style: italic;
+								}
+							}
+
+							.mega-widget-title-action {
+								flex: 0 0 auto;
+								display: flex;
+								flex-direction: row;
+								flex-wrap: nowrap;
+								align-items: center;
+								justify-content: flex-end;
+								gap: 8px;
+								position: static;
+								margin: 0;
+								padding: 0;
+								background: $white;
 								border: 0;
-								padding-left: 0;
-								padding-right: 10px;
-								position: absolute;
-								top: 0;
 							}
 
 							&[data-type=item] form {
+								display: flex;
+								flex-direction: column;
+								align-items: stretch;
+								gap: 6px;
+
 								input, select {
-									float: right;
+									align-self: flex-end;
+									max-width: 100%;
 								}
 
 								p {
-									float: left;
 									width: 100%;
 									margin-bottom: 0;
 								}
 
-								.widget-content {
+								.mega-widget-content {
 									padding-top: 10px;
 								}
 							}
 
-							.widget-title {
-
-								h4 {
-									font-weight: normal;
-									margin-top: 5px;
-									line-height: 16px;
-								}
-
-								.widget-desc {
-									clear: both;
-									font-weight: normal;
-									font-size: 10px;
-									opacity: 0.6;
-									float: left;
-									font-style: italic;
-								}
-
-							}
-
 						}
 
-					}
-
-					.mega-col-description {
-						float: left;
-
-						.mega-disabled .dashicons {
-							opacity: 1;
-						}
-
-						.dashicons.mega-settings-open {
-							opacity: 1;
-						}
-						
-						.dashicons {
-							opacity: 0.2;
-							transition: opacity 0.5s;
-						}
-
-						.dashicons-trash {
-							display: none;
-							color: #D0011B;
-						}
-					}
-
-					&[data-total-blocks='0'] {
-						.dashicons-trash {
-							display: inline-block;
-							opacity: 1;
-						}
 					}
 
 					.mega-col-header {
-						display: inline-block;
+						display: flex;
+						flex-wrap: wrap;
+						align-items: center;
+						align-content: center;
+						justify-content: flex-start;
 						width: 100%;
+						min-height: 40px;
+						height: auto;
+						box-sizing: border-box;
+						gap: 8px;
+						row-gap: 6px;
+						min-width: 0;
+						margin-bottom: 10px;
 
-						.mega-col-description:hover .dashicons {
-							opacity: 1;
+						> .mega-col-actions {
+							display: inline-flex;
+							flex-wrap: wrap;
+							align-items: center;
+							align-content: center;
+							gap: 5px;
+							row-gap: 6px;
+							flex: 1 1 auto;
+							min-width: 0;
+							max-width: 100%;
+							user-select: none;
+
+							> :not(.mega-col-drag-handle) {
+								flex-shrink: 0;
+							}
+
+							.mega-col-header__action {
+								appearance: none;
+								-webkit-appearance: none;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								margin: 0;
+								cursor: pointer;
+								box-shadow: none;
+								color: inherit;
+								display: inline-flex;
+								align-items: center;
+								justify-content: center;
+								line-height: 1;
+
+								&:focus-visible {
+									@include mega-admin-focus-ring;
+								}
+							}
+
+							> .mega-col-drag-handle {
+								flex: 1 1 auto;
+								align-self: stretch;
+								min-width: 24px;
+								margin: 0;
+								padding: 0;
+								border: 0;
+								background: transparent;
+								cursor: grab;
+								border-radius: 2px;
+
+								&:active {
+									cursor: grabbing;
+								}
+							}
+
+							.mega-disabled .dashicons {
+								opacity: 1;
+							}
+
+							.dashicons.mega-settings-open {
+								opacity: 1;
+								color: $ink;
+							}
+
+							.dashicons {
+								opacity: 1;
+								color: $icon-dim;
+								transition: color 0.15s ease;
+								width: 14px;
+								height: 14px;
+								font-size: 14px;
+								line-height: 1;
+								display: inline-flex;
+								align-items: center;
+								justify-content: center;
+							}
+
+							.mega-col-header__action--delete {
+								display: none;
+								color: $error;
+							}
+
+							&:hover .dashicons {
+								color: $ink;
+							}
 						}
 
-						.mega-col-actions {
-							float: right;
+						> .mega-col-span {
+							@include mega-col-span-pill;
+
+							button.mega-col-contract,
+							button.mega-col-expand {
+								appearance: none;
+								-webkit-appearance: none;
+								display: inline-flex;
+								align-items: center;
+								justify-content: center;
+								margin: 0;
+								padding: 0;
+								border: 0;
+								background: transparent;
+								font: inherit;
+								color: inherit;
+								line-height: 1;
+								border-radius: 2px;
+								cursor: pointer;
+								box-shadow: none;
+
+								&:hover,
+								&:focus-visible {
+									color: $admin-blue-dark;
+								}
+
+								&:focus-visible {
+									@include mega-admin-focus-ring($wp-admin-theme-color, 1px);
+								}
+							}
+
+							button.mega-col-expand:disabled,
+							button.mega-col-contract:disabled {
+								color: $text-placeholder;
+								cursor: not-allowed;
+
+								&:hover,
+								&:focus-visible {
+									color: $text-placeholder;
+								}
+
+								.dashicons {
+									cursor: not-allowed;
+								}
+							}
 
 							.dashicons {
 								margin-right: 0;
-								width: 10px;
+								width: 14px;
+								height: 14px;
+								font-size: 14px;
+								line-height: 1;
 								cursor: pointer;
-							}
-							> span {
-								font-size: 10px;
-								position: relative;
-								top: -3px;
+								color: inherit;
+								opacity: 1;
 							}
 
+							.mega-col-cols {
+								display: inline-flex;
+								align-items: center;
+								line-height: 1.2;
+								font-size: 11px;
+								font-weight: 600;
+								color: inherit;
+							}
 						}
-
 					}
 
-				}
+					// After `.mega-col-header__action--delete { display: none }` so higher specificity wins.
+					&[data-total-blocks='0'] .mega-col-header > .mega-col-actions > .mega-col-header__action--delete {
+						display: inline-flex;
+						opacity: 1;
+					}
 
-				button.mega-add-column {
-					position: absolute;
-				    right: 10px;
-				    top: 10px;
 				}
 
 				button.mega-add-row {
 					margin-top: 20px;
 				}
 
-				.mega-col-settings {
-					float: left;
+				.mega-col-settings,
+				.mega-row-settings {
 					width: 100%;
 					display: none;
-					margin: 5px 0 20px;
-					padding: 10px;
+					margin: 8px 0 20px;
+					padding: 12px 14px;
 					box-sizing: border-box;
+					background: $white;
+					border: 1px solid $line-ui;
+					border-radius: 2px;
+					box-shadow: none;
+				}
 
+				.mega-col-settings {
 					label {
 						width: 100%;
 						font-size: 11px;
 						text-transform: uppercase;
 						margin-right: 5px;
+						color: $ink;
+						font-weight: 600;
+						letter-spacing: 0.02em;
 					}
 
 					input {
-						font-size: 11px;
+						font-size: 13px;
 						max-width: 100%;
 						display: block;
 						width: 100%;
 						margin: 5px 0 10px 0;
-					}
-
-					button {
-						display: block;
+						color: $ink;
+						border-color: $megamenu-form-control-border;
 					}
 				}
 
 				.mega-row-settings {
-					float: left;
-					width: 100%;
-					display: none;
-					margin: 5px 0 20px;
-					padding: 10px;
-					box-sizing: border-box;
-
 					.mega-settings-row {
-						margin-bottom: 5px;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						align-items: center;
+						gap: 8px 12px;
+						margin-bottom: 8px;
 					}
 
 					label {
@@ -712,15 +2622,16 @@ body.toplevel_page_maxmegamenu,
 						font-size: 11px;
 						text-transform: uppercase;
 						display: inline-block;
+						color: $ink;
+						font-weight: 600;
+						letter-spacing: 0.02em;
 					}
 
 					input,
 					select {
-						font-size: 11px;
-					}
-
-					button {
-						display: block;
+						font-size: 13px;
+						color: $ink;
+						border-color: $megamenu-form-control-border;
 					}
 				}
 				.mega-row-header .dashicons,
@@ -730,25 +2641,22 @@ body.toplevel_page_maxmegamenu,
 					cursor: pointer;
 				}
 
-				.dashicons-sort,
-				.dashicons-move {
-					cursor: move;
+				.mega-col-header {
+					user-select: none;
+
+					a {
+						cursor: pointer;
+					}
 				}
 
 				.mega-disabled .dashicons {
 					&:before {
-						color: $red;
+						color: $error;
 					}
-				}
-
-				.mega-add-row {
-					clear: both;
 				}
 
 				.drop-area {
 					display: inline-block;
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
 					box-sizing: border-box;
 				}
 
@@ -758,15 +2666,14 @@ body.toplevel_page_maxmegamenu,
 
 			}
 
-			#widgets {
-				float: left;
-				background: $light_grey;
-				border: 1px solid $grey;
-				width: 760px;
-				position: relative;
-				margin-top: 15px;
+			#megamenu-standard {
+				flex-flow: row wrap;
+				align-items: flex-start;
+				align-content: flex-start;
+				gap: 0;
+				background: $surface;
+				border: 1px solid $line;
 				padding: 5px;
-				float: left;
 				width: 100%;
 				box-sizing: border-box;
 				min-height: 200px;
@@ -776,21 +2683,17 @@ body.toplevel_page_maxmegamenu,
 					margin-left: 10px;
 					font-style: italic;
 					margin-top: 10px;
-					clear: both;
-					color: $text_grey;
-					float: left;
+					color: $text;
+					flex: 1 0 100%;
 				}
 
 				.drop-area {
 					display: block;
-					border: 1px solid $mid_grey;
-					float: left;
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
+					border: 1px solid $surface;
 					box-sizing: border-box;
 				}
 
-				.widget {
+				.mega-widget {
 					width: 100%;
 
 					h4 {
@@ -799,45 +2702,22 @@ body.toplevel_page_maxmegamenu,
 				}
 			}
 
-			select#mm_enable_mega_menu {
-				margin-bottom: 0;
-				font-size: 0.9em;
-				margin: 0 5px;
-			}
-
-			select#mm_widget_selector {
-				font-size: 0.9em;
-				float: right;
-			}
-
-			select#mm_number_of_columns {
-				font-size: 0.9em;
-				float: right;
-				margin-right: 10px;
-			}
-
-			.mm_header {
-				float: right;
-			}
-
-			.widget {
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
+			.mega-widget {
 				box-sizing: border-box;
 				width: 160px;
 				margin: 0;
-				color: $text_grey;
+				color: $text;
 				font-size: 12px;
-				display: inline-block;
-				float: left;
+				display: block;
 				border: 5px solid transparent;
+				flex: 0 0 auto;
 
 				&:hover {
-					.widget-top {
-						border: 1px solid $text_grey;
+					.mega-widget-top {
+						border: 1px solid $text;
 					}
-					.widget-inner {
-						border: 1px solid $text_grey;
+					.mega-widget-inner {
+						border: 1px solid $text;
 					}
 				}
 
@@ -846,59 +2726,189 @@ body.toplevel_page_maxmegamenu,
 				}
 			}
 
-			.widget.open {
-				z-index: 999;
-
-				.widget-top {
-					border: 1px solid $text_grey;
+			.mega-widget.open {
+				.mega-widget-top {
+					border: 1px solid $text;
 					cursor: move;
-					z-index: 1001;
 					position: relative;
+					z-index: 50;
+					box-sizing: border-box;
+					opacity: 0.5;
+					filter: brightness(0.88);
+					transition: opacity 0.15s ease, filter 0.15s ease;
+				}
+
+				.mega-widget-inner {
+					border: 1px solid $text;
+					// Absolute within the panels container (rows, cols, and the open widget are all
+					// position: static so `.megamenu-dialog-panels` is the nearest positioned ancestor).
+					// JS sets --mmm-panels-scroll to the panels' scrollTop when the widget opens, so
+					// `top: calc(var(…) + 50%)` places the form at the centre of the *visible* panels
+					// area regardless of how far the user has scrolled.
+					position: absolute;
+					left: 10%;
+					right: 10%;
+					top: calc(var(--mmm-panels-scroll, 0px) + 50%);
+					bottom: auto;
+					transform: translateY(-50%);
+					width: auto;
+					margin: 0;
+					z-index: 60;
+					box-sizing: border-box;
+					max-width: 100%;
+					// Cap height to 90% of the panels visible height so the form never overflows.
+					max-height: 90%;
+					height: max-content;
+					min-width: 0;
+					min-height: 0;
+					overflow-x: hidden;
+					overflow-y: auto;
+					overscroll-behavior: contain;
+					display: flex;
+					flex-direction: column;
+					background: $white;
+					box-shadow:
+						$shadow-large-hover,
+						0 0 0 1px $shadow-a07,
+						0 0 0 9999px rgba(0, 0, 0, 0.4);
+					border-radius: 4px;
+
+					&.mmm-widget-inner--preparing {
+						opacity: 0;
+						pointer-events: none;
+						transition: none;
+					}
+
+					&.mmm-widget-inner--show {
+						opacity: 1;
+						transition: opacity 0.2s ease;
+					}
+				}
+
+				.mega-widget-inner > form {
+					display: flex;
+					flex-direction: column;
+					flex: 1 1 auto;
+					min-height: 0;
+					padding: 0 15px 0;
+					margin-bottom: 0;
+					box-sizing: border-box;
+				}
+
+				.mega-widget-inner .mega-widget-dialog-header {
+					flex: 0 0 auto;
+					display: flex;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					align-items: center;
+					justify-content: space-between;
+					gap: 8px;
+					padding: 8px 0 10px;
+					margin: 0;
+					border-bottom: 1px solid $line;
+				}
+
+				.mega-widget-inner .mega-widget-dialog-title {
+					flex: 1 1 auto;
+					min-width: 0;
+					margin: 0;
+					padding: 0 4px 0 2px;
+					font-size: 14px;
+					font-weight: 600;
+					line-height: 1.35;
+					color: $ink;
 					border-bottom: 0;
 				}
 
-				.widget-inner {
-					border: 1px solid $text_grey;
-					position: absolute;
-					z-index: 1000;
-					-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-					box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-					margin-top: -1px;
-					background: white;
-					min-width: 340px;
+				.mega-widget-inner .mega-widget-dialog-close {
+					flex: 0 0 auto;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 32px;
+					height: 32px;
+					margin: 0;
+					padding: 0;
+					border: 0;
+					border-radius: 4px;
+					background: transparent;
+					color: $icon-dim;
+					cursor: pointer;
 					box-sizing: border-box;
-					display: block;
+
+					.dashicons {
+						width: 18px;
+						height: 18px;
+						font-size: 18px;
+						line-height: 1;
+					}
+
+					&:hover,
+					&:focus-visible {
+						color: $ink;
+						background: $surface;
+					}
+
+					&:focus-visible {
+						@include mega-admin-focus-ring;
+					}
 				}
 
-				.widget-action {
+				.mega-widget-inner .mega-widget-content {
+					flex: 1 1 auto;
+					min-height: 0;
+					overflow-x: hidden;
+					// Single scrollbar on `.mega-widget-inner` (viewport-capped).
+					overflow-y: visible;
+				}
+
+				.mega-widget-inner .mega-widget-form-footer {
+					flex: 0 0 auto;
+					margin-top: 0;
+					padding-top: 10px;
+					padding-bottom: 12px;
+					border-top: 1px solid $line;
+					background: $white;
+				}
+
+				.mega-widget-action {
 					&::after {
 						content: '\f142';
 					}
 				}
 			}
 
-			.widget-top {
+			.mega-widget-top {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				min-height: 42px;
+				box-sizing: border-box;
 				border: 0;
-				-webkit-box-shadow: 0 0 0;
-				box-shadow: 0 0 0;
-				border: 1px solid $grey;
-				padding: 0 8px;
-				background: white;
+				box-shadow: none;
+				border: 1px solid $line;
+				padding: 0 10px;
+				background: $white;
 				overflow: hidden;
 			}
 
 
 
-			.widget.sub_menu {
-				.widget-top {
+			.mega-widget[data-type='menu_item'] {
+				.mega-widget-top {
 					cursor: default;
 				}
 			}
 
-			.widget-title {
+			.mega-widget-title {
+				flex: 1 1 auto;
+				min-width: 0;
+
 				h4 {
-					color: $text_grey;
-					float: left;
+					color: $text;
 					margin: 0;
 					padding: 0;
 					overflow: hidden;
@@ -906,7 +2916,7 @@ body.toplevel_page_maxmegamenu,
 					border-bottom: 0;
 					font-size: 12px;
 					text-overflow: ellipsis;
-					line-height: 42px;
+					line-height: 1.35;
 
 					&:after {
 						color: #d54e21;
@@ -915,11 +2925,9 @@ body.toplevel_page_maxmegamenu,
 						speak: none;
 						-webkit-font-smoothing: antialiased;
 						-moz-osx-font-smoothing: grayscale;
-						vertical-align: top;
 						margin-left: 5px;
 						content: '\f463';
-						-webkit-animation: rotation 2s infinite linear;
-						animation: rotation 2s infinite linear;
+						animation: mm-rotation 2s infinite linear;
 						vertical-align: middle;
 					}
 				}
@@ -931,16 +2939,15 @@ body.toplevel_page_maxmegamenu,
 				}
 			}
 
-			.widget[data-type='menu_item'] {
-				.widget-title {
+			.mega-widget[data-type='menu_item'] {
+				.mega-widget-title {
 					h4 {
 						&:before {
-							color: $text_grey;
+							color: $text;
 							font: normal 16px/1 'dashicons';
 							speak: none;
 							-webkit-font-smoothing: antialiased;
 							-moz-osx-font-smoothing: grayscale;
-							vertical-align: top;
 							margin-right: 2px;
 							content: "\f333";
 							vertical-align: middle;
@@ -950,37 +2957,61 @@ body.toplevel_page_maxmegamenu,
 					}
 				}
 				form {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 6px;
+
 					input, select {
-						float: right;
+						align-self: flex-end;
+						max-width: 100%;
 					}
 
 					p {
-						float: left;
 						width: 100%;
 						margin-bottom: 0;
 					}
 				}
 			}
 
-			.widget-controls {
+			.mega-widget-form-footer {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				width: 100%;
+				box-sizing: border-box;
+				margin-top: 12px;
+				padding-top: 4px;
+				clear: both;
 
-				float: left;
-
-				.delete:hover {
-					text-decoration: none;
-					color: $red;
+				.mega-widget-controls {
+					display: flex;
+					align-items: center;
+					flex: 0 0 auto;
+					margin: 0;
+					padding: 0;
 				}
 			}
 
-			.widget-inner {
+			.mega-widget-controls {
+				flex: 0 0 auto;
+
+				.mega-delete {
+					@include mega-admin-trash-icon-button;
+				}
+			}
+
+			.mega-widget-inner {
 				display: none;
-				float: left;
 				width: 100%;
-				background: white;
+				background: $white;
 
 				form {
 					padding: 0 15px 15px 15px;
-					margin-bottom: 30px;
+					margin-bottom: 0;
 				}
 				p {
 					font-size: 12px;
@@ -993,141 +3024,176 @@ body.toplevel_page_maxmegamenu,
 				}
 			}
 
-			.widget-title-action {
+			.mega-widget-title-action {
+				flex: 0 0 auto;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 8px;
 				padding: 0;
-				position: relative;
+				margin: 0;
+				position: static;
 				font-weight: normal;
-				position: absolute;
-				right: 1px;
-				background: white;
-				border-right: 7px solid white;
-				padding-left: 10px;
 				opacity: 1;
-				background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, white 9%, white 100%);
+				background: $white;
 
-				a {
-					display: inline-block;
-					line-height: 40px;
+				.mega-col-span {
+					@include mega-col-span-pill;
+
+					.mega-widget-option.mega-widget-contract,
+					.mega-widget-option.mega-widget-expand {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						line-height: 1;
+						border-radius: 2px;
+						color: inherit;
+
+						&:hover,
+						&:focus-visible {
+							color: $admin-blue-dark;
+						}
+
+						&::after {
+							color: inherit;
+						}
+
+						&:focus-visible {
+							@include mega-admin-focus-ring($wp-admin-theme-color, 1px);
+						}
+					}
+
+					.mega-widget-cols {
+						display: inline-flex;
+						align-items: center;
+						line-height: 1.2;
+						font-size: 11px;
+						font-weight: 600;
+						color: inherit;
+					}
 				}
 			}
 
-			.widget-option {
+			.mega-widget-option {
 				right: 0;
+				appearance: none;
+				-webkit-appearance: none;
 				border: 0;
 				background: 0 0;
 				font: 400 16px/1 dashicons;
 				speak: none;
 				display: block;
 				padding: 0;
+				margin: 0;
 				text-indent: 0;
 				text-align: center;
 				position: relative;
 				-webkit-font-smoothing: antialiased;
 				-moz-osx-font-smoothing: grayscale;
 				text-decoration: none !important;
-				color: $dark_grey;
+				color: $icon-dim;
+				box-shadow: none;
 
 				&:hover {
-					color: $text_grey;
+					color: $text;
 					cursor: pointer;
 				}
 
 				&::after {
 					padding: 0;
-					font: 400 14px/40px dashicons;
-					display: inline;
+					font: 400 16px/1 dashicons;
+					display: block;
 				}
 			}
 
-			.widget-cols {
-				line-height: 40px;
-				vertical-align: top;
-				display: inline-block;
-				color: $dark_grey;
+			.mega-widget-cols {
+				display: inline-flex;
+				align-items: center;
+				line-height: 1.2;
+				color: $icon-dim;
 				font-size: 11px;
-				vertical-align: bottom;
 			}
 
 			h5 {
 				margin: 10px 0 0 10px;
 				text-transform: uppercase;
-				float: left;
 			}
 
-			.widget-expand {
+			.mega-widget-expand {
 				&::after {
 					content: '\f345';
 				}
 			}
 
-			.widget-contract {
+			.mega-widget-contract {
 				&::after {
 					content: '\f341';
 				}
 			}
 
-			.widget-action {
+			.mega-widget-action {
 				&::after {
 					content: '\f107';
 					margin: 0;
 				}
 			}
 
-			.widget-option.disabled {
+			.mega-widget-option.disabled {
 				&:hover {
-					color: $dark_grey;
+					color: $icon-dim;
 				}
 			}
 
-			.widget[data-columns='1'] {
-				.widget-contract {
+			.mega-widget[data-columns='1'] {
+				.mega-widget-contract {
 					display: none;
 				}
 			}
 
-			#widgets {
-                @for $of from 1 through 12 {
-                    @for $cols from 1 through $of {
-                        &[data-columns='#{$of}'] .widget[data-columns='#{$cols}'] {
-                            width: (100% / $of) * $cols;
-                        }
-                    }
-                }
+			#megamenu-standard {
+				@include grid-col-widths('data-columns', '.mega-widget', 'data-columns');
+
+				.mega-widget {
+					transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+					@media (prefers-reduced-motion: reduce) {
+						transition: none;
+					}
+				}
 			}
 
 		}
 
-		label[for='mm_enable_mega_menu'] {
-			font-size: 12px;
-		}
-
 		.menu_icon {
 			.icon_selector {
-				clear: both;
+				display: flex;
+				flex-flow: row wrap;
+				align-items: flex-start;
+				gap: 10px;
 
 				>div {
-					float: left;
-					padding: 0 19px 19px 0;
-					width: 24px;
-					height: 24px;
-					box-sizing: initial;
+					flex: 0 0 auto;
+					padding: 0;
+					width: 40px;
+					height: 40px;
+					box-sizing: border-box;
+				}
+
+				> div.mmm-icon-filter-hidden {
+					display: none !important;
 				}
 
 				label {
-					float: left;
 					display: block;
-					width: 24px;
-					height: 24px;
+					width: 40px;
+					height: 40px;
 
 					&:before {
-						width: 24px;
-						height: 24px;
-						display: inline-block;
 						content: attr(rel);
-						border: 1px solid $grey;
-						padding: 6px;
-						background: $light_grey;
-						color: $dark_grey;
+						speak: none;
+						@include megamenu-admin-icon-pseudo-dashicon-tile;
 					}
 				}
 
@@ -1139,9 +3205,6 @@ body.toplevel_page_maxmegamenu,
 							label {
 								position: relative;
 								cursor: pointer;
-								-webkit-user-select: none;
-								-moz-user-select: none;
-								-ms-user-select: none;
 								user-select: none;
 							}
 						}
@@ -1150,267 +3213,194 @@ body.toplevel_page_maxmegamenu,
 					&:checked {
 						~ {
 							label {
-								&:before {
-									border: 1px solid #0074a2;
-									color: #0074a2;
-									background: white;
-								}
-								color: $dark_grey;
+								color: $icon-dim;
 							}
 						}
 					}
+				}
 
-					&:hover {
-						&:checked {
-							~ {
-								label {
-									&:before {
-										border: 1px solid #0074a2;
-										color: #0074a2;
-										background: white;
-									}
-								}
-							}
-						}
-						~ {
-							label {
-								&:before {
-									color: #0074a2;
-								}
-							}
-						}
-					}
+				> div:has(input:focus-visible) label:before {
+					@include mega-admin-focus-ring;
+				}
+
+				> div:has(input:checked) label:before {
+					color: $wp-admin-theme-color;
+					background: transparent;
+					box-shadow: inset 0 0 0 2px $wp-admin-theme-color;
+				}
+
+				> div:has(input:checked):hover label:before {
+					color: $wp-admin-theme-color;
+					background: $surface-raised;
+					box-shadow: inset 0 0 0 2px $wp-admin-theme-color;
+				}
+
+				> div:has(input:not(:checked)):hover label:before {
+					color: $ink;
+					background: $surface-raised;
 				}
 
 				.dash {
 					label {
 						&:before {
-							font: 400 24px/1 dashicons;
+							font-style: normal;
+							font-variant: normal;
+							text-decoration: inherit;
+							text-rendering: auto;
+							font-family: dashicons;
 						}
 					}
 				}
 			}
 		}
 
-		table {
-
+		@at-root body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .general_settings table {
 			td {
-				padding-bottom: 10px;
+				padding-top: 3px;
+				padding-bottom: 3px;
 			}
 
-			td.mega-name {
-				width: 27%;
-				line-height: 2em;
-				vertical-align: top;
-				font-size: 12px;
+			td.mega-value--pill {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 10px 12px;
+
+				.components-form-toggle {
+					flex-shrink: 0;
+				}
+
+				.mega-description,
+				em {
+					flex: 0 1 auto;
+					min-width: 0;
+					max-width: 100%;
+					margin: 0;
+					text-align: inherit;
+				}
 
 				.mega-description {
-					font-size: 0.9em;
-					color: $dark_grey;
-					line-height: 1.5em;
-
-					p {
-						font-size: 0.9em;
-					}
-				}
-			}
-
-			td.mega-value {
-				font-size: 12px;
-
-				select {
-					font-size: 0.9em;
-				}
-				textarea {
-					font-size: 0.9em;
-					height: 28px;
-					line-height: 28px;
-				}
-				input[type=text] {
-					font-size: 0.9em;
-					height: 28px;
-					line-height: 28px;
-				}
-				input[type=number] {
-					font-size: 0.9em;
-					height: 28px;
-					line-height: 28px;
-				}
-				.mega-description {
-					font-size: 0.9em;
-					color: $dark_grey;
-					line-height: 1.5em;
-					text-indent: 2px;
-					margin-top: 5px;
-					display: inline;
-					font-style: italic;
-
-					p {
-						font-size: 0.9em;
-					}
-				}
-			}
-
-			.mega-menu-item-align {
-				td.mega-value {
-					select {
-						float: left;
-					}
-					.mega-description {
-						float: left;
-						margin-left: 10px;
-					}
-				}
-			}
-
-			.mega-sub-menu-align {
-				td.mega-value {
-					select {
-						float: left;
-						margin-right: 10px;
-					}
-					.mega-description {
-						float: left;
-						margin-right: 10px;
-					}
-				}
-			}
-
-			input {
-				width: 70px;
-				margin-right: 20px;
-			}
-
-			label {
-				font-size: 0.9em;
-			}
-
-			input[type=checkbox] {
-				width: 16px;
-				height: 16px;
-				margin-right: 10px;
-				vertical-align: middle;
-			}
-			width: 100%;
-			border-collapse: collapse;
-		}
-
-		.general_settings {
-			table {
-				td {
-					padding-bottom: 3px;
+					display: block;
 				}
 			}
 		}
 
-		form {
+		form,
+		.megamenu_content {
 			> h4.first {
-				margin: 0em 0 0.7em 0;
+				margin: 0 0 0.85em 0;
 			}
 			> h4 {
-				clear: both;
-				border-bottom: 1px solid $grey;
-				padding: 0 0 10px 0;
-				font-size: 1em;
-				margin: 1.33em 0 0.7em 0;
+				display: flow-root;
+				border-bottom: 1px solid $line;
+				padding: 0 0 12px 0;
+				font-size: 1.05em;
+				font-weight: 600;
+				color: $ink;
+				margin: 1.5em 0 1em 0;
 			}
 		}
 
-		.mm_content {
-			> h4.first {
-				margin: 0em 0 0.7em 0;
-			}
-			> h4 {
-				clear: both;
-				border-bottom: 1px solid $grey;
-				padding: 0 0 10px 0;
-				font-size: 1em;
-				margin: 1.33em 0 0.7em 0;
-			}
+		select {
+			border-radius: 4px;
+			border-color: $megamenu-form-control-border;
+			background-color: $white;
+		}
+
+		.description,
+		.mega-description {
+			color: $text-secondary;
+			font-style: italic;
 		}
 
 		img {
 			height: auto;
 			max-width: 100%;
 		}
-
-		div[id^=rommeled_image] {
-			.non-sortable {
-				display: block !important;
-			}
-		}
-	}
-
-	#cboxClose {
-		text-indent: 0;
-		background: none;
-		width: auto;
-		height: auto;
-	    right: 14px;
-	    top: 25px;
-		color: $dark_grey;
-
-		&:before {
-			content: "\f335";
-			font: normal 24px/29px 'dashicons';
-		}
-		&:hover {
-			color: #0074a2;
-		}
 	}
 
 	&.megamenu_enabled {
-		.mm_prefix {
+		.megamenu_prefix {
 			display: block;
 			font-size: 0.9em;
-			border-left: 3px solid $orange;
+			border-left: 3px solid $warning;
 			padding-left: 10px;
 			margin-top: 3px;
 		}
 	}
 
-	.mm_prefix {
+	.megamenu_prefix {
 		display: none;
 	}
 
-	.mm_launch {
-		margin-left: 10px;
-		font-size: 12px;
-		cursor: pointer;
-		color: white;
+	// Uses core .button.button-primary.button-small; only layout, reveal, dashicon, and non-disabled attr state.
+	.megamenu_launch.button.button-primary.button-small {
+		margin-left: 8px;
 		display: inline-flex;
 		align-items: center;
-		width: auto;
-		font-weight: normal;
-		height: auto;
-		background: $light_blue;
-		border-color: #0074a2;
-		border-width: 1px;
-		padding: 1px 5px;
-		border-radius: 3px;
+		gap: 3px;
+		line-height: 1.15;
+		min-height: 22px;
+		padding-top: 0;
+		padding-bottom: 0;
 		opacity: 0;
-		-webkit-transition: all 0.3s ease;
-		-moz-transition: all 0.3s ease;
-		-o-transition: all 0.3s ease;
-		-ms-transition: all 0.3s ease;
-		transition: all 0.3s ease;
+		transition: opacity 0.2s ease;
 		z-index: 1;
 		position: relative;
 
+		&:focus-visible {
+			opacity: 1;
+		}
+
+		&.megamenu_disabled,
+		&[aria-disabled="true"] {
+			cursor: not-allowed;
+			color: $icon-dim !important;
+			background: $surface !important;
+			border-color: $line !important;
+			box-shadow: none !important;
+		}
+
+		&.megamenu_disabled:hover,
+		&.megamenu_disabled:active,
+		&[aria-disabled="true"]:hover,
+		&[aria-disabled="true"]:active {
+			color: $icon-dim !important;
+			background: $surface !important;
+			border-color: $line !important;
+			box-shadow: none !important;
+		}
+
 		&:before {
 			font-family: dashicons;
-			content: "\f111";
-			font-size: 10px;
-			margin-right: 4px;
+			content: "\f111"; // dashicons-admin-generic
+			font-size: 12px;
+			width: 12px;
+			height: 12px;
+			line-height: 12px;
+			color: rgba($white, 0.92);
 			display: inline-block;
-			vertical-align: middle;
+			flex-shrink: 0;
 		}
+
+		&.megamenu_disabled:before,
+		&[aria-disabled="true"]:before {
+			color: $text-placeholder;
+		}
+	}
+
+	// Restore hidden state when the launch control has programmatic :focus (e.g. after modal close) but not :focus-visible.
+	.menu-item-bar .menu-item-handle:not(:hover) .megamenu_launch.button.button-primary.button-small:focus:not(:focus-visible) {
+		opacity: 0;
 	}
 
 	.menu-item-bar {
 		.menu-item-handle {
+			// Hover only: focus-within would keep the button visible when focus returns after closing the modal.
 			&:hover {
-				.mm_launch {
+				.megamenu_launch {
 					opacity: 1;
 				}
 			}
@@ -1425,137 +3415,17 @@ body.toplevel_page_maxmegamenu,
 	}
 
 	#nav-menu-meta .mega_menu_meta_box {
-		.inside {
+		// Core wraps the callback in a div (historically .inside); target first child without using that class name.
+		#mega_menu_meta_box-content > :first-child {
 			margin: 0;
+			padding: 14px;
+			box-sizing: border-box;
 		}
 
-		.accordion-section-content,
-		.accordion-section-title,
-		.postbox {
-		    opacity: 1;
-		}
-
-		div.accordion-section-content {
+		.accordion-section-content {
 			padding: 0;
-
-			.mega-accordion {
-				float: left;
-				width: 100%;
-			}
-
-			.mega-accordion-content {
-				padding: 10px 14px 0 14px;
-				border-bottom: 1px solid #ccc;
-
-				&:last-child {
-					border-bottom: 0;
-				}
-			}
-
-			.mega-accordion-title {
-				padding: 10px 3px 10px 10px;
-				box-sizing: border-box;
-
-				&.mega-last:not(.mega-accordion-open) {
-					border-bottom: 0;
-				}
-				.dashicons {
-					margin-right: 4px;
-				}
-				.dashicons-yes {
-					display: none;
-				}
-
-				&.mega-location-enabled {
-					.dashicons-yes {
-						display: inline-block;
-						margin-left: 4px;
-						color: $green;
-					}
-
-					&.mega-has-active-location .dashicons-yes {
-						color: #F56E28;
-					}
-				}
-			}
-
-			h4 {
-				outline: none;
-				border: 0;
-				margin: 0;
-				padding: 0;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-
-				.dashicons {
-					margin-right: 0;
-				}
-			}
-
-			.mega-location-info {
-				font-size: 10px;
-				margin-left: 28px;
-				line-height: 18px;
-			}
-
-			table {
-				font-size: 0.9em;
-				width: 100%;
-				margin-bottom: 15px;
-				border-collapse: collapse;
-
-				tr {
-					height: 29px;
-					vertical-align: middle;
-
-					td {
-						&:nth-child(2) {
-							text-align: right;
-							min-width: 150px;
-							padding: 2px 0;
-						}
-					}
-
-					select {
-						font-size: 0.9em;
-						max-width: 120px;
-						margin: 0;
-					}
-
-					input[type=checkbox] {
-						margin: 0;
-					}
-				}
-
-				&.sticky_settings {
-					td {
-						&:nth-child(2) {
-							text-align: right;
-							min-width: 100px;
-						}
-					}
-				}
-			}
-
-			.mega-ellipsis {
-				margin-right: 5px;
-			}
-		}
-
-		p.submit {
-			float: right;
-			text-align: right;
-			width: auto;
-			margin: 0 0 15px 0;
-			padding: 0;
-		}
-
-		.spinner {
-			float: right;
 		}
 	}
-
 
 	.menu-item-handle {
 		.item-title {
@@ -1564,21 +3434,1078 @@ body.toplevel_page_maxmegamenu,
 	}
 }
 
-body[class*='_page_maxmegamenu_'],
-body.toplevel_page_maxmegamenu {
+// Shared modal shell (menu item editor, preview, location settings): fixed overlay inset from the admin menu edge.
+// Same `body` block continues below with theme editor / `#wpbody` layout (icon dropdown, Menu Themes tabs, etc.).
+body.maxmegamenu-admin {
+
+	--megamenu-form-control-border: #{$neutral};
+
+	.megamenu_outer_wrap {
+		input[type='text'],
+		input[type='password'],
+		input[type='date'],
+		input[type='datetime'],
+		input[type='datetime-local'],
+		input[type='email'],
+		input[type='month'],
+		input[type='number'],
+		input[type='search'],
+		input[type='tel'],
+		input[type='time'],
+		input[type='url'],
+		input[type='week'] {
+			padding: 0 6px;
+		}
+	}
+
+	.megamenu-admin-modal td.mega-value p {
+		margin: 0;
+		font-style: italic;
+	}
+
+	input.button-primary.is-busy,
+	button.button-primary.is-busy {
+		pointer-events: none;
+		background-size: 100px 100% !important;
+		background-image: linear-gradient(
+			-45deg,
+			var(--wp-admin-theme-color) 28%,
+			var(--wp-admin-theme-color-darker-20) 0,
+			var(--wp-admin-theme-color-darker-20) 72%,
+			var(--wp-admin-theme-color) 0
+		) !important;
+		border-color: var(--wp-admin-theme-color) !important;
+		animation: busy-animation 2.5s linear infinite;
+	}
+
+	[data-mega-tooltip] {
+		position: relative;
+		@include tooltip-popup-base;
+	}
+
+	// Optional placement (default mixin is below). Used e.g. for disabled mobile preview in footer toolbar.
+	// Gap must clear a 9px square at 45° (~6.4px half-extent each way); 8px was too narrow and drew the
+	// chevron inside the bubble. Use 14px gutter and center the arrow on it.
+	[data-mega-tooltip][data-mega-tooltip-position="right"] {
+		&:before {
+			top: 50%;
+			left: 100%;
+			right: auto;
+			margin-left: 14px;
+			margin-top: 0;
+			transform: translateY(-50%);
+			text-align: start;
+			white-space: normal;
+			width: max-content;
+			max-width: min(400px, calc(100vw - 100px));
+			min-width: 0;
+		}
+
+		// SW-corner L + 45deg → tip points left (offset tuned vs :before margin-left).
+		&:after {
+			top: 50%;
+			left: calc(100% + 14px);
+			width: 9px;
+			height: 9px;
+			margin: 0;
+			background: $white;
+			border-left: 1px solid $line-strong;
+			border-bottom: 1px solid $line-strong;
+			border-right: none;
+			border-top: none;
+			box-sizing: border-box;
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+	}
+
+	&.rtl [data-mega-tooltip][data-mega-tooltip-position="right"] {
+		&:before {
+			left: auto;
+			right: 100%;
+			margin-left: 0;
+			margin-right: 14px;
+			transform: translateY(-50%);
+		}
+
+		// NE-corner L + 45deg → tip points right; mirror LTR.
+		&:after {
+			left: auto;
+			right: calc(100% + 14px);
+			width: 9px;
+			height: 9px;
+			margin: 0;
+			background: $white;
+			border-top: 1px solid $line-strong;
+			border-right: 1px solid $line-strong;
+			border-bottom: none;
+			border-left: none;
+			box-sizing: border-box;
+			transform: translate(50%, -50%) rotate(45deg);
+		}
+	}
+
+	[data-mega-tooltip][data-mega-tooltip-enabled] {
+		&.mega-enabled:before {
+			content: attr(data-mega-tooltip-enabled);
+		}
+
+		&.mega-disabled:before {
+			content: attr(data-mega-tooltip-disabled);
+		}
+	}
+
+	// Labels wrapping core `components-form-toggle` (styles from `wp-components`).
+	.mega-mmm-enable-toggle,
+	.mmm-settings-pill-field-label {
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+		max-width: 100%;
+		cursor: pointer;
+	}
+
+	.mega-mmm-enable-toggle .components-form-toggle {
+		flex-shrink: 0;
+		margin-right: 4px;
+	}
+
+	// Location settings modal pill wrapper (label + switch inside).
+	.mmm-settings-pill-field {
+		display: inline-block;
+		vertical-align: top;
+		align-self: flex-start;
+		margin: 0 0 14px 0;
+		max-width: 100%;
+		box-sizing: border-box;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	// Collapsed panel size — same for preview, location settings, and menu item (until expanded).
+	$megamenu-modal-panel-collapsed-max-width: 1200px;
+	$megamenu-modal-panel-collapsed-max-vh: 70vh;
+	$megamenu-modal-panel-collapsed-height-cap: 960px;
+	// Expanded: explicit calc so height/max-height can transition (not `auto` / `none`).
+	$megamenu-modal-panel-expanded-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px) - 40px);
+
+	.megamenu-admin-modal {
+		display: none;
+		position: fixed;
+		z-index: 159000;
+		top: var(--wp-admin--admin-bar--height, 32px);
+		right: 0;
+		bottom: 0;
+		left: 160px;
+		margin: 0;
+		border: none;
+		outline: none;
+		padding: 20px 24px;
+		overflow: auto;
+		box-sizing: border-box;
+		flex-direction: row;
+		// Stretch on the main axis only; keep cross-axis centering so height changes grow from the middle.
+		align-items: center;
+		justify-content: stretch;
+
+		&.is-open {
+			display: flex;
+		}
+
+		&.megamenu-admin-modal--wpcontent-expanded {
+			.megamenu-admin-modal__panel {
+				// Same width model as collapsed (`width: 100%` + max-width); only max-width grows — interpolates smoothly.
+				max-width: 100%;
+				// Stay centered like collapsed; do not stretch to top (that caused jump-then-expand-down).
+				height: $megamenu-modal-panel-expanded-height;
+				max-height: $megamenu-modal-panel-expanded-height;
+				min-height: 0;
+				// Match collapsed so margin doesn’t snap (auto → 0 was causing a horizontal jump with width).
+				margin-inline: auto;
+				margin-block: auto;
+			}
+		}
+
+		&__backdrop {
+			position: absolute;
+			inset: 0;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: $shadow-a45;
+			cursor: pointer;
+		}
+
+		&__panel {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			// Interpolates cleanly to expanded `max-width: 100%` (avoid `width: min()` ↔ `100%` which jumps).
+			width: 100%;
+			max-width: $megamenu-modal-panel-collapsed-max-width;
+			// Same expression for height + max-height so transitions don’t fight (was max-height: 70vh with height min(70vh, 960px)).
+			$megamenu-modal-panel-collapsed-height: min(#{$megamenu-modal-panel-collapsed-max-vh}, #{$megamenu-modal-panel-collapsed-height-cap});
+			max-height: $megamenu-modal-panel-collapsed-height;
+			height: $megamenu-modal-panel-collapsed-height;
+			min-height: 0;
+			flex-shrink: 0;
+			margin-inline: auto;
+			margin-block: auto;
+			align-self: center;
+			background: $white;
+			border-radius: $modal-radius;
+			box-shadow: $shadow-large;
+			overflow: hidden;
+			font-size: 14px;
+			line-height: 1.5;
+			transition:
+				width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+				max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+				max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+				height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+				margin-inline 0.3s ease;
+
+			@media (prefers-reduced-motion: reduce) {
+				transition: none;
+			}
+		}
+
+		&__header {
+			flex: 0 0 auto;
+			position: relative;
+			z-index: 1;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			width: 100%;
+			box-sizing: border-box;
+			padding: 24px;
+			min-height: 0;
+			border-bottom: 0;
+			box-shadow: $shadow-small;
+			background: $white;
+
+			.megamenu-admin-modal__title-group {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				flex: 1 1 auto;
+				min-width: 0;
+				padding-right: 40px;
+			}
+
+			.megamenu-admin-modal__title {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin: 0;
+				min-width: 0;
+				font-size: 1.25rem;
+				font-weight: 600;
+				line-height: 1.3;
+				letter-spacing: 0;
+				color: $ink;
+
+				br {
+					display: none;
+				}
+			}
+
+			.megamenu-admin-modal__title-icon.dashicons {
+				flex-shrink: 0;
+				width: 24px;
+				height: 24px;
+				font-size: 24px;
+				line-height: 1;
+				color: $text-secondary;
+			}
+
+			.megamenu-admin-modal__title-text {
+				min-width: 0;
+			}
+
+			.megamenu_subtitle {
+				margin: 0;
+				font-size: 13px;
+				font-family:
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					Oxygen-Sans,
+					Ubuntu,
+					Cantarell,
+					"Helvetica Neue",
+					sans-serif;
+				color: $text-secondary;
+				line-height: 1.3;
+				letter-spacing: 0;
+			}
+
+			.megamenu-admin-modal__header-meta {
+				flex: 0 0 auto;
+				align-self: center;
+			}
+
+			.megamenu-admin-modal__header-actions {
+				position: absolute;
+				top: 14px;
+				right: 12px;
+				z-index: 2;
+				display: inline-flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 6px;
+
+				.megamenu-modal-close {
+					position: static;
+					top: auto;
+					right: auto;
+					z-index: auto;
+				}
+
+					.megamenu-admin-modal__expand-btn {
+					@include megamenu-admin-ghost-icon-button-shell;
+					@include megamenu-admin-ghost-icon-button-states;
+					position: static;
+					top: auto;
+					right: auto;
+					z-index: auto;
+
+					.megamenu-admin-modal__expand-icon {
+						pointer-events: none;
+						width: 24px;
+						height: 24px;
+						font-size: 24px;
+						line-height: 1;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+
+						&--contract {
+							display: none;
+						}
+					}
+
+					&.megamenu-admin-modal__expand-btn--expanded {
+						.megamenu-admin-modal__expand-icon--expand {
+							display: none;
+						}
+
+						.megamenu-admin-modal__expand-icon--contract {
+							display: inline-flex;
+						}
+					}
+				}
+			}
+		}
+
+		&__body {
+			flex: 1 1 auto;
+			min-height: 0;
+			overflow: hidden;
+			padding: 0;
+			box-sizing: border-box;
+			background: $white;
+			display: flex;
+			flex-direction: column;
+
+			textarea,
+			input[type="text"],
+			input[type="number"],
+			input[type="search"],
+			select {
+				border-radius: 4px;
+			}
+		}
+
+		// Centered loading overlay + spinner (preview iframe shell, location + menu item modal bodies).
+		.megamenu-admin-modal__loading-host {
+			position: relative;
+		}
+
+		.megamenu-admin-modal__loading-overlay {
+			display: none;
+			position: absolute;
+			inset: 0;
+			z-index: 2;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			background: rgba($surface-raised, 0.94);
+			pointer-events: none;
+		}
+
+		.megamenu-admin-modal__loading-host--loading .megamenu-admin-modal__loading-overlay {
+			display: flex;
+		}
+
+		.megamenu-admin-modal__loading-spinner {
+			box-sizing: border-box;
+			width: 36px;
+			height: 36px;
+			border: 3px solid $line;
+			border-top-color: $wp-admin-theme-color;
+			border-radius: 50%;
+			animation: megamenu-admin-modal-loading-spin 0.7s linear infinite;
+		}
+
+		@keyframes megamenu-admin-modal-loading-spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.megamenu-admin-modal__body-slot {
+			flex: 1 1 auto;
+			min-height: 0;
+			overflow: auto;
+			display: flex;
+			flex-direction: column;
+			box-sizing: border-box;
+		}
+
+		&.megamenu-location-settings-dialog &__body {
+			padding: 0;
+		}
+
+		&.megamenu-location-settings-dialog &__body .megamenu-admin-modal__body-slot {
+			padding: 8px $modal-padding-x 0;
+		}
+
+		&.megamenu-menu-item-dialog &__body,
+		&.megamenu-preview-dialog &__body {
+			padding: 0;
+		}
+
+		// Footer bar: location settings (Save + spinner), preview dialog (viewport toggle). Menu item modal has no footer row.
+		&__footer {
+			flex: 0 0 auto;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 12px;
+			padding: 24px;
+			border-top: 0;
+			background: $white;
+
+			p.submit {
+				margin: 0;
+				padding: 0;
+				line-height: inherit;
+			}
+
+			.spinner {
+				float: none;
+				margin: 0;
+				visibility: hidden;
+			}
+
+			// Secondary actions: text-style control (reference “Cancel”).
+			.button:not(.button-primary) {
+				background: transparent;
+				border-color: transparent;
+				color: $wp-admin-theme-color;
+				box-shadow: none;
+
+				&:hover,
+				&:focus {
+					background: $surface;
+					border-color: transparent;
+					color: $admin-blue-dark;
+				}
+			}
+		}
+	}
+
+	// Menu item modal body grid (sibling of .megamenu-admin-modal to avoid Sass duplicating `body` when nesting `.megamenu-admin-modal__*`).
+	// Collapsed panel width/height match preview + location (shared `&__panel` above).
+	.megamenu-admin-modal.megamenu-menu-item-dialog {
+		.megamenu-admin-modal__header {
+			#megamenu-menu-item-dialog-breadcrumb.megamenu-menu-item-dialog-breadcrumb {
+				margin: 0;
+				height: 26px;
+				display: flex;
+				align-items: center;
+				box-sizing: border-box;
+				font-size: 13px;
+				font-family:
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					Oxygen-Sans,
+					Ubuntu,
+					Cantarell,
+					"Helvetica Neue",
+					sans-serif;
+				color: $text-secondary;
+				line-height: 1.3;
+				letter-spacing: 0;
+
+				.megamenu-menu-item-dialog-breadcrumb__inner {
+					display: flex;
+					align-items: center;
+					width: 100%;
+					min-width: 0;
+					box-sizing: border-box;
+				}
+
+				.megamenu-menu-item-dialog-breadcrumb__text {
+					flex: 1 1 auto;
+					min-width: 0;
+					display: flex;
+					flex-wrap: wrap;
+					align-items: center;
+					column-gap: 6px;
+					row-gap: 2px;
+					line-height: 1.35;
+
+					.megamenu-menu-item-dialog-breadcrumb__start-icon.dashicons {
+						flex-shrink: 0;
+						position: relative;
+						top: -2px;
+						width: 18px;
+						height: 18px;
+						font-size: 18px;
+						line-height: 1;
+						color: $text-secondary;
+					}
+				}
+
+				.megamenu-menu-item-dialog-breadcrumb__sep.dashicons {
+					flex-shrink: 0;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 14px;
+					height: 1.35em;
+					font-size: 14px;
+					line-height: 1;
+					margin: 0;
+					color: $text-placeholder;
+
+					&::before {
+						line-height: 1;
+					}
+				}
+			}
+		}
+
+		.megamenu-admin-modal__header-actions .megamenu-menu-item-dialog-saving-indicator {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 32px;
+			height: 32px;
+			margin: 0;
+			padding: 0;
+			flex-shrink: 0;
+			pointer-events: none;
+
+			&[hidden] {
+				display: none !important;
+			}
+
+			.megamenu-menu-item-dialog-saving-indicator__icon {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 22px;
+				height: 22px;
+				font-size: 22px;
+				line-height: 1;
+				color: $text-secondary;
+				animation: mm-rotation 2s infinite linear;
+			}
+		}
+
+		.megamenu-admin-modal__body .megamenu_outer_wrap {
+			flex: 1 1 auto;
+			min-height: 0;
+			overflow: hidden;
+			font-size: 14px;
+			line-height: 1.5;
+
+			.mega-tablist {
+				button.megamenu-dialog-tab.mega_menu:before {
+					content: "\f116";
+				}
+
+				button.megamenu-dialog-tab.general_settings:before {
+					content: "\f111";
+				}
+
+				button.megamenu-dialog-tab.menu_icon:before {
+					content: "\f128";
+				}
+
+				button.megamenu-dialog-tab.styling:before {
+					content: "\f540";
+				}
+
+				button.megamenu-dialog-tab.roles:before {
+					content: "\f110";
+				}
+
+				button.megamenu-dialog-tab.badge:before {
+					content: "\f313"; // dashicons-awards
+				}
+
+				button.megamenu-dialog-tab .mm-tab-dirty-indicator {
+					display: inline-flex;
+					align-items: center;
+					vertical-align: middle;
+					margin-inline-start: 4px;
+
+					.dashicons {
+						width: 16px;
+						height: 16px;
+						font-size: 16px;
+						line-height: 1;
+						color: #dba617;
+						speak: none;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+					}
+				}
+			}
+
+			.megamenu_tabs li.megamenu_tab_horizontal {
+				font-size: 14px;
+				padding: 5px 8px;
+			}
+
+			.filter_icons {
+				font-size: 1em;
+			}
+		}
+	}
+
+	.megamenu-admin-modal.megamenu-preview-dialog {
+		.megamenu-admin-modal__loading-spinner {
+			border-top-color: $wp-block-synced-color;
+		}
+
+		.megamenu-admin-modal__header {
+			.megamenu-admin-modal__header-actions {
+				.megamenu-preview-dialog__refresh-btn {
+					@include megamenu-admin-ghost-icon-button-shell;
+					@include megamenu-admin-ghost-icon-button-states;
+					position: static;
+					top: auto;
+					right: auto;
+					z-index: auto;
+				}
+			}
+		}
+
+		.megamenu-preview-dialog__iframe-shell {
+			position: relative;
+			flex: 1 1 auto;
+			min-height: 0;
+			height: 100%;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: stretch;
+			$checker-base: $surface-raised;
+			$checker-tile: color.mix($black, $checker-base, 6%);
+			background-color: $checker-base;
+			background-image: repeating-conic-gradient($checker-base 0% 25%, $checker-tile 0% 50%);
+			background-size: 16px 16px;
+		}
+
+		.megamenu-preview-dialog__iframe {
+			flex: 1 1 auto;
+			width: 100%;
+			max-width: 100%;
+			border: 0;
+			background: transparent;
+			min-height: 0;
+			transition: max-width 0.2s ease-out;
+		}
+
+		&.megamenu-preview-dialog--mobile-preview .megamenu-preview-dialog__iframe {
+			max-width: var(--megamenu-preview-mobile-width, 390px);
+			width: 100%;
+		}
+
+		.megamenu-admin-modal__footer {
+			justify-content: flex-start;
+			align-items: center;
+			gap: 0;
+		}
+
+		.megamenu-preview-dialog__viewport-toggle {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.megamenu-preview-dialog__viewport-btn {
+			@include megamenu-admin-ghost-icon-button-shell;
+			@include megamenu-admin-ghost-icon-button-states;
+
+			&--active {
+				background: $white;
+				border: 1px solid $wp-admin-theme-color;
+				color: $wp-admin-theme-color;
+				box-shadow: none;
+			}
+
+			// Keep the selected viewport tile solid white (states mixin tints inactive controls on hover/focus).
+			&--active:hover,
+			&--active:focus:not(:hover) {
+				background: $white;
+				color: $wp-admin-theme-color;
+			}
+
+			&:disabled {
+				opacity: 0.45;
+				cursor: not-allowed;
+
+				&:hover,
+				&:focus:not(:hover) {
+					background: transparent;
+					color: $icon-dim;
+				}
+			}
+
+			&--unavailable {
+				opacity: 0.45;
+				cursor: not-allowed;
+				pointer-events: auto;
+
+				&:hover,
+				&:focus:not(:hover) {
+					background: transparent;
+					color: $icon-dim;
+				}
+			}
+		}
+	}
+
+	.megamenu-admin-modal.megamenu-scss-variables-dialog {
+		#megamenu-scss-variables-dialog-body.megamenu-scss-variables-dialog__slot {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			min-height: 0;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+
+		.megamenu-scss-variables-dialog__intro {
+			margin: 0;
+		}
+
+		.megamenu-scss-vars-list {
+			display: grid;
+			grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+			column-gap: 20px;
+			row-gap: 0;
+			align-items: start;
+			margin: 0;
+			overflow: auto;
+			padding: 0;
+			border: 1px solid $line;
+			border-radius: $modal-radius;
+			background: $white;
+			font-size: 12px;
+			line-height: 1.45;
+		}
+
+		.megamenu-scss-vars-list dt {
+			margin: 0;
+			padding: 10px 0 10px 14px;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+			font-weight: 600;
+			color: $text-secondary;
+			border-bottom: 1px solid $line;
+		}
+
+		.megamenu-scss-vars-list dd {
+			margin: 0;
+			padding: 10px 14px 10px 0;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+			word-break: break-word;
+			white-space: pre-wrap;
+			border-bottom: 1px solid $line;
+			color: $ink;
+		}
+
+		.megamenu-scss-vars-list dt:last-of-type,
+		.megamenu-scss-vars-list dd:last-of-type {
+			border-bottom: 0;
+		}
+	}
+
+	.megamenu-admin-modal.megamenu-location-settings-dialog {
+		.megamenu-admin-modal__loading-spinner {
+			border-top-color: $wp-block-synced-color;
+		}
+
+		.megamenu-admin-modal__title .megamenu-admin-modal__title-text {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		.megamenu-location-settings-title-prefix {
+			flex-shrink: 0;
+		}
+
+		.megamenu-location-title {
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.megamenu-location-settings-dialog__footer .megamenu-location-settings-dialog-save.button.button-primary {
+			background: $wp-block-synced-color;
+			border-color: $wp-block-synced-color;
+			color: $white;
+			box-shadow: none;
+			text-shadow: none;
+
+			&:hover:not(:disabled):not([aria-disabled="true"]) {
+				filter: brightness(0.92);
+			}
+
+			&:active:not(:disabled):not([aria-disabled="true"]) {
+				filter: brightness(0.86);
+			}
+
+			&:focus {
+				box-shadow:
+					0 0 0 1px $white,
+					0 0 0 3px $wp-block-synced-color;
+			}
+
+			&:focus-visible {
+				outline: none;
+				box-shadow:
+					0 0 0 1px $white,
+					0 0 0 3px $wp-block-synced-color;
+			}
+
+			&:disabled,
+			&[aria-disabled="true"] {
+				filter: none;
+				opacity: 0.65;
+			}
+		}
+
+		.megamenu-admin-modal__body {
+			.megamenu-location-settings-dialog__surface {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				width: 100%;
+				height: 100%;
+				min-height: 0;
+				box-sizing: border-box;
+				font-size: 14px;
+				display: flex;
+				flex-direction: column;
+
+				form.megamenu-location-settings-dialog-form {
+					flex: 1 1 auto;
+					min-height: 0;
+					display: flex;
+					flex-direction: column;
+				}
+
+				.megamenu-location-settings-dialog-theme-selector {
+					display: inline-flex;
+					align-items: center;
+					flex-wrap: wrap;
+					gap: 6px;
+				}
+
+				.megamenu-location-settings-dialog-edit-theme {
+					min-width: $mega-admin-icon-hit;
+					@include megamenu-admin-ghost-icon-button;
+				}
+
+				.megamenu-dialog-rail {
+					flex: 1 1 auto;
+					min-height: 0;
+				}
+
+				tr.mega-effect_mobile {
+					td.mega-value {
+						display: flex;
+						flex-wrap: wrap;
+						align-items: flex-end;
+						column-gap: 24px;
+						row-gap: 12px;
+					}
+
+					td.mega-value > label {
+						display: flex;
+						flex-direction: column;
+						align-items: flex-start;
+						margin: 0;
+					}
+
+					.mega-effect_mobile_direction {
+						display: none;
+					}
+
+					&.mega-is-offcanvas .mega-effect_mobile_direction {
+						display: flex;
+						flex-direction: column;
+						align-items: flex-start;
+					}
+				}
+
+				// Vertical rail tabs: synced-pattern accent + section dashicons (PHP/JS only add `is-active`).
+				.mega-tablist button {
+					&:focus-visible {
+						@include mega-admin-focus-ring($wp-block-synced-color);
+					}
+
+					&.is-active {
+						color: $wp-block-synced-color;
+						border-inline-start-color: $wp-block-synced-color;
+
+						&::before {
+							color: $wp-block-synced-color;
+						}
+					}
+
+					&::before {
+						content: "\f111";
+					}
+
+					&[data-tab-section="general"]::before {
+						content: "\f472";
+					}
+
+					&[data-tab-section="theme"]::before {
+						content: "\f100";
+					}
+
+					&[data-tab-section="advanced"]::before {
+						content: "\f107";
+					}
+
+					&[data-tab-section="output_options"]::before {
+						content: "\f177";
+					}
+
+					&[data-tab-section="sticky"]::before {
+						content: "\f103";
+					}
+
+					&[data-tab-section="overlay"]::before {
+						content: "\f188";
+					}
+
+					&[data-tab-section="mobile"]::before {
+						content: "\f470";
+					}
+				}
+
+				.megamenu-dialog-panels {
+					padding: 10px 32px 32px;
+				}
+
+				h5 {
+					font-size: 12px;
+				}
+			}
+		}
+	}
+
+	// Vertical rail: tab button chrome (WP admin blue). Location settings dialog overrides with synced accent in `.megamenu-location-settings-dialog__surface`.
+	.mega-tablist button {
+		@include megamenu-dialog-side-tab;
+
+		&::before {
+			color: $icon-dim;
+			display: inline-block;
+			font-family: dashicons;
+			speak: none;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			vertical-align: middle;
+			margin-right: 8px;
+			content: '\f463';
+			font-size: 17px;
+			width: 18px;
+			transition: color 0.15s ease;
+		}
+	}
+
+	// Let plugin settings pages use full #wpbody width (not Appearance > Menus, which shares this body class).
+	&:not(.nav-menus-php) #wpbody-content > .wrap {
+		margin-block-start: 0;
+		margin-inline: 0;
+		padding-inline: 0;
+		padding-block-start: 0;
+	}
+
+	&:not(.nav-menus-php) #wpcontent {
+		padding-inline-start: 0;
+	}
 
 	.megamenu_outer_wrap {
 		display: inline-block;
 		width: 100%;
-		padding-right: 20px;
-		padding-top: 10px;
+		padding: 0;
 		box-sizing: border-box;
 
 		.notice {
 			margin: 0 0 20px 0;
-			clear: both;
 		}
 	}
+
+	// Menu-item modal + location settings modal + plugin settings page: two-column rail (modal: no gap; settings: gutter).
+	.megamenu-admin-modal .megamenu-dialog-rail {
+		@include megamenu-dialog-rail-grid;
+	}
+
+	.megamenu_wrap.megamenu-dialog-rail {
+		@include megamenu-dialog-rail-grid($megamenu-settings-rail-gap, 0);
+		background: $white;
+
+		@include tablet {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto auto;
+			row-gap: $megamenu-settings-rail-gap;
+		}
+	}
+
+	.mega-tablist {
+		@include megamenu-dialog-tablist-shell;
+		padding-top: 10px;
+	}
+
+	.megamenu-admin-modal .megamenu-dialog-panels {
+		@include megamenu-dialog-panels-shell;
+	}
+
+	.megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels {
+		@include megamenu-dialog-panels-shell(visible);
+
+		// After this block, unqualified shell would override a rule inside `@include tablet` on the parent.
+		@include tablet {
+			grid-column: 1;
+			grid-row: 2;
+		}
+	}
+
 	*:focus {
 		box-shadow: 0 0 0;
 	}
@@ -1587,7 +4514,7 @@ body.toplevel_page_maxmegamenu {
 
 		.select2-choice > .select2-chosen {
 		    line-height: 28px;
-		    margin-right: 0px;
+		    margin-right: 0;
 		}
 
 		.select2-choice .select2-arrow {
@@ -1595,16 +4522,16 @@ body.toplevel_page_maxmegamenu {
 		}
 
 		.select2-choice {
-		    padding: 0 5px 0 5px;
+		    padding: 0 5px;
 		    height: 28px;
-		    color: $grey;
-		    border: 1px solid #7e8993;
+		    color: $line;
+		    border: 1px solid $megamenu-form-control-border;
 		}
 
 		.select2-chosen i:before {
 		    line-height: 28px;
 		    font-size: 16px;
-		    color: $text_grey;
+		    color: $text;
 		}
 
 	}
@@ -1614,12 +4541,16 @@ body.toplevel_page_maxmegamenu {
 	    min-width: 150px;
 	}
 
+	.select2-results {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+	}
+
 	.select2-results li {
-	    float: left;
+	    flex: 0 0 auto;
 
 	    &:first-child {
-	    	float: none;
-
 	    	i {
 		    	display: none;
 			}
@@ -1628,7 +4559,7 @@ body.toplevel_page_maxmegamenu {
 		.select2-result-label {
 			font-size: 0.9em;
 		}
-	}
+	}	
 
 	.icon_dropdown .select2-choice > .select2-chosen i,
 	.select2-result-label i {
@@ -1649,138 +4580,188 @@ body.toplevel_page_maxmegamenu {
 	    -moz-osx-font-smoothing: grayscale;
 	}
 
-	.megamenu_header_top {
-		font-size: 0.9em;
-		display: block;
+	.megamenu_header {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 8px 20px;
+		background: $white;
+		padding: 30px 20px;
+		margin-bottom: 20px;
+		border-bottom: 1px solid $surface;
+		box-shadow:
+			0 1px 2px $shadow-a05,
+			0 2px 10px $shadow-a07;
 		width: 100%;
-		height: 30px;
-		line-height: 30px;
-		margin-bottom: 10px;
 		box-sizing: border-box;
 
-		ul {
-			margin: 0;
-			float: right;
-			position: relative;
-		
+		.megamenu_header_left {
+			flex: 1 1 200px;
+			min-width: 0;
+
+			.megamenu_header_title_row {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 10px;
+			}
+
+			.megamenu_header_icon {
+				flex-shrink: 0;
+				width: 28px;
+				height: 28px;
+				object-fit: contain;
+			}
+
+			.megamenu_header_title_row h2 {
+				margin: 0;
+				padding: 0;
+				line-height: 1.2;
+			}
+		}
+
+		.megamenu_header_right {
+			flex: 0 0 auto;
+			margin-inline-start: auto;
+			font-size: 0.9em;
+			line-height: 30px;
+
+			ul {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: flex-end;
+				gap: 0 14px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
 			li {
-				display: inline-block;
-				margin: 0 0 0 14px;
+				margin: 0;
 				line-height: 30px;
 
 				&.mega-highlight {
-					background: #35b1df;
 					border-radius: 5px;
+					background: $wp-admin-theme-color;
 
 					a {
-						color: white;
+						color: $white;
 						line-height: 30px;
 						padding: 0 10px;
 					}
 				}
 			}
 		}
-	}
-
-	.megamenu_header {
-		background: white;
-		padding: 10px 17px;
-		border-bottom: 1px solid $mid_grey;
-		float: left;
-		width: 100%;
-		box-sizing: border-box;
 
 		.version {
-			color: $dark_grey;
-			margin-bottom: 15px;
+			color: $icon-dim;
+			margin-bottom: 0;
 			font-size: 12px;
 		}
-
-		@include tablet {
-			text-align: center;
-			border-bottom: 0;
-		}
 	}
 
-	.megamenu_wrap {
-		width: 100%;
-		float: left;
-		display: flex;
-		flex-wrap: wrap;
-		background: white;
-
+	.megamenu_wrap.megamenu-dialog-rail > .mega-tablist {
 		@include tablet {
-			flex-direction: column;
-		}
-	}
-
-
-	.megamenu_left {
-		flex-basis: 190px;
-		flex-grow: 1;
-
-		@include tablet {
-			flex-basis: auto;
-			border-bottom: 0;
-			margin-bottom: 20px;
+			grid-column: 1;
+			grid-row: 1;
+			overflow-x: auto;
+			overflow-y: visible;
 		}
 
-		ul.mega-page-navigation {
+		nav.mega-page-navigation ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
 			@include tablet {
-				text-align: center;
-				margin: 0;
+				display: flex;
+				flex-flow: row wrap;
+				align-items: stretch;
+				justify-content: center;
+				column-gap: 12px;
+				row-gap: 8px;
 			}
 
 			li {
+				margin: 0;
+				padding: 0;
+
 				@include tablet {
-					display: inline-flex;
-					margin-bottom: 0;
+					display: flex;
+					flex: 0 0 auto;
 				}
 
 				a {
+					@include megamenu-dialog-side-tab;
 					text-decoration: none;
-					color: $text_grey;
-					width: 100%;
-					display: block;
-					padding: 5px 0px 5px 17px;
-					box-sizing: border-box;
-					border-left: 2px solid white;
-					outline: 0;
 
-					&:hover,
-					&.active {
-					    border-left: 2px solid $light_blue;
-					    color: #0074a2;
+					// Match `.mega-tablist button::before` (block tab + inline-block icon).
+					&::before {
+						color: $icon-dim;
+						display: inline-block;
+						font-family: dashicons;
+						speak: none;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						vertical-align: middle;
+						margin-right: 8px;
+						content: none;
+						font-size: 17px;
+						width: 18px;
+						transition: color 0.15s ease;
 					}
 
 					@include tablet {
-						border-left: 0;
-					    padding: 1rem;
-					    margin: 0;
-					    margin-left: 1rem;
-					    margin-right: 1rem;
-
-						&.active {
-					    	border-left: 0;
-						    box-shadow: inset 0 -3px $light_blue;
-						    font-weight: 600;
-						}
+						display: inline-flex;
+						align-items: center;
+						width: auto;
+						margin-bottom: 0;
+						text-align: center;
+						border-inline-start: 3px solid transparent;
+						border-bottom: 3px solid transparent;
 
 						&:hover {
-					    	border-left: 0;
+							border-inline-start-color: transparent;
+						}
+
+						&.is-active {
+							border-inline-start-color: transparent;
+							box-shadow: none;
+							border-bottom-color: $wp-admin-theme-color;
+						}
+
+						&::before {
+							margin-right: 6px;
 						}
 					}
 				}
+
+				&.menu_locations a::before {
+					content: '\f230';
+				}
+
+				&.theme_editor a::before {
+					content: '\f100';
+				}
+
+				&.general_settings a::before {
+					content: '\f111';
+				}
+
+				&.tools a::before {
+					content: '\f107';
+				}
+
+				&.license a::before,
+				&.licence a::before {
+					content: '\f112';
+				}
 			}
-		}
-	}
-
-	.megamenu_right {
-		flex-basis: 0;
-		flex-grow: 999;
-
-		@include tablet {
-			flex-basis: auto;
 		}
 	}
 
@@ -1789,11 +4770,11 @@ body.toplevel_page_maxmegamenu {
 	}
 
 	h3 {
-		clear: both;
+		display: flow-root;
 		font-size: 1.1em;
 		margin: 17px 0 5px 0;
 		text-indent: 1px;
-	    border-bottom: 1px solid $grey;
+	    border-bottom: 1px solid $line;
 	    padding: 0 0 10px 0;
 	}
 
@@ -1812,138 +4793,54 @@ body.toplevel_page_maxmegamenu {
 	.megamenu_submit {
 		margin-bottom: 40px;
 		padding-top: 35px;
-
-		.mega_left,
-		.mega_right {
-		    float: left;
-		    width: 50%;
-		}
-
-		.spinner {
-		    float: left;
-		}
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		gap: 8px 16px;
+		box-sizing: border-box;
 
 		p.submit {
 			margin: 0;
 			padding: 0;
-		    float: left;
-		}
-
-		.mega_right {
-			text-align: right;
-		}
-
-		.mega_right a {
-			color: $red;
 		}
 	}
-
-
-
-
 
 	.megamenu_wrap .megamenu_submit .saved {
 	    background: transparent;
 	    line-height: 28px;
 	    margin: 0 0 0 5px;
-	    float: left;
+	    flex: 0 0 auto;
 	    border-radius: 0;
-	    color: #0074a2;
+		color: $wp-admin-theme-color;
 	    text-transform: uppercase;
 	    font-weight: bold;
 	}
 
 	.megamenu_wrap .megamenu_submit .saved .dashicons {
-	    color: #0074a2;
+		color: $wp-admin-theme-color;
 	    width: 26px;
 	    line-height: 28px;
 	    height: 28px;
 	}
 
-	.megamenu_wrap .success,
-	.megamenu_wrap .warning,
-	.megamenu_wrap .fail {
-	    background: $white;
-	    border-left: 4px solid $green;
-		border-top: 1px solid $grey;
-		border-bottom: 1px solid $grey;
-		border-right: 1px solid $grey;
-	    box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-	    padding: 10px;
-	    margin: 5px 0 30px;
-	    line-height: 22px;
-	    clear: both;
+	// Shared admin utility / tab callouts (was duplicated under location modal + Menu Locations settings).
+	.mega-vertical-align-top {
+		vertical-align: top;
 	}
 
-	.megamenu_wrap .megamenu_right .warning {
-		margin-bottom: 0;
-	}
-	.megamenu_wrap .fail {
-		border-left-color: $red;
-	}
-	.megamenu_wrap .warning {
-		border-left-color: #ffb900;
+	.megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tab-content .warning,
+	.megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels .menu_settings.menu_settings_menu_locations .mega-tab-content .warning {
+		margin: 20px 0 0 0;
 	}
 
-	.mm-picker-container {
-		border-radius: 3px;
-		border: 1px solid #8c8f94;
-		font-size: 0.9em;
-		float: left;
-
-		.sp-replacer {
-			margin: 0;
-			float: left;
-			border: 0;
-			background: transparent;
-			padding: 0;
-		}
-
-		.sp-dd {
-			display: none;
-		}
-		.sp-palette-container {
-		    width: 40px;
-		}
-
-		.sp-replacer .sp-preview {
-			border: 0;
-			border-right: 1px solid #8c8f94;
-			height: 26px;
-			width: 26px;
-			margin: 0;
-		}
-
-		input.mm_colorpicker {
-			float: left;
-			border: 0;
-			height: 23px;
-			box-shadow: 0 0 0;
-			margin: 0;
-		}
-
-		div.chosen-color {
-			border-radius: 0 2px 2px 0;
-			color: $text_grey;
-			font-size: 11px;
-			line-height: 26px;
-			padding: 0 6px;
-			text-align: center;
-			float: left;
-			cursor: default;
-		}
-	}
-
-	.block .mm-picker-container {
-	    float: right;
-	    margin-right: 0;
-	}
-
-	.megamenu_right {
-		padding: 20px;
+	.megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels {
+		padding: 20px 24px 32px 0;
 		box-sizing: border-box;
-		border-left: 1px solid $mid_grey;
 		min-height: 400px;
+
+		@include tablet {
+			padding: 24px;
+		}
 
 		textarea.mega-export {
 			width: 100%;
@@ -1953,763 +4850,186 @@ body.toplevel_page_maxmegamenu {
 			font-size: 0.9em;
 		}
 
-		nav.nav-tab-wrapper {
+		.megamenu-nav-tab-wrapper {
 			position: relative;
-		    margin: 0;
+			margin: 0;
+			padding: 0;
 			display: inline-flex;
 			align-items: center;
 			align-content: center;
 			height: 64px;
 			gap: 30px;
 			width: 100%;
+			border: 0;
+			box-sizing: border-box;
 
-			a.mega-tab {
+			@include tablet {
+				gap: 16px;
+				justify-content: space-between;
+			}
+
+			button.mega-tab {
+				appearance: none;
+				font: inherit;
 				display: flex;
-			    cursor: pointer;
-			    height: 100%;
-			    align-content: center;
-    			flex-wrap: wrap;
-    			color: $text_grey;
-			    font-weight: 500;
-			    font-size: 14px;
-			    padding: 0 5px;
+				cursor: pointer;
+				height: 100%;
+				align-content: center;
+				flex-wrap: wrap;
+				color: $text;
+				font-weight: 500;
+				font-size: 14px;
+				padding: 0 5px;
+				margin: 0;
+				background: transparent;
+				border: 0;
+				box-shadow: none;
+				text-decoration: none;
+				text-align: inherit;
 
-			    @include tablet {
-			    	font-size: 12px;
-			    }
+				&:hover {
+					color: $wp-admin-theme-color;
+				}
 
-			    &:hover {
-			    	color: $light_blue;
-			    }
+				&.nav-tab-active {
+					background: $white;
+					position: relative;
+					z-index: 1;
+					color: $wp-admin-theme-color;
+				}
 			}
 
-			a.nav-tab-active {
-				background: white;
-			    position: relative;
-			    z-index: 1;
-			    color: $light_blue;
-			}
-
-	        /* The sliding border element */
-	        .nav-tab-slider {
-	            position: absolute;
-	            bottom: 0;
-	            height: 3px;
-	            background-color: $light_blue;
-	            border-radius: 2px;
-	            transition: left 0.3s ease-out, width 0.3s ease-out;
-	            z-index: 1;
-	        }
+			@include nav-tab-slider-indicator;
 		}
 
-		h3.editing_theme {
-			margin: 0 0 30px 0;
-		    padding: 0;
-		    border: 0;
-		    float: left;
-		    width: 100%;
-		}
 
 		.menu_settings {
-			
-			.mega-tooltip {
-				&:before {
-					top: -29px;
-					margin-left: -5px;
-				}
-
-				&:after {
-					margin-left: 2px;
-				}
-			}
-
-			&.menu_settings_general_settings {
-				.mega-inner-table {
-					width: auto;
-
-					td {
-						padding-top: 3px;
-						padding-bottom: 3px;
-					}
-				}
-			}
-
-			&.menu_settings_menu_locations {
-
-				.mega-accordion-title {
-					h4:before {
-						font: 400 14px/1 dashicons;
-						content: "\f347";
-						speak: none;
-						padding: 0;
-						margin-right: 10px;
-						display: inline-block;
-						vertical-align: middle;
-						-webkit-font-smoothing: antialiased;
-						-moz-osx-font-smoothing: grayscale;
-						transition: all 0.4s ease;
-					}
-
-					&.mega-accordion-open h4:before {
-						transform: rotateZ(-180deg);
-					}
-				}
-
-				.mega-add-location {
-					margin-top: 20px;
-				}
-				div.mega-tab-content {
-					border: 0;
-				}
-				.nav-tab-wrapper {
-					border: 0;
-
-					a.nav-tab,
-					a.nav-tab-active {
-						cursor: pointer;
-						font-size: 12px;
-						font-weight: normal;
-						padding: 3px 5px;
-						border: 0;
-						margin: 0 15px 0 0;
-						background: white;
-						color: $text_grey;
-						border-radius: 3px;
-						background: $light_grey;
-						border: 1px solid $grey;
-					}
-
-					a.nav-tab-active {
-						background: $light_blue;
-						border-color: $light_blue;
-						color: white;
-					}
-				}
-
-				table td {
-					padding-bottom: 0;
-				}
-
-				table.output_options td.mega-value {
-					textarea {
-						width: 100%;
-						height: auto;
-						margin-bottom: 0;
-					}
-					label {
-						float: none;
-					}
-				}
-
-				table.sticky_settings tr td:first-child {
-				    width: 40%;
-				}
-
-				.mega-tab-content table td:first-child {
-					width: 40%;
-					font-size: 13px;
-
-					.mega-description {
-						margin-top: 0;
-					}
-					.dashicons {
-						margin-right: 6px;
-						font-size: 14px;
-						vertical-align: middle;
-					}
-				}
-
-				.mega-vartical-align-top {
-					vertical-align: top;
-				}
-
-				.megamenu_submit {
-					margin-bottom: 0;
-				}
-			}
 
 			&.menu_settings_menu_themes {
 
 				.theme_selector {
 					margin-bottom: 20px;
-					font-size: 15px;
 					display: flex;
-					align-items: center;
+					flex-wrap: wrap;
+					align-items: flex-end;
+					row-gap: 12px;
+					column-gap: 32px;
+					overflow: visible;
+					box-sizing: border-box;
 
+					.theme-selector-field {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 4px;
+						min-width: 0;
+					}
+
+					.theme-editor-actions-group,
+					.theme-editor-preview-group {
+						display: flex;
+						flex-direction: column;
+						align-items: flex-start;
+						gap: 4px;
+						min-width: 0;
+					}
+
+					// Same treatment as `label span.mega-short-desc` in `.megamenu_outer_wrap table` (location dialog / theme fields).
+					.theme-selector-field .mega-short-desc,
+					.theme-editor-actions-group .mega-short-desc,
+					.theme-editor-preview-group .mega-short-desc {
+						@include mega-toolbar-field-label;
+					}
+
+					.theme-editor-actions-group > .mega-short-desc,
+					.theme-editor-preview-group > .mega-short-desc {
+						margin: 0 0 0 1px;
+					}
+
+					// Native menulist (single chevron): core `.wp-core-ui select` adds a Dashicon
+					// `background-image` — clear it or two arrows show.
+					select#theme_selector,
 					select {
-						margin-left: 10px;
-						font-size: 14px;
-						border-color: black;
+						@include mega-toolbar-native-select;
 					}
 				}
 
-				.mega-ellipsis {
-					float: left;
-					height: 30px;
-					margin-left: 6px;
+				// Toggle Bar Designer: block-type picker (labeled `<select>` only — no card chrome or custom select styling).
+				form.theme_editor .mega-toggle-block-selector-field {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 4px;
+					margin: 0 0 20px;
+					max-width: 100%;
 
-					svg {
-						height: 30px;
-						border: 1px solid black;
-						border-radius: 3px;
-						box-sizing: border-box;
+					// Label uses `for=` — without this it stretches full width and every click in that row focuses the select.
+					.mega-short-desc {
+						@include mega-toolbar-field-label;
+						align-self: flex-start;
+						width: fit-content;
+						max-width: 100%;
 					}
 
-					.mega-export-theme .dashicons,
-					.mega-import-theme .dashicons {
+					select#toggle-block-selector {
+						max-width: 100%;
+					}
+				}
+
+				.mega-theme-editor-actions {
+					display: inline-flex;
+					align-items: center;
+					flex-wrap: wrap;
+					gap: 10px;
+					margin: 0;
+					overflow: visible;
+				}
+
+				// Theme toolbar icon buttons — `@include megamenu-admin-ghost-icon-button` (same as modal close / preview refresh).
+				.mega-theme-editor-actions button.mega-theme-editor-action.megamenu-preview-open {
+					font: inherit;
+					text-align: center;
+				}
+
+				.mega-theme-editor-action.is-busy {
+					pointer-events: none;
+					opacity: 0.65;
+				}
+
+				.mega-theme-editor-action {
+					position: relative;
+					overflow: visible;
+					text-decoration: none;
+					@include megamenu-admin-ghost-icon-button;
+					// Match `mega-toolbar-native-select` / theme editor fields.
+					border: 1px solid $megamenu-form-control-border;
+					background: $white;
+
+					&:focus {
+						border-color: $neutral;
+					}
+
+					&:hover {
+						border-color: var(--wp-admin-theme-color-darker-20);
+					}
+
+					&:focus-visible {
+						border-color: $wp-admin-theme-color;
+					}
+
+					&.mega-theme-editor-action--export .dashicons,
+					&.mega-theme-editor-action--import .dashicons {
 						transform: rotate(90deg);
 					}
 				}
-
-				td.mega-name {
-					font-size: 14px;
-				}
-
-				h5 {
-					clear: both;
-					font-size: 1.1em;
-					margin: 15px 0 0 0;
-					padding: 0;
-				}
-			}
-
-			&.menu_settings_tools {
-				label {
-					clear: both;
-					width: 100%;
-				}
-			}
-
-			&.menu_settings_menu_locations {
-
-				.mega-location-disabled-assign-menu .mega-accordion-content {
-					padding: 10px 20px;
-				}
-
-				.mega-enabled-locations {
-					float: left;
-					width: 100%;
-
-					&:empty {
-						display: none;
-					}
-				}
-				.mega-location {
-					font-size: 14px;
-					border: 0;
-					border: 1px solid $grey;
-					margin-bottom: 10px;
-					float: left;
-    				width: 100%;
-
-					.mega-accordion-title.mega-accordion-open,
-					.mega-accordion-title:hover {
-						background: $light_grey;
-					}
-
-					.mega-accordion-title {
-						padding: 8px;
-						font-size: 0.9em;
-
-						.dashicons-yes {
-							color: transparent;
-							display: none;
-						}
-					}
-
-					&.mega-location-enabled {
-						.mega-accordion-title .dashicons-yes {
-							color: $green;
-							margin-left: 4px;
-							display: inline-block;
-						}
-
-						&.mega-has-active-location {
-							.mega-accordion-title .dashicons-yes {
-								color: #F56E28;
-							}
-						}
-
-					}
-
-					.mega-accordion-content {
-						border-top: 1px solid $grey;
-
-						.megamenu-edit-theme {
-							opacity: 0.6;
-							line-height: 26px;
-							margin-left: 5px;
-							cursor: pointer;
-
-							&:hover {
-								opacity: 1;
-							}
-						}
-						.megamenu_submit {
-							background: $light_grey;
-							padding: 20px 10px;
-							margin-top: 20px;
-							box-sizing: border-box;
-						}
-
-						.mega-accordion-content-wrapper {
-							padding: 10px 15px;
-							float: left;
-							width: 100%;
-							box-sizing: border-box;
-						}
-
-						tr.mega-effect_mobile {
-							.mega-effect_mobile_direction {
-								display: none;
-							}
-							&.mega-is-offcanvas .mega-effect_mobile_direction {
-								display: block;
-							}
-						}
-
-					}
-				}
-
-				.warning {
-					margin: 10px;
-				}
-
-				.mega-tab-content {
-					.warning {
-					    margin: 20px 0 0 0;
-				    }
-				}
-				table .mega-value textarea {
-					height: 40px;
-					width: 500px;
-					padding: 10px;
-				}
-
-				> table td:first-child {
-					width: 25%;
-				}
-
-				h5 {
-					font-size: 12px;
-				}
-
-				.accordion-section-content {
-					width: 100%;
-					box-sizing: border-box;
-					padding: 0;
-
-					.accordion-wrapper {
-						padding: 10px 20px;
-					}
-
-					.megamenu_submit {
-						border-top: 1px solid #ddd;
-						box-sizing: border-box;
-						padding: 20px;
-						background: $light_grey;
-						margin-top: 20px;
-					}
-				}
-			}
-
-			table {
-				width: 100%;
-				border-collapse: collapse;
-
-				label {
-				    font-size: 0.9em;
-				    float: left;
-				    margin-right: 10px;
-				    margin-bottom: 10px;
-				}
-
-				.mega-radio-row {
-					margin-bottom: 3px;
-
-					label {
-						float: none;
-						top: -3px;
-	    				position: relative;
-	    				font-size: 1em;
-					}
-				}
-
-				textarea,
-				input[type=text],
-				input[type=number],
-				select {
-					font-size: 12px;
-					min-height: 28px;
-				}
-
-				select {
-					max-width: 200px;
-				}
-				
-				textarea {
-					width: 100%;
-					height: 150px;
-					font-family: monospace;
-					line-height: 1.5em;
-					margin-bottom: 10px;
-				}
-
-				input[type=number] {
-					height: auto;
-					line-height: 1.2em;
-				}
-
-				input[name=export] {
-					margin-top: 20px;
-				}
-
-				input[type=text] {
-					min-width: 70px;
-					field-sizing: content;
-				}
-
-				input[type=text].wide {
-					width: 300px;
-				}
-
-				input[type=submit] {
-					width: auto;
-				}
-
-				input[type=checkbox] {
-					width: 16px;
-					height: 16px;
-					vertical-align: middle;
-				}
-
-				.wide input[type=text] {
-					width: 300px;
-				}
-				
-				.CodeMirror {
-					height: auto;
-				    min-height: 150px;
-					border: 1px solid #aaa;
-				}
-
-				div.CodeMirror span.CodeMirror-matchingbracket {
-					color: green;
-				}
-
-				.CodeMirror-scroll {
-					min-height: 150px;
-				}
-
-				tr:first-child td {
-					border-top: 0;
-					padding-top: 20px;
-				}
-
-				th {
-					text-align: left;
-				}
-
-				td {
-					position: relative;
-					padding-bottom: 25px;
-					padding-top: 15px;
-
-					&.mega-name {
-						width: 33%;
-						line-height: 2em;
-						padding-right: 30px;
-						vertical-align: top;
-					}
-
-					&.mega-value {
-						padding-top: 10px;
-
-						.mega-description {
-							margin-top: 5px;
-						}
-
-						.mega-info {
-							clear: both;
-							margin-top: 15px;
-							display: block;
-							float: left;
-							font-size: 0.9em;
-							color: #777;
-							line-height: 20px;
-							width: 100%;
-
-							&:before {
-								font: 400 20px/1 dashicons;
-								content: "\f348";
-								speak: none;
-								padding: 0;
-								margin-right: 6px;
-								display: inline-block;
-								vertical-align: top;
-								-webkit-font-smoothing: antialiased;
-								-moz-osx-font-smoothing: grayscale;
-							}
-						}
-					}
-
-					&.mega-custom_css {
-						width: 100%;
-						margin-bottom: 0;
-					}
-
-				}	
-
-				td.mega-value.mega-instances {
-				    vertical-align: top;
-
-					table th,
-					table td {
-					    font-weight: normal;
-					    padding: 5px;
-					}
-
-					.mega-description {
-					    padding-left: 5px;
-					}
-
-				}
-
-				td.mega-name .mega-description,
-				td.mega-value .mega-description {
-					font-size: 13px;
-					color: #777;
-					line-height: 1.5em;
-					width: 80%;
-
-					p {
-						font-size: 12px;
-					}
-				}
-
-				ul.custom_styling_tips {
-					list-style-type: disc;
-					list-style-position: inside;
-
-					code {
-						margin: 10px 0 0 0;
-						font-size: 0.9em;
-					}
-				}
-
-				label.mega-error input {
-					border: 1px solid $red;
-					background: #FFDDDD;
-				}
-
-				label.mega-toggle_blocks {
-					width: 99%;
-					cursor: auto;
-
-					.mega-value {
-					    padding-bottom: 0;
-					}
-
-					.mega-description {
-					    float: left;
-					    width: 100%;
-					    margin-top: 20px;
-					}
-
-	 				.toggle-bar-designer {
-
-	 					.mega-blocks {
-	 						display: flex;
-	 						box-sizing: border-box;
-	 					}
-
-						.mega-blocks .mega-left,
-						.mega-blocks .mega-center,
-						.mega-blocks .mega-right {
-						    box-sizing: border-box;
-						    border: 1px solid #ccc;
-						    background: #f7f7f7;
-						    height: 60px;
-						    padding: 10px;
-						    margin-top: 15px;
-						    display: flex;
-						    flex-basis: 33.3333%;
-						}
-						.mega-blocks .mega-left {
-							border-right: 0px;
-							flex: 1;
-						}
-						.mega-blocks .mega-center {
-						    border-left: 1px dashed #ccc;
-						    border-right: 1px dashed #ccc;
-						    justify-content: center;
-						}
-						.mega-blocks .mega-right {
-						    border-left: 0px;
-						    flex: 1;
-						    justify-content: flex-end;
-						}
-						.mega-blocks .mega-right .block {
-						    float: right;
-						    margin: 0 0 0 5px;
-						}
-						.mega-blocks .block.mega-open .block-title {
-						    border-bottom: 1px solid white;
-						    border-radius: 3px 3px 0 0;
-						}
-						.mega-blocks .block .block-title {
-						    padding: 0 10px;
-						    display: inline-block;
-						    height: 35px;
-						    line-height: 35px;
-						    font-size: 0.9em;
-						    background: white;
-						    color: $text_grey;
-						    cursor: move;
-						    border: 1px solid #ccc;
-						    position: relative;
-						    z-index: 2;
-						    border-radius: 3px;
-						    text-align: left;
-						    box-sizing: border-box;
-						    white-space: nowrap;
-						}
-
-						.mega-blocks .block.ui-sortable-helper {
-						    width: auto !important;
-						}
-
-						.mega-blocks .block .block-title .dashicons {
-						    line-height: 35px;
-						    cursor: pointer;
-						    font-size: 20px;
-						}
-
-						.mega-blocks .block .block-settings {
-						    padding: 10px;
-						    display: none;
-						    width: 300px;
-						    vertical-align: top;
-						    background: white;
-						    text-align: left;
-						    color: #ccc;
-						    position: absolute;
-						    left: 0px;
-						    top: 34px;
-						    z-index: 1;
-						    border: 1px solid #ccc;
-
-						    .mega-custom-color-input-wrapper {
-						    	float: right;
-						    }
-						}
-
-						.mega-blocks .mega-right .block .block-settings {
-						    left: auto;
-						    right: 0;
-						}
-
-						.mega-blocks .block h3 {
-						    margin-top: 5px;
-						    border-bottom: 1px solid #ccc;
-						    padding-bottom: 10px;
-						}
-
-						.block-settings label {
-						    width: 100%;
-						    clear: both;
-						    color: $text_grey;
-						    font-size: 1em;
-						}
-
-						.block-settings label input,
-						.block-settings label select,
-						.block-settings label input[type=number],
-						.block-settings label .icon_dropdown {
-							float: right;
-							font-size: 0.9em;
-						}
-
-						.block-settings label input[type=number] {
-							height: 28px;
-							line-height: 28px;
-						}
-
-						.toggle-left {
-							border-right: 1px dashed #ccc;
-						}
-
-						.toggle-right {
-						    border-left: 0px solid #ccc;
-						    text-align: right;
-
-						}
-
-						.mega-blocks .block {
-						    position: relative;
-						    display: inline-block;
-						    vertical-align: top;
-						    margin: 0 5px 0 0;
-
-						    input[type=text] {
-							    width: 50%;
-							}
-						}
-	 				}
-				}
-
-
-				.mega-validation-message {
-				    display: none;
-				    clear: both;
-				    font-size: 0.8em;
-				    color: $red;
-				}
-
-				label span.mega-short-desc {
-					font-size: 10px;
-					text-transform: uppercase;
-					color: #777;
-					display: block;
-					margin: 0 0 2px 1px;
-				}
-
-				label.mega-copy_color {
-				    margin-right: 3px;
-
-				    span.mega-short-desc {
-					    visibility: hidden;
-					}
-
-					span.dashicons {
-					    opacity: 0.5;
-					    margin-top: 6px;
-					    font-size: 16px;
-					    cursor: pointer;
-					}
-				}
-			}
-			
-			.row h5 {
-				margin: 0;
-				font-weight: normal;
-				float: left;
-				width: 250px;
-				font-size: 1em;
-			}
-
-			.megamenu_submit {
-			    float: left;
-			    width: 100%;
 
 			}
 
 			div.mega-tab-content {
 			    position: relative;
-			    clear: both;
-			    float: left;
+			    display: block;
 			    width: 100%;
-			    padding: 0;
+			    padding: 10px 0 0;
 			    box-sizing: border-box;
 
 			    &.mega-toggle-disabled {
@@ -2718,16 +5038,7 @@ body.toplevel_page_maxmegamenu {
 			    	.mega-toggle_bar_height td:after,
 			    	.mega-mobile_menu_overlay td:after,
 			    	.mega-mobile_menu_force_width td:after {
-			    		background: $mid_grey;
-					    display: block;
-					    position: absolute;
-					    top: 0;
-					    left: 0;
-					    height: 100%;
-					    width: 100%;
-					    content: "";
-					    opacity: 0.5;
-					    z-index: 9;
+			    		@include disabled-row-overlay;
 			    	}
 
 				    .mega-mobile_toggle_disabled {
@@ -2737,16 +5048,7 @@ body.toplevel_page_maxmegamenu {
 
 			    &.mega-mobile-disabled {
 			    	tr:not(.mega-responsive_breakpoint):not(.mega-responsive_breakpoint_disabled) td:after {
-			    		background: $mid_grey;
-					    display: block;
-					    position: absolute;
-					    top: 0;
-					    left: 0;
-					    height: 100%;
-					    width: 100%;
-					    content: "";
-					    opacity: 0.5;
-					    z-index: 9;
+			    		@include disabled-row-overlay;
 			    	}
 
 				    .mega-responsive_breakpoint_disabled {
@@ -2758,208 +5060,54 @@ body.toplevel_page_maxmegamenu {
 				    }
 			    }
 
-
 			    .mega-responsive_breakpoint_disabled,
 			    .mega-mobile_toggle_disabled {
-			  		display: none;
+				    display: none;
 
-			    	td {
-			    		padding-top: 10px;
-			    		padding-bottom: 10px;
-			    		border-top: 0;
-			    	}
+				    td {
+					    padding-top: 10px;
+					    padding-bottom: 10px;
+					    border-top: 0;
+				    }
 
-			    	h5 {
-				    	border: 1px solid #ccc;
+				    h5 {
+					    border: 1px solid $line-ui;
 					    padding: 10px;
 					    box-sizing: border-box;
-					    border-left: 3px solid $green;
+					    border-left: 3px solid $success;
 					    font-size: 12px;
 					    font-weight: normal;
 					    margin: 0 10px;
-			    	}
-
+				    }
 			    }
 			}
 		}
 
-		.mega-description .fail {
-			margin: 20px 0 0 0;
-			color: $dark_grey;
-		}
-
-	}
-
-	.mega-delete {
-		margin-bottom: 15px;
-	    cursor: pointer;
 	}
 
 }
 
-
-.mega-accordion-title {
-	transition: all .1s ease-in;
-	margin: 0;
-	color: $text_grey;
-	cursor: pointer;
-	float: left;
-	width: 100%;
-	box-sizing: border-box;
-	line-height: 24px;
-
-	h4 {
-		display: inline;
+@keyframes mm-mega-widget-selector-pulse {
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 transparent;
 	}
-
-	.dashicons {
-		font-size: 18px;
-	    vertical-align: middle;
-	    margin-right: 6px;
-	    transition: none;
-	}
-
-	&.mega-accordion-open + .mega-accordion-content {
-		display: block;
+	50% {
+		box-shadow: 0 0 0 3px $focus-ring-blue-soft;
 	}
 }
 
-.mega-ellipsis {
-	float: right;
-	position: relative;
-	height: 24px;
-
-	svg {
-		cursor: pointer;
-		fill: black;
-		height: 24px;
-		width: 24px;
-	}
-
-	&.mega-ellipsis-horizontal svg {
-		transform: rotate(90deg);
-	}
-
-	&.mega-ellipsis-open {
-		ul.mega-ellipsis-content {
-			display: block;
-		}
-	}
-
-	&.mega-ellipsis-left {
-		ul.mega-ellipsis-content {
-			left: -177px;
-			top: -5px;
-
-		    &:after {
-			    top: 8px;
-			    right: -14px;
-			    transform: rotate(90deg);
-		    }
-
-		    &:before {
-				top: 7px;
-				right: -16px;
-			    transform: rotate(90deg);
-		    }
-
-			li {
-		    	a {
-		    		line-height: 30px;
-		    	}
-		    }
-		}
-	}
-
-	ul.mega-ellipsis-content {
-		display: none;
-		position: absolute;
-	    width: 170px;
-	    background: white;
-	    left: -141px;
-	    top: 33px;
-	    z-index: 9;
-	    border: 1px solid $dark_grey;
-	    margin: 0;
-	    box-shadow: 0 8px 24px rgba(149,157,165,.2);
-	    border-radius: 3px;
-
-	    &:after {
-		    top: -14px;
-		    right: 10px;
-		    left: auto;
-		    border: 7px solid transparent;
-		    border-bottom-color: #fff;
-		    position: absolute;
-		    display: inline-block;
-		    content: "";
-	    }
-
-	    &:before {
-		    top: -16px;
-		    right: 9px;
-		    left: auto;
-		    border: 8px solid transparent;
-		    border-bottom-color: $dark_grey;
-		    position: absolute;
-		    display: inline-block;
-		    content: "";
-	    }
-	    li {
-	    	font-size: 12px;
-	    	margin-bottom: 0;
-
-	    	a {
-	    		display: block;
-	    		text-decoration: none;
-	    		line-height: 40px;
-	    		padding-left: 10px;
-	    		color: $text_grey;
-	    		transition: all 0.2s;
-
-	    		&:hover {
-	    			background: $light_grey;
-	    			color: $light_blue;
-	    		}
-
-				.dashicons {
-				    font-size: 18px;
-				    vertical-align: middle;
-				    margin-right: 6px;
-				    transition: none;
-				}
-	    	}
-	    }
-	}
-}
-
-.mega-accordion-content {
-	display: none;
-	float: left;
-	width: 100%;
-	box-sizing: border-box;
-}
-
-.mega-warning {
-	padding: 10px 0;
-
-	.dashicons {
-		margin-right: 6px;
-	}
-}
-
-@keyframes "rotation" {
+@keyframes mm-rotation {
 	0% {
-		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 	100% {
-		-webkit-transform: rotate(359deg);
 		transform: rotate(359deg);
 	}
 }
+
 @keyframes busy-animation {
-    0% {
-        background-position: 200px 0;
-    }
+	0% {
+		background-position: 200px 0;
+	}
 }

@@ -201,6 +201,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <a href="#select_parent"><strong>Select Parent Popup Window</strong></a>
 </li>
 <li>
+<a href="#thumbnail_generation"><strong>Thumbnail Generation Support (Media/Assistant Bulk Action)</strong></a>
+</li>
+<li>
 <a href="#admin_columns"><strong>Support for the &#8220;Admin Columns&#8221; Plugin</strong></a>
 </li>
 <li>
@@ -530,7 +533,7 @@ You can assign a "Featured Image" to any Media Library item. Simply go to the Me
 </tr>
 </table>
 <p>
-WordPress 4.7 added thumbnail generation for PDF documents, and these "native thumbnail images" will automatically be used when available. You can also use MLA's thumbnail generation support (in the Media/Assistant Bulk Actions) to create native thumbnails for older documents.
+WordPress 4.7 added thumbnail generation for PDF documents, and these "native thumbnail images" will automatically be used when available. You can also use <a href="#thumbnail_generation">MLA's thumbnail generation support</a> (in the Media/Assistant Bulk Actions) to create native thumbnails for older documents or make changes to the thumbnails WordPress generates.
 </p>
 <p>
 The <code>mla_viewer</code> solution supports dynamic thumbnail image generation for PDF and Postscript documents on your site's server. The dynamic thumbnail image generation uses the PHP <code>Imagick</code> class, which <strong>requires ImageMagick and Ghostscript</strong> to be installed on your server.  If you need help installing them, look at this <a href="https://wordpress.org/support/topic/nothing-but-error-messages" title="Help with installation" target="_blank">PDF Thumbnails support topic</a>. If you don't have them on your server you can still use the Featured Image support to supply thumbnails for your non-image items.
@@ -8686,6 +8689,103 @@ Once you have chosen a new parent, click the "Update" button at the lower right 
 </p>
 <p>
 If you change your mind you can close the window without making a change by clicking the "X" in the upper-right corner of the window or the "Cancel" button in the lower-left corner of the window.
+<a name="thumbnail_generation"></a>&nbsp;
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Thumbnail Generation Support (Media/Assistant Bulk Action)</h3>
+<p>Media Library Assistant lets you assign a "Featured Image" to your Media Library items. For non-image items such as PDF documents this image can be used as the <code>mla_viewer</code> thumbnail image, avoiding the overhead of generating the image each time the gallery is composed. The "Thumbnail" Bulk Action makes it easy to generate thumbnails as Media Library items and assign them as Featured Images to their corresponding non-image Media Library items.</p>
+<p>WordPress 4.7 and later generate thumbnail images for PDF documents as they are uploaded to the Media Library. You can use MLA's "WP" thumbnail generation Type to create WordPress-style thumbnails for documents you added to the Media Library before updating to version 4.7. You can also use the "WP" Type to replace existing thumbnails by setting Existing Thumbnails to "Delete".
+</p>
+<p>
+Although WordPress performs thumbnail generation only for PDF documents, you can also generate WordPress-style, JPG and PNG thumbnails for other file types. MLA supports thumbnail generation for these file types:
+</p>
+<table>
+	<tr>
+		<td class="mla-doc-table-label">.pdf</td>
+		<td>Adobe Portable Document Format (PDF)</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">.ai</td>
+		<td>Adobe Illustrator (Postscript)</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">.eps, .ps</td>
+		<td>Adobe Postscript</td>
+	</tr>
+</table>
+<p>
+The PDF file type is active by default. To add the other file types to your Media Library you must activate them in the Settings/Media Library Assistant Uploads tab and check the "Always Use MLA MIME Type" option to bypass a WordPress security check.
+</p>
+<p>
+You can use the following fields to control the thumbnail generation parameters:
+</p>
+<table>
+	<tr>
+		<td class="mla-doc-table-label">Width</td>
+		<td>the maximum width in pixels (default "0" for WP 4.7+, "150" for earlier versions) of the thumbnail image. The height (unless also specified) will be adjusted to maintain the page proportions.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Height</td>
+		<td>the maximum height in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Best Fit</td>
+		<td>retain page proportions when both height and width are explicitly stated. If unchecked, the image will be stretched as required to exactly fit the height and width. If checked, the image will be reduced in size to fit within the bounds, but proportions will be preserved. For example, a typical page is 612 pixels wide and 792 pixels tall. If you set width and height to 300 and set best fit to true, the thumbnail will be reduced to 231 pixels wide by 300 pixels tall.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Page</td>
+		<td>the page number (default "1") to be used for the thumbnail image. If the page does not exist for a particular document the first page will be used instead.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Resolution</td>
+		<td>the pixels/inch resolution (default "128" for WP 4.7+, "72" for earlier versions) of the page before reduction. If you set this to a higher number, such as 300, you will improve thumbnail quality at the expense of additional processing time.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Quality</td>
+		<td>the compression quality (default 90) of the final page. You can set this to a value between 1 and 100 to get smaller files at the expense of image quality; 1 is smallest/worst and 100 is largest/best.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Suffix</td>
+		<td>the suffix added to the source item's Title to create the thumbnail's Title. Suffix is ignored when generating WordPress-style thumbnails (Type "WP").</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label"></td>
+		<td></td>
+	</tr>
+</table>
+<p>
+You can use the following fields to control the thumbnail type and handling of existing thumbnails:
+</p>
+<table>
+	<tr>
+		<td class="mla-doc-table-label">Type</td>
+		<td>the MIME type, "JPG" (image/jpeg, default) or "PNG" (image/png), of the final thumbnail. You can, for example, set this to "PNG" to retain a transparent background instead of the white jpeg background. For these types, a new image file is generated and added as a Media Library item.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+You can select "WP" to generate WordPress-style thumbnails (for PDF documents) like those for new uploads as of WP 4.7. These are part of the PDF item itself, not a separate item.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+You can select "None" to skip the generation of a new thumbnail. You can use this Type if you simply want to remove existing Featured Images and/or existing WordPress-style thumbnails.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Existing Features</td>
+		<td>the action to take if an item already has a Featured Image. Select "<strong>Keep</strong>" to retain the Featured Image and not generate anything. Select "<strong>Ignore</strong>" to leave the old Featured Image, if any, unchanged. Select "<strong>Remove</strong>" to remove the old Featured Image but leaving the old image in the Media Library. Select "<strong>Trash</strong>" (if available) to remove the old Featured Image and move the old image item to the Media Trash. Select "<strong>Delete</strong>" to remove the old Featured Image and permanently delete the old image item.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">Existing Thumbnails</td>
+		<td>the action to take if an item already has a native WordPress-style thumbnail (Type "WP"). Select "<strong>Keep</strong>" to retain the thumbnail and not generate anything. Select "<strong>Ignore</strong>" to leave the old thumbnail, if any, unchanged. Select <strong>"Delete"</strong> to delete the old thumbnail.</td>
+	</tr>
+</table>
+<p>
+You can use the Type and Existing... controls to perform a variety of thumbnail management tasks. For example:
+</p>
+<ul class="mla_settings">
+<li>To generate JPG or PNG images without disturbing existing thumbnails, set the Type to "JPG" or "PNG" and set both of the Existing... controls to "Ignore".</li>
+<li>To remove existing Featured Images, set the Type to "None" and Existing Thumbnails to "Ignore". You can remove the Featured Image setting but leave the image files intact by setting Existing Features to "Remove", or you can also delete the image files by setting Existing Features to "Trash" or "Delete".</li>
+<li>To remove existing WordPress-style thumbnails, set the Type to "None", Existing Features to "Ignore" and Existing Thumbnails to "Delete".</li>
+<li>To generate new or modify existing WordPress-style thumbnails, set the Type to "WP", Existing Features to "Ignore" and Existing Thumbnails to "Delete". For example, you can change the maximum size, resolution or quality parameters. Reducing the maxinum size can eliminate some of the larger thumbnail files generated by the WordPress default processing.</li>
+</ul>
+<p>
 <a name="admin_columns"></a>&nbsp;
 </p>
 <p>

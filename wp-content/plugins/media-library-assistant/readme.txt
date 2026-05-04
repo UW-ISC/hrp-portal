@@ -2,8 +2,8 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Tested up to: 6.9.1
-Stable tag: 3.33
+Tested up to: 7.0
+Stable tag: 3.35
 Requires at least: 4.7
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -197,6 +197,15 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Changelog ==
 
+= 3.35 =
+* New: Several enhancements to the Media/Assistant "Thumbnail" (generation) Bulk action. More information in the "Thumbnail Generation" tab of the pulldown Help menu and the new Settings/Media Library Assistant "Thumbnail Generation Support" Documentation section.
+* Fix: IMPORTANT: For all five MLA shortcodes, a Stored Cross-Site Scripting (XSS) security risk has been mitigated.
+* Fix: IMPORTANT: For the `[mla_custom_list]` shortcode, an SQL Injection security risk has been mitigated.
+* Fix: IMPORTANT: For WP 7.0, several updates to the MLA enhancements for the Media Manager Modal (popup) Window and Media/Library Grid view have been made.
+* Fix: A defect handling REGEX named subpatterns in mapping rule templates has been corrected.
+* Fix: For MP3 files, XMP metadata is now extracted from XML and PRIV frames, bypassing embedded image files.
+* Fix: For shortcodes that generate pagination links, a defect in handling URL fragments has been corrected.
+
 = 3.34 =
 * New: For the Media/Assistant submenu page, **custom table views** can be composed with all of the data selection parameters of the `[mla_gallery]` shortcode. More information in the "Library Views/Post MIME Type Processing" section of the Settings/Media Library Assistant Documentation tab.
 * Fix: IMPORTANT: For the Media Manager Modal (popup) Window, a Missing Authorization security risk has been mitigated.
@@ -385,8 +394,8 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Upgrade Notice ==
 
-= 3.34 =
-IMPORTANT:  Security fix for the Media Manager Modal (popup) Window. New custom table views for the Media/Assistant admin page. Metadata parsing fixes. One enhancement and four fixes in all.
+= 3.35 =
+IMPORTANT: Two security fixes and WP 7.0 updates. Media/Assistant "Thumbnail" (generation) Bulk action enhancements. MP3 metadata extraction fixes. One enhancement and six fixes in all.
 
 == Acknowledgements ==
 

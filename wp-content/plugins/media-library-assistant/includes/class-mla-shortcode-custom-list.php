@@ -329,7 +329,7 @@ class MLACustomList {
 
 		if ( $item_values['captiontag'] ) {
 			if ( ! empty( $arguments['mla_caption'] ) ) {
-				$item_values['caption'] = wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) );
+				$item_values['caption'] = wp_kses( wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) ), 'post' );
 			}
 		}
 
@@ -420,7 +420,7 @@ class MLACustomList {
 			if ( empty( $arguments['mla_option_text'] ) ) {
 				$item_values['thelabel'] = $item_values['link_text'];
 			} else {
-				$item_values['thelabel'] = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values );
+				$item_values['thelabel'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values ), 'post' );
 			}
 
 			if ( empty( $arguments['mla_option_value'] ) ) {
@@ -1292,7 +1292,7 @@ class MLACustomList {
 		if ( 0 === $found_rows ) {
 			if ( ! empty( $arguments['mla_control_name'] ) ) {
 				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
-				$mla_control_name = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
+				$mla_control_name = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values ) );
 	
 				// Does not handle default 'tax_input[[+taxonomy+]][]' values
 				unset( $_REQUEST[ $mla_item_parameter ] );
@@ -1409,9 +1409,9 @@ class MLACustomList {
 		$option_all_text = 'ignore.values.assigned';
 		if ( $add_all_option ) {
 			$found_rows += 1;
-			$option_all_text = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_text'], $page_values );
+			$option_all_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_text'], $page_values ), 'post' );
 			if ( ! empty( $arguments['option_all_value'] ) ) {
-				$option_all_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_value'], $page_values );
+				$option_all_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_value'], $page_values ) );
 			}
 		}
 
@@ -1419,9 +1419,9 @@ class MLACustomList {
 		$option_any_values_text = 'any.values.assigned';
 		if ( $add_any_values_option ) {
 			$found_rows += 1;
-			$option_any_values_text = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_text'], $page_values );
+			$option_any_values_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_text'], $page_values ), 'post' );
 			if ( ! empty( $arguments['option_any_values_value'] ) ) {
-				$option_any_values_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_value'], $page_values );
+				$option_any_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_value'], $page_values ) );
 			}
 		}
 
@@ -1429,9 +1429,9 @@ class MLACustomList {
 		$option_no_values_text = 'no.values.assigned';
 		if ( $add_no_values_option ) {
 			$found_rows += 1;
-			$option_no_values_text = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_text'], $page_values );
+			$option_no_values_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_text'], $page_values ), 'post' );
 			if ( ! empty( $arguments['option_no_values_value'] ) ) {
-				$option_no_values_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_value'], $page_values );
+				$option_no_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_value'], $page_values ) );
 			}
 		}
 
@@ -1671,6 +1671,69 @@ class MLACustomList {
 	}
 
 	/**
+	 * Valid database fields for function mla_get_terms()
+	 *
+	 * @since 3.33
+	 *
+	 * @var	array
+	 */
+	private static $mla_get_custom_values_fields = array(
+		'm.meta_id',
+		'm.post_id',
+		'm.meta_key',
+		'm.meta_value',
+		'p.ID',
+		'p.post_author',
+		'p.post_date',
+		'p.post_date_gmt',
+		'p.post_content',
+		'p.post_title',
+		'p.post_excerpt',
+		'p.post_status',
+		'p.comment_status',
+		'p.ping_status',
+		'p.post_name',
+		'p.to_ping',
+		'p.pinged',
+		'p.post_modified',
+		'p.post_modified_gmt',
+		'p.post_content_filtered',
+		'p.post_parent',
+		'p.guid',
+		'p.menu_order',
+		'p.post_type',
+		'p.post_mime_type',
+		'p.comment_count',
+	);
+
+	/**
+	 * Validate database fields in SELECT clause to prevent SQL injection attacks
+	 * 
+	 * @since 3.33
+	 *
+	 * @param	string	comma-separated string of qualified field names, e.g., tt.taxonomy
+	 *
+	 * @return	array	exploded array of validated field names, or false if validation fails
+	 */
+	private static function mla_validate_get_custom_values_fields( $fields, $no_count = false) {
+		$fields =  array_map( 'trim', explode( ',', $fields ) );
+
+		foreach ( $fields as $index => $field ) {
+			if ( ! in_array( $field, self::$mla_get_custom_values_fields ) ) {
+				unset( $fields[ $index ] );
+			} elseif ( $no_count && false !== strpos( $field, 'p.' ) ) {
+				unset( $fields[ $index ] );
+			}
+		}
+
+		if ( empty( $fields ) ) {
+			$fields = array( 'm.meta_value' );
+		}
+
+		return implode( ',', $fields );
+	}
+
+	/**
 	 * Retrieve the values  for one or more custom fields
 	 *
 	 * Alternative to WordPress meta query that provides
@@ -1706,27 +1769,18 @@ class MLACustomList {
 		 * If we're not counting attachments per term, strip
 		 * post fields out of list and adjust the orderby value
 		 */
-		$no_count = false;
-		$field_array = explode( ',', $arguments['fields'] );
+		$no_count = 'true' === trim( strtolower( (string) $arguments['no_count'] ) );
+		$clauses['fields'] = self::mla_validate_get_custom_values_fields( $arguments['fields'], $no_count );
 
-		if ( 'true' === trim( strtolower( (string) $arguments['no_count'] ) ) ) {
-			foreach ( $field_array as $index => $field ) {
-				if ( false !== strpos( $field, 'p.' ) ) {
-					unset( $field_array[ $index ] );
-				}
-			}
-
+		if ( $no_count)	{			
 			$arguments['minimum'] = 0;
 			$arguments['post_mime_type'] = 'all';
 
 			if ( 'count' === strtolower( $arguments['orderby'] ) ) {
 				$arguments['orderby'] = 'none';
 			}
-
-			$no_count = true;
 		}
 
-		$clauses['fields'] = implode( ',', $field_array );
 		$clause = array ();
 		$clause_parameters = array();
 

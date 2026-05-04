@@ -3,8 +3,8 @@ Contributors: edo888
 Author: Translate AI Multilingual Solutions
 Tags: translate, translator, multilingual, translation, language
 Requires at least: 2.8.1
-Tested up to: 6.8
-Stable tag: 3.0.9
+Tested up to: 6.9
+Stable tag: 3.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -258,6 +258,9 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard (paid)
 
 == Changelog ==
+= 3.0.10 =
+* New widget look: Popup with search
+
 = 3.0.9 =
 * Updated localization strings on the GTranslate plugin settings page.
 * Added information about TranslateX - unlimited automatic translation API, and integration plugins for Loco Translate and TranslatePress.

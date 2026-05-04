@@ -613,7 +613,9 @@
                             e.preventDefault(); 
                             e.stopPropagation(); 
                             _showPicker(); 
-                            if ($textDisplayInput) { $textDisplayInput.focus(); } 
+                            if ($textDisplayInput && $textDisplayInput.length) {
+                                $textDisplayInput.trigger('focus');
+                            }
                         });
                         
                         if ($textDisplayInput) {
@@ -632,6 +634,18 @@
                                     _hidePicker();
                                 }
                             }
+                        });
+
+                        $(document).on(`keydown.${pickerInstanceId}`, function (e) {
+                            if (!$pickerContainer || !$pickerContainer.is(':visible')) {
+                                return;
+                            }
+                            if (e.key !== 'Escape' && e.keyCode !== 27) {
+                                return;
+                            }
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                            _hidePicker();
                         });
                     });
                 }
