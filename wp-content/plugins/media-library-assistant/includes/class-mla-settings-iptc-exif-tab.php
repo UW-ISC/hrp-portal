@@ -297,7 +297,17 @@ class MLASettings_IPTCEXIF {
 		$new_rule['name'] = $new_name;
 		$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['description'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['description'] ) : '' );
 		$new_rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) : 'none' );
-		$new_rule['exif_value'] = wp_kses( isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : '', 'post' );
+
+		// Preserve named subpatterns in regular expressions
+		$exif_value = isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : ''; // phpcs:ignore
+		if ( ! empty( $exif_value ) ) {
+			$exif_value = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $exif_value );
+			$exif_value = wp_kses( $exif_value, 'post' );
+			$new_rule['exif_value'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $exif_value );
+		} else {
+			$new_rule['exif_value'] = '';
+		}
+
 		$new_rule['iptc_first'] = isset( $_REQUEST['mla_iptc_exif_rule']['iptc_first'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['iptc_first'];
 
 		if ( isset( $_REQUEST['mla_iptc_exif_rule']['keep_existing'] ) ) {
@@ -383,7 +393,17 @@ class MLASettings_IPTCEXIF {
 			$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['description'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['description'] ) : '' );
 			$new_rule['hierarchical'] = isset( $_REQUEST['mla_iptc_exif_rule']['hierarchical'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['hierarchical'];
 			$new_rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) : 'none' );
-			$new_rule['exif_value'] = wp_kses( isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : '', 'post' );
+
+			// Preserve named subpatterns in regular expressions
+			$exif_value = isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : ''; // phpcs:ignore
+			if ( ! empty( $exif_value ) ) {
+				$exif_value = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $exif_value );
+				$exif_value = wp_kses( $exif_value, 'post' );
+				$new_rule['exif_value'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $exif_value );
+			} else {
+				$new_rule['exif_value'] = '';
+			}
+
 			$new_rule['iptc_first'] = isset( $_REQUEST['mla_iptc_exif_rule']['iptc_first'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['iptc_first'];
 
 			if ( isset( $_REQUEST['mla_iptc_exif_rule']['keep_existing'] ) ) {
@@ -1149,7 +1169,17 @@ class MLASettings_IPTCEXIF {
 		}
 
 		$rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['iptc_value'] ) ? wp_unslash( $_REQUEST['iptc_value'] ) : 'none' );
-		$rule['exif_value'] = wp_kses( isset( $_REQUEST['exif_value'] ) ? wp_unslash( $_REQUEST['exif_value'] ) : '', 'post' );
+
+		// Preserve named subpatterns in regular expressions
+		$exif_value = isset( $_REQUEST['exif_value'] ) ? wp_unslash( $_REQUEST['exif_value'] ) : ''; // phpcs:ignore
+		if ( ! empty( $exif_value ) ) {
+			$exif_value = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $exif_value );
+			$exif_value = wp_kses( $exif_value, 'post' );
+			$rule['exif_value'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $exif_value );
+		} else {
+			$rule['exif_value'] = '';
+		}
+
 		$rule['iptc_first'] = isset( $_REQUEST['iptc_first'] ) && '1' === $_REQUEST['iptc_first'];
 
 		if ( isset( $_REQUEST['keep_existing'] ) ) {

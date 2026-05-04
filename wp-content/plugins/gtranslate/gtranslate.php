@@ -3,14 +3,14 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 3.0.9
+Version: 3.0.10
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 Text Domain: gtranslate
 
 */
 
-/*  Copyright 2010 - 2022 GTranslate Inc. ( website: https://gtranslate.com )
+/*  Copyright 2010 - 2026 GTranslate Inc. ( website: https://gtranslate.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -266,7 +266,7 @@ class GTranslate extends WP_Widget {
         $data = get_option('GTranslate');
         self::load_defaults($data);
 
-        if(isset($atts['widget_look']) and in_array($atts['widget_look'], array('float', 'dropdown_with_flags', 'dropdown', 'flags_dropdown', 'popup', 'flags', 'globe', 'flags_code', 'flags_name', 'lang_names', 'lang_codes'))) {
+        if(isset($atts['widget_look']) and in_array($atts['widget_look'], array('float', 'dropdown_with_flags', 'dropdown', 'flags_dropdown', 'popup', 'popup_search', 'flags', 'globe', 'flags_code', 'flags_name', 'lang_names', 'lang_codes'))) {
             $data['widget_look'] = $atts['widget_look'];
         }
 
@@ -325,6 +325,7 @@ class GTranslate extends WP_Widget {
             case 'dropdown': $keep_keys = array('default_language', 'languages', 'url_structure', 'native_language_names', 'detect_browser_language', 'wrapper_selector', 'custom_domains', 'select_language_label', 'custom_css', 'horizontal_position', 'vertical_position'); break;
             case 'flags_dropdown': $keep_keys = array('default_language', 'languages', 'dropdown_languages', 'url_structure', 'native_language_names', 'detect_browser_language', 'add_new_line', 'flag_style', 'flag_size', 'wrapper_selector', 'alt_flags', 'custom_domains', 'custom_css', 'horizontal_position', 'vertical_position'); break;
             case 'popup':
+            case 'popup_search':
             case 'flags':
             case 'flags_name':
             case 'flags_code': $keep_keys = array('default_language', 'languages', 'url_structure', 'native_language_names', 'detect_browser_language', 'flag_style', 'flag_size', 'wrapper_selector', 'alt_flags', 'custom_domains', 'custom_css', 'horizontal_position', 'vertical_position'); break;
@@ -601,7 +602,7 @@ function RefreshDoWidgetCode() {
     window.gt_translate_script = true;
 
     // make sure default language is on
-    if(widget_look == 'flags_dropdown' || widget_look == 'float' || widget_look == 'dropdown_with_flags' || widget_look == 'flags' || widget_look == 'flags_name' || widget_look == 'flags_code' || widget_look == 'popup')
+    if(widget_look == 'flags_dropdown' || widget_look == 'float' || widget_look == 'dropdown_with_flags' || widget_look == 'flags' || widget_look == 'flags_name' || widget_look == 'flags_code' || widget_look == 'popup' || widget_look == 'popup_search')
         jQuery('#fincl_langs'+default_language).prop('checked', true);
     if(widget_look == 'dropdown' || widget_look == 'globe' || widget_look == 'lang_names' || widget_look == 'lang_codes')
         jQuery('#incl_langs'+default_language).prop('checked', true);
@@ -645,7 +646,7 @@ function RefreshDoWidgetCode() {
         jQuery('#alternative_flags_option').hide();
     }
 
-    if(widget_look == 'flags' || widget_look == 'flags_dropdown' || widget_look == 'float' || widget_look == 'dropdown_with_flags' || widget_look == 'flags_name' || widget_look == 'flags_code' || widget_look == 'popup') {
+    if(widget_look == 'flags' || widget_look == 'flags_dropdown' || widget_look == 'float' || widget_look == 'dropdown_with_flags' || widget_look == 'flags_name' || widget_look == 'flags_code' || widget_look == 'popup' || widget_look == 'popup_search') {
         jQuery('#flag_languages_option').show();
         jQuery('#alternative_flags_option').show();
     } else {
@@ -812,7 +813,7 @@ if('$widget_look' == 'globe') {
     jQuery('.globe_color_options').hide();
 }
 
-if('$widget_look' == 'flags' || '$widget_look' == 'flags_dropdown' || '$widget_look' == 'float' || '$widget_look' == 'dropdown_with_flags' || '$widget_look' == 'flags_name' || '$widget_look' == 'flags_code' || '$widget_look' == 'popup') {
+if('$widget_look' == 'flags' || '$widget_look' == 'flags_dropdown' || '$widget_look' == 'float' || '$widget_look' == 'dropdown_with_flags' || '$widget_look' == 'flags_name' || '$widget_look' == 'flags_code' || '$widget_look' == 'popup' || '$widget_look' == 'popup_search') {
     jQuery('#flag_languages_option').show();
     jQuery('#alternative_flags_option').show();
 } else {
@@ -926,6 +927,7 @@ EOT;
                                 <option value="float"><?php esc_html_e('Float', 'gtranslate'); ?></option>
                                 <option value="dropdown_with_flags"><?php esc_html_e('Nice dropdown with flags', 'gtranslate'); ?></option>
                                 <option value="popup"><?php esc_html_e('Popup', 'gtranslate'); ?></option>
+                                <option value="popup_search"><?php esc_html_e('Popup with search', 'gtranslate'); ?></option>
                                 <option value="dropdown"><?php esc_html_e('Dropdown', 'gtranslate'); ?></option>
                                 <option value="flags"><?php esc_html_e('Flags', 'gtranslate'); ?></option>
                                 <option value="flags_dropdown"><?php esc_html_e('Flags and dropdown', 'gtranslate'); ?></option>
@@ -1507,32 +1509,19 @@ EOT;
 
         $data['pro_version'] = isset($_POST['pro_version']) ? intval($_POST['pro_version']) : '';
         $data['enterprise_version'] = isset($_POST['enterprise_version']) ? intval($_POST['enterprise_version']) : '';
-        $data['wrapper_selector'] = isset($_POST['wrapper_selector']) ? sanitize_text_field($_POST['wrapper_selector']) : '.gtranslate_wrapper';
         $data['custom_domains'] = isset($_POST['custom_domains']) ? intval($_POST['custom_domains']) : '';
-        $data['custom_domains_data'] = isset($_POST['custom_domains_data']) ? sanitize_text_field($_POST['custom_domains_data']) : '';
         $data['url_translation'] = isset($_POST['url_translation']) ? intval($_POST['url_translation']) : '';
         $data['add_hreflang_tags'] = isset($_POST['add_hreflang_tags']) ? intval($_POST['add_hreflang_tags']) : '';
         $data['email_translation'] = isset($_POST['email_translation']) ? intval($_POST['email_translation']) : '';
         $data['email_translation_debug'] = isset($_POST['email_translation_debug']) ? intval($_POST['email_translation_debug']) : '';
         $data['enable_cdn'] = isset($_POST['enable_cdn']) ? intval($_POST['enable_cdn']) : '';
-        $data['show_in_menu'] = isset($_POST['show_in_menu']) ? sanitize_text_field($_POST['show_in_menu']) : '';
-        $data['floating_language_selector'] = isset($_POST['floating_language_selector']) ? sanitize_text_field($_POST['floating_language_selector']) : 'no';
         $data['native_language_names'] = isset($_POST['native_language_names']) ? intval($_POST['native_language_names']) : '';
         $data['detect_browser_language'] = isset($_POST['detect_browser_language']) ? intval($_POST['detect_browser_language']) : '';
         $data['add_new_line'] = isset($_POST['add_new_line']) ? intval($_POST['add_new_line']) : '';
-        $data['default_language'] = isset($_POST['default_language']) ? sanitize_text_field($_POST['default_language']) : 'en';
-        $data['widget_look'] = isset($_POST['widget_look']) ? sanitize_text_field($_POST['widget_look']) : 'float';
         $data['flag_size'] = isset($_POST['flag_size']) ? intval($_POST['flag_size']) : 24;
-        $data['flag_style'] = isset($_POST['flag_style']) ? sanitize_text_field($_POST['flag_style']) : '2d';
         $data['globe_size'] = isset($_POST['globe_size']) ? intval($_POST['globe_size']) : 60;
+
         $data['globe_color'] = isset($_POST['globe_color']) ? sanitize_hex_color($_POST['globe_color']) : '#66aaff';
-        $data['incl_langs'] = (isset($_POST['incl_langs']) and is_array($_POST['incl_langs'])) ? array_map('sanitize_text_field', $_POST['incl_langs']) : array($data['default_language']);
-        $data['fincl_langs'] = (isset($_POST['fincl_langs']) and is_array($_POST['fincl_langs'])) ? array_map('sanitize_text_field', $_POST['fincl_langs']) : array($data['default_language']);
-        $data['alt_flags'] = (isset($_POST['alt_flags']) and is_array($_POST['alt_flags'])) ? array_map('sanitize_text_field', $_POST['alt_flags']) : array();
-        $data['select_language_label'] = isset($_POST['select_language_label']) ? sanitize_text_field($_POST['select_language_label']) : 'Select Language';
-
-        $data['custom_css'] = isset($_POST['custom_css']) ? wp_kses_post($_POST['custom_css']) : '';
-
         $data['switcher_text_color'] = isset($_POST['switcher_text_color']) ? sanitize_hex_color($_POST['switcher_text_color']) : '#666';
         $data['switcher_arrow_color'] = isset($_POST['switcher_arrow_color']) ? sanitize_hex_color($_POST['switcher_arrow_color']) : '#666';
         $data['switcher_border_color'] = isset($_POST['switcher_border_color']) ? sanitize_hex_color($_POST['switcher_border_color']) : '#ccc';
@@ -1543,11 +1532,59 @@ EOT;
         $data['dropdown_hover_color'] = isset($_POST['dropdown_hover_color']) ? sanitize_hex_color($_POST['dropdown_hover_color']) : '#fff';
         $data['dropdown_background_color'] = isset($_POST['dropdown_background_color']) ? sanitize_hex_color($_POST['dropdown_background_color']) : '#eee';
 
+        $data['custom_css'] = isset($_POST['custom_css']) ? wp_kses_post($_POST['custom_css']) : '';
+
+        $data['wrapper_selector'] = isset($_POST['wrapper_selector']) ? sanitize_text_field($_POST['wrapper_selector']) : '.gtranslate_wrapper';
+        $data['custom_domains_data'] = isset($_POST['custom_domains_data']) ? sanitize_text_field($_POST['custom_domains_data']) : '';
+        $data['select_language_label'] = isset($_POST['select_language_label']) ? sanitize_text_field($_POST['select_language_label']) : 'Select Language';
+
+        $data['show_in_menu'] = isset($_POST['show_in_menu']) ? sanitize_text_field($_POST['show_in_menu']) : '';
+        if(!in_array($data['show_in_menu'], array_keys(get_registered_nav_menus())))
+            $data['show_in_menu'] = '';
+
+        $data['floating_language_selector'] = isset($_POST['floating_language_selector']) ? sanitize_text_field($_POST['floating_language_selector']) : 'no';
+        if(!in_array($data['floating_language_selector'], array('no', 'bottom_left', 'bottom_right', 'top_left', 'top_right')))
+            $data['floating_language_selector'] = 'no';
+
+        $data['default_language'] = isset($_POST['default_language']) ? sanitize_text_field($_POST['default_language']) : 'en';
+        if(!in_array($data['default_language'], array_keys(GTranslate::$lang_array)))
+            $data['default_language'] = 'en';
+
+        $data['widget_look'] = isset($_POST['widget_look']) ? sanitize_text_field($_POST['widget_look']) : 'float';
+        if(!in_array($data['widget_look'], array('float', 'dropdown_with_flags', 'popup', 'popup_search', 'dropdown', 'flags', 'flags_dropdown', 'flags_name', 'flags_code', 'lang_names', 'lang_codes', 'globe')))
+            $data['widget_look'] = 'float';
+
+        $data['flag_style'] = isset($_POST['flag_style']) ? sanitize_text_field($_POST['flag_style']) : '2d';
+        if(!in_array($data['flag_style'], array('2d', '3d')))
+            $data['flag_style'] = '2d';
+
         $data['float_switcher_open_direction'] = isset($_POST['float_switcher_open_direction']) ? sanitize_text_field($_POST['float_switcher_open_direction']) : 'top';
+        if(!in_array($data['float_switcher_open_direction'], array('left', 'right', 'top', 'bottom')))
+            $data['float_switcher_open_direction'] = 'top';
+
         $data['switcher_open_direction'] = isset($_POST['switcher_open_direction']) ? sanitize_text_field($_POST['switcher_open_direction']) : 'top';
+        if(!in_array($data['switcher_open_direction'], array('top', 'bottom')))
+            $data['switcher_open_direction'] = 'top';
 
         $data['language_codes'] = (isset($_POST['language_codes']) and !empty($_POST['language_codes'])) ? sanitize_text_field($_POST['language_codes']) : 'af,sq,ar,hy,az,eu,be,bg,ca,zh-CN,zh-TW,hr,cs,da,nl,en,et,tl,fi,fr,gl,ka,de,el,ht,iw,hi,hu,is,id,ga,it,ja,ko,lv,lt,mk,ms,mt,no,fa,pl,pt,ro,ru,sr,sk,sl,es,sw,sv,th,tr,uk,ur,vi,cy,yi';
+        if(!empty(array_diff(explode(',', $data['language_codes']), array_keys(GTranslate::$lang_array))))
+             $data['language_codes'] = 'af,sq,ar,hy,az,eu,be,bg,ca,zh-CN,zh-TW,hr,cs,da,nl,en,et,tl,fi,fr,gl,ka,de,el,ht,iw,hi,hu,is,id,ga,it,ja,ko,lv,lt,mk,ms,mt,no,fa,pl,pt,ro,ru,sr,sk,sl,es,sw,sv,th,tr,uk,ur,vi,cy,yi';
+
         $data['language_codes2'] = (isset($_POST['language_codes2']) and !empty($_POST['language_codes2'])) ? sanitize_text_field($_POST['language_codes2']) : 'af,sq,am,ar,hy,az,eu,be,bn,bs,bg,ca,ceb,ny,zh-CN,zh-TW,co,hr,cs,da,nl,en,eo,et,tl,fi,fr,fy,gl,ka,de,el,gu,ht,ha,haw,iw,hi,hmn,hu,is,ig,id,ga,it,ja,jw,kn,kk,km,ko,ku,ky,lo,la,lv,lt,lb,mk,mg,ms,ml,mt,mi,mr,mn,my,ne,no,ps,fa,pl,pt,pa,ro,ru,sm,gd,sr,st,sn,sd,si,sk,sl,so,es,su,sw,sv,tg,ta,te,th,tr,uk,ur,uz,vi,cy,xh,yi,yo,zu';
+        if(!empty(array_diff(explode(',', $data['language_codes2']), array_keys(GTranslate::$lang_array))))
+            $data['language_codes2'] = 'af,sq,am,ar,hy,az,eu,be,bn,bs,bg,ca,ceb,ny,zh-CN,zh-TW,co,hr,cs,da,nl,en,eo,et,tl,fi,fr,fy,gl,ka,de,el,gu,ht,ha,haw,iw,hi,hmn,hu,is,ig,id,ga,it,ja,jw,kn,kk,km,ko,ku,ky,lo,la,lv,lt,lb,mk,mg,ms,ml,mt,mi,mr,mn,my,ne,no,ps,fa,pl,pt,pa,ro,ru,sm,gd,sr,st,sn,sd,si,sk,sl,so,es,su,sw,sv,tg,ta,te,th,tr,uk,ur,uz,vi,cy,xh,yi,yo,zu';
+
+        $data['incl_langs'] = (isset($_POST['incl_langs']) and is_array($_POST['incl_langs'])) ? array_map('sanitize_text_field', $_POST['incl_langs']) : array($data['default_language']);
+        if(!empty(array_diff($data['incl_langs'], array_keys(GTranslate::$lang_array))))
+            $data['incl_langs'] = array($data['default_language']);
+
+        $data['fincl_langs'] = (isset($_POST['fincl_langs']) and is_array($_POST['fincl_langs'])) ? array_map('sanitize_text_field', $_POST['fincl_langs']) : array($data['default_language']);
+        if(!empty(array_diff($data['fincl_langs'], array_keys(GTranslate::$lang_array))))
+            $data['fincl_langs'] = array($data['default_language']);
+
+        $data['alt_flags'] = (isset($_POST['alt_flags']) and is_array($_POST['alt_flags'])) ? array_map('sanitize_text_field', $_POST['alt_flags']) : array();
+        if(!empty(array_diff($data['alt_flags'], array('us', 'ca', 'br', 'mx', 'ar', 'co', 'qc'))))
+            $data['alt_flags'] = array();
 
         echo '<p style="color:red;">' . __('Changes Saved', 'gtranslate') . '</p>';
         update_option('GTranslate', $data);
@@ -1976,19 +2013,6 @@ class GTranslate_Notices {
             }
         }
 
-        /*
-        $one_week_support = esc_url(add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'one_week_support')));
-
-        $notices['one_week_support'] = array(
-          'title' => esc_html__('Hey! How is it going?', 'gtranslate'),
-          'msg' => esc_html__('Thank you for using GTranslate! We hope that you have found everything you need, but if you have any questions you can use our Live Chat or Forum:', 'gtranslate'),
-          'link' => '<li><span class="dashicons dashicons-admin-comments"></span><a target="_blank" href="https://gtranslate.io/#contact" rel="noreferrer">' . esc_html__('Get help', 'gtranslate') . '</a></li>' .
-                    '<li><span class="dashicons dashicons-format-video"></span><a target="_blank" href="https://gtranslate.io/videos" rel="noreferrer">'.esc_html__('Check videos', 'gtranslate') . '</a></li>' .
-                    '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $one_week_support . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
-          'int' => 1
-        );
-        */
-
         $two_week_review_ignore = esc_url(add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'two_week_review')));
         $two_week_review_temp = esc_url(add_query_arg(array($this->prefix . '_admin_notice_temp_ignore' => 'two_week_review', 'gt_int' => 6)));
 
@@ -2042,7 +2066,7 @@ class GTranslate_Notices {
             $notices['upgrade_tips'][] = array(
                 'title' => esc_html__('Did you know?', 'gtranslate'),
                 'msg' => sprintf(esc_html__('You can have %1$sneural machine translations%2$s which are human level by upgrading your GTranslate.', 'gtranslate'), '<b>', '</b>'),
-                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Learn more', 'gtranslate') . '</a></li>' .
+                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Compare plans', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-calendar-alt"></span><a href="' . $upgrade_tips_temp . '">' . esc_html__('Maybe later', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $upgrade_tips_ignore . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
                 'later_link' => $upgrade_tips_temp,
@@ -2052,7 +2076,7 @@ class GTranslate_Notices {
             $notices['upgrade_tips'][] = array(
                 'title' => esc_html__('Did you know?', 'gtranslate'),
                 'msg' => sprintf(esc_html__('You can %1$sincrease%2$s your international %1$straffic%2$s by upgrading your GTranslate.', 'gtranslate'), '<b>', '</b>'),
-                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Learn more', 'gtranslate') . '</a></li>' .
+                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Compare plans', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-calendar-alt"></span><a href="' . $upgrade_tips_temp . '">' . esc_html__('Maybe later', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $upgrade_tips_ignore . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
                 'later_link' => $upgrade_tips_temp,
@@ -2062,7 +2086,7 @@ class GTranslate_Notices {
             $notices['upgrade_tips'][] = array(
                 'title' => esc_html__('Did you know?', 'gtranslate'),
                 'msg' => sprintf(esc_html__('You can have your %1$stranslated pages indexed%2$s in search engines by upgrading your GTranslate.', 'gtranslate'), '<b>', '</b>'),
-                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Learn more', 'gtranslate') . '</a></li>' .
+                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Compare plans', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-calendar-alt"></span><a href="' . $upgrade_tips_temp . '">' . esc_html__('Maybe later', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $upgrade_tips_ignore . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
                 'later_link' => $upgrade_tips_temp,
@@ -2072,7 +2096,7 @@ class GTranslate_Notices {
             $notices['upgrade_tips'][] = array(
                 'title' => esc_html__('Did you know?', 'gtranslate'),
                 'msg' => sprintf(esc_html__('You can %1$sincrease%2$s your %1$sAdSense revenue%2$s by upgrading your GTranslate.', 'gtranslate'), '<b>', '</b>'),
-                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Learn more', 'gtranslate') . '</a></li>' .
+                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Compare plans', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-calendar-alt"></span><a href="' . $upgrade_tips_temp . '">' . esc_html__('Maybe later', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $upgrade_tips_ignore . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
                 'later_link' => $upgrade_tips_temp,
@@ -2082,7 +2106,7 @@ class GTranslate_Notices {
             $notices['upgrade_tips'][] = array(
                 'title' => esc_html__('Did you know?', 'gtranslate'),
                 'msg' => sprintf(esc_html__('You can %1$sedit translations%2$s by upgrading your GTranslate.', 'gtranslate'), '<b>', '</b>'),
-                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Learn more', 'gtranslate') . '</a></li>' .
+                'link' => '<li><span class="dashicons dashicons-external"></span><a href="https://gtranslate.io/?xyz=998#pricing" target="_blank" rel="noreferrer">' . esc_html__('Compare plans', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-calendar-alt"></span><a href="' . $upgrade_tips_temp . '">' . esc_html__('Maybe later', 'gtranslate') . '</a></li>' .
                           '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $upgrade_tips_ignore . '">' . esc_html__('Never show again', 'gtranslate') . '</a></li>',
                 'later_link' => $upgrade_tips_temp,
@@ -2125,7 +2149,7 @@ if($data['pro_version']) { // gtranslate redirect rules with PHP (for environmen
         exit;
     } // #2 add trailing slash
 
-    if($data['widget_look'] == 'float' or $data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup')
+    if($data['widget_look'] == 'float' or $data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup' or $data['widget_look'] == 'popup_search')
         $allowed_languages = $data['fincl_langs'];
     elseif($data['widget_look'] == 'flags_dropdown')
         $allowed_languages = array_values(array_unique(array_merge($data['fincl_langs'], $data['incl_langs'])));
@@ -2222,7 +2246,7 @@ if($data['add_hreflang_tags'] and ($data['pro_version'] or $data['enterprise_ver
         GTranslate::load_defaults($data);
 
         $enabled_languages = array();
-        if($data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup')
+        if($data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup' or $data['widget_look'] == 'popup_search')
             $enabled_languages = $data['fincl_langs'];
         elseif($data['widget_look'] == 'flags_dropdown')
             $enabled_languages = array_values(array_unique(array_merge($data['fincl_langs'], $data['incl_langs'])));
@@ -2312,7 +2336,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
 
 // auto redirect to browser language
 if(($data['pro_version'] or $data['enterprise_version']) and $data['detect_browser_language'] and parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) == parse_url(site_url(), PHP_URL_PATH) . '/' and isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) and isset($_SERVER['HTTP_USER_AGENT']) and !isset($_SERVER['HTTP_X_GT_LANG']) and preg_match('/bot|spider|slurp|facebook/i', $_SERVER['HTTP_USER_AGENT']) == 0) {
-    if($data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup')
+    if($data['widget_look'] == 'flags' or $data['widget_look'] == 'float' or $data['widget_look'] == 'dropdown_with_flags' or $data['widget_look'] == 'flags_name' or $data['widget_look'] == 'flags_code' or $data['widget_look'] == 'popup' or $data['widget_look'] == 'popup_search')
         $allowed_languages = $data['fincl_langs'];
     elseif($data['widget_look'] == 'flags_dropdown')
         $allowed_languages = array_values(array_unique(array_merge($data['fincl_langs'], $data['incl_langs'])));

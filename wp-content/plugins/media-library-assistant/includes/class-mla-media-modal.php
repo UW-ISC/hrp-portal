@@ -137,7 +137,7 @@ class MLAModal {
 		$months = self::mla_media_library_months_with_files_filter();
 
 		$month_count = count( $months );
-		$month_array = array( '0' => __( 'Show all dates', 'media-library-assistant' ) );
+		$month_array = array( '0' => __( 'All dates', 'media-library-assistant' ) );
 
 		if ( !$month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
 			return $month_array;
@@ -151,7 +151,6 @@ class MLAModal {
 			$prefix = zeroise( $index, 3 );
 			$month = zeroise( $arc_row->month, 2 );
 			$year = $arc_row->year;
-//			$month_array[ esc_attr( $prefix . $arc_row->year . $month ) ] = 
 			$month_array[ 'M' . $prefix . $arc_row->year . $month ] = 
 				/* translators: 1: month name, 2: 4-digit year */
 				sprintf( __( '%1$s %2$d', 'media-library-assistant' ), $wp_locale->get_month( $month ), $year );
@@ -172,7 +171,7 @@ class MLAModal {
 	public static function mla_terms_options( $markup ) {
 		$match_count = preg_match_all( "#\<option(( class=\"([^\"]+)\" )|( ))value=((\'([^\']+)\')|(\"([^\"]+)\"))([^\>]*)\>([^\<]*)\<.*#", $markup, $matches );
 		if ( ( $match_count == false ) || ( $match_count == 0 ) ) {
-			return array( 'class' => array( '' ), 'value' => array( '0' ), 'text' => array( 'Show all terms' ) );
+			return array( 'class' => array( '' ), 'value' => array( '0' ), 'text' => array( 'All terms' ) );
 		}
 
 		$class_array = array();
@@ -242,6 +241,7 @@ class MLAModal {
 			'termsValue' => array(),
 			'generateTagButtons' => false,
 			'generateTagUl' => false,
+			'createToolbar70' => false,
 			'removeTerm' => '',
 			);
 
@@ -307,6 +307,10 @@ class MLAModal {
 			self::$mla_media_modal_settings['generateTagUl'] = true;
 		}
 		
+		if ( version_compare( $current_version, '6.9.99', '>' ) ) {
+			self::$mla_media_modal_settings['createToolbar70'] = true;
+		}
+		
 		self::$mla_media_modal_settings['enableMediaGrid'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) );
 		self::$mla_media_modal_settings['enableMediaModal'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) );
 		self::$mla_media_modal_settings['enableDetailsCategory'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) );
@@ -332,9 +336,7 @@ class MLAModal {
 					$use_checklist =  MLACore::mla_taxonomy_support( $key, 'flat-checklist' );
 				}
 
-				/*
-				 * Make sure the appropriate MMMW Enhancement option has been checked
-				 */
+				// Make sure the appropriate MMMW Enhancement option has been checked
 				if ( $use_checklist ) {
 					if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) ) {
 						self::$mla_media_modal_settings['enhancedTaxonomies'][] = $key;
@@ -402,6 +404,7 @@ class MLAModal {
 	public static function mla_media_view_strings_filter( $strings, $post ) {
 		$mla_strings = array(
 			'ajaxurl' => admin_url( 'admin-ajax.php', 'relative' ),
+			'filterByTermLabel' => __( 'Filter by term', 'media-library-assistant' ),
 			'searchBoxPlaceholder' => __( 'Search Box', 'media-library-assistant' ),
 			'loadingText' => __( 'Loading...', 'media-library-assistant' ),
 			'searchBoxControlsStyle' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) ) ? 'display: inline;' : 'display: none;',

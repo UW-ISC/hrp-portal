@@ -262,7 +262,7 @@ class MLATermList {
 			if ( $item_values['captiontag'] ) {
 				$item_values['caption'] = wptexturize( $term->description );
 				if ( ! empty( $arguments['mla_caption'] ) ) {
-					$item_values['caption'] = wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) );
+					$item_values['caption'] = wp_kses( wptexturize( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) ), 'post' );
 				}
 			} else {
 				$item_values['caption'] = '';
@@ -318,7 +318,7 @@ class MLATermList {
 			if ( empty( $arguments['mla_item_value'] ) ) {
 				$item_values['thevalue'] = $item_values['term_id'];
 			} else {
-				$item_values['thevalue'] = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_item_value'], $item_values );
+				$item_values['thevalue'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_item_value'], $item_values ), 'post' );
 			}
 
 			// Currentlink, editlink, termlink and thelink  TODO - link style
@@ -352,7 +352,7 @@ class MLATermList {
 				if ( empty( $arguments['mla_option_text'] ) ) {
 					$item_values['thelabel'] = $pad . $item_values['link_text'];
 				} else {
-					$item_values['thelabel'] = $pad . wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values ) );
+					$item_values['thelabel'] = $pad . wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_option_text'], $item_values ), 'post' );
 				}
 
 				if ( empty( $arguments['mla_option_value'] ) ) {
@@ -852,7 +852,7 @@ class MLATermList {
 		if ( 0 === $found_rows ) {
 			if ( !empty( $arguments['mla_control_name'] ) ) {
 				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
-				$mla_control_name = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
+				$mla_control_name = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values ) );
 	
 				// Does not handle default 'tax_input[[+taxonomy+]][]' values
 				unset( $_REQUEST[ $mla_item_parameter ] );
@@ -1022,7 +1022,7 @@ class MLATermList {
 
 			if ( ( 0 === $found_rows ) && !empty( $arguments['mla_control_name'] ) ) {
 				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
-				$mla_control_name = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
+				$mla_control_name = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_control_name'], $page_values ) );
 	
 				// Does not handle default 'tax_input[[+taxonomy+]][]' values
 				unset( $_REQUEST[ $mla_item_parameter ] );
@@ -1139,7 +1139,7 @@ class MLATermList {
 
 			foreach( $tags as $taxonomy => $root_terms ) {
 				$markup_values['taxonomy'] = $taxonomy;
-				$markup_values['thename'] = MLAShortcode_Support::mla_process_shortcode_parameter( $mla_control_name, $markup_values );
+				$markup_values['thename'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $mla_control_name, $markup_values ) );
 
 
 				// Add the optional 'all-terms', 'any-terms' and/or 'no-terms' option(s), if requested
@@ -1219,7 +1219,7 @@ class MLATermList {
 				}
 			}
 		} else {
-			$markup_values['thename'] = MLAShortcode_Support::mla_process_shortcode_parameter( $mla_control_name, $markup_values );
+			$markup_values['thename'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $mla_control_name, $markup_values ) );
 
 			// Add the optional 'all-terms', 'any-terms' and/or 'no-terms' option(s), if requested
 			if ( $add_any_terms_option ) {

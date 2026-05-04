@@ -7,18 +7,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 
 	/**
-	 * Outputs a registered menu location using wp_nav_menu
+	 * WordPress widget that outputs a registered menu location using wp_nav_menu.
+	 *
+	 * @since   1.7.4
+	 * @package MegaMenu
 	 */
 	class Mega_Menu_Widget extends WP_Widget {
 
 		/**
 		 * Register widget with WordPress.
+		 *
+		 * @since 1.7.4
 		 */
 		public function __construct() {
 			parent::__construct(
 				'maxmegamenu', // Base ID
 				__( 'Max Mega Menu', 'megamenu' ), // Name
-				array( 'description' => __( 'Outputs a menu for a selected theme location.', 'megamenu' ) ) // Args
+				[ 'description' => __( 'Outputs a menu for a selected theme location.', 'megamenu' ) ] // Args
 			);
 		}
 
@@ -27,15 +32,16 @@ if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 		 *
 		 * @since 1.7.4
 		 * @see WP_Widget::widget()
-		 * @param array   $args     Widget arguments.
-		 * @param array   $instance Saved values from database.
+		 * @param array $args     Widget arguments.
+		 * @param array $instance Saved values from database.
+		 * @return void
 		 */
 		public function widget( $args, $instance ) {
 			if ( ! is_array( $args ) ) {
-				$args = array(
+				$args = [
 					'before_widget' => '',
 					'after_widget'  => '',
-				);
+				];
 			}
 
 			extract( $args );
@@ -52,7 +58,7 @@ if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 				}
 
 				if ( has_nav_menu( $location ) ) {
-					 wp_nav_menu( array( 'theme_location' => $location ) );
+					 wp_nav_menu( [ 'theme_location' => $location ] );
 				}
 
 				echo $after_widget;
@@ -69,7 +75,7 @@ if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 		 * @return array Updated safe values to be saved.
 		 */
 		public function update( $new_instance, $old_instance ) {
-			$instance             = array();
+			$instance             = [];
 			$instance['location'] = strip_tags( $new_instance['location'] );
 			$instance['title']    = strip_tags( $new_instance['title'] );
 
@@ -81,7 +87,8 @@ if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 		 *
 		 * @since 1.7.4
 		 * @see WP_Widget::form()
-		 * @param array   $instance Previously saved values from database.
+		 * @param array $instance Previously saved values from database.
+		 * @return void
 		 */
 		public function form( $instance ) {
 
@@ -115,8 +122,8 @@ if ( ! class_exists( 'Mega_Menu_Widget' ) ) :
 
 					<?php
 
-						$enabled_locations  = array();
-						$disabled_locations = array();
+						$enabled_locations  = [];
+						$disabled_locations = [];
 
 					foreach ( $locations as $location => $description ) {
 						if ( max_mega_menu_is_enabled( $location ) ) {

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2026-03-06 11:03-0800\n"
-"PO-Revision-Date: 2026-03-06 11:03-0800\n"
+"POT-Creation-Date: 2026-03-28 14:25-0700\n"
+"PO-Revision-Date: 2026-03-28 14:26-0700\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1408,6 +1408,9 @@ msgctxt "error_log"
 msgid "mla_parse_xml_string set option failed."
 msgstr ""
 
+msgid "bytes of BINARY DATA"
+msgstr ""
+
 msgid "Auto"
 msgstr ""
 
@@ -2075,11 +2078,14 @@ msgstr ""
 msgid "Choose from the most used tags"
 msgstr ""
 
-msgid "Show all dates"
+msgid "All dates"
 msgstr ""
 
 #, php-format
 msgid "%1$s %2$d"
+msgstr ""
+
+msgid "Filter by term"
 msgstr ""
 
 msgid "Search Box"
@@ -2092,9 +2098,6 @@ msgid "Search Terms"
 msgstr ""
 
 msgid "There are no taxonomies to search"
-msgstr ""
-
-msgid "Filter by term"
 msgstr ""
 
 msgid "All phrases"
@@ -4294,17 +4297,21 @@ msgstr ""
 msgid "Item %1$d"
 msgstr ""
 
-msgid "has native thumbnail."
-msgstr ""
-
-msgid "Featured Image retained."
-msgstr ""
-
 #, php-format
 msgid "%1$s: %2$sno attached file."
 msgstr ""
 
 msgid "unsupported file type."
+msgstr ""
+
+msgid "Featured Image retained."
+msgstr ""
+
+msgid "Native thumbnail retained."
+msgstr ""
+
+#, php-format
+msgid "%1$sNo thumbnail generated."
 msgstr ""
 
 #, php-format
@@ -4347,7 +4354,10 @@ msgstr ""
 msgid "Quality"
 msgstr ""
 
-msgid "Existing Items"
+msgid "Existing Features"
+msgstr ""
+
+msgid "Existing Thumbnails"
 msgstr ""
 
 msgid "Ignore"

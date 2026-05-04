@@ -5,10 +5,12 @@
  */
 
 /**
- * A class to manage admin notices
- * displayed only to admin, based on 'manage_options' capability
- * and only on dashboard, plugins and Max Mega Menu admin pages
+ * A class to manage admin notices, displayed only to admins (based on
+ * 'manage_options' capability) and only on dashboard, plugins, and
+ * Max Mega Menu admin pages.
  *
+ * @since   3.0
+ * @package MegaMenu
  */
 class Mega_Menu_Admin_Notices {
 	/**
@@ -23,28 +25,24 @@ class Mega_Menu_Admin_Notices {
 	 *
 	 * @var string[]
 	 */
-	private static $notices = array();
+	private static $notices = [];
 
 	/**
-	 * Constructor
-	 * Setup actions
+	 * Constructor. Sets up actions for hiding and displaying notices.
 	 *
 	 * @since 3.0
-	 *
-	 * @param object $polylang
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'hide_notice' ) );
-		add_action( 'admin_notices', array( $this, 'display_notices' ) );
+		add_action( 'admin_init', [ $this, 'hide_notice' ] );
+		add_action( 'admin_notices', [ $this, 'display_notices' ] );
 	}
 
 	/**
-	 * Add a custom notice
+	 * Add a custom notice.
 	 *
 	 * @since 3.0
-	 *
-	 * @param string $name Notice name
-	 * @param string $html Content of the notice
+	 * @param string $name Notice name.
+	 * @param string $html HTML content of the notice.
 	 * @return void
 	 */
 	public static function add_notice( $name, $html ) {
@@ -52,11 +50,10 @@ class Mega_Menu_Admin_Notices {
 	}
 
 	/**
-	 * Get custom notices
+	 * Get all registered custom notices.
 	 *
 	 * @since 3.0
-	 *
-	 * @return string[]
+	 * @return string[] Map of notice name to HTML content.
 	 */
 	public static function get_notices() {
 		return self::$notices;
@@ -66,12 +63,11 @@ class Mega_Menu_Admin_Notices {
 	 * Has a notice been dismissed?
 	 *
 	 * @since 3.0
-	 *
-	 * @param string $notice Notice name
-	 * @return bool
+	 * @param string $notice Notice name.
+	 * @return bool True if the notice has been dismissed, false otherwise.
 	 */
 	public static function is_dismissed( $notice ) {
-		$dismissed = get_option( 'megamenu_dismissed_notices', array() );
+		$dismissed = get_option( 'megamenu_dismissed_notices', [] );
 
 		return in_array( $notice, $dismissed );
 	}
@@ -80,9 +76,8 @@ class Mega_Menu_Admin_Notices {
 	 * Should we display notices on this screen?
 	 *
 	 * @since 3.0
-	 *
 	 * @param  string $notice The notice name.
-	 * @return bool
+	 * @return bool True if the notice should be displayed on the current screen.
 	 */
 	protected function can_display_notice( $notice ) {
 		$screen = get_current_screen();
@@ -103,26 +98,25 @@ class Mega_Menu_Admin_Notices {
 			'mmm_can_display_notice',
 			in_array(
 				$screen->id,
-				array(
+				[
 					'dashboard',
 					'plugins',
 					'toplevel_page_maxmegamenu'
-				)
+				]
 			),
 			$notice
 		);
 	}
 
 	/**
-	 * Stores a dismissed notice in database
+	 * Stores a dismissed notice in the database.
 	 *
 	 * @since 3.0
-	 *
-	 * @param string $notice
+	 * @param string $notice Notice name.
 	 * @return void
 	 */
 	public static function dismiss( $notice ) {
-		$dismissed = get_option( 'megamenu_dismissed_notices', array() );
+		$dismissed = get_option( 'megamenu_dismissed_notices', [] );
 
 		if ( ! in_array( $notice, $dismissed ) ) {
 			$dismissed[] = $notice;
@@ -131,10 +125,9 @@ class Mega_Menu_Admin_Notices {
 	}
 
 	/**
-	 * Handle a click on the dismiss button
+	 * Handle a click on the dismiss button.
 	 *
 	 * @since 3.0
-	 *
 	 * @return void
 	 */
 	public function hide_notice() {
@@ -142,16 +135,15 @@ class Mega_Menu_Admin_Notices {
 			$notice = sanitize_key( $_GET['mmm-hide-notice'] );
 			check_admin_referer( $notice, '_mmm_notice_nonce' );
 			self::dismiss( $notice );
-			wp_safe_redirect( remove_query_arg( array( 'mmm-hide-notice', '_mmm_notice_nonce' ), wp_get_referer() ) );
+			wp_safe_redirect( remove_query_arg( [ 'mmm-hide-notice', '_mmm_notice_nonce' ], wp_get_referer() ) );
 			exit;
 		}
 	}
 
 	/**
-	 * Displays notices
+	 * Displays notices.
 	 *
 	 * @since 2.3.9
-	 *
 	 * @return void
 	 */
 	public function display_notices() {
@@ -184,27 +176,27 @@ class Mega_Menu_Admin_Notices {
 	}
 
 	/**
-	 * Displays a dismiss button
+	 * Displays a dismiss button.
 	 *
 	 * @since 3.0
-	 *
-	 * @param string $name Notice name
+	 * @param string $name Notice name.
 	 * @return void
 	 */
 	public function dismiss_button( $name ) {
-		printf(
-			'<a style="text-decoration: none;" class="notice-dismiss" href="%s"><span class="screen-reader-text">%s</span></a>',
-			esc_url( wp_nonce_url( add_query_arg( 'mmm-hide-notice', $name ), $name, '_mmm_notice_nonce' ) ),
-			/* translators: accessibility text */
-			esc_html__( 'Dismiss this notice.', 'megamenu' )
-		);
+		$dismiss_href = esc_url( wp_nonce_url( add_query_arg( 'mmm-hide-notice', $name ), $name, '_mmm_notice_nonce' ) );
+		$processor    = new WP_HTML_Tag_Processor( '<a><span class="screen-reader-text">' . esc_html__( 'Dismiss this notice.', 'megamenu' ) . '</span></a>' );
+		if ( $processor->next_tag( 'a' ) ) {
+			$processor->set_attribute( 'style', 'text-decoration: none;' );
+			$processor->set_attribute( 'class', 'notice-dismiss' );
+			$processor->set_attribute( 'href', $dismiss_href );
+		}
+		echo $processor->get_updated_html();
 	}
 
 	/**
-	 * Displays a notice asking for a review
+	 * Displays a notice asking for a review.
 	 *
 	 * @since 3.0
-	 *
 	 * @return void
 	 */
 	private function review_notice() {
@@ -213,11 +205,25 @@ class Mega_Menu_Admin_Notices {
 		<?php $this->dismiss_button( 'review' ); ?>
 			<p>
 				<?php
+				$review_processor = new WP_HTML_Tag_Processor( '<a>' . esc_html__( 'give us a 5 stars rating', 'megamenu' ) . '</a>' );
+				if ( $review_processor->next_tag( 'a' ) ) {
+					$review_processor->set_attribute( 'href', 'https://wordpress.org/support/plugin/megamenu/reviews/?rate=5#new-post' );
+					$review_processor->set_attribute( 'target', '_blank' );
+					$review_processor->set_attribute( 'rel', 'noopener noreferrer' );
+				}
 				printf(
-					/* translators: %1$s is link start tag, %2$s is link end tag. */
-					esc_html__( 'We have noticed that you have been using Max Mega Menu for some time. We hope you love it, and we would really appreciate it if you would %1$sgive us a 5 stars rating%2$s.', 'megamenu' ),
-					'<a href="https://wordpress.org/support/plugin/megamenu/reviews/?rate=5#new-post">',
-					'</a>'
+					/* translators: %s: link to the plugin review form on WordPress.org */
+					esc_html__( 'We have noticed that you have been using Max Mega Menu for some time. We hope you love it, and we would really appreciate it if you would %s.', 'megamenu' ),
+					wp_kses(
+						$review_processor->get_updated_html(),
+						[
+							'a' => [
+								'href'   => true,
+								'target' => true,
+								'rel'    => true,
+							],
+						]
+					)
 				);
 				?>
 			</p>

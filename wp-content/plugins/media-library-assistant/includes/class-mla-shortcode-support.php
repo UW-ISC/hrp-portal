@@ -411,6 +411,7 @@ class MLAShortcode_Support {
 			}
 		}
 
+//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 		return $attr;
 	}
 
@@ -1598,7 +1599,7 @@ class MLAShortcode_Support {
 			if ( $item_values['captiontag'] ) {
 				$item_values['caption'] = wptexturize( $attachment->post_excerpt );
 				if ( ! empty( $arguments['mla_caption'] ) ) {
-					$item_values['caption'] = wptexturize( self::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) );
+					$item_values['caption'] = wp_kses( wptexturize( self::mla_process_shortcode_parameter( $arguments['mla_caption'], $item_values ) ), 'post' );
 				}
 			} else {
 				$item_values['caption'] = '';
@@ -2242,12 +2243,7 @@ class MLAShortcode_Support {
 	 * @return string link with $_REQUEST elements
 	 */
 	public static function mla_process_pagination_link( $link ) {
-//error_log( __LINE__ . ' mla_process_pagination_link _SERVER = ' . var_export( $_SERVER, true ), 0 );
-//error_log( __LINE__ . ' mla_process_pagination_link _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
-//error_log( __LINE__ . ' mla_process_pagination_link link = ' . var_export( $link, true ), 0 );
-
 		$match_count = preg_match_all( '#href=(\'|\")([^\']+)(\'|\")#', $link, $matches, PREG_OFFSET_CAPTURE );
-//error_log( __LINE__ . ' mla_process_pagination_link matches = ' . var_export( $matches, true ), 0 );
 		if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
 			$delimiter = $matches[1][0][0];
 			$link_url = $matches[2][0][0];
@@ -2269,8 +2265,13 @@ class MLAShortcode_Support {
 			$parts['host'] = $_SERVER['HTTP_HOST']; // phpcs:ignore
 		}
 
-//error_log( __LINE__ . ' mla_process_pagination_link link_url = ' . var_export( $link_url, true ), 0 );
-//error_log( __LINE__ . ' mla_process_pagination_link parts = ' . var_export( $parts, true ), 0 );
+		// Fragments must come at the end of the URL and be preceded by a #
+		if ( !empty( $parts['fragment'] ) ) {
+			$parts['fragment'] = '#' . $parts['fragment'];
+		} else {
+			$parts['fragment'] = '';
+		}
+
 		$uri_path = empty( $parts['path'] ) ? '' : $parts['path'];
 		$uri_query = empty( $parts['query'] ) ? '' : $parts['query'];
 
@@ -2294,7 +2295,6 @@ class MLAShortcode_Support {
 		if ( ! empty( $_REQUEST ) ) {
 			$clean_query = array_merge( $_REQUEST, $clean_query );
 		}
-//error_log( __LINE__ . ' mla_process_pagination_link clean_query = ' . var_export( $clean_query, true ), 0 );
 
 		$clean_query = urlencode_deep( $clean_query );
 		$clean_query = build_query( $clean_query );
@@ -2303,7 +2303,7 @@ class MLAShortcode_Support {
 			$uri_path .= '?' . $clean_query;	
 		}
 
-		$link_href = set_url_scheme( $parts['scheme'] . '://' . $parts['host'] . $uri_path );
+		$link_href = set_url_scheme( $parts['scheme'] . '://' . $parts['host'] . $uri_path . $parts['fragment'] );
 
 		// Replace single- and double-quote delimited values
 		if ( '"' === $delimiter ) {
@@ -2311,7 +2311,6 @@ class MLAShortcode_Support {
 		} else {
 			$link = preg_replace('# href=\'([^\']*)\'#', " href='{$link_href}'", $link );
 		}
-//error_log( __LINE__ . ' mla_process_pagination_link link = ' . var_export( $link, true ), 0 );
 
 		return $link;
 	}
@@ -2329,6 +2328,19 @@ class MLAShortcode_Support {
 	 */
 	private static function _replace_query_parameter( $key, $value, $url ) {
 		$parts = wp_parse_url( $url );
+
+		if ( empty( $parts['scheme'] ) ) {
+			if ( 'HTTPS' === substr( $_SERVER["SERVER_PROTOCOL"], 0, 5 ) ) { // phpcs:ignore
+				$parts['scheme'] = 'https';
+			} else {
+				$parts['scheme'] = 'http';
+			}
+		}
+
+		if ( empty( $parts['host'] ) ) {
+			$parts['host'] = $_SERVER['HTTP_HOST']; // phpcs:ignore
+		}
+
 		if ( empty( $parts['path'] ) ) {
 			$parts['path'] = '';
 		}

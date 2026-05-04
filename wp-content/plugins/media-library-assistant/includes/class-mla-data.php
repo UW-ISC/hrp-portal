@@ -2828,19 +2828,19 @@ class MLAData {
 				$new_offset = $new_offset + ( $chunksize - 16 );
 //error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) ", 0 );
 				$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $chunksize );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0, 32, 0 );
 			} // while not found
 		} else { // if not found
 			$new_offset = $file_offset;
 		}
 
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$start_tag} ) ", 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( offset {$new_offset}, start {$start_tag} ) ", 0 );
 		if ( false === $start_tag ) {
 			return NULL;
 		}
 
-		// If necessary and possible, expand the $xmp_chunk until it contains the start tag
-		if ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>', $start_tag ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
+		// If necessary and possible, expand the $xmp_chunk until it contains the end tag
+		if ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>', $start_tag ) ) && ( $chunksize === strlen( $xmp_chunk ) ) ) {
 			$new_offset = $new_offset + $start_tag;
 			$start_tag = 0;
 			$new_chunksize = $chunksize + $chunksize;
@@ -2855,13 +2855,23 @@ class MLAData {
 			return NULL;
 		}
 
-		$xmp_string = "<?xml version='1.0'?>\n" . substr( $xmp_chunk, $start_tag, ( $end_tag + 12 ) - $start_tag );
+		$length =  ( $end_tag + 12 ) - $start_tag;
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( offset {$new_offset}, start {$start_tag}, end {$end_tag}, length {$length} ) ", 0 );
+		$xmp_string = "<?xml version='1.0'?>\n" . substr( $xmp_chunk, $start_tag, $length );
 //error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_string = " . var_export( $xmp_string, true ), 0 );
 //error_log( __LINE__ . "  MLAData::mla_parse_xmp_metadata xmp_string = \r\n" . MLAData::mla_hex_dump( $xmp_string ), 0 );
 
 		$results = MLAData::mla_parse_xml_string( $xmp_string );
+		if ( is_array( $results ) ) {
+			$results['xmp_offset'] = $new_offset + $start_tag;
+			$results['xmp_length'] = $length;
 //error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata results = " . var_export( $results, true ), 0 );
-		return $results;
+
+			//$more_results = self::mla_parse_xmp_metadata( $file_name, $new_offset + $start_tag + $length );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata more_results = " . var_export( $results, true ), 0 );
+		}
+
+return $results;
 	}
 
 	/**
@@ -4278,10 +4288,131 @@ class MLAData {
 
 		$id3_metadata = self::mla_fetch_attachment_id3_metadata( $post_id );
 		if ( ! empty( $id3_metadata ) && !isset( $id3_metadata['error'] ) ) {
+			// Replace image blobs with a text message
+			if ( isset( $id3_metadata['comments']['picture'] ) && is_array( $id3_metadata['comments']['picture'] ) ) {
+				foreach ( $id3_metadata['comments']['picture'] as $key => $picture ) {
+					if ( isset( $picture['data'] ) ) {
+						$image_size = strlen( $picture['data'] );
+						$id3_metadata['comments']['picture'][ $key ]['data'] = '( ' . $image_size . ' ' . __( 'bytes of BINARY DATA', 'media-library-assistant' ) . ' )';
+					}
+				}
+
+			}
+
+			if ( isset( $id3_metadata['image']['data'] ) ) {
+				$image_size = strlen( $id3_metadata['image']['data'] );
+				$id3_metadata['image']['data'] = '( ' . $image_size . ' ' . __( 'bytes of BINARY DATA', 'media-library-assistant' ) . ' )';
+			}
+
 			$text .= self::_compose_metadata_array( $id3_metadata, 'id3', ':' );
 		}
 
 		return $text; // var_export( $metadata, true );
+	}
+
+	/**
+	 * Fetch XMP metadata for an MP3 audio file.
+	 * 
+	 * @since 3.35
+	 *
+	 * @param	string	Path to the MP3 file.
+	 *
+	 * @return	array	XMP Meta data variables, if present, or an empty string
+	 */
+	public static function mla_fetch_mp3_xmp_metadata( $path ) {
+		$results = array(
+			'mla_id3_xmp_metadata' => array(),
+			'mla_id3_xmp_errors' => array(),
+		);
+
+		$fp = fopen( $path, 'rb' );
+		if ( false === $fp ) {
+			$results['mla_id3_xmp_errors'][] = "Unable to open MP3 file";
+			return $results;
+		}
+
+		$data = fread( $fp, 10 ); // Read ID3 tag
+		if ( false === $data ) {
+			$results['mla_id3_xmp_errors'][] = "Unable to read ID3 tag";
+			return $results;
+		}
+
+		if ( 'ID3' !== substr( $data, 0, 3 ) ) {
+			$results['mla_id3_xmp_errors'][] = "Invalid MP3 file; no ID3 tag found";
+			return $results;
+		}
+
+		// Parse synchsafe ID3 tag size
+		$tagSize = (
+			(ord($data[6]) & 0x7F) << 21 |
+			(ord($data[7]) & 0x7F) << 14 |
+			(ord($data[8]) & 0x7F) << 7  |
+			(ord($data[9]) & 0x7F)
+		);
+
+		$offset = 10;
+		$len = filesize( $path );
+		$xmp_frame = '';
+
+		while ($offset <= $tagSize ) {
+			$tagData = fread( $fp, 10 );
+			if ( false === $tagData || strlen( $tagData ) < 10 ) {
+				$results['mla_id3_xmp_errors'][] = "Unable to read frame header at offset {$offset}";
+				break;
+			}
+
+			$frameId   = substr( $tagData, 0, 4) ;
+			$frameSize = unpack( "N", substr( $tagData, 4, 4 ) )[1];
+
+			if ( $frameSize <= 0 || $offset + 10 + $frameSize > $len ) {
+				$results['mla_id3_xmp_errors'][] = "Invalid MP3 file; bad frame size at offset {$offset}";
+				break;
+			}
+
+			// XMP FRAME (XMP , XMP\0, XMP_)
+			if ( str_starts_with( $frameId, "XMP" ) ) {
+				$xmp_frame = fread( $fp, $frameSize );
+				break;
+			}
+
+			// PRIV FRAME
+			if ( $frameId === "PRIV" ) {
+				$frameData = fread( $fp, $frameSize );
+
+				// Owner identifier (null-terminated)
+				$nullPos = strpos( $frameData, "\x00" );
+
+				if ( false !== $nullPos ) {
+					if ( 'XMP' === substr($frameData, 0, $nullPos) ) {
+						$xmp_frame = substr($frameData, $nullPos + 1);
+						break;
+					}
+				}
+			}
+
+			$offset += 10 + $frameSize;
+			fseek( $fp, $offset, SEEK_SET );
+		}
+
+		if ( ! empty( $xmp_frame ) ) {
+			$start = strpos( $xmp_frame, '<x:xmpmeta' );
+			if ( false !== $start ) {
+				$end = strpos( $xmp_frame, '</x:xmpmeta>' );
+				if ( false !== $end ) {
+					$xmp_frame = substr( $xmp_frame, $start, $end - $start + 12 );
+					$results['mla_id3_xmp_metadata'] = MLAData::mla_parse_xml_string( $xmp_frame );
+					if ( empty( $results['mla_id3_xmp_metadata'] ) ) {
+						$results['mla_id3_xmp_errors'][] = "XMP metadata found but could not be parsed";
+					}
+				} else {
+					$results['mla_id3_xmp_errors'][] = "XMP metadata found but end tag not found";
+				}
+			} else {
+				$results['mla_id3_xmp_errors'][] = "XMP metadata frame found but start tag not found";
+			}
+		}
+
+		return $results;
 	}
 
 	/**
@@ -4517,9 +4648,24 @@ class MLAData {
 				}
 			} // image/webp
 
-			$results['mla_xmp_metadata'] = self::mla_parse_xmp_metadata( $path, 0 );
-			if ( NULL === $results['mla_xmp_metadata'] ) {
-				$results['mla_xmp_metadata'] = array();
+			if ( false !== strpos( $filetype['type'], 'audio/mpeg' ) ) {
+				$id3_metadata = self::mla_fetch_mp3_xmp_metadata( $path );
+
+				if ( ! empty( $id3_metadata['mla_id3_xmp_metadata'] ) ) {
+					$results['mla_xmp_metadata'] = $id3_metadata['mla_id3_xmp_metadata'];
+					
+					if ( ! empty( $id3_metadata['mla_id3_xmp_errors'] ) ) {
+					$results['mla_xmp_errors'] = $id3_metadata['mla_id3_xmp_errors'];
+					}
+				}
+			} // audio/mpeg
+
+			if ( empty( $results['mla_xmp_metadata'] ) ) {
+				$results['mla_xmp_metadata'] = self::mla_parse_xmp_metadata( $path, 0 );
+
+				if ( NULL === $results['mla_xmp_metadata'] ) {
+					$results['mla_xmp_metadata'] = array();
+				}
 			}
 
 			// damage repair for Robert O'Conner (Rufus McDufus)

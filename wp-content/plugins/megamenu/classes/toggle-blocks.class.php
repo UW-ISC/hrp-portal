@@ -7,53 +7,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 	/**
-	 * Mobile Toggle Blocks
+	 * Manages the mobile toggle bar blocks including the menu toggle, animated
+	 * menu toggle, and spacer — handling both front-end output and admin editing.
+	 *
+	 * @since   2.1
+	 * @package MegaMenu
 	 */
 	class Mega_Menu_Toggle_Blocks {
 
 		/**
-		 * Constructor
+		 * Constructor. Registers actions and filters for toggle block output and saving.
 		 *
 		 * @since 2.1
 		 */
 		public function __construct() {
 
-			add_filter( 'megamenu_scss_variables', array( $this, 'add_menu_toggle_block_vars_to_scss' ), 10, 5 );
-			add_filter( 'megamenu_scss_variables', array( $this, 'add_spacer_block_vars_to_scss' ), 10, 5 );
-			add_filter( 'megamenu_scss_variables', array( $this, 'add_menu_toggle_animated_block_vars_to_scss' ), 10, 5 );
+			add_filter( 'megamenu_scss_variables', [ $this, 'add_menu_toggle_block_vars_to_scss' ], 10, 5 );
+			add_filter( 'megamenu_scss_variables', [ $this, 'add_spacer_block_vars_to_scss' ], 10, 5 );
+			add_filter( 'megamenu_scss_variables', [ $this, 'add_menu_toggle_animated_block_vars_to_scss' ], 10, 5 );
 
-			add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_scss' ), 10 );
-			add_filter( 'megamenu_toggle_bar_content', array( $this, 'output_public_toggle_blocks' ), 10, 4 );
+			add_filter( 'megamenu_load_scss_file_contents', [ $this, 'append_scss' ], 10 );
+			add_filter( 'megamenu_toggle_bar_content', [ $this, 'output_public_toggle_blocks' ], 10, 4 );
 
-			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html' ) );
-			add_action( 'megamenu_output_admin_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html' ), 10, 2 );
-			add_action( 'megamenu_output_public_toggle_block_menu_toggle', array( $this, 'output_menu_public_toggle_block_html' ), 10, 3 );
+			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle', [ $this, 'output_menu_toggle_block_html' ] );
+			add_action( 'megamenu_output_admin_toggle_block_menu_toggle', [ $this, 'output_menu_toggle_block_html' ], 10, 2 );
+			add_action( 'megamenu_output_public_toggle_block_menu_toggle', [ $this, 'output_menu_public_toggle_block_html' ], 10, 3 );
 
-			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html' ) );
-			add_action( 'megamenu_output_admin_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html' ), 10, 2 );
-			add_action( 'megamenu_output_public_toggle_block_menu_toggle_animated', array( $this, 'output_menu_public_toggle_block_animated_html' ), 10, 3 );
+			add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle_animated', [ $this, 'output_menu_toggle_block_animated_html' ] );
+			add_action( 'megamenu_output_admin_toggle_block_menu_toggle_animated', [ $this, 'output_menu_toggle_block_animated_html' ], 10, 2 );
+			add_action( 'megamenu_output_public_toggle_block_menu_toggle_animated', [ $this, 'output_menu_public_toggle_block_animated_html' ], 10, 3 );
 
-			add_action( 'wp_ajax_mm_get_toggle_block_spacer', array( $this, 'output_spacer_block_html' ) );
-			add_action( 'megamenu_output_admin_toggle_block_spacer', array( $this, 'output_spacer_block_html' ), 10, 2 );
+			add_action( 'wp_ajax_mm_get_toggle_block_spacer', [ $this, 'output_spacer_block_html' ] );
+			add_action( 'megamenu_output_admin_toggle_block_spacer', [ $this, 'output_spacer_block_html' ], 10, 2 );
 
-			add_action( 'megamenu_after_theme_revert', array( $this, 'revert_toggle_blocks' ) );
-			add_action( 'megamenu_after_theme_save', array( $this, 'save_toggle_blocks' ) );
+			add_action( 'megamenu_after_theme_revert', [ $this, 'revert_toggle_blocks' ] );
+			add_action( 'megamenu_after_theme_save', [ $this, 'save_toggle_blocks' ] );
 
-			add_action( 'megamenu_admin_scripts', array( $this, 'enqueue_scripts' ) );
-			add_action( 'megamenu_print_theme_option_toggle_blocks', array( $this, 'print_theme_toggle_bar_designer_option' ), 10, 2 );
+			add_action( 'megamenu_print_theme_option_toggle_blocks', [ $this, 'print_theme_toggle_bar_designer_option' ], 10, 2 );
 
-			add_filter( 'megamenu_theme_editor_settings', array( $this, 'add_toggle_designer_to_theme_editor' ), 10 );
+			add_filter( 'megamenu_theme_editor_settings', [ $this, 'add_toggle_designer_to_theme_editor' ], 10 );
 
 		}
 
 
 		/**
-		 * Output the menu toggle block (front end)
+		 * Output the standard menu toggle block HTML on the front end.
 		 *
 		 * @since 2.4.1
-		 * @param string $html
-		 * @param array $settings
-		 * @return string
+		 * @param string $html     Existing toggle HTML.
+		 * @param array  $settings Block settings array.
+		 * @param array  $args     wp_nav_menu arguments.
+		 * @return string Modified toggle HTML.
 		 */
 		public function output_menu_public_toggle_block_html( $html, $settings, $args ) {
 			$closed_text = isset( $settings['closed_text'] ) ? do_shortcode( stripslashes( $settings['closed_text'] ) ) : 'MENU';
@@ -63,9 +67,23 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		    $css_version = Mega_Menu_Style_Manager::get_css_version();
 		    // Only use button HTML if CSS version is >= 3.5.1
 		    if ( version_compare( $css_version, '3.5.1', '>=' ) ) {
-		    	$html = "<button class='mega-toggle-standard mega-toggle-label' aria-haspopup='true' aria-expanded='false' aria-controls='mega-menu-" . esc_attr($args['theme_location']) . "'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
+				$html = "<button class='mega-toggle-standard mega-toggle-label'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
+				$processor = new WP_HTML_Tag_Processor( $html );
+				if ( $processor->next_tag( 'button' ) ) {
+					$processor->set_attribute( 'aria-haspopup', 'true' );
+					$processor->set_attribute( 'aria-expanded', 'false' );
+					$processor->set_attribute( 'aria-controls', 'mega-menu-' . $args['theme_location'] );
+				}
+				$html = $processor->get_updated_html();
 		    } else {
-		    	$html = "<span class='mega-toggle-label' role='button' aria-haspopup='true' aria-expanded='false'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
+				$html = "<span class='mega-toggle-label'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
+				$processor = new WP_HTML_Tag_Processor( $html );
+				if ( $processor->next_tag( 'span' ) ) {
+					$processor->set_attribute( 'role', 'button' );
+					$processor->set_attribute( 'aria-haspopup', 'true' );
+					$processor->set_attribute( 'aria-expanded', 'false' );
+				}
+				$html = $processor->get_updated_html();
 		    }
 
 			return apply_filters( 'megamenu_toggle_menu_toggle_html', $html );
@@ -73,11 +91,11 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Return the saved toggle blocks for a specified theme
+		 * Return the saved toggle blocks for a specified theme.
 		 *
-		 * @param string $theme_id
 		 * @since 2.1
-		 * @return array
+		 * @param string $theme_id The theme ID.
+		 * @return array Array of toggle block settings.
 		 */
 		private function get_toggle_blocks_for_theme( $theme_id ) {
 
@@ -87,12 +105,12 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				return $blocks[ $theme_id ];
 			}
 
-			$defaults[] = array(
+			$defaults[] = [
 				'type'       => 'menu_toggle_animated',
 				'align'      => 'right',
 				'icon_scale' => isset( $settings['icon_scale'] ) && strlen( $settings['icon_scale'] ) ? $settings['icon_scale'] : '0.8',
 				'icon_color' => isset( $settings['icon_color'] ) ? $settings['icon_color'] : 'rgb(221, 221, 221)',
-			);
+			];
 
 			return $defaults;
 
@@ -100,20 +118,18 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Return default menu toggle block settings
+		 * Return default menu toggle block settings.
 		 *
 		 * @since 2.1
-		 * @return array
+		 * @param string $theme_id The theme ID to inherit defaults from.
+		 * @return array Default menu toggle block settings.
 		 */
 		private function get_default_menu_toggle_block( $theme_id = 'default' ) {
 
-			$style_manager = new Mega_Menu_Style_Manager();
+			$theme_obj  = Mega_Menu_Theme::find( $theme_id );
+			$menu_theme = $theme_obj->settings;
 
-			$themes = $style_manager->get_themes();
-
-			$menu_theme = isset( $themes[ $theme_id ] ) ? $themes[ $theme_id ] : $themes['default'];
-
-			$defaults = array(
+			$defaults = [
 				'type'          => 'menu_toggle',
 				'align'         => 'right',
 				'closed_text'   => isset( $menu_theme['responsive_text'] ) ? $menu_theme['responsive_text'] : 'MENU',
@@ -125,21 +141,21 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				'icon_color'    => isset( $menu_theme['toggle_font_color'] ) ? $menu_theme['toggle_font_color'] : 'rgb(221, 221, 221)',
 				'text_size'     => '14px',
 				'icon_size'     => '24px',
-			);
+			];
 
 			return $defaults;
 		}
 
 
 		/**
-		 * Get the HTML output for the toggle blocks
+		 * Append toggle block HTML to the menu toggle bar on the front end.
 		 *
 		 * @since 2.1
-		 * @param string $content
-		 * @param string $nav_menu
-		 * @param array $args
-		 * @param string $theme_id
-		 * @return string
+		 * @param string $content  Existing toggle bar content.
+		 * @param string $nav_menu Nav menu HTML output.
+		 * @param array  $args     wp_nav_menu arguments.
+		 * @param string $theme_id The active theme ID.
+		 * @return string Updated toggle bar content with blocks appended.
 		 */
 		public function output_public_toggle_blocks( $content, $nav_menu, $args, $theme_id ) {
 
@@ -158,15 +174,19 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		}
 
 		/**
-		 * Sort the toggle blocks into 3 divs (left, center, right) to be aligned using flex CSS.
+		 * Sort toggle blocks into three flex divs (left, center, right) and return combined HTML.
 		 *
-		 * @param array $toggle_blocks
 		 * @since 2.4.1
-		 * @return string html
+		 * @param array  $toggle_blocks Array of toggle block settings.
+		 * @param string $content       Existing toggle bar content.
+		 * @param string $nav_menu      Nav menu HTML output.
+		 * @param array  $args          wp_nav_menu arguments.
+		 * @param string $theme_id      The active theme ID.
+		 * @return string Toggle blocks HTML divided into left/center/right wrappers.
 		 */
 		private function get_flex_blocks_html( $toggle_blocks, $content, $nav_menu, $args, $theme_id ) {
 
-			$sorted_blocks = array();
+			$sorted_blocks = [];
 
 			/** Sort blocks into left, center, right array **/
 			foreach ( $toggle_blocks as $block_id => $block ) {
@@ -211,12 +231,16 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		}
 
 		/**
-		 * Generate the HTML for a single toggle block
+		 * Generate the HTML wrapper for a single toggle block.
 		 *
 		 * @since 2.4.1
-		 * @param string block_id
-		 * @param array $block
-		 * @return string
+		 * @param int    $block_id Block index.
+		 * @param array  $block    Block settings array.
+		 * @param string $content  Existing toggle bar content.
+		 * @param string $nav_menu Nav menu HTML output.
+		 * @param array  $args     wp_nav_menu arguments.
+		 * @param string $theme_id The active theme ID.
+		 * @return string Complete HTML for the toggle block wrapper.
 		 */
 		private function get_toggle_block_html( $block_id, $block, $content, $nav_menu, $args, $theme_id ) {
 			$block_html = '';
@@ -229,10 +253,10 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 			$id = apply_filters( 'megamenu_toggle_block_id', 'mega-toggle-block-' . $block_id );
 
-			$atts = array(
+			$atts = [
 				'class' => "mega-toggle-block {$class} mega-toggle-block-{$block_id}",
 				'id'    => "mega-toggle-block-{$block_id}",
-			);
+			];
 
 			$attributes = apply_filters( 'megamenu_toggle_block_attributes', $atts, $block, $content, $nav_menu, $args, $theme_id );
 
@@ -250,9 +274,10 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Save the toggle blocks when the theme is saved
+		 * Save the toggle blocks when the theme is saved.
 		 *
 		 * @since 2.1
+		 * @return void
 		 */
 		public function save_toggle_blocks() {
 
@@ -274,9 +299,10 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Revert the toggle blocks when a theme is reverted
+		 * Revert (delete) the saved toggle blocks when a theme is reverted.
 		 *
 		 * @since 2.1
+		 * @return void
 		 */
 		public function revert_toggle_blocks() {
 
@@ -293,63 +319,37 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Add the toggle bar designer to the theme editor
+		 * Add the toggle bar designer section to the theme editor settings.
 		 *
 		 * @since 2.1
-		 * @return array
+		 * @param array $settings Theme editor settings array.
+		 * @return array Updated settings with toggle bar designer added.
 		 */
 		public function add_toggle_designer_to_theme_editor( $settings ) {
 
-			$settings['mobile_menu']['settings']['toggle_blocks'] = array(
+			$settings['mobile_menu']['settings']['toggle_blocks'] = [
 				'priority'    => 6,
 				'title'       => __( 'Toggle Bar Designer', 'megamenu' ),
 				'description' => __( 'Configure the contents of the mobile toggle bar', 'megamenu' ),
-				'settings'    => array(
-					array(
+				'settings'    => [
+					[
 						'title' => '',
 						'type'  => 'toggle_blocks',
 						'key'   => 'toggle_blocks',
-					),
-				),
-			);
+					],
+				],
+			];
 
 			return $settings;
 		}
 
 
 		/**
-		 * Enqueue nav-menus.php scripts
+		 * Append the toggle blocks SCSS to the main SCSS file contents.
 		 *
 		 * @since 2.1
-		 */
-		public function enqueue_scripts() {
-
-			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
-
-			if ( ! current_user_can( $capability ) ) {
-				return;
-			}
-
-			if ( isset( $_GET['page'] ) && 'maxmegamenu_theme_editor' === $_GET['page'] ) { // @codingStandardsIgnoreLine
-				wp_enqueue_script( 'mega-menu-toggle-bar-designer', MEGAMENU_BASE_URL . 'js/toggledesigner.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), MEGAMENU_VERSION );
-
-				wp_localize_script(
-					'mega-menu-toggle-bar-designer',
-					'megamenu',
-					array(
-						'nonce' => wp_create_nonce( 'megamenu_edit' ),
-					)
-				);
-			}
-		}
-
-
-		/**
-		 * Append the logo SCSS to the main SCSS file
-		 *
-		 * @since 2.1
-		 * @param string $scss
-		 * @param string
+		 * @param string $scss The existing SCSS content.
+		 * @return string SCSS with toggle-blocks.scss appended.
 		 */
 		public function append_scss( $scss ) {
 
@@ -363,21 +363,21 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Create a new variable containing the toggle blocks to be used by the SCSS file
+		 * Inject menu_toggle_blocks SCSS variable for all menu toggle blocks in the theme.
 		 *
-		 * @param array $vars
-		 * @param string $location
-		 * @param string $theme
-		 * @param int $menu_id
-		 * @param string $theme_id
-		 * @return array - all custom SCSS vars
 		 * @since 2.1
+		 * @param array  $vars      Existing SCSS variables.
+		 * @param string $location  Menu location slug.
+		 * @param array  $theme     Theme settings array.
+		 * @param int    $menu_id   Menu term ID.
+		 * @param string $theme_id  The active theme ID.
+		 * @return array Updated SCSS variables.
 		 */
 		public function add_menu_toggle_block_vars_to_scss( $vars, $location, $theme, $menu_id, $theme_id ) {
 
 			$toggle_blocks = $this->get_toggle_blocks_for_theme( $theme_id );
 
-			$menu_toggle_blocks = array();
+			$menu_toggle_blocks = [];
 
 			if ( is_array( $toggle_blocks ) ) {
 
@@ -399,7 +399,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 							$open_icon = 'disabled';
 						}
 
-						$styles = array(
+						$styles = [
 							'id'            => $index,
 							'align'         => isset( $settings['align'] ) ? "'" . $settings['align'] . "'" : "'right'",
 							'closed_text'   => "''", // deprecated
@@ -411,7 +411,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 							'icon_position' => isset( $settings['icon_position'] ) ? "'" . $settings['icon_position'] . "'" : 'after',
 							'text_size'     => isset( $settings['text_size'] ) && strlen( $settings['text_size'] ) ? $settings['text_size'] : '14px',
 							'icon_size'     => isset( $settings['icon_size'] ) && strlen( $settings['icon_size'] ) ? $settings['icon_size'] : '24px',
-						);
+						];
 
 						$menu_toggle_blocks[ $index ] = $styles;
 					}
@@ -423,7 +423,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (456, green, null),
 			// (789, blue, 90%),());
 			if ( count( $menu_toggle_blocks ) ) {
-				$blocks = array();
+				$blocks = [];
 
 				foreach ( $menu_toggle_blocks as $id => $vals ) {
 					$blocks[] = '(' . implode( ',', $vals ) . ')';
@@ -447,21 +447,21 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		}
 
 		/**
-		 * Create a new variable containing the spacer blocks to be used by the SCSS file
+		 * Inject spacer_toggle_blocks SCSS variable for all spacer blocks in the theme.
 		 *
-		 * @param array $vars
-		 * @param string $location
-		 * @param string $theme
-		 * @param int $menu_id
-		 * @param string $theme_id
-		 * @return array - all custom SCSS vars
 		 * @since 2.1
+		 * @param array  $vars      Existing SCSS variables.
+		 * @param string $location  Menu location slug.
+		 * @param array  $theme     Theme settings array.
+		 * @param int    $menu_id   Menu term ID.
+		 * @param string $theme_id  The active theme ID.
+		 * @return array Updated SCSS variables.
 		 */
 		public function add_spacer_block_vars_to_scss( $vars, $location, $theme, $menu_id, $theme_id ) {
 
 			$toggle_blocks = $this->get_toggle_blocks_for_theme( $theme_id );
 
-			$spacer_blocks = array();
+			$spacer_blocks = [];
 
 			if ( is_array( $toggle_blocks ) ) {
 
@@ -469,11 +469,11 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 					if ( isset( $settings['type'] ) && $settings['type'] == 'spacer' ) {
 
-						$styles = array(
+						$styles = [
 							'id'    => $index,
 							'align' => isset( $settings['align'] ) ? "'" . $settings['align'] . "'" : "'right'",
 							'width' => isset( $settings['width'] ) ? $settings['width'] : '0px',
-						);
+						];
 
 						$spacer_blocks[ $index ] = $styles;
 					}
@@ -486,7 +486,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (789, blue, 90%),());
 			if ( count( $spacer_blocks ) ) {
 
-				$blocks = array();
+				$blocks = [];
 
 				foreach ( $spacer_blocks as $id => $vals ) {
 					$blocks[] = '(' . implode( ',', $vals ) . ')';
@@ -511,21 +511,21 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		}
 
 		/**
-		 * Create a new variable containing the animated menu toggle blocks to be used by the SCSS file
+		 * Inject menu_toggle_animated_blocks SCSS variable for all animated toggle blocks.
 		 *
-		 * @param array $vars
-		 * @param string $location
-		 * @param string $theme
-		 * @param int $menu_id
-		 * @param string $theme_id
-		 * @return array - all custom SCSS vars
 		 * @since 2.5.3
+		 * @param array  $vars      Existing SCSS variables.
+		 * @param string $location  Menu location slug.
+		 * @param array  $theme     Theme settings array.
+		 * @param int    $menu_id   Menu term ID.
+		 * @param string $theme_id  The active theme ID.
+		 * @return array Updated SCSS variables.
 		 */
 		public function add_menu_toggle_animated_block_vars_to_scss( $vars, $location, $theme, $menu_id, $theme_id ) {
 
 			$toggle_blocks = $this->get_toggle_blocks_for_theme( $theme_id );
 
-			$menu_toggle_animated_blocks = array();
+			$menu_toggle_animated_blocks = [];
 
 			if ( is_array( $toggle_blocks ) ) {
 
@@ -533,11 +533,11 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 					if ( isset( $settings['type'] ) && $settings['type'] == 'menu_toggle_animated' ) {
 
-						$styles = array(
+						$styles = [
 							'id'         => $index,
 							'icon_scale' => isset( $settings['icon_scale'] ) && strlen( $settings['icon_scale'] ) ? $settings['icon_scale'] : '0.8',
 							'icon_color' => isset( $settings['icon_color'] ) ? $settings['icon_color'] : 'rgb(221, 221, 221)',
-						);
+						];
 
 						$menu_toggle_animated_blocks[ $index ] = $styles;
 					}
@@ -549,7 +549,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 			// (456, green, null),
 			// (789, blue, 90%),());
 			if ( count( $menu_toggle_animated_blocks ) ) {
-				$blocks = array();
+				$blocks = [];
 
 				foreach ( $menu_toggle_animated_blocks as $id => $vals ) {
 					$blocks[] = '(' . implode( ',', $vals ) . ')';
@@ -575,11 +575,12 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Print the toggle bar designer option
+		 * Output the toggle bar designer UI in the theme editor.
 		 *
 		 * @since 2.1
-		 * @param string $key
-		 * @param string $theme_id
+		 * @param string $key      The settings key for this option.
+		 * @param string $theme_id The active theme ID.
+		 * @return void
 		 */
 		public function print_theme_toggle_bar_designer_option( $key, $theme_id ) {
 
@@ -587,31 +588,34 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 			$block_types = apply_filters(
 				'megamenu_registered_toggle_blocks',
-				array(
+				[
 					'menu_toggle_animated' => __( 'Menu Toggle (Animated)', 'megamenu' ),
 					'menu_toggle'          => __( 'Menu Toggle (Standard)', 'megamenu' ),
 					'spacer'               => __( 'Spacer', 'megamenu' ),
-				)
+				]
 			);
 
 			ksort( $block_types );
 			?>
 
-		<select id='toggle-block-selector'>
-			<option value='title'><?php echo __( 'Add block to toggle bar', 'megamenu' ); ?></option>
+		<div class='mega-toolbar-select-field mega-toggle-block-selector-field'>
+			<label for='toggle-block-selector' class='mega-short-desc'><?php esc_html_e( 'Add block to toggle bar', 'megamenu' ); ?></label>
+			<select id='toggle-block-selector'>
+				<option value='title'><?php echo esc_html__( 'Select…', 'megamenu' ); ?></option>
 
-			<?php foreach ( $block_types as $block_id => $block_name ) : ?>
-				<option value='<?php echo $block_id; ?>'><?php echo $block_name; ?></option>
-			<?php endforeach; ?>
+				<?php foreach ( $block_types as $block_id => $block_name ) : ?>
+					<option value='<?php echo esc_attr( $block_id ); ?>'><?php echo esc_html( $block_name ); ?></option>
+				<?php endforeach; ?>
 
-			<?php if ( ! is_plugin_active( 'megamenu-pro/megamenu-pro.php' ) ) : ?>
-				<option disabled="disabled">Menu Toggle (Custom) (Pro)</option>
-				<option disabled="disabled">Search (Pro)</option>
-				<option disabled="disabled">Logo (Pro)</option>
-				<option disabled="disabled">Icon (Pro)</option>
-				<option disabled="disabled">HTML (Pro)</option>
-			<?php endif; ?>
-		</select>
+				<?php if ( ! is_plugin_active( 'megamenu-pro/megamenu-pro.php' ) ) : ?>
+					<option disabled="disabled">Menu Toggle (Custom) (Pro)</option>
+					<option disabled="disabled">Search (Pro)</option>
+					<option disabled="disabled">Logo (Pro)</option>
+					<option disabled="disabled">Icon (Pro)</option>
+					<option disabled="disabled">HTML (Pro)</option>
+				<?php endif; ?>
+			</select>
+		</div>
 
 		<div class='toggle-bar-designer'>
 			<div class='mega-blocks'>
@@ -674,22 +678,23 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Output the HTML for the "Spacer" toggle block settings
+		 * Output the admin HTML for the "Spacer" toggle block settings panel.
 		 *
 		 * @since 2.1
-		 * @param int $block_id
-		 * @param array $settings
+		 * @param int   $block_id The block index.
+		 * @param array $settings Block settings, merged with defaults.
+		 * @return void
 		 */
-		public function output_spacer_block_html( $block_id, $settings = array() ) {
+		public function output_spacer_block_html( $block_id, $settings = [] ) {
 
 			if ( empty( $settings ) ) {
 				$block_id = '0';
 			}
 
-			$defaults = array(
+			$defaults = [
 				'align' => 'right',
 				'width' => '0px',
-			);
+			];
 
 			$settings = array_merge( $defaults, $settings );
 
@@ -704,7 +709,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				<label>
 					<?php _e( 'Width', 'megamenu' ); ?><input type='text' class='closed_text' name='toggle_blocks[<?php echo $block_id; ?>][width]' value='<?php echo $settings['width']; ?>' />
 				</label>
-				<a class='mega-delete'><?php _e( 'Delete', 'megamenu' ); ?></a>
+				<?php $this->print_toggle_block_delete_control(); ?>
 			</div>
 		</div>
 
@@ -713,13 +718,14 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Output the HTML for the "Menu Toggle" block settings
+		 * Output the admin HTML for the "Menu Toggle" block settings panel.
 		 *
 		 * @since 2.1
-		 * @param int $block_id
-		 * @param array $settings
+		 * @param int   $block_id The block index.
+		 * @param array $settings Block settings, merged with defaults.
+		 * @return void
 		 */
-		public function output_menu_toggle_block_html( $block_id, $settings = array() ) {
+		public function output_menu_toggle_block_html( $block_id, $settings = [] ) {
 
 			if ( empty( $settings ) ) {
 				$block_id = '0';
@@ -778,7 +784,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 						<option value='after' <?php selected( $settings['icon_position'], 'after' ); ?> ><?php _e( 'After', 'megamenu' ); ?></option>
 					</select>
 				</label>
-				<a class='mega-delete'><?php _e( 'Delete', 'megamenu' ); ?></a>
+				<?php $this->print_toggle_block_delete_control(); ?>
 			</div>
 		</div>
 
@@ -787,45 +793,56 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Output the menu toggle block (front end)
+		 * Output the animated menu toggle block HTML on the front end.
 		 *
 		 * @since 2.5.3
-		 * @param string $html
-		 * @param array $settings
-		 * @return string
+		 * @param string $html     Existing toggle HTML.
+		 * @param array  $settings Block settings array.
+		 * @param array  $args     wp_nav_menu arguments.
+		 * @return string Modified toggle HTML.
 		 */
 		public function output_menu_public_toggle_block_animated_html( $html, $settings, $args ) {
 			$style = isset( $settings['style'] ) ? $settings['style'] : 'slider';
 			$label = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : 'Toggle Menu';
 
-			$html = '<button aria-label="' . esc_attr( $label ) . '" class="mega-toggle-animated mega-toggle-animated-' . esc_attr( $style ) . '" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="mega-menu-' . esc_attr($args['theme_location']) . '">
+			$html = '<button class="mega-toggle-animated mega-toggle-animated-' . esc_attr( $style ) . '" type="button">
                   <span class="mega-toggle-animated-box">
                     <span class="mega-toggle-animated-inner"></span>
                   </span>
                 </button>';
+
+			$processor = new WP_HTML_Tag_Processor( $html );
+			if ( $processor->next_tag( 'button' ) ) {
+				$processor->set_attribute( 'aria-label', $label );
+				$processor->set_attribute( 'aria-haspopup', 'true' );
+				$processor->set_attribute( 'aria-expanded', 'false' );
+				$processor->set_attribute( 'aria-controls', 'mega-menu-' . $args['theme_location'] );
+			}
+			$html = $processor->get_updated_html();
 
 			return apply_filters( 'megamenu_toggle_menu_toggle_animated_html', $html );
 
 		}
 
 		/**
-		 * Output the HTML for the "Menu Toggle (Animated)" block settings
+		 * Output the admin HTML for the "Menu Toggle (Animated)" block settings panel.
 		 *
 		 * @since 2.5.3
-		 * @param int $block_id
-		 * @param array $settings
+		 * @param int   $block_id The block index.
+		 * @param array $settings Block settings, merged with defaults.
+		 * @return void
 		 */
-		public function output_menu_toggle_block_animated_html( $block_id, $settings = array() ) {
+		public function output_menu_toggle_block_animated_html( $block_id, $settings = [] ) {
 
 			if ( empty( $settings ) ) {
 				$block_id = '0';
 			}
 
-			$defaults = array(
+			$defaults = [
 				'icon_scale' => '0.8',
 				'icon_color' => 'rgb(221, 221, 221)',
 				'aria_label' => 'Toggle Menu',
-			);
+			];
 
 			$settings = array_merge( $defaults, $settings );
 
@@ -854,7 +871,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				<label>
 					<?php _e( 'Label', 'megamenu' ); ?><input type='text' class='aria_label' name='toggle_blocks[<?php echo $block_id; ?>][aria_label]' value='<?php echo stripslashes( esc_attr( $settings['aria_label'] ) ); ?>' />
 				</label>
-				<a class='mega-delete'><?php _e( 'Delete', 'megamenu' ); ?></a>
+				<?php $this->print_toggle_block_delete_control(); ?>
 			</div>
 		</div>
 
@@ -863,12 +880,30 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Print an icon selection box
+		 * Icon-only delete control for toggle block settings (button for native semantics; widgets still use anchor).
+		 *
+		 * @since 3.9.0
+		 * @return void
+		 */
+		private function print_toggle_block_delete_control() {
+
+			?>
+		<button type="button" class="mega-delete" data-mega-tooltip="<?php echo esc_attr__( 'Delete', 'megamenu' ); ?>" data-mega-tooltip-position="right" aria-label="<?php echo esc_attr__( 'Delete', 'megamenu' ); ?>">
+			<span class="dashicons dashicons-trash" aria-hidden="true"></span>
+		</button>
+			<?php
+		}
+
+
+		/**
+		 * Output an icon selection dropdown for a toggle block setting.
 		 *
 		 * @since 2.1
-		 * @param string $key
-		 * @param int $block_id
-		 * @param string $value
+		 * @param string $key      The setting key (e.g. 'closed_icon').
+		 * @param int    $block_id The block index.
+		 * @param string $value    The currently selected icon code.
+		 * @param array  $icons    Map of icon codes to Dashicon class names.
+		 * @return void
 		 */
 		public function print_icon_option( $key, $block_id, $value, $icons ) {
 
@@ -880,7 +915,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 				foreach ( $icons as $code => $class ) {
 					$name = str_replace( 'dashicons-', '', $class );
-					$name = ucwords( str_replace( array( '-', 'arrow' ), ' ', $name ) );
+					$name = ucwords( str_replace( [ '-', 'arrow' ], ' ', $name ) );
 					echo "<option data-class='{$class}' value='{$code}'" . selected( $value, $code, false ) . '>' . $name . '</option>';
 				}
 
@@ -892,12 +927,13 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * Print a color picker
+		 * Output a color picker input for a toggle block setting.
 		 *
 		 * @since 2.1
-		 * @param string $key
-		 * @param int $block_id
-		 * @param string $value
+		 * @param string $key      The setting key (e.g. 'text_color').
+		 * @param int    $block_id The block index.
+		 * @param string $value    The currently saved color value.
+		 * @return void
 		 */
 		public function print_toggle_color_option( $key, $block_id, $value ) {
 
@@ -916,14 +952,14 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * List of all available toggle DashIcon classes.
+		 * List of all available toggle Dashicon classes.
 		 *
 		 * @since 2.1
-		 * @return array - Sorted list of toggle classes
+		 * @return array Map of hex code keys to Dashicon CSS class names.
 		 */
 		public function toggle_icons() {
 
-			$icons = array(
+			$icons = [
 				'dash-f333' => 'dashicons-menu',
 				'dash-f228' => 'dashicons-menu-alt',
 				'dash-f329' => 'dashicons-menu-alt2',
@@ -941,7 +977,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				'dash-f346' => 'dashicons-arrow-down-alt',
 				'dash-f343' => 'dashicons-arrow-up-alt2',
 				'dash-f347' => 'dashicons-arrow-down-alt2',
-			);
+			];
 
 			$icons = apply_filters( 'megamenu_toggle_icons', $icons );
 

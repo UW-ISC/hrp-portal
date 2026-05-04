@@ -260,7 +260,17 @@ class MLASettings_CustomFields {
 		$new_rule['name'] = $new_name;
 		$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['description'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['description'] ) : '' );
 		$new_rule['data_source'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['data_source'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['data_source'] ) : 'none' );
-		$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
+
+		// Preserve named subpatterns in regular expressions
+		$meta_name = isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : ''; // phpcs:ignore
+		if ( ! empty( $meta_name ) ) {
+			$meta_name = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $meta_name );
+			$meta_name = wp_kses( $meta_name, 'post' );
+			$new_rule['meta_name'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $meta_name );
+		} else {
+			$new_rule['meta_name'] = '';
+		}
+
 		$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
 		$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['option'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['option'] ) : 'text' );
 
@@ -342,7 +352,17 @@ class MLASettings_CustomFields {
 			$new_rule['name'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_custom_field']['name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['name'] ) : '' );
 			$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['description'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['description'] ) : '' );
 			$new_rule['data_source'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['data_source'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['data_source'] ) : 'none' );
-			$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
+
+			// Preserve named subpatterns in regular expressions
+			$meta_name = isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : ''; // phpcs:ignore
+			if ( ! empty( $meta_name ) ) {
+				$meta_name = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $meta_name );
+				$meta_name = wp_kses( $meta_name, 'post' );
+				$new_rule['meta_name'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $meta_name );
+			} else {
+				$new_rule['meta_name'] = '';
+			}
+
 			$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
 			$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['option'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['option'] ) : 'text' );
 
@@ -512,7 +532,7 @@ class MLASettings_CustomFields {
 			'Data Source' => __( 'Data Source', 'media-library-assistant' ),
 			'data_sources' => MLAOptions::mla_compose_data_source_option_list( $item['data_source'] ),
 			'Meta/Template' => __( 'Meta/Template', 'media-library-assistant' ),
-			'meta_name' => $item['meta_name'],
+			'meta_name' => esc_attr( $item['meta_name'] ),
 			'Enter Meta/Template' => __( 'WordPress attachment metadata element or Content Template', 'media-library-assistant' ),
 			'mla_column' => $item['mla_column'] ? 'checked=checked' : '',
 			'MLA Column' => __( 'MLA Column', 'media-library-assistant' ),
@@ -1024,7 +1044,17 @@ class MLASettings_CustomFields {
 		}
 
 		$rule['data_source'] = sanitize_text_field( isset( $_REQUEST['data_source'] ) ? wp_unslash( $_REQUEST['data_source'] ) : 'none' );
-		$rule['meta_name'] = wp_kses( isset( $_REQUEST['meta_name'] ) ? wp_unslash( $_REQUEST['meta_name'] ) : '', 'post' );
+
+		// Preserve named subpatterns in regular expressions
+		$meta_name = isset( $_REQUEST['meta_name'] ) ? wp_unslash( $_REQUEST['meta_name'] ) : ''; // phpcs:ignore
+		if ( ! empty( $meta_name ) ) {
+			$meta_name = str_replace( array( '(?P<', '(?<' ), array( '(?P>', '(?>' ), $meta_name );
+			$meta_name = wp_kses( $meta_name, 'post' );
+			$rule['meta_name'] = str_replace( array( '&gt;', '(?P>', '(?>' ), array( '>', '(?P<', '(?<' ), $meta_name );
+		} else {
+			$rule['meta_name'] = '';
+		}
+
 		$rule['format'] = sanitize_text_field( isset( $_REQUEST['format'] ) ? wp_unslash( $_REQUEST['format'] ) : 'native' );
 		$rule['option'] = sanitize_text_field( isset( $_REQUEST['option'] ) ? wp_unslash( $_REQUEST['option'] ) : 'text' );
 

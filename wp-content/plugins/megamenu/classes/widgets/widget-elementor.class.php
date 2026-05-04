@@ -4,17 +4,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Elementor Max Mega Menu Widget.
+ * Elementor Max Mega Menu Widget. Allows users to embed a Max Mega Menu
+ * location within an Elementor page layout.
  *
- *
- * @since 3.5
+ * @since   3.5
+ * @package MegaMenu
  */
 class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget name.
-	 *
-	 * Retrieve list widget name.
 	 *
 	 * @since 3.5
 	 * @access public
@@ -27,8 +26,6 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Get widget title.
 	 *
-	 * Retrieve list widget title.
-	 *
 	 * @since 3.5
 	 * @access public
 	 * @return string Widget title.
@@ -39,8 +36,6 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget icon.
-	 *
-	 * Retrieve list widget icon.
 	 *
 	 * @since 3.5
 	 * @access public
@@ -53,8 +48,6 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Get widget categories.
 	 *
-	 * Retrieve the list of categories the list widget belongs to.
-	 *
 	 * @since 3.5
 	 * @access public
 	 * @return array Widget categories.
@@ -65,8 +58,6 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget keywords.
-	 *
-	 * Retrieve the list of keywords the list widget belongs to.
 	 *
 	 * @since 3.5
 	 * @access public
@@ -79,8 +70,6 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Get custom help URL.
 	 *
-	 * Retrieve a URL where the user can get more information about the widget.
-	 *
 	 * @since 3.5
 	 * @access public
 	 * @return string Widget help URL.
@@ -90,12 +79,11 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
-	 * Register list widget controls.
-	 *
-	 * Add input fields to allow the user to customize the widget settings.
+	 * Register widget controls.
 	 *
 	 * @since 3.5
 	 * @access protected
+	 * @return void
 	 */
 	protected function register_controls() {
 
@@ -111,23 +99,40 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 		if ( ! empty( $locations ) ) {
 			$this->add_control(
 				'location',
-				array(
+				[
 					'label'        => __( 'Choose Location', 'megamenu' ),
 					'type'         => \Elementor\Controls_Manager::SELECT,
 					'options'      => $locations,
 					'default'      => array_keys( $locations )[0],
 					'save_default' => true
-				)
+				]
 			);
 		} else {
+			$locations_admin = admin_url( 'admin.php?page=maxmegamenu' );
+			$locations_link_processor = new WP_HTML_Tag_Processor( '<a>' . esc_html__( 'Menu Locations', 'megamenu' ) . '</a>' );
+			if ( $locations_link_processor->next_tag( 'a' ) ) {
+				$locations_link_processor->set_attribute( 'href', $locations_admin );
+			}
+			$locations_link = $locations_link_processor->get_updated_html();
 			$this->add_control(
 				'location',
-				array(
+				[
 					'type'            => \Elementor\Controls_Manager::RAW_HTML,
-					'raw'             => sprintf( __( 'Go to the <a href="%s">Menu Locations</a> page to create your first menu location.', 'megamenu' ), admin_url( 'admin.php?page=maxmegamenu' ) ),
+					'raw'             => wp_kses(
+						sprintf(
+							/* translators: %s: link to the Menu Locations admin page */
+							__( 'Go to the %s page to create your first menu location.', 'megamenu' ),
+							$locations_link
+						),
+						[
+							'a' => [
+								'href' => true,
+							],
+						]
+					),
 					'separator'       => 'after',
 					'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-				)
+				]
 			);
 		}
 
@@ -154,10 +159,10 @@ class Elementor_Max_Mega_Menu_Widget extends \Elementor\Widget_Base {
 
 		if ( ! empty( $settings['location'] ) ) {
 			wp_nav_menu(
-				array(
+				[
 					'theme_location' => $settings['location'],
 					'echo'           => true,
-				)
+				]
 			);
 		}
 	}
