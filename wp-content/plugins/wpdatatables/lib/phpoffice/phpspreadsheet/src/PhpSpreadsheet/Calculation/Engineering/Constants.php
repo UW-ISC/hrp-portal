@@ -1,11 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
 class Constants
 {
     /**
      * EULER.
      */
-    public const EULER = 2.71828182845904523536;
+    public const EULER = 2.718281828459045;
 }

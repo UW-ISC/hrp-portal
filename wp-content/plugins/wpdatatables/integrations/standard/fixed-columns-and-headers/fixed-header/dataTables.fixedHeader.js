@@ -334,6 +334,16 @@
             var itemElement = item === 'header' ?
                 this.dom.thead :
                 this.dom.tfoot;
+            var tableNode = $(dt.table().node());
+            var scrollBody = $(tableNode.parent());
+            // Re-apply table x-scroll to the floating header after mode CSS updates (WPDT-2082 / DT FH 4.0.5).
+            var scrollLeftUpdate = function () {
+                var scrollLeft = scrollBody.scrollLeft();
+                that.s.scrollLeft = {footer: scrollLeft, header: scrollLeft};
+                if (itemDom.floatingParent) {
+                    itemDom.floatingParent.scrollLeft(that.s.scrollLeft.header);
+                }
+            };
 
             // If footer and scrolling is enabled then we don't clone
             // Instead the table's height is decreased accordingly - see `_scroll()`
@@ -347,6 +357,7 @@
             } else {
                 var docScrollLeft = $(document).scrollLeft();
                 var docScrollTop = $(document).scrollTop();
+                var bodyScrollLeft = scrollBody.scrollLeft();
                 if ($(this.wpDatatableDescription.selector).find('thead tr th span.filter_select div.btn-group.open').length != 0) {
                     $(this.wpDatatableDescription.selector).find('thead tr th span.filter_select div.btn-group.open').removeClass('open')
                 }
@@ -359,8 +370,6 @@
                     itemDom.floating.remove();
                 }
 
-                var tableNode = $(dt.table().node());
-                var scrollBody = $(tableNode.parent());
                 var scrollEnabled = this._scrollEnabled();
 
                 itemDom.floating = $(dt.table().node().cloneNode(false))
@@ -378,7 +387,7 @@
                         overflow: 'hidden',
                         height: 'fit-content',
                         position: 'fixed',
-                        left: scrollEnabled ? tableNode.offset().left + scrollBody.scrollLeft() : 0
+                        left: scrollEnabled ? tableNode.offset().left + bodyScrollLeft : 0
                     })
                     .css(
                         item === 'header' ?
@@ -396,12 +405,6 @@
                     .prependTo(this.wpDatatableDescription.selector)
 
                 // this._stickyPosition(itemDom.floating, '-');
-
-                var scrollLeftUpdate = function () {
-                    var scrollLeft = scrollBody.scrollLeft()
-                    that.s.scrollLeft = {footer: scrollLeft, header: scrollLeft};
-                    itemDom.floatingParent.scrollLeft(that.s.scrollLeft.header);
-                }
 
                 scrollLeftUpdate();
                 scrollBody
@@ -425,7 +428,13 @@
                 $(document)
                     .scrollTop(docScrollTop)
                     .scrollLeft(docScrollLeft);
+
+                // Preserve horizontal scroll of the table scroller (.wdtscroll) across thead move (WPDT-2082).
+                scrollBody.scrollLeft(bodyScrollLeft);
+                scrollLeftUpdate();
             }
+
+            return scrollLeftUpdate;
         },
         //
         // /**
@@ -621,7 +630,7 @@
             } else if (mode === 'in') {
                 // Remove the header from the read header and insert into a fixed
                 // positioned floating table clone
-                this._clone(item, forceChange);
+                var scrollLeftUpdate = this._clone(item, forceChange);
 
                 // Get useful position values
                 var scrollOffset = scrollBody.offset();
@@ -647,12 +656,14 @@
                 var prop = item === 'header' ? 'top' : 'bottom';
                 var val = this.c[item + 'Offset'] - (shuffle > 0 ? shuffle : 0);
                 // var tableHeightFilter = document.getElementById(this.wpDatatableDescription.tableId);
+                // For scrollable tables, keep floating parent aligned to the scroller, not the shifted table.
+                var floatingLeft = scrollEnabled ? scrollOffset.left : position.left;
 
                 itemDom.floating.addClass('fixedHeader-floating');
                 itemDom.floatingParent
                     .css(prop, val)
                     .css({
-                        'left': position.left,
+                        'left': floatingLeft,
                         'height': item === 'header' ? 'max-content' : position.tfootHeight,
                         'z-index': 4
                     })
@@ -661,36 +672,51 @@
                 if (!(this.wpDatatableDescription.scrollable))
                     importantWidth(position.width);
 
+                // CSS updates above can reset floatingParent scrollLeft; re-apply x-scroll (WPDT-2082).
+                if (scrollLeftUpdate) {
+                    scrollLeftUpdate();
+                }
+
                 if (item === 'footer') {
                     itemDom.floating.css('top', '');
                 }
             } else if (mode === 'below') { // only used for the header
                 // Fix the position of the floating header at base of the table body
-                this._clone(item, forceChange);
+                var scrollLeftUpdateBelow = this._clone(item, forceChange);
+                var belowLeft = scrollEnabled ? scrollBody.offset().left : position.left;
 
                 itemDom.floating.addClass('fixedHeader-locked');
                 itemDom.floatingParent.css({
                     position: 'absolute',
                     // top: position.tfootTop - position.theadHeight,
                     top: 0,
-                    left: position.left + 'px'
+                    left: belowLeft + 'px'
                 });
 
                 if (!(this.wpDatatableDescription.scrollable))
                     importantWidth(position.width);
+
+                if (scrollLeftUpdateBelow) {
+                    scrollLeftUpdateBelow();
+                }
             } else if (mode === 'above') { // only used for the footer
                 // Fix the position of the floating footer at top of the table body
-                this._clone(item, forceChange);
+                var scrollLeftUpdateAbove = this._clone(item, forceChange);
+                var aboveLeft = scrollEnabled ? scrollBody.offset().left : position.left;
 
                 itemDom.floating.addClass('fixedHeader-locked');
                 itemDom.floatingParent.css({
                     position: 'absolute',
                     top: position.tbodyTop,
-                    left: position.left + 'px'
+                    left: aboveLeft + 'px'
                 });
 
                 if (!(this.wpDatatableDescription.scrollable))
                     importantWidth(position.width);
+
+                if (scrollLeftUpdateAbove) {
+                    scrollLeftUpdateAbove();
+                }
             }
 
             // Restore focus if it was lost
@@ -809,12 +835,16 @@
                     if (windowTop + this.c.headerOffset + position.theadHeight > bodyBottom || this.dom.header.floatingParent === undefined) {
                         forceChange = true;
                     } else {
+                        var currentBodyScrollLeft = scrollBody.scrollLeft();
                         this.dom.header.floatingParent
                             .css({
                                 'top': this.c.headerOffset,
                                 'position': 'fixed'
                             })
                             .append(this.dom.header.floating);
+                        // Preserve x-scroll sync while only updating floating header top (WPDT-2082).
+                        this.dom.header.floatingParent.scrollLeft(currentBodyScrollLeft);
+                        this.s.scrollLeft.header = currentBodyScrollLeft;
                     }
                 }
                 // Anything else and the view is below the table

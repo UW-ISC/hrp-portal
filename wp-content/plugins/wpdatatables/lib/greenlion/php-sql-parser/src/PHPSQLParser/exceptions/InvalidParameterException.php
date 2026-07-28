@@ -1,4 +1,5 @@
 <?php
+
 /**
  * InvalidParameterException.php
  *
@@ -39,10 +40,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\exceptions;
 
-namespace PHPSQLParser\exceptions;
 use InvalidArgumentException;
-
 /**
  * This exception will occur in the parser, if the given SQL statement
  * is not a String type.
@@ -51,18 +51,16 @@ use InvalidArgumentException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class InvalidParameterException extends InvalidArgumentException {
-
+class InvalidParameterException extends InvalidArgumentException
+{
     protected $argument;
-
-    public function __construct($argument) {
+    public function __construct($argument)
+    {
         $this->argument = $argument;
         parent::__construct("no SQL string to parse: \n" . $argument, 10);
     }
-
-    public function getArgument() {
+    public function getArgument()
+    {
         return $this->argument;
     }
 }
-
-?>

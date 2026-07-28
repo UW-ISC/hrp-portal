@@ -1,11 +1,12 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Registry for retrieving specific URI scheme validator objects.
  */
 class HTMLPurifier_URISchemeRegistry
 {
-
     /**
      * Retrieve sole instance of the registry.
      * @param HTMLPurifier_URISchemeRegistry $prototype Optional prototype to overload sole instance with,
@@ -19,18 +20,16 @@ class HTMLPurifier_URISchemeRegistry
         static $instance = null;
         if ($prototype !== null) {
             $instance = $prototype;
-        } elseif ($instance === null || $prototype == true) {
+        } elseif ($instance === null || $prototype == \true) {
             $instance = new HTMLPurifier_URISchemeRegistry();
         }
         return $instance;
     }
-
     /**
      * Cache of retrieved schemes.
      * @type HTMLPurifier_URIScheme[]
      */
     protected $schemes = array();
-
     /**
      * Retrieves a scheme validator object
      * @param string $scheme String scheme name like http or mailto
@@ -43,30 +42,24 @@ class HTMLPurifier_URISchemeRegistry
         if (!$config) {
             $config = HTMLPurifier_Config::createDefault();
         }
-
         // important, otherwise attacker could include arbitrary file
         $allowed_schemes = $config->get('URI.AllowedSchemes');
-        if (!$config->get('URI.OverrideAllowedSchemes') &&
-            !isset($allowed_schemes[$scheme])
-        ) {
+        if (!$config->get('URI.OverrideAllowedSchemes') && !isset($allowed_schemes[$scheme])) {
             return;
         }
-
         if (isset($this->schemes[$scheme])) {
             return $this->schemes[$scheme];
         }
         if (!isset($allowed_schemes[$scheme])) {
             return;
         }
-
         $class = 'HTMLPurifier_URIScheme_' . $scheme;
-        if (!class_exists($class)) {
+        if (!\class_exists($class)) {
             return;
         }
         $this->schemes[$scheme] = new $class();
         return $this->schemes[$scheme];
     }
-
     /**
      * Registers a custom scheme to the cache, bypassing reflection.
      * @param string $scheme Scheme name
@@ -77,5 +70,4 @@ class HTMLPurifier_URISchemeRegistry
         $this->schemes[$scheme] = $scheme_obj;
     }
 }
-
 // vim: et sw=4 sts=4

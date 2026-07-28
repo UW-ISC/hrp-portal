@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Base
 {
     use ArrayEnabled;
-
     /**
      * BASE.
      *
@@ -31,38 +29,34 @@ class Base
      */
     public static function evaluate($number, $radix, $minLength = null)
     {
-        if (is_array($number) || is_array($radix) || is_array($minLength)) {
+        if (\is_array($number) || \is_array($radix) || \is_array($minLength)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $radix, $minLength);
         }
-
         try {
-            $number = (float) floor(Helpers::validateNumericNullBool($number));
+            $number = (float) \floor(Helpers::validateNumericNullBool($number));
             $radix = (int) Helpers::validateNumericNullBool($radix);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         return self::calculate($number, $radix, $minLength);
     }
-
     /**
      * @param mixed $minLength
      */
-    private static function calculate(float $number, int $radix, $minLength): string
+    private static function calculate(float $number, int $radix, $minLength) : string
     {
-        if ($minLength === null || is_numeric($minLength)) {
+        if ($minLength === null || \is_numeric($minLength)) {
             if ($number < 0 || $number >= 2 ** 53 || $radix < 2 || $radix > 36) {
-                return ExcelError::NAN(); // Numeric range constraints
+                return ExcelError::NAN();
+                // Numeric range constraints
             }
-
-            $outcome = strtoupper((string) base_convert("$number", 10, $radix));
+            $outcome = \strtoupper((string) \base_convert("{$number}", 10, $radix));
             if ($minLength !== null) {
-                $outcome = str_pad($outcome, (int) $minLength, '0', STR_PAD_LEFT); // String padding
+                $outcome = \str_pad($outcome, (int) $minLength, '0', \STR_PAD_LEFT);
+                // String padding
             }
-
             return $outcome;
         }
-
         return ExcelError::VALUE();
     }
 }

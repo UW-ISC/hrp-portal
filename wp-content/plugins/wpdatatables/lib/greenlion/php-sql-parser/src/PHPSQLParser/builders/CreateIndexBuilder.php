@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateIndex.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the CREATE INDEX statement. You can overwrite
@@ -49,32 +49,31 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateIndexBuilder implements Builder {
-
-    protected function buildIndexType($parsed) {
+class CreateIndexBuilder implements Builder
+{
+    protected function buildIndexType($parsed)
+    {
         $builder = new CreateIndexTypeBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexTable($parsed) {
+    protected function buildIndexTable($parsed)
+    {
         $builder = new CreateIndexTableBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexOptions($parsed) {
+    protected function buildIndexOptions($parsed)
+    {
         $builder = new CreateIndexOptionsBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $parsed['name'];
         $sql .= ' ' . $this->buildIndexType($parsed);
-        $sql = trim($sql);
+        $sql = \trim($sql);
         $sql .= ' ' . $this->buildIndexTable($parsed);
-        $sql = trim($sql);
+        $sql = \trim($sql);
         $sql .= $this->buildIndexOptions($parsed);
-        return trim($sql);
+        return \trim($sql);
     }
-
 }
-?>

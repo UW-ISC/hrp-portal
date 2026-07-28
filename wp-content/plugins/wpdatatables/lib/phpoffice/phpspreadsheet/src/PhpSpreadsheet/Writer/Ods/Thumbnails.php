@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 
 class Thumbnails extends WriterPart
 {
@@ -9,7 +9,7 @@ class Thumbnails extends WriterPart
      *
      * @return string XML Output
      */
-    public function write(): string
+    public function write() : string
     {
         return '';
     }

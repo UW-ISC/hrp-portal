@@ -27,6 +27,9 @@ class WdtIvyFormsIntegration
         add_filter('wpdatatables_filter_insert_table_array', array('WdtIvyFormsIntegration', 'extendTableConfig'));
         add_action('wp_ajax_ivyforms_one_click_install', array('WdtIvyFormsIntegration', 'oneClickInstallIvyForms'));
         add_action('wpdatatables_add_table_constructor_type_in_wizard', array('WdtIvyFormsIntegration', 'addNewTableTypes'));
+        add_filter('wpdatatables_filter_cell_output', array('WdtIvyFormsIntegration', 'filterIvyFormsCellOutput'), 10, 3);
+        add_filter('wpdatatables_filter_cell_val', array('WdtIvyFormsIntegration', 'filterIvyFormsCellVal'), 10, 2);
+        add_filter('safecss_filter_attr_allow_css', array(__CLASS__, 'allowIvyformsRichTextInlineCss'), 10, 2);
     }
 
     /**
@@ -261,7 +264,67 @@ class WdtIvyFormsIntegration
         if (empty($params['columnTitles'])) {
             $params['columnTitles'] = self::getColumnHeaders($content->formId, $content->fieldIds);
         }
-        $wpDataTable->arrayBasedConstruct(self::generateFormArray($content, $ivyFormsData), $params);
+        $formArray = self::generateFormArray($content, $ivyFormsData);
+        self::$relaxSafecssForIvyHtml = true;
+        try {
+            $wpDataTable->arrayBasedConstruct($formArray, $params);
+        } finally {
+            self::$relaxSafecssForIvyHtml = false;
+        }
+    }
+
+    /**
+     * Allow IvyForms HTML field inline styles through safecss while arrayBasedConstruct runs wp_kses_post.
+     *
+     * Core safecss rejects declarations containing "(" (e.g. color: rgb(...)) or "&" (e.g. font-family: &quot;..."),
+     * which IvyForms/Vue commonly emit.
+     *
+     * @param bool   $allow             Whether the CSS fragment passed core's character checks.
+     * @param string $css_test_string   Single declaration under test (e.g. "color: rgb(1, 2, 3)").
+     * @return bool
+     */
+    public static function allowIvyformsRichTextInlineCss($allow, $css_test_string) {
+        if ($allow || !self::$relaxSafecssForIvyHtml) {
+            return $allow;
+        }
+
+        if (!is_string($css_test_string)) {
+            return false;
+        }
+
+        $t = trim($css_test_string);
+        if ($t === '') {
+            return false;
+        }
+
+        if (preg_match('/\b(?:url|expression|javascript|@import|behavior|-moz-binding)\s*\(/i', $t)) {
+            return false;
+        }
+
+        if (preg_match(
+            '/^(?:color|background-color|border-color)\s*:\s*rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}(?:\s*,\s*(?:0?\.\d+|1(?:\.0)?))?\s*\)\s*$/i',
+            $t
+        )) {
+            return true;
+        }
+
+        if (preg_match(
+            '/^(?:color|background-color|border-color)\s*:\s*hsla?\(\s*[\d.]+\s*,\s*[\d.]+%\s*,\s*[\d.]+%(?:\s*,\s*(?:0?\.\d+|1(?:\.0)?))?\s*\)\s*$/i',
+            $t
+        )) {
+            return true;
+        }
+
+        if (preg_match('/^font-family\s*:/iu', $t) && strpos($t, '&') !== false) {
+            if (preg_match(
+                '/^font-family\s*:\s*(?:[\p{L}\p{N}\s\-_,.\'"]|&(?:#(?:x[0-9a-f]+|[0-9]+)|[a-z]+);)+$/iu',
+                $t
+            )) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -610,23 +673,607 @@ class WdtIvyFormsIntegration
     }
 
     /**
-     * Prepare fields data for table display
+     * MIME types allowed for IvyForms signature data URIs (decoded bytes must match).
+     *
+     * @return string[]
      */
-    public static function prepareFieldsData($field, $entry)
-    {
-        $fieldId = $field->getId();
+    private static function allowedSignatureImageMimeTypes(): array {
+        return array(
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/webp',
+        );
+    }
 
-        // Check if entry has fields array - for now, type is not relevant
-        // TODO Check for password, signature etc.
-        if (isset($entry['fields']) && is_array($entry['fields'])) {
-            foreach ($entry['fields'] as $entryField) {
-                if (isset($entryField['fieldId']) && $entryField['fieldId'] == $fieldId) {
-                    return $entryField['fieldValue'] ?? '';
+    /**
+     * Normalize image MIME aliases for comparison and allowlist checks.
+     *
+     * @param string $mime Raw MIME string.
+     * @return string
+     */
+    private static function normalizeSignatureImageMime(string $mime): string {
+        $mime = strtolower(trim($mime));
+        $aliases = array(
+            'image/jpg' => 'image/jpeg',
+            'image/pjpeg' => 'image/jpeg',
+            'image/x-png' => 'image/png',
+        );
+
+        return isset($aliases[$mime]) ? $aliases[$mime] : $mime;
+    }
+
+    /**
+     * Check if a string is a valid data-URI image with base64 payload.
+     *
+     * Requires header before the first comma to match `data:image/<mime>;base64`
+     * so non-image payloads (e.g. application/pdf) are rejected. Decodes the payload,
+     * verifies real image bytes via getimagesizefromstring, optional finfo_buffer,
+     * and requires the declared header MIME to match the detected MIME and allowlist.
+     *
+     * @param string $data The data to check (may omit leading `data:` if it starts with `image/`).
+     * @return bool
+     */
+    private static function isValidBase64Image($data): bool {
+        if (!is_string($data)) {
+            return false;
+        }
+
+        $normalized = trim($data);
+        if ($normalized === '') {
+            return false;
+        }
+
+        // IvyForms / browsers may store `image/png;base64,...` without the `data:` prefix.
+        if (stripos($normalized, 'data:') !== 0 && stripos($normalized, 'image/') === 0) {
+            $normalized = 'data:' . $normalized;
+        }
+
+        if (strpos($normalized, ',') === false) {
+            return false;
+        }
+
+        list($header, $base64String) = explode(',', $normalized, 2);
+        $header = trim($header);
+        $base64String = trim($base64String);
+
+        if ($header === '' || $base64String === '') {
+            return false;
+        }
+
+        if (!preg_match('/^data:(image\/[^;]+);base64$/i', $header, $headerMimeMatch)) {
+            return false;
+        }
+
+        $declaredMime = self::normalizeSignatureImageMime($headerMimeMatch[1]);
+        $allowed = self::allowedSignatureImageMimeTypes();
+        if (!in_array($declaredMime, $allowed, true)) {
+            return false;
+        }
+
+        $binary = base64_decode($base64String, true);
+        if ($binary === false || $binary === '') {
+            return false;
+        }
+
+        if (!function_exists('getimagesizefromstring')) {
+            return false;
+        }
+
+        $imageInfo = getimagesizefromstring($binary);
+        if ($imageInfo === false || empty($imageInfo['mime'])) {
+            return false;
+        }
+
+        $detectedMime = self::normalizeSignatureImageMime($imageInfo['mime']);
+        if (!in_array($detectedMime, $allowed, true) || $detectedMime !== $declaredMime) {
+            return false;
+        }
+
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            if ($finfo) {
+                $probeMime = finfo_buffer($finfo, $binary, FILEINFO_MIME_TYPE);
+                finfo_close($finfo);
+                if (is_string($probeMime) && $probeMime !== '') {
+                    $probeNorm = self::normalizeSignatureImageMime($probeMime);
+                    if (strpos($probeNorm, 'image/') === 0) {
+                        if (!in_array($probeNorm, $allowed, true) || $probeNorm !== $detectedMime) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Extract raw image source from possible signature value formats.
+     */
+    private static function extractSignatureImageSource($value): string {
+        if (!is_string($value)) {
+            return '';
+        }
+
+        $decodedValue = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $trimmedValue = trim($decodedValue);
+
+        if ($trimmedValue === '') {
+            return '';
+        }
+
+        if (preg_match('/^<img\\b[^>]*\\bsrc\\s*=\\s*(["\'])(.*?)\\1/i', $trimmedValue, $matches)) {
+            return trim($matches[2]);
+        }
+
+        if (preg_match('/^<img\\b[^>]*\\bsrc\\s*=\\s*([^\s>]+)/i', $trimmedValue, $matches)) {
+            return trim($matches[1], " \t\n\r\0\x0B\"'");
+        }
+
+        return $trimmedValue;
+    }
+
+    /**
+     * Normalize signature data to proper data URL format
+     *
+     * Only prefixes `data:` when the value is already a base64 image MIME fragment
+     * (`image/<subtype>;base64,...`), matching the same image data URI rules as isValidBase64Image().
+     *
+     * @param string $value The signature value
+     * @return string Properly formatted data URL
+     */
+    private static function normalizeSignatureDataUrl(string $value): string {
+        $value = trim($value);
+
+        if (stripos($value, 'data:') === 0) {
+            return $value;
+        }
+
+        if (preg_match('/^image\/[^;]+;base64,/i', $value)) {
+            return 'data:' . $value;
+        }
+
+        return $value;
+    }
+
+    /**
+     * IvyForms HTML block field type (slug is `html` in FieldType / builder).
+     *
+     * @param mixed $fieldType Raw type from Field::getType().
+     * @return bool
+     */
+    private static function isHtmlFieldType($fieldType): bool {
+        return is_string($fieldType) && strcasecmp(trim($fieldType), 'html') === 0;
+    }
+
+    /**
+     * IvyForms signature field type.
+     *
+     * @param mixed $fieldType Raw type from Field::getType().
+     * @return bool
+     */
+    private static function isSignatureFieldType($fieldType): bool {
+        return is_string($fieldType) && strtolower(trim($fieldType)) === 'signature';
+    }
+
+    /**
+     * Read htmlContent from field settings for HTML field type
+     */
+    private static function getHtmlFieldContent($field): string {
+        if (!is_object($field)) {
+            return '';
+        }
+
+        if (method_exists($field, 'getFieldGeneralSettings')) {
+            $generalSettings = $field->getFieldGeneralSettings();
+
+            if (is_object($generalSettings) && method_exists($generalSettings, 'getHtmlContent')) {
+                return (string)$generalSettings->getHtmlContent();
+            }
+
+            if (is_object($generalSettings) && method_exists($generalSettings, 'toArray')) {
+                $settingsArr = $generalSettings->toArray();
+                if (isset($settingsArr['htmlContent']) && is_string($settingsArr['htmlContent'])) {
+                    return $settingsArr['htmlContent'];
+                }
+            }
+        }
+
+        if (method_exists($field, 'toArray')) {
+            $fieldArr = $field->toArray();
+
+            if (isset($fieldArr['htmlContent']) && is_string($fieldArr['htmlContent'])) {
+                return $fieldArr['htmlContent'];
+            }
+
+            if (isset($fieldArr['settings'])) {
+                $settings = is_array($fieldArr['settings'])
+                    ? $fieldArr['settings']
+                    : json_decode((string)$fieldArr['settings'], true);
+
+                if (is_array($settings) && isset($settings['htmlContent']) && is_string($settings['htmlContent'])) {
+                    return $settings['htmlContent'];
                 }
             }
         }
 
         return '';
+    }
+
+    /**
+     * Resolve rating meta from field settings and options.
+     *
+     * @return array{max: float, icon: string}
+     */
+    private static function getRatingMeta($field): array {
+        $meta = array(
+            'max' => 5.0,
+            'icon' => 'star',
+        );
+
+        if (!is_object($field)) {
+            return $meta;
+        }
+
+        if (method_exists($field, 'getFieldAdvancedSettings')) {
+            $advancedSettings = $field->getFieldAdvancedSettings();
+            if (is_object($advancedSettings) && method_exists($advancedSettings, 'toArray')) {
+                $advancedArr = $advancedSettings->toArray();
+                if (isset($advancedArr['ratingIcon']) && is_string($advancedArr['ratingIcon']) && $advancedArr['ratingIcon'] !== '') {
+                    $meta['icon'] = strtolower(trim($advancedArr['ratingIcon']));
+                }
+            }
+        }
+
+        if (method_exists($field, 'getFieldGeneralSettings')) {
+            $generalSettings = $field->getFieldGeneralSettings();
+            if (is_object($generalSettings) && method_exists($generalSettings, 'getMaxValue')) {
+                $configuredMax = $generalSettings->getMaxValue();
+                if (is_numeric($configuredMax) && (float)$configuredMax > 0) {
+                    $meta['max'] = (float)$configuredMax;
+                }
+            }
+        }
+
+        $fieldId = method_exists($field, 'getId') ? (int)$field->getId() : 0;
+        if ($fieldId > 0) {
+            if (!array_key_exists($fieldId, self::$ratingOptionsCache)) {
+                $options = IvyFormsAPI::getFieldOptions($fieldId);
+                self::$ratingOptionsCache[$fieldId] = is_wp_error($options) || !is_array($options) ? array() : $options;
+            }
+
+            $options = self::$ratingOptionsCache[$fieldId];
+
+            if (!empty($options)) {
+                $numericValues = array();
+
+                foreach ($options as $option) {
+                    if (is_object($option) && method_exists($option, 'getValue')) {
+                        $optionValue = $option->getValue();
+                    } elseif (is_array($option) && isset($option['value'])) {
+                        $optionValue = $option['value'];
+                    } else {
+                        $optionValue = null;
+                    }
+
+                    if (is_numeric($optionValue)) {
+                        $numericValues[] = (float)$optionValue;
+                    }
+                }
+
+                if (!empty($numericValues)) {
+                    $maxFromOptions = max($numericValues);
+                    if ($maxFromOptions > 0) {
+                        $meta['max'] = $maxFromOptions;
+                    }
+                } else {
+                    $meta['max'] = (float)count($options);
+                }
+            }
+        }
+
+        return $meta;
+    }
+
+    /**
+     * Resolve display markup by rating icon type.
+     */
+    private static function getRatingIconMarkup(string $icon, bool $filled): string {
+        $normalized = strtolower(trim($icon));
+
+        if (in_array($normalized, array('heart', 'hearts'), true)) {
+            return $filled ? '&#9829;' : '&#9825;';
+        }
+
+        if (in_array($normalized, array('like', 'likes', 'thumb', 'thumbs', 'thumbs-up', 'thumbs_up', 'thumb-up', 'thumb_up'), true)) {
+            return '<span class="dashicons dashicons-thumbs-up" aria-hidden="true"></span>';
+        }
+
+        return $filled ? '&#9733;' : '&#9734;';
+    }
+
+    /**
+     * Build rating placeholder marker from numeric value and field settings.
+     */
+    private static function buildRatingPlaceholder($value, $field): string {
+        if (!is_numeric($value)) {
+            return '';
+        }
+
+        $rating = (float)$value;
+        $meta = self::getRatingMeta($field);
+        $iconSlug = preg_replace('/[^a-z0-9_-]/', '', strtolower($meta['icon']));
+        if ($iconSlug === '') {
+            $iconSlug = 'star';
+        }
+
+        return 'WDTRTG:' . $rating . ':' . $meta['max'] . ':' . $iconSlug;
+    }
+
+    /**
+     * Check if field type should be treated as rating.
+     */
+    private static function isRatingFieldType($fieldType): bool {
+        if (!is_string($fieldType)) {
+            return false;
+        }
+
+        return strtolower(trim($fieldType)) === 'rating';
+    }
+
+    /**
+     * Convert a rating marker to star-based HTML output.
+     */
+    private static function renderRatingPlaceholder($marker): string {
+        if (!is_string($marker) || !preg_match('/^WDTRTG:([0-9]+(?:\.[0-9]+)?):([0-9]+(?:\.[0-9]+)?):([a-z0-9_-]+)$/', trim($marker), $matches)) {
+            return $marker;
+        }
+
+        $rating = (float)$matches[1];
+        $maxRating = (float)$matches[2];
+        $icon = $matches[3];
+
+        if ($maxRating <= 0) {
+            $maxRating = 5.0;
+        }
+
+        if ($rating < 0) {
+            $rating = 0.0;
+        }
+
+        if ($rating > $maxRating) {
+            $rating = $maxRating;
+        }
+
+        $roundedMax = (int)round($maxRating);
+        if ($roundedMax < 1) {
+            $roundedMax = 1;
+        }
+
+        $filled = (int)round($rating);
+        if ($filled < 0) {
+            $filled = 0;
+        }
+
+        if ($filled > $roundedMax) {
+            $filled = $roundedMax;
+        }
+
+        $ratingLabel = rtrim(rtrim(number_format($rating, 2, '.', ''), '0'), '.');
+        $maxLabel = rtrim(rtrim(number_format($maxRating, 2, '.', ''), '0'), '.');
+
+        $iconsHtml = '';
+        for ($i = 1; $i <= $roundedMax; $i++) {
+            $isFilled = $i <= $filled;
+            $symbols = self::getRatingIconMarkup($icon, $isFilled);
+            $iconClass = $isFilled ? 'wdt-ivy-rating-icon-filled' : 'wdt-ivy-rating-icon-empty';
+            $iconStyle = $isFilled ? 'color:#FFD700;' : 'color:#CCCCCC;opacity:0.35;';
+            $iconsHtml .= '<span class="wdt-ivy-rating-icon ' . esc_attr($iconClass) . '" style="' . esc_attr($iconStyle) . '">' . $symbols . '</span>';
+        }
+
+        return '<span class="wdt-ivy-rating" title="' . esc_attr($ratingLabel . '/' . $maxLabel) . '">'
+            . '<span class="wdt-ivy-rating-icons">' . $iconsHtml . '</span>'
+            . ' <span class="wdt-ivy-rating-value">(' . esc_html($ratingLabel . '/' . $maxLabel) . ')</span>'
+            . '</span>';
+    }
+
+    /**
+     * In-memory cache for signature data, keyed by md5 hash.
+     * Avoids passing the huge base64 string through wp_kses_post which can mangle it.
+     *
+     * @var array<string, string>
+     */
+    private static $signatureCache = [];
+
+    /**
+     * In-memory cache for rating options by field id.
+     *
+     * @var array<int, array>
+     */
+    private static $ratingOptionsCache = [];
+
+    /**
+     * Whether a wpDataTable ID is an IvyForms-backed table (cached per request).
+     *
+     * @var array<int, bool>
+     */
+    private static $ivyFormsTableTypeCache = [];
+
+    /**
+     * True only while WPDataTable::arrayBasedConstruct runs for IvyForms (wp_kses_post + safecss).
+     *
+     * @var bool
+     */
+    private static $relaxSafecssForIvyHtml = false;
+
+    /**
+     * Prepare fields data for table display
+     */
+    public static function prepareFieldsData($field, $entry)
+    {
+        $fieldId = $field->getId();
+        $fieldType = $field->getType();
+
+        // Check if entry has fields array
+        if (isset($entry['fields']) && is_array($entry['fields'])) {
+            foreach ($entry['fields'] as $entryField) {
+                if (isset($entryField['fieldId']) && $entryField['fieldId'] == $fieldId) {
+                    $fieldValue = $entryField['fieldValue'] ?? '';
+
+                    // HTML blocks: IvyForms often stores an empty row; content lives on the field (htmlContent).
+                    if (self::isHtmlFieldType($fieldType)) {
+                        $trimmedHtml = is_string($fieldValue) ? trim($fieldValue) : '';
+                        if ($trimmedHtml !== '') {
+                            return $fieldValue;
+                        }
+
+                        return self::getHtmlFieldContent($field);
+                    }
+
+                    if (self::isRatingFieldType($fieldType)) {
+                        $ratingPlaceholder = self::buildRatingPlaceholder($fieldValue, $field);
+                        return $ratingPlaceholder !== '' ? $ratingPlaceholder : $fieldValue;
+                    }
+
+                    if (self::isSignatureFieldType($fieldType)) {
+                        $signatureSource = self::extractSignatureImageSource($fieldValue);
+                        if (self::isValidBase64Image($signatureSource)) {
+                            // Signature fields: store base64 in static cache, pass only the hash.
+                            // wp_kses_post (in arrayBasedConstruct) can mangle large base64 strings.
+                            // The hash (plain alphanumeric) passes through untouched.
+                            $normalizedSource = self::normalizeSignatureDataUrl($signatureSource);
+                            $hash = md5($normalizedSource);
+                            self::$signatureCache[$hash] = $normalizedSource;
+
+                            return 'WDTSIG:' . $hash;
+                        }
+                    }
+
+                    return $fieldValue;
+                }
+            }
+        }
+
+        if (self::isHtmlFieldType($fieldType)) {
+            return self::getHtmlFieldContent($field);
+        }
+
+        return '';
+    }
+
+    /**
+     * wpdatatables_filter_cell_output — replace IvyForms rating/signature placeholders with HTML.
+     *
+     * @param mixed  $cellOutput Cell content after column formatting.
+     * @param int    $tableId wpDataTable ID.
+     * @param string|null $columnName Column key (unused; kept for filter arity).
+     * @return mixed
+     */
+    public static function filterIvyFormsCellOutput($cellOutput, $tableId, $columnName = null) {
+        return self::resolveIvyFormsPlaceholderMarkers($cellOutput, $tableId);
+    }
+
+    /**
+     * wpdatatables_filter_cell_val — same placeholder resolution for code paths that only apply cell_val.
+     *
+     * @param mixed $cellValue Cell value after prepareCellOutput.
+     * @param int   $tableId wpDataTable ID.
+     * @return mixed
+     */
+    public static function filterIvyFormsCellVal($cellValue, $tableId) {
+        return self::resolveIvyFormsPlaceholderMarkers($cellValue, $tableId);
+    }
+
+    /**
+     * Whether the table is IvyForms-backed (cached). Used so global cell filters skip non-Ivy tables cheaply.
+     *
+     * @param int $tableId Table ID from the filter.
+     * @return bool
+     */
+    private static function isIvyFormsDataTableId($tableId) {
+        $tableId = absint($tableId);
+        if (!$tableId) {
+            return false;
+        }
+
+        if (array_key_exists($tableId, self::$ivyFormsTableTypeCache)) {
+            return self::$ivyFormsTableTypeCache[$tableId];
+        }
+
+        if (!class_exists('WDTConfigController')) {
+            self::$ivyFormsTableTypeCache[$tableId] = false;
+            return false;
+        }
+
+        try {
+            $table = WDTConfigController::loadTableFromDB($tableId, true);
+        } catch (Exception $e) {
+            self::$ivyFormsTableTypeCache[$tableId] = false;
+            return false;
+        }
+
+        $isIvyForms = is_object($table) && isset($table->table_type) && $table->table_type === 'ivyforms';
+        self::$ivyFormsTableTypeCache[$tableId] = $isIvyForms;
+
+        return $isIvyForms;
+    }
+
+    /**
+     * Replace WDTRTG / WDTSIG markers for IvyForms tables only.
+     *
+     * @param mixed $cellContent Raw or formatted cell string.
+     * @param int   $tableId wpDataTable ID.
+     * @return mixed
+     */
+    private static function resolveIvyFormsPlaceholderMarkers($cellContent, $tableId) {
+        if (!is_string($cellContent)) {
+            return $cellContent;
+        }
+
+        $trimmed = trim($cellContent);
+        $isRatingMarker = (strpos($trimmed, 'WDTRTG:') === 0);
+        $isSignatureMarker = (bool) preg_match('/^WDTSIG:[a-f0-9]{32}$/', $trimmed);
+
+        if (!$isRatingMarker && !$isSignatureMarker) {
+            return $cellContent;
+        }
+
+        if (!self::isIvyFormsDataTableId($tableId)) {
+            return $cellContent;
+        }
+
+        if ($isRatingMarker) {
+            return self::renderRatingPlaceholder($cellContent);
+        }
+
+        return self::renderSignaturePlaceholderFromMarker($trimmed);
+    }
+
+    /**
+     * Convert a WDTSIG:<hash> cell string to an <img> tag using the in-request cache.
+     *
+     * @param string $trimmedOutput Trimmed cell value matching WDTSIG pattern.
+     * @return string
+     */
+    private static function renderSignaturePlaceholderFromMarker($trimmedOutput) {
+        if (!preg_match('/^WDTSIG:([a-f0-9]{32})$/', $trimmedOutput, $matches)) {
+            return $trimmedOutput;
+        }
+
+        $hash = $matches[1];
+
+        if (!isset(self::$signatureCache[$hash])) {
+            return '';
+        }
+
+        $dataUrl = self::normalizeSignatureDataUrl(self::$signatureCache[$hash]);
+        if (!self::isValidBase64Image($dataUrl)) {
+            return '';
+        }
+
+        return '<img src="' . esc_attr($dataUrl) . '" alt="Signature" class="wdt-signature-image" style="max-width:100%;height:auto;max-height:200px;border:1px solid #ddd;border-radius:4px;" />';
     }
 }
 

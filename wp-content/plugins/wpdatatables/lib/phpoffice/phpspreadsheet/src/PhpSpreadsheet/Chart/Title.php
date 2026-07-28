@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Chart;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Chart;
 
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-
+use WPDT\PhpOffice\PhpSpreadsheet\RichText\RichText;
 class Title
 {
     /**
@@ -12,21 +11,18 @@ class Title
      * @var array|RichText|string
      */
     private $caption = '';
-
     /**
      * Allow overlay of other elements?
      *
      * @var bool
      */
-    private $overlay = true;
-
+    private $overlay = \true;
     /**
      * Title Layout.
      *
      * @var ?Layout
      */
     private $layout;
-
     /**
      * Create a new Title.
      *
@@ -34,13 +30,12 @@ class Title
      * @param ?Layout $layout
      * @param bool $overlay
      */
-    public function __construct($caption = '', ?Layout $layout = null, $overlay = false)
+    public function __construct($caption = '', ?Layout $layout = null, $overlay = \false)
     {
         $this->caption = $caption;
         $this->layout = $layout;
         $this->setOverlay($overlay);
     }
-
     /**
      * Get caption.
      *
@@ -50,11 +45,10 @@ class Title
     {
         return $this->caption;
     }
-
-    public function getCaptionText(): string
+    public function getCaptionText() : string
     {
         $caption = $this->caption;
-        if (is_string($caption)) {
+        if (\is_string($caption)) {
             return $caption;
         }
         if ($caption instanceof RichText) {
@@ -70,10 +64,8 @@ class Title
                 $retVal .= $text;
             }
         }
-
         return $retVal;
     }
-
     /**
      * Set caption.
      *
@@ -84,10 +76,8 @@ class Title
     public function setCaption($caption)
     {
         $this->caption = $caption;
-
         return $this;
     }
-
     /**
      * Get allow overlay of other elements?
      *
@@ -97,18 +87,16 @@ class Title
     {
         return $this->overlay;
     }
-
     /**
      * Set allow overlay of other elements?
      *
      * @param bool $overlay
      */
-    public function setOverlay($overlay): void
+    public function setOverlay($overlay) : void
     {
         $this->overlay = $overlay;
     }
-
-    public function getLayout(): ?Layout
+    public function getLayout() : ?Layout
     {
         return $this->layout;
     }

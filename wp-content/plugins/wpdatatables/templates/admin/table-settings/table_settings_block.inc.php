@@ -1205,6 +1205,32 @@ defined('ABSPATH') or die('Access denied.');
                             </div>
 
                         </div>
+                        <div class="col-sm-4 m-b-16 advanced-filtering-option-block">
+
+                            <h4 class="c-title-color m-b-2 wdt-advanced-filters-option">
+                                <?php esc_html_e( 'Advanced Filter Option', 'wpdatatables' ); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#advanced-filter-option-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                                <p class="m-b-2 wdt-advanced-filters wdt-beta-feature"><?php esc_html_e( 'BETA', 'wpdatatables' ); ?></p>
+                            </h4>
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="advanced-filter-option-hint">
+                                <div class="popover-heading">
+                                    <?php esc_html_e( 'Advanced Filter Option', 'wpdatatables' ); ?>
+                                </div>
+                                <div class="popover-body">
+                                    <?php esc_html_e( 'Enable to allow advanced filtering of special characters in selectbox and multi-selectbox filters.', 'wpdatatables' ); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-advanced-filter-option" type="checkbox">
+                                <label for="wdt-advanced-filter-option"
+                                       class="ts-label"><?php esc_html_e( 'Enable advanced special character filtering', 'wpdatatables' ); ?></label>
+                            </div>
+
+                        </div>
 
                         <?php do_action_deprecated('wdt_add_sorting_and_filtering_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_sorting_and_filtering_element'); ?>
                         <?php do_action('wpdatatables_add_sorting_and_filtering_element'); ?>

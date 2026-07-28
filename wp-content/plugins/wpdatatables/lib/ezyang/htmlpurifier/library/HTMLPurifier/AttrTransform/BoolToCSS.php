@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Pre-transform that changes converts a boolean attribute to fixed CSS
  */
@@ -10,13 +12,11 @@ class HTMLPurifier_AttrTransform_BoolToCSS extends HTMLPurifier_AttrTransform
      * @type string
      */
     protected $attr;
-
     /**
      * CSS declarations to add to style, needs trailing semicolon.
      * @type string
      */
     protected $css;
-
     /**
      * @param string $attr attribute name to convert from
      * @param string $css CSS declarations to add to style (needs semicolon)
@@ -26,7 +26,6 @@ class HTMLPurifier_AttrTransform_BoolToCSS extends HTMLPurifier_AttrTransform
         $this->attr = $attr;
         $this->css = $css;
     }
-
     /**
      * @param array $attr
      * @param HTMLPurifier_Config $config
@@ -43,5 +42,4 @@ class HTMLPurifier_AttrTransform_BoolToCSS extends HTMLPurifier_AttrTransform
         return $attr;
     }
 }
-
 // vim: et sw=4 sts=4

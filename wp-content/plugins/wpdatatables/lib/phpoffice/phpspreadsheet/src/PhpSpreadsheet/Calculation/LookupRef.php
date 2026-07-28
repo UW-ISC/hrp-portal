@@ -1,18 +1,17 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Address;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\HLookup;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Indirect;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Lookup;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Matrix;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Offset;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\RowColumnInformation;
-use PhpOffice\PhpSpreadsheet\Calculation\LookupRef\VLookup;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Address;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\HLookup;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Indirect;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Lookup;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Matrix;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\Offset;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\RowColumnInformation;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef\VLookup;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Cell;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 /**
  * @deprecated 1.18.0
  */
@@ -44,11 +43,10 @@ class LookupRef
      *
      * @return array|string
      */
-    public static function cellAddress($row, $column, $relativity = 1, $referenceStyle = true, $sheetText = '')
+    public static function cellAddress($row, $column, $relativity = 1, $referenceStyle = \true, $sheetText = '')
     {
         return Address::cell($row, $column, $relativity, $referenceStyle, $sheetText);
     }
-
     /**
      * COLUMN.
      *
@@ -74,7 +72,6 @@ class LookupRef
     {
         return RowColumnInformation::COLUMN($cellAddress, $cell);
     }
-
     /**
      * COLUMNS.
      *
@@ -96,7 +93,6 @@ class LookupRef
     {
         return RowColumnInformation::COLUMNS($cellAddress);
     }
-
     /**
      * ROW.
      *
@@ -122,7 +118,6 @@ class LookupRef
     {
         return RowColumnInformation::ROW($cellAddress, $cell);
     }
-
     /**
      * ROWS.
      *
@@ -144,7 +139,6 @@ class LookupRef
     {
         return RowColumnInformation::ROWS($cellAddress);
     }
-
     /**
      * HYPERLINK.
      *
@@ -165,7 +159,6 @@ class LookupRef
     {
         return LookupRef\Hyperlink::set($linkURL, $displayName, $cell);
     }
-
     /**
      * INDIRECT.
      *
@@ -188,9 +181,8 @@ class LookupRef
      */
     public static function INDIRECT($cellAddress, Cell $cell)
     {
-        return Indirect::INDIRECT($cellAddress, true, $cell);
+        return Indirect::INDIRECT($cellAddress, \true, $cell);
     }
-
     /**
      * OFFSET.
      *
@@ -229,7 +221,6 @@ class LookupRef
     {
         return Offset::OFFSET($cellAddress, $rows, $columns, $height, $width, $cell);
     }
-
     /**
      * CHOOSE.
      *
@@ -251,7 +242,6 @@ class LookupRef
     {
         return LookupRef\Selection::choose(...$chooseArgs);
     }
-
     /**
      * MATCH.
      *
@@ -275,7 +265,6 @@ class LookupRef
     {
         return LookupRef\ExcelMatch::MATCH($lookupValue, $lookupArray, $matchType);
     }
-
     /**
      * INDEX.
      *
@@ -300,7 +289,6 @@ class LookupRef
     {
         return Matrix::index($matrix, $rowNum, $columnNum);
     }
-
     /**
      * TRANSPOSE.
      *
@@ -319,7 +307,6 @@ class LookupRef
     {
         return Matrix::transpose($matrixData);
     }
-
     /**
      * VLOOKUP
      * The VLOOKUP function searches for value in the left-most column of lookup_array and returns the value
@@ -337,11 +324,10 @@ class LookupRef
      *
      * @return mixed The value of the found cell
      */
-    public static function VLOOKUP($lookup_value, $lookup_array, $index_number, $not_exact_match = true)
+    public static function VLOOKUP($lookup_value, $lookup_array, $index_number, $not_exact_match = \true)
     {
         return VLookup::lookup($lookup_value, $lookup_array, $index_number, $not_exact_match);
     }
-
     /**
      * HLOOKUP
      * The HLOOKUP function searches for value in the top-most row of lookup_array and returns the value
@@ -359,11 +345,10 @@ class LookupRef
      *
      * @return mixed The value of the found cell
      */
-    public static function HLOOKUP($lookup_value, $lookup_array, $index_number, $not_exact_match = true)
+    public static function HLOOKUP($lookup_value, $lookup_array, $index_number, $not_exact_match = \true)
     {
         return HLookup::lookup($lookup_value, $lookup_array, $index_number, $not_exact_match);
     }
-
     /**
      * LOOKUP
      * The LOOKUP function searches for value either from a one-row or one-column range or from an array.
@@ -382,7 +367,6 @@ class LookupRef
     {
         return Lookup::lookup($lookup_value, $lookup_vector, $result_vector);
     }
-
     /**
      * FORMULATEXT.
      *

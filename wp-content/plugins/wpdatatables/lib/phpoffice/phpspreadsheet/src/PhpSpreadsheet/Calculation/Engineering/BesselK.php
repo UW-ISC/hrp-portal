@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class BesselK
 {
     use ArrayEnabled;
-
     /**
      * BESSELK.
      *
@@ -35,27 +33,22 @@ class BesselK
      */
     public static function BESSELK($x, $ord)
     {
-        if (is_array($x) || is_array($ord)) {
+        if (\is_array($x) || \is_array($ord)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $x, $ord);
         }
-
         try {
             $x = EngineeringValidations::validateFloat($x);
             $ord = EngineeringValidations::validateInt($ord);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($ord < 0) || ($x <= 0.0)) {
+        if ($ord < 0 || $x <= 0.0) {
             return ExcelError::NAN();
         }
-
         $fBk = self::calculate($x, $ord);
-
-        return (is_nan($fBk)) ? ExcelError::NAN() : $fBk;
+        return \is_nan($fBk) ? ExcelError::NAN() : $fBk;
     }
-
-    private static function calculate(float $x, int $ord): float
+    private static function calculate(float $x, int $ord) : float
     {
         // special cases
         switch ($ord) {
@@ -64,62 +57,42 @@ class BesselK
             case 1:
                 return self::besselK1($x);
         }
-
         return self::besselK2($x, $ord);
     }
-
     /**
      * Mollify Phpstan.
      *
      * @codeCoverageIgnore
      */
-    private static function callBesselI(float $x, int $ord): float
+    private static function callBesselI(float $x, int $ord) : float
     {
         $rslt = BesselI::BESSELI($x, $ord);
-        if (!is_float($rslt)) {
+        if (!\is_float($rslt)) {
             throw new Exception('Unexpected array or string');
         }
-
         return $rslt;
     }
-
-    private static function besselK0(float $x): float
+    private static function besselK0(float $x) : float
     {
         if ($x <= 2) {
             $fNum2 = $x * 0.5;
-            $y = ($fNum2 * $fNum2);
-
-            return -log($fNum2) * self::callBesselI($x, 0) +
-                (-0.57721566 + $y * (0.42278420 + $y * (0.23069756 + $y * (0.3488590e-1 + $y * (0.262698e-2 + $y *
-                                    (0.10750e-3 + $y * 0.74e-5))))));
+            $y = $fNum2 * $fNum2;
+            return -\log($fNum2) * self::callBesselI($x, 0) + (-0.57721566 + $y * (0.4227842 + $y * (0.23069756 + $y * (0.0348859 + $y * (0.00262698 + $y * (0.0001075 + $y * 7.4E-6))))));
         }
-
         $y = 2 / $x;
-
-        return exp(-$x) / sqrt($x) *
-            (1.25331414 + $y * (-0.7832358e-1 + $y * (0.2189568e-1 + $y * (-0.1062446e-1 + $y *
-                            (0.587872e-2 + $y * (-0.251540e-2 + $y * 0.53208e-3))))));
+        return \exp(-$x) / \sqrt($x) * (1.25331414 + $y * (-0.07832358 + $y * (0.02189568 + $y * (-0.01062446 + $y * (0.00587872 + $y * (-0.0025154 + $y * 0.00053208))))));
     }
-
-    private static function besselK1(float $x): float
+    private static function besselK1(float $x) : float
     {
         if ($x <= 2) {
             $fNum2 = $x * 0.5;
-            $y = ($fNum2 * $fNum2);
-
-            return log($fNum2) * self::callBesselI($x, 1) +
-                (1 + $y * (0.15443144 + $y * (-0.67278579 + $y * (-0.18156897 + $y * (-0.1919402e-1 + $y *
-                                    (-0.110404e-2 + $y * (-0.4686e-4))))))) / $x;
+            $y = $fNum2 * $fNum2;
+            return \log($fNum2) * self::callBesselI($x, 1) + (1 + $y * (0.15443144 + $y * (-0.6727857900000001 + $y * (-0.18156897 + $y * (-0.01919402 + $y * (-0.00110404 + $y * -4.686E-5)))))) / $x;
         }
-
         $y = 2 / $x;
-
-        return exp(-$x) / sqrt($x) *
-            (1.25331414 + $y * (0.23498619 + $y * (-0.3655620e-1 + $y * (0.1504268e-1 + $y * (-0.780353e-2 + $y *
-                                (0.325614e-2 + $y * (-0.68245e-3)))))));
+        return \exp(-$x) / \sqrt($x) * (1.25331414 + $y * (0.23498619 + $y * (-0.0365562 + $y * (0.01504268 + $y * (-0.00780353 + $y * (0.00325614 + $y * -0.00068245))))));
     }
-
-    private static function besselK2(float $x, int $ord): float
+    private static function besselK2(float $x, int $ord) : float
     {
         $fTox = 2 / $x;
         $fBkm = self::besselK0($x);
@@ -129,7 +102,6 @@ class BesselK
             $fBkm = $fBk;
             $fBk = $fBkp;
         }
-
         return $fBk;
     }
 }

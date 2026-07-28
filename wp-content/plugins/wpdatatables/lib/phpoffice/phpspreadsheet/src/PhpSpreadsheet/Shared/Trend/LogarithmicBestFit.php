@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared\Trend;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared\Trend;
 
 class LogarithmicBestFit extends BestFit
 {
@@ -11,7 +11,6 @@ class LogarithmicBestFit extends BestFit
      * @var string
      */
     protected $bestFitType = 'logarithmic';
-
     /**
      * Return the Y-Value for a specified value of X.
      *
@@ -21,9 +20,8 @@ class LogarithmicBestFit extends BestFit
      */
     public function getValueOfYForX($xValue)
     {
-        return $this->getIntersect() + $this->getSlope() * log($xValue - $this->xOffset);
+        return $this->getIntersect() + $this->getSlope() * \log($xValue - $this->xOffset);
     }
-
     /**
      * Return the X-Value for a specified value of Y.
      *
@@ -33,9 +31,8 @@ class LogarithmicBestFit extends BestFit
      */
     public function getValueOfXForY($yValue)
     {
-        return exp(($yValue - $this->getIntersect()) / $this->getSlope());
+        return \exp(($yValue - $this->getIntersect()) / $this->getSlope());
     }
-
     /**
      * Return the Equation of the best-fit line.
      *
@@ -47,28 +44,21 @@ class LogarithmicBestFit extends BestFit
     {
         $slope = $this->getSlope($dp);
         $intersect = $this->getIntersect($dp);
-
         return 'Y = ' . $slope . ' * log(' . $intersect . ' * X)';
     }
-
     /**
      * Execute the regression and calculate the goodness of fit for a set of X and Y data values.
      *
      * @param float[] $yValues The set of Y-values for this regression
      * @param float[] $xValues The set of X-values for this regression
      */
-    private function logarithmicRegression(array $yValues, array $xValues, bool $const): void
+    private function logarithmicRegression(array $yValues, array $xValues, bool $const) : void
     {
-        $adjustedYValues = array_map(
-            function ($value) {
-                return ($value < 0.0) ? 0 - log(abs($value)) : log($value);
-            },
-            $yValues
-        );
-
+        $adjustedYValues = \array_map(function ($value) {
+            return $value < 0.0 ? 0 - \log(\abs($value)) : \log($value);
+        }, $yValues);
         $this->leastSquareFit($adjustedYValues, $xValues, $const);
     }
-
     /**
      * Define the regression and calculate the goodness of fit for a set of X and Y data values.
      *
@@ -76,10 +66,9 @@ class LogarithmicBestFit extends BestFit
      * @param float[] $xValues The set of X-values for this regression
      * @param bool $const
      */
-    public function __construct($yValues, $xValues = [], $const = true)
+    public function __construct($yValues, $xValues = [], $const = \true)
     {
         parent::__construct($yValues, $xValues);
-
         if (!$this->error) {
             $this->logarithmicRegression($yValues, $xValues, (bool) $const);
         }

@@ -1,11 +1,12 @@
 <?php
 
+namespace WPDT;
+
 /**
  * @file
  * Defines a function wrapper for HTML Purifier for quick use.
  * @note ''HTMLPurifier()'' is NOT the same as ''new HTMLPurifier()''
  */
-
 /**
  * Purify HTML.
  * @param string $html String HTML to purify
@@ -15,11 +16,10 @@
  */
 function HTMLPurifier($html, $config = null)
 {
-    static $purifier = false;
+    static $purifier = \false;
     if (!$purifier) {
         $purifier = new HTMLPurifier();
     }
     return $purifier->purify($html, $config);
 }
-
 // vim: et sw=4 sts=4

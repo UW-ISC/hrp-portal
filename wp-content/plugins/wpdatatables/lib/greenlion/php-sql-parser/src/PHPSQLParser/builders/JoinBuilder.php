@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JoinBuilder.php
  *
@@ -39,8 +40,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the JOIN statement parts (within FROM). 
@@ -51,9 +51,10 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class JoinBuilder {
-
-    public function build($parsed) {
+class JoinBuilder
+{
+    public function build($parsed)
+    {
         if ($parsed === 'CROSS') {
             return ", ";
         }
@@ -73,4 +74,3 @@ class JoinBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

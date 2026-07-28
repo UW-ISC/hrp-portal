@@ -58,6 +58,11 @@ class FixedColumnsAndHeaderIntegration
 
     public static function frontendEnqueueScripts($obj)
     {
+        // Already bundled in wdt.frontend.min.js/.css; wdt-datatables is not registered then.
+        if (get_option('wdtMinifiedJs')) {
+            return;
+        }
+
         if ($obj->isFixedHeaders()) {
             wp_enqueue_script('wdt-fixed-header', WDT_FCH_ROOT_URL . 'fixed-header/dataTables.fixedHeader.js', array('jquery',
                 'wdt-datatables'), WDT_CURRENT_VERSION, true);

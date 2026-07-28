@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class ErfC
 {
     use ArrayEnabled;
-
     /**
      * ERFC.
      *
@@ -32,19 +30,15 @@ class ErfC
      */
     public static function ERFC($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return self::erfcValue($value);
         }
-
         return ExcelError::VALUE();
     }
-
-    private const ONE_SQRT_PI = 0.564189583547756287;
-
+    private const ONE_SQRT_PI = 0.5641895835477563;
     /**
      * Method to calculate the erfc value.
      *
@@ -55,7 +49,7 @@ class ErfC
     private static function erfcValue($value)
     {
         $value = (float) $value;
-        if (abs($value) < 2.2) {
+        if (\abs($value) < 2.2) {
             return 1 - Erf::erfValue($value);
         }
         if ($value < 0) {
@@ -63,7 +57,7 @@ class ErfC
         }
         $a = $n = 1;
         $b = $c = $value;
-        $d = ($value * $value) + 0.5;
+        $d = $value * $value + 0.5;
         $q2 = $b / $d;
         do {
             $t = $a * $n + $b * $value;
@@ -75,8 +69,7 @@ class ErfC
             $n += 0.5;
             $q1 = $q2;
             $q2 = $b / $d;
-        } while ((abs($q1 - $q2) / $q2) > Functions::PRECISION);
-
-        return self::ONE_SQRT_PI * exp(-$value * $value) * $q2;
+        } while (\abs($q1 - $q2) / $q2 > Functions::PRECISION);
+        return self::ONE_SQRT_PI * \exp(-$value * $value) * $q2;
     }
 }

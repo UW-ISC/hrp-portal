@@ -1,11 +1,10 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Web;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Web;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Settings;
-use Psr\Http\Client\ClientExceptionInterface;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Settings;
+use WPDT\Psr\Http\Client\ClientExceptionInterface;
 class Service
 {
     /**
@@ -20,38 +19,36 @@ class Service
      */
     public static function webService(string $url)
     {
-        $url = trim($url);
-        if (strlen($url) > 2048) {
-            return ExcelError::VALUE(); // Invalid URL length
+        $url = \trim($url);
+        if (\strlen($url) > 2048) {
+            return ExcelError::VALUE();
+            // Invalid URL length
         }
-
-        if (!preg_match('/^http[s]?:\/\//', $url)) {
-            return ExcelError::VALUE(); // Invalid protocol
+        if (!\preg_match('/^http[s]?:\\/\\//', $url)) {
+            return ExcelError::VALUE();
+            // Invalid protocol
         }
-
         // Get results from the the webservice
         $client = Settings::getHttpClient();
         $requestFactory = Settings::getRequestFactory();
         $request = $requestFactory->createRequest('GET', $url);
-
         try {
             $response = $client->sendRequest($request);
         } catch (ClientExceptionInterface $e) {
-            return ExcelError::VALUE(); // cURL error
+            return ExcelError::VALUE();
+            // cURL error
         }
-
         if ($response->getStatusCode() != 200) {
-            return ExcelError::VALUE(); // cURL error
+            return ExcelError::VALUE();
+            // cURL error
         }
-
         $output = $response->getBody()->getContents();
-        if (strlen($output) > 32767) {
-            return ExcelError::VALUE(); // Output not a string or too long
+        if (\strlen($output) > 32767) {
+            return ExcelError::VALUE();
+            // Output not a string or too long
         }
-
         return $output;
     }
-
     /**
      * URLENCODE.
      *
@@ -66,10 +63,9 @@ class Service
      */
     public static function urlEncode($text)
     {
-        if (!is_string($text)) {
+        if (!\is_string($text)) {
             return ExcelError::VALUE();
         }
-
-        return str_replace('+', '%20', urlencode($text));
+        return \str_replace('+', '%20', \urlencode($text));
     }
 }

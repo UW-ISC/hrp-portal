@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Allows multiple validators to attempt to validate attribute.
  *
@@ -11,14 +13,12 @@
  */
 class HTMLPurifier_AttrDef_CSS_Composite extends HTMLPurifier_AttrDef
 {
-
     /**
      * List of objects that may process strings.
      * @type HTMLPurifier_AttrDef[]
      * @todo Make protected
      */
     public $defs;
-
     /**
      * @param HTMLPurifier_AttrDef[] $defs List of HTMLPurifier_AttrDef objects
      */
@@ -26,7 +26,6 @@ class HTMLPurifier_AttrDef_CSS_Composite extends HTMLPurifier_AttrDef
     {
         $this->defs = $defs;
     }
-
     /**
      * @param string $string
      * @param HTMLPurifier_Config $config
@@ -37,12 +36,11 @@ class HTMLPurifier_AttrDef_CSS_Composite extends HTMLPurifier_AttrDef
     {
         foreach ($this->defs as $i => $def) {
             $result = $this->defs[$i]->validate($string, $config, $context);
-            if ($result !== false) {
+            if ($result !== \false) {
                 return $result;
             }
         }
-        return false;
+        return \false;
     }
 }
-
 // vim: et sw=4 sts=4

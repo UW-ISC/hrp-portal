@@ -245,7 +245,8 @@ var singleClick = false;
                                             url: tableDescription.adminAjaxBaseUrl,
                                             method: 'POST',
                                             data: {
-                                                wdtNonce: $('#wdtNonce').val(),
+                                                wdtNonce: $('#wdtNonceFrontendServerSide_' + tableDescription.tableWpId).val()
+                                                    || $('#wdtFrontendelementorNonce_' + tableDescription.tableWpId).val(),
                                                 action: 'wpdatatables_get_column_possible_values',
                                                 tableId: tableDescription.tableWpId,
                                                 originalHeader: $inputElement.data('key')
@@ -571,19 +572,35 @@ var singleClick = false;
 
                                 // If default value is set, append it to selectbox HTML
                                 if (column.defaultValue) {
+                                    var $editSelect = $selectpickerBlock.find('select');
                                     if (column.editorInputType === 'multi-selectbox') {
                                         var defaultValues = !Array.isArray(column.defaultValue) ? column.defaultValue.split('|') : column.defaultValue;
+                                        defaultValuesArr = [];
 
                                         $.each(defaultValues, function (index, value) {
                                             if (value) {
-                                                $selectpickerBlock.find('select').append('<option selected value="' + value + '">' + value + '</option>');
+                                                var optionValue = (typeof value === 'object' && value !== null && value.value != null)
+                                                    ? value.value
+                                                    : value;
+                                                var optionText = (typeof value === 'object' && value !== null && value.text != null)
+                                                    ? value.text
+                                                    : optionValue;
+                                                defaultValuesArr.push(optionValue);
+                                                $editSelect.append(
+                                                    jQuery('<option></option>').prop('selected', true).attr('value', optionValue).text(optionText)
+                                                );
                                             }
                                         });
                                     } else {
-                                        if (typeof column.defaultValue === 'object')
-                                            $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue.value + '">' + column.defaultValue.text + '</option>');
-                                        else
-                                            $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue + '">' + column.defaultValue + '</option>');
+                                        if (typeof column.defaultValue === 'object') {
+                                            $editSelect.append(
+                                                jQuery('<option></option>').prop('selected', true).attr('value', column.defaultValue.value).text(column.defaultValue.text)
+                                            );
+                                        } else {
+                                            $editSelect.append(
+                                                jQuery('<option></option>').prop('selected', true).attr('value', column.defaultValue).text(column.defaultValue)
+                                            );
+                                        }
                                     }
                                 }
 
@@ -598,7 +615,8 @@ var singleClick = false;
                                         url: tableDescription.adminAjaxBaseUrl,
                                         method: 'POST',
                                         data: {
-                                            wdtNonce: $('#wdtNonce').val(),
+                                            wdtNonce: $('#wdtNonceFrontendServerSide_' + tableDescription.tableWpId).val()
+                                                || $('#wdtFrontendelementorNonce_' + tableDescription.tableWpId).val(),
                                             action: 'wpdatatables_get_column_possible_values',
                                             tableId: tableDescription.tableWpId,
                                             originalHeader: column.origHeader
@@ -637,10 +655,21 @@ var singleClick = false;
                         if (column.defaultValue) {
                             let columnDefaultValue = column.defaultValue;
                             if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1) {
-                                if (typeof columnDefaultValue === 'object') {
-                                    defaultValuesArr = columnDefaultValue.value;
-                                } else {
-                                    defaultValuesArr = column.editorInputType === 'multi-selectbox' && !Array.isArray(columnDefaultValue) ? columnDefaultValue.split('|') : column.defaultValue;
+                                // Reuse values normalized while appending AJAX default options when available.
+                                if (typeof defaultValuesArr === 'undefined') {
+                                    if (Array.isArray(columnDefaultValue)) {
+                                        defaultValuesArr = $.map(columnDefaultValue, function (value) {
+                                            return (value && typeof value === 'object' && value.value != null)
+                                                ? value.value
+                                                : value;
+                                        });
+                                    } else if (typeof columnDefaultValue === 'object' && columnDefaultValue !== null) {
+                                        defaultValuesArr = columnDefaultValue.value;
+                                    } else {
+                                        defaultValuesArr = column.editorInputType === 'multi-selectbox'
+                                            ? columnDefaultValue.split('|')
+                                            : column.defaultValue;
+                                    }
                                 }
                                 $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').selectpicker('val', defaultValuesArr).trigger('change.abs.preserveSelected');
                             } else if ($.inArray(column.editorInputType, ['attachment', 'image']) !== -1 && ($('.fileupload-' + tableDescription.tableId).length)) {
@@ -2556,6 +2585,7 @@ var singleClick = false;
             if (tableObject) {
                 var tableDescription = JSON.parse(tableObject);
                 var tableSelector = tableDescription.selector;
+                var elementorNonce = $('#wdtFrontendelementorNonce_' + tableDescription.tableWpId).val();
 
                 if ($(instance.$element.find('.elementor-shortcode')).length) {
                     $(instance.$element.find('.elementor-shortcode')).empty();
@@ -2575,7 +2605,7 @@ var singleClick = false;
                     dataType: 'json',
                     data: {
                         action: 'wpdatatables_do_shortcode_elementor',
-                        wdtNonce: $('#wdtFrontendelementorNonce_' + tableDescription.tableWpId).val(),
+                        wdtNonce: elementorNonce,
                         formdata: formdata,
                     },
                     success: function (response) {

@@ -404,7 +404,8 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                             url: tableDescription.adminAjaxBaseUrl,
                             method: 'POST',
                             data: {
-                                wdtNonce: $('#wdtNonce').val(),
+                                wdtNonce: $('#wdtNonceFrontendServerSide_' + tableDescription.tableWpId).val()
+                                    || $('#wdtFrontendelementorNonce_' + tableDescription.tableWpId).val(),
                                 action: 'wpdatatables_get_column_possible_values',
                                 tableId: tableDescription.tableWpId,
                                 originalHeader: obj.params.columnHeader

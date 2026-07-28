@@ -16,11 +16,11 @@ class WdtHighstockChart extends WdtHighchartsChart
      */
     protected $_highstock_render_data = NULL;
 
-    // Path depending on "Stable version"
+    // Highstock script is loaded from local plugin assets.
     /**
      * @var string
      */
-    protected $highChartStockSource = '//code.highcharts.com/stock/modules/stock.js';
+    protected $highChartStockSource = '';
 
     /**
      * @return string
@@ -50,16 +50,14 @@ class WdtHighstockChart extends WdtHighchartsChart
     public function __construct(array $constructedChartData, $loadFromDB = false)
     {
         parent::__construct($constructedChartData, $loadFromDB);
-        if (get_option('wdtHighChartStableVersion')) {
-            $this->setHighChartStockSource(WDT_HS_ASSETS_URL . 'js/highcharts-stock.js');
-        }
+        $this->setHighChartStockSource(WDT_HS_ASSETS_URL . 'js/highcharts-stock.js');
         $this->setEngine('highstock');
     }
 
     /**
      * @return array
      */
-    public function prepareRenderOptions()
+    public function prepareRenderOptions(): array
     {
         $highstockRender = array(
             'title' => array(

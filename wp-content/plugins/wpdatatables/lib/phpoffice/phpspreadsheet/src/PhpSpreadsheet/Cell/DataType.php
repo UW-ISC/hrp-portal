@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Cell;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Cell;
 
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\RichText\RichText;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 class DataType
 {
     // Data types
@@ -17,25 +16,13 @@ class DataType
     const TYPE_INLINE = 'inlineStr';
     const TYPE_ERROR = 'e';
     const TYPE_ISO_DATE = 'd';
-
     /**
      * List of error codes.
      *
      * @var array<string, int>
      */
-    private static $errorCodes = [
-        '#NULL!' => 0,
-        '#DIV/0!' => 1,
-        '#VALUE!' => 2,
-        '#REF!' => 3,
-        '#NAME?' => 4,
-        '#NUM!' => 5,
-        '#N/A' => 6,
-        '#CALC!' => 7,
-    ];
-
+    private static $errorCodes = ['#NULL!' => 0, '#DIV/0!' => 1, '#VALUE!' => 2, '#REF!' => 3, '#NAME?' => 4, '#NUM!' => 5, '#N/A' => 6, '#CALC!' => 7];
     public const MAX_STRING_LENGTH = 32767;
-
     /**
      * Get list of error codes.
      *
@@ -45,7 +32,6 @@ class DataType
     {
         return self::$errorCodes;
     }
-
     /**
      * Check a string that it satisfies Excel requirements.
      *
@@ -59,16 +45,12 @@ class DataType
             // TODO: Sanitize Rich-Text string (max. character count is 32,767)
             return $textValue;
         }
-
         // string must never be longer than 32,767 characters, truncate if necessary
         $textValue = StringHelper::substring((string) $textValue, 0, self::MAX_STRING_LENGTH);
-
         // we require that newline is represented as "\n" in core, not as "\r\n" or "\r"
-        $textValue = str_replace(["\r\n", "\r"], "\n", $textValue);
-
+        $textValue = \str_replace(["\r\n", "\r"], "\n", $textValue);
         return $textValue;
     }
-
     /**
      * Check a value that it is a valid error code.
      *
@@ -79,11 +61,9 @@ class DataType
     public static function checkErrorCode($value)
     {
         $value = (string) $value;
-
         if (!isset(self::$errorCodes[$value])) {
             $value = '#NULL!';
         }
-
         return $value;
     }
 }

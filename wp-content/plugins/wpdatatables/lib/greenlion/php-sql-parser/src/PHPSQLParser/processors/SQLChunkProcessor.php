@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SQLChunkProcessor.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes the SQL chunks.
@@ -48,19 +48,20 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SQLChunkProcessor extends AbstractProcessor {
-
-    protected function moveLIKE(&$out) {
+class SQLChunkProcessor extends AbstractProcessor
+{
+    protected function moveLIKE(&$out)
+    {
         if (!isset($out['TABLE']['like'])) {
             return;
         }
         $out = $this->array_insert_after($out, 'TABLE', array('LIKE' => $out['TABLE']['like']));
         unset($out['TABLE']['like']);
     }
-
-    public function process($out) {
+    public function process($out)
+    {
         if (!$out) {
-            return false;
+            return \false;
         }
         if (!empty($out['BRACKET'])) {
             // TODO: this field should be a global STATEMENT field within the output
@@ -68,15 +69,12 @@ class SQLChunkProcessor extends AbstractProcessor {
             $processor = new BracketProcessor($this->options);
             $processedBracket = $processor->process($out['BRACKET']);
             $remainingExpressions = $processedBracket[0]['remaining_expressions'];
-
             unset($processedBracket[0]['remaining_expressions']);
-
-            if(!empty($remainingExpressions)) {
-                foreach($remainingExpressions as $key=>$expression) {
+            if (!empty($remainingExpressions)) {
+                foreach ($remainingExpressions as $key => $expression) {
                     $processedBracket[][$key] = $expression;
                 }
             }
-
             $out['BRACKET'] = $processedBracket;
         }
         if (!empty($out['CREATE'])) {
@@ -94,15 +92,15 @@ class SQLChunkProcessor extends AbstractProcessor {
         }
         if (!empty($out['EXPLAIN'])) {
             $processor = new ExplainProcessor($this->options);
-            $out['EXPLAIN'] = $processor->process($out['EXPLAIN'], array_keys($out));
+            $out['EXPLAIN'] = $processor->process($out['EXPLAIN'], \array_keys($out));
         }
         if (!empty($out['DESCRIBE'])) {
             $processor = new DescribeProcessor($this->options);
-            $out['DESCRIBE'] = $processor->process($out['DESCRIBE'], array_keys($out));
+            $out['DESCRIBE'] = $processor->process($out['DESCRIBE'], \array_keys($out));
         }
         if (!empty($out['DESC'])) {
             $processor = new DescProcessor($this->options);
-            $out['DESC'] = $processor->process($out['DESC'], array_keys($out));
+            $out['DESC'] = $processor->process($out['DESC'], \array_keys($out));
         }
         if (!empty($out['SELECT'])) {
             $processor = new SelectProcessor($this->options);
@@ -188,11 +186,9 @@ class SQLChunkProcessor extends AbstractProcessor {
             $out['OPTIONS'] = $processor->process($out['OPTIONS']);
         }
         if (!empty($out['WITH'])) {
-        	$processor = new WithProcessor($this->options);
-        	$out['WITH'] = $processor->process($out['WITH']);
+            $processor = new WithProcessor($this->options);
+            $out['WITH'] = $processor->process($out['WITH']);
         }
-
         return $out;
     }
 }
-?>

@@ -1,24 +1,22 @@
 <?php
 
+namespace WPDT;
+
 class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCache
 {
-
     /**
      * Cache object we are decorating
      * @type HTMLPurifier_DefinitionCache
      */
     public $cache;
-
     /**
      * The name of the decorator
      * @var string
      */
     public $name;
-
     public function __construct()
     {
     }
-
     /**
      * Lazy decorator function
      * @param HTMLPurifier_DefinitionCache $cache Reference to cache object to decorate
@@ -32,7 +30,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
         $decorator->type = $cache->type;
         return $decorator;
     }
-
     /**
      * Cross-compatible clone substitute
      * @return HTMLPurifier_DefinitionCache_Decorator
@@ -41,7 +38,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return new HTMLPurifier_DefinitionCache_Decorator();
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -51,7 +47,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->add($def, $config);
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -61,7 +56,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->set($def, $config);
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -71,7 +65,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->replace($def, $config);
     }
-
     /**
      * @param HTMLPurifier_Config $config
      * @return mixed
@@ -80,7 +73,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->get($config);
     }
-
     /**
      * @param HTMLPurifier_Config $config
      * @return mixed
@@ -89,7 +81,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->remove($config);
     }
-
     /**
      * @param HTMLPurifier_Config $config
      * @return mixed
@@ -98,7 +89,6 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
     {
         return $this->cache->flush($config);
     }
-
     /**
      * @param HTMLPurifier_Config $config
      * @return mixed
@@ -108,5 +98,4 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
         return $this->cache->cleanup($config);
     }
 }
-
 // vim: et sw=4 sts=4

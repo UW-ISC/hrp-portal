@@ -1,13 +1,12 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Constant\Periodic;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Constant\Periodic;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\CashFlowValidations;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\CashFlowValidations;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Cumulative
 {
     /**
@@ -30,21 +29,14 @@ class Cumulative
      *
      * @return float|string
      */
-    public static function interest(
-        $rate,
-        $periods,
-        $presentValue,
-        $start,
-        $end,
-        $type = FinancialConstants::PAYMENT_END_OF_PERIOD
-    ) {
+    public static function interest($rate, $periods, $presentValue, $start, $end, $type = FinancialConstants::PAYMENT_END_OF_PERIOD)
+    {
         $rate = Functions::flattenSingleValue($rate);
         $periods = Functions::flattenSingleValue($periods);
         $presentValue = Functions::flattenSingleValue($presentValue);
         $start = Functions::flattenSingleValue($start);
         $end = Functions::flattenSingleValue($end);
-        $type = ($type === null) ? FinancialConstants::PAYMENT_END_OF_PERIOD : Functions::flattenSingleValue($type);
-
+        $type = $type === null ? FinancialConstants::PAYMENT_END_OF_PERIOD : Functions::flattenSingleValue($type);
         try {
             $rate = CashFlowValidations::validateRate($rate);
             $periods = CashFlowValidations::validateInt($periods);
@@ -55,26 +47,21 @@ class Cumulative
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Validate parameters
         if ($start < 1 || $start > $end) {
             return ExcelError::NAN();
         }
-
         // Calculate
         $interest = 0;
         for ($per = $start; $per <= $end; ++$per) {
             $ipmt = Interest::payment($rate, $per, $periods, $presentValue, 0, $type);
-            if (is_string($ipmt)) {
+            if (\is_string($ipmt)) {
                 return $ipmt;
             }
-
             $interest += $ipmt;
         }
-
         return $interest;
     }
-
     /**
      * CUMPRINC.
      *
@@ -95,21 +82,14 @@ class Cumulative
      *
      * @return float|string
      */
-    public static function principal(
-        $rate,
-        $periods,
-        $presentValue,
-        $start,
-        $end,
-        $type = FinancialConstants::PAYMENT_END_OF_PERIOD
-    ) {
+    public static function principal($rate, $periods, $presentValue, $start, $end, $type = FinancialConstants::PAYMENT_END_OF_PERIOD)
+    {
         $rate = Functions::flattenSingleValue($rate);
         $periods = Functions::flattenSingleValue($periods);
         $presentValue = Functions::flattenSingleValue($presentValue);
         $start = Functions::flattenSingleValue($start);
         $end = Functions::flattenSingleValue($end);
-        $type = ($type === null) ? FinancialConstants::PAYMENT_END_OF_PERIOD : Functions::flattenSingleValue($type);
-
+        $type = $type === null ? FinancialConstants::PAYMENT_END_OF_PERIOD : Functions::flattenSingleValue($type);
         try {
             $rate = CashFlowValidations::validateRate($rate);
             $periods = CashFlowValidations::validateInt($periods);
@@ -120,23 +100,19 @@ class Cumulative
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Validate parameters
         if ($start < 1 || $start > $end) {
             return ExcelError::VALUE();
         }
-
         // Calculate
         $principal = 0;
         for ($per = $start; $per <= $end; ++$per) {
             $ppmt = Payments::interestPayment($rate, $per, $periods, $presentValue, 0, $type);
-            if (is_string($ppmt)) {
+            if (\is_string($ppmt)) {
                 return $ppmt;
             }
-
             $principal += $ppmt;
         }
-
         return $principal;
     }
 }

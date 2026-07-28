@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexTypeBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the index type of a PRIMARY KEY
  * statement part of CREATE TABLE. 
@@ -52,29 +52,27 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class IndexTypeBuilder implements Builder {
-
-    protected function buildReserved($parsed) {
+class IndexTypeBuilder implements Builder
+{
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_TYPE) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildReserved($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE primary key index type subtree', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
 }
-?>

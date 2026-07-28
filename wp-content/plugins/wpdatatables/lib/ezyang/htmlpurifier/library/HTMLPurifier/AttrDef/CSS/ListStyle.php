@@ -1,19 +1,19 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates shorthand CSS property list-style.
  * @warning Does not support url tokens that have internal spaces.
  */
 class HTMLPurifier_AttrDef_CSS_ListStyle extends HTMLPurifier_AttrDef
 {
-
     /**
      * Local copy of validators.
      * @type HTMLPurifier_AttrDef[]
      * @note See HTMLPurifier_AttrDef_CSS_Font::$info for a similar impl.
      */
     protected $info;
-
     /**
      * @param HTMLPurifier_Config $config
      */
@@ -24,7 +24,6 @@ class HTMLPurifier_AttrDef_CSS_ListStyle extends HTMLPurifier_AttrDef
         $this->info['list-style-position'] = $def->info['list-style-position'];
         $this->info['list-style-image'] = $def->info['list-style-image'];
     }
-
     /**
      * @param string $string
      * @param HTMLPurifier_Config $config
@@ -36,40 +35,39 @@ class HTMLPurifier_AttrDef_CSS_ListStyle extends HTMLPurifier_AttrDef
         // regular pre-processing
         $string = $this->parseCDATA($string);
         if ($string === '') {
-            return false;
+            return \false;
         }
-
         // assumes URI doesn't have spaces in it
-        $bits = explode(' ', strtolower($string)); // bits to process
-
+        $bits = \explode(' ', \strtolower($string));
+        // bits to process
         $caught = array();
-        $caught['type'] = false;
-        $caught['position'] = false;
-        $caught['image'] = false;
-
-        $i = 0; // number of catches
-        $none = false;
-
+        $caught['type'] = \false;
+        $caught['position'] = \false;
+        $caught['image'] = \false;
+        $i = 0;
+        // number of catches
+        $none = \false;
         foreach ($bits as $bit) {
             if ($i >= 3) {
                 return;
-            } // optimization bit
+            }
+            // optimization bit
             if ($bit === '') {
                 continue;
             }
             foreach ($caught as $key => $status) {
-                if ($status !== false) {
+                if ($status !== \false) {
                     continue;
                 }
                 $r = $this->info['list-style-' . $key]->validate($bit, $config, $context);
-                if ($r === false) {
+                if ($r === \false) {
                     continue;
                 }
                 if ($r === 'none') {
                     if ($none) {
                         continue;
                     } else {
-                        $none = true;
+                        $none = \true;
                     }
                     if ($key == 'image') {
                         continue;
@@ -80,33 +78,26 @@ class HTMLPurifier_AttrDef_CSS_ListStyle extends HTMLPurifier_AttrDef
                 break;
             }
         }
-
         if (!$i) {
-            return false;
+            return \false;
         }
-
         $ret = array();
-
         // construct type
         if ($caught['type']) {
             $ret[] = $caught['type'];
         }
-
         // construct image
         if ($caught['image']) {
             $ret[] = $caught['image'];
         }
-
         // construct position
         if ($caught['position']) {
             $ret[] = $caught['position'];
         }
-
         if (empty($ret)) {
-            return false;
+            return \false;
         }
-        return implode(' ', $ret);
+        return \implode(' ', $ret);
     }
 }
-
 // vim: et sw=4 sts=4

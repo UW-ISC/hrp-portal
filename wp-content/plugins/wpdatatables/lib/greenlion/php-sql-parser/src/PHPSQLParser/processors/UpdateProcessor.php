@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UpdateProcessor.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes the UPDATE statements.
@@ -48,7 +48,6 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class UpdateProcessor extends FromProcessor {
-
+class UpdateProcessor extends FromProcessor
+{
 }
-?>

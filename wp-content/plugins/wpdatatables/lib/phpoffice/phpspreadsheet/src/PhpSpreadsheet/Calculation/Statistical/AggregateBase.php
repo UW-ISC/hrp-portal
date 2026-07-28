@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 abstract class AggregateBase
 {
     /**
@@ -18,7 +17,7 @@ abstract class AggregateBase
      */
     protected static function testAcceptedBoolean($arg, $k)
     {
-        if (!is_bool($arg)) {
+        if (!\is_bool($arg)) {
             return $arg;
         }
         if (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_GNUMERIC) {
@@ -31,40 +30,37 @@ abstract class AggregateBase
             return (int) $arg;
         }
         /*if (
-            (is_bool($arg)) &&
-            ((!Functions::isCellValue($k) && (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_EXCEL)) ||
-                (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE))
-        ) {
-            $arg = (int) $arg;
-        }*/
-
+              (is_bool($arg)) &&
+              ((!Functions::isCellValue($k) && (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_EXCEL)) ||
+                  (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE))
+          ) {
+              $arg = (int) $arg;
+          }*/
         return $arg;
     }
-
     /**
      * @param mixed $arg
      * @param mixed $k
      *
      * @return bool
      */
-    protected static function isAcceptedCountable($arg, $k, bool $countNull = false)
+    protected static function isAcceptedCountable($arg, $k, bool $countNull = \false)
     {
         if ($countNull && $arg === null && !Functions::isCellValue($k) && Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_GNUMERIC) {
-            return true;
+            return \true;
         }
-        if (!is_numeric($arg)) {
-            return false;
+        if (!\is_numeric($arg)) {
+            return \false;
         }
-        if (!is_string($arg)) {
-            return true;
+        if (!\is_string($arg)) {
+            return \true;
         }
         if (!Functions::isCellValue($k) && Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE) {
-            return true;
+            return \true;
         }
         if (!Functions::isCellValue($k) && Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_GNUMERIC) {
-            return true;
+            return \true;
         }
-
-        return false;
+        return \false;
     }
 }

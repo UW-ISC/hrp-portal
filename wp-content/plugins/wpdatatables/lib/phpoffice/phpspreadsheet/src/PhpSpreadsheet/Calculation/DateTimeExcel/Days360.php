@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 class Days360
 {
     use ArrayEnabled;
-
     /**
      * DAYS360.
      *
@@ -44,60 +42,50 @@ class Days360
      *         If an array of values is passed for the $startDate or $endDays,arguments, then the returned result
      *            will also be an array with matching dimensions
      */
-    public static function between($startDate = 0, $endDate = 0, $method = false)
+    public static function between($startDate = 0, $endDate = 0, $method = \false)
     {
-        if (is_array($startDate) || is_array($endDate) || is_array($method)) {
+        if (\is_array($startDate) || \is_array($endDate) || \is_array($method)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $startDate, $endDate, $method);
         }
-
         try {
             $startDate = Helpers::getDateValue($startDate);
             $endDate = Helpers::getDateValue($endDate);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (!is_bool($method)) {
+        if (!\is_bool($method)) {
             return ExcelError::VALUE();
         }
-
         // Execute function
         $PHPStartDateObject = SharedDateHelper::excelToDateTimeObject($startDate);
         $startDay = $PHPStartDateObject->format('j');
         $startMonth = $PHPStartDateObject->format('n');
         $startYear = $PHPStartDateObject->format('Y');
-
         $PHPEndDateObject = SharedDateHelper::excelToDateTimeObject($endDate);
         $endDay = $PHPEndDateObject->format('j');
         $endMonth = $PHPEndDateObject->format('n');
         $endYear = $PHPEndDateObject->format('Y');
-
         return self::dateDiff360((int) $startDay, (int) $startMonth, (int) $startYear, (int) $endDay, (int) $endMonth, (int) $endYear, !$method);
     }
-
     /**
      * Return the number of days between two dates based on a 360 day calendar.
      */
-    private static function dateDiff360(int $startDay, int $startMonth, int $startYear, int $endDay, int $endMonth, int $endYear, bool $methodUS): int
+    private static function dateDiff360(int $startDay, int $startMonth, int $startYear, int $endDay, int $endMonth, int $endYear, bool $methodUS) : int
     {
         $startDay = self::getStartDay($startDay, $startMonth, $startYear, $methodUS);
         $endDay = self::getEndDay($endDay, $endMonth, $endYear, $startDay, $methodUS);
-
         return $endDay + $endMonth * 30 + $endYear * 360 - $startDay - $startMonth * 30 - $startYear * 360;
     }
-
-    private static function getStartDay(int $startDay, int $startMonth, int $startYear, bool $methodUS): int
+    private static function getStartDay(int $startDay, int $startMonth, int $startYear, bool $methodUS) : int
     {
         if ($startDay == 31) {
             --$startDay;
-        } elseif ($methodUS && ($startMonth == 2 && ($startDay == 29 || ($startDay == 28 && !Helpers::isLeapYear($startYear))))) {
+        } elseif ($methodUS && ($startMonth == 2 && ($startDay == 29 || $startDay == 28 && !Helpers::isLeapYear($startYear)))) {
             $startDay = 30;
         }
-
         return $startDay;
     }
-
-    private static function getEndDay(int $endDay, int &$endMonth, int &$endYear, int $startDay, bool $methodUS): int
+    private static function getEndDay(int $endDay, int &$endMonth, int &$endYear, int $startDay, bool $methodUS) : int
     {
         if ($endDay == 31) {
             if ($methodUS && $startDay != 30) {
@@ -112,7 +100,6 @@ class Days360
                 $endDay = 30;
             }
         }
-
         return $endDay;
     }
 }

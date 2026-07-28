@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexHintListBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for index hint lists. 
@@ -49,22 +49,22 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class IndexHintListBuilder implements Builder {
-
-    public function hasHint($parsed) {
+class IndexHintListBuilder implements Builder
+{
+    public function hasHint($parsed)
+    {
         return isset($parsed['hints']);
     }
-
     // TODO: the hint list should be enhanced to get base_expr fro position calculation
-    public function build(array $parsed) {
-        if (!isset($parsed['hints']) || $parsed['hints'] === false) {
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['hints']) || $parsed['hints'] === \false) {
             return "";
         }
         $sql = "";
         foreach ($parsed['hints'] as $k => $v) {
             $sql .= $v['hint_type'] . " " . $v['hint_list'] . " ";
         }
-        return " " . substr($sql, 0, -1);
+        return " " . \substr($sql, 0, -1);
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UpdateBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the UPDATE statement parts. 
  * You can overwrite all functions to achieve another handling.
@@ -51,25 +51,23 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class UpdateBuilder implements Builder {
-
-    protected function buildTable($parsed, $idx) {
+class UpdateBuilder implements Builder
+{
+    protected function buildTable($parsed, $idx)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $idx);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = '';
-
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildTable($v, $k);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('UPDATE table list', $k, $v, 'expr_type');
             }
         }
         return 'UPDATE ' . $sql;
     }
 }
-?>

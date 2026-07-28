@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DefaultValueBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the default value statement part of CREATE TABLE. 
  * You can overwrite all functions to achieve another handling.
@@ -50,13 +50,13 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DefaultValueBuilder implements Builder {
-
-    public function build(array $parsed) {
+class DefaultValueBuilder implements Builder
+{
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::DEF_VALUE) {
             return "";
         }
         return $parsed['base_expr'];
     }
 }
-?>

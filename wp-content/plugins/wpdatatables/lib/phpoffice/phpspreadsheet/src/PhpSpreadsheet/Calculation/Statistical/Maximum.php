@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
 class Maximum extends MaxMinBase
 {
     /**
@@ -23,30 +22,25 @@ class Maximum extends MaxMinBase
     public static function max(...$args)
     {
         $returnValue = null;
-
         // Loop through arguments
         $aArgs = Functions::flattenArray($args);
         foreach ($aArgs as $arg) {
             if (ErrorValue::isError($arg)) {
                 $returnValue = $arg;
-
                 break;
             }
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
-                if (($returnValue === null) || ($arg > $returnValue)) {
+            if (\is_numeric($arg) && !\is_string($arg)) {
+                if ($returnValue === null || $arg > $returnValue) {
                     $returnValue = $arg;
                 }
             }
         }
-
         if ($returnValue === null) {
             return 0;
         }
-
         return $returnValue;
     }
-
     /**
      * MAXA.
      *
@@ -62,28 +56,24 @@ class Maximum extends MaxMinBase
     public static function maxA(...$args)
     {
         $returnValue = null;
-
         // Loop through arguments
         $aArgs = Functions::flattenArray($args);
         foreach ($aArgs as $arg) {
             if (ErrorValue::isError($arg)) {
                 $returnValue = $arg;
-
                 break;
             }
             // Is it a numeric value?
-            if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
+            if (\is_numeric($arg) || \is_bool($arg) || \is_string($arg) && $arg != '') {
                 $arg = self::datatypeAdjustmentAllowStrings($arg);
-                if (($returnValue === null) || ($arg > $returnValue)) {
+                if ($returnValue === null || $arg > $returnValue) {
                     $returnValue = $arg;
                 }
             }
         }
-
         if ($returnValue === null) {
             return 0;
         }
-
         return $returnValue;
     }
 }

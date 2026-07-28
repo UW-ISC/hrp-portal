@@ -1,76 +1,60 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Cell;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Cell;
 
 use DateTimeInterface;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\RichText\RichText;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 class StringValueBinder implements IValueBinder
 {
     /**
      * @var bool
      */
-    protected $convertNull = true;
-
+    protected $convertNull = \true;
     /**
      * @var bool
      */
-    protected $convertBoolean = true;
-
+    protected $convertBoolean = \true;
     /**
      * @var bool
      */
-    protected $convertNumeric = true;
-
+    protected $convertNumeric = \true;
     /**
      * @var bool
      */
-    protected $convertFormula = true;
-
-    public function setNullConversion(bool $suppressConversion = false): self
+    protected $convertFormula = \true;
+    public function setNullConversion(bool $suppressConversion = \false) : self
     {
         $this->convertNull = $suppressConversion;
-
         return $this;
     }
-
-    public function setBooleanConversion(bool $suppressConversion = false): self
+    public function setBooleanConversion(bool $suppressConversion = \false) : self
     {
         $this->convertBoolean = $suppressConversion;
-
         return $this;
     }
-
-    public function getBooleanConversion(): bool
+    public function getBooleanConversion() : bool
     {
         return $this->convertBoolean;
     }
-
-    public function setNumericConversion(bool $suppressConversion = false): self
+    public function setNumericConversion(bool $suppressConversion = \false) : self
     {
         $this->convertNumeric = $suppressConversion;
-
         return $this;
     }
-
-    public function setFormulaConversion(bool $suppressConversion = false): self
+    public function setFormulaConversion(bool $suppressConversion = \false) : self
     {
         $this->convertFormula = $suppressConversion;
-
         return $this;
     }
-
-    public function setConversionForAllValueTypes(bool $suppressConversion = false): self
+    public function setConversionForAllValueTypes(bool $suppressConversion = \false) : self
     {
         $this->convertNull = $suppressConversion;
         $this->convertBoolean = $suppressConversion;
         $this->convertNumeric = $suppressConversion;
         $this->convertFormula = $suppressConversion;
-
         return $this;
     }
-
     /**
      * Bind value to a cell.
      *
@@ -79,46 +63,40 @@ class StringValueBinder implements IValueBinder
      */
     public function bindValue(Cell $cell, $value)
     {
-        if (is_object($value)) {
+        if (\is_object($value)) {
             return $this->bindObjectValue($cell, $value);
         }
-
         // sanitize UTF-8 strings
-        if (is_string($value)) {
+        if (\is_string($value)) {
             $value = StringHelper::sanitizeUTF8($value);
         }
-
-        if ($value === null && $this->convertNull === false) {
+        if ($value === null && $this->convertNull === \false) {
             $cell->setValueExplicit($value, DataType::TYPE_NULL);
-        } elseif (is_bool($value) && $this->convertBoolean === false) {
+        } elseif (\is_bool($value) && $this->convertBoolean === \false) {
             $cell->setValueExplicit($value, DataType::TYPE_BOOL);
-        } elseif ((is_int($value) || is_float($value)) && $this->convertNumeric === false) {
+        } elseif ((\is_int($value) || \is_float($value)) && $this->convertNumeric === \false) {
             $cell->setValueExplicit($value, DataType::TYPE_NUMERIC);
-        } elseif (is_string($value) && strlen($value) > 1 && $value[0] === '=' && $this->convertFormula === false) {
+        } elseif (\is_string($value) && \strlen($value) > 1 && $value[0] === '=' && $this->convertFormula === \false) {
             $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
         } else {
-            if (is_string($value) && strlen($value) > 1 && $value[0] === '=') {
-                $cell->getStyle()->setQuotePrefix(true);
+            if (\is_string($value) && \strlen($value) > 1 && $value[0] === '=') {
+                $cell->getStyle()->setQuotePrefix(\true);
             }
             $cell->setValueExplicit((string) $value, DataType::TYPE_STRING);
         }
-
-        return true;
+        return \true;
     }
-
-    protected function bindObjectValue(Cell $cell, object $value): bool
+    protected function bindObjectValue(Cell $cell, object $value) : bool
     {
         // Handle any objects that might be injected
         if ($value instanceof DateTimeInterface) {
             $value = $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof RichText) {
             $cell->setValueExplicit($value, DataType::TYPE_INLINE);
-
-            return true;
+            return \true;
         }
-
-        $cell->setValueExplicit((string) $value, DataType::TYPE_STRING); // @phpstan-ignore-line
-
-        return true;
+        $cell->setValueExplicit((string) $value, DataType::TYPE_STRING);
+        // @phpstan-ignore-line
+        return \true;
     }
 }

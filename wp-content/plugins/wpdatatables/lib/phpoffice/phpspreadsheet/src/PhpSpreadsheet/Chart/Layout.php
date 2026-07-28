@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Chart;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Chart;
 
-use PhpOffice\PhpSpreadsheet\Style\Font;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Style\Font;
 class Layout
 {
     /**
@@ -12,62 +11,52 @@ class Layout
      * @var ?string
      */
     private $layoutTarget;
-
     /**
      * X Mode.
      *
      * @var ?string
      */
     private $xMode;
-
     /**
      * Y Mode.
      *
      * @var ?string
      */
     private $yMode;
-
     /**
      * X-Position.
      *
      * @var ?float
      */
     private $xPos;
-
     /**
      * Y-Position.
      *
      * @var ?float
      */
     private $yPos;
-
     /**
      * width.
      *
      * @var ?float
      */
     private $width;
-
     /**
      * height.
      *
      * @var ?float
      */
     private $height;
-
     /**
      * Position - t=top.
      *
      * @var string
      */
     private $dLblPos = '';
-
     /** @var string */
     private $numFmtCode = '';
-
     /** @var bool */
-    private $numFmtLinked = false;
-
+    private $numFmtLinked = \false;
     /**
      * show legend key
      * Specifies that legend keys should be shown in data labels.
@@ -75,7 +64,6 @@ class Layout
      * @var ?bool
      */
     private $showLegendKey;
-
     /**
      * show value
      * Specifies that the value should be shown in a data label.
@@ -83,7 +71,6 @@ class Layout
      * @var ?bool
      */
     private $showVal;
-
     /**
      * show category name
      * Specifies that the category name should be shown in the data label.
@@ -91,7 +78,6 @@ class Layout
      * @var ?bool
      */
     private $showCatName;
-
     /**
      * show data series name
      * Specifies that the series name should be shown in the data label.
@@ -99,7 +85,6 @@ class Layout
      * @var ?bool
      */
     private $showSerName;
-
     /**
      * show percentage
      * Specifies that the percentage should be shown in the data label.
@@ -107,14 +92,12 @@ class Layout
      * @var ?bool
      */
     private $showPercent;
-
     /**
      * show bubble size.
      *
      * @var ?bool
      */
     private $showBubbleSize;
-
     /**
      * show leader lines
      * Specifies that leader lines should be shown for the data label.
@@ -122,19 +105,14 @@ class Layout
      * @var ?bool
      */
     private $showLeaderLines;
-
     /** @var ?ChartColor */
     private $labelFillColor;
-
     /** @var ?ChartColor */
     private $labelBorderColor;
-
     /** @var ?Font */
     private $labelFont;
-
     /** @var Properties */
     private $labelEffects;
-
     /**
      * Create a new Layout.
      */
@@ -190,21 +168,18 @@ class Layout
             $this->labelEffects = $labelEffects;
         }
     }
-
-    private function initBoolean(array $layout, string $name): void
+    private function initBoolean(array $layout, string $name) : void
     {
         if (isset($layout[$name])) {
-            $this->$name = (bool) $layout[$name];
+            $this->{$name} = (bool) $layout[$name];
         }
     }
-
-    private function initColor(array $layout, string $name): void
+    private function initColor(array $layout, string $name) : void
     {
         if (isset($layout[$name]) && $layout[$name] instanceof ChartColor) {
-            $this->$name = $layout[$name];
+            $this->{$name} = $layout[$name];
         }
     }
-
     /**
      * Get Layout Target.
      *
@@ -214,7 +189,6 @@ class Layout
     {
         return $this->layoutTarget;
     }
-
     /**
      * Set Layout Target.
      *
@@ -225,10 +199,8 @@ class Layout
     public function setLayoutTarget($target)
     {
         $this->layoutTarget = $target;
-
         return $this;
     }
-
     /**
      * Get X-Mode.
      *
@@ -238,7 +210,6 @@ class Layout
     {
         return $this->xMode;
     }
-
     /**
      * Set X-Mode.
      *
@@ -249,10 +220,8 @@ class Layout
     public function setXMode($mode)
     {
         $this->xMode = (string) $mode;
-
         return $this;
     }
-
     /**
      * Get Y-Mode.
      *
@@ -262,7 +231,6 @@ class Layout
     {
         return $this->yMode;
     }
-
     /**
      * Set Y-Mode.
      *
@@ -273,10 +241,8 @@ class Layout
     public function setYMode($mode)
     {
         $this->yMode = (string) $mode;
-
         return $this;
     }
-
     /**
      * Get X-Position.
      *
@@ -286,7 +252,6 @@ class Layout
     {
         return $this->xPos;
     }
-
     /**
      * Set X-Position.
      *
@@ -297,10 +262,8 @@ class Layout
     public function setXPosition($position)
     {
         $this->xPos = (float) $position;
-
         return $this;
     }
-
     /**
      * Get Y-Position.
      *
@@ -310,7 +273,6 @@ class Layout
     {
         return $this->yPos;
     }
-
     /**
      * Set Y-Position.
      *
@@ -321,10 +283,8 @@ class Layout
     public function setYPosition($position)
     {
         $this->yPos = (float) $position;
-
         return $this;
     }
-
     /**
      * Get Width.
      *
@@ -334,7 +294,6 @@ class Layout
     {
         return $this->width;
     }
-
     /**
      * Set Width.
      *
@@ -345,10 +304,8 @@ class Layout
     public function setWidth($width)
     {
         $this->width = $width;
-
         return $this;
     }
-
     /**
      * Get Height.
      *
@@ -358,7 +315,6 @@ class Layout
     {
         return $this->height;
     }
-
     /**
      * Set Height.
      *
@@ -369,209 +325,166 @@ class Layout
     public function setHeight($height)
     {
         $this->height = $height;
-
         return $this;
     }
-
-    public function getShowLegendKey(): ?bool
+    public function getShowLegendKey() : ?bool
     {
         return $this->showLegendKey;
     }
-
     /**
      * Set show legend key
      * Specifies that legend keys should be shown in data labels.
      */
-    public function setShowLegendKey(?bool $showLegendKey): self
+    public function setShowLegendKey(?bool $showLegendKey) : self
     {
         $this->showLegendKey = $showLegendKey;
-
         return $this;
     }
-
-    public function getShowVal(): ?bool
+    public function getShowVal() : ?bool
     {
         return $this->showVal;
     }
-
     /**
      * Set show val
      * Specifies that the value should be shown in data labels.
      */
-    public function setShowVal(?bool $showDataLabelValues): self
+    public function setShowVal(?bool $showDataLabelValues) : self
     {
         $this->showVal = $showDataLabelValues;
-
         return $this;
     }
-
-    public function getShowCatName(): ?bool
+    public function getShowCatName() : ?bool
     {
         return $this->showCatName;
     }
-
     /**
      * Set show cat name
      * Specifies that the category name should be shown in data labels.
      */
-    public function setShowCatName(?bool $showCategoryName): self
+    public function setShowCatName(?bool $showCategoryName) : self
     {
         $this->showCatName = $showCategoryName;
-
         return $this;
     }
-
-    public function getShowSerName(): ?bool
+    public function getShowSerName() : ?bool
     {
         return $this->showSerName;
     }
-
     /**
      * Set show data series name.
      * Specifies that the series name should be shown in data labels.
      */
-    public function setShowSerName(?bool $showSeriesName): self
+    public function setShowSerName(?bool $showSeriesName) : self
     {
         $this->showSerName = $showSeriesName;
-
         return $this;
     }
-
-    public function getShowPercent(): ?bool
+    public function getShowPercent() : ?bool
     {
         return $this->showPercent;
     }
-
     /**
      * Set show percentage.
      * Specifies that the percentage should be shown in data labels.
      */
-    public function setShowPercent(?bool $showPercentage): self
+    public function setShowPercent(?bool $showPercentage) : self
     {
         $this->showPercent = $showPercentage;
-
         return $this;
     }
-
-    public function getShowBubbleSize(): ?bool
+    public function getShowBubbleSize() : ?bool
     {
         return $this->showBubbleSize;
     }
-
     /**
      * Set show bubble size.
      * Specifies that the bubble size should be shown in data labels.
      */
-    public function setShowBubbleSize(?bool $showBubbleSize): self
+    public function setShowBubbleSize(?bool $showBubbleSize) : self
     {
         $this->showBubbleSize = $showBubbleSize;
-
         return $this;
     }
-
-    public function getShowLeaderLines(): ?bool
+    public function getShowLeaderLines() : ?bool
     {
         return $this->showLeaderLines;
     }
-
     /**
      * Set show leader lines.
      * Specifies that leader lines should be shown in data labels.
      */
-    public function setShowLeaderLines(?bool $showLeaderLines): self
+    public function setShowLeaderLines(?bool $showLeaderLines) : self
     {
         $this->showLeaderLines = $showLeaderLines;
-
         return $this;
     }
-
-    public function getLabelFillColor(): ?ChartColor
+    public function getLabelFillColor() : ?ChartColor
     {
         return $this->labelFillColor;
     }
-
-    public function setLabelFillColor(?ChartColor $chartColor): self
+    public function setLabelFillColor(?ChartColor $chartColor) : self
     {
         $this->labelFillColor = $chartColor;
-
         return $this;
     }
-
-    public function getLabelBorderColor(): ?ChartColor
+    public function getLabelBorderColor() : ?ChartColor
     {
         return $this->labelBorderColor;
     }
-
-    public function setLabelBorderColor(?ChartColor $chartColor): self
+    public function setLabelBorderColor(?ChartColor $chartColor) : self
     {
         $this->labelBorderColor = $chartColor;
-
         return $this;
     }
-
-    public function getLabelFont(): ?Font
+    public function getLabelFont() : ?Font
     {
         return $this->labelFont;
     }
-
-    public function getLabelEffects(): ?Properties
+    public function getLabelEffects() : ?Properties
     {
         return $this->labelEffects;
     }
-
-    public function getLabelFontColor(): ?ChartColor
+    public function getLabelFontColor() : ?ChartColor
     {
         if ($this->labelFont === null) {
             return null;
         }
-
         return $this->labelFont->getChartColor();
     }
-
-    public function setLabelFontColor(?ChartColor $chartColor): self
+    public function setLabelFontColor(?ChartColor $chartColor) : self
     {
         if ($this->labelFont === null) {
             $this->labelFont = new Font();
-            $this->labelFont->setSize(null, true);
+            $this->labelFont->setSize(null, \true);
         }
         $this->labelFont->setChartColorFromObject($chartColor);
-
         return $this;
     }
-
-    public function getDLblPos(): string
+    public function getDLblPos() : string
     {
         return $this->dLblPos;
     }
-
-    public function setDLblPos(string $dLblPos): self
+    public function setDLblPos(string $dLblPos) : self
     {
         $this->dLblPos = $dLblPos;
-
         return $this;
     }
-
-    public function getNumFmtCode(): string
+    public function getNumFmtCode() : string
     {
         return $this->numFmtCode;
     }
-
-    public function setNumFmtCode(string $numFmtCode): self
+    public function setNumFmtCode(string $numFmtCode) : self
     {
         $this->numFmtCode = $numFmtCode;
-
         return $this;
     }
-
-    public function getNumFmtLinked(): bool
+    public function getNumFmtLinked() : bool
     {
         return $this->numFmtLinked;
     }
-
-    public function setNumFmtLinked(bool $numFmtLinked): self
+    public function setNumFmtLinked(bool $numFmtLinked) : self
     {
         $this->numFmtLinked = $numFmtLinked;
-
         return $this;
     }
 }

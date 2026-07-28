@@ -165,7 +165,7 @@ class WDTSettingsController
 
     public static function getCurrentPluginConfig()
     {
-        return array(
+        $settings = array(
             'wdtInterfaceLanguage' => get_option('wdtInterfaceLanguage'),
             'wdtTablesPerPage' => get_option('wdtTablesPerPage'),
             'wdtDateFormat' => get_option('wdtDateFormat'),
@@ -221,11 +221,12 @@ class WDTSettingsController
             'wdtPurchaseCodeStoreMasterDetail' => get_option('wdtPurchaseCodeStoreMasterDetail') != '' ? 1 : 0,
             'wdtAutoUpdateOption' => get_option('wdtAutoUpdateOption'),
             'wdtGoogleStableVersion' => get_option('wdtGoogleStableVersion'),
-            'wdtHighChartStableVersion' => get_option('wdtHighChartStableVersion'),
             'wdtApexStableVersion' => get_option('wdtApexStableVersion'),
             'wdtGoogleApiMaps' => get_option('wdtGoogleApiMaps'),
             'wdtGoogleApiMapsValidated' => get_option('wdtGoogleApiMapsValidated'),
         );
+
+        return $settings;
     }
 
     /**

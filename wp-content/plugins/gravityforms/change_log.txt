@@ -1,7 +1,48 @@
+### 2.10.5 | 2026-06-30
+- Added security enhancements.
+- Fixed an issue that prevents a "CONTAINS" conditional logic rule from being evaluated properly when the target field value contains a pipe (`|`) character.
+- Fixed an issue that prevents personal data from being erased or exported on sites with more than 60 forms.
+- Fixed an issue that prevents the file upload field from correctly saving a mix of new and existing uploaded files.
+- Fixed an issue that prevents bulk entry editing from working when entries are filtered by search criteria.
+- Fixed an issue in the form editor where the quantity input for a Single Product field with a linked Quantity field is displayed in the field preview when the field settings load.
+- Fixed an issue where toggles cannot be disabled in settings.
+- Fixed an issue that causes too many screen reader announcements when bulk editing entries.
+- Fixed an issue that prevents the "Custom CSS" block setting introduced in WordPress 7.0 from working on the first form embedded in a page.
+- Fixed an issue where the Entry List page shows an empty page when the site has no forms.
+- API: Fixed a PHP deprecation notice that occurs when `null` is passed to the first argument of `rgget()` or `GFForms::get()`.
+
+### 2.10.4 | 2026-06-18
+- Added logging details when fields fail validation.
+- Fixed an issue where the REST API modal creates duplicate API keys.
+- Fixed use of double slash in the path while checking for an existing index.html in the form upload root.
+- Fixed warning when trying to add the index.html file to a month upload folder that doesn't exist yet.
+- Fixed an issue where the subject in notification email can contain encoded symbols.
+- Fixed use of `esc_attr__()` for variables where it wasn't needed.
+- Fixed an issue that caused deprecation notices on the block editor page.
+- Fixed a PHP fatal error that can occur when using an existing save & continue resume link after a consent field is added to the form.
+- Updated the v1 API impersonate account dropdown to use the AJAX search.
+- Updated browser alerts in the admin to use the Dialog component.
+- Updated the minimum WordPress version (for support) on the System Status page to 6.9.
+- Updated the merge tag dropdowns to have a unique IDs.
+- Updated File Upload field handling to preserve trusted signed URL records during edit flows.
+- Updated the About page in System Status to redirect to the gravityforms.com releases page.
+
+### 2.10.3 | 2026-05-28
+- Added security enhancements.
+- Removed a console Log of Feeds that is displaying in the frontend.
+- Removed dynamic population for the File Upload field.
+
+### 2.10.2 | 2026-05-13
+- Added security enhancements.
+- Added background processing for entry bulk actions.
+- Fixed an issue with the REST API user setting that can cause timeout errors on sites with lots of users.
+- Fixed a JS error that occurs when the Delete quick action link text for a confirmation contains special characters.
+- Fixed a JS error that is sometimes displayed when loading the Rest API page.
+
 ### 2.10.1 | 2026-04-30
 - Added security enhancements.
 - Fixed a PHP deprecation notice that occurs when duplicating a duplicate confirmation.
-- Fixed an acessibility issue where the Post Image field does not have a label in the frontend when no Image Metadata option is selected.
+- Fixed an accessibility issue where the Post Image field does not have a label in the frontend when no Image Metadata option is selected.
 - Updated the default error message displayed when the new AJAX submission process encounters a 403 error.
 - Updated the system report to indicate if Background Notifications is enabled.
 - API: Added the [gform/ajax/pre_display_error](https://docs.gravityforms.com/gform-ajax-pre_display_error/) filter allowing customization of the error message displayed when the new AJAX submission process encounters an error.

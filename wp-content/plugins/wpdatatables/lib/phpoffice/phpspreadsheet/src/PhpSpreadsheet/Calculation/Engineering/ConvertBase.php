@@ -1,53 +1,44 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 abstract class ConvertBase
 {
     use ArrayEnabled;
-
     /** @param mixed $value */
-    protected static function validateValue($value): string
+    protected static function validateValue($value) : string
     {
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             if (Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE) {
                 throw new Exception(ExcelError::VALUE());
             }
             $value = (int) $value;
         }
-
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
-                $value = floor((float) $value);
+                $value = \floor((float) $value);
             }
         }
-
-        return strtoupper((string) $value);
+        return \strtoupper((string) $value);
     }
-
     /** @param mixed $places */
-    protected static function validatePlaces($places = null): ?int
+    protected static function validatePlaces($places = null) : ?int
     {
         if ($places === null) {
             return $places;
         }
-
-        if (is_numeric($places)) {
+        if (\is_numeric($places)) {
             if ($places < 0 || $places > 10) {
                 throw new Exception(ExcelError::NAN());
             }
-
             return (int) $places;
         }
-
         throw new Exception(ExcelError::VALUE());
     }
-
     /**
      * Formats a number base string value with leading zeroes.
      *
@@ -56,16 +47,14 @@ abstract class ConvertBase
      *
      * @return string The padded "number"
      */
-    protected static function nbrConversionFormat(string $value, ?int $places): string
+    protected static function nbrConversionFormat(string $value, ?int $places) : string
     {
         if ($places !== null) {
-            if (strlen($value) <= $places) {
-                return substr(str_pad($value, $places, '0', STR_PAD_LEFT), -10);
+            if (\strlen($value) <= $places) {
+                return \substr(\str_pad($value, $places, '0', \STR_PAD_LEFT), -10);
             }
-
             return ExcelError::NAN();
         }
-
-        return substr($value, -10);
+        return \substr($value, -10);
     }
 }

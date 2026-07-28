@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Processes an entire attribute array for corrections needing multiple values.
  *
@@ -13,10 +15,8 @@
  * HTMLPurifier_AttrDef validation.  See HTMLPurifier_HTMLDefinition for
  * more details.
  */
-
 abstract class HTMLPurifier_AttrTransform
 {
-
     /**
      * Abstract: makes changes to the attributes dependent on multiple values.
      *
@@ -26,8 +26,7 @@ abstract class HTMLPurifier_AttrTransform
      * @param HTMLPurifier_Context $context Mandatory HTMLPurifier_Context object
      * @return array Processed attribute array.
      */
-    abstract public function transform($attr, $config, $context);
-
+    public abstract function transform($attr, $config, $context);
     /**
      * Prepends CSS properties to the style attribute, creating the
      * attribute if it doesn't exist.
@@ -39,7 +38,6 @@ abstract class HTMLPurifier_AttrTransform
         $attr['style'] = isset($attr['style']) ? $attr['style'] : '';
         $attr['style'] = $css . $attr['style'];
     }
-
     /**
      * Retrieves and removes an attribute
      * @param array &$attr Attribute array to process (passed by reference)
@@ -56,5 +54,4 @@ abstract class HTMLPurifier_AttrTransform
         return $value;
     }
 }
-
 // vim: et sw=4 sts=4

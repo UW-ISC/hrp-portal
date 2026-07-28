@@ -1,23 +1,19 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Cell;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date;
 class Functions
 {
-    const PRECISION = 8.88E-016;
-
+    const PRECISION = 8.88E-16;
     /**
      * 2 / PI.
      */
-    const M_2DIVPI = 0.63661977236758134307553505349006;
-
+    const M_2DIVPI = 0.6366197723675814;
     const COMPATIBILITY_EXCEL = 'Excel';
     const COMPATIBILITY_GNUMERIC = 'Gnumeric';
     const COMPATIBILITY_OPENOFFICE = 'OpenOfficeCalc';
-
     /** Use of RETURNDATE_PHP_NUMERIC is discouraged - not 32-bit Y2038-safe, no timezone. */
     const RETURNDATE_PHP_NUMERIC = 'P';
     /** Use of RETURNDATE_UNIX_TIMESTAMP is discouraged - not 32-bit Y2038-safe, no timezone. */
@@ -25,21 +21,18 @@ class Functions
     const RETURNDATE_PHP_OBJECT = 'O';
     const RETURNDATE_PHP_DATETIME_OBJECT = 'O';
     const RETURNDATE_EXCEL = 'E';
-
     /**
      * Compatibility mode to use for error checking and responses.
      *
      * @var string
      */
     protected static $compatibilityMode = self::COMPATIBILITY_EXCEL;
-
     /**
      * Data Type to use when returning date values.
      *
      * @var string
      */
     protected static $returnDateType = self::RETURNDATE_EXCEL;
-
     /**
      * Set the Compatibility Mode.
      *
@@ -53,19 +46,12 @@ class Functions
      */
     public static function setCompatibilityMode($compatibilityMode)
     {
-        if (
-            ($compatibilityMode == self::COMPATIBILITY_EXCEL) ||
-            ($compatibilityMode == self::COMPATIBILITY_GNUMERIC) ||
-            ($compatibilityMode == self::COMPATIBILITY_OPENOFFICE)
-        ) {
+        if ($compatibilityMode == self::COMPATIBILITY_EXCEL || $compatibilityMode == self::COMPATIBILITY_GNUMERIC || $compatibilityMode == self::COMPATIBILITY_OPENOFFICE) {
             self::$compatibilityMode = $compatibilityMode;
-
-            return true;
+            return \true;
         }
-
-        return false;
+        return \false;
     }
-
     /**
      * Return the current Compatibility Mode.
      *
@@ -79,7 +65,6 @@ class Functions
     {
         return self::$compatibilityMode;
     }
-
     /**
      * Set the Return Date Format used by functions that return a date/time (Excel, PHP Serialized Numeric or PHP DateTime Object).
      *
@@ -93,19 +78,12 @@ class Functions
      */
     public static function setReturnDateType($returnDateType)
     {
-        if (
-            ($returnDateType == self::RETURNDATE_UNIX_TIMESTAMP) ||
-            ($returnDateType == self::RETURNDATE_PHP_DATETIME_OBJECT) ||
-            ($returnDateType == self::RETURNDATE_EXCEL)
-        ) {
+        if ($returnDateType == self::RETURNDATE_UNIX_TIMESTAMP || $returnDateType == self::RETURNDATE_PHP_DATETIME_OBJECT || $returnDateType == self::RETURNDATE_EXCEL) {
             self::$returnDateType = $returnDateType;
-
-            return true;
+            return \true;
         }
-
-        return false;
+        return \false;
     }
-
     /**
      * Return the current Return Date Format for functions that return a date/time (Excel, PHP Serialized Numeric or PHP Object).
      *
@@ -119,7 +97,6 @@ class Functions
     {
         return self::$returnDateType;
     }
-
     /**
      * DUMMY.
      *
@@ -129,61 +106,53 @@ class Functions
     {
         return '#Not Yet Implemented';
     }
-
     /** @param mixed $idx */
-    public static function isMatrixValue($idx): bool
+    public static function isMatrixValue($idx) : bool
     {
-        return (substr_count($idx, '.') <= 1) || (preg_match('/\.[A-Z]/', $idx) > 0);
+        return \substr_count($idx, '.') <= 1 || \preg_match('/\\.[A-Z]/', $idx) > 0;
     }
-
     /** @param mixed $idx */
-    public static function isValue($idx): bool
+    public static function isValue($idx) : bool
     {
-        return substr_count($idx, '.') === 0;
+        return \substr_count($idx, '.') === 0;
     }
-
     /** @param mixed $idx */
-    public static function isCellValue($idx): bool
+    public static function isCellValue($idx) : bool
     {
-        return substr_count($idx, '.') > 1;
+        return \substr_count($idx, '.') > 1;
     }
-
     /** @param mixed $condition */
-    public static function ifCondition($condition): string
+    public static function ifCondition($condition) : string
     {
         $condition = self::flattenSingleValue($condition);
-
         if ($condition === '') {
             return '=""';
         }
-        if (!is_string($condition) || !in_array($condition[0], ['>', '<', '='], true)) {
+        if (!\is_string($condition) || !\in_array($condition[0], ['>', '<', '='], \true)) {
             $condition = self::operandSpecialHandling($condition);
-            if (is_bool($condition)) {
+            if (\is_bool($condition)) {
                 return '=' . ($condition ? 'TRUE' : 'FALSE');
-            } elseif (!is_numeric($condition)) {
-                if ($condition !== '""') { // Not an empty string
+            } elseif (!\is_numeric($condition)) {
+                if ($condition !== '""') {
+                    // Not an empty string
                     // Escape any quotes in the string value
-                    $condition = (string) preg_replace('/"/ui', '""', $condition);
+                    $condition = (string) \preg_replace('/"/ui', '""', $condition);
                 }
-                $condition = Calculation::wrapResult(strtoupper($condition));
+                $condition = Calculation::wrapResult(\strtoupper($condition));
             }
-
-            return str_replace('""""', '""', '=' . $condition);
+            return \str_replace('""""', '""', '=' . $condition);
         }
-        preg_match('/(=|<[>=]?|>=?)(.*)/', $condition, $matches);
+        \preg_match('/(=|<[>=]?|>=?)(.*)/', $condition, $matches);
         [, $operator, $operand] = $matches;
-
         $operand = self::operandSpecialHandling($operand);
-        if (is_numeric(trim($operand, '"'))) {
-            $operand = trim($operand, '"');
-        } elseif (!is_numeric($operand) && $operand !== 'FALSE' && $operand !== 'TRUE') {
-            $operand = str_replace('"', '""', $operand);
-            $operand = Calculation::wrapResult(strtoupper($operand));
+        if (\is_numeric(\trim($operand, '"'))) {
+            $operand = \trim($operand, '"');
+        } elseif (!\is_numeric($operand) && $operand !== 'FALSE' && $operand !== 'TRUE') {
+            $operand = \str_replace('"', '""', $operand);
+            $operand = Calculation::wrapResult(\strtoupper($operand));
         }
-
-        return str_replace('""""', '""', $operator . $operand);
+        return \str_replace('""""', '""', $operator . $operand);
     }
-
     /**
      * @param mixed $operand
      *
@@ -191,25 +160,21 @@ class Functions
      */
     private static function operandSpecialHandling($operand)
     {
-        if (is_numeric($operand) || is_bool($operand)) {
+        if (\is_numeric($operand) || \is_bool($operand)) {
             return $operand;
-        } elseif (strtoupper($operand) === Calculation::getTRUE() || strtoupper($operand) === Calculation::getFALSE()) {
-            return strtoupper($operand);
+        } elseif (\strtoupper($operand) === Calculation::getTRUE() || \strtoupper($operand) === Calculation::getFALSE()) {
+            return \strtoupper($operand);
         }
-
         // Check for percentage
-        if (preg_match('/^\-?\d*\.?\d*\s?\%$/', $operand)) {
-            return ((float) rtrim($operand, '%')) / 100;
+        if (\preg_match('/^\\-?\\d*\\.?\\d*\\s?\\%$/', $operand)) {
+            return (float) \rtrim($operand, '%') / 100;
         }
-
         // Check for dates
-        if (($dateValueOperand = Date::stringToExcel($operand)) !== false) {
+        if (($dateValueOperand = Date::stringToExcel($operand)) !== \false) {
             return $dateValueOperand;
         }
-
         return $operand;
     }
-
     /**
      * NULL.
      *
@@ -224,7 +189,6 @@ class Functions
     {
         return Information\ExcelError::null();
     }
-
     /**
      * NaN.
      *
@@ -239,7 +203,6 @@ class Functions
     {
         return Information\ExcelError::NAN();
     }
-
     /**
      * REF.
      *
@@ -254,7 +217,6 @@ class Functions
     {
         return Information\ExcelError::REF();
     }
-
     /**
      * NA.
      *
@@ -273,7 +235,6 @@ class Functions
     {
         return Information\ExcelError::NA();
     }
-
     /**
      * VALUE.
      *
@@ -288,7 +249,6 @@ class Functions
     {
         return Information\ExcelError::VALUE();
     }
-
     /**
      * NAME.
      *
@@ -303,7 +263,6 @@ class Functions
     {
         return Information\ExcelError::NAME();
     }
-
     /**
      * DIV0.
      *
@@ -316,7 +275,6 @@ class Functions
     {
         return Information\ExcelError::DIV0();
     }
-
     /**
      * ERROR_TYPE.
      *
@@ -331,7 +289,6 @@ class Functions
     {
         return Information\ExcelError::type($value);
     }
-
     /**
      * IS_BLANK.
      *
@@ -346,7 +303,6 @@ class Functions
     {
         return Information\Value::isBlank($value);
     }
-
     /**
      * IS_ERR.
      *
@@ -361,7 +317,6 @@ class Functions
     {
         return Information\ErrorValue::isErr($value);
     }
-
     /**
      * IS_ERROR.
      *
@@ -376,7 +331,6 @@ class Functions
     {
         return Information\ErrorValue::isError($value);
     }
-
     /**
      * IS_NA.
      *
@@ -391,7 +345,6 @@ class Functions
     {
         return Information\ErrorValue::isNa($value);
     }
-
     /**
      * IS_EVEN.
      *
@@ -406,7 +359,6 @@ class Functions
     {
         return Information\Value::isEven($value);
     }
-
     /**
      * IS_ODD.
      *
@@ -421,7 +373,6 @@ class Functions
     {
         return Information\Value::isOdd($value);
     }
-
     /**
      * IS_NUMBER.
      *
@@ -436,7 +387,6 @@ class Functions
     {
         return Information\Value::isNumber($value);
     }
-
     /**
      * IS_LOGICAL.
      *
@@ -451,7 +401,6 @@ class Functions
     {
         return Information\Value::isLogical($value);
     }
-
     /**
      * IS_TEXT.
      *
@@ -466,7 +415,6 @@ class Functions
     {
         return Information\Value::isText($value);
     }
-
     /**
      * IS_NONTEXT.
      *
@@ -481,7 +429,6 @@ class Functions
     {
         return Information\Value::isNonText($value);
     }
-
     /**
      * N.
      *
@@ -505,7 +452,6 @@ class Functions
     {
         return Information\Value::asNumber($value);
     }
-
     /**
      * TYPE.
      *
@@ -528,7 +474,6 @@ class Functions
     {
         return Information\Value::type($value);
     }
-
     /**
      * Convert a multi-dimensional array to a simple 1-dimensional array.
      *
@@ -538,26 +483,21 @@ class Functions
      */
     public static function flattenArray($array)
     {
-        if (!is_array($array)) {
+        if (!\is_array($array)) {
             return (array) $array;
         }
-
         $flattened = [];
-        $stack = array_values($array);
-
+        $stack = \array_values($array);
         while (!empty($stack)) {
-            $value = array_shift($stack);
-
-            if (is_array($value)) {
-                array_unshift($stack, ...array_values($value));
+            $value = \array_shift($stack);
+            if (\is_array($value)) {
+                \array_unshift($stack, ...\array_values($value));
             } else {
                 $flattened[] = $value;
             }
         }
-
         return $flattened;
     }
-
     /**
      * @param mixed $value
      *
@@ -565,17 +505,14 @@ class Functions
      */
     public static function scalar($value)
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return $value;
         }
-
         do {
-            $value = array_pop($value);
-        } while (is_array($value));
-
+            $value = \array_pop($value);
+        } while (\is_array($value));
         return $value;
     }
-
     /**
      * Convert a multi-dimensional array to a simple 1-dimensional array, but retain an element of indexing.
      *
@@ -585,15 +522,14 @@ class Functions
      */
     public static function flattenArrayIndexed($array)
     {
-        if (!is_array($array)) {
+        if (!\is_array($array)) {
             return (array) $array;
         }
-
         $arrayValues = [];
         foreach ($array as $k1 => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $k2 => $val) {
-                    if (is_array($val)) {
+                    if (\is_array($val)) {
                         foreach ($val as $k3 => $v) {
                             $arrayValues[$k1 . '.' . $k2 . '.' . $k3] = $v;
                         }
@@ -605,10 +541,8 @@ class Functions
                 $arrayValues[$k1] = $value;
             }
         }
-
         return $arrayValues;
     }
-
     /**
      * Convert an array to a single scalar value by extracting the first element.
      *
@@ -618,13 +552,11 @@ class Functions
      */
     public static function flattenSingleValue($value = '')
     {
-        while (is_array($value)) {
-            $value = array_shift($value);
+        while (\is_array($value)) {
+            $value = \array_shift($value);
         }
-
         return $value;
     }
-
     /**
      * ISFORMULA.
      *
@@ -640,38 +572,32 @@ class Functions
     {
         return Information\Value::isFormula($cellReference, $cell);
     }
-
-    public static function expandDefinedName(string $coordinate, Cell $cell): string
+    public static function expandDefinedName(string $coordinate, Cell $cell) : string
     {
         $worksheet = $cell->getWorksheet();
         $spreadsheet = $worksheet->getParentOrThrow();
         // Uppercase coordinate
-        $pCoordinatex = strtoupper($coordinate);
+        $pCoordinatex = \strtoupper($coordinate);
         // Eliminate leading equal sign
-        $pCoordinatex = (string) preg_replace('/^=/', '', $pCoordinatex);
+        $pCoordinatex = (string) \preg_replace('/^=/', '', $pCoordinatex);
         $defined = $spreadsheet->getDefinedName($pCoordinatex, $worksheet);
         if ($defined !== null) {
             $worksheet2 = $defined->getWorkSheet();
             if (!$defined->isFormula() && $worksheet2 !== null) {
-                $coordinate = "'" . $worksheet2->getTitle() . "'!" .
-                    (string) preg_replace('/^=/', '', str_replace('$', '', $defined->getValue()));
+                $coordinate = "'" . $worksheet2->getTitle() . "'!" . (string) \preg_replace('/^=/', '', \str_replace('$', '', $defined->getValue()));
             }
         }
-
         return $coordinate;
     }
-
-    public static function trimTrailingRange(string $coordinate): string
+    public static function trimTrailingRange(string $coordinate) : string
     {
-        return (string) preg_replace('/:[\w\$]+$/', '', $coordinate);
+        return (string) \preg_replace('/:[\\w\\$]+$/', '', $coordinate);
     }
-
-    public static function trimSheetFromCellReference(string $coordinate): string
+    public static function trimSheetFromCellReference(string $coordinate) : string
     {
-        if (strpos($coordinate, '!') !== false) {
-            $coordinate = substr($coordinate, strrpos($coordinate, '!') + 1);
+        if (\strpos($coordinate, '!') !== \false) {
+            $coordinate = \substr($coordinate, \strrpos($coordinate, '!') + 1);
         }
-
         return $coordinate;
     }
 }

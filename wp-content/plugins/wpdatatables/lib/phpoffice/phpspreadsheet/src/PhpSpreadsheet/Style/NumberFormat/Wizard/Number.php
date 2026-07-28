@@ -1,17 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
 
-use PhpOffice\PhpSpreadsheet\Exception;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception;
 class Number extends NumberBase implements Wizard
 {
-    public const WITH_THOUSANDS_SEPARATOR = true;
-
-    public const WITHOUT_THOUSANDS_SEPARATOR = false;
-
-    protected bool $thousandsSeparator = true;
-
+    public const WITH_THOUSANDS_SEPARATOR = \true;
+    public const WITHOUT_THOUSANDS_SEPARATOR = \false;
+    protected bool $thousandsSeparator = \true;
     /**
      * @param int $decimals number of decimal places to display, in the range 0-30
      * @param bool $thousandsSeparator indicator whether the thousands separator should be used, or not
@@ -22,36 +18,26 @@ class Number extends NumberBase implements Wizard
      *
      * @throws Exception If a provided locale code is not a valid format
      */
-    public function __construct(
-        int $decimals = 2,
-        bool $thousandsSeparator = self::WITH_THOUSANDS_SEPARATOR,
-        ?string $locale = null
-    ) {
+    public function __construct(int $decimals = 2, bool $thousandsSeparator = self::WITH_THOUSANDS_SEPARATOR, ?string $locale = null)
+    {
         $this->setDecimals($decimals);
         $this->setThousandsSeparator($thousandsSeparator);
         $this->setLocale($locale);
     }
-
-    public function setThousandsSeparator(bool $thousandsSeparator = self::WITH_THOUSANDS_SEPARATOR): void
+    public function setThousandsSeparator(bool $thousandsSeparator = self::WITH_THOUSANDS_SEPARATOR) : void
     {
         $this->thousandsSeparator = $thousandsSeparator;
     }
-
     /**
      * As MS Excel cannot easily handle Lakh, which is the only locale-specific Number format variant,
      *       we don't use locale with Numbers.
      */
-    protected function getLocaleFormat(): string
+    protected function getLocaleFormat() : string
     {
         return $this->format();
     }
-
-    public function format(): string
+    public function format() : string
     {
-        return sprintf(
-            '%s0%s',
-            $this->thousandsSeparator ? '#,##' : null,
-            $this->decimals > 0 ? '.' . str_repeat('0', $this->decimals) : null
-        );
+        return \sprintf('%s0%s', $this->thousandsSeparator ? '#,##' : null, $this->decimals > 0 ? '.' . \str_repeat('0', $this->decimals) : null);
     }
 }

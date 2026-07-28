@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style;
 
-use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 class Borders extends Supervisor
 {
     // Diagonal directions
@@ -11,84 +10,72 @@ class Borders extends Supervisor
     const DIAGONAL_UP = 1;
     const DIAGONAL_DOWN = 2;
     const DIAGONAL_BOTH = 3;
-
     /**
      * Left.
      *
      * @var Border
      */
     protected $left;
-
     /**
      * Right.
      *
      * @var Border
      */
     protected $right;
-
     /**
      * Top.
      *
      * @var Border
      */
     protected $top;
-
     /**
      * Bottom.
      *
      * @var Border
      */
     protected $bottom;
-
     /**
      * Diagonal.
      *
      * @var Border
      */
     protected $diagonal;
-
     /**
      * DiagonalDirection.
      *
      * @var int
      */
     protected $diagonalDirection;
-
     /**
      * All borders pseudo-border. Only applies to supervisor.
      *
      * @var Border
      */
     protected $allBorders;
-
     /**
      * Outline pseudo-border. Only applies to supervisor.
      *
      * @var Border
      */
     protected $outline;
-
     /**
      * Inside pseudo-border. Only applies to supervisor.
      *
      * @var Border
      */
     protected $inside;
-
     /**
      * Vertical pseudo-border. Only applies to supervisor.
      *
      * @var Border
      */
     protected $vertical;
-
     /**
      * Horizontal pseudo-border. Only applies to supervisor.
      *
      * @var Border
      */
     protected $horizontal;
-
     /**
      * Create a new Borders.
      *
@@ -96,11 +83,10 @@ class Borders extends Supervisor
      *                                    Leave this value at default unless you understand exactly what
      *                                        its ramifications are
      */
-    public function __construct($isSupervisor = false, bool $isConditional = false)
+    public function __construct($isSupervisor = \false, bool $isConditional = \false)
     {
         // Supervisor?
         parent::__construct($isSupervisor);
-
         // Initialise values
         $this->left = new Border($isSupervisor, $isConditional);
         $this->right = new Border($isSupervisor, $isConditional);
@@ -108,16 +94,14 @@ class Borders extends Supervisor
         $this->bottom = new Border($isSupervisor, $isConditional);
         $this->diagonal = new Border($isSupervisor, $isConditional);
         $this->diagonalDirection = self::DIAGONAL_NONE;
-
         // Specially for supervisor
         if ($isSupervisor) {
             // Initialize pseudo-borders
-            $this->allBorders = new Border(true, $isConditional);
-            $this->outline = new Border(true, $isConditional);
-            $this->inside = new Border(true, $isConditional);
-            $this->vertical = new Border(true, $isConditional);
-            $this->horizontal = new Border(true, $isConditional);
-
+            $this->allBorders = new Border(\true, $isConditional);
+            $this->outline = new Border(\true, $isConditional);
+            $this->inside = new Border(\true, $isConditional);
+            $this->vertical = new Border(\true, $isConditional);
+            $this->horizontal = new Border(\true, $isConditional);
             // bind parent if we are a supervisor
             $this->left->bindParent($this, 'left');
             $this->right->bindParent($this, 'right');
@@ -131,7 +115,6 @@ class Borders extends Supervisor
             $this->horizontal->bindParent($this, 'horizontal');
         }
     }
-
     /**
      * Get the shared style component for the currently active cell in currently active sheet.
      * Only used for style supervisor.
@@ -142,10 +125,8 @@ class Borders extends Supervisor
     {
         /** @var Style */
         $parent = $this->parent;
-
         return $parent->getSharedComponent()->getBorders();
     }
-
     /**
      * Build style array from subcomponents.
      *
@@ -157,7 +138,6 @@ class Borders extends Supervisor
     {
         return ['borders' => $array];
     }
-
     /**
      * Apply styles from array.
      *
@@ -227,10 +207,8 @@ class Borders extends Supervisor
                 $this->getBottom()->applyFromArray($styleArray['allBorders']);
             }
         }
-
         return $this;
     }
-
     /**
      * Get Left.
      *
@@ -240,7 +218,6 @@ class Borders extends Supervisor
     {
         return $this->left;
     }
-
     /**
      * Get Right.
      *
@@ -250,7 +227,6 @@ class Borders extends Supervisor
     {
         return $this->right;
     }
-
     /**
      * Get Top.
      *
@@ -260,7 +236,6 @@ class Borders extends Supervisor
     {
         return $this->top;
     }
-
     /**
      * Get Bottom.
      *
@@ -270,7 +245,6 @@ class Borders extends Supervisor
     {
         return $this->bottom;
     }
-
     /**
      * Get Diagonal.
      *
@@ -280,7 +254,6 @@ class Borders extends Supervisor
     {
         return $this->diagonal;
     }
-
     /**
      * Get AllBorders (pseudo-border). Only applies to supervisor.
      *
@@ -291,10 +264,8 @@ class Borders extends Supervisor
         if (!$this->isSupervisor) {
             throw new PhpSpreadsheetException('Can only get pseudo-border for supervisor.');
         }
-
         return $this->allBorders;
     }
-
     /**
      * Get Outline (pseudo-border). Only applies to supervisor.
      *
@@ -305,10 +276,8 @@ class Borders extends Supervisor
         if (!$this->isSupervisor) {
             throw new PhpSpreadsheetException('Can only get pseudo-border for supervisor.');
         }
-
         return $this->outline;
     }
-
     /**
      * Get Inside (pseudo-border). Only applies to supervisor.
      *
@@ -319,10 +288,8 @@ class Borders extends Supervisor
         if (!$this->isSupervisor) {
             throw new PhpSpreadsheetException('Can only get pseudo-border for supervisor.');
         }
-
         return $this->inside;
     }
-
     /**
      * Get Vertical (pseudo-border). Only applies to supervisor.
      *
@@ -333,10 +300,8 @@ class Borders extends Supervisor
         if (!$this->isSupervisor) {
             throw new PhpSpreadsheetException('Can only get pseudo-border for supervisor.');
         }
-
         return $this->vertical;
     }
-
     /**
      * Get Horizontal (pseudo-border). Only applies to supervisor.
      *
@@ -347,10 +312,8 @@ class Borders extends Supervisor
         if (!$this->isSupervisor) {
             throw new PhpSpreadsheetException('Can only get pseudo-border for supervisor.');
         }
-
         return $this->horizontal;
     }
-
     /**
      * Get DiagonalDirection.
      *
@@ -361,10 +324,8 @@ class Borders extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getDiagonalDirection();
         }
-
         return $this->diagonalDirection;
     }
-
     /**
      * Set DiagonalDirection.
      *
@@ -383,10 +344,8 @@ class Borders extends Supervisor
         } else {
             $this->diagonalDirection = $direction;
         }
-
         return $this;
     }
-
     /**
      * Get hash code.
      *
@@ -397,19 +356,9 @@ class Borders extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getHashcode();
         }
-
-        return md5(
-            $this->getLeft()->getHashCode() .
-            $this->getRight()->getHashCode() .
-            $this->getTop()->getHashCode() .
-            $this->getBottom()->getHashCode() .
-            $this->getDiagonal()->getHashCode() .
-            $this->getDiagonalDirection() .
-            __CLASS__
-        );
+        return \md5($this->getLeft()->getHashCode() . $this->getRight()->getHashCode() . $this->getTop()->getHashCode() . $this->getBottom()->getHashCode() . $this->getDiagonal()->getHashCode() . $this->getDiagonalDirection() . __CLASS__);
     }
-
-    protected function exportArray1(): array
+    protected function exportArray1() : array
     {
         $exportedArray = [];
         $this->exportArray2($exportedArray, 'bottom', $this->getBottom());
@@ -418,7 +367,6 @@ class Borders extends Supervisor
         $this->exportArray2($exportedArray, 'left', $this->getLeft());
         $this->exportArray2($exportedArray, 'right', $this->getRight());
         $this->exportArray2($exportedArray, 'top', $this->getTop());
-
         return $exportedArray;
     }
 }

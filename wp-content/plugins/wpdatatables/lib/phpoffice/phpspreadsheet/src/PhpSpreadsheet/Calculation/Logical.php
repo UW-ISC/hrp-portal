@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 /**
  * @deprecated 1.17.0
  */
@@ -23,11 +22,10 @@ class Logical
      *
      * @return bool True
      */
-    public static function true(): bool
+    public static function true() : bool
     {
         return Boolean::true();
     }
-
     /**
      * FALSE.
      *
@@ -42,11 +40,10 @@ class Logical
      *
      * @return bool False
      */
-    public static function false(): bool
+    public static function false() : bool
     {
         return Boolean::false();
     }
-
     /**
      * LOGICAL_AND.
      *
@@ -75,7 +72,6 @@ class Logical
     {
         return Logical\Operations::logicalAnd(...$args);
     }
-
     /**
      * LOGICAL_OR.
      *
@@ -104,7 +100,6 @@ class Logical
     {
         return Logical\Operations::logicalOr(...$args);
     }
-
     /**
      * LOGICAL_XOR.
      *
@@ -135,7 +130,6 @@ class Logical
     {
         return Logical\Operations::logicalXor(...$args);
     }
-
     /**
      * NOT.
      *
@@ -159,11 +153,10 @@ class Logical
      *
      * @return array|bool|string the boolean inverse of the argument
      */
-    public static function NOT($logical = false)
+    public static function NOT($logical = \false)
     {
         return Logical\Operations::NOT($logical);
     }
-
     /**
      * STATEMENT_IF.
      *
@@ -199,11 +192,10 @@ class Logical
      *
      * @return mixed The value of returnIfTrue or returnIfFalse determined by condition
      */
-    public static function statementIf($condition = true, $returnIfTrue = 0, $returnIfFalse = false)
+    public static function statementIf($condition = \true, $returnIfTrue = 0, $returnIfFalse = \false)
     {
         return Logical\Conditional::statementIf($condition, $returnIfTrue, $returnIfFalse);
     }
-
     /**
      * STATEMENT_SWITCH.
      *
@@ -236,7 +228,6 @@ class Logical
     {
         return Logical\Conditional::statementSwitch(...$arguments);
     }
-
     /**
      * IFERROR.
      *
@@ -256,7 +247,6 @@ class Logical
     {
         return Logical\Conditional::IFERROR($testValue, $errorpart);
     }
-
     /**
      * IFNA.
      *
@@ -276,7 +266,6 @@ class Logical
     {
         return Logical\Conditional::IFNA($testValue, $napart);
     }
-
     /**
      * IFS.
      *

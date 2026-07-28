@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
 use DateTimeImmutable;
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 class DateValue
 {
     use ArrayEnabled;
-
     /**
      * DATEVALUE.
      *
@@ -41,93 +39,82 @@ class DateValue
      */
     public static function fromString($dateValue)
     {
-        if (is_array($dateValue)) {
+        if (\is_array($dateValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $dateValue);
         }
-
         // try to parse as date iff there is at least one digit
-        if (is_string($dateValue) && preg_match('/\d/', $dateValue) !== 1) {
+        if (\is_string($dateValue) && \preg_match('/\\d/', $dateValue) !== 1) {
             return ExcelError::VALUE();
         }
-
         $dti = new DateTimeImmutable();
         $baseYear = SharedDateHelper::getExcelCalendar();
-        $dateValue = trim($dateValue ?? '', '"');
+        $dateValue = \trim($dateValue ?? '', '"');
         //    Strip any ordinals because they're allowed in Excel (English only)
-        $dateValue = (string) preg_replace('/(\d)(st|nd|rd|th)([ -\/])/Ui', '$1$3', $dateValue);
+        $dateValue = (string) \preg_replace('/(\\d)(st|nd|rd|th)([ -\\/])/Ui', '$1$3', $dateValue);
         //    Convert separators (/ . or space) to hyphens (should also handle dot used for ordinals in some countries, e.g. Denmark, Germany)
-        $dateValue = str_replace(['/', '.', '-', '  '], ' ', $dateValue);
-
-        $yearFound = false;
-        $t1 = explode(' ', $dateValue);
+        $dateValue = \str_replace(['/', '.', '-', '  '], ' ', $dateValue);
+        $yearFound = \false;
+        $t1 = \explode(' ', $dateValue);
         $t = '';
         foreach ($t1 as &$t) {
-            if ((is_numeric($t)) && ($t > 31)) {
+            if (\is_numeric($t) && $t > 31) {
                 if ($yearFound) {
                     return ExcelError::VALUE();
                 }
                 if ($t < 100) {
                     $t += 1900;
                 }
-                $yearFound = true;
+                $yearFound = \true;
             }
         }
-        if (count($t1) === 1) {
+        if (\count($t1) === 1) {
             //    We've been fed a time value without any date
-            return ((strpos((string) $t, ':') === false)) ? ExcelError::Value() : 0.0;
+            return \strpos((string) $t, ':') === \false ? ExcelError::Value() : 0.0;
         }
         unset($t);
-
         $dateValue = self::t1ToString($t1, $dti, $yearFound);
-
         $PHPDateArray = self::setUpArray($dateValue, $dti);
-
         return self::finalResults($PHPDateArray, $dti, $baseYear);
     }
-
-    private static function t1ToString(array $t1, DateTimeImmutable $dti, bool $yearFound): string
+    private static function t1ToString(array $t1, DateTimeImmutable $dti, bool $yearFound) : string
     {
-        if (count($t1) == 2) {
+        if (\count($t1) == 2) {
             //    We only have two parts of the date: either day/month or month/year
             if ($yearFound) {
-                array_unshift($t1, 1);
+                \array_unshift($t1, 1);
             } else {
-                if (is_numeric($t1[1]) && $t1[1] > 29) {
+                if (\is_numeric($t1[1]) && $t1[1] > 29) {
                     $t1[1] += 1900;
-                    array_unshift($t1, 1);
+                    \array_unshift($t1, 1);
                 } else {
                     $t1[] = $dti->format('Y');
                 }
             }
         }
-        $dateValue = implode(' ', $t1);
-
+        $dateValue = \implode(' ', $t1);
         return $dateValue;
     }
-
     /**
      * Parse date.
      */
-    private static function setUpArray(string $dateValue, DateTimeImmutable $dti): array
+    private static function setUpArray(string $dateValue, DateTimeImmutable $dti) : array
     {
         $PHPDateArray = Helpers::dateParse($dateValue);
         if (!Helpers::dateParseSucceeded($PHPDateArray)) {
             // If original count was 1, we've already returned.
             // If it was 2, we added another.
             // Therefore, neither of the first 2 stroks below can fail.
-            $testVal1 = strtok($dateValue, '- ');
-            $testVal2 = strtok('- ');
-            $testVal3 = strtok('- ') ?: $dti->format('Y');
+            $testVal1 = \strtok($dateValue, '- ');
+            $testVal2 = \strtok('- ');
+            $testVal3 = \strtok('- ') ?: $dti->format('Y');
             Helpers::adjustYear((string) $testVal1, (string) $testVal2, $testVal3);
             $PHPDateArray = Helpers::dateParse($testVal1 . '-' . $testVal2 . '-' . $testVal3);
             if (!Helpers::dateParseSucceeded($PHPDateArray)) {
                 $PHPDateArray = Helpers::dateParse($testVal2 . '-' . $testVal1 . '-' . $testVal3);
             }
         }
-
         return $PHPDateArray;
     }
-
     /**
      * Final results.
      *
@@ -151,12 +138,11 @@ class DateValue
             $month = (int) $PHPDateArray['month'];
             $day = (int) $PHPDateArray['day'];
             $year = (int) $PHPDateArray['year'];
-            if (!checkdate($month, $day, $year)) {
-                return ($year === 1900 && $month === 2 && $day === 29) ? Helpers::returnIn3FormatsFloat(60.0) : ExcelError::VALUE();
+            if (!\checkdate($month, $day, $year)) {
+                return $year === 1900 && $month === 2 && $day === 29 ? Helpers::returnIn3FormatsFloat(60.0) : ExcelError::VALUE();
             }
-            $retValue = Helpers::returnIn3FormatsArray($PHPDateArray, true);
+            $retValue = Helpers::returnIn3FormatsArray($PHPDateArray, \true);
         }
-
         return $retValue;
     }
 }

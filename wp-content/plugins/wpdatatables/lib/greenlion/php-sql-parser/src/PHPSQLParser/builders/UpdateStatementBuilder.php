@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UpdateStatement.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the whole Update statement. You can overwrite
@@ -49,24 +49,25 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class UpdateStatementBuilder implements Builder {
-
-    protected function buildWHERE($parsed) {
+class UpdateStatementBuilder implements Builder
+{
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSET($parsed) {
+    protected function buildSET($parsed)
+    {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildUPDATE($parsed) {
+    protected function buildUPDATE($parsed)
+    {
         $builder = new UpdateBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $this->buildUPDATE($parsed['UPDATE']) . " " . $this->buildSET($parsed['SET']);
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->buildWHERE($parsed['WHERE']);
@@ -74,4 +75,3 @@ class UpdateStatementBuilder implements Builder {
         return $sql;
     }
 }
-?>

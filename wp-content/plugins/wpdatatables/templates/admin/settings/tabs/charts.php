@@ -19,6 +19,7 @@
         </div>
 
         <?php do_action('wpdatatables_add_chart_stable_tag_option'); ?>
+    </div>
 
         <div class="row">
             <div id="wdt-googlechart-mapkey-tag" class="col-sm-4 stable-tag googlechart-mapkey">
@@ -54,6 +55,7 @@
                         class="btn m-l-15 btn-primary wdt-validate-googlegeochart-mapkey"><?php esc_html_e('Validate & Save', 'wpdatatables'); ?></button>
             </div>
         </div>
+    <div class="row">
         <div class="col-sm-4 wdt-global-loder">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Loader visibility', 'wpdatatables'); ?>

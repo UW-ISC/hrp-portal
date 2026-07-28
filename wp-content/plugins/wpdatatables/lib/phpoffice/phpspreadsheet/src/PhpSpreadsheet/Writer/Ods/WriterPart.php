@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 
-use PhpOffice\PhpSpreadsheet\Writer\Ods;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 abstract class WriterPart
 {
     /**
@@ -12,7 +11,6 @@ abstract class WriterPart
      * @var Ods
      */
     private $parentWriter;
-
     /**
      * Get Ods writer.
      *
@@ -22,7 +20,6 @@ abstract class WriterPart
     {
         return $this->parentWriter;
     }
-
     /**
      * Set parent Ods writer.
      */
@@ -30,6 +27,5 @@ abstract class WriterPart
     {
         $this->parentWriter = $writer;
     }
-
-    abstract public function write(): string;
+    public abstract function write() : string;
 }

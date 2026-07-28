@@ -1,26 +1,22 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use SimpleXMLElement;
-
 class Hyperlinks
 {
     /** @var Worksheet */
     private $worksheet;
-
     /** @var array */
     private $hyperlinks = [];
-
     public function __construct(Worksheet $workSheet)
     {
         $this->worksheet = $workSheet;
     }
-
-    public function readHyperlinks(SimpleXMLElement $relsWorksheet): void
+    public function readHyperlinks(SimpleXMLElement $relsWorksheet) : void
     {
         foreach ($relsWorksheet->children(Namespaces::RELATIONSHIPS)->Relationship as $elementx) {
             $element = Xlsx::getAttributes($elementx);
@@ -29,8 +25,7 @@ class Hyperlinks
             }
         }
     }
-
-    public function setHyperlinks(SimpleXMLElement $worksheetXml): void
+    public function setHyperlinks(SimpleXMLElement $worksheetXml) : void
     {
         foreach ($worksheetXml->children(Namespaces::MAIN)->hyperlink as $hyperlink) {
             if ($hyperlink !== null) {
@@ -38,12 +33,10 @@ class Hyperlinks
             }
         }
     }
-
-    private function setHyperlink(SimpleXMLElement $hyperlink, Worksheet $worksheet): void
+    private function setHyperlink(SimpleXMLElement $hyperlink, Worksheet $worksheet) : void
     {
         // Link url
         $linkRel = Xlsx::getAttributes($hyperlink, Namespaces::SCHEMA_OFFICE_DOCUMENT);
-
         $attributes = Xlsx::getAttributes($hyperlink);
         foreach (Coordinate::extractAllCellReferencesInRange($attributes->ref) as $cellReference) {
             $cell = $worksheet->getCell($cellReference);
@@ -56,7 +49,6 @@ class Hyperlinks
             } elseif (isset($attributes['location'])) {
                 $cell->getHyperlink()->setUrl('sheet://' . (string) $attributes['location']);
             }
-
             // Tooltip
             if (isset($attributes['tooltip'])) {
                 $cell->getHyperlink()->setTooltip((string) $attributes['tooltip']);

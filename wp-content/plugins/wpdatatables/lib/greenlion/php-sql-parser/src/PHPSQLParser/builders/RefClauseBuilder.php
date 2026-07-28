@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RefClauseBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  *
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the references clause within a JOIN.
  * You can overwrite all functions to achieve another handling.
@@ -50,55 +50,56 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RefClauseBuilder implements Builder {
-
-    protected function buildInList($parsed) {
+class RefClauseBuilder implements Builder
+{
+    protected function buildInList($parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
-        if ($parsed === false) {
+    public function build(array $parsed)
+    {
+        if ($parsed === \false) {
             return '';
         }
         $sql = '';
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildConstant($v);
@@ -107,14 +108,11 @@ class RefClauseBuilder implements Builder {
             $sql .= $this->buildInList($v);
             $sql .= $this->buildColumnList($v);
             $sql .= $this->buildSubQuery($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('expression ref_clause', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
 }
-?>

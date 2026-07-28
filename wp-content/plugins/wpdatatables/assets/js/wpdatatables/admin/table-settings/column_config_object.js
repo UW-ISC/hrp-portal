@@ -1322,7 +1322,6 @@ WDTColumn.prototype.fillInputs = function () {
                             this.filterDefaultValue = this.filterDefaultValue.split('|');
                     }
 
-                    jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val', this.filterDefaultValue);
                     if (this.filterDefaultValue instanceof Array) {
                         this.filterDefaultValue = this.filterDefaultValue.join('|');
                     }

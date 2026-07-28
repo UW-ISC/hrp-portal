@@ -267,15 +267,12 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with improvements and bug fixes:
+                            New update with a security bug fix:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Improvement:</strong> Improved security by preventing stored cross-site scripting via CSV/Excel data import.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with HighChart Stock library not working properly.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with HighCharts stable version not working properly on the front-end.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with chart autoloader not working properly.</li>
+                                <li><strong>BugFix:</strong> Fixed SQL injection risks in date/time filters, foreign-key IN list construction, and MCP LIKE query handling.</li>
                             </ul>
                         </div>
 

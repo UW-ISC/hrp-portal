@@ -31,8 +31,9 @@ if ($this->getFilteringForm()) {
 <?php if ($this->serverSide()): ?>
     <?php wp_nonce_field('wdtFrontendServerSideNonce' . $this->getWpId(), 'wdtNonceFrontendServerSide_' . $this->getWpId()); ?>
 <?php endif; ?>
+<?php wp_nonce_field('wdtFrontendElementorNonce' . $this->getWpId(), 'wdtFrontendelementorNonce_' . $this->getWpId(), false, true); ?>
     <input type="hidden" id="<?php echo esc_attr($this->getId()) ?>_desc"
-           value='<?php echo $this->getJsonDescription(); ?>'/>
+           value='<?php echo esc_attr($this->getJsonDescription()); ?>'/>
 
     <table id="<?php echo esc_attr($this->getId()) ?>"
            class="<?php if ($this->isFixedHeaders()) { ?>wpFixedHeader<?php } ?><?php if ($this->groupingEnabled()) { ?> wpdt-has-grouping<?php } ?> <?php if ($this->isScrollable()) { ?>scroll<?php } ?> <?php if ($this->isResponsive()) { ?>responsive<?php } ?> display nowrap wdt-no-display <?php echo esc_attr($this->getCssClassesArr()) ?> <?php echo esc_attr($customClasses) ?> wpDataTable wpDataTableID-<?php echo esc_attr($this->getWpId()) ?> "

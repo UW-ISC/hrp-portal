@@ -1,42 +1,36 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared\OLE;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared\OLE;
 
-use PhpOffice\PhpSpreadsheet\Shared\OLE;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\OLE;
 class ChainedBlockStream
 {
     /** @var mixed */
     public $context;
-
     /**
      * The OLE container of the file that is being read.
      *
      * @var null|OLE
      */
     public $ole;
-
     /**
      * Parameters specified by fopen().
      *
      * @var array
      */
     public $params;
-
     /**
      * The binary data of the file.
      *
      * @var string
      */
     public $data;
-
     /**
      * The file pointer.
      *
      * @var int byte offset
      */
     public $pos;
-
     /**
      * Implements support for fopen().
      * For creating streams using this wrapper, use OLE_PPS_File::getStream().
@@ -49,27 +43,23 @@ class ChainedBlockStream
      *
      * @return bool true on success
      */
-    public function stream_open($path, $mode, $options, &$openedPath) // @codingStandardsIgnoreLine
+    public function stream_open($path, $mode, $options, &$openedPath)
     {
         if ($mode[0] !== 'r') {
-            if ($options & STREAM_REPORT_ERRORS) {
-                trigger_error('Only reading is supported', E_USER_WARNING);
+            if ($options & \STREAM_REPORT_ERRORS) {
+                \trigger_error('Only reading is supported', \E_USER_WARNING);
             }
-
-            return false;
+            return \false;
         }
-
         // 25 is length of "ole-chainedblockstream://"
-        parse_str(substr($path, 25), $this->params);
+        \parse_str(\substr($path, 25), $this->params);
         if (!isset($this->params['oleInstanceId'], $this->params['blockId'], $GLOBALS['_OLE_INSTANCES'][$this->params['oleInstanceId']])) {
-            if ($options & STREAM_REPORT_ERRORS) {
-                trigger_error('OLE stream not found', E_USER_WARNING);
+            if ($options & \STREAM_REPORT_ERRORS) {
+                \trigger_error('OLE stream not found', \E_USER_WARNING);
             }
-
-            return false;
+            return \false;
         }
         $this->ole = $GLOBALS['_OLE_INSTANCES'][$this->params['oleInstanceId']];
-
         $blockId = $this->params['blockId'];
         $this->data = '';
         if (isset($this->params['size']) && $this->params['size'] < $this->ole->bigBlockThreshold && $blockId != $this->ole->root->startBlock) {
@@ -78,38 +68,34 @@ class ChainedBlockStream
             while ($blockId != -2) {
                 $pos = $rootPos + $blockId * $this->ole->bigBlockSize;
                 $blockId = $this->ole->sbat[$blockId];
-                fseek($this->ole->_file_handle, $pos);
-                $this->data .= fread($this->ole->_file_handle, $this->ole->bigBlockSize);
+                \fseek($this->ole->_file_handle, $pos);
+                $this->data .= \fread($this->ole->_file_handle, $this->ole->bigBlockSize);
             }
         } else {
             // Block id refers to big blocks
             while ($blockId != -2) {
                 $pos = $this->ole->getBlockOffset($blockId);
-                fseek($this->ole->_file_handle, $pos);
-                $this->data .= fread($this->ole->_file_handle, $this->ole->bigBlockSize);
+                \fseek($this->ole->_file_handle, $pos);
+                $this->data .= \fread($this->ole->_file_handle, $this->ole->bigBlockSize);
                 $blockId = $this->ole->bbat[$blockId];
             }
         }
         if (isset($this->params['size'])) {
-            $this->data = substr($this->data, 0, $this->params['size']);
+            $this->data = \substr($this->data, 0, $this->params['size']);
         }
-
-        if ($options & STREAM_USE_PATH) {
+        if ($options & \STREAM_USE_PATH) {
             $openedPath = $path;
         }
-
-        return true;
+        return \true;
     }
-
     /**
      * Implements support for fclose().
      */
-    public function stream_close(): void // @codingStandardsIgnoreLine
+    public function stream_close() : void
     {
         $this->ole = null;
         unset($GLOBALS['_OLE_INSTANCES']);
     }
-
     /**
      * Implements support for fread(), fgets() etc.
      *
@@ -117,38 +103,34 @@ class ChainedBlockStream
      *
      * @return false|string
      */
-    public function stream_read($count) // @codingStandardsIgnoreLine
+    public function stream_read($count)
     {
         if ($this->stream_eof()) {
-            return false;
+            return \false;
         }
-        $s = substr($this->data, (int) $this->pos, $count);
+        $s = \substr($this->data, (int) $this->pos, $count);
         $this->pos += $count;
-
         return $s;
     }
-
     /**
      * Implements support for feof().
      *
      * @return bool TRUE if the file pointer is at EOF; otherwise FALSE
      */
-    public function stream_eof() // @codingStandardsIgnoreLine
+    public function stream_eof()
     {
-        return $this->pos >= strlen($this->data);
+        return $this->pos >= \strlen($this->data);
     }
-
     /**
      * Returns the position of the file pointer, i.e. its offset into the file
      * stream. Implements support for ftell().
      *
      * @return int
      */
-    public function stream_tell() // @codingStandardsIgnoreLine
+    public function stream_tell()
     {
         return $this->pos;
     }
-
     /**
      * Implements support for fseek().
      *
@@ -157,35 +139,33 @@ class ChainedBlockStream
      *
      * @return bool
      */
-    public function stream_seek($offset, $whence) // @codingStandardsIgnoreLine
+    public function stream_seek($offset, $whence)
     {
-        if ($whence == SEEK_SET && $offset >= 0) {
+        if ($whence == \SEEK_SET && $offset >= 0) {
             $this->pos = $offset;
-        } elseif ($whence == SEEK_CUR && -$offset <= $this->pos) {
+        } elseif ($whence == \SEEK_CUR && -$offset <= $this->pos) {
             $this->pos += $offset;
             // @phpstan-ignore-next-line
-        } elseif ($whence == SEEK_END && -$offset <= count(/** @scrutinizer ignore-type */ $this->data)) {
-            $this->pos = strlen($this->data) + $offset;
+        } elseif ($whence == \SEEK_END && -$offset <= \count(
+            /** @scrutinizer ignore-type */
+            $this->data
+        )) {
+            $this->pos = \strlen($this->data) + $offset;
         } else {
-            return false;
+            return \false;
         }
-
-        return true;
+        return \true;
     }
-
     /**
      * Implements support for fstat(). Currently the only supported field is
      * "size".
      *
      * @return array
      */
-    public function stream_stat() // @codingStandardsIgnoreLine
+    public function stream_stat()
     {
-        return [
-            'size' => strlen($this->data),
-        ];
+        return ['size' => \strlen($this->data)];
     }
-
     // Methods used by stream_wrapper_register() that are not implemented:
     // bool stream_flush ( void )
     // int stream_write ( string data )

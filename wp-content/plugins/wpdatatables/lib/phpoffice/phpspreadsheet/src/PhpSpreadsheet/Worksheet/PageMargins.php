@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Worksheet;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Worksheet;
 
 class PageMargins
 {
@@ -10,49 +10,42 @@ class PageMargins
      * @var float
      */
     private $left = 0.7;
-
     /**
      * Right.
      *
      * @var float
      */
     private $right = 0.7;
-
     /**
      * Top.
      *
      * @var float
      */
     private $top = 0.75;
-
     /**
      * Bottom.
      *
      * @var float
      */
     private $bottom = 0.75;
-
     /**
      * Header.
      *
      * @var float
      */
     private $header = 0.3;
-
     /**
      * Footer.
      *
      * @var float
      */
     private $footer = 0.3;
-
     /**
      * Create a new PageMargins.
      */
     public function __construct()
     {
     }
-
     /**
      * Get Left.
      *
@@ -62,7 +55,6 @@ class PageMargins
     {
         return $this->left;
     }
-
     /**
      * Set Left.
      *
@@ -73,10 +65,8 @@ class PageMargins
     public function setLeft($left)
     {
         $this->left = $left;
-
         return $this;
     }
-
     /**
      * Get Right.
      *
@@ -86,7 +76,6 @@ class PageMargins
     {
         return $this->right;
     }
-
     /**
      * Set Right.
      *
@@ -97,10 +86,8 @@ class PageMargins
     public function setRight($right)
     {
         $this->right = $right;
-
         return $this;
     }
-
     /**
      * Get Top.
      *
@@ -110,7 +97,6 @@ class PageMargins
     {
         return $this->top;
     }
-
     /**
      * Set Top.
      *
@@ -121,10 +107,8 @@ class PageMargins
     public function setTop($top)
     {
         $this->top = $top;
-
         return $this;
     }
-
     /**
      * Get Bottom.
      *
@@ -134,7 +118,6 @@ class PageMargins
     {
         return $this->bottom;
     }
-
     /**
      * Set Bottom.
      *
@@ -145,10 +128,8 @@ class PageMargins
     public function setBottom($bottom)
     {
         $this->bottom = $bottom;
-
         return $this;
     }
-
     /**
      * Get Header.
      *
@@ -158,7 +139,6 @@ class PageMargins
     {
         return $this->header;
     }
-
     /**
      * Set Header.
      *
@@ -169,10 +149,8 @@ class PageMargins
     public function setHeader($header)
     {
         $this->header = $header;
-
         return $this;
     }
-
     /**
      * Get Footer.
      *
@@ -182,7 +160,6 @@ class PageMargins
     {
         return $this->footer;
     }
-
     /**
      * Set Footer.
      *
@@ -193,36 +170,29 @@ class PageMargins
     public function setFooter($footer)
     {
         $this->footer = $footer;
-
         return $this;
     }
-
-    public static function fromCentimeters(float $value): float
+    public static function fromCentimeters(float $value) : float
     {
         return $value / 2.54;
     }
-
-    public static function toCentimeters(float $value): float
+    public static function toCentimeters(float $value) : float
     {
         return $value * 2.54;
     }
-
-    public static function fromMillimeters(float $value): float
+    public static function fromMillimeters(float $value) : float
     {
         return $value / 25.4;
     }
-
-    public static function toMillimeters(float $value): float
+    public static function toMillimeters(float $value) : float
     {
         return $value * 25.4;
     }
-
-    public static function fromPoints(float $value): float
+    public static function fromPoints(float $value) : float
     {
         return $value / 72;
     }
-
-    public static function toPoints(float $value): float
+    public static function toPoints(float $value) : float
     {
         return $value * 72;
     }

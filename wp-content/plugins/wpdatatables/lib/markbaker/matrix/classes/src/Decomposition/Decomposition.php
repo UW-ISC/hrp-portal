@@ -1,21 +1,19 @@
 <?php
 
-namespace Matrix\Decomposition;
+namespace WPDT\Matrix\Decomposition;
 
-use Matrix\Exception;
-use Matrix\Matrix;
-
+use WPDT\Matrix\Exception;
+use WPDT\Matrix\Matrix;
 class Decomposition
 {
     const LU = 'LU';
     const QR = 'QR';
-
     /**
      * @throws Exception
      */
     public static function decomposition($type, Matrix $matrix)
     {
-        switch (strtoupper($type)) {
+        switch (\strtoupper($type)) {
             case self::LU:
                 return new LU($matrix);
             case self::QR:

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ColumnListBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for column-list parts of CREATE TABLE. 
  * You can overwrite all functions to achieve another handling.
@@ -51,36 +51,33 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ColumnListBuilder implements Builder {
-
-    protected function buildIndexColumn($parsed) {
+class ColumnListBuilder implements Builder
+{
+    protected function buildIndexColumn($parsed)
+    {
         $builder = new IndexColumnBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildColumnReference($parsed) {
+    protected function buildColumnReference($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed, $delim = ', ') {
+    public function build(array $parsed, $delim = ', ')
+    {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_LIST) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildIndexColumn($v);
             $sql .= $this->buildColumnReference($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-list subtree', $k, $v, 'expr_type');
             }
-
             $sql .= $delim;
         }
-        return '(' . substr($sql, 0, -strlen($delim)) . ')';
+        return '(' . \substr($sql, 0, -\strlen($delim)) . ')';
     }
-
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BracketStatementBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the parentheses around a statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,29 +50,28 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class BracketStatementBuilder implements Builder {
-
-    protected function buildSelectBracketExpression($parsed) {
+class BracketStatementBuilder implements Builder
+{
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed, " ");
     }
-
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement($parsed)
+    {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed['BRACKET'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildSelectBracketExpression($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('BRACKET', $k, $v, 'expr_type');
             }
         }
-        return trim($sql . " " . trim($this->buildSelectStatement($parsed)));
+        return \trim($sql . " " . \trim($this->buildSelectStatement($parsed)));
     }
 }
-?>

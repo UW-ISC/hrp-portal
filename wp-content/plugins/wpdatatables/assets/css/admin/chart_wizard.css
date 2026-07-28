@@ -364,6 +364,10 @@
 
 .wpdt-c .wdt-chart-wizard .wdt-chart-wizard-chart-selecter-block .card-header img {
     margin: 0 auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 250 / 150;
+    object-fit: contain;
 }
 
 .wpdt-c .wdt-chart-wizard .wdt-chart-wizard-chart-selecter-block .card-body span {

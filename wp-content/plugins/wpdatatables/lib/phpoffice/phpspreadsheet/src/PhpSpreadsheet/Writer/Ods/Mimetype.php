@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 
 class Mimetype extends WriterPart
 {
@@ -9,7 +9,7 @@ class Mimetype extends WriterPart
      *
      * @return string XML Output
      */
-    public function write(): string
+    public function write() : string
     {
         return 'application/vnd.oasis.opendocument.spreadsheet';
     }

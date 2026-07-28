@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GroupByBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the GROUP-BY clause. 
  * You can overwrite all functions to achieve another handling.
@@ -50,52 +50,49 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class GroupByBuilder implements Builder {
-
-    protected function buildColRef($parsed) {
+class GroupByBuilder implements Builder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildPosition($parsed) {
+    protected function buildPosition($parsed)
+    {
         $builder = new PositionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildGroupByAlias($parsed) {
+    protected function buildGroupByAlias($parsed)
+    {
         $builder = new GroupByAliasBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildGroupByExpression($parsed) {
-    	$builder = new GroupByExpressionBuilder();
+    protected function buildGroupByExpression($parsed)
+    {
+        $builder = new GroupByExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildPosition($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildGroupByExpression($v);
             $sql .= $this->buildGroupByAlias($v);
-            
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('GROUP', $k, $v, 'expr_type');
             }
-
             $sql .= ", ";
         }
-        $sql = substr($sql, 0, -2);
+        $sql = \substr($sql, 0, -2);
         return "GROUP BY " . $sql;
     }
-
 }
-?>

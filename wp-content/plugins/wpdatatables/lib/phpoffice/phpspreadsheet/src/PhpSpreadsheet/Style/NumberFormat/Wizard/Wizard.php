@@ -1,8 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
 
 interface Wizard
 {
-    public function format(): string;
+    public function format() : string;
 }

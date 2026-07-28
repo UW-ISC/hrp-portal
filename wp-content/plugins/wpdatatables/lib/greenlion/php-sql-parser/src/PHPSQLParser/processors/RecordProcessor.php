@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RecordProcessor.php
  *
@@ -39,8 +40,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes records of an INSERT statement.
@@ -49,17 +49,17 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RecordProcessor extends AbstractProcessor {
-
-    protected function processExpressionList($unparsed) {
+class RecordProcessor extends AbstractProcessor
+{
+    protected function processExpressionList($unparsed)
+    {
         $processor = new ExpressionListProcessor($this->options);
         return $processor->process($unparsed);
     }
-
-    public function process($unparsed) {
+    public function process($unparsed)
+    {
         $unparsed = $this->removeParenthesisFromStart($unparsed);
         $values = $this->splitSQLIntoTokens($unparsed);
-
         foreach ($values as $k => $v) {
             if ($this->isCommaToken($v)) {
                 $values[$k] = "";
@@ -68,4 +68,3 @@ class RecordProcessor extends AbstractProcessor {
         return $this->processExpressionList($values);
     }
 }
-?>

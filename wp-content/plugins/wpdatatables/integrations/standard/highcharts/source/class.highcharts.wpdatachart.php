@@ -72,18 +72,18 @@ class WdtHighchartsChart extends WPDataChart
     //Render data
     protected $_highcharts_render_data = NULL;
 
-    // Paths depending on "stable version"
-    protected $_libSource = '//code.highcharts.com/highcharts.js';
-    protected $_moreLibSource = '//code.highcharts.com/highcharts-more.js';
-    protected $_threeDLibSource = '//code.highcharts.com/highcharts-3d.js';
-    protected $_exportingDataLibSource = '//code.highcharts.com/modules/export-data.js';
-    protected $_accessibilityLibSource = '//code.highcharts.com/modules/accessibility.js';
-    protected $_exportingLibSource = '//code.highcharts.com/modules/exporting.js';
-    protected $_cylinderLibSource = '//code.highcharts.com/modules/cylinder.js';
-    protected $_heatMapLibSource = '//code.highcharts.com/modules/heatmap.js';
-    protected $_funnelLibSource = '//code.highcharts.com/modules/funnel.js';
-    protected $_funnel3DLibSource = '//code.highcharts.com/modules/funnel3d.js';
-    protected $_treeMapLibSource = '//code.highcharts.com/modules/treemap.js';
+    // Highcharts scripts are loaded from local plugin assets.
+    protected $_libSource = '';
+    protected $_moreLibSource = '';
+    protected $_threeDLibSource = '';
+    protected $_exportingDataLibSource = '';
+    protected $_accessibilityLibSource = '';
+    protected $_exportingLibSource = '';
+    protected $_cylinderLibSource = '';
+    protected $_heatMapLibSource = '';
+    protected $_funnelLibSource = '';
+    protected $_funnel3DLibSource = '';
+    protected $_treeMapLibSource = '';
 
 
     /**
@@ -1065,19 +1065,17 @@ class WdtHighchartsChart extends WPDataChart
             $this->setCreditsText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com')));
         }
 
-        if (get_option('wdtHighChartStableVersion')) {
-            $this->setLibSource(WDT_HC_ASSETS_URL . 'js/highcharts.js');
-            $this->setMoreLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-more.js');
-            $this->setThreeDLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-3D.js');
-            $this->setCylinderLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-cylinder.js');
-            $this->setHeatMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-heatmap.js');
-            $this->setFunnelLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel.js');
-            $this->setFunnel3DLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel3D.js');
-            $this->setTreeMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-treemap.js');
-            $this->setExportingLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting.js');
-            $this->setExportingDataLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting-data.js');
-            $this->setAccessibilityLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-accessibility.js');
-        }
+        $this->setLibSource(WDT_HC_ASSETS_URL . 'js/highcharts.js');
+        $this->setMoreLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-more.js');
+        $this->setThreeDLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-3D.js');
+        $this->setCylinderLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-cylinder.js');
+        $this->setHeatMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-heatmap.js');
+        $this->setFunnelLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel.js');
+        $this->setFunnel3DLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-funnel3D.js');
+        $this->setTreeMapLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-treemap.js');
+        $this->setExportingLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting.js');
+        $this->setExportingDataLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-exporting-data.js');
+        $this->setAccessibilityLibSource(WDT_HC_ASSETS_URL . 'js/highcharts-accessibility.js');
 
     }
 
@@ -1289,7 +1287,7 @@ class WdtHighchartsChart extends WPDataChart
     /**
      * @return array
      */
-    public function prepareRenderOptions()
+    public function prepareRenderOptions(): array
     {
         $highchartsRender = array(
             'title' => array(
@@ -1320,7 +1318,13 @@ class WdtHighchartsChart extends WPDataChart
                 'highcharts_3d_pie_chart',
                 'highcharts_3d_donut_chart',
                 'highcharts_treemap_chart',
-                'highcharts_treemap_level_chart'
+                'highcharts_treemap_level_chart',
+                'highcharts_funnel_chart',
+                'highcharts_funnel3d_chart',
+                'highcharts_bubble_chart',
+                'highcharts_bubble3d_chart',
+                'highcharts_sized_bubble_chart',
+                'highcharts_sized_bubble3d_chart'
             )
         )
         ) {
@@ -1385,17 +1389,32 @@ class WdtHighchartsChart extends WPDataChart
                         'highcharts_pie_with_gradient_chart',
                         'highcharts_donut_chart',
                         'highcharts_3d_pie_chart',
-                        'highcharts_3d_donut_chart'
+                        'highcharts_3d_donut_chart',
+                        'highcharts_funnel_chart',
+                        'highcharts_funnel3d_chart'
                     )
                 )
             ) {
                 $highchartsRender['series'] = array(
                     array(
-                        'type' => 'pie',
                         'name' => $this->_render_data['columns'][1]['label'],
                         'data' => $this->_render_data['rows']
                     )
                 );
+                if (
+                    in_array(
+                        $this->_type,
+                        array(
+                            'highcharts_pie_chart',
+                            'highcharts_pie_with_gradient_chart',
+                            'highcharts_donut_chart',
+                            'highcharts_3d_pie_chart',
+                            'highcharts_3d_donut_chart'
+                        )
+                    )
+                ) {
+                    $highchartsRender['series'][0]['type'] = 'pie';
+                }
                 unset($highchartsRender['xAxis']);
             } else if ($this->_type == 'highcharts_treemap_chart') {
                 $data = [];
@@ -1501,9 +1520,191 @@ class WdtHighchartsChart extends WPDataChart
                 );
 
                 unset($highchartsRender['xAxis']);
+            } else if (
+                in_array(
+                    $this->_type,
+                    array(
+                        'highcharts_bubble_chart',
+                        'highcharts_bubble3d_chart',
+                        'highcharts_sized_bubble_chart',
+                        'highcharts_sized_bubble3d_chart',
+                    )
+                )
+            ) {
+                // Default bubble size
+                $defaultSize = 10;
+
+                // Highcharts default colors
+                $colors = ["#2caffe", "#544fc5", "#00e272", "#fe6a35", "#6b8abc", "#d568fb", "#2ee0ca", "#fa4b42", "#feb56a", "#91e8e1"];
+                $colorsNum = count($colors);
+
+                $rows = $this->_render_data['rows'];
+
+                $seriesData = [];
+
+                if ($this->_type === 'highcharts_bubble_chart' || $this->_type === 'highcharts_bubble3d_chart') {
+                    $columns = $this->_render_data['columns'];
+
+                    if (!empty($columns)) {
+                        $firstColumnType = $columns[0]['type'] ?? '';
+                        $hasPointNameColumn = in_array($firstColumnType, ['string', 'date', 'datetime', 'time'], true);
+                        $seriesStartIndex = $hasPointNameColumn ? 1 : 0;
+
+                        for ($columnIndex = $seriesStartIndex; $columnIndex < count($columns); $columnIndex++) {
+                            $seriesPosition = $columnIndex - $seriesStartIndex;
+                            $seriesColor = $this->_render_data['options']['series'][$seriesPosition]['color'] ?? $colors[$seriesPosition % $colorsNum];
+                            $seriesLabel = $this->_render_data['options']['series'][$seriesPosition]['label'] ?? $columns[$columnIndex]['label'];
+
+                            $seriesData[$seriesPosition] = [
+                                'name' => $seriesLabel,
+                                'label' => $seriesLabel,
+                                'data' => [],
+                                'color' => $seriesColor,
+                                'orig_header' => $columns[$columnIndex]['orig_header'] ?? ''
+                            ];
+                        }
+
+                        foreach ($rows as $rowIndex => $row) {
+                            for ($columnIndex = $seriesStartIndex; $columnIndex < count($columns); $columnIndex++) {
+                                if (!isset($row[$columnIndex]) || !is_numeric($row[$columnIndex])) {
+                                    continue;
+                                }
+
+                                $seriesPosition = $columnIndex - $seriesStartIndex;
+                                $x = (float)$rowIndex;
+                                $y = (float)$row[$columnIndex];
+
+                                if ($hasPointNameColumn && isset($row[0])) {
+                                    $seriesData[$seriesPosition]['data'][] = [
+                                        'name' => (string)$row[0],
+                                        'x' => $x,
+                                        'y' => $y,
+                                        'z' => $defaultSize
+                                    ];
+                                } else {
+                                    $seriesData[$seriesPosition]['data'][] = [$x, $y, $defaultSize];
+                                }
+                            }
+                        }
+                    }
+                } elseif ($this->_type === 'highcharts_sized_bubble_chart' || $this->_type === 'highcharts_sized_bubble3d_chart') {
+                    $columns = $this->_render_data['columns'];
+
+                    if (!empty($columns)) {
+                        $firstColumnType = $columns[0]['type'] ?? '';
+                        $hasPointNameColumn = in_array($firstColumnType, ['string', 'date', 'datetime', 'time'], true);
+                        $seriesStartIndex = $hasPointNameColumn ? 1 : 0;
+
+                        for ($columnIndex = $seriesStartIndex; $columnIndex < count($columns); $columnIndex += 2) {
+                            $seriesPosition = (int)(($columnIndex - $seriesStartIndex) / 2);
+                            $column = isset($columns[$columnIndex]) ? $columns[$columnIndex] : [];
+                            $fallbackName = 'Series ' . ($seriesPosition + 1);
+                            $seriesColor = $this->_render_data['options']['series'][$seriesPosition]['color'] ?? $colors[$seriesPosition % $colorsNum];
+                            $seriesLabel = $this->_render_data['options']['series'][$seriesPosition]['label']
+                                ?? (isset($column['label']) ? $column['label'] : $fallbackName);
+
+                            $seriesData[$seriesPosition] = [
+                                'name' => $seriesLabel,
+                                'label' => $seriesLabel,
+                                'data' => [],
+                                'color' => $seriesColor,
+                                'orig_header' => isset($column['orig_header']) ? $column['orig_header'] : ''
+                            ];
+                        }
+
+                        foreach ($rows as $rowIndex => $row) {
+                            for ($columnIndex = $seriesStartIndex; $columnIndex < count($columns); $columnIndex += 2) {
+                                $seriesPosition = (int)(($columnIndex - $seriesStartIndex) / 2);
+
+                                if (!isset($seriesData[$seriesPosition]) || !isset($row[$columnIndex])) {
+                                    continue;
+                                }
+
+                                $y = $row[$columnIndex];
+                                if (!is_numeric($y)) {
+                                    continue;
+                                }
+
+                                $size = isset($row[$columnIndex + 1]) && is_numeric($row[$columnIndex + 1])
+                                    ? (float)$row[$columnIndex + 1]
+                                    : $defaultSize;
+
+                                $x = (float)$rowIndex;
+                                if ($hasPointNameColumn && isset($row[0])) {
+                                    $seriesData[$seriesPosition]['data'][] = [
+                                        'name' => (string)$row[0],
+                                        'x' => $x,
+                                        'y' => (float)$y,
+                                        'z' => $size
+                                    ];
+                                } else {
+                                    $seriesData[$seriesPosition]['data'][] = [$x, (float)$y, $size];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $highchartsRender['series'] = $seriesData;
+
+                // Add styles for 3D charts
+                if ($this->_type === 'highcharts_bubble3d_chart' || $this->_type === 'highcharts_sized_bubble3d_chart') {
+                    $this->applyBubble3dMarkerStyles($highchartsRender['series']);
+                }
             }
         }
         return $highchartsRender;
+    }
+
+    /**
+     * Applies a radial-gradient marker to each series in a 3D chart.
+     * Series colors are expected to be hex (#RRGGBB / #RGB) or rgb() values.
+     *
+     * @param array $seriesArray
+     * @return void
+     */
+    private function applyBubble3dMarkerStyles(array &$seriesArray): void
+    {
+        foreach ($seriesArray as &$series) {
+            if (empty($series['color'])) {
+                continue;
+            }
+
+            $color = trim((string)$series['color']);
+            $r = null;
+            $g = null;
+            $b = null;
+
+            if (preg_match('/^#([A-Fa-f0-9]{6})$/', $color, $matches)) {
+                $r = hexdec(substr($matches[1], 0, 2));
+                $g = hexdec(substr($matches[1], 2, 2));
+                $b = hexdec(substr($matches[1], 4, 2));
+            } elseif (preg_match('/^#([A-Fa-f0-9]{3})$/', $color, $matches)) {
+                $hex = $matches[1];
+                $r = hexdec(str_repeat($hex[0], 2));
+                $g = hexdec(str_repeat($hex[1], 2));
+                $b = hexdec(str_repeat($hex[2], 2));
+            } elseif (preg_match('/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i', $color, $matches)) {
+                $r = (int)$matches[1];
+                $g = (int)$matches[2];
+                $b = (int)$matches[3];
+            }
+
+            if ($r === null || $g === null || $b === null ||
+                $r < 0 || $r > 255 || $g < 0 || $g > 255 || $b < 0 || $b > 255) {
+                continue;
+            }
+
+            $series['marker'] = [
+                'fillColor' => [
+                    'radialGradient' => ['cx' => 0.4, 'cy' => 0.3, 'r' => 0.7],
+                    'stops' => [
+                        [0, 'rgba(255,255,255,0.5)'],
+                        [1, 'rgba(' . $r . ',' . $g . ',' . $b . ',0.5)']
+                    ]
+                ]
+            ];
+        }
     }
 
     /**

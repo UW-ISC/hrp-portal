@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates file as defined by RFC 1630 and RFC 1738.
  */
@@ -10,8 +12,7 @@ class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
      * machines, so placing them as an img src is incorrect.
      * @type bool
      */
-    public $browsable = false;
-
+    public $browsable = \false;
     /**
      * Basically the *only* URI scheme for which this is true, since
      * accessing files on the local machine is very common.  In fact,
@@ -20,8 +21,7 @@ class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
      * network shares.
      * @type bool
      */
-    public $may_omit_host = true;
-
+    public $may_omit_host = \true;
     /**
      * @param HTMLPurifier_URI $uri
      * @param HTMLPurifier_Config $config
@@ -37,8 +37,7 @@ class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
         // While it seems to work on Firefox, the querystring has
         // no possible effect and is thus stripped.
         $uri->query = null;
-        return true;
+        return \true;
     }
 }
-
 // vim: et sw=4 sts=4

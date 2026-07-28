@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OrderByBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the ORDER-BY clause. 
  * You can overwrite all functions to achieve another handling.
@@ -51,47 +51,48 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class OrderByBuilder implements Builder {
-
-    protected function buildFunction($parsed) {
+class OrderByBuilder implements Builder
+{
+    protected function buildFunction($parsed)
+    {
         $builder = new OrderByFunctionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new OrderByReservedBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new OrderByColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new OrderByAliasBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildExpression($parsed) {
+    protected function buildExpression($parsed)
+    {
         $builder = new OrderByExpressionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression($parsed)
+    {
         $builder = new OrderByBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildPosition($parsed) {
+    protected function buildPosition($parsed)
+    {
         $builder = new OrderByPositionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildAlias($v);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildFunction($v);
@@ -99,15 +100,12 @@ class OrderByBuilder implements Builder {
             $sql .= $this->buildBracketExpression($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildPosition($v);
-            
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('ORDER', $k, $v, 'expr_type');
             }
-
             $sql .= ", ";
         }
-        $sql = substr($sql, 0, -2);
+        $sql = \substr($sql, 0, -2);
         return "ORDER BY " . $sql;
     }
 }
-?>

@@ -44,5 +44,3 @@ class DIVI_DiviWpdt extends DiviExtension
         parent::__construct($name, $args);
     }
 }
-
-new DIVI_DiviWpdt;

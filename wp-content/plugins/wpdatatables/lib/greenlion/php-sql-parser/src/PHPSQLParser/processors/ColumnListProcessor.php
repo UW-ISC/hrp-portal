@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ColumnListProcessor.php
  *
@@ -29,10 +30,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace WPDT\PHPSQLParser\processors;
 
-namespace PHPSQLParser\processors;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * 
  * This class processes column-lists.
@@ -40,16 +40,15 @@ use PHPSQLParser\utils\ExpressionType;
  * @author arothe
  * 
  */
-class ColumnListProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
-        $columns = explode(",", $tokens);
+class ColumnListProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
+        $columns = \explode(",", $tokens);
         $cols = array();
         foreach ($columns as $k => $v) {
-            $cols[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => trim($v),
-                            'no_quotes' => $this->revokeQuotation($v));
+            $cols[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => \trim($v), 'no_quotes' => $this->revokeQuotation($v));
         }
         return $cols;
     }
 }
-?>

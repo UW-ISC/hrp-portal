@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 class Dollar
 {
     use ArrayEnabled;
-
     /**
      * DOLLAR.
      *
@@ -33,7 +31,6 @@ class Dollar
     {
         return Format::DOLLAR($number, $precision);
     }
-
     /**
      * DOLLARDE.
      *
@@ -53,19 +50,15 @@ class Dollar
      */
     public static function decimal($fractionalDollar = null, $fraction = 0)
     {
-        if (is_array($fractionalDollar) || is_array($fraction)) {
+        if (\is_array($fractionalDollar) || \is_array($fraction)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $fractionalDollar, $fraction);
         }
-
         try {
-            $fractionalDollar = FinancialValidations::validateFloat(
-                Functions::flattenSingleValue($fractionalDollar) ?? 0.0
-            );
+            $fractionalDollar = FinancialValidations::validateFloat(Functions::flattenSingleValue($fractionalDollar) ?? 0.0);
             $fraction = FinancialValidations::validateInt(Functions::flattenSingleValue($fraction));
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Additional parameter validations
         if ($fraction < 0) {
             return ExcelError::NAN();
@@ -73,15 +66,12 @@ class Dollar
         if ($fraction == 0) {
             return ExcelError::DIV0();
         }
-
-        $dollars = ($fractionalDollar < 0) ? ceil($fractionalDollar) : floor($fractionalDollar);
-        $cents = fmod($fractionalDollar, 1.0);
+        $dollars = $fractionalDollar < 0 ? \ceil($fractionalDollar) : \floor($fractionalDollar);
+        $cents = \fmod($fractionalDollar, 1.0);
         $cents /= $fraction;
-        $cents *= 10 ** ceil(log10($fraction));
-
+        $cents *= 10 ** \ceil(\log10($fraction));
         return $dollars + $cents;
     }
-
     /**
      * DOLLARFR.
      *
@@ -101,19 +91,15 @@ class Dollar
      */
     public static function fractional($decimalDollar = null, $fraction = 0)
     {
-        if (is_array($decimalDollar) || is_array($fraction)) {
+        if (\is_array($decimalDollar) || \is_array($fraction)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $decimalDollar, $fraction);
         }
-
         try {
-            $decimalDollar = FinancialValidations::validateFloat(
-                Functions::flattenSingleValue($decimalDollar) ?? 0.0
-            );
+            $decimalDollar = FinancialValidations::validateFloat(Functions::flattenSingleValue($decimalDollar) ?? 0.0);
             $fraction = FinancialValidations::validateInt(Functions::flattenSingleValue($fraction));
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Additional parameter validations
         if ($fraction < 0) {
             return ExcelError::NAN();
@@ -121,12 +107,10 @@ class Dollar
         if ($fraction == 0) {
             return ExcelError::DIV0();
         }
-
-        $dollars = ($decimalDollar < 0.0) ? ceil($decimalDollar) : floor($decimalDollar);
-        $cents = fmod($decimalDollar, 1);
+        $dollars = $decimalDollar < 0.0 ? \ceil($decimalDollar) : \floor($decimalDollar);
+        $cents = \fmod($decimalDollar, 1);
         $cents *= $fraction;
-        $cents *= 10 ** (-ceil(log10($fraction)));
-
+        $cents *= 10 ** (-\ceil(\log10($fraction)));
         return $dollars + $cents;
     }
 }

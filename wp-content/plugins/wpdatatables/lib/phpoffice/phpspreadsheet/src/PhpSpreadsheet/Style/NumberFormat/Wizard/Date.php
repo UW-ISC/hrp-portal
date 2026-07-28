@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
 
 class Date extends DateTimeWizard
 {
@@ -8,12 +8,10 @@ class Date extends DateTimeWizard
      * Year (4 digits), e.g. 2023.
      */
     public const YEAR_FULL = 'yyyy';
-
     /**
      * Year (last 2 digits), e.g. 23.
      */
     public const YEAR_SHORT = 'yy';
-
     public const MONTH_FIRST_LETTER = 'mmmmm';
     /**
      * Month name, long form, e.g. January.
@@ -27,68 +25,41 @@ class Date extends DateTimeWizard
      * Month number with a leading zero if required, e.g. 01.
      */
     public const MONTH_NUMBER_LONG = 'mm';
-
     /**
      * Month number without a leading zero, e.g. 1.
      */
     public const MONTH_NUMBER_SHORT = 'm';
-
     /**
      * Day of the week, full form, e.g. Tuesday.
      */
     public const WEEKDAY_NAME_LONG = 'dddd';
-
     /**
      * Day of the week, short form, e.g. Tue.
      */
     public const WEEKDAY_NAME_SHORT = 'ddd';
-
     /**
      * Day number with a leading zero, e.g. 03.
      */
     public const DAY_NUMBER_LONG = 'dd';
-
     /**
      * Day number without a leading zero, e.g. 3.
      */
     public const DAY_NUMBER_SHORT = 'd';
-
-    protected const DATE_BLOCKS = [
-        self::YEAR_FULL,
-        self::YEAR_SHORT,
-        self::MONTH_FIRST_LETTER,
-        self::MONTH_NAME_FULL,
-        self::MONTH_NAME_SHORT,
-        self::MONTH_NUMBER_LONG,
-        self::MONTH_NUMBER_SHORT,
-        self::WEEKDAY_NAME_LONG,
-        self::WEEKDAY_NAME_SHORT,
-        self::DAY_NUMBER_LONG,
-        self::DAY_NUMBER_SHORT,
-    ];
-
+    protected const DATE_BLOCKS = [self::YEAR_FULL, self::YEAR_SHORT, self::MONTH_FIRST_LETTER, self::MONTH_NAME_FULL, self::MONTH_NAME_SHORT, self::MONTH_NUMBER_LONG, self::MONTH_NUMBER_SHORT, self::WEEKDAY_NAME_LONG, self::WEEKDAY_NAME_SHORT, self::DAY_NUMBER_LONG, self::DAY_NUMBER_SHORT];
     public const SEPARATOR_DASH = '-';
     public const SEPARATOR_DOT = '.';
     public const SEPARATOR_SLASH = '/';
-    public const SEPARATOR_SPACE_NONBREAKING = "\u{a0}";
+    public const SEPARATOR_SPACE_NONBREAKING = " ";
     public const SEPARATOR_SPACE = ' ';
-
-    protected const DATE_DEFAULT = [
-        self::YEAR_FULL,
-        self::MONTH_NUMBER_LONG,
-        self::DAY_NUMBER_LONG,
-    ];
-
+    protected const DATE_DEFAULT = [self::YEAR_FULL, self::MONTH_NUMBER_LONG, self::DAY_NUMBER_LONG];
     /**
      * @var string[]
      */
     protected array $separators;
-
     /**
      * @var string[]
      */
     protected array $formatBlocks;
-
     /**
      * @param null|string|string[] $separators
      *        If you want to use the same separator for all format blocks, then it can be passed as a string literal;
@@ -98,28 +69,21 @@ class Date extends DateTimeWizard
     public function __construct($separators = self::SEPARATOR_DASH, string ...$formatBlocks)
     {
         $separators ??= self::SEPARATOR_DASH;
-        $formatBlocks = (count($formatBlocks) === 0) ? self::DATE_DEFAULT : $formatBlocks;
-
-        $this->separators = $this->padSeparatorArray(
-            is_array($separators) ? $separators : [$separators],
-            count($formatBlocks) - 1
-        );
-        $this->formatBlocks = array_map([$this, 'mapFormatBlocks'], $formatBlocks);
+        $formatBlocks = \count($formatBlocks) === 0 ? self::DATE_DEFAULT : $formatBlocks;
+        $this->separators = $this->padSeparatorArray(\is_array($separators) ? $separators : [$separators], \count($formatBlocks) - 1);
+        $this->formatBlocks = \array_map([$this, 'mapFormatBlocks'], $formatBlocks);
     }
-
-    private function mapFormatBlocks(string $value): string
+    private function mapFormatBlocks(string $value) : string
     {
         // Any date masking codes are returned as lower case values
-        if (in_array(mb_strtolower($value), self::DATE_BLOCKS, true)) {
-            return mb_strtolower($value);
+        if (\in_array(\mb_strtolower($value), self::DATE_BLOCKS, \true)) {
+            return \mb_strtolower($value);
         }
-
         // Wrap any string literals in quotes, so that they're clearly defined as string literals
         return $this->wrapLiteral($value);
     }
-
-    public function format(): string
+    public function format() : string
     {
-        return implode('', array_map([$this, 'intersperse'], $this->formatBlocks, $this->separators));
+        return \implode('', \array_map([$this, 'intersperse'], $this->formatBlocks, $this->separators));
     }
 }

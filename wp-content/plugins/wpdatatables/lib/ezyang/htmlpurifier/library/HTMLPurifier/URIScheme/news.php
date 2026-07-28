@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates news (Usenet) as defined by generic RFC 1738
  */
@@ -8,13 +10,11 @@ class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme
     /**
      * @type bool
      */
-    public $browsable = false;
-
+    public $browsable = \false;
     /**
      * @type bool
      */
-    public $may_omit_host = true;
-
+    public $may_omit_host = \true;
     /**
      * @param HTMLPurifier_URI $uri
      * @param HTMLPurifier_Config $config
@@ -28,8 +28,7 @@ class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme
         $uri->port = null;
         $uri->query = null;
         // typecode check needed on path
-        return true;
+        return \true;
     }
 }
-
 // vim: et sw=4 sts=4

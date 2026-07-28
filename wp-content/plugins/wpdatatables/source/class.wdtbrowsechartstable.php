@@ -72,10 +72,11 @@ class WDTBrowseChartsTable extends WP_List_Table
         $query = "SELECT COUNT(*) FROM {$wpdb->prefix}wpdatacharts";
 
         if (isset($_REQUEST['s'])) {
-            if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+            $searchTerm = sanitize_text_field(wp_unslash($_REQUEST['s']));
+            if (is_numeric($searchTerm)) {
+                $query .= $wpdb->prepare(" WHERE id LIKE %s", $searchTerm);
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $query .= $wpdb->prepare(" WHERE title LIKE %s", '%' . $wpdb->esc_like($searchTerm) . '%');
             }
         }
 
@@ -99,10 +100,11 @@ class WDTBrowseChartsTable extends WP_List_Table
                     FROM {$wpdb->prefix}wpdatacharts ";
 
         if (isset($_REQUEST['s'])) {
-            if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+            $searchTerm = sanitize_text_field(wp_unslash($_REQUEST['s']));
+            if (is_numeric($searchTerm)) {
+                $query .= $wpdb->prepare(" WHERE id LIKE %s", $searchTerm);
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $query .= $wpdb->prepare(" WHERE title LIKE %s", '%' . $wpdb->esc_like($searchTerm) . '%');
             }
         }
 
@@ -265,8 +267,13 @@ class WDTBrowseChartsTable extends WP_List_Table
             case 'google_pie_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Pie Chart', 'wpdatatables') . '</span>';
             case 'chartjs_bubble_chart':
+            case 'highcharts_bubble_chart':
             case 'google_bubble_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Bubble Chart', 'wpdatatables') . '</span>';
+            case 'highcharts_sized_bubble_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Sized Bubble Chart', 'wpdatatables') . '</span>';
+            case 'highcharts_sized_bubble3d_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('3D Sized Bubble Chart', 'wpdatatables') . '</span>';
             case 'highcharts_donut_chart':
             case 'apexcharts_donut_chart':
             case 'google_donut_chart':
@@ -301,6 +308,10 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-chart-type">' . esc_html__('3D Funnel Chart', 'wpdatatables') . '</span>';
             case 'highcharts_funnel_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Funnel Chart', 'wpdatatables') . '</span>';
+            case 'highcharts_bubble3d_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('3D Bubble Chart', 'wpdatatables') . '</span>';
+            case 'highcharts_sized_bubble3d_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('3D Sized Bubble Chart', 'wpdatatables') . '</span>';
             case 'chartjs_stacked_area_chart':
             case 'highcharts_stacked_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Stacked Area Chart', 'wpdatatables') . '</span>';
@@ -441,7 +452,7 @@ class WDTBrowseChartsTable extends WP_List_Table
         $current_url = apply_filters('wpdatatables_filter_browse_charts_order_current_url', $current_url, 'chart');
 
         if (isset($_GET['orderby'])) {
-            $current_orderby = $_GET['orderby'];
+            $current_orderby = sanitize_text_field(wp_unslash($_GET['orderby']));
         } else {
             $current_orderby = '';
         }

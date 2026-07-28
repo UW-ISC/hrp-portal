@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 class NetworkDays
 {
     use ArrayEnabled;
-
     /**
      * NETWORKDAYS.
      *
@@ -35,22 +33,15 @@ class NetworkDays
      */
     public static function count($startDate, $endDate, ...$dateArgs)
     {
-        if (is_array($startDate) || is_array($endDate)) {
-            return self::evaluateArrayArgumentsSubset(
-                [self::class, __FUNCTION__],
-                2,
-                $startDate,
-                $endDate,
-                ...$dateArgs
-            );
+        if (\is_array($startDate) || \is_array($endDate)) {
+            return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 2, $startDate, $endDate, ...$dateArgs);
         }
-
         try {
             //    Retrieve the mandatory start and end date that are referenced in the function definition
             $sDate = Helpers::getDateValue($startDate);
             $eDate = Helpers::getDateValue($endDate);
-            $startDate = min($sDate, $eDate);
-            $endDate = max($sDate, $eDate);
+            $startDate = \min($sDate, $eDate);
+            $endDate = \max($sDate, $eDate);
             //    Get the optional days
             $dateArgs = Functions::flattenArray($dateArgs);
             //    Test any extra holiday parameters
@@ -61,59 +52,49 @@ class NetworkDays
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Execute function
         $startDow = self::calcStartDow($startDate);
         $endDow = self::calcEndDow($endDate);
-        $wholeWeekDays = (int) floor(($endDate - $startDate) / 7) * 5;
+        $wholeWeekDays = (int) \floor(($endDate - $startDate) / 7) * 5;
         $partWeekDays = self::calcPartWeekDays($startDow, $endDow);
-
         //    Test any extra holiday parameters
         $holidayCountedArray = [];
         foreach ($holidayArray as $holidayDate) {
-            if (($holidayDate >= $startDate) && ($holidayDate <= $endDate)) {
-                if ((Week::day($holidayDate, 2) < 6) && (!in_array($holidayDate, $holidayCountedArray))) {
+            if ($holidayDate >= $startDate && $holidayDate <= $endDate) {
+                if (Week::day($holidayDate, 2) < 6 && !\in_array($holidayDate, $holidayCountedArray)) {
                     --$partWeekDays;
                     $holidayCountedArray[] = $holidayDate;
                 }
             }
         }
-
         return self::applySign($wholeWeekDays + $partWeekDays, $sDate, $eDate);
     }
-
-    private static function calcStartDow(float $startDate): int
+    private static function calcStartDow(float $startDate) : int
     {
         $startDow = 6 - (int) Week::day($startDate, 2);
         if ($startDow < 0) {
             $startDow = 5;
         }
-
         return $startDow;
     }
-
-    private static function calcEndDow(float $endDate): int
+    private static function calcEndDow(float $endDate) : int
     {
         $endDow = (int) Week::day($endDate, 2);
         if ($endDow >= 6) {
             $endDow = 0;
         }
-
         return $endDow;
     }
-
-    private static function calcPartWeekDays(int $startDow, int $endDow): int
+    private static function calcPartWeekDays(int $startDow, int $endDow) : int
     {
         $partWeekDays = $endDow + $startDow;
         if ($partWeekDays > 5) {
             $partWeekDays -= 5;
         }
-
         return $partWeekDays;
     }
-
-    private static function applySign(int $result, float $sDate, float $eDate): int
+    private static function applySign(int $result, float $sDate, float $eDate) : int
     {
-        return ($sDate > $eDate) ? -$result : $result;
+        return $sDate > $eDate ? -$result : $result;
     }
 }

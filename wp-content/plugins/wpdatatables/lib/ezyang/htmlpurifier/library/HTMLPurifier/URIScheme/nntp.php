@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates nntp (Network News Transfer Protocol) as defined by generic RFC 1738
  */
@@ -9,12 +11,10 @@ class HTMLPurifier_URIScheme_nntp extends HTMLPurifier_URIScheme
      * @type int
      */
     public $default_port = 119;
-
     /**
      * @type bool
      */
-    public $browsable = false;
-
+    public $browsable = \false;
     /**
      * @param HTMLPurifier_URI $uri
      * @param HTMLPurifier_Config $config
@@ -25,8 +25,7 @@ class HTMLPurifier_URIScheme_nntp extends HTMLPurifier_URIScheme
     {
         $uri->userinfo = null;
         $uri->query = null;
-        return true;
+        return \true;
     }
 }
-
 // vim: et sw=4 sts=4

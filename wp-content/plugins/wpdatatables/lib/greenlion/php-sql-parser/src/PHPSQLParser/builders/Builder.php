@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Builder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * A builder can create a part of an SQL statement. The necessary information
@@ -49,7 +49,8 @@ namespace PHPSQLParser\builders;
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
-interface Builder {
+interface Builder
+{
     /**
      * Builds a part of an SQL statement.
      * 
@@ -59,5 +60,3 @@ interface Builder {
      */
     public function build(array $parsed);
 }
-
-?>

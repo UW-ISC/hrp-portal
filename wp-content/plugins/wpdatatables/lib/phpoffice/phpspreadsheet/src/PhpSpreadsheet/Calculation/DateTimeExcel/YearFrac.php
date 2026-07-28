@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 class YearFrac
 {
     use ArrayEnabled;
-
     /**
      * YEARFRAC.
      *
@@ -45,22 +43,20 @@ class YearFrac
      */
     public static function fraction($startDate, $endDate, $method = 0)
     {
-        if (is_array($startDate) || is_array($endDate) || is_array($method)) {
+        if (\is_array($startDate) || \is_array($endDate) || \is_array($method)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $startDate, $endDate, $method);
         }
-
         try {
             $method = (int) Helpers::validateNumericNull($method);
             $sDate = Helpers::getDateValue($startDate);
             $eDate = Helpers::getDateValue($endDate);
             $sDate = self::excelBug($sDate, $startDate, $endDate, $method);
             $eDate = self::excelBug($eDate, $endDate, $startDate, $method);
-            $startDate = min($sDate, $eDate);
-            $endDate = max($sDate, $eDate);
+            $startDate = \min($sDate, $eDate);
+            $endDate = \max($sDate, $eDate);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         switch ($method) {
             case 0:
                 return Functions::scalar(Days360::between($startDate, $endDate)) / 360;
@@ -71,19 +67,17 @@ class YearFrac
             case 3:
                 return Functions::scalar(Difference::interval($startDate, $endDate)) / 365;
             case 4:
-                return Functions::scalar(Days360::between($startDate, $endDate, true)) / 360;
+                return Functions::scalar(Days360::between($startDate, $endDate, \true)) / 360;
         }
-
         return ExcelError::NAN();
     }
-
     /**
      * Excel 1900 calendar treats date argument of null as 1900-01-00. Really.
      *
      * @param mixed $startDate
      * @param mixed $endDate
      */
-    private static function excelBug(float $sDate, $startDate, $endDate, int $method): float
+    private static function excelBug(float $sDate, $startDate, $endDate, int $method) : float
     {
         if (Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE && SharedDateHelper::getExcelCalendar() !== SharedDateHelper::CALENDAR_MAC_1904) {
             if ($endDate === null && $startDate !== null) {
@@ -94,11 +88,9 @@ class YearFrac
                 }
             }
         }
-
         return $sDate;
     }
-
-    private static function method1(float $startDate, float $endDate): float
+    private static function method1(float $startDate, float $endDate) : float
     {
         $days = Functions::scalar(Difference::interval($startDate, $endDate));
         $startYear = (int) DateParts::year($startDate);
@@ -127,7 +119,6 @@ class YearFrac
             }
             $tmpCalcAnnualBasis /= $years;
         }
-
         return $days / $tmpCalcAnnualBasis;
     }
 }

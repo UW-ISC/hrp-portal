@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 
-use PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
 class Styles extends WriterPart
 {
     /**
@@ -11,7 +10,7 @@ class Styles extends WriterPart
      *
      * @return string XML Output
      */
-    public function write(): string
+    public function write() : string
     {
         $objWriter = null;
         if ($this->getParentWriter()->getUseDiskCaching()) {
@@ -19,10 +18,8 @@ class Styles extends WriterPart
         } else {
             $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
         }
-
         // XML header
         $objWriter->startDocument('1.0', 'UTF-8');
-
         // Content
         $objWriter->startElement('office:document-styles');
         $objWriter->writeAttribute('xmlns:office', 'urn:oasis:names:tc:opendocument:xmlns:office:1.0');
@@ -53,13 +50,11 @@ class Styles extends WriterPart
         $objWriter->writeAttribute('xmlns:tableooo', 'http://openoffice.org/2009/table');
         $objWriter->writeAttribute('xmlns:css3t', 'http://www.w3.org/TR/css3-text/');
         $objWriter->writeAttribute('office:version', '1.2');
-
         $objWriter->writeElement('office:font-face-decls');
         $objWriter->writeElement('office:styles');
         $objWriter->writeElement('office:automatic-styles');
         $objWriter->writeElement('office:master-styles');
         $objWriter->endElement();
-
         return $objWriter->getData();
     }
 }

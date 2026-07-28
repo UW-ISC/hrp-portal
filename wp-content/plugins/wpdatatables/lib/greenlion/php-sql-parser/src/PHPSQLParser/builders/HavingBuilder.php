@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HavingBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the HAVING part. 
  * You can overwrite all functions to achieve another handling.
@@ -51,28 +51,28 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class HavingBuilder extends WhereBuilder {
-
-    protected function buildAliasReference($parsed) {
+class HavingBuilder extends WhereBuilder
+{
+    protected function buildAliasReference($parsed)
+    {
         $builder = new AliasReferenceBuilder();
         return $builder->build($parsed);
     }
-	
-	protected function buildHavingExpression($parsed) {
+    protected function buildHavingExpression($parsed)
+    {
         $builder = new HavingExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildHavingBracketExpression($parsed) {
+    protected function buildHavingBracketExpression($parsed)
+    {
         $builder = new HavingBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "HAVING ";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
-
+            $len = \strlen($sql);
             $sql .= $this->buildAliasReference($v);
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildConstant($v);
@@ -83,15 +83,11 @@ class HavingBuilder extends WhereBuilder {
             $sql .= $this->buildHavingExpression($v);
             $sql .= $this->buildHavingBracketExpression($v);
             $sql .= $this->buildUserVariable($v);
-
-            if (strlen($sql) == $len) {
+            if (\strlen($sql) == $len) {
                 throw new UnableToCreateSQLException('HAVING', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
-
 }
-?>

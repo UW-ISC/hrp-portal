@@ -3,6 +3,195 @@
  */
 
 (function (Handsontable, $) {
+    /**
+     * Escape HTML for fail-closed display when DOMParser is unavailable or parsing fails.
+     */
+    function wdtEscapeHtmlPlain(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * Mirrors WDTTools::isWpdtSafeWebUrl — only http(s) with acceptable host, or root-relative path (no protocol-relative //).
+     */
+    function wdtIsWpdtSafeWebUrl(url) {
+        url = String(url == null ? '' : url).trim();
+        if (!url) {
+            return false;
+        }
+        if (url.indexOf('//') === 0) {
+            return false;
+        }
+        if (url.charAt(0) === '/' && url.charAt(1) !== '/') {
+            return true;
+        }
+        var lower = url.toLowerCase();
+        if (lower.indexOf('http://') !== 0 && lower.indexOf('https://') !== 0) {
+            return false;
+        }
+        try {
+            var u = new URL(url);
+            var h = (u.hostname || '').toLowerCase();
+            if (!h) {
+                return false;
+            }
+            if (h === 'localhost') {
+                return true;
+            }
+            if (h.charAt(0) === '[' && h.charAt(h.length - 1) === ']') {
+                return true;
+            }
+            if (h.indexOf('.') !== -1) {
+                return true;
+            }
+            if (/^\d{1,3}(\.\d{1,3}){3}$/.test(h)) {
+                return true;
+            }
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Harden full cell URL for link/image renderers (same allowlist as PHP link/image sanitizers).
+     */
+    function wdtSanitizeExcelHref(url) {
+        url = String(url == null ? '' : url).trim();
+        if (!url) {
+            return '';
+        }
+        if (/["'<>]/.test(url) || /[\u0000-\u001F\u007F]/.test(url)) {
+            return '';
+        }
+        return wdtIsWpdtSafeWebUrl(url) ? url : '';
+    }
+
+    function wdtSanitizeExcelMailto(addr) {
+        addr = String(addr == null ? '' : addr).trim();
+        if (!addr || /["'<>]/.test(addr) || /[\u0000-\u001F\u007F]/.test(addr)) {
+            return '';
+        }
+        return addr;
+    }
+
+    /**
+     * Rich-text href: strip only scriptable schemes / protocol-relative URLs (mirrors PHP cellHtmlRichHrefMustStrip).
+     */
+    function wdtExcelRichCellHrefMustStrip(val) {
+        val = String(val == null ? '' : val).trim();
+        if (!val) {
+            return true;
+        }
+        if (val.indexOf('//') === 0) {
+            return true;
+        }
+        var m = val.match(/^([a-z][a-z0-9+.-]*):/i);
+        if (!m) {
+            return false;
+        }
+        var s = m[1].toLowerCase();
+        if (s === 'javascript' || s === 'vbscript' || s === 'data' || s === 'file') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * href/src/poster/formaction in rich string cells — mirrors PHP sanitizeCellHtmlUrlAttribute:
+     * src|poster|formaction: wdtIsWpdtSafeWebUrl; href: esc_url-style value kept unless scheme is dangerous.
+     */
+    function wdtSanitizeUrlAttrForExcelCell(val, attrName) {
+        val = String(val == null ? '' : val).trim();
+        attrName = String(attrName == null ? '' : attrName).toLowerCase();
+        if (!val) {
+            return '';
+        }
+        if (/^\s*(javascript|vbscript)\s*:/i.test(val) || /^\s*data\s*:\s*text\/html/i.test(val)) {
+            return '';
+        }
+        if (/["'<>]/.test(val) || /[\u0000-\u001F\u007F]/.test(val)) {
+            return '';
+        }
+        if (attrName === 'href') {
+            return wdtExcelRichCellHrefMustStrip(val) ? '' : val;
+        }
+        if (attrName === 'src' || attrName === 'poster' || attrName === 'formaction') {
+            return wdtIsWpdtSafeWebUrl(val) ? val : '';
+        }
+        return wdtIsWpdtSafeWebUrl(val) ? val : '';
+    }
+
+    /**
+     * Strip dangerous attributes from allowed HTML in string cells (matches server stripJsAttributes intent).
+     */
+    function wdtSanitizeExcelRichCellHtml(html) {
+        if (typeof html !== 'string' || html.indexOf('<') === -1) {
+            return html;
+        }
+        if (typeof DOMParser === 'undefined') {
+            return wdtEscapeHtmlPlain(html);
+        }
+        try {
+            var doc = new DOMParser().parseFromString('<div data-wdt-excel-san="1">' + html + '</div>', 'text/html');
+            var wrapper = doc.body && doc.body.firstElementChild;
+            if (!wrapper) {
+                return wdtEscapeHtmlPlain(html);
+            }
+            var urlAttrs = ['href', 'src', 'poster', 'formaction'];
+            var nodes = wrapper.getElementsByTagName('*');
+            var i, j, el, nm, v, safe;
+            for (i = nodes.length - 1; i >= 0; i--) {
+                el = nodes[i];
+                for (j = el.attributes.length - 1; j >= 0; j--) {
+                    nm = el.attributes[j].name;
+                    if (/^on/i.test(nm)) {
+                        el.removeAttribute(nm);
+                    }
+                }
+                if (el.hasAttribute('srcdoc')) {
+                    el.removeAttribute('srcdoc');
+                }
+            }
+            nodes = wrapper.getElementsByTagName('*');
+            for (i = 0; i < nodes.length; i++) {
+                el = nodes[i];
+                for (j = 0; j < urlAttrs.length; j++) {
+                    nm = urlAttrs[j];
+                    if (!el.hasAttribute(nm)) {
+                        continue;
+                    }
+                    v = el.getAttribute(nm);
+                    safe = wdtSanitizeUrlAttrForExcelCell(v, nm);
+                    if (safe === '') {
+                        el.removeAttribute(nm);
+                    } else {
+                        el.setAttribute(nm, safe);
+                    }
+                }
+            }
+            var anchors = wrapper.querySelectorAll('a');
+            for (i = 0; i < anchors.length; i++) {
+                el = anchors[i];
+                if (!String(el.getAttribute('href') || '').trim()) {
+                    while (el.firstChild) {
+                        el.parentNode.insertBefore(el.firstChild, el);
+                    }
+                    if (el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }
+            }
+            return wrapper.innerHTML;
+        } catch (err) {
+            return wdtEscapeHtmlPlain(html);
+        }
+    }
+
     //this is used for setting default values in new rows for every cell that has it.
     var baseBeginEditing = Handsontable.editors.BaseEditor.prototype.beginEditing;
     Handsontable.editors.BaseEditor.prototype.beginEditing = function (initialValue, event) {
@@ -834,7 +1023,10 @@
                     if (value) {
                         indexOfMatch = caseSensitive ? $.inArray(value, editor.query.split(',')) : $.inArray(value.toLowerCase(), editor.query.toLowerCase().split(','));
                         if (indexOfMatch != -1) {
-                            TD.innerHTML = value.replace(value, '<strong>' + value + '</strong>');
+                            var safe = Handsontable.helper.stringify(value);
+                            var escSpan = document.createElement('span');
+                            escSpan.textContent = safe;
+                            TD.innerHTML = '<strong>' + escSpan.innerHTML + '</strong>';
                         }
                     }
                 },
@@ -896,23 +1088,35 @@
         }
 
         var link_parts = value.split('||');
-        var link = link_parts[0];
+        var link = wdtSanitizeExcelHref(link_parts[0]);
 
         if (link.length == 0) {
+            $(td).empty();
+            td.appendChild(document.createTextNode(String(link_parts[1] != null ? link_parts[1] : link_parts[0])));
             return td;
         }
 
         var content = (link_parts.length > 1) ? link_parts[1] : link;
         var table_settings = instance.getSettings();
         var class_name = 'wdt_link';
-        var title_attr = '';
+        var titleText = '';
 
         if (!table_settings.readOnly) {
             class_name += '_editable';
-            title_attr = 'title="ctrl+click to open hyperlink:' + link + '"';
+            titleText = 'ctrl+click to open hyperlink:' + link;
         }
 
-        $(td).html('<a class="' + class_name + '" href="' + link + '" target="_blank" ' + title_attr + '>' + content + '</a>');
+        var $a = $('<a/>', {
+            'class': class_name,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            href: link
+        });
+        if (titleText) {
+            $a.attr('title', titleText);
+        }
+        $a.text(content);
+        $(td).empty().append($a);
     }
 
     /**
@@ -926,23 +1130,33 @@
         }
 
         var email_parts = value.split('||');
-        var email = email_parts[0];
+        var email = wdtSanitizeExcelMailto(email_parts[0]);
 
         if (email.length == 0) {
+            $(td).empty();
+            td.appendChild(document.createTextNode(String(email_parts[1] != null ? email_parts[1] : email_parts[0])));
             return td;
         }
 
         var content = (email_parts.length > 1) ? email_parts[1] : email;
         var table_settings = instance.getSettings();
         var class_name = 'wdt_email';
-        var title_attr = '';
+        var titleText = '';
 
         if (!table_settings.readOnly) {
             class_name += '_editable';
-            title_attr = 'title="ctrl+click to send email to:' + email + '"';
+            titleText = 'ctrl+click to send email to:' + email;
         }
 
-        $(td).html('<a class="' + class_name + '" href="mailto:' + email + '" ' + title_attr + '>' + content + '</a>');
+        var $a = $('<a/>', {
+            'class': class_name,
+            href: 'mailto:' + email
+        });
+        if (titleText) {
+            $a.attr('title', titleText);
+        }
+        $a.text(content);
+        $(td).empty().append($a);
     }
 
     /**
@@ -956,18 +1170,24 @@
         }
 
         var image_parts = value.split('||');
-        var image_url = image_parts[0];
+        var raw_thumb = image_parts[0];
 
-        if (image_url.length == 0) {
+        if (raw_thumb.length == 0) {
             return td;
         }
 
         //image width and height data are saved with image url(in editing cell process) as query params ('img_width' and 'img_height') in order to fast retrieve them.
         //without presetting image dimensions, handsontable had troubles to render table dimensions properly if image column is present.
-        var imageUri = new URI(image_url);
+        var imageUri = new URI(raw_thumb);
         var imageQuery = imageUri.query(true);
         var img_width = (imageUri.hasQuery('img_width')) ? imageQuery.img_width : 0;
         var img_height = (imageUri.hasQuery('img_height')) ? imageQuery.img_height : 0;
+
+        var thumb_src = wdtSanitizeExcelHref(imageUri.toString());
+        if (!thumb_src) {
+            $(td).empty();
+            return td;
+        }
 
         var img_style = '';
 
@@ -996,18 +1216,21 @@
 
             var fullSizeImgUri = new URI(image_parts[1]);
             fullSizeImgUri.removeQuery(['img_width', 'img_height']);
-            var full_size_image = fullSizeImgUri.toString();
+            var full_size_image = wdtSanitizeExcelHref(fullSizeImgUri.toString());
+            if (!full_size_image) {
+                html = '<img class="wpdt-thumb" src="' + thumb_src + '" ' + img_style + ' />';
+            } else {
+                if (!tableSettings.readOnly) {
+                    class_name += '_editable';
+                    title_attr = 'title="ctrl+click to open hyperlink:' + full_size_image + '"';
+                }
 
-            if (!tableSettings.readOnly) {
-                class_name += '_editable';
-                title_attr = 'title="ctrl+click to open hyperlink:' + full_size_image + '"';
+                var image_html = '<img class="wpdt-thumb" src="' + thumb_src + '" ' + img_style + ' />';
+
+                html = '<a class="' + class_name + '" href="' + full_size_image + '" target="_blank" rel="noopener noreferrer" ' + title_attr + '>' + image_html + '</a>';
             }
-
-            var image_html = '<img class="wpdt-thumb" src="' + image_url + '" ' + img_style + ' />';
-
-            html = '<a class="' + class_name + '" href="' + full_size_image + '" target="_blank" ' + title_attr + '>' + image_html + '</a>';
         } else {
-            html = '<img class="wpdt-thumb" src="' + image_url + '" ' + img_style + ' />';
+            html = '<img class="wpdt-thumb" src="' + thumb_src + '" ' + img_style + ' />';
         }
 
         td.innerHTML = html;
@@ -1019,6 +1242,7 @@
     function wdtTextRenderer(instance, td, row, col, prop, value, cellProperties) {
         var escaped = Handsontable.helper.stringify(value);
         escaped = wdtStripTags(escaped, '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub>'); //be sure you only allow certain HTML tags to avoid XSS threats (you should also remove unwanted HTML attributes)
+        escaped = wdtSanitizeExcelRichCellHtml(escaped);
         td.innerHTML = escaped;
         Handsontable.SearchCellDecorator.apply(this, arguments);
         return td;

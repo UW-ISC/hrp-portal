@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HavingBracketExpressionBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for bracket expressions within the HAVING part. 
  * You can overwrite all functions to achieve another handling.
@@ -52,20 +52,21 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder {
-    
-    protected function buildHavingExpression($parsed) {
+class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder
+{
+    protected function buildHavingExpression($parsed)
+    {
         $builder = new HavingExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildOperator($v);
@@ -74,17 +75,12 @@ class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder {
             $sql .= $this->buildHavingExpression($v);
             $sql .= $this->build($v);
             $sql .= $this->buildUserVariable($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('HAVING expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-
-        $sql = "(" . substr($sql, 0, -1) . ")";
+        $sql = "(" . \substr($sql, 0, -1) . ")";
         return $sql;
     }
-
 }
-?>

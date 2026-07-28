@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\RichText;
+namespace WPDT\PhpOffice\PhpSpreadsheet\RichText;
 
 interface ITextElement
 {
@@ -10,7 +10,6 @@ interface ITextElement
      * @return string Text
      */
     public function getText();
-
     /**
      * Set text.
      *
@@ -19,14 +18,12 @@ interface ITextElement
      * @return ITextElement
      */
     public function setText($text);
-
     /**
      * Get font.
      *
      * @return null|\PhpOffice\PhpSpreadsheet\Style\Font
      */
     public function getFont();
-
     /**
      * Get hash code.
      *

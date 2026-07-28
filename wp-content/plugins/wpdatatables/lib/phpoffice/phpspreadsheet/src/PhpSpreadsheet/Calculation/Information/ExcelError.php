@@ -1,35 +1,45 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Information;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 class ExcelError
 {
     use ArrayEnabled;
-
     /**
      * List of error codes.
      *
      * @var array<string, string>
      */
     public const ERROR_CODES = [
-        'null' => '#NULL!', // 1
-        'divisionbyzero' => '#DIV/0!', // 2
-        'value' => '#VALUE!', // 3
-        'reference' => '#REF!', // 4
-        'name' => '#NAME?', // 5
-        'num' => '#NUM!', // 6
-        'na' => '#N/A', // 7
-        'gettingdata' => '#GETTING_DATA', // 8
-        'spill' => '#SPILL!', // 9
-        'connect' => '#CONNECT!', //10
-        'blocked' => '#BLOCKED!', //11
-        'unknown' => '#UNKNOWN!', //12
-        'field' => '#FIELD!', //13
-        'calculation' => '#CALC!', //14
+        'null' => '#NULL!',
+        // 1
+        'divisionbyzero' => '#DIV/0!',
+        // 2
+        'value' => '#VALUE!',
+        // 3
+        'reference' => '#REF!',
+        // 4
+        'name' => '#NAME?',
+        // 5
+        'num' => '#NUM!',
+        // 6
+        'na' => '#N/A',
+        // 7
+        'gettingdata' => '#GETTING_DATA',
+        // 8
+        'spill' => '#SPILL!',
+        // 9
+        'connect' => '#CONNECT!',
+        //10
+        'blocked' => '#BLOCKED!',
+        //11
+        'unknown' => '#UNKNOWN!',
+        //12
+        'field' => '#FIELD!',
+        //13
+        'calculation' => '#CALC!',
     ];
-
     /**
      * List of error codes. Replaced by constant;
      * previously it was public and updateable, allowing
@@ -40,15 +50,13 @@ class ExcelError
      * @var array<string, string>
      */
     public static $errorCodes = self::ERROR_CODES;
-
     /**
      * @param mixed $value
      */
-    public static function throwError($value): string
+    public static function throwError($value) : string
     {
-        return in_array($value, self::ERROR_CODES, true) ? $value : self::ERROR_CODES['value'];
+        return \in_array($value, self::ERROR_CODES, \true) ? $value : self::ERROR_CODES['value'];
     }
-
     /**
      * ERROR_TYPE.
      *
@@ -58,10 +66,9 @@ class ExcelError
      */
     public static function type($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
         $i = 1;
         foreach (self::ERROR_CODES as $errorCode) {
             if ($value === $errorCode) {
@@ -69,10 +76,8 @@ class ExcelError
             }
             ++$i;
         }
-
         return self::NA();
     }
-
     /**
      * NULL.
      *
@@ -80,11 +85,10 @@ class ExcelError
      *
      * @return string #NULL!
      */
-    public static function null(): string
+    public static function null() : string
     {
         return self::ERROR_CODES['null'];
     }
-
     /**
      * NaN.
      *
@@ -92,11 +96,10 @@ class ExcelError
      *
      * @return string #NUM!
      */
-    public static function NAN(): string
+    public static function NAN() : string
     {
         return self::ERROR_CODES['num'];
     }
-
     /**
      * REF.
      *
@@ -104,11 +107,10 @@ class ExcelError
      *
      * @return string #REF!
      */
-    public static function REF(): string
+    public static function REF() : string
     {
         return self::ERROR_CODES['reference'];
     }
-
     /**
      * NA.
      *
@@ -120,11 +122,10 @@ class ExcelError
      *
      * @return string #N/A!
      */
-    public static function NA(): string
+    public static function NA() : string
     {
         return self::ERROR_CODES['na'];
     }
-
     /**
      * VALUE.
      *
@@ -132,11 +133,10 @@ class ExcelError
      *
      * @return string #VALUE!
      */
-    public static function VALUE(): string
+    public static function VALUE() : string
     {
         return self::ERROR_CODES['value'];
     }
-
     /**
      * NAME.
      *
@@ -144,27 +144,25 @@ class ExcelError
      *
      * @return string #NAME?
      */
-    public static function NAME(): string
+    public static function NAME() : string
     {
         return self::ERROR_CODES['name'];
     }
-
     /**
      * DIV0.
      *
      * @return string #DIV/0!
      */
-    public static function DIV0(): string
+    public static function DIV0() : string
     {
         return self::ERROR_CODES['divisionbyzero'];
     }
-
     /**
      * CALC.
      *
      * @return string #CALC!
      */
-    public static function CALC(): string
+    public static function CALC() : string
     {
         return self::ERROR_CODES['calculation'];
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexColumnBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for index column entries of the column-list 
  * parts of CREATE TABLE. 
@@ -51,17 +51,18 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class IndexColumnBuilder implements Builder {
-
-    protected function buildLength($parsed) {
-        return ($parsed === false ? '' : ('(' . $parsed . ')'));
+class IndexColumnBuilder implements Builder
+{
+    protected function buildLength($parsed)
+    {
+        return $parsed === \false ? '' : '(' . $parsed . ')';
     }
-
-    protected function buildDirection($parsed) {
-        return ($parsed === false ? '' : (' ' . $parsed));
+    protected function buildDirection($parsed)
+    {
+        return $parsed === \false ? '' : ' ' . $parsed;
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_COLUMN) {
             return "";
         }
@@ -70,6 +71,4 @@ class IndexColumnBuilder implements Builder {
         $sql .= $this->buildDirection($parsed['dir']);
         return $sql;
     }
-
 }
-?>

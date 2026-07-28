@@ -1,6 +1,6 @@
 <?php
 
-use \Firebase\JWT\JWT;
+use \WPDT\Firebase\JWT\JWT;
 
 defined('ABSPATH') or die('Access denied.');
 

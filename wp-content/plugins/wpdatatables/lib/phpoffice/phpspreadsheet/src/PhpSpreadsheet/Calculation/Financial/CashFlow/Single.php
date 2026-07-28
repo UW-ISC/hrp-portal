@@ -1,11 +1,10 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Single
 {
     /**
@@ -26,10 +25,8 @@ class Single
     {
         $principal = Functions::flattenSingleValue($principal);
         $schedule = Functions::flattenArray($schedule);
-
         try {
             $principal = CashFlowValidations::validateFloat($principal);
-
             foreach ($schedule as $rate) {
                 $rate = CashFlowValidations::validateFloat($rate);
                 $principal *= 1 + $rate;
@@ -37,10 +34,8 @@ class Single
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         return $principal;
     }
-
     /**
      * PDURATION.
      *
@@ -57,7 +52,6 @@ class Single
         $rate = Functions::flattenSingleValue($rate);
         $presentValue = Functions::flattenSingleValue($presentValue);
         $futureValue = Functions::flattenSingleValue($futureValue);
-
         try {
             $rate = CashFlowValidations::validateRate($rate);
             $presentValue = CashFlowValidations::validatePresentValue($presentValue);
@@ -65,15 +59,12 @@ class Single
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Validate parameters
         if ($rate <= 0.0 || $presentValue <= 0.0 || $futureValue <= 0.0) {
             return ExcelError::NAN();
         }
-
-        return (log($futureValue) - log($presentValue)) / log(1 + $rate);
+        return (\log($futureValue) - \log($presentValue)) / \log(1 + $rate);
     }
-
     /**
      * RRI.
      *
@@ -90,7 +81,6 @@ class Single
         $periods = Functions::flattenSingleValue($periods);
         $presentValue = Functions::flattenSingleValue($presentValue);
         $futureValue = Functions::flattenSingleValue($futureValue);
-
         try {
             $periods = CashFlowValidations::validateFloat($periods);
             $presentValue = CashFlowValidations::validatePresentValue($presentValue);
@@ -98,12 +88,10 @@ class Single
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Validate parameters
         if ($periods <= 0.0 || $presentValue <= 0.0 || $futureValue < 0.0) {
             return ExcelError::NAN();
         }
-
         return ($futureValue / $presentValue) ** (1 / $periods) - 1;
     }
 }

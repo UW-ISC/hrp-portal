@@ -4009,8 +4009,11 @@ abstract class GFPaymentAddOn extends GFFeedAddOn {
 			?>
 			<input id="cancelsub" type="button" name="cancelsub"
 			       value="<?php esc_html_e( 'Cancel Subscription', 'gravityforms' ) ?>" class="button"
-			       onclick="cancel_subscription(<?php echo absint( $entry['id'] ); ?>);"
-			       onkeypress="cancel_subscription(<?php echo absint( $entry['id'] ); ?>);"/>
+				   data-dialog-title="<?php esc_attr_e( 'Cancel Subscription', 'gravityforms' ); ?>"
+				   data-dialog-confirm="<?php echo esc_attr( __( "Warning! This subscription will be canceled. This cannot be undone. 'OK' to cancel subscription, 'Cancel' to stop.", 'gravityforms' ) ); ?>"
+				   data-dialog-callback="gaddon_cancel_subscription_confirmed"
+				   data-entry-id="<?php echo absint( $entry['id'] ); ?>"
+			/>
 			<img src="<?php echo esc_url( GFCommon::get_base_url() ); ?>/images/spinner.svg" id="subscription_cancel_spinner"
 			     style="display: none;"/>
 

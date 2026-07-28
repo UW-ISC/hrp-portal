@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Document;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Document;
 
-use PhpOffice\PhpSpreadsheet\Shared\PasswordHasher;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\PasswordHasher;
 class Security
 {
     /**
@@ -11,100 +10,81 @@ class Security
      *
      * @var bool
      */
-    private $lockRevision = false;
-
+    private $lockRevision = \false;
     /**
      * LockStructure.
      *
      * @var bool
      */
-    private $lockStructure = false;
-
+    private $lockStructure = \false;
     /**
      * LockWindows.
      *
      * @var bool
      */
-    private $lockWindows = false;
-
+    private $lockWindows = \false;
     /**
      * RevisionsPassword.
      *
      * @var string
      */
     private $revisionsPassword = '';
-
     /**
      * WorkbookPassword.
      *
      * @var string
      */
     private $workbookPassword = '';
-
     /**
      * Create a new Document Security instance.
      */
     public function __construct()
     {
     }
-
     /**
      * Is some sort of document security enabled?
      */
-    public function isSecurityEnabled(): bool
+    public function isSecurityEnabled() : bool
     {
-        return  $this->lockRevision ||
-                $this->lockStructure ||
-                $this->lockWindows;
+        return $this->lockRevision || $this->lockStructure || $this->lockWindows;
     }
-
-    public function getLockRevision(): bool
+    public function getLockRevision() : bool
     {
         return $this->lockRevision;
     }
-
-    public function setLockRevision(?bool $locked): self
+    public function setLockRevision(?bool $locked) : self
     {
         if ($locked !== null) {
             $this->lockRevision = $locked;
         }
-
         return $this;
     }
-
-    public function getLockStructure(): bool
+    public function getLockStructure() : bool
     {
         return $this->lockStructure;
     }
-
-    public function setLockStructure(?bool $locked): self
+    public function setLockStructure(?bool $locked) : self
     {
         if ($locked !== null) {
             $this->lockStructure = $locked;
         }
-
         return $this;
     }
-
-    public function getLockWindows(): bool
+    public function getLockWindows() : bool
     {
         return $this->lockWindows;
     }
-
-    public function setLockWindows(?bool $locked): self
+    public function setLockWindows(?bool $locked) : self
     {
         if ($locked !== null) {
             $this->lockWindows = $locked;
         }
-
         return $this;
     }
-
-    public function getRevisionsPassword(): string
+    public function getRevisionsPassword() : string
     {
         return $this->revisionsPassword;
     }
-
     /**
      * Set RevisionsPassword.
      *
@@ -113,7 +93,7 @@ class Security
      *
      * @return $this
      */
-    public function setRevisionsPassword(?string $password, bool $alreadyHashed = false)
+    public function setRevisionsPassword(?string $password, bool $alreadyHashed = \false)
     {
         if ($password !== null) {
             if (!$alreadyHashed) {
@@ -121,15 +101,12 @@ class Security
             }
             $this->revisionsPassword = $password;
         }
-
         return $this;
     }
-
-    public function getWorkbookPassword(): string
+    public function getWorkbookPassword() : string
     {
         return $this->workbookPassword;
     }
-
     /**
      * Set WorkbookPassword.
      *
@@ -138,7 +115,7 @@ class Security
      *
      * @return $this
      */
-    public function setWorkbookPassword(?string $password, bool $alreadyHashed = false)
+    public function setWorkbookPassword(?string $password, bool $alreadyHashed = \false)
     {
         if ($password !== null) {
             if (!$alreadyHashed) {
@@ -146,7 +123,6 @@ class Security
             }
             $this->workbookPassword = $password;
         }
-
         return $this;
     }
 }

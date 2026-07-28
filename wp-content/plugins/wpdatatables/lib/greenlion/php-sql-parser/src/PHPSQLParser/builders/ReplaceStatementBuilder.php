@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReplaceStatement.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the whole Replace statement. You can overwrite
@@ -49,29 +49,30 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ReplaceStatementBuilder implements Builder {
-
-    protected function buildVALUES($parsed) {
+class ReplaceStatementBuilder implements Builder
+{
+    protected function buildVALUES($parsed)
+    {
         $builder = new ValuesBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildREPLACE($parsed) {
+    protected function buildREPLACE($parsed)
+    {
         $builder = new ReplaceBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT($parsed)
+    {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildSET($parsed) {
+    protected function buildSET($parsed)
+    {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         // TODO: are there more than one tables possible (like [REPLACE][1])
         $sql = $this->buildREPLACE($parsed['REPLACE']);
         if (isset($parsed['VALUES'])) {
@@ -86,4 +87,3 @@ class ReplaceStatementBuilder implements Builder {
         return $sql;
     }
 }
-?>

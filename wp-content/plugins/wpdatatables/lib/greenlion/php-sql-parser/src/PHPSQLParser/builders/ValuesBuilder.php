@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ValuesBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the VALUES part of INSERT statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,30 +50,28 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ValuesBuilder implements Builder {
-
-    protected function buildRecord($parsed) {
+class ValuesBuilder implements Builder
+{
+    protected function buildRecord($parsed)
+    {
         $builder = new RecordBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildRecord($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('VALUES', $k, $v, 'expr_type');
             }
-
             $sql .= $this->getRecordDelimiter($v);
         }
-        return "VALUES " . trim($sql);
+        return "VALUES " . \trim($sql);
     }
-
-    protected function getRecordDelimiter($parsed) {
+    protected function getRecordDelimiter($parsed)
+    {
         return empty($parsed['delim']) ? ' ' : $parsed['delim'] . ' ';
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TableBracketExpressionBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the table expressions 
  * within the create definitions of CREATE TABLE. 
@@ -52,55 +52,56 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class TableBracketExpressionBuilder implements Builder {
-
-    protected function buildColDef($parsed) {
+class TableBracketExpressionBuilder implements Builder
+{
+    protected function buildColDef($parsed)
+    {
         $builder = new ColumnDefinitionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildPrimaryKey($parsed) {
+    protected function buildPrimaryKey($parsed)
+    {
         $builder = new PrimaryKeyBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildForeignKey($parsed) {
+    protected function buildForeignKey($parsed)
+    {
         $builder = new ForeignKeyBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildCheck($parsed) {
+    protected function buildCheck($parsed)
+    {
         $builder = new CheckBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildLikeExpression($parsed) {
+    protected function buildLikeExpression($parsed)
+    {
         $builder = new LikeExpressionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildIndexKey($parsed) {
+    protected function buildIndexKey($parsed)
+    {
         $builder = new IndexKeyBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildUniqueIndex($parsed) {
+    protected function buildUniqueIndex($parsed)
+    {
         $builder = new UniqueIndexBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildFulltextIndex($parsed) {
+    protected function buildFulltextIndex($parsed)
+    {
         $builder = new FulltextIndexBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildColDef($v);
             $sql .= $this->buildPrimaryKey($v);
             $sql .= $this->buildCheck($v);
@@ -109,17 +110,12 @@ class TableBracketExpressionBuilder implements Builder {
             $sql .= $this->buildIndexKey($v);
             $sql .= $this->buildUniqueIndex($v);
             $sql .= $this->buildFulltextIndex($v);
-                        
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ", ";
         }
-
-        $sql = " (" . substr($sql, 0, -2) . ")";
+        $sql = " (" . \substr($sql, 0, -2) . ")";
         return $sql;
     }
-    
 }
-?>

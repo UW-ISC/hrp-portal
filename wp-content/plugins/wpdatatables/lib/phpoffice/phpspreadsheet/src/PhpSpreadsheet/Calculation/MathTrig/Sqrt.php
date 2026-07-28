@@ -1,14 +1,12 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
 class Sqrt
 {
     use ArrayEnabled;
-
     /**
      * SQRT.
      *
@@ -22,19 +20,16 @@ class Sqrt
      */
     public static function sqrt($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return Helpers::numberOrNan(sqrt($number));
+        return Helpers::numberOrNan(\sqrt($number));
     }
-
     /**
      * SQRTPI.
      *
@@ -48,17 +43,15 @@ class Sqrt
      */
     public static function pi($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullSubstitution($number, 0);
             Helpers::validateNotNegative($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return sqrt($number * M_PI);
+        return \sqrt($number * \M_PI);
     }
 }

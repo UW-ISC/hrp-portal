@@ -146,7 +146,6 @@ class GF_System_Report {
 
 		// Display page footer.
 		GF_System_Status::page_footer();
-
 	}
 
 	/**
@@ -785,13 +784,18 @@ class GF_System_Report {
 				}
 
 				if ( isset( $item['action'] ) && ! $is_export ) {
-					$value .= "&nbsp;<a href='#' onclick='gfDoAction(\"{$item['action']['code']}\", \"" . esc_attr( $item['action']['confirm'] ) . "\");'>{$item['action']['label']}</a>";
+					$value .= sprintf(
+						'&nbsp;<a href="#" data-dialog-title="%1$s" data-dialog-confirm="%2$s" data-dialog-callback="gfSystemReportAction" data-action-code="%3$s">%4$s</a>',
+						esc_attr( $item['action']['label'] ),
+						esc_attr( $item['action']['confirm'] ),
+						esc_attr( $item['action']['code'] ),
+						esc_html( $item['action']['label'] )
+					);
 				}
 
 				return $value;
 
 		}
-
 	}
 
 	/**

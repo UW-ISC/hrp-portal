@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Database;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Database;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Maximum;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Maximum;
 class DMax extends DatabaseAbstract
 {
     /**
@@ -33,15 +32,12 @@ class DMax extends DatabaseAbstract
      *
      * @return null|float|string
      */
-    public static function evaluate($database, $field, $criteria, bool $returnError = true)
+    public static function evaluate($database, $field, $criteria, bool $returnError = \true)
     {
         $field = self::fieldExtract($database, $field);
         if ($field === null) {
             return $returnError ? ExcelError::VALUE() : null;
         }
-
-        return Maximum::max(
-            self::getFilteredColumn($database, $field, $criteria)
-        );
+        return Maximum::max(self::getFilteredColumn($database, $field, $criteria));
     }
 }

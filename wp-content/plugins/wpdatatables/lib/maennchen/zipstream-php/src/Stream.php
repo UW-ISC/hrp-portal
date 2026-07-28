@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
-namespace ZipStream;
+declare (strict_types=1);
+namespace WPDT\ZipStream;
 
 use function mb_strlen;
-
-use Psr\Http\Message\StreamInterface;
+use WPDT\Psr\Http\Message\StreamInterface;
 use RuntimeException;
-
 /**
  * Describes a data stream.
  *
@@ -19,12 +16,10 @@ use RuntimeException;
 class Stream implements StreamInterface
 {
     protected $stream;
-
     public function __construct($stream)
     {
         $this->stream = $stream;
     }
-
     /**
      * Reads all data from the stream into a string, from the beginning to end.
      *
@@ -39,28 +34,26 @@ class Stream implements StreamInterface
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */
-    public function __toString(): string
+    public function __toString() : string
     {
         try {
             $this->seek(0);
         } catch (RuntimeException $e) {
         }
-        return (string) stream_get_contents($this->stream);
+        return (string) \stream_get_contents($this->stream);
     }
-
     /**
      * Closes the stream and any underlying resources.
      *
      * @return void
      */
-    public function close(): void
+    public function close() : void
     {
-        if (is_resource($this->stream)) {
-            fclose($this->stream);
+        if (\is_resource($this->stream)) {
+            \fclose($this->stream);
         }
         $this->detach();
     }
-
     /**
      * Separates any underlying resources from the stream.
      *
@@ -74,7 +67,6 @@ class Stream implements StreamInterface
         $this->stream = null;
         return $result;
     }
-
     /**
      * Seek to a position in the stream.
      *
@@ -87,26 +79,24 @@ class Stream implements StreamInterface
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET): void
+    public function seek($offset, $whence = \SEEK_SET) : void
     {
         if (!$this->isSeekable()) {
             throw new RuntimeException();
         }
-        if (fseek($this->stream, $offset, $whence) !== 0) {
+        if (\fseek($this->stream, $offset, $whence) !== 0) {
             throw new RuntimeException();
         }
     }
-
     /**
      * Returns whether or not the stream is seekable.
      *
      * @return bool
      */
-    public function isSeekable(): bool
+    public function isSeekable() : bool
     {
-        return (bool)$this->getMetadata('seekable');
+        return (bool) $this->getMetadata('seekable');
     }
-
     /**
      * Get stream metadata as an associative array or retrieve a specific key.
      *
@@ -121,46 +111,42 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        $metadata = stream_get_meta_data($this->stream);
+        $metadata = \stream_get_meta_data($this->stream);
         return $key !== null ? @$metadata[$key] : $metadata;
     }
-
     /**
      * Get the size of the stream if known.
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
      */
-    public function getSize(): ?int
+    public function getSize() : ?int
     {
-        $stats = fstat($this->stream);
+        $stats = \fstat($this->stream);
         return $stats['size'];
     }
-
     /**
      * Returns the current position of the file read/write pointer
      *
      * @return int Position of the file pointer
      * @throws RuntimeException on error.
      */
-    public function tell(): int
+    public function tell() : int
     {
-        $position = ftell($this->stream);
-        if ($position === false) {
+        $position = \ftell($this->stream);
+        if ($position === \false) {
             throw new RuntimeException();
         }
         return $position;
     }
-
     /**
      * Returns true if the stream is at the end of the stream.
      *
      * @return bool
      */
-    public function eof(): bool
+    public function eof() : bool
     {
-        return feof($this->stream);
+        return \feof($this->stream);
     }
-
     /**
      * Seek to the beginning of the stream.
      *
@@ -171,11 +157,10 @@ class Stream implements StreamInterface
      * @link http://www.php.net/manual/en/function.fseek.php
      * @throws RuntimeException on failure.
      */
-    public function rewind(): void
+    public function rewind() : void
     {
         $this->seek(0);
     }
-
     /**
      * Write data to the stream.
      *
@@ -183,31 +168,29 @@ class Stream implements StreamInterface
      * @return int Returns the number of bytes written to the stream.
      * @throws RuntimeException on failure.
      */
-    public function write($string): int
+    public function write($string) : int
     {
         if (!$this->isWritable()) {
             throw new RuntimeException();
         }
-        if (fwrite($this->stream, $string) === false) {
+        if (\fwrite($this->stream, $string) === \false) {
             throw new RuntimeException();
         }
         return mb_strlen($string);
     }
-
     /**
      * Returns whether or not the stream is writable.
      *
      * @return bool
      */
-    public function isWritable(): bool
+    public function isWritable() : bool
     {
         $mode = $this->getMetadata('mode');
-        if (!is_string($mode)) {
+        if (!\is_string($mode)) {
             throw new RuntimeException('Could not get stream mode from metadata!');
         }
-        return preg_match('/[waxc+]/', $mode) === 1;
+        return \preg_match('/[waxc+]/', $mode) === 1;
     }
-
     /**
      * Read data from the stream.
      *
@@ -218,32 +201,30 @@ class Stream implements StreamInterface
      *     if no bytes are available.
      * @throws RuntimeException if an error occurs.
      */
-    public function read($length): string
+    public function read($length) : string
     {
         if (!$this->isReadable()) {
             throw new RuntimeException();
         }
-        $result = fread($this->stream, $length);
-        if ($result === false) {
+        $result = \fread($this->stream, $length);
+        if ($result === \false) {
             throw new RuntimeException();
         }
         return $result;
     }
-
     /**
      * Returns whether or not the stream is readable.
      *
      * @return bool
      */
-    public function isReadable(): bool
+    public function isReadable() : bool
     {
         $mode = $this->getMetadata('mode');
-        if (!is_string($mode)) {
+        if (!\is_string($mode)) {
             throw new RuntimeException('Could not get stream mode from metadata!');
         }
-        return preg_match('/[r+]/', $mode) === 1;
+        return \preg_match('/[r+]/', $mode) === 1;
     }
-
     /**
      * Returns the remaining contents in a string
      *
@@ -251,13 +232,13 @@ class Stream implements StreamInterface
      * @throws RuntimeException if unable to read or an error occurs while
      *     reading.
      */
-    public function getContents(): string
+    public function getContents() : string
     {
         if (!$this->isReadable()) {
             throw new RuntimeException();
         }
-        $result = stream_get_contents($this->stream);
-        if ($result === false) {
+        $result = \stream_get_contents($this->stream);
+        if ($result === \false) {
             throw new RuntimeException();
         }
         return $result;

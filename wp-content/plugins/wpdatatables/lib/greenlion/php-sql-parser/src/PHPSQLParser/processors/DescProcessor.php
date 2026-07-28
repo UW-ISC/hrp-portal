@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DescProcessor.php
  *
@@ -29,8 +30,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * 
@@ -39,10 +39,10 @@ namespace PHPSQLParser\processors;
  * @author arothe
  * 
  */
-class DescProcessor extends ExplainProcessor {
-
-    protected function isStatement($keys, $needle = "DESC") {
+class DescProcessor extends ExplainProcessor
+{
+    protected function isStatement($keys, $needle = "DESC")
+    {
         return parent::isStatement($keys, $needle);
     }
 }
-?>

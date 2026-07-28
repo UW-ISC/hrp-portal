@@ -125,7 +125,9 @@ function wdtSavePluginSettings()
         exit();
     }
 
-    WDTSettingsController::saveSettings(apply_filters('wpdatatables_before_save_settings', $_POST['settings']));
+    $settings = apply_filters('wpdatatables_before_save_settings', $_POST['settings']);
+
+    WDTSettingsController::saveSettings($settings);
     exit();
 }
 

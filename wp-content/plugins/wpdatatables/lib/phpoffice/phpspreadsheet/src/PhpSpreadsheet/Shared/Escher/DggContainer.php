@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared\Escher;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared\Escher;
 
 class DggContainer
 {
@@ -10,42 +10,36 @@ class DggContainer
      * @var int
      */
     private $spIdMax;
-
     /**
      * Total number of drawings saved.
      *
      * @var int
      */
     private $cDgSaved;
-
     /**
      * Total number of shapes saved (including group shapes).
      *
      * @var int
      */
     private $cSpSaved;
-
     /**
      * BLIP Store Container.
      *
      * @var ?DggContainer\BstoreContainer
      */
     private $bstoreContainer;
-
     /**
      * Array of options for the drawing group.
      *
      * @var array
      */
     private $OPT = [];
-
     /**
      * Array of identifier clusters containg information about the maximum shape identifiers.
      *
      * @var array
      */
     private $IDCLs = [];
-
     /**
      * Get maximum shape index of all shapes in all drawings (plus one).
      *
@@ -55,17 +49,15 @@ class DggContainer
     {
         return $this->spIdMax;
     }
-
     /**
      * Set maximum shape index of all shapes in all drawings (plus one).
      *
      * @param int $value
      */
-    public function setSpIdMax($value): void
+    public function setSpIdMax($value) : void
     {
         $this->spIdMax = $value;
     }
-
     /**
      * Get total number of drawings saved.
      *
@@ -75,17 +67,15 @@ class DggContainer
     {
         return $this->cDgSaved;
     }
-
     /**
      * Set total number of drawings saved.
      *
      * @param int $value
      */
-    public function setCDgSaved($value): void
+    public function setCDgSaved($value) : void
     {
         $this->cDgSaved = $value;
     }
-
     /**
      * Get total number of shapes saved (including group shapes).
      *
@@ -95,17 +85,15 @@ class DggContainer
     {
         return $this->cSpSaved;
     }
-
     /**
      * Set total number of shapes saved (including group shapes).
      *
      * @param int $value
      */
-    public function setCSpSaved($value): void
+    public function setCSpSaved($value) : void
     {
         $this->cSpSaved = $value;
     }
-
     /**
      * Get BLIP Store Container.
      *
@@ -115,28 +103,25 @@ class DggContainer
     {
         return $this->bstoreContainer;
     }
-
     /**
      * Set BLIP Store Container.
      *
      * @param DggContainer\BstoreContainer $bstoreContainer
      */
-    public function setBstoreContainer($bstoreContainer): void
+    public function setBstoreContainer($bstoreContainer) : void
     {
         $this->bstoreContainer = $bstoreContainer;
     }
-
     /**
      * Set an option for the drawing group.
      *
      * @param int $property The number specifies the option
      * @param mixed $value
      */
-    public function setOPT($property, $value): void
+    public function setOPT($property, $value) : void
     {
         $this->OPT[$property] = $value;
     }
-
     /**
      * Get an option for the drawing group.
      *
@@ -149,10 +134,8 @@ class DggContainer
         if (isset($this->OPT[$property])) {
             return $this->OPT[$property];
         }
-
         return null;
     }
-
     /**
      * Get identifier clusters.
      *
@@ -162,13 +145,12 @@ class DggContainer
     {
         return $this->IDCLs;
     }
-
     /**
      * Set identifier clusters. [<drawingId> => <max shape id>, ...].
      *
      * @param array $IDCLs
      */
-    public function setIDCLs($IDCLs): void
+    public function setIDCLs($IDCLs) : void
     {
         $this->IDCLs = $IDCLs;
     }

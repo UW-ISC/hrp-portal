@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
 class StandardNormal
 {
     use ArrayEnabled;
-
     /**
      * NORMSDIST.
      *
@@ -32,9 +30,8 @@ class StandardNormal
      */
     public static function cumulative($value)
     {
-        return Normal::distribution($value, 0, 1, true);
+        return Normal::distribution($value, 0, 1, \true);
     }
-
     /**
      * NORM.S.DIST.
      *
@@ -59,7 +56,6 @@ class StandardNormal
     {
         return Normal::distribution($value, 0, 1, $cumulative);
     }
-
     /**
      * NORMSINV.
      *
@@ -80,7 +76,6 @@ class StandardNormal
     {
         return Normal::inverse($value, 0, 1);
     }
-
     /**
      * GAUSS.
      *
@@ -96,19 +91,16 @@ class StandardNormal
      */
     public static function gauss($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             return ExcelError::VALUE();
         }
         /** @var float */
-        $dist = self::distribution($value, true);
-
+        $dist = self::distribution($value, \true);
         return $dist - 0.5;
     }
-
     /**
      * ZTEST.
      *
@@ -130,24 +122,19 @@ class StandardNormal
      */
     public static function zTest($dataSet, $m0, $sigma = null)
     {
-        if (is_array($m0) || is_array($sigma)) {
+        if (\is_array($m0) || \is_array($sigma)) {
             return self::evaluateArrayArgumentsSubsetFrom([self::class, __FUNCTION__], 1, $dataSet, $m0, $sigma);
         }
-
         $dataSet = Functions::flattenArrayIndexed($dataSet);
-
-        if (!is_numeric($m0) || ($sigma !== null && !is_numeric($sigma))) {
+        if (!\is_numeric($m0) || $sigma !== null && !\is_numeric($sigma)) {
             return ExcelError::VALUE();
         }
-
         if ($sigma === null) {
             /** @var float */
             $sigma = StandardDeviations::STDEV($dataSet);
         }
-        $n = count($dataSet);
-
+        $n = \count($dataSet);
         $sub1 = Averages::average($dataSet);
-
-        return is_numeric($sub1) ? (1 - self::cumulative(($sub1 - $m0) / ($sigma / sqrt($n)))) : $sub1;
+        return \is_numeric($sub1) ? 1 - self::cumulative(($sub1 - $m0) / ($sigma / \sqrt($n))) : $sub1;
     }
 }

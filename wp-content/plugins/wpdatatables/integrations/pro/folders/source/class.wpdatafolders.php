@@ -5,6 +5,7 @@ namespace WDTIntegration;
 use WDTBrowseChartsTable;
 use WDTBrowseTable;
 use WPDataFoldersFactory;
+use WDTTools;
 
 defined('ABSPATH') or die('Access denied.');
 
@@ -146,7 +147,7 @@ class WPDataFolders
 
     public function dequeueScripts()
     {
-        $wpdtPage = isset($_GET['page']) ? $_GET['page'] : '';
+        $wpdtPage = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
         if (is_admin() &&
             (strpos($wpdtPage, 'wpdatatables') !== false) ||
             (strpos($wpdtPage, 'wpdatareports') !== false)
@@ -178,7 +179,7 @@ class WPDataFolders
 
     public function dequeueStyles()
     {
-        $wpdtPage = isset($_GET['page']) ? $_GET['page'] : '';
+        $wpdtPage = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
         if (is_admin() &&
             (strpos($wpdtPage, 'wpdatatables') !== false) ||
             (strpos($wpdtPage, 'wpdatareports') !== false)
@@ -488,7 +489,7 @@ class WPDataFolders
     {
         $instance = '';
         if (isset($_GET['page'])) {
-            $instance = WPDataFoldersFactory::createPageBased($_GET['page']);
+            $instance = WPDataFoldersFactory::createPageBased(sanitize_text_field(wp_unslash($_GET['page'])));
         }
         if (!$instance) return;
         wp_enqueue_script('wpdt-folders-jstree-js', WDT_PRO_INTEGRATIONS_URL . 'folders/assets/js/jstree.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
@@ -513,6 +514,7 @@ class WPDataFolders
                 'settings' => $instance->getSettings(),
             ]
         );
+        wp_localize_script('wpdt-custom-folders-js', 'wpdatatables_folder_strings', WDTTools::getTranslationStringsFolders());
     }
 
     public function assignItemsToFolder()

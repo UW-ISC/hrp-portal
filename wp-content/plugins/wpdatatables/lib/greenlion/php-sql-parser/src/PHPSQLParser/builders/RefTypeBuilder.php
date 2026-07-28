@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RefTypeBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnsupportedFeatureException;
-
+use WPDT\PHPSQLParser\exceptions\UnsupportedFeatureException;
 /**
  * This class implements the references type within a JOIN. 
  * You can overwrite all functions to achieve another handling.
@@ -50,10 +50,11 @@ use PHPSQLParser\exceptions\UnsupportedFeatureException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class RefTypeBuilder {
-
-    public function build($parsed) {
-        if ($parsed === false) {
+class RefTypeBuilder
+{
+    public function build($parsed)
+    {
+        if ($parsed === \false) {
             return "";
         }
         if ($parsed === 'ON') {
@@ -66,4 +67,3 @@ class RefTypeBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

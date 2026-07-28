@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
 use DateTimeInterface;
-
 /**
  * @deprecated 1.18.0
  */
@@ -24,7 +23,6 @@ class TextData
     {
         return TextData\CharacterConvert::character($character);
     }
-
     /**
      * TRIMNONPRINTABLE.
      *
@@ -40,7 +38,6 @@ class TextData
     {
         return TextData\Trim::nonPrintable($stringValue);
     }
-
     /**
      * TRIMSPACES.
      *
@@ -56,7 +53,6 @@ class TextData
     {
         return TextData\Trim::spaces($stringValue);
     }
-
     /**
      * ASCIICODE.
      *
@@ -72,7 +68,6 @@ class TextData
     {
         return TextData\CharacterConvert::code($characters);
     }
-
     /**
      * CONCATENATE.
      *
@@ -88,7 +83,6 @@ class TextData
     {
         return TextData\Concatenate::CONCATENATE(...$args);
     }
-
     /**
      * DOLLAR.
      *
@@ -110,7 +104,6 @@ class TextData
     {
         return TextData\Format::DOLLAR($value, $decimals);
     }
-
     /**
      * FIND.
      *
@@ -128,7 +121,6 @@ class TextData
     {
         return TextData\Search::sensitive($needle, $haystack, $offset);
     }
-
     /**
      * SEARCH.
      *
@@ -146,7 +138,6 @@ class TextData
     {
         return TextData\Search::insensitive($needle, $haystack, $offset);
     }
-
     /**
      * FIXEDFORMAT.
      *
@@ -160,11 +151,10 @@ class TextData
      *
      * @return array|string
      */
-    public static function FIXEDFORMAT($value, $decimals = 2, $no_commas = false)
+    public static function FIXEDFORMAT($value, $decimals = 2, $no_commas = \false)
     {
         return TextData\Format::FIXEDFORMAT($value, $decimals, $no_commas);
     }
-
     /**
      * LEFT.
      *
@@ -181,7 +171,6 @@ class TextData
     {
         return TextData\Extract::left($value, $chars);
     }
-
     /**
      * MID.
      *
@@ -199,7 +188,6 @@ class TextData
     {
         return TextData\Extract::mid($value, $start, $chars);
     }
-
     /**
      * RIGHT.
      *
@@ -216,7 +204,6 @@ class TextData
     {
         return TextData\Extract::right($value, $chars);
     }
-
     /**
      * STRINGLENGTH.
      *
@@ -232,7 +219,6 @@ class TextData
     {
         return TextData\Text::length($value);
     }
-
     /**
      * LOWERCASE.
      *
@@ -250,7 +236,6 @@ class TextData
     {
         return TextData\CaseConvert::lower($mixedCaseString);
     }
-
     /**
      * UPPERCASE.
      *
@@ -268,7 +253,6 @@ class TextData
     {
         return TextData\CaseConvert::upper($mixedCaseString);
     }
-
     /**
      * PROPERCASE.
      *
@@ -286,7 +270,6 @@ class TextData
     {
         return TextData\CaseConvert::proper($mixedCaseString);
     }
-
     /**
      * REPLACE.
      *
@@ -305,7 +288,6 @@ class TextData
     {
         return TextData\Replace::replace($oldText, $start, $chars, $newText);
     }
-
     /**
      * SUBSTITUTE.
      *
@@ -324,7 +306,6 @@ class TextData
     {
         return TextData\Replace::substitute($text, $fromText, $toText, $instance);
     }
-
     /**
      * RETURNSTRING.
      *
@@ -340,7 +321,6 @@ class TextData
     {
         return TextData\Text::test($testValue);
     }
-
     /**
      * TEXTFORMAT.
      *
@@ -357,7 +337,6 @@ class TextData
     {
         return TextData\Format::TEXTFORMAT($value, $format);
     }
-
     /**
      * VALUE.
      *
@@ -373,7 +352,6 @@ class TextData
     {
         return TextData\Format::VALUE($value);
     }
-
     /**
      * NUMBERVALUE.
      *
@@ -391,7 +369,6 @@ class TextData
     {
         return TextData\Format::NUMBERVALUE($value, $decimalSeparator, $groupSeparator);
     }
-
     /**
      * Compares two text strings and returns TRUE if they are exactly the same, FALSE otherwise.
      * EXACT is case-sensitive but ignores formatting differences.
@@ -410,7 +387,6 @@ class TextData
     {
         return TextData\Text::exact($value1, $value2);
     }
-
     /**
      * TEXTJOIN.
      *
@@ -428,7 +404,6 @@ class TextData
     {
         return TextData\Concatenate::TEXTJOIN($delimiter, $ignoreEmpty, ...$args);
     }
-
     /**
      * REPT.
      *

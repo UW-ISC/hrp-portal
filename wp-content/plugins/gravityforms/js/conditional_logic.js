@@ -179,7 +179,7 @@ function gf_is_match_checkable( $inputs, rule, formId, fieldId ) {
 	$inputs.each( function() {
 
 		var $input           = jQuery( this ),
-			fieldValue       = gf_get_value( $input.val() ),
+			fieldValue       = gf_get_value( $input.val(), $input ),
 			isRangeOperator  = jQuery.inArray( rule.operator, [ '<', '>' ] ) !== -1,
 			isStringOperator = jQuery.inArray( rule.operator, [ 'contains', 'starts_with', 'ends_with' ] ) !== -1;
 
@@ -236,9 +236,9 @@ function gf_is_match_default( $input, rule, formId, fieldId ) {
 
 	for( var i = 0; i < valuesLength; i++ ) {
 
-		// fields with pipes in the value will use the label for conditional logic comparison
-		var hasLabel   = values[i] ? values[i].indexOf( '|' ) >= 0 : true,
-			fieldValue = gf_get_value( values[i] );
+		var isPriceField = $input.closest( '.gfield_price' ).length > 0,
+			hasLabel       = ! values[i] || ( isPriceField && values[i].indexOf( '|' ) >= 0 ),
+			fieldValue     = gf_get_value( values[i], $input );
 
 		var fieldNumberFormat = gf_get_field_number_format( rule.fieldId, formId, 'value' );
 		if( fieldNumberFormat && ! hasLabel ) {
@@ -357,12 +357,18 @@ function gf_matches_operation(val1, val2, operation){
 	return false;
 }
 
-function gf_get_value(val){
-	if(!val)
-		return "";
+function gf_get_value( val, $input ) {
+	if ( ! val ) {
+		return '';
+	}
 
-	val = val.split("|");
-	return val[0];
+	// Selection pricing fields are formatted as value|price. Split on the | to get the field label or value that is in the first position. 
+	// For all other pricing fields, splitting on the | won't have any effect.
+	if ( $input && $input.closest( '.gfield_price' ).length ) {
+		val = gformParseChoiceValue( val )['name'];
+	}
+
+	return val;
 }
 
 function gf_do_field_action(formId, action, fieldId, isInit, callback){

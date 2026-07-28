@@ -1,0 +1,352 @@
+{
+  "name": "divi-wpdt/wpdatatable",
+  "d4Shortcode": "et_pb_DIVI_wpDataTable",
+  "title": "wpDataTable",
+  "titles": "wpDataTables",
+  "category": "module",
+  "moduleClassName": "divi_wpdt_wpdatatable",
+  "moduleOrderClassName": "divi_wpdt_wpdatatable",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "default": {
+        "meta": {
+          "adminLabel": {
+            "desktop": {
+              "value": "wpDataTable"
+            }
+          }
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "decoration": {
+          "layout": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "id": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "id.innerContent",
+            "label": "Choose a wpDataTable",
+            "description": "Select a wpDataTable from the list",
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": {
+                  "0": {
+                    "label": "Select a table"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "view.innerContent",
+            "label": "Table view",
+            "description": "Choose regular or excel-like table view",
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": {
+                  "regular": {
+                    "label": "Regular"
+                  },
+                  "excel-like": {
+                    "label": "Excel-like"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var1": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "var1.innerContent",
+            "label": "%VAR1%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var2": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "var2.innerContent",
+            "label": "%VAR2%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var3": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 50,
+            "render": true,
+            "attrName": "var3.innerContent",
+            "label": "%VAR3%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var4": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 60,
+            "render": true,
+            "attrName": "var4.innerContent",
+            "label": "%VAR4%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var5": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 70,
+            "render": true,
+            "attrName": "var5.innerContent",
+            "label": "%VAR5%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var6": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 80,
+            "render": true,
+            "attrName": "var6.innerContent",
+            "label": "%VAR6%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var7": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 90,
+            "render": true,
+            "attrName": "var7.innerContent",
+            "label": "%VAR7%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var8": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 100,
+            "render": true,
+            "attrName": "var8.innerContent",
+            "label": "%VAR8%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "var9": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 110,
+            "render": true,
+            "attrName": "var9.innerContent",
+            "label": "%VAR9%",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    },
+    "export_file_name": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 120,
+            "render": true,
+            "attrName": "export_file_name.innerContent",
+            "label": "Export file name",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  },
+  "mousetrap": {
+    "inner": {
+      "edited": true
+    }
+  }
+}

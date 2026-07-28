@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateTableOptionsBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the table-options statement part of CREATE TABLE. 
  * You can overwrite all functions to achieve another handling.
@@ -50,23 +50,23 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableOptionsBuilder implements Builder {
-
-    protected function buildExpression($parsed) {
+class CreateTableOptionsBuilder implements Builder
+{
+    protected function buildExpression($parsed)
+    {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildCharacterSet($parsed) {
+    protected function buildCharacterSet($parsed)
+    {
         $builder = new CharacterSetBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildCollation($parsed) {
+    protected function buildCollation($parsed)
+    {
         $builder = new CollationBuilder();
         return $builder->build($parsed);
     }
-
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
@@ -74,29 +74,27 @@ class CreateTableOptionsBuilder implements Builder {
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter($parsed) {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+    protected function getDelimiter($parsed)
+    {
+        return $parsed['delim'] === \false ? '' : \trim($parsed['delim']) . ' ';
     }
-
-    public function build(array $parsed) {
-        if (!isset($parsed['options']) || $parsed['options'] === false) {
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['options']) || $parsed['options'] === \false) {
             return "";
         }
         $options = $parsed['options'];
         $sql = "";
         foreach ($options as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildExpression($v);
             $sql .= $this->buildCharacterSet($v);
             $sql .= $this->buildCollation($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE options', $k, $v, 'expr_type');
             }
-
             $sql .= $this->getDelimiter($v);
         }
-        return " " . substr($sql, 0, -1);
+        return " " . \substr($sql, 0, -1);
     }
 }
-?>

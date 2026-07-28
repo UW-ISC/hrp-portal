@@ -72,29 +72,7 @@ class DIVI_wpDataChart extends ET_Builder_Module
 
     public function render($attrs, $content = null, $render_slug = null)
     {
-        $shortcode = '[wpdatachart ';
-        $chartId = $this->props['id'];
-
-        //Fix for Divi not recognizing chart ID as an int when only one chart is created
-        if (!is_numeric($chartId)) {
-            $chartId = substr($chartId, strrpos($chartId, "(id:") + 4);
-            $chartId = substr($chartId, 0, strrpos($chartId, ')'));
-            $chartId = (int)$chartId;
-        }
-
-        if (count($this->getAllCharts()) == 1) {
-            return __(WDTConfigController::wdt_create_chart_notice());
-        }
-
-        if (!(int)$chartId) {
-            return __(WDTConfigController::wdt_select_chart_notice());
-        }
-
-        $shortcode .= 'id=' . $chartId;
-        $shortcode .= ']';
-
-        return do_shortcode($shortcode);
-
+        return Divi_Wpdt_Shortcode_Helper::render_wpdatachart_from_props( $this->props );
     }
 }
 

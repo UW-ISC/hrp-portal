@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Database;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Database;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 class DProduct extends DatabaseAbstract
 {
     /**
@@ -38,9 +37,6 @@ class DProduct extends DatabaseAbstract
         if ($field === null) {
             return ExcelError::VALUE();
         }
-
-        return MathTrig\Operations::product(
-            self::getFilteredColumn($database, $field, $criteria)
-        );
+        return MathTrig\Operations::product(self::getFilteredColumn($database, $field, $criteria));
     }
 }

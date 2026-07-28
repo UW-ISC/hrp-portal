@@ -1,22 +1,18 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Spreadsheet;
 interface IWriter
 {
     public const SAVE_WITH_CHARTS = 1;
-
     public const DISABLE_PRECALCULATE_FORMULAE = 2;
-
     /**
      * IWriter constructor.
      *
      * @param Spreadsheet $spreadsheet The spreadsheet that we want to save using this Writer
      */
     public function __construct(Spreadsheet $spreadsheet);
-
     /**
      * Write charts in workbook?
      *        If this is true, then the Writer will write definitions for any charts that exist in the PhpSpreadsheet object.
@@ -25,7 +21,6 @@ interface IWriter
      * @return bool
      */
     public function getIncludeCharts();
-
     /**
      * Set write charts in workbook
      *        Set to true, to advise the Writer to include any charts that exist in the PhpSpreadsheet object.
@@ -36,7 +31,6 @@ interface IWriter
      * @return IWriter
      */
     public function setIncludeCharts($includeCharts);
-
     /**
      * Get Pre-Calculate Formulas flag
      *     If this is true (the default), then the writer will recalculate all formulae in a workbook when saving,
@@ -48,7 +42,6 @@ interface IWriter
      * @return bool
      */
     public function getPreCalculateFormulas();
-
     /**
      * Set Pre-Calculate Formulas
      *        Set to true (the default) to advise the Writer to calculate all formulae on save
@@ -59,7 +52,6 @@ interface IWriter
      * @return IWriter
      */
     public function setPreCalculateFormulas($precalculateFormulas);
-
     /**
      * Save PhpSpreadsheet to file.
      *
@@ -70,15 +62,13 @@ interface IWriter
      *
      * @throws Exception
      */
-    public function save($filename, int $flags = 0): void;
-
+    public function save($filename, int $flags = 0) : void;
     /**
      * Get use disk caching where possible?
      *
      * @return bool
      */
     public function getUseDiskCaching();
-
     /**
      * Set use disk caching where possible?
      *
@@ -88,7 +78,6 @@ interface IWriter
      * @return IWriter
      */
     public function setUseDiskCaching($useDiskCache, $cacheDirectory = null);
-
     /**
      * Get disk caching directory.
      *

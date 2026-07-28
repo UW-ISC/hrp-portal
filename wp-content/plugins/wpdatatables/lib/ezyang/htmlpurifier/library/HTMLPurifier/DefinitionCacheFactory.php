@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Responsible for creating definition caches.
  */
@@ -9,17 +11,14 @@ class HTMLPurifier_DefinitionCacheFactory
      * @type array
      */
     protected $caches = array('Serializer' => array());
-
     /**
      * @type array
      */
     protected $implementations = array();
-
     /**
      * @type HTMLPurifier_DefinitionCache_Decorator[]
      */
     protected $decorators = array();
-
     /**
      * Initialize default decorators
      */
@@ -27,7 +26,6 @@ class HTMLPurifier_DefinitionCacheFactory
     {
         $this->addDecorator('Cleanup');
     }
-
     /**
      * Retrieves an instance of global definition cache factory.
      * @param HTMLPurifier_DefinitionCacheFactory $prototype
@@ -38,13 +36,12 @@ class HTMLPurifier_DefinitionCacheFactory
         static $instance;
         if ($prototype !== null) {
             $instance = $prototype;
-        } elseif ($instance === null || $prototype === true) {
+        } elseif ($instance === null || $prototype === \true) {
             $instance = new HTMLPurifier_DefinitionCacheFactory();
             $instance->setup();
         }
         return $instance;
     }
-
     /**
      * Registers a new definition cache object
      * @param string $short Short name of cache object, for reference
@@ -54,7 +51,6 @@ class HTMLPurifier_DefinitionCacheFactory
     {
         $this->implementations[$short] = $long;
     }
-
     /**
      * Factory method that creates a cache object based on configuration
      * @param string $type Name of definitions handled by cache
@@ -70,12 +66,11 @@ class HTMLPurifier_DefinitionCacheFactory
         if (!empty($this->caches[$method][$type])) {
             return $this->caches[$method][$type];
         }
-        if (isset($this->implementations[$method]) &&
-            class_exists($class = $this->implementations[$method])) {
+        if (isset($this->implementations[$method]) && \class_exists($class = $this->implementations[$method])) {
             $cache = new $class($type);
         } else {
             if ($method != 'Serializer') {
-                trigger_error("Unrecognized DefinitionCache $method, using Serializer instead", E_USER_WARNING);
+                \trigger_error("Unrecognized DefinitionCache {$method}, using Serializer instead", \E_USER_WARNING);
             }
             $cache = new HTMLPurifier_DefinitionCache_Serializer($type);
         }
@@ -88,19 +83,17 @@ class HTMLPurifier_DefinitionCacheFactory
         $this->caches[$method][$type] = $cache;
         return $this->caches[$method][$type];
     }
-
     /**
      * Registers a decorator to add to all new cache objects
      * @param HTMLPurifier_DefinitionCache_Decorator|string $decorator An instance or the name of a decorator
      */
     public function addDecorator($decorator)
     {
-        if (is_string($decorator)) {
-            $class = "HTMLPurifier_DefinitionCache_Decorator_$decorator";
-            $decorator = new $class;
+        if (\is_string($decorator)) {
+            $class = "HTMLPurifier_DefinitionCache_Decorator_{$decorator}";
+            $decorator = new $class();
         }
         $this->decorators[$decorator->name] = $decorator;
     }
 }
-
 // vim: et sw=4 sts=4

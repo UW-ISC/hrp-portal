@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Abstract class of a tag token (start, end or empty), and its behavior.
  */
@@ -12,8 +14,7 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
      * without having to use a function call <tt>is_a()</tt>.
      * @type bool
      */
-    public $is_tag = true;
-
+    public $is_tag = \true;
     /**
      * The lower-case name of the tag, like 'a', 'b' or 'blockquote'.
      *
@@ -23,13 +24,11 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
      * @type string
      */
     public $name;
-
     /**
      * Associative array of the tag's attributes.
      * @type array
      */
     public $attr = array();
-
     /**
      * Non-overloaded constructor, which lower-cases passed tag name.
      *
@@ -41,11 +40,11 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
      */
     public function __construct($name, $attr = array(), $line = null, $col = null, $armor = array())
     {
-        $this->name = ctype_lower($name) ? $name : strtolower($name);
+        $this->name = \ctype_lower($name) ? $name : \strtolower($name);
         foreach ($attr as $key => $value) {
             // normalization only necessary when key is not lowercase
-            if (!ctype_lower((string)$key)) {
-                $new_key = strtolower($key);
+            if (!\ctype_lower((string) $key)) {
+                $new_key = \strtolower($key);
                 if (!isset($attr[$new_key])) {
                     $attr[$new_key] = $attr[$key];
                 }
@@ -59,10 +58,9 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
         $this->col = $col;
         $this->armor = $armor;
     }
-
-    public function toNode() {
+    public function toNode()
+    {
         return new HTMLPurifier_Node_Element($this->name, $this->attr, $this->line, $this->col, $this->armor);
     }
 }
-
 // vim: et sw=4 sts=4

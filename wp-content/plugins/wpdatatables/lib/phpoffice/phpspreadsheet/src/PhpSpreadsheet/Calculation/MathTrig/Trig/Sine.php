@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Trig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Trig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Helpers;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Helpers;
 class Sine
 {
     use ArrayEnabled;
-
     /**
      * SIN.
      *
@@ -23,19 +21,16 @@ class Sine
      */
     public static function sin($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
-
         try {
             $angle = Helpers::validateNumericNullBool($angle);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return sin($angle);
+        return \sin($angle);
     }
-
     /**
      * SINH.
      *
@@ -49,19 +44,16 @@ class Sine
      */
     public static function sinh($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
-
         try {
             $angle = Helpers::validateNumericNullBool($angle);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return sinh($angle);
+        return \sinh($angle);
     }
-
     /**
      * ASIN.
      *
@@ -75,19 +67,16 @@ class Sine
      */
     public static function asin($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return Helpers::numberOrNan(asin($number));
+        return Helpers::numberOrNan(\asin($number));
     }
-
     /**
      * ASINH.
      *
@@ -101,16 +90,14 @@ class Sine
      */
     public static function asinh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return Helpers::numberOrNan(asinh($number));
+        return Helpers::numberOrNan(\asinh($number));
     }
 }

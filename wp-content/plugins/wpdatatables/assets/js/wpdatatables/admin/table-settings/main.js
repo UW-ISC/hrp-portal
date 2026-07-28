@@ -290,7 +290,12 @@
         $('#wdt-global-sorting').change(function (e) {
             wpdatatable_config.setSorting($(this).is(':checked') ? 1 : 0);
         });
-
+        /**
+         * Toggle Advanced Filter Option
+         */
+        $('#wdt-advanced-filter-option').change(function (e) {
+            wpdatatable_config.setAdvancedFilteringOption($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Toggle Global Search
          */

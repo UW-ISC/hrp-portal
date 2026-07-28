@@ -247,6 +247,7 @@
         $('#wdt-global-table-loader').change(function (e) {
             wpdatatable_plugin_config.setGlobalTableLoaders($(this).is(':checked') ? 1 : 0);
         });
+
         /**
          * Toggle chart loaders
          */
@@ -287,13 +288,6 @@
 
         $('#wdt-envato-deactivation-wpdatatables').on('click', function () {
             deactivatePlugin()
-        });
-
-        /**
-         * Toggle HighCharts stable version
-         */
-        $('#wdt-use-highcharts-stable-version').on('change', function () {
-            wpdatatable_plugin_config.setHighChartStableVersion($(this).is(':checked') ? 1 : 0);
         });
 
         /**
@@ -345,7 +339,6 @@
         wpdatatable_plugin_config.setBorderRemovalHeader(wdt_current_config.wdtBorderRemovalHeader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setPurchaseCodeStore(wdt_current_config.wdtPurchaseCodeStore);
         wpdatatable_plugin_config.setGoogleStableVersion(wdt_current_config.wdtGoogleStableVersion == 1 ? 1 : 0);
-        wpdatatable_plugin_config.setHighChartStableVersion(wdt_current_config.wdtHighChartStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setApexStableVersion(wdt_current_config.wdtApexStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setGoogleApiMaps(wdt_current_config.wdtGoogleApiMapsValidated == 1 ? 1 : 0);
 

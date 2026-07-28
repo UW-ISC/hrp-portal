@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard;
 
 use NumberFormatter;
-use PhpOffice\PhpSpreadsheet\Exception;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception;
 final class Locale
 {
     /**
@@ -14,23 +13,19 @@ final class Locale
      * Separated by underscores or dashes.
      */
     public const STRUCTURE = '/^(?P<language>[a-z]{2})([-_](?P<script>[a-z]{4}))?([-_](?P<country>[a-z]{2}))?$/i';
-
     private NumberFormatter $formatter;
-
     public function __construct(?string $locale, int $style)
     {
-        if (class_exists(NumberFormatter::class) === false) {
+        if (\class_exists(NumberFormatter::class) === \false) {
             throw new Exception();
         }
-
-        $formatterLocale = str_replace('-', '_', $locale ?? '');
+        $formatterLocale = \str_replace('-', '_', $locale ?? '');
         $this->formatter = new NumberFormatter($formatterLocale, $style);
         if ($this->formatter->getLocale() !== $formatterLocale) {
             throw new Exception("Unable to read locale data for '{$locale}'");
         }
     }
-
-    public function format(): string
+    public function format() : string
     {
         return $this->formatter->getPattern();
     }

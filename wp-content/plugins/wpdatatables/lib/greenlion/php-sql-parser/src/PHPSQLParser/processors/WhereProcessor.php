@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WhereProcessor.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes the WHERE statements.
@@ -48,7 +48,6 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class WhereProcessor extends ExpressionListProcessor {
-
+class WhereProcessor extends ExpressionListProcessor
+{
 }
-?>

@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Psr\Http\Message;
+declare (strict_types=1);
+namespace WPDT\Psr\Http\Message;
 
 /**
  * Representation of an incoming, server-side HTTP request.
@@ -54,7 +53,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return array
      */
     public function getServerParams();
-
     /**
      * Retrieve cookies.
      *
@@ -66,7 +64,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return array
      */
     public function getCookieParams();
-
     /**
      * Return an instance with the specified cookies.
      *
@@ -85,7 +82,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return static
      */
     public function withCookieParams(array $cookies);
-
     /**
      * Retrieve query string arguments.
      *
@@ -99,7 +95,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return array
      */
     public function getQueryParams();
-
     /**
      * Return an instance with the specified query string arguments.
      *
@@ -123,7 +118,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return static
      */
     public function withQueryParams(array $query);
-
     /**
      * Retrieve normalized file upload data.
      *
@@ -137,7 +131,6 @@ interface ServerRequestInterface extends RequestInterface
      *     array MUST be returned if no data is present.
      */
     public function getUploadedFiles();
-
     /**
      * Create a new instance with the specified uploaded files.
      *
@@ -150,7 +143,6 @@ interface ServerRequestInterface extends RequestInterface
      * @throws \InvalidArgumentException if an invalid structure is provided.
      */
     public function withUploadedFiles(array $uploadedFiles);
-
     /**
      * Retrieve any parameters provided in the request body.
      *
@@ -167,7 +159,6 @@ interface ServerRequestInterface extends RequestInterface
      *     These will typically be an array or object.
      */
     public function getParsedBody();
-
     /**
      * Return an instance with the specified body parameters.
      *
@@ -197,7 +188,6 @@ interface ServerRequestInterface extends RequestInterface
      *     provided.
      */
     public function withParsedBody($data);
-
     /**
      * Retrieve attributes derived from the request.
      *
@@ -210,7 +200,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return array Attributes derived from the request.
      */
     public function getAttributes();
-
     /**
      * Retrieve a single derived request attribute.
      *
@@ -227,7 +216,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return mixed
      */
     public function getAttribute(string $name, $default = null);
-
     /**
      * Return an instance with the specified derived request attribute.
      *
@@ -244,7 +232,6 @@ interface ServerRequestInterface extends RequestInterface
      * @return static
      */
     public function withAttribute(string $name, $value);
-
     /**
      * Return an instance that removes the specified derived request attribute.
      *
