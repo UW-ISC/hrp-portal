@@ -2,19 +2,19 @@
 Contributors: edo888
 Author: Translate AI Multilingual Solutions
 Tags: translate, translator, multilingual, translation, language
-Requires at least: 2.8.1
-Tested up to: 6.9
-Stable tag: 3.0.10
+Requires at least: 6.0.1
+Tested up to: 7.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
 Author URI: https://gtranslate.io/?xyz=998
 
-Translate WordPress with Google Translate multilanguage plugin to make your website multilingual. Complete multilingual SEO solution for WordPress.
+Translate WordPress with Google Translate multilanguage plugin using AI translation. Complete multilingual SEO solution, WooCommerce compatible.
 
 == Description ==
 
-Translate WordPress with GTranslate plugin uses Google Translate automatic translation service to **translate wordpress** site with Google power and make it **multilingual**. With 103 available languages your site will be available to more than 99% of internet users. Our paid versions are **fully SEO compatible** which will **increase your international traffic and sales**. This translate plugin is a budget multilingual WordPress solution which combines automatic and human translations to save money and is easy to implement.
+Translate WordPress with GTranslate plugin uses Google Translate **AI translation** service to **translate wordpress** site with Google power and make it **multilingual**. With 103 available languages your site will be available to more than 99% of internet users. Our paid versions are **fully SEO compatible** which will **increase your international traffic and sales**. This translate plugin is a budget multilingual WordPress solution which combines automatic and human translations to save money and is easy to implement.
 
 GTranslate is a leading website translation services provider since 2008, it moves away the language barriers.
 
@@ -258,6 +258,11 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard (paid)
 
 == Changelog ==
+= 3.1.1 =
+* Added Gutenberg block support
+* Fixed keyboard navigation issue in language selectors
+* Improved paid version support for form submissions with file uploads on translated pages
+
 = 3.0.10 =
 * New widget look: Popup with search
 

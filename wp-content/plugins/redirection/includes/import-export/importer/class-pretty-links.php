@@ -1,52 +1,50 @@
 <?php
 
+namespace Redirection\ImportExport\Importer;
+
 /**
- * @phpstan-import-type ImporterInfo from Red_Plugin_Importer
+ * @phpstan-import-type ImporterInfo from Plugin
  */
-class Red_PrettyLinks_Importer extends Red_Plugin_Importer {
+class PrettyLinks extends Plugin {
 	/**
-	 * Import redirects from Pretty Links.
-	 *
-	 * @param int $group_id Target group ID.
-	 * @return int Number of imported redirects.
+	 * @return bool
 	 */
-	public function import_plugin( $group_id ) {
+	public function supports_preview() {
+		return true;
+	}
+
+	/**
+	 * @return array<int, array<string, mixed>|false>
+	 */
+	protected function get_redirect_items() {
 		global $wpdb;
 
-		$count = 0;
 		$redirects = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}prli_links" );
+		$items = array();
 
 		foreach ( $redirects as $redirect ) {
-			$created = $this->create_for_item( $group_id, $redirect );
-
-			if ( $created instanceof Red_Item ) {
-				$count++;
-			}
+			$items[] = $this->get_item_for_link( $redirect );
 		}
 
-		return $count;
+		return $items;
 	}
 
 	/**
 	 * Create a Redirection item for a Pretty Links row.
 	 *
-	 * @param int      $group_id Target group ID.
-	 * @param stdClass $link     Row from prli_links.
-	 * @return Red_Item|WP_Error Created redirect or error.
+	 * @param \stdClass $link Row from prli_links.
+	 * @return array<string, mixed>
 	 */
-	private function create_for_item( $group_id, $link ) {
-		$item = array(
+	private function get_item_for_link( $link ) {
+		return array(
 			'url'         => '/' . $link->slug,
 			'action_data' => array( 'url' => $link->url ),
 			'regex'       => false,
-			'group_id'    => $group_id,
 			'match_type'  => 'url',
 			'action_type' => 'url',
 			'title'       => $link->name,
 			'action_code' => $link->redirect_type,
 		);
-
-		return Red_Item::create( $item );
 	}
 
 	/**
@@ -63,6 +61,8 @@ class Red_PrettyLinks_Importer extends Red_Plugin_Importer {
 			return [
 				'id' => 'pretty-links',
 				'name' => 'PrettyLinks',
+				'description' => __( 'Redirects created by Pretty Links.', 'redirection' ),
+				'source' => __( 'Database tables', 'redirection' ),
 				'total' => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}prli_links" ),
 			];
 		}

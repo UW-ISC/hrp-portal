@@ -1,4 +1,4 @@
-(function(){
+(function(){if(!(document.currentScript instanceof HTMLScriptElement))return;
     var gt = window.gtranslateSettings || {};
     gt = gt[document.currentScript.getAttribute('data-gt-widget-id')] || gt;
 
@@ -171,7 +171,7 @@
         if(current_lang != default_language)
             load_tlib();
         else
-            document.querySelectorAll(u_class).forEach(function(e){e.addEventListener('pointerenter',load_tlib)});
+            document.querySelectorAll(u_class).forEach(function(e){e.addEventListener('pointerenter',load_tlib);e.addEventListener('focusin',load_tlib)});
 
         document.querySelectorAll(u_class + ' a[data-gt-lang]').forEach(function(e){e.addEventListener('click', function(evt) {
             evt.preventDefault();

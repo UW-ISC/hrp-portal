@@ -95,8 +95,6 @@ if(isset($request_headers['content-type'])) {
 }
 
 if(isset($request_headers['Content-Type']) and strpos($request_headers['Content-Type'], 'multipart/form-data;') !== false) {
-    //$request_headers['Content-Type'] = 'multipart/form-data'; // remove boundary
-    $request_headers['Content-Type'] = 'application/x-www-form-urlencoded';
     $is_multipart = true;
     $request_headers['Content-Length'] = '';
 
@@ -155,22 +153,24 @@ switch($_SERVER['REQUEST_METHOD']) {
     case 'POST': {
         curl_setopt($ch, CURLOPT_POST, true);
         if(isset($is_multipart)) {
-            http_build_query_for_curl($_POST, $new_post);
-            $new_post2 = array();
-            foreach($new_post as $key => $value)
-                $new_post2[] = $key.'='.urlencode($value);
-            $new_post = implode('&', $new_post2);
-            $headers[] = 'Content-Length: '.strlen($new_post);
+            $multipart_boundary = substr($request_headers['Content-Type'], strpos($request_headers['Content-Type'], 'boundary=') + 9);
+
+            $new_post = array();
+            http_build_query_for_curl_multipart($_POST, $new_post, null, $multipart_boundary);
+
+            // add files
+            if(count($_FILES) > 0)
+                http_build_files_for_curl_multipart($_FILES, $new_post, null, $multipart_boundary);
+
+            // add final boundary
+            $new_post[] = "--$multipart_boundary--";
+            $new_post[] = "";
+
+            $new_post = implode("\r\n", $new_post);
+
+            $headers[] = 'Content-Length: ' . strlen($new_post);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $new_post);
-
-        } elseif(isset($request_headers['Content-Type']) and strpos($request_headers['Content-Type'], 'multipart/form-data') !== false) {
-            http_build_query_for_curl($_POST, $new_post);
-
-            $new_post = array('a'=>1,'b'=>2);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $new_post); // todo: think about $_FILES: http://php.net/manual/en/class.curlfile.php
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, array());
-            file_put_contents(dirname(__FILE__).'/debug.txt', print_r($new_post, true)."\n", FILE_APPEND);
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
         }
@@ -267,17 +267,55 @@ if(function_exists('gzencode') and isset($return_gz) and $return_gz and zlib_get
 else
     echo $html;
 
-function http_build_query_for_curl($arrays, &$new = array(), $prefix = null) { // flatten multidimentional array for post
-    if(is_object($arrays)) {
+function http_build_query_for_curl_multipart($arrays, &$new, $prefix = null, $multipart_boundary) {
+    if(is_object($arrays))
         $arrays = get_object_vars($arrays);
-    }
 
-    foreach($arrays AS $key => $value) {
-        $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
+    foreach($arrays as $key => $value) {
+        $k = isset($prefix) ? $prefix . '[' . str_replace(array("\0", "\"", "\r", "\n"), '_', $key) . ']' : str_replace(array("\0", "\"", "\r", "\n"), '_', $key);
         if(is_array($value) or is_object($value)) {
-            http_build_query_for_curl($value, $new, $k);
+            http_build_query_for_curl_multipart($value, $new, $k, $multipart_boundary);
         } else {
-            $new[$k] = $value;
+            $new[$k] = implode("\r\n", array(
+                "--$multipart_boundary",
+                "Content-Disposition: form-data; name=\"$k\"",
+                '',
+                filter_var($value),
+            ));
+        }
+    }
+}
+
+function http_build_files_for_curl_multipart($arrays, &$new, $prefix = null, $multipart_boundary) {
+    if(is_object($arrays))
+        $arrays = get_object_vars($arrays);
+
+    foreach($arrays as $key => $value) {
+        $k = isset($prefix) ? $prefix . '[' . str_replace(array("\0", "\"", "\r", "\n"), '_', $key) . ']' : str_replace(array("\0", "\"", "\r", "\n"), '_', $key);
+        if(isset($value['name'], $value['tmp_name'], $value['error']) and (is_array($value['name']) or is_object($value['name']))) {
+            // multiple files, one level array case, todo: multidimensional case e.g. documents[page][front] documents[page][back]
+            foreach($value['name'] as $i => $name) {
+                $v = str_replace(array("\0", "\"", "\r", "\n"), '_', $name);
+                $data = file_get_contents($value['tmp_name'][$i]);
+                $kk = $k.'['.$i.']';
+                $new[$kk] = implode("\r\n", array(
+                    "--$multipart_boundary",
+                    "Content-Disposition: form-data; name=\"{$kk}\"; filename=\"{$v}\"",
+                    'Content-Type: application/octet-stream',
+                    '',
+                    $data,
+                ));
+            }
+        } elseif(isset($value['name'], $value['tmp_name'], $value['error'])) {
+            $v = str_replace(array("\0", "\"", "\r", "\n"), '_', $value['name']);
+            $data = file_get_contents($value['tmp_name']);
+            $new[$k] = implode("\r\n", array(
+                "--$multipart_boundary",
+                "Content-Disposition: form-data; name=\"{$k}\"; filename=\"{$v}\"",
+                'Content-Type: application/octet-stream',
+                '',
+                $data,
+            ));
         }
     }
 }
