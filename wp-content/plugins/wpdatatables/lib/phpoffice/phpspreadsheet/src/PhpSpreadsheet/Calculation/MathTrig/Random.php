@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Random
 {
     use ArrayEnabled;
-
     /**
      * RAND.
      *
@@ -17,9 +15,8 @@ class Random
      */
     public static function rand()
     {
-        return mt_rand(0, 10000000) / 10000000;
+        return \mt_rand(0, 10000000) / 10000000;
     }
-
     /**
      * RANDBETWEEN.
      *
@@ -34,10 +31,9 @@ class Random
      */
     public static function randBetween($min, $max)
     {
-        if (is_array($min) || is_array($max)) {
+        if (\is_array($min) || \is_array($max)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $min, $max);
         }
-
         try {
             $min = (int) Helpers::validateNumericNullBool($min);
             $max = (int) Helpers::validateNumericNullBool($max);
@@ -45,10 +41,8 @@ class Random
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return mt_rand($min, $max);
+        return \mt_rand($min, $max);
     }
-
     /**
      * RANDARRAY.
      *
@@ -67,7 +61,7 @@ class Random
      *
      * @return array|string The resulting array, or a string containing an error
      */
-    public static function randArray($rows = 1, $columns = 1, $min = 0, $max = 1, $wholeNumber = false)
+    public static function randArray($rows = 1, $columns = 1, $min = 0, $max = 1, $wholeNumber = \false)
     {
         try {
             $rows = (int) Helpers::validateNumericNullSubstitution($rows, 1);
@@ -76,24 +70,14 @@ class Random
             Helpers::validatePositive($columns);
             $min = Helpers::validateNumericNullSubstitution($min, 1);
             $max = Helpers::validateNumericNullSubstitution($max, 1);
-
             if ($max <= $min) {
                 return ExcelError::VALUE();
             }
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return array_chunk(
-            array_map(
-                function () use ($min, $max, $wholeNumber) {
-                    return $wholeNumber
-                        ? mt_rand((int) $min, (int) $max)
-                        : (mt_rand() / mt_getrandmax()) * ($max - $min) + $min;
-                },
-                array_fill(0, $rows * $columns, $min)
-            ),
-            max($columns, 1)
-        );
+        return \array_chunk(\array_map(function () use($min, $max, $wholeNumber) {
+            return $wholeNumber ? \mt_rand((int) $min, (int) $max) : \mt_rand() / \mt_getrandmax() * ($max - $min) + $min;
+        }, \array_fill(0, $rows * $columns, $min)), \max($columns, 1));
     }
 }

@@ -1,24 +1,21 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Amortization;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Coupons;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Depreciation;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Dollar;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\InterestRate;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\TreasuryBill;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Amortization;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Coupons;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Depreciation;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Dollar;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\InterestRate;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\TreasuryBill;
 /**
  * @deprecated 1.18.0
  */
 class Financial
 {
     const FINANCIAL_MAX_ITERATIONS = 128;
-
-    const FINANCIAL_PRECISION = 1.0e-08;
-
+    const FINANCIAL_PRECISION = 1.0E-8;
     /**
      * ACCRINT.
      *
@@ -56,28 +53,10 @@ class Financial
      *
      * @return float|string Result, or a string containing an error
      */
-    public static function ACCRINT(
-        $issue,
-        $firstInterest,
-        $settlement,
-        $rate,
-        $parValue = 1000,
-        $frequency = 1,
-        $basis = 0,
-        $calcMethod = true
-    ) {
-        return Securities\AccruedInterest::periodic(
-            $issue,
-            $firstInterest,
-            $settlement,
-            $rate,
-            $parValue,
-            $frequency,
-            $basis,
-            $calcMethod
-        );
+    public static function ACCRINT($issue, $firstInterest, $settlement, $rate, $parValue = 1000, $frequency = 1, $basis = 0, $calcMethod = \true)
+    {
+        return Securities\AccruedInterest::periodic($issue, $firstInterest, $settlement, $rate, $parValue, $frequency, $basis, $calcMethod);
     }
-
     /**
      * ACCRINTM.
      *
@@ -108,7 +87,6 @@ class Financial
     {
         return Securities\AccruedInterest::atMaturity($issue, $settlement, $rate, $parValue, $basis);
     }
-
     /**
      * AMORDEGRC.
      *
@@ -147,7 +125,6 @@ class Financial
     {
         return Amortization::AMORDEGRC($cost, $purchased, $firstPeriod, $salvage, $period, $rate, $basis);
     }
-
     /**
      * AMORLINC.
      *
@@ -181,7 +158,6 @@ class Financial
     {
         return Amortization::AMORLINC($cost, $purchased, $firstPeriod, $salvage, $period, $rate, $basis);
     }
-
     /**
      * COUPDAYBS.
      *
@@ -217,7 +193,6 @@ class Financial
     {
         return Coupons::COUPDAYBS($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * COUPDAYS.
      *
@@ -253,7 +228,6 @@ class Financial
     {
         return Coupons::COUPDAYS($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * COUPDAYSNC.
      *
@@ -289,7 +263,6 @@ class Financial
     {
         return Coupons::COUPDAYSNC($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * COUPNCD.
      *
@@ -326,7 +299,6 @@ class Financial
     {
         return Coupons::COUPNCD($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * COUPNUM.
      *
@@ -363,7 +335,6 @@ class Financial
     {
         return Coupons::COUPNUM($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * COUPPCD.
      *
@@ -400,7 +371,6 @@ class Financial
     {
         return Coupons::COUPPCD($settlement, $maturity, $frequency, $basis);
     }
-
     /**
      * CUMIPMT.
      *
@@ -429,7 +399,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Cumulative::interest($rate, $nper, $pv, $start, $end, $type);
     }
-
     /**
      * CUMPRINC.
      *
@@ -458,7 +427,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Cumulative::principal($rate, $nper, $pv, $start, $end, $type);
     }
-
     /**
      * DB.
      *
@@ -492,7 +460,6 @@ class Financial
     {
         return Depreciation::DB($cost, $salvage, $life, $period, $month);
     }
-
     /**
      * DDB.
      *
@@ -523,7 +490,6 @@ class Financial
     {
         return Depreciation::DDB($cost, $salvage, $life, $period, $factor);
     }
-
     /**
      * DISC.
      *
@@ -556,7 +522,6 @@ class Financial
     {
         return Financial\Securities\Rates::discount($settlement, $maturity, $price, $redemption, $basis);
     }
-
     /**
      * DOLLARDE.
      *
@@ -580,7 +545,6 @@ class Financial
     {
         return Dollar::decimal($fractional_dollar, $fraction);
     }
-
     /**
      * DOLLARFR.
      *
@@ -604,7 +568,6 @@ class Financial
     {
         return Dollar::fractional($decimal_dollar, $fraction);
     }
-
     /**
      * EFFECT.
      *
@@ -627,7 +590,6 @@ class Financial
     {
         return Financial\InterestRate::effective($nominalRate, $periodsPerYear);
     }
-
     /**
      * FV.
      *
@@ -657,7 +619,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic::futureValue($rate, $nper, $pmt, $pv, $type);
     }
-
     /**
      * FVSCHEDULE.
      *
@@ -680,7 +641,6 @@ class Financial
     {
         return Financial\CashFlow\Single::futureValue($principal, $schedule);
     }
-
     /**
      * INTRATE.
      *
@@ -713,7 +673,6 @@ class Financial
     {
         return Financial\Securities\Rates::interest($settlement, $maturity, $investment, $redemption, $basis);
     }
-
     /**
      * IPMT.
      *
@@ -740,7 +699,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Interest::payment($rate, $per, $nper, $pv, $fv, $type);
     }
-
     /**
      * IRR.
      *
@@ -769,7 +727,6 @@ class Financial
     {
         return Financial\CashFlow\Variable\Periodic::rate($values, $guess);
     }
-
     /**
      * ISPMT.
      *
@@ -798,7 +755,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Interest::schedulePayment(...$args);
     }
-
     /**
      * MIRR.
      *
@@ -824,7 +780,6 @@ class Financial
     {
         return Financial\CashFlow\Variable\Periodic::modifiedRate($values, $finance_rate, $reinvestment_rate);
     }
-
     /**
      * NOMINAL.
      *
@@ -846,7 +801,6 @@ class Financial
     {
         return InterestRate::nominal($effectiveRate, $periodsPerYear);
     }
-
     /**
      * NPER.
      *
@@ -868,7 +822,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic::periods($rate, $pmt, $pv, $fv, $type);
     }
-
     /**
      * NPV.
      *
@@ -886,7 +839,6 @@ class Financial
     {
         return Financial\CashFlow\Variable\Periodic::presentValue(...$args);
     }
-
     /**
      * PDURATION.
      *
@@ -906,7 +858,6 @@ class Financial
     {
         return Financial\CashFlow\Single::periods($rate, $pv, $fv);
     }
-
     /**
      * PMT.
      *
@@ -928,7 +879,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Payments::annuity($rate, $nper, $pv, $fv, $type);
     }
-
     /**
      * PPMT.
      *
@@ -952,7 +902,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Payments::interestPayment($rate, $per, $nper, $pv, $fv, $type);
     }
-
     /**
      * PRICE.
      *
@@ -987,7 +936,6 @@ class Financial
     {
         return Securities\Price::price($settlement, $maturity, $rate, $yield, $redemption, $frequency, $basis);
     }
-
     /**
      * PRICEDISC.
      *
@@ -1017,7 +965,6 @@ class Financial
     {
         return Securities\Price::priceDiscounted($settlement, $maturity, $discount, $redemption, $basis);
     }
-
     /**
      * PRICEMAT.
      *
@@ -1048,7 +995,6 @@ class Financial
     {
         return Securities\Price::priceAtMaturity($settlement, $maturity, $issue, $rate, $yield, $basis);
     }
-
     /**
      * PV.
      *
@@ -1070,7 +1016,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic::presentValue($rate, $nper, $pmt, $fv, $type);
     }
-
     /**
      * RATE.
      *
@@ -1108,7 +1053,6 @@ class Financial
     {
         return Financial\CashFlow\Constant\Periodic\Interest::rate($nper, $pmt, $pv, $fv, $type, $guess);
     }
-
     /**
      * RECEIVED.
      *
@@ -1138,7 +1082,6 @@ class Financial
     {
         return Financial\Securities\Price::received($settlement, $maturity, $investment, $discount, $basis);
     }
-
     /**
      * RRI.
      *
@@ -1158,7 +1101,6 @@ class Financial
     {
         return Financial\CashFlow\Single::interestRate($nper, $pv, $fv);
     }
-
     /**
      * SLN.
      *
@@ -1178,7 +1120,6 @@ class Financial
     {
         return Depreciation::SLN($cost, $salvage, $life);
     }
-
     /**
      * SYD.
      *
@@ -1199,7 +1140,6 @@ class Financial
     {
         return Depreciation::SYD($cost, $salvage, $life, $period);
     }
-
     /**
      * TBILLEQ.
      *
@@ -1222,7 +1162,6 @@ class Financial
     {
         return TreasuryBill::bondEquivalentYield($settlement, $maturity, $discount);
     }
-
     /**
      * TBILLPRICE.
      *
@@ -1245,7 +1184,6 @@ class Financial
     {
         return TreasuryBill::price($settlement, $maturity, $discount);
     }
-
     /**
      * TBILLYIELD.
      *
@@ -1268,7 +1206,6 @@ class Financial
     {
         return TreasuryBill::yield($settlement, $maturity, $price);
     }
-
     /**
      * XIRR.
      *
@@ -1294,7 +1231,6 @@ class Financial
     {
         return Financial\CashFlow\Variable\NonPeriodic::rate($values, $dates, $guess);
     }
-
     /**
      * XNPV.
      *
@@ -1325,7 +1261,6 @@ class Financial
     {
         return Financial\CashFlow\Variable\NonPeriodic::presentValue($rate, $values, $dates);
     }
-
     /**
      * YIELDDISC.
      *
@@ -1355,7 +1290,6 @@ class Financial
     {
         return Securities\Yields::yieldDiscounted($settlement, $maturity, $price, $redemption, $basis);
     }
-
     /**
      * YIELDMAT.
      *

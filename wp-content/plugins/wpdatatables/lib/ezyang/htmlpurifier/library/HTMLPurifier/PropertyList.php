@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Generic property list implementation
  */
@@ -10,19 +12,16 @@ class HTMLPurifier_PropertyList
      * @type array
      */
     protected $data = array();
-
     /**
      * Parent plist.
      * @type HTMLPurifier_PropertyList
      */
     protected $parent;
-
     /**
      * Cache.
      * @type array
      */
     protected $cache;
-
     /**
      * @param HTMLPurifier_PropertyList $parent Parent plist
      */
@@ -30,7 +29,6 @@ class HTMLPurifier_PropertyList
     {
         $this->parent = $parent;
     }
-
     /**
      * Recursively retrieves the value for a key
      * @param string $name
@@ -45,9 +43,8 @@ class HTMLPurifier_PropertyList
         if ($this->parent) {
             return $this->parent->get($name);
         }
-        throw new HTMLPurifier_Exception("Key '$name' not found");
+        throw new HTMLPurifier_Exception("Key '{$name}' not found");
     }
-
     /**
      * Sets the value of a key, for this plist
      * @param string $name
@@ -57,7 +54,6 @@ class HTMLPurifier_PropertyList
     {
         $this->data[$name] = $value;
     }
-
     /**
      * Returns true if a given key exists
      * @param string $name
@@ -65,9 +61,8 @@ class HTMLPurifier_PropertyList
      */
     public function has($name)
     {
-        return array_key_exists($name, $this->data);
+        return \array_key_exists($name, $this->data);
     }
-
     /**
      * Resets a value to the value of it's parent, usually the default. If
      * no value is specified, the entire plist is reset.
@@ -81,25 +76,23 @@ class HTMLPurifier_PropertyList
             unset($this->data[$name]);
         }
     }
-
     /**
      * Squashes this property list and all of its property lists into a single
      * array, and returns the array. This value is cached by default.
      * @param bool $force If true, ignores the cache and regenerates the array.
      * @return array
      */
-    public function squash($force = false)
+    public function squash($force = \false)
     {
         if ($this->cache !== null && !$force) {
             return $this->cache;
         }
         if ($this->parent) {
-            return $this->cache = array_merge($this->parent->squash($force), $this->data);
+            return $this->cache = \array_merge($this->parent->squash($force), $this->data);
         } else {
             return $this->cache = $this->data;
         }
     }
-
     /**
      * Returns the parent plist.
      * @return HTMLPurifier_PropertyList
@@ -108,7 +101,6 @@ class HTMLPurifier_PropertyList
     {
         return $this->parent;
     }
-
     /**
      * Sets the parent plist.
      * @param HTMLPurifier_PropertyList $plist Parent plist
@@ -118,5 +110,4 @@ class HTMLPurifier_PropertyList
         $this->parent = $plist;
     }
 }
-
 // vim: et sw=4 sts=4

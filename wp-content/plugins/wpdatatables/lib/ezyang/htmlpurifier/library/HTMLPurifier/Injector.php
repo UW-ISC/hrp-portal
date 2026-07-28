@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Injects tokens into the document while parsing for well-formedness.
  * This enables "formatter-like" functionality such as auto-paragraphing,
@@ -15,37 +17,31 @@
  */
 abstract class HTMLPurifier_Injector
 {
-
     /**
      * Advisory name of injector, this is for friendly error messages.
      * @type string
      */
     public $name;
-
     /**
      * @type HTMLPurifier_HTMLDefinition
      */
     protected $htmlDefinition;
-
     /**
      * Reference to CurrentNesting variable in Context. This is an array
      * list of tokens that we are currently "inside"
      * @type array
      */
     protected $currentNesting;
-
     /**
      * Reference to current token.
      * @type HTMLPurifier_Token
      */
     protected $currentToken;
-
     /**
      * Reference to InputZipper variable in Context.
      * @type HTMLPurifier_Zipper
      */
     protected $inputZipper;
-
     /**
      * Array of elements and attributes this injector creates and therefore
      * need to be allowed by the definition. Takes form of
@@ -53,13 +49,11 @@ abstract class HTMLPurifier_Injector
      * @type array
      */
     public $needed = array();
-
     /**
      * Number of elements to rewind backwards (relative).
      * @type bool|int
      */
-    protected $rewindOffset = false;
-
+    protected $rewindOffset = \false;
     /**
      * Rewind to a spot to re-perform processing. This is useful if you
      * deleted a node, and now need to see if this change affected any
@@ -73,7 +67,6 @@ abstract class HTMLPurifier_Injector
     {
         $this->rewindOffset = $offset;
     }
-
     /**
      * Retrieves rewind offset, and then unsets it.
      * @return bool|int
@@ -81,10 +74,9 @@ abstract class HTMLPurifier_Injector
     public function getRewindOffset()
     {
         $r = $this->rewindOffset;
-        $this->rewindOffset = false;
+        $this->rewindOffset = \false;
         return $r;
     }
-
     /**
      * Prepares the injector by giving it the config and context objects:
      * this allows references to important variables to be made within
@@ -101,15 +93,14 @@ abstract class HTMLPurifier_Injector
         // still test checkNeeded, so be careful. Maybe get rid of that
         // dependency.
         $result = $this->checkNeeded($config);
-        if ($result !== false) {
+        if ($result !== \false) {
             return $result;
         }
         $this->currentNesting =& $context->get('CurrentNesting');
-        $this->currentToken   =& $context->get('CurrentToken');
-        $this->inputZipper    =& $context->get('InputZipper');
-        return false;
+        $this->currentToken =& $context->get('CurrentToken');
+        $this->inputZipper =& $context->get('InputZipper');
+        return \false;
     }
-
     /**
      * This function checks if the HTML environment
      * will work with the Injector: if p tags are not allowed, the
@@ -121,24 +112,23 @@ abstract class HTMLPurifier_Injector
     {
         $def = $config->getHTMLDefinition();
         foreach ($this->needed as $element => $attributes) {
-            if (is_int($element)) {
+            if (\is_int($element)) {
                 $element = $attributes;
             }
             if (!isset($def->info[$element])) {
                 return $element;
             }
-            if (!is_array($attributes)) {
+            if (!\is_array($attributes)) {
                 continue;
             }
             foreach ($attributes as $name) {
                 if (!isset($def->info[$element]->attr[$name])) {
-                    return "$element.$name";
+                    return "{$element}.{$name}";
                 }
             }
         }
-        return false;
+        return \false;
     }
-
     /**
      * Tests if the context node allows a certain element
      * @param string $name Name of element to test for
@@ -147,28 +137,27 @@ abstract class HTMLPurifier_Injector
     public function allowsElement($name)
     {
         if (!empty($this->currentNesting)) {
-            $parent_token = array_pop($this->currentNesting);
+            $parent_token = \array_pop($this->currentNesting);
             $this->currentNesting[] = $parent_token;
             $parent = $this->htmlDefinition->info[$parent_token->name];
         } else {
             $parent = $this->htmlDefinition->info_parent_def;
         }
         if (!isset($parent->child->elements[$name]) || isset($parent->excludes[$name])) {
-            return false;
+            return \false;
         }
         // check for exclusion
         if (!empty($this->currentNesting)) {
-            for ($i = count($this->currentNesting) - 2; $i >= 0; $i--) {
+            for ($i = \count($this->currentNesting) - 2; $i >= 0; $i--) {
                 $node = $this->currentNesting[$i];
-                $def  = $this->htmlDefinition->info[$node->name];
+                $def = $this->htmlDefinition->info[$node->name];
                 if (isset($def->excludes[$name])) {
-                    return false;
+                    return \false;
                 }
             }
         }
-        return true;
+        return \true;
     }
-
     /**
      * Iterator function, which starts with the next token and continues until
      * you reach the end of the input tokens.
@@ -182,17 +171,16 @@ abstract class HTMLPurifier_Injector
     protected function forward(&$i, &$current)
     {
         if ($i === null) {
-            $i = count($this->inputZipper->back) - 1;
+            $i = \count($this->inputZipper->back) - 1;
         } else {
             $i--;
         }
         if ($i < 0) {
-            return false;
+            return \false;
         }
         $current = $this->inputZipper->back[$i];
-        return true;
+        return \true;
     }
-
     /**
      * Similar to _forward, but accepts a third parameter $nesting (which
      * should be initialized at 0) and stops when we hit the end tag
@@ -207,7 +195,7 @@ abstract class HTMLPurifier_Injector
     {
         $result = $this->forward($i, $current);
         if (!$result) {
-            return false;
+            return \false;
         }
         if ($nesting === null) {
             $nesting = 0;
@@ -216,13 +204,12 @@ abstract class HTMLPurifier_Injector
             $nesting++;
         } elseif ($current instanceof HTMLPurifier_Token_End) {
             if ($nesting <= 0) {
-                return false;
+                return \false;
             }
             $nesting--;
         }
-        return true;
+        return \true;
     }
-
     /**
      * Iterator function, starts with the previous token and continues until
      * you reach the beginning of input tokens.
@@ -236,31 +223,28 @@ abstract class HTMLPurifier_Injector
     protected function backward(&$i, &$current)
     {
         if ($i === null) {
-            $i = count($this->inputZipper->front) - 1;
+            $i = \count($this->inputZipper->front) - 1;
         } else {
             $i--;
         }
         if ($i < 0) {
-            return false;
+            return \false;
         }
         $current = $this->inputZipper->front[$i];
-        return true;
+        return \true;
     }
-
     /**
      * Handler that is called when a text token is processed
      */
     public function handleText(&$token)
     {
     }
-
     /**
      * Handler that is called when a start or empty token is processed
      */
     public function handleElement(&$token)
     {
     }
-
     /**
      * Handler that is called when an end token is processed
      */
@@ -268,7 +252,6 @@ abstract class HTMLPurifier_Injector
     {
         $this->notifyEnd($token);
     }
-
     /**
      * Notifier that is called when an end token is processed
      * @param HTMLPurifier_Token $token Current token variable.
@@ -279,5 +262,4 @@ abstract class HTMLPurifier_Injector
     {
     }
 }
-
 // vim: et sw=4 sts=4

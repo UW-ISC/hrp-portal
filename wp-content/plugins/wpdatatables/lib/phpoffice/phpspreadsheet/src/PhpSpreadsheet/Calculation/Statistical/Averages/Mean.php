@@ -1,14 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Counts;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Counts;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
 class Mean
 {
     /**
@@ -28,18 +27,15 @@ class Mean
     public static function geometric(...$args)
     {
         $aArgs = Functions::flattenArray($args);
-
         $aMean = MathTrig\Operations::product($aArgs);
-        if (is_numeric($aMean) && ($aMean > 0)) {
+        if (\is_numeric($aMean) && $aMean > 0) {
             $aCount = Counts::COUNT($aArgs);
             if (Minimum::min($aArgs) > 0) {
                 return $aMean ** (1 / $aCount);
             }
         }
-
         return ExcelError::NAN();
     }
-
     /**
      * HARMEAN.
      *
@@ -60,28 +56,24 @@ class Mean
         if (Minimum::min($aArgs) < 0) {
             return ExcelError::NAN();
         }
-
         $returnValue = 0;
         $aCount = 0;
         foreach ($aArgs as $arg) {
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if (\is_numeric($arg) && !\is_string($arg)) {
                 if ($arg <= 0) {
                     return ExcelError::NAN();
                 }
-                $returnValue += (1 / $arg);
+                $returnValue += 1 / $arg;
                 ++$aCount;
             }
         }
-
         // Return
         if ($aCount > 0) {
             return 1 / ($returnValue / $aCount);
         }
-
         return ExcelError::NA();
     }
-
     /**
      * TRIMMEAN.
      *
@@ -99,34 +91,27 @@ class Mean
     public static function trim(...$args)
     {
         $aArgs = Functions::flattenArray($args);
-
         // Calculate
-        $percent = array_pop($aArgs);
-
-        if ((is_numeric($percent)) && (!is_string($percent))) {
-            if (($percent < 0) || ($percent > 1)) {
+        $percent = \array_pop($aArgs);
+        if (\is_numeric($percent) && !\is_string($percent)) {
+            if ($percent < 0 || $percent > 1) {
                 return ExcelError::NAN();
             }
-
             $mArgs = [];
             foreach ($aArgs as $arg) {
                 // Is it a numeric value?
-                if ((is_numeric($arg)) && (!is_string($arg))) {
+                if (\is_numeric($arg) && !\is_string($arg)) {
                     $mArgs[] = $arg;
                 }
             }
-
-            $discard = floor(Counts::COUNT($mArgs) * $percent / 2);
-            sort($mArgs);
-
+            $discard = \floor(Counts::COUNT($mArgs) * $percent / 2);
+            \sort($mArgs);
             for ($i = 0; $i < $discard; ++$i) {
-                array_pop($mArgs);
-                array_shift($mArgs);
+                \array_pop($mArgs);
+                \array_shift($mArgs);
             }
-
             return Averages::average($mArgs);
         }
-
         return ExcelError::VALUE();
     }
 }

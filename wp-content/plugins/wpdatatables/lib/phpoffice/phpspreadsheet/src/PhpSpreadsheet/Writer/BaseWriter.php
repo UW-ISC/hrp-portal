@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer;
 
 abstract class BaseWriter implements IWriter
 {
@@ -10,8 +10,7 @@ abstract class BaseWriter implements IWriter
      *
      * @var bool
      */
-    protected $includeCharts = false;
-
+    protected $includeCharts = \false;
     /**
      * Pre-calculate formulas
      * Forces PhpSpreadsheet to recalculate all formulae in a workbook when saving, so that the pre-calculated values are
@@ -19,128 +18,107 @@ abstract class BaseWriter implements IWriter
      *
      * @var bool
      */
-    protected $preCalculateFormulas = true;
-
+    protected $preCalculateFormulas = \true;
     /**
      * Use disk caching where possible?
      *
      * @var bool
      */
-    private $useDiskCaching = false;
-
+    private $useDiskCaching = \false;
     /**
      * Disk caching directory.
      *
      * @var string
      */
     private $diskCachingDirectory = './';
-
     /**
      * @var resource
      */
     protected $fileHandle;
-
     /**
      * @var bool
      */
     private $shouldCloseFile;
-
     public function getIncludeCharts()
     {
         return $this->includeCharts;
     }
-
     public function setIncludeCharts($includeCharts)
     {
         $this->includeCharts = (bool) $includeCharts;
-
         return $this;
     }
-
     public function getPreCalculateFormulas()
     {
         return $this->preCalculateFormulas;
     }
-
     public function setPreCalculateFormulas($precalculateFormulas)
     {
         $this->preCalculateFormulas = (bool) $precalculateFormulas;
-
         return $this;
     }
-
     public function getUseDiskCaching()
     {
         return $this->useDiskCaching;
     }
-
     public function setUseDiskCaching($useDiskCache, $cacheDirectory = null)
     {
         $this->useDiskCaching = $useDiskCache;
-
         if ($cacheDirectory !== null) {
-            if (is_dir($cacheDirectory)) {
+            if (\is_dir($cacheDirectory)) {
                 $this->diskCachingDirectory = $cacheDirectory;
             } else {
-                throw new Exception("Directory does not exist: $cacheDirectory");
+                throw new Exception("Directory does not exist: {$cacheDirectory}");
             }
         }
-
         return $this;
     }
-
     public function getDiskCachingDirectory()
     {
         return $this->diskCachingDirectory;
     }
-
-    protected function processFlags(int $flags): void
+    protected function processFlags(int $flags) : void
     {
-        if (((bool) ($flags & self::SAVE_WITH_CHARTS)) === true) {
-            $this->setIncludeCharts(true);
+        if ((bool) ($flags & self::SAVE_WITH_CHARTS) === \true) {
+            $this->setIncludeCharts(\true);
         }
-        if (((bool) ($flags & self::DISABLE_PRECALCULATE_FORMULAE)) === true) {
-            $this->setPreCalculateFormulas(false);
+        if ((bool) ($flags & self::DISABLE_PRECALCULATE_FORMULAE) === \true) {
+            $this->setPreCalculateFormulas(\false);
         }
     }
-
     /**
      * Open file handle.
      *
      * @param resource|string $filename
      */
-    public function openFileHandle($filename): void
+    public function openFileHandle($filename) : void
     {
-        if (is_resource($filename)) {
+        if (\is_resource($filename)) {
             $this->fileHandle = $filename;
-            $this->shouldCloseFile = false;
-
+            $this->shouldCloseFile = \false;
             return;
         }
-
         $mode = 'wb';
-        $scheme = parse_url($filename, PHP_URL_SCHEME);
+        $scheme = \parse_url($filename, \PHP_URL_SCHEME);
         if ($scheme === 's3') {
             // @codeCoverageIgnoreStart
             $mode = 'w';
             // @codeCoverageIgnoreEnd
         }
-        $fileHandle = $filename ? fopen($filename, $mode) : false;
-        if ($fileHandle === false) {
+        $fileHandle = $filename ? \fopen($filename, $mode) : \false;
+        if ($fileHandle === \false) {
             throw new Exception('Could not open file "' . $filename . '" for writing.');
         }
-
         $this->fileHandle = $fileHandle;
-        $this->shouldCloseFile = true;
+        $this->shouldCloseFile = \true;
     }
-
     /**
      * Close file handle only if we opened it ourselves.
      */
-    protected function maybeCloseFileHandle(): void
+    protected function maybeCloseFileHandle() : void
     {
         if ($this->shouldCloseFile) {
-            if (!fclose($this->fileHandle)) {
+            if (!\fclose($this->fileHandle)) {
                 throw new Exception('Could not close file after writing.');
             }
         }

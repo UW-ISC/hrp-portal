@@ -1,4 +1,5 @@
 <?php
+
 /**
  * InListBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder list of values for the IN statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,14 +50,15 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class InListBuilder implements Builder {
-
-    protected function buildSubTree($parsed, $delim) {
+class InListBuilder implements Builder
+{
+    protected function buildSubTree($parsed, $delim)
+    {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::IN_LIST) {
             return "";
         }
@@ -65,4 +66,3 @@ class InListBuilder implements Builder {
         return "(" . $sql . ")";
     }
 }
-?>

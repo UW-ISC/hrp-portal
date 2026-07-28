@@ -1,6 +1,6 @@
 <?php
 
-namespace jlawrence\eos;
+namespace WPDT\jlawrence\eos;
 
 /**
  * Basic Stack Class.
@@ -14,21 +14,21 @@ namespace jlawrence\eos;
  * @package Math
  * @version 0.1
  */
-class Stack {
+class Stack
+{
     private $index;
     private $locArray;
-
     /**
      * Constructor
      *
      * Initializes the stack
      */
-    public function __construct() {
+    public function __construct()
+    {
         //define the private vars
         $this->locArray = array();
         $this->index = -1;
     }
-
     /**
      * Peek
      *
@@ -36,13 +36,14 @@ class Stack {
      *
      * @return mixed An element of the array or false if none exist
      */
-    public function peek() {
-        if($this->index > -1)
+    public function peek()
+    {
+        if ($this->index > -1) {
             return $this->locArray[$this->index];
-        else
-            return false;
+        } else {
+            return \false;
+        }
     }
-
     /**
      * Poke
      *
@@ -50,10 +51,10 @@ class Stack {
      *
      * @param mixed $data Element to add
      */
-    public function poke($data) {
+    public function poke($data)
+    {
         $this->locArray[++$this->index] = $data;
     }
-
     /**
      * Push
      *
@@ -62,11 +63,11 @@ class Stack {
      *
      * @param mixed $data Element to add
      */
-    public function push($data) {
+    public function push($data)
+    {
         //alias for 'poke'
         $this->poke($data);
     }
-
     /**
      * Pop
      *
@@ -75,26 +76,25 @@ class Stack {
      *
      * @return mixed Element at end of stack or false if none exist
      */
-    public function pop() {
-        if($this->index > -1)
-        {
+    public function pop()
+    {
+        if ($this->index > -1) {
             $this->index--;
-            return $this->locArray[$this->index+1];
+            return $this->locArray[$this->index + 1];
+        } else {
+            return \false;
         }
-        else
-            return false;
     }
-
     /**
      * Clear
      *
      * Clears the stack to be reused.
      */
-    public function clear() {
+    public function clear()
+    {
         $this->index = -1;
         $this->locArray = array();
     }
-
     /**
      * Get Stack
      *
@@ -102,14 +102,12 @@ class Stack {
      *
      * @return mixed Array of stack elements or false if none exist.
      */
-    public function getStack() {
-        if($this->index > -1)
-        {
-            return array_values($this->locArray);
+    public function getStack()
+    {
+        if ($this->index > -1) {
+            return \array_values($this->locArray);
+        } else {
+            return \false;
         }
-        else
-            return false;
     }
 }
-
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * LimitBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder LIMIT statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,14 +50,14 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class LimitBuilder implements Builder {
-
-    public function build(array $parsed) {
-        $sql = ($parsed['rowcount']) . ($parsed['offset'] ? " OFFSET " . $parsed['offset'] : "");
+class LimitBuilder implements Builder
+{
+    public function build(array $parsed)
+    {
+        $sql = $parsed['rowcount'] . ($parsed['offset'] ? " OFFSET " . $parsed['offset'] : "");
         if ($sql === "") {
             throw new UnableToCreateSQLException('LIMIT', 'rowcount', $parsed, 'rowcount');
         }
         return "LIMIT " . $sql;
     }
 }
-?>

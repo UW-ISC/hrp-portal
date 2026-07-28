@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateIndexTable.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the table part of a CREATE INDEX statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,15 +50,16 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateIndexTableBuilder implements Builder {
-
-    protected function buildColumnList($parsed) {
+class CreateIndexTableBuilder implements Builder
+{
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
-        if (!isset($parsed['on']) || $parsed['on'] === false) {
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['on']) || $parsed['on'] === \false) {
             return '';
         }
         $table = $parsed['on'];
@@ -67,6 +68,4 @@ class CreateIndexTableBuilder implements Builder {
         }
         return 'ON ' . $table['name'] . ' ' . $this->buildColumnList($table['sub_tree']);
     }
-
 }
-?>

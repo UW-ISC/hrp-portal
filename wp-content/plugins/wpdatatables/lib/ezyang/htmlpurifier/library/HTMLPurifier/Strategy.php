@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Supertype for classes that define a strategy for modifying/purifying tokens.
  *
@@ -7,11 +9,8 @@
  * strategies provide plug points for extra configuration or even extra
  * features, such as custom tags, custom parsing of text, etc.
  */
-
-
 abstract class HTMLPurifier_Strategy
 {
-
     /**
      * Executes the strategy on the tokens.
      *
@@ -20,7 +19,6 @@ abstract class HTMLPurifier_Strategy
      * @param HTMLPurifier_Context $context
      * @return HTMLPurifier_Token[] Processed array of token objects.
      */
-    abstract public function execute($tokens, $config, $context);
+    public abstract function execute($tokens, $config, $context);
 }
-
 // vim: et sw=4 sts=4

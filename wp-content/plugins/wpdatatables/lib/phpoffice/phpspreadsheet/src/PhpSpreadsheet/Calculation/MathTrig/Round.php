@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 // following added in Php8.4
-use RoundingMode;
-
+use WPDT\RoundingMode;
 class Round
 {
     use ArrayEnabled;
-
     /**
      * ROUND.
      *
@@ -26,20 +24,17 @@ class Round
      */
     public static function round($number, $precision)
     {
-        if (is_array($number) || is_array($precision)) {
+        if (\is_array($number) || \is_array($precision)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $precision);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             $precision = Helpers::validateNumericNullBool($precision);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return round($number, (int) $precision);
+        return \round($number, (int) $precision);
     }
-
     /**
      * ROUNDUP.
      *
@@ -54,36 +49,26 @@ class Round
      */
     public static function up($number, $digits)
     {
-        if (is_array($number) || is_array($digits)) {
+        if (\is_array($number) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $digits);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             $digits = (int) Helpers::validateNumericNullSubstitution($digits, null);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($number == 0.0) {
             return 0.0;
         }
-
-        if (PHP_VERSION_ID >= 80400) {
-            return round(
-                (float) (string) $number,
-                $digits,
-                RoundingMode::AwayFromZero //* @phpstan-ignore-line
-            );
+        if (\PHP_VERSION_ID >= 80400) {
+            return \round((float) (string) $number, $digits, RoundingMode::AwayFromZero);
         }
-
         if ($number < 0.0) {
-            return round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
+            return \round($number - 0.5 * 0.1 ** $digits, $digits, \PHP_ROUND_HALF_DOWN);
         }
-
-        return round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
+        return \round($number + 0.5 * 0.1 ** $digits, $digits, \PHP_ROUND_HALF_DOWN);
     }
-
     /**
      * ROUNDDOWN.
      *
@@ -98,36 +83,26 @@ class Round
      */
     public static function down($number, $digits)
     {
-        if (is_array($number) || is_array($digits)) {
+        if (\is_array($number) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $digits);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             $digits = (int) Helpers::validateNumericNullSubstitution($digits, null);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($number == 0.0) {
             return 0.0;
         }
-
-        if (PHP_VERSION_ID >= 80400) {
-            return round(
-                (float) (string) $number,
-                $digits,
-                RoundingMode::TowardsZero //* @phpstan-ignore-line
-            );
+        if (\PHP_VERSION_ID >= 80400) {
+            return \round((float) (string) $number, $digits, RoundingMode::TowardsZero);
         }
-
         if ($number < 0.0) {
-            return round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
+            return \round($number + 0.5 * 0.1 ** $digits, $digits, \PHP_ROUND_HALF_UP);
         }
-
-        return round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
+        return \round($number - 0.5 * 0.1 ** $digits, $digits, \PHP_ROUND_HALF_UP);
     }
-
     /**
      * MROUND.
      *
@@ -142,29 +117,24 @@ class Round
      */
     public static function multiple($number, $multiple)
     {
-        if (is_array($number) || is_array($multiple)) {
+        if (\is_array($number) || \is_array($multiple)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $multiple);
         }
-
         try {
             $number = Helpers::validateNumericNullSubstitution($number, 0);
             $multiple = Helpers::validateNumericNullSubstitution($multiple, null);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($number == 0 || $multiple == 0) {
             return 0;
         }
-        if ((Helpers::returnSign($number)) == (Helpers::returnSign($multiple))) {
+        if (Helpers::returnSign($number) == Helpers::returnSign($multiple)) {
             $multiplier = 1 / $multiple;
-
-            return round($number * $multiplier) / $multiplier;
+            return \round($number * $multiplier) / $multiplier;
         }
-
         return ExcelError::NAN();
     }
-
     /**
      * EVEN.
      *
@@ -185,19 +155,16 @@ class Round
      */
     public static function even($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         return Helpers::getEven($number);
     }
-
     /**
      * ODD.
      *
@@ -211,26 +178,22 @@ class Round
      */
     public static function odd($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $significance = Helpers::returnSign($number);
         if ($significance == 0) {
             return 1;
         }
-
-        $result = ceil($number / $significance) * $significance;
+        $result = \ceil($number / $significance) * $significance;
         if ($result == Helpers::getEven($result)) {
             $result += $significance;
         }
-
         return $result;
     }
 }

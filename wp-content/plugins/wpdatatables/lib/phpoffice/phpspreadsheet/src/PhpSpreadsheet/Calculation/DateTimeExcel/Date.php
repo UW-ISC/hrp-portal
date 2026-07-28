@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 class Date
 {
     use ArrayEnabled;
-
     /**
      * DATE.
      *
@@ -65,107 +63,102 @@ class Date
      */
     public static function fromYMD($year, $month, $day)
     {
-        if (is_array($year) || is_array($month) || is_array($day)) {
+        if (\is_array($year) || \is_array($month) || \is_array($day)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $year, $month, $day);
         }
-
         $baseYear = SharedDateHelper::getExcelCalendar();
-
         try {
-            $year = self::getYear($year, $baseYear); // must be int - Scrutinizer is wrong
+            $year = self::getYear($year, $baseYear);
+            // must be int - Scrutinizer is wrong
             $month = self::getMonth($month);
             $day = self::getDay($day);
-            self::adjustYearMonth(/** @scrutinizer ignore-type */ $year, $month, $baseYear);
+            self::adjustYearMonth(
+                /** @scrutinizer ignore-type */
+                $year,
+                $month,
+                $baseYear
+            );
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Execute function
-        $excelDateValue = SharedDateHelper::formattedPHPToExcel(/** @scrutinizer ignore-type */ $year, $month, $day);
-
+        $excelDateValue = SharedDateHelper::formattedPHPToExcel(
+            /** @scrutinizer ignore-type */
+            $year,
+            $month,
+            $day
+        );
         return Helpers::returnIn3FormatsFloat($excelDateValue);
     }
-
     /**
      * Convert year from multiple formats to int.
      *
      * @param mixed $year
      */
-    private static function getYear($year, int $baseYear): int
+    private static function getYear($year, int $baseYear) : int
     {
-        $year = ($year !== null) ? StringHelper::testStringAsNumeric((string) $year) : 0;
-        if (!is_numeric($year)) {
+        $year = $year !== null ? StringHelper::testStringAsNumeric((string) $year) : 0;
+        if (!\is_numeric($year)) {
             throw new Exception(ExcelError::VALUE());
         }
         $year = (int) $year;
-
-        if ($year < ($baseYear - 1900)) {
+        if ($year < $baseYear - 1900) {
             throw new Exception(ExcelError::NAN());
         }
-        if ((($baseYear - 1900) !== 0) && ($year < $baseYear) && ($year >= 1900)) {
+        if ($baseYear - 1900 !== 0 && $year < $baseYear && $year >= 1900) {
             throw new Exception(ExcelError::NAN());
         }
-
-        if (($year < $baseYear) && ($year >= ($baseYear - 1900))) {
+        if ($year < $baseYear && $year >= $baseYear - 1900) {
             $year += 1900;
         }
-
         return (int) $year;
     }
-
     /**
      * Convert month from multiple formats to int.
      *
      * @param mixed $month
      */
-    private static function getMonth($month): int
+    private static function getMonth($month) : int
     {
-        if (($month !== null) && (!is_numeric($month))) {
+        if ($month !== null && !\is_numeric($month)) {
             $month = SharedDateHelper::monthStringToNumber($month);
         }
-
-        $month = ($month !== null) ? StringHelper::testStringAsNumeric((string) $month) : 0;
-        if (!is_numeric($month)) {
+        $month = $month !== null ? StringHelper::testStringAsNumeric((string) $month) : 0;
+        if (!\is_numeric($month)) {
             throw new Exception(ExcelError::VALUE());
         }
-
         return (int) $month;
     }
-
     /**
      * Convert day from multiple formats to int.
      *
      * @param mixed $day
      */
-    private static function getDay($day): int
+    private static function getDay($day) : int
     {
-        if (($day !== null) && (!is_numeric($day))) {
+        if ($day !== null && !\is_numeric($day)) {
             $day = SharedDateHelper::dayStringToNumber($day);
         }
-
-        $day = ($day !== null) ? StringHelper::testStringAsNumeric((string) $day) : 0;
-        if (!is_numeric($day)) {
+        $day = $day !== null ? StringHelper::testStringAsNumeric((string) $day) : 0;
+        if (!\is_numeric($day)) {
             throw new Exception(ExcelError::VALUE());
         }
-
         return (int) $day;
     }
-
-    private static function adjustYearMonth(int &$year, int &$month, int $baseYear): void
+    private static function adjustYearMonth(int &$year, int &$month, int $baseYear) : void
     {
         if ($month < 1) {
             //    Handle year/month adjustment if month < 1
             --$month;
-            $year += ceil($month / 12) - 1;
-            $month = 13 - abs($month % 12);
+            $year += \ceil($month / 12) - 1;
+            $month = 13 - \abs($month % 12);
         } elseif ($month > 12) {
             //    Handle year/month adjustment if month > 12
-            $year += floor($month / 12);
-            $month = ($month % 12);
+            $year += \floor($month / 12);
+            $month = $month % 12;
         }
-
         // Re-validate the year parameter after adjustments
-        if (($year < $baseYear) || ($year >= 10000)) {
+        if ($year < $baseYear || $year >= 10000) {
             throw new Exception(ExcelError::NAN());
         }
     }

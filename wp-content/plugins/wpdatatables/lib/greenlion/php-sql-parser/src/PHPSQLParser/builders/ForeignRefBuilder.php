@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ForeignRefBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the FOREIGN KEY REFERENCES statement
  * part of CREATE TABLE. 
@@ -52,41 +52,39 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ForeignRefBuilder implements Builder {
-
-    protected function buildTable($parsed) {
+class ForeignRefBuilder implements Builder
+{
+    protected function buildTable($parsed)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, 0);
     }
-
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::REFERENCE) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildTable($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildColumnList($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE foreign ref subtree', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
 }
-?>

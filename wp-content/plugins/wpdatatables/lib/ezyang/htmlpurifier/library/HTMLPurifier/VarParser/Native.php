@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * This variable parser uses PHP's internal code engine. Because it does
  * this, it can represent all inputs; however, it is dangerous and cannot
@@ -7,7 +9,6 @@
  */
 class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
 {
-
     /**
      * @param mixed $var
      * @param int $type
@@ -18,7 +19,6 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
     {
         return $this->evalExpression($var);
     }
-
     /**
      * @param string $expr
      * @return mixed
@@ -27,12 +27,11 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
     protected function evalExpression($expr)
     {
         $var = null;
-        $result = eval("\$var = $expr;");
-        if ($result === false) {
+        $result = eval("\$var = {$expr};");
+        if ($result === \false) {
             throw new HTMLPurifier_VarParserException("Fatal error in evaluated code");
         }
         return $var;
     }
 }
-
 // vim: et sw=4 sts=4

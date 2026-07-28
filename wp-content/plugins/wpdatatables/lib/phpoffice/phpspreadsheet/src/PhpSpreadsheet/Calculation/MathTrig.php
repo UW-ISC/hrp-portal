@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
 /**
  * @deprecated 1.18.0
@@ -27,7 +27,6 @@ class MathTrig
     {
         return MathTrig\Arabic::evaluate($roman);
     }
-
     /**
      * ATAN2.
      *
@@ -57,7 +56,6 @@ class MathTrig
     {
         return MathTrig\Trig\Tangent::atan2($xCoordinate, $yCoordinate);
     }
-
     /**
      * BASE.
      *
@@ -80,7 +78,6 @@ class MathTrig
     {
         return MathTrig\Base::evaluate($number, $radix, $minLength);
     }
-
     /**
      * CEILING.
      *
@@ -105,7 +102,6 @@ class MathTrig
     {
         return MathTrig\Ceiling::ceiling($number, $significance);
     }
-
     /**
      * COMBIN.
      *
@@ -128,7 +124,6 @@ class MathTrig
     {
         return MathTrig\Combinations::withoutRepetition($numObjs, $numInSet);
     }
-
     /**
      * EVEN.
      *
@@ -153,7 +148,6 @@ class MathTrig
     {
         return MathTrig\Round::even($number);
     }
-
     /**
      * Helper function for Even.
      *
@@ -161,11 +155,10 @@ class MathTrig
      *      Use the evaluate() method in the MathTrig\Helpers class instead
      * @see MathTrig\Helpers::getEven()
      */
-    public static function getEven(float $number): int
+    public static function getEven(float $number) : int
     {
         return (int) MathTrig\Helpers::getEven($number);
     }
-
     /**
      * FACT.
      *
@@ -187,7 +180,6 @@ class MathTrig
     {
         return MathTrig\Factorial::fact($factVal);
     }
-
     /**
      * FACTDOUBLE.
      *
@@ -208,7 +200,6 @@ class MathTrig
     {
         return MathTrig\Factorial::factDouble($factVal);
     }
-
     /**
      * FLOOR.
      *
@@ -230,7 +221,6 @@ class MathTrig
     {
         return MathTrig\Floor::floor($number, $significance);
     }
-
     /**
      * FLOOR.MATH.
      *
@@ -253,7 +243,6 @@ class MathTrig
     {
         return MathTrig\Floor::math($number, $significance, $mode);
     }
-
     /**
      * FLOOR.PRECISE.
      *
@@ -275,7 +264,6 @@ class MathTrig
     {
         return MathTrig\Floor::precise($number, $significance);
     }
-
     /**
      * INT.
      *
@@ -296,7 +284,6 @@ class MathTrig
     {
         return MathTrig\IntClass::evaluate($number);
     }
-
     /**
      * GCD.
      *
@@ -319,7 +306,6 @@ class MathTrig
     {
         return MathTrig\Gcd::evaluate(...$args);
     }
-
     /**
      * LCM.
      *
@@ -343,7 +329,6 @@ class MathTrig
     {
         return MathTrig\Lcm::evaluate(...$args);
     }
-
     /**
      * LOG_BASE.
      *
@@ -365,7 +350,6 @@ class MathTrig
     {
         return MathTrig\Logarithms::withBase($number, $base);
     }
-
     /**
      * MDETERM.
      *
@@ -386,7 +370,6 @@ class MathTrig
     {
         return MathTrig\MatrixFunctions::determinant($matrixValues);
     }
-
     /**
      * MINVERSE.
      *
@@ -407,7 +390,6 @@ class MathTrig
     {
         return MathTrig\MatrixFunctions::inverse($matrixValues);
     }
-
     /**
      * MMULT.
      *
@@ -424,7 +406,6 @@ class MathTrig
     {
         return MathTrig\MatrixFunctions::multiply($matrixData1, $matrixData2);
     }
-
     /**
      * MOD.
      *
@@ -441,7 +422,6 @@ class MathTrig
     {
         return MathTrig\Operations::mod($a, $b);
     }
-
     /**
      * MROUND.
      *
@@ -460,7 +440,6 @@ class MathTrig
     {
         return MathTrig\Round::multiple($number, $multiple);
     }
-
     /**
      * MULTINOMIAL.
      *
@@ -478,7 +457,6 @@ class MathTrig
     {
         return MathTrig\Factorial::multinomial(...$args);
     }
-
     /**
      * ODD.
      *
@@ -496,7 +474,6 @@ class MathTrig
     {
         return MathTrig\Round::odd($number);
     }
-
     /**
      * POWER.
      *
@@ -515,7 +492,6 @@ class MathTrig
     {
         return MathTrig\Operations::power($x, $y);
     }
-
     /**
      * PRODUCT.
      *
@@ -536,7 +512,6 @@ class MathTrig
     {
         return MathTrig\Operations::product(...$args);
     }
-
     /**
      * QUOTIENT.
      *
@@ -559,7 +534,6 @@ class MathTrig
     {
         return MathTrig\Operations::quotient($numerator, $denominator);
     }
-
     /**
      * RAND/RANDBETWEEN.
      *
@@ -576,7 +550,6 @@ class MathTrig
     {
         return MathTrig\Random::randBetween($min, $max);
     }
-
     /**
      * ROMAN.
      *
@@ -595,7 +568,6 @@ class MathTrig
     {
         return MathTrig\Roman::evaluate($aValue, $style);
     }
-
     /**
      * ROUNDUP.
      *
@@ -614,7 +586,6 @@ class MathTrig
     {
         return MathTrig\Round::up($number, $digits);
     }
-
     /**
      * ROUNDDOWN.
      *
@@ -633,7 +604,6 @@ class MathTrig
     {
         return MathTrig\Round::down($number, $digits);
     }
-
     /**
      * SERIESSUM.
      *
@@ -654,7 +624,6 @@ class MathTrig
     {
         return MathTrig\SeriesSum::evaluate($x, $n, $m, ...$args);
     }
-
     /**
      * SIGN.
      *
@@ -673,7 +642,6 @@ class MathTrig
     {
         return MathTrig\Sign::evaluate($number);
     }
-
     /**
      * returnSign = returns 0/-1/+1.
      *
@@ -681,11 +649,10 @@ class MathTrig
      *      Use the returnSign method in the MathTrig\Helpers class instead
      * @see MathTrig\Helpers::returnSign()
      */
-    public static function returnSign(float $number): int
+    public static function returnSign(float $number) : int
     {
         return MathTrig\Helpers::returnSign($number);
     }
-
     /**
      * SQRTPI.
      *
@@ -703,7 +670,6 @@ class MathTrig
     {
         return MathTrig\Sqrt::pi($number);
     }
-
     /**
      * SUBTOTAL.
      *
@@ -728,7 +694,6 @@ class MathTrig
     {
         return MathTrig\Subtotal::evaluate($functionType, ...$args);
     }
-
     /**
      * SUM.
      *
@@ -749,7 +714,6 @@ class MathTrig
     {
         return MathTrig\Sum::sumIgnoringStrings(...$args);
     }
-
     /**
      * SUMIF.
      *
@@ -772,7 +736,6 @@ class MathTrig
     {
         return Statistical\Conditional::SUMIF($range, $criteria, $sumRange);
     }
-
     /**
      * SUMIFS.
      *
@@ -793,7 +756,6 @@ class MathTrig
     {
         return Statistical\Conditional::SUMIFS(...$args);
     }
-
     /**
      * SUMPRODUCT.
      *
@@ -812,7 +774,6 @@ class MathTrig
     {
         return MathTrig\Sum::product(...$args);
     }
-
     /**
      * SUMSQ.
      *
@@ -833,7 +794,6 @@ class MathTrig
     {
         return MathTrig\SumSquares::sumSquare(...$args);
     }
-
     /**
      * SUMX2MY2.
      *
@@ -850,7 +810,6 @@ class MathTrig
     {
         return MathTrig\SumSquares::sumXSquaredMinusYSquared($matrixData1, $matrixData2);
     }
-
     /**
      * SUMX2PY2.
      *
@@ -867,7 +826,6 @@ class MathTrig
     {
         return MathTrig\SumSquares::sumXSquaredPlusYSquared($matrixData1, $matrixData2);
     }
-
     /**
      * SUMXMY2.
      *
@@ -884,7 +842,6 @@ class MathTrig
     {
         return MathTrig\SumSquares::sumXMinusYSquared($matrixData1, $matrixData2);
     }
-
     /**
      * TRUNC.
      *
@@ -903,7 +860,6 @@ class MathTrig
     {
         return MathTrig\Trunc::evaluate($value, $digits);
     }
-
     /**
      * SEC.
      *
@@ -921,7 +877,6 @@ class MathTrig
     {
         return MathTrig\Trig\Secant::sec($angle);
     }
-
     /**
      * SECH.
      *
@@ -939,7 +894,6 @@ class MathTrig
     {
         return MathTrig\Trig\Secant::sech($angle);
     }
-
     /**
      * CSC.
      *
@@ -957,7 +911,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosecant::csc($angle);
     }
-
     /**
      * CSCH.
      *
@@ -975,7 +928,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosecant::csch($angle);
     }
-
     /**
      * COT.
      *
@@ -993,7 +945,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cotangent::cot($angle);
     }
-
     /**
      * COTH.
      *
@@ -1011,7 +962,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cotangent::coth($angle);
     }
-
     /**
      * ACOT.
      *
@@ -1029,7 +979,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cotangent::acot($number);
     }
-
     /**
      * Return NAN or value depending on argument.
      *
@@ -1045,7 +994,6 @@ class MathTrig
     {
         return MathTrig\Helpers::numberOrNan($result);
     }
-
     /**
      * ACOTH.
      *
@@ -1063,7 +1011,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cotangent::acoth($number);
     }
-
     /**
      * ROUND.
      *
@@ -1082,7 +1029,6 @@ class MathTrig
     {
         return MathTrig\Round::round($number, $precision);
     }
-
     /**
      * ABS.
      *
@@ -1100,7 +1046,6 @@ class MathTrig
     {
         return MathTrig\Absolute::evaluate($number);
     }
-
     /**
      * ACOS.
      *
@@ -1118,7 +1063,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosine::acos($number);
     }
-
     /**
      * ACOSH.
      *
@@ -1136,7 +1080,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosine::acosh($number);
     }
-
     /**
      * ASIN.
      *
@@ -1154,7 +1097,6 @@ class MathTrig
     {
         return MathTrig\Trig\Sine::asin($number);
     }
-
     /**
      * ASINH.
      *
@@ -1172,7 +1114,6 @@ class MathTrig
     {
         return MathTrig\Trig\Sine::asinh($number);
     }
-
     /**
      * ATAN.
      *
@@ -1190,7 +1131,6 @@ class MathTrig
     {
         return MathTrig\Trig\Tangent::atan($number);
     }
-
     /**
      * ATANH.
      *
@@ -1208,7 +1148,6 @@ class MathTrig
     {
         return MathTrig\Trig\Tangent::atanh($number);
     }
-
     /**
      * COS.
      *
@@ -1226,7 +1165,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosine::cos($number);
     }
-
     /**
      * COSH.
      *
@@ -1244,7 +1182,6 @@ class MathTrig
     {
         return MathTrig\Trig\Cosine::cosh($number);
     }
-
     /**
      * DEGREES.
      *
@@ -1262,7 +1199,6 @@ class MathTrig
     {
         return MathTrig\Angle::toDegrees($number);
     }
-
     /**
      * EXP.
      *
@@ -1280,7 +1216,6 @@ class MathTrig
     {
         return MathTrig\Exp::evaluate($number);
     }
-
     /**
      * LN.
      *
@@ -1298,7 +1233,6 @@ class MathTrig
     {
         return MathTrig\Logarithms::natural($number);
     }
-
     /**
      * LOG10.
      *
@@ -1316,7 +1250,6 @@ class MathTrig
     {
         return MathTrig\Logarithms::base10($number);
     }
-
     /**
      * RADIANS.
      *
@@ -1334,7 +1267,6 @@ class MathTrig
     {
         return MathTrig\Angle::toRadians($number);
     }
-
     /**
      * SIN.
      *
@@ -1352,7 +1284,6 @@ class MathTrig
     {
         return MathTrig\Trig\Sine::sin($number);
     }
-
     /**
      * SINH.
      *
@@ -1370,7 +1301,6 @@ class MathTrig
     {
         return MathTrig\Trig\Sine::sinh($number);
     }
-
     /**
      * SQRT.
      *
@@ -1388,7 +1318,6 @@ class MathTrig
     {
         return MathTrig\Sqrt::sqrt($number);
     }
-
     /**
      * TAN.
      *
@@ -1406,7 +1335,6 @@ class MathTrig
     {
         return MathTrig\Trig\Tangent::tan($number);
     }
-
     /**
      * TANH.
      *
@@ -1424,7 +1352,6 @@ class MathTrig
     {
         return MathTrig\Trig\Tangent::tanh($number);
     }
-
     /**
      * Many functions accept null/false/true argument treated as 0/0/1.
      *
@@ -1434,12 +1361,12 @@ class MathTrig
      *
      * @param mixed $number
      */
-    public static function nullFalseTrueToNumber(&$number): void
+    public static function nullFalseTrueToNumber(&$number) : void
     {
         $number = Functions::flattenSingleValue($number);
         if ($number === null) {
             $number = 0;
-        } elseif (is_bool($number)) {
+        } elseif (\is_bool($number)) {
             $number = (int) $number;
         }
     }

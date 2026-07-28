@@ -239,6 +239,7 @@ class WDTConfigController
             $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin) ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
             $table->table_wcag = isset($table->table_wcag) || isset($advancedSettings->table_wcag) ? $advancedSettings->table_wcag : 0;
             $table->loader = isset($table->loader) || isset($advancedSettings->loader) ? $advancedSettings->loader : 1;
+            $table->advanced_filter_option = isset($table->advanced_filter_option) || isset($advancedSettings->advanced_filter_option) ? $advancedSettings->advanced_filter_option : 0;
             $table->simple_template_id = isset($table->simple_template_id) || isset($advancedSettings->simple_template_id) ? $advancedSettings->simple_template_id : 0;
             $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval) ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
             $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader) ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
@@ -464,6 +465,7 @@ class WDTConfigController
                     'loader' => $table->loader,
                     'showCartInformation' => $table->showCartInformation,
                     'index_column'=> $table->index_column,
+                    'advanced_filter_option'=> $table->advanced_filter_option,
                 )
             ),
         );
@@ -554,6 +556,7 @@ class WDTConfigController
         $table->tableSkin = sanitize_text_field($table->tableSkin);
         $table->simple_template_id = (int)$table->simple_template_id;
         $table->table_wcag = (int)($table->table_wcag);
+        $table->advanced_filter_option = (int)($table->advanced_filter_option);
         $table->tableBorderRemoval = (int)$table->tableBorderRemoval;
         $table->tableBorderRemovalHeader = (int)$table->tableBorderRemovalHeader;
         $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
@@ -1881,6 +1884,7 @@ class WDTConfigController
         $table->customRowDisplay = '';
         $table->showCartInformation = 1;
         $table->index_column = 0;
+        $table->advanced_filter_option = 0;
         return $table;
     }
 
@@ -2054,27 +2058,23 @@ class WDTConfigController
 
     public static function wdt_create_chart_notice()
     {
-
-        return 'Please create a wpDataChart first. You can check out how on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.';
+        return __('Please create a wpDataChart first. You can check out how on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.', 'wpdatatables');
 
     }
 
     public static function wdt_select_chart_notice()
     {
-
-        return 'Please select a wpDataChart.';
+        return __('Please select a wpDataChart.', 'wpdatatables');
 
     }
 
     public static function wdt_create_table_notice()
     {
-
-        return 'Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
+        return __('Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" rel="nofollow" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.', 'wpdatatables');
     }
 
     public static function wdt_select_table_notice()
     {
-
-        return 'Please select a wpDataTable.';
+        return __('Please select a wpDataTable.', 'wpdatatables');
     }
 }

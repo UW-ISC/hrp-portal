@@ -1,73 +1,33 @@
 #!/usr/bin/env php
-<?php
-$options = getopt("i:e:h", ['include:', 'exclude:', 'help']);
+<?php 
+namespace WPDT;
 
+$options = \getopt("i:e:h", ['include:', 'exclude:', 'help']);
 if (isset($options['include'])) {
     $options['i'] = $options['include'];
 }
-
 if (isset($options['exclude'])) {
     $options['e'] = $options['exclude'];
 }
-
 if (isset($options['h']) || isset($options['help'])) {
-    echo "Cleaning composer vendor directory" . PHP_EOL . PHP_EOL;
-
-    echo "\e[0;33mUsage:\e[0m" . PHP_EOL;
-    echo "  command [options] [arguments]" . PHP_EOL . PHP_EOL;
-
-    echo "\e[0;33mOptions:\e[0m" . PHP_EOL;
-    echo "  \e[0;32m-h, --help    \e[0m  Display this help message" . PHP_EOL;
-    echo "  \e[0;32m-i, --include \e[0m  Add patterns for common files, comma separated" . PHP_EOL;
-    echo "  \e[0;32m-e, --exclude \e[0m  Remove patterns for common files, comma separated" . PHP_EOL . PHP_EOL;
-
-    echo "\e[0;33mExample:\e[0m" . PHP_EOL;
-    echo "  ./vendor/bin/cleanup --include *.zip,*.rar --exclude doc,docs,test" . PHP_EOL;
+    echo "Cleaning composer vendor directory" . \PHP_EOL . \PHP_EOL;
+    echo "\x1b[0;33mUsage:\x1b[0m" . \PHP_EOL;
+    echo "  command [options] [arguments]" . \PHP_EOL . \PHP_EOL;
+    echo "\x1b[0;33mOptions:\x1b[0m" . \PHP_EOL;
+    echo "  \x1b[0;32m-h, --help    \x1b[0m  Display this help message" . \PHP_EOL;
+    echo "  \x1b[0;32m-i, --include \x1b[0m  Add patterns for common files, comma separated" . \PHP_EOL;
+    echo "  \x1b[0;32m-e, --exclude \x1b[0m  Remove patterns for common files, comma separated" . \PHP_EOL . \PHP_EOL;
+    echo "\x1b[0;33mExample:\x1b[0m" . \PHP_EOL;
+    echo "  ./vendor/bin/cleanup --include *.zip,*.rar --exclude doc,docs,test" . \PHP_EOL;
     return;
 }
-
 // Default patterns for common files
-$patterns = [
-    '.git',
-    '.github',
-    'test',
-    'tests',
-    'travis',
-    'demo',
-    'example',
-    'examples',
-    'doc',
-    'docs',
-    'license',
-    'changelog*',
-    'changes*',
-    'faq*',
-    'contributing*',
-    'history*',
-    'upgrading*',
-    'upgrade*',
-    'package*',
-    'readme*',
-    '{,.}*.yml',
-    '*.md',
-    '*.xml',
-    '*.txt',
-    '*.dist',
-    '.php_cs*',
-    '.scrutinizer',
-    '.gitignore',
-    '.gitattributes',
-    '.editorconfig',
-    'dockerfile',
-    'composer.lock',
-];
-
+$patterns = ['.git', '.github', 'test', 'tests', 'travis', 'demo', 'example', 'examples', 'doc', 'docs', 'license', 'changelog*', 'changes*', 'faq*', 'contributing*', 'history*', 'upgrading*', 'upgrade*', 'package*', 'readme*', '{,.}*.yml', '*.md', '*.xml', '*.txt', '*.dist', '.php_cs*', '.scrutinizer', '.gitignore', '.gitattributes', '.editorconfig', 'dockerfile', 'composer.lock'];
 if (isset($options['i'])) {
-    $patterns = array_merge($patterns, explode(',', $options['i']));
+    $patterns = \array_merge($patterns, \explode(',', $options['i']));
 }
-
 if (isset($options['e'])) {
-    $patterns = array_diff($patterns, explode(',', $options['e']));
+    $patterns = \array_diff($patterns, \explode(',', $options['e']));
 }
 /**
  * Recursively traverses the directory tree
@@ -78,18 +38,16 @@ if (isset($options['e'])) {
 function expandTree($dir)
 {
     $directories = [];
-    $files = array_diff(scandir($dir), ['.', '..']);
-    foreach($files as $file) {
+    $files = \array_diff(\scandir($dir), ['.', '..']);
+    foreach ($files as $file) {
         $directory = $dir . '/' . $file;
-        if(is_dir($directory)) {
+        if (\is_dir($directory)) {
             $directories[] = $directory;
-            $directories = array_merge($directories, expandTree($directory));
+            $directories = \array_merge($directories, expandTree($directory));
         }
     }
-
     return $directories;
 }
-
 /**
  * Recursively deletes the directory
  *
@@ -98,14 +56,12 @@ function expandTree($dir)
  */
 function delTree($dir)
 {
-    $files = array_diff(scandir($dir), ['.', '..']);
+    $files = \array_diff(\scandir($dir), ['.', '..']);
     foreach ($files as $file) {
-        (is_dir($dir . '/' . $file)) ? delTree($dir . '/' . $file) : unlink($dir . '/' . $file);
+        \is_dir($dir . '/' . $file) ? delTree($dir . '/' . $file) : \unlink($dir . '/' . $file);
     }
-
-    return rmdir($dir);
+    return \rmdir($dir);
 }
-
 /**
  * Prepare word
  *
@@ -114,27 +70,20 @@ function delTree($dir)
  */
 function prepareWord($matches)
 {
-    return '[' . strtolower($matches[1]) . strtoupper($matches[1]) . ']';
+    return '[' . \strtolower($matches[1]) . \strtoupper($matches[1]) . ']';
 }
-
-$directories = expandTree(dirname(__DIR__, 2));
-
+$directories = expandTree(\dirname(__DIR__, 2));
 foreach ($directories as $directory) {
     foreach ($patterns as $pattern) {
-
-        $casePattern = preg_replace_callback('/([a-z])/i', 'prepareWord', $pattern);
-
-        foreach (glob($directory . '/' . $casePattern, GLOB_BRACE) as $file) {
-
-            echo 'delete: ' . $file . PHP_EOL;
-
-            if (is_dir($file)) {
+        $casePattern = \preg_replace_callback('/([a-z])/i', 'prepareWord', $pattern);
+        foreach (\glob($directory . '/' . $casePattern, \GLOB_BRACE) as $file) {
+            echo 'delete: ' . $file . \PHP_EOL;
+            if (\is_dir($file)) {
                 delTree($file);
             } else {
-                unlink($file);
+                \unlink($file);
             }
         }
     }
 }
-
-echo 'success' . PHP_EOL;
+echo 'success' . \PHP_EOL;

@@ -261,18 +261,6 @@
                 </div>
             </div>
         </div>
-        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
-            <div class="card" data-type="highcharts_funnel3d_chart" data-min_columns="2" data-max_columns="2">
-                <div class="card-header">
-                    <div class="wdt-chart-wizard-overlay"></div>
-                    <img class="img-responsive"
-                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_funnel3d_charts.jpg">
-                </div>
-                <div class="card-body">
-                    <h4 class="f-14"><?php esc_html_e('3d funnel chart', 'wpdatatables'); ?></h4>
-                </div>
-            </div>
-        </div>
 
         <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
             <div class="card" data-type="highcharts_funnel_chart" data-min_columns="2" data-max_columns="2">
@@ -287,8 +275,69 @@
             </div>
         </div>
 
+        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+            <div class="card" data-type="highcharts_funnel3d_chart" data-min_columns="2" data-max_columns="2">
+                <div class="card-header">
+                    <div class="wdt-chart-wizard-overlay"></div>
+                    <img class="img-responsive"
+                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_funnel3d_charts.jpg">
+                </div>
+                <div class="card-body">
+                    <h4 class="f-14"><?php esc_html_e('3D funnel chart', 'wpdatatables'); ?></h4>
+                </div>
+            </div>
+        </div>
 
+        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+            <div class="card" data-type="highcharts_bubble_chart" data-min_columns="2" data-max_columns="0">
+                <div class="card-header">
+                    <div class="wdt-chart-wizard-overlay"></div>
+                    <img class="img-responsive"
+                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_bubble_chart.png">
+                </div>
+                <div class="card-body">
+                    <h4 class="f-14"><?php esc_html_e('Bubble chart', 'wpdatatables'); ?></h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+            <div class="card" data-type="highcharts_bubble3d_chart" data-min_columns="2" data-max_columns="0">
+                <div class="card-header">
+                    <div class="wdt-chart-wizard-overlay"></div>
+                    <img class="img-responsive"
+                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_bubble3d_chart.png">
+                </div>
+                <div class="card-body">
+                    <h4 class="f-14"><?php esc_html_e('3D Bubble chart', 'wpdatatables'); ?></h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+            <div class="card" data-type="highcharts_sized_bubble_chart" data-min_columns="3" data-max_columns="0">
+                <div class="card-header">
+                    <div class="wdt-chart-wizard-overlay"></div>
+                    <img class="img-responsive"
+                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_sized_bubble_chart.png">
+                </div>
+                <div class="card-body">
+                    <h4 class="f-14"><?php esc_html_e('Sized Bubble chart', 'wpdatatables'); ?></h4>
+                </div>
+            </div>
+        </div>
+        <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+            <div class="card" data-type="highcharts_sized_bubble3d_chart" data-min_columns="3" data-max_columns="0">
+                <div class="card-header">
+                    <div class="wdt-chart-wizard-overlay"></div>
+                    <img class="img-responsive"
+                         src="<?php echo WDT_HC_ASSETS_URL ?>img/highcharts_sized_bubble3d_chart.png">
+                </div>
+                <div class="card-body">
+                    <h4 class="f-14"><?php esc_html_e('3D Sized Bubble chart', 'wpdatatables'); ?></h4>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
 <!-- /div.highcharts-charts-type -->

@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: https://gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.10.1
+Version: 2.10.5
 Requires at least: 6.5
 Requires PHP: 7.4
 Author: Gravity Forms
@@ -123,7 +123,7 @@ define( 'GF_SUPPORTED_WP_VERSION', version_compare( get_bloginfo( 'version' ), G
  *
  * @var string GF_MIN_WP_VERSION_SUPPORT_TERMS The version number
  */
-define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '6.8' );
+define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '6.9' );
 
 /**
  * Defines the minimum version of PHP that is supported.
@@ -257,7 +257,7 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.10.1';
+	public static $version = '2.10.5';
 
 	/**
 	 * Handles background upgrade tasks.
@@ -335,6 +335,7 @@ class GFForms {
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Query\Batch_Processing\GF_Batch_Operations_Service_Provider() );
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Settings\GF_Settings_Service_Provider() );
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Author_Select\GF_Author_Select_Service_Provider() );
+		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Webapi\User_Select\GF_User_Select_Service_Provider() );
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Assets\GF_Asset_Service_Provider( plugin_dir_path( __FILE__ ) ) );
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Honeypot\GF_Honeypot_Service_Provider() );
 		$container->add_provider( new \Gravity_Forms\Gravity_Forms\Ajax\GF_Ajax_Service_Provider() );
@@ -373,6 +374,7 @@ class GFForms {
 		require_once GF_PLUGIN_DIR_PATH . 'includes/merge-tags/class-gf-merge-tags-service-provider.php';
 		require_once GF_PLUGIN_DIR_PATH . 'includes/settings/class-gf-settings-service-provider.php';
 		require_once GF_PLUGIN_DIR_PATH . 'includes/author-select/class-gf-author-select-service-provider.php';
+		require_once GF_PLUGIN_DIR_PATH . 'includes/webapi/user-select/class-gf-user-select-service-provider.php';
 		require_once GF_PLUGIN_DIR_PATH . 'includes/assets/class-gf-asset-service-provider.php';
 		require_once GF_PLUGIN_DIR_PATH . '/includes/honeypot/class-gf-honeypot-service-provider.php';
 		require_once GF_PLUGIN_DIR_PATH . '/includes/ajax/class-gf-ajax-service-provider.php';
@@ -2075,7 +2077,7 @@ class GFForms {
 					$form_title = sprintf( __( 'Search Entries: %1$s &#8212; %2$s', 'gravityforms' ), esc_html( $search ),  esc_html( $form_title ) );
 				}
 
-				$admin_title = sprintf( '%1$s &lsaquo; %2$s', esc_html( $form_title ), esc_html( $admin_title ) );
+				$admin_title = sprintf( '%1$s &lsaquo; %2$s', esc_html__( 'Entry List', 'gravityforms' ), esc_html( $admin_title ) );
 				break;
 
 			case 'entry_detail':
@@ -4303,6 +4305,10 @@ class GFForms {
 	 * @return string The value.  Empty if not found.
 	 */
 	public static function get( $name, $array = null ) {
+		if ( is_null( $name ) ) {
+			return '';
+		}
+
 		if ( ! isset( $array ) ) {
 			$array = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
@@ -5330,8 +5336,9 @@ class GFForms {
 				<?php if ( ! empty( $tabs ) ) { ?>
 				<nav class="gform-settings__navigation">
 					<?php
-						$current_tab = rgempty( 'subview', $_GET ) ? '' : rgget( 'subview' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						$current_tab  = rgget( 'subview' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$active_class = null;
+
 						foreach ( $tabs as $tab ) {
 
 							if ( rgar( $tab, 'capabilities' ) && ! GFCommon::current_user_can_any( $tab['capabilities'] ) ) {
@@ -5350,17 +5357,28 @@ class GFForms {
 							$icon_markup = GFCommon::get_icon_markup( $tab, 'gform-icon--cog' );
 
 							if ( $current_tab === $tab['name'] || ( empty( $current_tab ) && is_null( $active_class ) ) ) {
-								$active_class = 'class="active"';
+								$active_class = 'active';
 							} else {
 								$active_class = '';
 							}
 
+							$class_attr    = '';
+							$url           = isset( $tab['url'] ) ? $tab['url'] : add_query_arg( $query );
+							$target        = isset( $tab['target'] ) ? $tab['target'] : '';
+							$external_icon = ! empty( $tab['is_external'] ) ? ' <span class="screen-reader-text">' . esc_html__( 'opens in a new tab', 'gravityforms' ) . '</span><span class="gform-icon gform-icon--external-link" aria-hidden="true"></span>' : '';
+
+							if ( ! empty( $active_class ) ) {
+								$class_attr = sprintf( 'class="%s"', esc_attr( $active_class ) );
+							}
+
 							printf(
-								'<a href="%s"%s><span class="icon">%s</span> <span class="label">%s</span></a>',
+								'<a href="%s" %s%s><span class="icon">%s</span> <span class="label">%s%s</span></a>',
 								esc_url( $url ),
-								esc_attr( $active_class ),
-								$icon_markup, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-								esc_html( $tab['label'] )
+								$class_attr, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								$target ? ' target="' . esc_attr( $target ) . '"' : '',
+								$icon_markup, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								esc_html( $tab['label'] ),
+								$external_icon //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							);
 						}
 					?>

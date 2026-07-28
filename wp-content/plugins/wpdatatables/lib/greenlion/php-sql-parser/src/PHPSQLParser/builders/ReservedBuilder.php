@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReservedBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for reserved keywords.
  * You can overwrite all functions to achieve another handling.
@@ -50,17 +50,17 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ReservedBuilder implements Builder {
-
-    public function isReserved($parsed) {
-        return (isset($parsed['expr_type']) && $parsed['expr_type'] === ExpressionType::RESERVED);
+class ReservedBuilder implements Builder
+{
+    public function isReserved($parsed)
+    {
+        return isset($parsed['expr_type']) && $parsed['expr_type'] === ExpressionType::RESERVED;
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if (!$this->isReserved($parsed)) {
             return "";
         }
         return $parsed['base_expr'];
     }
 }
-?>

@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Chart;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Chart;
 
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class PlotArea
 {
     /**
@@ -11,8 +10,7 @@ class PlotArea
      *
      * @var bool
      */
-    private $noFill = false;
-
+    private $noFill = \false;
     /**
      * PlotArea Gradient Stop list.
      * Each entry is a 2-element array.
@@ -22,28 +20,24 @@ class PlotArea
      * @var array[]
      */
     private $gradientFillStops = [];
-
     /**
      * PlotArea Gradient Angle.
      *
      * @var ?float
      */
     private $gradientFillAngle;
-
     /**
      * PlotArea Layout.
      *
      * @var ?Layout
      */
     private $layout;
-
     /**
      * Plot Series.
      *
      * @var DataSeries[]
      */
     private $plotSeries = [];
-
     /**
      * Create a new PlotArea.
      *
@@ -54,20 +48,17 @@ class PlotArea
         $this->layout = $layout;
         $this->plotSeries = $plotSeries;
     }
-
-    public function getLayout(): ?Layout
+    public function getLayout() : ?Layout
     {
         return $this->layout;
     }
-
     /**
      * Get Number of Plot Groups.
      */
-    public function getPlotGroupCount(): int
+    public function getPlotGroupCount() : int
     {
-        return count($this->plotSeries);
+        return \count($this->plotSeries);
     }
-
     /**
      * Get Number of Plot Series.
      *
@@ -79,10 +70,8 @@ class PlotArea
         foreach ($this->plotSeries as $plot) {
             $seriesCount += $plot->getPlotSeriesCount();
         }
-
         return $seriesCount;
     }
-
     /**
      * Get Plot Series.
      *
@@ -92,7 +81,6 @@ class PlotArea
     {
         return $this->plotSeries;
     }
-
     /**
      * Get Plot Series by Index.
      *
@@ -104,7 +92,6 @@ class PlotArea
     {
         return $this->plotSeries[$index];
     }
-
     /**
      * Set Plot Series.
      *
@@ -115,45 +102,36 @@ class PlotArea
     public function setPlotSeries(array $plotSeries)
     {
         $this->plotSeries = $plotSeries;
-
         return $this;
     }
-
-    public function refresh(Worksheet $worksheet): void
+    public function refresh(Worksheet $worksheet) : void
     {
         foreach ($this->plotSeries as $plotSeries) {
             $plotSeries->refresh($worksheet);
         }
     }
-
-    public function setNoFill(bool $noFill): self
+    public function setNoFill(bool $noFill) : self
     {
         $this->noFill = $noFill;
-
         return $this;
     }
-
-    public function getNoFill(): bool
+    public function getNoFill() : bool
     {
         return $this->noFill;
     }
-
-    public function setGradientFillProperties(array $gradientFillStops, ?float $gradientFillAngle): self
+    public function setGradientFillProperties(array $gradientFillStops, ?float $gradientFillAngle) : self
     {
         $this->gradientFillStops = $gradientFillStops;
         $this->gradientFillAngle = $gradientFillAngle;
-
         return $this;
     }
-
     /**
      * Get gradientFillAngle.
      */
-    public function getGradientFillAngle(): ?float
+    public function getGradientFillAngle() : ?float
     {
         return $this->gradientFillAngle;
     }
-
     /**
      * Get gradientFillStops.
      *
@@ -163,49 +141,37 @@ class PlotArea
     {
         return $this->gradientFillStops;
     }
-
     /** @var ?int */
     private $gapWidth;
-
     /** @var bool */
-    private $useUpBars = false;
-
+    private $useUpBars = \false;
     /** @var bool */
-    private $useDownBars = false;
-
-    public function getGapWidth(): ?int
+    private $useDownBars = \false;
+    public function getGapWidth() : ?int
     {
         return $this->gapWidth;
     }
-
-    public function setGapWidth(?int $gapWidth): self
+    public function setGapWidth(?int $gapWidth) : self
     {
         $this->gapWidth = $gapWidth;
-
         return $this;
     }
-
-    public function getUseUpBars(): bool
+    public function getUseUpBars() : bool
     {
         return $this->useUpBars;
     }
-
-    public function setUseUpBars(bool $useUpBars): self
+    public function setUseUpBars(bool $useUpBars) : self
     {
         $this->useUpBars = $useUpBars;
-
         return $this;
     }
-
-    public function getUseDownBars(): bool
+    public function getUseDownBars() : bool
     {
         return $this->useDownBars;
     }
-
-    public function setUseDownBars(bool $useDownBars): self
+    public function setUseDownBars(bool $useDownBars) : self
     {
         $this->useDownBars = $useDownBars;
-
         return $this;
     }
 }

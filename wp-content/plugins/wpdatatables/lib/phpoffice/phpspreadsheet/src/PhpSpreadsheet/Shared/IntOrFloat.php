@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared;
 
 class IntOrFloat
 {
@@ -15,7 +15,6 @@ class IntOrFloat
     public static function evaluate($value)
     {
         $iValue = (int) $value;
-
-        return ($value == $iValue) ? $iValue : $value;
+        return $value == $iValue ? $iValue : $value;
     }
 }

@@ -111,6 +111,9 @@ class GFFormDisplay {
 		GFCommon::log_debug( "GFFormDisplay::process_form(): Source page number: {$source_page_number}. Target page number: {$target_page}." );
 
 		$saving_for_later = rgpost( 'gform_save' ) ? true : false;
+		if ( $saving_for_later ) {
+			$files = self::sanitize_file_uploads_for_save( $form );
+		}
 
 		$is_valid = true;
 
@@ -434,6 +437,99 @@ class GFFormDisplay {
 		}
 
 		return $files;
+	}
+
+	/**
+	 * Sanitizes existing temporary file upload metadata before saving a draft submission.
+	 *
+	 * @since 2.10.5
+	 *
+	 * @param array $form The form currently being processed.
+	 *
+	 * @return array
+	 */
+	private static function sanitize_file_uploads_for_save( $form ) {
+		$form_id       = absint( rgar( $form, 'id' ) );
+		$upload_fields = GFCommon::get_fields_by_type( $form, array( 'fileupload' ) );
+
+		foreach ( $upload_fields as $field ) {
+			if ( ! $field instanceof GF_Field_FileUpload ) {
+				continue;
+			}
+
+			$field->formId = $form_id;
+			$files         = $field->get_submission_files();
+			$clean_files   = array(
+				'existing' => array(),
+				'new'      => array(),
+			);
+
+			foreach ( rgar( $files, 'existing', array() ) as $file ) {
+				if ( ! is_array( $file ) ) {
+					continue;
+				}
+
+				if ( isset( $file['url'] ) ) {
+					if ( $field->is_valid_populated_file_url( $file ) ) {
+						$clean_files['existing'][] = $file;
+					}
+
+					continue;
+				}
+
+				$temp_filename     = rgar( $file, 'temp_filename' );
+				$uploaded_filename = rgar( $file, 'uploaded_filename' );
+
+				if ( ! is_string( $temp_filename ) || ! is_string( $uploaded_filename ) ) {
+					continue;
+				}
+
+				$temp_filename     = sanitize_file_name( wp_basename( $temp_filename ) );
+				$uploaded_filename = sanitize_file_name( wp_basename( $uploaded_filename ) );
+
+				if ( empty( $temp_filename ) || empty( $uploaded_filename ) ) {
+					continue;
+				}
+
+				$file['temp_filename']     = $temp_filename;
+				$file['uploaded_filename'] = $uploaded_filename;
+
+				if ( $field->is_invalid_file( $file, false ) || self::is_invalid_file_upload_temp_filename( $temp_filename, $field ) ) {
+					continue;
+				}
+
+				$tmp_path = rgar( GFFormsModel::get_tmp_upload_location( $form_id ), 'path' );
+				if ( empty( $tmp_path ) || ! is_file( $tmp_path . $temp_filename ) ) {
+					continue;
+				}
+
+				$clean_files['existing'][] = $file;
+			}
+
+			$field->set_submission_files( $clean_files );
+		}
+
+		return rgar( GFFormsModel::$uploaded_files, $form_id, array() );
+	}
+
+	/**
+	 * Determines if the temporary upload filename is invalid for the supplied file upload field.
+	 *
+	 * @since 2.10.5
+	 *
+	 * @param string              $temp_filename The temporary upload filename.
+	 * @param GF_Field_FileUpload $field         The file upload field.
+	 *
+	 * @return bool
+	 */
+	private static function is_invalid_file_upload_temp_filename( $temp_filename, $field ) {
+		$allowed_extensions = $field->get_clean_allowed_extensions();
+
+		if ( empty( $allowed_extensions ) ) {
+			return GFCommon::file_name_has_disallowed_extension( $temp_filename );
+		}
+
+		return ! GFCommon::match_file_extension( $temp_filename, $allowed_extensions );
 	}
 
 	public static function get_state( $form, $field_values ) {
@@ -1614,8 +1710,8 @@ class GFFormDisplay {
 				$field_value = rgar( $submitted_values, $field->id );
 
 				if ( $field->type === 'consent'
-					&& ( $field_value[ $field->id . '.3' ] != GFFormsModel::get_latest_form_revisions_id( $form['id'] )
-						|| $field_value[ $field->id . '.2' ] != $field->checkboxLabel ) ) {
+					&& ( (int) rgar( $field_value, $field->id . '.3' ) !== (int) GFFormsModel::get_latest_form_revisions_id( $form['id'] )
+						|| rgar( $field_value, $field->id . '.2' ) !== $field->checkboxLabel ) ) {
 					$field_value = GFFormsModel::get_field_value( $field, $field_values );
 				}
 			} else {
@@ -2535,6 +2631,8 @@ class GFFormDisplay {
 
 		$gform_validation_args = array( 'gform_validation', $form_id );
 		if ( ! gf_has_filter( $gform_validation_args ) ) {
+			self::log_field_validation_errors( $form['fields'] );
+
 			return $is_valid;
 		}
 
@@ -2568,7 +2666,34 @@ class GFFormDisplay {
 		$form                   = $validation_result['form'];
 		$failed_validation_page = $validation_result['failed_validation_page'];
 
+		self::log_field_validation_errors( $form['fields'] );
+
 		return $is_valid;
+	}
+
+	/**
+	 * Add logging statements for any fields failing validation.
+	 *
+	 * @since 2.10.4
+	 *
+	 * @param array $fields The fields being validated.
+	 *
+	 * @return void
+	 */
+	private static function log_field_validation_errors( $fields ) {
+
+		// Log any fields failing validation.
+		foreach ( $fields as &$field ) {
+			if ( $field->failed_validation ) {
+				GFCommon::log_error( __METHOD__ . "(): Field {$field->label} ({$field->id} - {$field->type}) failed validation. Validation message: " . sanitize_text_field( $field->validation_message ) );
+			}
+
+			// If this is a repeater, process its subfields.
+			if ( isset( $field->fields ) && is_array( $field->fields ) ) {
+				self::log_field_validation_errors( $field->fields );
+			}
+		}
+
 	}
 
 	/**

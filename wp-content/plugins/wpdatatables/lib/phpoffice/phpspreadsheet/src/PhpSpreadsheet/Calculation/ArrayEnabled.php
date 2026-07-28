@@ -1,43 +1,38 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Engine\ArrayArgumentHelper;
-use PhpOffice\PhpSpreadsheet\Calculation\Engine\ArrayArgumentProcessor;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engine\ArrayArgumentHelper;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engine\ArrayArgumentProcessor;
 trait ArrayEnabled
 {
     /**
      * @var ArrayArgumentHelper
      */
     private static $arrayArgumentHelper;
-
     /**
      * @param array|false $arguments Can be changed to array for Php8.1+
      */
-    private static function initialiseHelper($arguments): void
+    private static function initialiseHelper($arguments) : void
     {
         if (self::$arrayArgumentHelper === null) {
             self::$arrayArgumentHelper = new ArrayArgumentHelper();
         }
-        self::$arrayArgumentHelper->initialise(($arguments === false) ? [] : $arguments);
+        self::$arrayArgumentHelper->initialise($arguments === \false ? [] : $arguments);
     }
-
     /**
      * Handles array argument processing when the function accepts a single argument that can be an array argument.
      * Example use for:
      *         DAYOFMONTH() or FACT().
      */
-    protected static function evaluateSingleArgumentArray(callable $method, array $values): array
+    protected static function evaluateSingleArgumentArray(callable $method, array $values) : array
     {
         $result = [];
         foreach ($values as $value) {
             $result[] = $method($value);
         }
-
         return $result;
     }
-
     /**
      * Handles array argument processing when the function accepts multiple arguments,
      *     and any of them can be an array argument.
@@ -46,14 +41,12 @@ trait ArrayEnabled
      *
      * @param mixed ...$arguments
      */
-    protected static function evaluateArrayArguments(callable $method, ...$arguments): array
+    protected static function evaluateArrayArguments(callable $method, ...$arguments) : array
     {
         self::initialiseHelper($arguments);
         $arguments = self::$arrayArgumentHelper->arguments();
-
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
-
     /**
      * Handles array argument processing when the function accepts multiple arguments,
      *     but only the first few (up to limit) can be an array arguments.
@@ -63,24 +56,21 @@ trait ArrayEnabled
      *
      * @param mixed ...$arguments
      */
-    protected static function evaluateArrayArgumentsSubset(callable $method, int $limit, ...$arguments): array
+    protected static function evaluateArrayArgumentsSubset(callable $method, int $limit, ...$arguments) : array
     {
-        self::initialiseHelper(array_slice($arguments, 0, $limit));
-        $trailingArguments = array_slice($arguments, $limit);
+        self::initialiseHelper(\array_slice($arguments, 0, $limit));
+        $trailingArguments = \array_slice($arguments, $limit);
         $arguments = self::$arrayArgumentHelper->arguments();
-        $arguments = array_merge($arguments, $trailingArguments);
-
+        $arguments = \array_merge($arguments, $trailingArguments);
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
-
     /**
      * @param mixed $value
      */
-    private static function testFalse($value): bool
+    private static function testFalse($value) : bool
     {
-        return $value === false;
+        return $value === \false;
     }
-
     /**
      * Handles array argument processing when the function accepts multiple arguments,
      *     but only the last few (from start) can be an array arguments.
@@ -90,24 +80,18 @@ trait ArrayEnabled
      *
      * @param mixed ...$arguments
      */
-    protected static function evaluateArrayArgumentsSubsetFrom(callable $method, int $start, ...$arguments): array
+    protected static function evaluateArrayArgumentsSubsetFrom(callable $method, int $start, ...$arguments) : array
     {
-        $arrayArgumentsSubset = array_combine(
-            range($start, count($arguments) - $start),
-            array_slice($arguments, $start)
-        );
+        $arrayArgumentsSubset = \array_combine(\range($start, \count($arguments) - $start), \array_slice($arguments, $start));
         if (self::testFalse($arrayArgumentsSubset)) {
             return ['#VALUE!'];
         }
-
         self::initialiseHelper($arrayArgumentsSubset);
-        $leadingArguments = array_slice($arguments, 0, $start);
+        $leadingArguments = \array_slice($arguments, 0, $start);
         $arguments = self::$arrayArgumentHelper->arguments();
-        $arguments = array_merge($leadingArguments, $arguments);
-
+        $arguments = \array_merge($leadingArguments, $arguments);
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
-
     /**
      * Handles array argument processing when the function accepts multiple arguments,
      *     and any of them can be an array argument except for the one specified by ignore.
@@ -117,17 +101,14 @@ trait ArrayEnabled
      *
      * @param mixed ...$arguments
      */
-    protected static function evaluateArrayArgumentsIgnore(callable $method, int $ignore, ...$arguments): array
+    protected static function evaluateArrayArgumentsIgnore(callable $method, int $ignore, ...$arguments) : array
     {
-        $leadingArguments = array_slice($arguments, 0, $ignore);
-        $ignoreArgument = array_slice($arguments, $ignore, 1);
-        $trailingArguments = array_slice($arguments, $ignore + 1);
-
-        self::initialiseHelper(array_merge($leadingArguments, [[null]], $trailingArguments));
+        $leadingArguments = \array_slice($arguments, 0, $ignore);
+        $ignoreArgument = \array_slice($arguments, $ignore, 1);
+        $trailingArguments = \array_slice($arguments, $ignore + 1);
+        self::initialiseHelper(\array_merge($leadingArguments, [[null]], $trailingArguments));
         $arguments = self::$arrayArgumentHelper->arguments();
-
-        array_splice($arguments, $ignore, 1, $ignoreArgument);
-
+        \array_splice($arguments, $ignore, 1, $ignoreArgument);
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
 }

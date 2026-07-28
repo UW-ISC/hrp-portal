@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates name/value pairs in param tags to be used in safe objects. This
  * will only allow name values it recognizes, and pre-fill certain attributes
@@ -18,23 +20,20 @@ class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
      * @type string
      */
     public $name = "SafeParam";
-
     /**
      * @type HTMLPurifier_AttrDef_URI
      */
     private $uri;
-
     /**
      * @type HTMLPurifier_AttrDef_Enum
      */
     public $wmode;
-
     public function __construct()
     {
-        $this->uri = new HTMLPurifier_AttrDef_URI(true); // embedded
+        $this->uri = new HTMLPurifier_AttrDef_URI(\true);
+        // embedded
         $this->wmode = new HTMLPurifier_AttrDef_Enum(array('window', 'opaque', 'transparent'));
     }
-
     /**
      * @param array $attr
      * @param HTMLPurifier_Config $config
@@ -56,7 +55,7 @@ class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
                 break;
             case 'allowFullScreen':
                 if ($config->get('HTML.FlashAllowFullScreen')) {
-                    $attr['value'] = ($attr['value'] == 'true') ? 'true' : 'false';
+                    $attr['value'] = $attr['value'] == 'true' ? 'true' : 'false';
                 } else {
                     $attr['value'] = 'false';
                 }
@@ -80,5 +79,4 @@ class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
         return $attr;
     }
 }
-
 // vim: et sw=4 sts=4

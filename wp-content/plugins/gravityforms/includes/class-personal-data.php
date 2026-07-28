@@ -14,6 +14,15 @@ class_exists( 'GFForms' ) || die();
 class GF_Personal_Data {
 
 	/**
+	 * Maximum number of forms per GF_Query to stay within MariaDB's join limit.
+	 *
+	 * @since 2.10.5
+	 *
+	 * @var int
+	 */
+	const MAX_FORMS_PER_QUERY = 59;
+
+	/**
 	 * The cached form array.
 	 *
 	 * @since 2.4
@@ -789,11 +798,11 @@ class GF_Personal_Data {
 
 		$forms = self::get_forms();
 
-		$form_ids = array();
-
-		$query = new GF_Query();
-
-		$conditions = array();
+		$batches = array();
+		$batch   = array(
+			'form_ids'   => array(),
+			'conditions' => array(),
+		);
 
 		foreach ( $forms as $form ) {
 
@@ -801,7 +810,7 @@ class GF_Personal_Data {
 				continue;
 			}
 
-			$form_ids[] = $form['id'];
+			$batch['form_ids'][] = $form['id'];
 
 			$identification_field = rgars( $form, 'personalData/exportingAndErasing/identificationField' );
 
@@ -809,7 +818,7 @@ class GF_Personal_Data {
 
 			if ( $field && $field->get_input_type() == 'email' ) {
 
-				$conditions[] = new GF_Query_Condition(
+				$batch['conditions'][] = new GF_Query_Condition(
 					new GF_Query_Column( $identification_field, intval( $form['id'] ) ),
 					GF_Query_Condition::EQ,
 					new GF_Query_Literal( $email_address )
@@ -825,23 +834,58 @@ class GF_Personal_Data {
 					continue;
 				}
 
-				$conditions[] = new GF_Query_Condition(
+				$batch['conditions'][] = new GF_Query_Condition(
 					new GF_Query_Column( $identification_field, intval( $form['id'] ) ),
 					GF_Query_Condition::EQ,
 					new GF_Query_Literal( $user->ID )
 				);
 			}
+
+			if ( count( $batch['form_ids'] ) >= self::MAX_FORMS_PER_QUERY ) {
+				$batches[] = $batch;
+				$batch     = array(
+					'form_ids'   => array(),
+					'conditions' => array(),
+				);
+			}
 		}
 
-		if ( empty( $conditions ) ) {
+		if ( ! empty( $batch['form_ids'] ) ) {
+			$batches[] = $batch;
+		}
+
+		$entries = array();
+
+		foreach ( $batches as $query_batch ) {
+			if ( empty( $query_batch['conditions'] ) ) {
+				continue;
+			}
+
+			$all_conditions = call_user_func_array( array( 'GF_Query_Condition', '_or' ), $query_batch['conditions'] );
+
+			$query = new GF_Query();
+
+			$batch_entries = $query->from( $query_batch['form_ids'] )->where( $all_conditions )->get();
+
+			if ( ! empty( $batch_entries ) ) {
+				$entries = array_merge( $entries, $batch_entries );
+			}
+		}
+
+		if ( empty( $entries ) ) {
 			return array();
 		}
 
-		$all_conditions = call_user_func_array( array( 'GF_Query_Condition', '_or' ), $conditions );
+		usort(
+			$entries,
+			function ( $a, $b ) {
+				return (int) rgar( $a, 'id' ) - (int) rgar( $b, 'id' );
+			}
+		);
 
-		$entries = $query->from( $form_ids )->where( $all_conditions )->limit( $limit )->page( $page )->get();
+		$offset = max( 0, ( $page - 1 ) * $limit );
 
-		return $entries;
+		return array_slice( $entries, $offset, $limit );
 	}
 
 	/**
@@ -1048,7 +1092,8 @@ class GF_Personal_Data {
 
 		$forms = self::get_forms();
 
-		$entries = self::get_entries( $email_address, $page, $limit );
+		// Always use page 1 because entries are erased at every page and won't be returned from the query. Page 1 will always have a new set of entries.
+		$entries = self::get_entries( $email_address, 1, $limit );
 
 		foreach ( $entries as $entry ) {
 

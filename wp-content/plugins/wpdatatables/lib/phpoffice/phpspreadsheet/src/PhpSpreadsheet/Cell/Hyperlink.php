@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Cell;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Cell;
 
 class Hyperlink
 {
@@ -10,14 +10,12 @@ class Hyperlink
      * @var string
      */
     private $url;
-
     /**
      * Tooltip to display on the hyperlink.
      *
      * @var string
      */
     private $tooltip;
-
     /**
      * Create a new Hyperlink.
      *
@@ -30,7 +28,6 @@ class Hyperlink
         $this->url = $url;
         $this->tooltip = $tooltip;
     }
-
     /**
      * Get URL.
      *
@@ -40,7 +37,6 @@ class Hyperlink
     {
         return $this->url;
     }
-
     /**
      * Set URL.
      *
@@ -51,10 +47,8 @@ class Hyperlink
     public function setUrl($url)
     {
         $this->url = $url;
-
         return $this;
     }
-
     /**
      * Get tooltip.
      *
@@ -64,7 +58,6 @@ class Hyperlink
     {
         return $this->tooltip;
     }
-
     /**
      * Set tooltip.
      *
@@ -75,10 +68,8 @@ class Hyperlink
     public function setTooltip($tooltip)
     {
         $this->tooltip = $tooltip;
-
         return $this;
     }
-
     /**
      * Is this hyperlink internal? (to another worksheet).
      *
@@ -86,9 +77,8 @@ class Hyperlink
      */
     public function isInternal()
     {
-        return strpos($this->url, 'sheet://') !== false;
+        return \strpos($this->url, 'sheet://') !== \false;
     }
-
     /**
      * @return string
      */
@@ -96,7 +86,6 @@ class Hyperlink
     {
         return $this->isInternal() ? '' : 'External';
     }
-
     /**
      * Get hash code.
      *
@@ -104,10 +93,6 @@ class Hyperlink
      */
     public function getHashCode()
     {
-        return md5(
-            $this->url .
-            $this->tooltip .
-            __CLASS__
-        );
+        return \md5($this->url . $this->tooltip . __CLASS__);
     }
 }

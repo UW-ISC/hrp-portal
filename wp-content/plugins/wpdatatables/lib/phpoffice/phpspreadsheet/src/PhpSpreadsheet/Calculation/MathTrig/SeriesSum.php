@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 class SeriesSum
 {
     use ArrayEnabled;
-
     /**
      * SERIESSUM.
      *
@@ -24,15 +22,13 @@ class SeriesSum
      */
     public static function evaluate($x, $n, $m, ...$args)
     {
-        if (is_array($x) || is_array($n) || is_array($m)) {
+        if (\is_array($x) || \is_array($n) || \is_array($m)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 3, $x, $n, $m, ...$args);
         }
-
         try {
             $x = Helpers::validateNumericNullSubstitution($x, 0);
             $n = Helpers::validateNumericNullSubstitution($n, 0);
             $m = Helpers::validateNumericNullSubstitution($m, 0);
-
             // Loop through arguments
             $aArgs = Functions::flattenArray($args);
             $returnValue = 0;
@@ -40,14 +36,13 @@ class SeriesSum
             foreach ($aArgs as $argx) {
                 if ($argx !== null) {
                     $arg = Helpers::validateNumericNullSubstitution($argx, 0);
-                    $returnValue += $arg * $x ** ($n + ($m * $i));
+                    $returnValue += $arg * $x ** ($n + $m * $i);
                     ++$i;
                 }
             }
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         return $returnValue;
     }
 }

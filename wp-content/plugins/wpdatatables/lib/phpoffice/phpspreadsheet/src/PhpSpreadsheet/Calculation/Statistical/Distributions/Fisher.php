@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Fisher
 {
     use ArrayEnabled;
-
     /**
      * FISHER.
      *
@@ -26,23 +24,19 @@ class Fisher
      */
     public static function distribution($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
         try {
             DistributionValidations::validateFloat($value);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value <= -1) || ($value >= 1)) {
+        if ($value <= -1 || $value >= 1) {
             return ExcelError::NAN();
         }
-
-        return 0.5 * log((1 + $value) / (1 - $value));
+        return 0.5 * \log((1 + $value) / (1 - $value));
     }
-
     /**
      * FISHERINV.
      *
@@ -59,16 +53,14 @@ class Fisher
      */
     public static function inverse($probability)
     {
-        if (is_array($probability)) {
+        if (\is_array($probability)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $probability);
         }
-
         try {
             DistributionValidations::validateFloat($probability);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return (exp(2 * $probability) - 1) / (exp(2 * $probability) + 1);
+        return (\exp(2 * $probability) - 1) / (\exp(2 * $probability) + 1);
     }
 }

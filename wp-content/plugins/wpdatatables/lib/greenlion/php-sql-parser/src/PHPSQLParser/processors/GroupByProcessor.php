@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GroupByProcessor.php
  *
@@ -29,8 +30,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * 
@@ -39,36 +39,31 @@ namespace PHPSQLParser\processors;
  * @author arothe
  * 
  */
-class GroupByProcessor extends OrderByProcessor {
-
-    public function process($tokens, $select = array()) {
+class GroupByProcessor extends OrderByProcessor
+{
+    public function process($tokens, $select = array())
+    {
         $out = array();
         $parseInfo = $this->initParseInfo();
-
         if (!$tokens) {
-            return false;
+            return \false;
         }
-
         foreach ($tokens as $token) {
-            $trim = strtoupper(trim($token));
+            $trim = \strtoupper(\trim($token));
             switch ($trim) {
-            case ',':
-                $parsed = $this->processOrderExpression($parseInfo, $select);
-                unset($parsed['direction']);
-
-                $out[] = $parsed;
-                $parseInfo = $this->initParseInfo();
-                break;
-            default:
-                $parseInfo['base_expr'] .= $token;
+                case ',':
+                    $parsed = $this->processOrderExpression($parseInfo, $select);
+                    unset($parsed['direction']);
+                    $out[] = $parsed;
+                    $parseInfo = $this->initParseInfo();
+                    break;
+                default:
+                    $parseInfo['base_expr'] .= $token;
             }
         }
-
         $parsed = $this->processOrderExpression($parseInfo, $select);
         unset($parsed['direction']);
         $out[] = $parsed;
-
         return $out;
     }
 }
-?>

@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Definition cache decorator class that saves all cache retrievals
  * to PHP's memory; good for unit tests or circumstances where
@@ -11,12 +13,10 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
      * @type array
      */
     protected $definitions;
-
     /**
      * @type string
      */
     public $name = 'Memory';
-
     /**
      * @return HTMLPurifier_DefinitionCache_Decorator_Memory
      */
@@ -24,7 +24,6 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
     {
         return new HTMLPurifier_DefinitionCache_Decorator_Memory();
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -38,7 +37,6 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
         }
         return $status;
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -52,7 +50,6 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
         }
         return $status;
     }
-
     /**
      * @param HTMLPurifier_Definition $def
      * @param HTMLPurifier_Config $config
@@ -66,7 +63,6 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
         }
         return $status;
     }
-
     /**
      * @param HTMLPurifier_Config $config
      * @return mixed
@@ -81,5 +77,4 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
         return $this->definitions[$key];
     }
 }
-
 // vim: et sw=4 sts=4

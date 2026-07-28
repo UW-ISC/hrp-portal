@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Combinations;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Combinations;
 class Binomial
 {
     use ArrayEnabled;
-
     /**
      * BINOMDIST.
      *
@@ -36,10 +34,9 @@ class Binomial
      */
     public static function distribution($value, $trials, $probability, $cumulative)
     {
-        if (is_array($value) || is_array($trials) || is_array($probability) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($trials) || \is_array($probability) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $trials, $probability, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateInt($value);
             $trials = DistributionValidations::validateInt($trials);
@@ -48,21 +45,16 @@ class Binomial
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value < 0) || ($value > $trials)) {
+        if ($value < 0 || $value > $trials) {
             return ExcelError::NAN();
         }
-
         if ($cumulative) {
             return self::calculateCumulativeBinomial($value, $trials, $probability);
         }
         /** @var float */
         $comb = Combinations::withoutRepetition($trials, $value);
-
-        return $comb * $probability ** $value
-            * (1 - $probability) ** ($trials - $value);
+        return $comb * $probability ** $value * (1 - $probability) ** ($trials - $value);
     }
-
     /**
      * BINOM.DIST.RANGE.
      *
@@ -85,12 +77,10 @@ class Binomial
      */
     public static function range($trials, $probability, $successes, $limit = null)
     {
-        if (is_array($trials) || is_array($probability) || is_array($successes) || is_array($limit)) {
+        if (\is_array($trials) || \is_array($probability) || \is_array($successes) || \is_array($limit)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $trials, $probability, $successes, $limit);
         }
-
         $limit = $limit ?? $successes;
-
         try {
             $trials = DistributionValidations::validateInt($trials);
             $probability = DistributionValidations::validateProbability($probability);
@@ -99,25 +89,20 @@ class Binomial
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($successes < 0) || ($successes > $trials)) {
+        if ($successes < 0 || $successes > $trials) {
             return ExcelError::NAN();
         }
-        if (($limit < 0) || ($limit > $trials) || $limit < $successes) {
+        if ($limit < 0 || $limit > $trials || $limit < $successes) {
             return ExcelError::NAN();
         }
-
         $summer = 0;
         for ($i = $successes; $i <= $limit; ++$i) {
             /** @var float */
             $comb = Combinations::withoutRepetition($trials, $i);
-            $summer += $comb * $probability ** $i
-                * (1 - $probability) ** ($trials - $i);
+            $summer += $comb * $probability ** $i * (1 - $probability) ** ($trials - $i);
         }
-
         return $summer;
     }
-
     /**
      * NEGBINOMDIST.
      *
@@ -143,10 +128,9 @@ class Binomial
      */
     public static function negative($failures, $successes, $probability)
     {
-        if (is_array($failures) || is_array($successes) || is_array($probability)) {
+        if (\is_array($failures) || \is_array($successes) || \is_array($probability)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $failures, $successes, $probability);
         }
-
         try {
             $failures = DistributionValidations::validateInt($failures);
             $successes = DistributionValidations::validateInt($successes);
@@ -154,22 +138,18 @@ class Binomial
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($failures < 0) || ($successes < 1)) {
+        if ($failures < 0 || $successes < 1) {
             return ExcelError::NAN();
         }
         if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
-            if (($failures + $successes - 1) <= 0) {
+            if ($failures + $successes - 1 <= 0) {
                 return ExcelError::NAN();
             }
         }
         /** @var float */
         $comb = Combinations::withoutRepetition($failures + $successes - 1, $successes - 1);
-
-        return $comb
-            * ($probability ** $successes) * ((1 - $probability) ** $failures);
+        return $comb * $probability ** $successes * (1 - $probability) ** $failures;
     }
-
     /**
      * BINOM.INV.
      *
@@ -189,10 +169,9 @@ class Binomial
      */
     public static function inverse($trials, $probability, $alpha)
     {
-        if (is_array($trials) || is_array($probability) || is_array($alpha)) {
+        if (\is_array($trials) || \is_array($probability) || \is_array($alpha)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $trials, $probability, $alpha);
         }
-
         try {
             $trials = DistributionValidations::validateInt($trials);
             $probability = DistributionValidations::validateProbability($probability);
@@ -200,13 +179,11 @@ class Binomial
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($trials < 0) {
             return ExcelError::NAN();
-        } elseif (($alpha < 0.0) || ($alpha > 1.0)) {
+        } elseif ($alpha < 0.0 || $alpha > 1.0) {
             return ExcelError::NAN();
         }
-
         $successes = 0;
         while ($successes <= $trials) {
             $result = self::calculateCumulativeBinomial($successes, $trials, $probability);
@@ -215,10 +192,8 @@ class Binomial
             }
             ++$successes;
         }
-
         return $successes;
     }
-
     /**
      * @return float|int
      */
@@ -228,10 +203,8 @@ class Binomial
         for ($i = 0; $i <= $value; ++$i) {
             /** @var float */
             $comb = Combinations::withoutRepetition($trials, $i);
-            $summer += $comb * $probability ** $i
-                * (1 - $probability) ** ($trials - $i);
+            $summer += $comb * $probability ** $i * (1 - $probability) ** ($trials - $i);
         }
-
         return $summer;
     }
 }

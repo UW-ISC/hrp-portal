@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use Complex\Complex as ComplexObject;
-use Complex\Exception as ComplexException;
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\Complex\Complex as ComplexObject;
+use WPDT\Complex\Exception as ComplexException;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class ComplexFunctions
 {
     use ArrayEnabled;
-
     /**
      * IMABS.
      *
@@ -28,19 +26,16 @@ class ComplexFunctions
      */
     public static function IMABS($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return $complex->abs();
     }
-
     /**
      * IMARGUMENT.
      *
@@ -59,23 +54,19 @@ class ComplexFunctions
      */
     public static function IMARGUMENT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         if ($complex->getReal() == 0.0 && $complex->getImaginary() == 0.0) {
             return ExcelError::DIV0();
         }
-
         return $complex->argument();
     }
-
     /**
      * IMCONJUGATE.
      *
@@ -93,19 +84,16 @@ class ComplexFunctions
      */
     public static function IMCONJUGATE($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->conjugate();
     }
-
     /**
      * IMCOS.
      *
@@ -123,19 +111,16 @@ class ComplexFunctions
      */
     public static function IMCOS($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->cos();
     }
-
     /**
      * IMCOSH.
      *
@@ -153,19 +138,16 @@ class ComplexFunctions
      */
     public static function IMCOSH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->cosh();
     }
-
     /**
      * IMCOT.
      *
@@ -183,19 +165,16 @@ class ComplexFunctions
      */
     public static function IMCOT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->cot();
     }
-
     /**
      * IMCSC.
      *
@@ -213,19 +192,16 @@ class ComplexFunctions
      */
     public static function IMCSC($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->csc();
     }
-
     /**
      * IMCSCH.
      *
@@ -243,19 +219,16 @@ class ComplexFunctions
      */
     public static function IMCSCH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->csch();
     }
-
     /**
      * IMSIN.
      *
@@ -273,19 +246,16 @@ class ComplexFunctions
      */
     public static function IMSIN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->sin();
     }
-
     /**
      * IMSINH.
      *
@@ -303,19 +273,16 @@ class ComplexFunctions
      */
     public static function IMSINH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->sinh();
     }
-
     /**
      * IMSEC.
      *
@@ -333,19 +300,16 @@ class ComplexFunctions
      */
     public static function IMSEC($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->sec();
     }
-
     /**
      * IMSECH.
      *
@@ -363,19 +327,16 @@ class ComplexFunctions
      */
     public static function IMSECH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->sech();
     }
-
     /**
      * IMTAN.
      *
@@ -393,19 +354,16 @@ class ComplexFunctions
      */
     public static function IMTAN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->tan();
     }
-
     /**
      * IMSQRT.
      *
@@ -423,24 +381,20 @@ class ComplexFunctions
      */
     public static function IMSQRT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         $theta = self::IMARGUMENT($complexNumber);
         if ($theta === ExcelError::DIV0()) {
             return '0';
         }
-
         return (string) $complex->sqrt();
     }
-
     /**
      * IMLN.
      *
@@ -458,23 +412,19 @@ class ComplexFunctions
      */
     public static function IMLN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         if ($complex->getReal() == 0.0 && $complex->getImaginary() == 0.0) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->ln();
     }
-
     /**
      * IMLOG10.
      *
@@ -492,23 +442,19 @@ class ComplexFunctions
      */
     public static function IMLOG10($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         if ($complex->getReal() == 0.0 && $complex->getImaginary() == 0.0) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->log10();
     }
-
     /**
      * IMLOG2.
      *
@@ -526,23 +472,19 @@ class ComplexFunctions
      */
     public static function IMLOG2($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         if ($complex->getReal() == 0.0 && $complex->getImaginary() == 0.0) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->log2();
     }
-
     /**
      * IMEXP.
      *
@@ -560,19 +502,16 @@ class ComplexFunctions
      */
     public static function IMEXP($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
         return (string) $complex->exp();
     }
-
     /**
      * IMPOWER.
      *
@@ -592,20 +531,17 @@ class ComplexFunctions
      */
     public static function IMPOWER($complexNumber, $realNumber)
     {
-        if (is_array($complexNumber) || is_array($realNumber)) {
+        if (\is_array($complexNumber) || \is_array($realNumber)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $complexNumber, $realNumber);
         }
-
         try {
             $complex = new ComplexObject($complexNumber);
         } catch (ComplexException $e) {
             return ExcelError::NAN();
         }
-
-        if (!is_numeric($realNumber)) {
+        if (!\is_numeric($realNumber)) {
             return ExcelError::VALUE();
         }
-
         return (string) $complex->pow((float) $realNumber);
     }
 }

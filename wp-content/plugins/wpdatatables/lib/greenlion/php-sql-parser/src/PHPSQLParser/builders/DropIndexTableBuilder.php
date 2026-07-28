@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DropIndexTable.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the table part of a DROP INDEX statement.
  * You can overwrite all functions to achieve another handling.
@@ -50,10 +50,11 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DropIndexTableBuilder implements Builder {
-
-    public function build(array $parsed) {
-        if (!isset($parsed['on']) || $parsed['on'] === false) {
+class DropIndexTableBuilder implements Builder
+{
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['on']) || $parsed['on'] === \false) {
             return '';
         }
         $table = $parsed['on'];
@@ -62,6 +63,4 @@ class DropIndexTableBuilder implements Builder {
         }
         return 'ON ' . $table['name'];
     }
-
 }
-?>

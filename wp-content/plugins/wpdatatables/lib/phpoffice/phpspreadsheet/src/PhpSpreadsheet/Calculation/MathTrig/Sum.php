@@ -1,12 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\Value;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\Value;
 class Sum
 {
     /**
@@ -24,20 +23,17 @@ class Sum
     public static function sumIgnoringStrings(...$args)
     {
         $returnValue = 0;
-
         // Loop through the arguments
         foreach (Functions::flattenArray($args) as $arg) {
             // Is it a numeric value?
-            if (is_numeric($arg)) {
+            if (\is_numeric($arg)) {
                 $returnValue += $arg;
             } elseif (ErrorValue::isError($arg)) {
                 return $arg;
             }
         }
-
         return $returnValue;
     }
-
     /**
      * SUM, returning error for non-numeric strings. This is used by Excel SUM function.
      *
@@ -57,12 +53,12 @@ class Sum
         $aArgs = Functions::flattenArrayIndexed($args);
         foreach ($aArgs as $k => $arg) {
             // Is it a numeric value?
-            if (is_numeric($arg) || empty($arg)) {
-                if (is_string($arg)) {
+            if (\is_numeric($arg) || empty($arg)) {
+                if (\is_string($arg)) {
                     $arg = (int) $arg;
                 }
                 $returnValue += $arg;
-            } elseif (is_bool($arg)) {
+            } elseif (\is_bool($arg)) {
                 $returnValue += (int) $arg;
             } elseif (ErrorValue::isError($arg)) {
                 return $arg;
@@ -71,10 +67,8 @@ class Sum
                 return ExcelError::VALUE();
             }
         }
-
         return $returnValue;
     }
-
     /**
      * SUMPRODUCT.
      *
@@ -88,31 +82,26 @@ class Sum
     public static function product(...$args)
     {
         $arrayList = $args;
-
-        $wrkArray = Functions::flattenArray(array_shift($arrayList));
-        $wrkCellCount = count($wrkArray);
-
+        $wrkArray = Functions::flattenArray(\array_shift($arrayList));
+        $wrkCellCount = \count($wrkArray);
         for ($i = 0; $i < $wrkCellCount; ++$i) {
-            if ((!is_numeric($wrkArray[$i])) || (is_string($wrkArray[$i]))) {
+            if (!\is_numeric($wrkArray[$i]) || \is_string($wrkArray[$i])) {
                 $wrkArray[$i] = 0;
             }
         }
-
         foreach ($arrayList as $matrixData) {
             $array2 = Functions::flattenArray($matrixData);
-            $count = count($array2);
+            $count = \count($array2);
             if ($wrkCellCount != $count) {
                 return ExcelError::VALUE();
             }
-
             foreach ($array2 as $i => $val) {
-                if ((!is_numeric($val)) || (is_string($val))) {
+                if (!\is_numeric($val) || \is_string($val)) {
                     $val = 0;
                 }
                 $wrkArray[$i] *= $val;
             }
         }
-
-        return array_sum($wrkArray);
+        return \array_sum($wrkArray);
     }
 }

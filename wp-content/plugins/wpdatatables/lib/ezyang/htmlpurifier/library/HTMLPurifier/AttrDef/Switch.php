@@ -1,26 +1,24 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Decorator that, depending on a token, switches between two definitions.
  */
 class HTMLPurifier_AttrDef_Switch
 {
-
     /**
      * @type string
      */
     protected $tag;
-
     /**
      * @type HTMLPurifier_AttrDef
      */
     protected $withTag;
-
     /**
      * @type HTMLPurifier_AttrDef
      */
     protected $withoutTag;
-
     /**
      * @param string $tag Tag name to switch upon
      * @param HTMLPurifier_AttrDef $with_tag Call if token matches tag
@@ -32,7 +30,6 @@ class HTMLPurifier_AttrDef_Switch
         $this->withTag = $with_tag;
         $this->withoutTag = $without_tag;
     }
-
     /**
      * @param string $string
      * @param HTMLPurifier_Config $config
@@ -41,7 +38,7 @@ class HTMLPurifier_AttrDef_Switch
      */
     public function validate($string, $config, $context)
     {
-        $token = $context->get('CurrentToken', true);
+        $token = $context->get('CurrentToken', \true);
         if (!$token || $token->name !== $this->tag) {
             return $this->withoutTag->validate($string, $config, $context);
         } else {
@@ -49,5 +46,4 @@ class HTMLPurifier_AttrDef_Switch
         }
     }
 }
-
 // vim: et sw=4 sts=4

@@ -1,12 +1,11 @@
 <?php
 
-namespace Matrix\Operators;
+namespace WPDT\Matrix\Operators;
 
-use Matrix\Matrix;
-use \Matrix\Builder;
-use Matrix\Exception;
+use WPDT\Matrix\Matrix;
+use WPDT\Matrix\Builder;
+use WPDT\Matrix\Exception;
 use Throwable;
-
 class Multiplication extends Operator
 {
     /**
@@ -16,28 +15,25 @@ class Multiplication extends Operator
      * @throws Exception If the provided argument is not appropriate for the operation
      * @return $this The operation object, allowing multiple multiplications to be chained
      **/
-    public function execute($value, string $type = 'multiplication'): Operator
+    public function execute($value, string $type = 'multiplication') : Operator
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $value = new Matrix($value);
         }
-
-        if (is_object($value) && ($value instanceof Matrix)) {
+        if (\is_object($value) && $value instanceof Matrix) {
             return $this->multiplyMatrix($value, $type);
-        } elseif (is_numeric($value)) {
+        } elseif (\is_numeric($value)) {
             return $this->multiplyScalar($value, $type);
         }
-
-        throw new Exception("Invalid argument for $type");
+        throw new Exception("Invalid argument for {$type}");
     }
-
     /**
      * Execute the multiplication for a scalar
      *
      * @param mixed $value The numeric value to multiply with the current base value
      * @return $this The operation object, allowing multiple mutiplications to be chained
      **/
-    protected function multiplyScalar($value, string $type = 'multiplication'): Operator
+    protected function multiplyScalar($value, string $type = 'multiplication') : Operator
     {
         try {
             for ($row = 0; $row < $this->rows; ++$row) {
@@ -46,12 +42,10 @@ class Multiplication extends Operator
                 }
             }
         } catch (Throwable $e) {
-            throw new Exception("Invalid argument for $type");
+            throw new Exception("Invalid argument for {$type}");
         }
-
         return $this;
     }
-
     /**
      * Execute the multiplication for a matrix
      *
@@ -59,14 +53,12 @@ class Multiplication extends Operator
      * @return $this The operation object, allowing multiple mutiplications to be chained
      * @throws Exception If the provided argument is not appropriate for the operation
      **/
-    protected function multiplyMatrix(Matrix $value, string $type = 'multiplication'): Operator
+    protected function multiplyMatrix(Matrix $value, string $type = 'multiplication') : Operator
     {
         $this->validateReflectingDimensions($value);
-
         $newRows = $this->rows;
         $newColumns = $value->columns;
-        $matrix = Builder::createFilledMatrix(0, $newRows, $newColumns)
-            ->toArray();
+        $matrix = Builder::createFilledMatrix(0, $newRows, $newColumns)->toArray();
         try {
             for ($row = 0; $row < $newRows; ++$row) {
                 for ($column = 0; $column < $newColumns; ++$column) {
@@ -77,10 +69,9 @@ class Multiplication extends Operator
                 }
             }
         } catch (Throwable $e) {
-            throw new Exception("Invalid argument for $type");
+            throw new Exception("Invalid argument for {$type}");
         }
         $this->matrix = $matrix;
-
         return $this;
     }
 }

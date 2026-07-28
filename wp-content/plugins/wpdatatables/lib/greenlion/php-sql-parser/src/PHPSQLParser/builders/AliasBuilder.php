@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AliasBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for aliases. 
@@ -49,14 +49,15 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class AliasBuilder implements Builder {
-
-    public function hasAlias($parsed) {
+class AliasBuilder implements Builder
+{
+    public function hasAlias($parsed)
+    {
         return isset($parsed['alias']);
     }
-
-    public function build(array $parsed) {
-        if (!isset($parsed['alias']) || $parsed['alias'] === false) {
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['alias']) || $parsed['alias'] === \false) {
             return "";
         }
         $sql = "";
@@ -67,4 +68,3 @@ class AliasBuilder implements Builder {
         return $sql;
     }
 }
-?>

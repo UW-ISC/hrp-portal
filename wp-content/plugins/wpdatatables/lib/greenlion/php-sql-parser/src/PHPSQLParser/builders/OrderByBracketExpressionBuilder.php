@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OrderByBracketExpressionBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for bracket-expressions within the ORDER-BY part. 
@@ -50,20 +50,19 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class OrderByBracketExpressionBuilder extends WhereBracketExpressionBuilder {
-
-    protected function buildDirection($parsed) {
+class OrderByBracketExpressionBuilder extends WhereBracketExpressionBuilder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = parent::build($parsed);
         if ($sql !== '') {
             $sql .= $this->buildDirection($parsed);
         }
         return $sql;
     }
-
 }
-?>

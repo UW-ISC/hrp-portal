@@ -1,71 +1,59 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Ods;
 
 use DOMDocument;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class PageSettings
 {
     /**
      * @var string
      */
     private $officeNs;
-
     /**
      * @var string
      */
     private $stylesNs;
-
     /**
      * @var string
      */
     private $stylesFo;
-
     /**
      * @var string
      */
     private $tableNs;
-
     /**
      * @var string[]
      */
     private $tableStylesCrossReference = [];
-
     /** @var array */
     private $pageLayoutStyles = [];
-
     /**
      * @var string[]
      */
     private $masterStylesCrossReference = [];
-
     /**
      * @var string[]
      */
     private $masterPrintStylesCrossReference = [];
-
     public function __construct(DOMDocument $styleDom)
     {
         $this->setDomNameSpaces($styleDom);
         $this->readPageSettingStyles($styleDom);
         $this->readStyleMasterLookup($styleDom);
     }
-
-    private function setDomNameSpaces(DOMDocument $styleDom): void
+    private function setDomNameSpaces(DOMDocument $styleDom) : void
     {
         $this->officeNs = $styleDom->lookupNamespaceUri('office');
         $this->stylesNs = $styleDom->lookupNamespaceUri('style');
         $this->stylesFo = $styleDom->lookupNamespaceUri('fo');
         $this->tableNs = $styleDom->lookupNamespaceUri('table');
     }
-
-    private function readPageSettingStyles(DOMDocument $styleDom): void
+    private function readPageSettingStyles(DOMDocument $styleDom) : void
     {
         $item0 = $styleDom->getElementsByTagNameNS($this->officeNs, 'automatic-styles')->item(0);
-        $styles = ($item0 === null) ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'page-layout');
-
+        $styles = $item0 === null ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'page-layout');
         foreach ($styles as $styleSet) {
             $styleName = $styleSet->getAttributeNS($this->stylesNs, 'name');
             $pageLayoutProperties = $styleSet->getElementsByTagNameNS($this->stylesNs, 'page-layout-properties')[0];
@@ -73,7 +61,6 @@ class PageSettings
             $styleScale = $pageLayoutProperties->getAttributeNS($this->stylesNs, 'scale-to');
             $stylePrintOrder = $pageLayoutProperties->getAttributeNS($this->stylesNs, 'print-page-order');
             $centered = $pageLayoutProperties->getAttributeNS($this->stylesNs, 'table-centering');
-
             $marginLeft = $pageLayoutProperties->getAttributeNS($this->stylesFo, 'margin-left');
             $marginRight = $pageLayoutProperties->getAttributeNS($this->stylesFo, 'margin-right');
             $marginTop = $pageLayoutProperties->getAttributeNS($this->stylesFo, 'margin-top');
@@ -84,7 +71,6 @@ class PageSettings
             $footer = $styleSet->getElementsByTagNameNS($this->stylesNs, 'footer-style')[0];
             $footerProperties = $footer->getElementsByTagNameNS($this->stylesNs, 'header-footer-properties')[0];
             $marginFooter = isset($footerProperties) ? $footerProperties->getAttributeNS($this->stylesFo, 'min-height') : null;
-
             $this->pageLayoutStyles[$styleName] = (object) [
                 'orientation' => $styleOrientation ?: PageSetup::ORIENTATION_DEFAULT,
                 'scale' => $styleScale ?: 100,
@@ -101,24 +87,20 @@ class PageSettings
             ];
         }
     }
-
-    private function readStyleMasterLookup(DOMDocument $styleDom): void
+    private function readStyleMasterLookup(DOMDocument $styleDom) : void
     {
         $item0 = $styleDom->getElementsByTagNameNS($this->officeNs, 'master-styles')->item(0);
-        $styleMasterLookup = ($item0 === null) ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'master-page');
-
+        $styleMasterLookup = $item0 === null ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'master-page');
         foreach ($styleMasterLookup as $styleMasterSet) {
             $styleMasterName = $styleMasterSet->getAttributeNS($this->stylesNs, 'name');
             $pageLayoutName = $styleMasterSet->getAttributeNS($this->stylesNs, 'page-layout-name');
             $this->masterPrintStylesCrossReference[$styleMasterName] = $pageLayoutName;
         }
     }
-
-    public function readStyleCrossReferences(DOMDocument $contentDom): void
+    public function readStyleCrossReferences(DOMDocument $contentDom) : void
     {
         $item0 = $contentDom->getElementsByTagNameNS($this->officeNs, 'automatic-styles')->item(0);
-        $styleXReferences = ($item0 === null) ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'style');
-
+        $styleXReferences = $item0 === null ? [] : $item0->getElementsByTagNameNS($this->stylesNs, 'style');
         foreach ($styleXReferences as $styleXreferenceSet) {
             $styleXRefName = $styleXreferenceSet->getAttributeNS($this->stylesNs, 'name');
             $stylePageLayoutName = $styleXreferenceSet->getAttributeNS($this->stylesNs, 'master-page-name');
@@ -135,50 +117,28 @@ class PageSettings
             }
         }
     }
-
-    public function setVisibilityForWorksheet(Worksheet $worksheet, string $styleName): void
+    public function setVisibilityForWorksheet(Worksheet $worksheet, string $styleName) : void
     {
-        if (!array_key_exists($styleName, $this->tableStylesCrossReference)) {
+        if (!\array_key_exists($styleName, $this->tableStylesCrossReference)) {
             return;
         }
-
-        $worksheet->setSheetState(
-            $this->tableStylesCrossReference[$styleName] === 'false'
-                ? Worksheet::SHEETSTATE_HIDDEN
-                : Worksheet::SHEETSTATE_VISIBLE
-        );
+        $worksheet->setSheetState($this->tableStylesCrossReference[$styleName] === 'false' ? Worksheet::SHEETSTATE_HIDDEN : Worksheet::SHEETSTATE_VISIBLE);
     }
-
-    public function setPrintSettingsForWorksheet(Worksheet $worksheet, string $styleName): void
+    public function setPrintSettingsForWorksheet(Worksheet $worksheet, string $styleName) : void
     {
-        if (!array_key_exists($styleName, $this->masterStylesCrossReference)) {
+        if (!\array_key_exists($styleName, $this->masterStylesCrossReference)) {
             return;
         }
         $masterStyleName = $this->masterStylesCrossReference[$styleName];
-
-        if (!array_key_exists($masterStyleName, $this->masterPrintStylesCrossReference)) {
+        if (!\array_key_exists($masterStyleName, $this->masterPrintStylesCrossReference)) {
             return;
         }
         $printSettingsIndex = $this->masterPrintStylesCrossReference[$masterStyleName];
-
-        if (!array_key_exists($printSettingsIndex, $this->pageLayoutStyles)) {
+        if (!\array_key_exists($printSettingsIndex, $this->pageLayoutStyles)) {
             return;
         }
         $printSettings = $this->pageLayoutStyles[$printSettingsIndex];
-
-        $worksheet->getPageSetup()
-            ->setOrientation($printSettings->orientation ?? PageSetup::ORIENTATION_DEFAULT)
-            ->setPageOrder($printSettings->printOrder === 'ltr' ? PageSetup::PAGEORDER_OVER_THEN_DOWN : PageSetup::PAGEORDER_DOWN_THEN_OVER)
-            ->setScale((int) trim($printSettings->scale, '%'))
-            ->setHorizontalCentered($printSettings->horizontalCentered)
-            ->setVerticalCentered($printSettings->verticalCentered);
-
-        $worksheet->getPageMargins()
-            ->setLeft($printSettings->marginLeft)
-            ->setRight($printSettings->marginRight)
-            ->setTop($printSettings->marginTop)
-            ->setBottom($printSettings->marginBottom)
-            ->setHeader($printSettings->marginHeader)
-            ->setFooter($printSettings->marginFooter);
+        $worksheet->getPageSetup()->setOrientation($printSettings->orientation ?? PageSetup::ORIENTATION_DEFAULT)->setPageOrder($printSettings->printOrder === 'ltr' ? PageSetup::PAGEORDER_OVER_THEN_DOWN : PageSetup::PAGEORDER_DOWN_THEN_OVER)->setScale((int) \trim($printSettings->scale, '%'))->setHorizontalCentered($printSettings->horizontalCentered)->setVerticalCentered($printSettings->verticalCentered);
+        $worksheet->getPageMargins()->setLeft($printSettings->marginLeft)->setRight($printSettings->marginRight)->setTop($printSettings->marginTop)->setBottom($printSettings->marginBottom)->setHeader($printSettings->marginHeader)->setFooter($printSettings->marginFooter);
     }
 }

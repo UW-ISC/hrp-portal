@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader;
 
 class DefaultReadFilter implements IReadFilter
 {
@@ -15,6 +15,6 @@ class DefaultReadFilter implements IReadFilter
      */
     public function readCell($columnAddress, $row, $worksheetName = '')
     {
-        return true;
+        return \true;
     }
 }

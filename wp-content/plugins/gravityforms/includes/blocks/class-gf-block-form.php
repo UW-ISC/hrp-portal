@@ -43,6 +43,20 @@ class GF_Block_Form extends GF_Block {
 		$this->assign_attributes();
 	}
 
+	/**
+	 * Register block type and add filters specific to the form block.
+	 *
+	 * @since 2.10.5
+	 *
+	 * @return void
+	 */
+	public function init() {
+		parent::init();
+
+		// Move WordPress's custom CSS classes from the <script> to the <div class="gform_wrapper">, so that the form is styled correctly.
+		add_filter( 'render_block_gravityforms/form', array( $this, 'fix_custom_css_class_placement' ), 10, 2 );
+	}
+
 	private function assign_attributes() {
 		$default_attributes = GFForms::get_service_container()->get( \Gravity_Forms\Gravity_Forms\Blocks\GF_Blocks_Service_Provider::FORM_BLOCK_ATTRIBUTES );
 		$attributes         = apply_filters( 'gform_form_block_attributes', $default_attributes );
@@ -69,6 +83,70 @@ class GF_Block_Form extends GF_Block {
 
 		return self::$_instance;
 
+	}
+
+	/**
+	 * Move the WordPress "Custom CSS" block-support classes from a leading <script> to the gform_wrapper <div>.
+	 *
+	 * The block "Custom CSS" setting introduced in WP 7.0 adds custom CSS classes to the first HTML element in a block,
+	 * which might be the <script> tag added by GFForms::maybe_prepend_hooks_js_script() instead of the <div class="gform_wrapper">.
+	 * This filter corrects that.
+	 *
+	 * @since 2.10.5
+	 *
+	 * @param string $block_content The rendered block HTML.
+	 * @param array  $block         The parsed block data.
+	 *
+	 * @return string The (possibly corrected) block HTML.
+	 */
+	public function fix_custom_css_class_placement( $block_content, $block ) {
+		if ( ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+
+		// Advance to the first tag.  If the content is empty or has no tags, bail.
+		if ( ! $tags->next_tag() ) {
+			return $block_content;
+		}
+
+		// Only act when the first element is a <script> — i.e. the hooks JS was prepended.
+		if ( 'SCRIPT' !== $tags->get_tag() ) {
+			return $block_content;
+		}
+
+		// Only act when WordPress has placed the custom-CSS marker classes on this <script>.
+		$class_attr = $tags->get_attribute( 'class' );
+		if ( ! $class_attr || false === strpos( $class_attr, 'has-custom-css' ) ) {
+			return $block_content;
+		}
+
+		// Extract the unique `wp-custom-css-*` class generated for this block instance.
+		$custom_css_class = null;
+		foreach ( preg_split( '/\s+/', $class_attr ) as $class ) {
+			if ( 0 === strpos( $class, 'wp-custom-css-' ) ) {
+				$custom_css_class = $class;
+				break;
+			}
+		}
+
+		// Remove the custom-CSS classes from the <script> tag.
+		$tags->remove_class( 'has-custom-css' );
+		if ( $custom_css_class ) {
+			$tags->remove_class( $custom_css_class );
+		}
+
+		// Find the form wrapper <div> and add the classes to it instead.
+		// next_tag() searches forward from the current cursor position.
+		if ( $tags->next_tag( array( 'class_name' => 'gform_wrapper' ) ) ) {
+			$tags->add_class( 'has-custom-css' );
+			if ( $custom_css_class ) {
+				$tags->add_class( $custom_css_class );
+			}
+		}
+
+		return $tags->get_updated_html();
 	}
 
 

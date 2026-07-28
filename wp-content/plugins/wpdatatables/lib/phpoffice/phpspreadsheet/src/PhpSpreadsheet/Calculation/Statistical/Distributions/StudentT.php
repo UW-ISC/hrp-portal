@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class StudentT
 {
     use ArrayEnabled;
-
     /**
      * TDIST.
      *
@@ -29,10 +27,9 @@ class StudentT
      */
     public static function distribution($value, $degrees, $tails)
     {
-        if (is_array($value) || is_array($degrees) || is_array($tails)) {
+        if (\is_array($value) || \is_array($degrees) || \is_array($tails)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees, $tails);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $degrees = DistributionValidations::validateInt($degrees);
@@ -40,14 +37,11 @@ class StudentT
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value < 0) || ($degrees < 1) || ($tails < 1) || ($tails > 2)) {
+        if ($value < 0 || $degrees < 1 || $tails < 1 || $tails > 2) {
             return ExcelError::NAN();
         }
-
         return self::calculateDistribution($value, $degrees, $tails);
     }
-
     /**
      * TINV.
      *
@@ -64,30 +58,24 @@ class StudentT
      */
     public static function inverse($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
-
         try {
             $probability = DistributionValidations::validateProbability($probability);
             $degrees = DistributionValidations::validateInt($degrees);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($degrees <= 0) {
             return ExcelError::NAN();
         }
-
-        $callback = function ($value) use ($degrees) {
+        $callback = function ($value) use($degrees) {
             return self::distribution($value, $degrees, 2);
         };
-
         $newtonRaphson = new NewtonRaphson($callback);
-
         return $newtonRaphson->execute($probability);
     }
-
     /**
      * @return float
      */
@@ -103,35 +91,30 @@ class StudentT
         //    Algorithms", editied by P Griffiths and I D Hill (1985; Ellis
         //    Horwood Ltd.; W. Sussex, England).
         $tterm = $degrees;
-        $ttheta = atan2($value, sqrt($tterm));
-        $tc = cos($ttheta);
-        $ts = sin($ttheta);
-
-        if (($degrees % 2) === 1) {
+        $ttheta = \atan2($value, \sqrt($tterm));
+        $tc = \cos($ttheta);
+        $ts = \sin($ttheta);
+        if ($degrees % 2 === 1) {
             $ti = 3;
             $tterm = $tc;
         } else {
             $ti = 2;
             $tterm = 1;
         }
-
         $tsum = $tterm;
         while ($ti < $degrees) {
             $tterm *= $tc * $tc * ($ti - 1) / $ti;
             $tsum += $tterm;
             $ti += 2;
         }
-
         $tsum *= $ts;
-        if (($degrees % 2) == 1) {
+        if ($degrees % 2 == 1) {
             $tsum = Functions::M_2DIVPI * ($tsum + $ttheta);
         }
-
         $tValue = 0.5 * (1 + $tsum);
         if ($tails == 1) {
-            return 1 - abs($tValue);
+            return 1 - \abs($tValue);
         }
-
-        return 1 - abs((1 - $tValue) - $tValue);
+        return 1 - \abs(1 - $tValue - $tValue);
     }
 }

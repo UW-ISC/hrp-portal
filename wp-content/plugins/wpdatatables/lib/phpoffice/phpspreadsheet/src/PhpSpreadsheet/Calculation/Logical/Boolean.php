@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Logical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Logical;
 
 class Boolean
 {
@@ -14,11 +14,10 @@ class Boolean
      *
      * @return bool True
      */
-    public static function true(): bool
+    public static function true() : bool
     {
-        return true;
+        return \true;
     }
-
     /**
      * FALSE.
      *
@@ -29,8 +28,8 @@ class Boolean
      *
      * @return bool False
      */
-    public static function false(): bool
+    public static function false() : bool
     {
-        return false;
+        return \false;
     }
 }

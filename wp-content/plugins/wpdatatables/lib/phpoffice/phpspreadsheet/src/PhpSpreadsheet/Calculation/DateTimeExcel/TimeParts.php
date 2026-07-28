@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 class TimeParts
 {
     use ArrayEnabled;
-
     /**
      * HOUROFDAY.
      *
@@ -29,27 +27,23 @@ class TimeParts
      */
     public static function hour($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
-
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
-
         return (int) $timeValue->format('H');
     }
-
     /**
      * MINUTE.
      *
@@ -69,27 +63,23 @@ class TimeParts
      */
     public static function minute($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
-
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
-
         return (int) $timeValue->format('i');
     }
-
     /**
      * SECOND.
      *
@@ -109,24 +99,21 @@ class TimeParts
      */
     public static function second($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
-
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
-
         return (int) $timeValue->format('s');
     }
 }

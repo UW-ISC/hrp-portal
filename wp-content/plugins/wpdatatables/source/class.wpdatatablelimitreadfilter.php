@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
 class wpDataTableLimitReadFilter implements IReadFilter
 {

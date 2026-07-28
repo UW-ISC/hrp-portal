@@ -165,8 +165,11 @@ class GF_Splash_Page {
 	 */
 	public function system_status_link( $subviews ) {
 		$subviews[19] = array(
-			'name'  => 'about',
-			'label' => __( 'About', 'gravityforms' ),
+			'name'        => 'about',
+			'label'       => esc_html__( 'About', 'gravityforms' ),
+			'url'         => 'https://www.gravityforms.com/tag/security-release/?utm_campaign=43447468-releases&utm_source=gravity-forms-plugin&utm_medium=wp-admin',
+			'target'      => '_blank',
+			'is_external' => true,
 		);
 
 		return $subviews;

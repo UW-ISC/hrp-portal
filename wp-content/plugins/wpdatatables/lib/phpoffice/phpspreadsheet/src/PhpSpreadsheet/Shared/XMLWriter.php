@@ -1,25 +1,21 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared;
 
-use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
 class XMLWriter extends \XMLWriter
 {
     /** @var bool */
-    public static $debugEnabled = false;
-
+    public static $debugEnabled = \false;
     /** Temporary storage method */
     const STORAGE_MEMORY = 1;
     const STORAGE_DISK = 2;
-
     /**
      * Temporary filename.
      *
      * @var string
      */
     private $tempFileName = '';
-
     /**
      * Create a new XMLWriter instance.
      *
@@ -36,21 +32,18 @@ class XMLWriter extends \XMLWriter
             if ($temporaryStorageFolder === null) {
                 $temporaryStorageFolder = File::sysGetTempDir();
             }
-            $this->tempFileName = (string) @tempnam($temporaryStorageFolder, 'xml');
-
+            $this->tempFileName = (string) @\tempnam($temporaryStorageFolder, 'xml');
             // Open storage
-            if (empty($this->tempFileName) || $this->openUri($this->tempFileName) === false) {
+            if (empty($this->tempFileName) || $this->openUri($this->tempFileName) === \false) {
                 // Fallback to memory...
                 $this->openMemory();
             }
         }
-
         // Set default values
         if (self::$debugEnabled) {
-            $this->setIndent(true);
+            $this->setIndent(\true);
         }
     }
-
     /**
      * Destructor.
      */
@@ -60,17 +53,14 @@ class XMLWriter extends \XMLWriter
         // There is nothing reasonable to do if unlink fails.
         if ($this->tempFileName != '') {
             /** @scrutinizer ignore-unhandled */
-            @unlink($this->tempFileName);
+            @\unlink($this->tempFileName);
         }
     }
-
-    public function __wakeup(): void
+    public function __wakeup() : void
     {
         $this->tempFileName = '';
-
         throw new SpreadsheetException('Unserialize not permitted');
     }
-
     /**
      * Get written data.
      *
@@ -79,13 +69,11 @@ class XMLWriter extends \XMLWriter
     public function getData()
     {
         if ($this->tempFileName == '') {
-            return $this->outputMemory(true);
+            return $this->outputMemory(\true);
         }
         $this->flush();
-
-        return file_get_contents($this->tempFileName) ?: '';
+        return \file_get_contents($this->tempFileName) ?: '';
     }
-
     /**
      * Wrapper method for writeRaw.
      *
@@ -95,10 +83,9 @@ class XMLWriter extends \XMLWriter
      */
     public function writeRawData($rawTextData)
     {
-        if (is_array($rawTextData)) {
-            $rawTextData = implode("\n", $rawTextData);
+        if (\is_array($rawTextData)) {
+            $rawTextData = \implode("\n", $rawTextData);
         }
-
-        return $this->writeRaw(htmlspecialchars($rawTextData ?? ''));
+        return $this->writeRaw(\htmlspecialchars($rawTextData ?? ''));
     }
 }

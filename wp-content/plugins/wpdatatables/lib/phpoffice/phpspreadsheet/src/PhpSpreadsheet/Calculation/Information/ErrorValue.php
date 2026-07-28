@@ -1,13 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Information;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 class ErrorValue
 {
     use ArrayEnabled;
-
     /**
      * IS_ERR.
      *
@@ -20,13 +18,11 @@ class ErrorValue
      */
     public static function isErr($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
-        return self::isError($value) && (!self::isNa(($value)));
+        return self::isError($value) && !self::isNa($value);
     }
-
     /**
      * IS_ERROR.
      *
@@ -39,17 +35,14 @@ class ErrorValue
      */
     public static function isError($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
-        if (!is_string($value)) {
-            return false;
+        if (!\is_string($value)) {
+            return \false;
         }
-
-        return in_array($value, ExcelError::ERROR_CODES, true);
+        return \in_array($value, ExcelError::ERROR_CODES, \true);
     }
-
     /**
      * IS_NA.
      *
@@ -62,10 +55,9 @@ class ErrorValue
      */
     public static function isNa($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
         return $value === ExcelError::NA();
     }
 }

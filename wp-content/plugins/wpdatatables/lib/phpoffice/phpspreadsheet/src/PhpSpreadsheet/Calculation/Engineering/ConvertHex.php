@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class ConvertHex extends ConvertBase
 {
     /**
@@ -40,10 +39,9 @@ class ConvertHex extends ConvertBase
      */
     public static function toBinary($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
-
         try {
             $value = self::validateValue($value);
             $value = self::validateHex($value);
@@ -51,12 +49,9 @@ class ConvertHex extends ConvertBase
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $dec = self::toDecimal($value);
-
         return ConvertDecimal::toBinary($dec, $places);
     }
-
     /**
      * toDecimal.
      *
@@ -80,36 +75,30 @@ class ConvertHex extends ConvertBase
      */
     public static function toDecimal($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
-
         try {
             $value = self::validateValue($value);
             $value = self::validateHex($value);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (strlen($value) > 10) {
+        if (\strlen($value) > 10) {
             return ExcelError::NAN();
         }
-
         $binX = '';
-        foreach (str_split($value) as $char) {
-            $binX .= str_pad(base_convert($char, 16, 2), 4, '0', STR_PAD_LEFT);
+        foreach (\str_split($value) as $char) {
+            $binX .= \str_pad(\base_convert($char, 16, 2), 4, '0', \STR_PAD_LEFT);
         }
-        if (strlen($binX) == 40 && $binX[0] == '1') {
+        if (\strlen($binX) == 40 && $binX[0] == '1') {
             for ($i = 0; $i < 40; ++$i) {
-                $binX[$i] = ($binX[$i] == '1' ? '0' : '1');
+                $binX[$i] = $binX[$i] == '1' ? '0' : '1';
             }
-
-            return (string) ((bindec($binX) + 1) * -1);
+            return (string) ((\bindec($binX) + 1) * -1);
         }
-
-        return (string) bindec($binX);
+        return (string) \bindec($binX);
     }
-
     /**
      * toOctal.
      *
@@ -147,10 +136,9 @@ class ConvertHex extends ConvertBase
      */
     public static function toOctal($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
-
         try {
             $value = self::validateValue($value);
             $value = self::validateHex($value);
@@ -158,18 +146,14 @@ class ConvertHex extends ConvertBase
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $decimal = self::toDecimal($value);
-
         return ConvertDecimal::toOctal($decimal, $places);
     }
-
-    protected static function validateHex(string $value): string
+    protected static function validateHex(string $value) : string
     {
-        if (strlen($value) > preg_match_all('/[0123456789ABCDEF]/', $value)) {
+        if (\strlen($value) > \preg_match_all('/[0123456789ABCDEF]/', $value)) {
             throw new Exception(ExcelError::NAN());
         }
-
         return $value;
     }
 }

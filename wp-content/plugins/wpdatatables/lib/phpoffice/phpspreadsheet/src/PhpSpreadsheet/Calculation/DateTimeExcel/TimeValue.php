@@ -1,31 +1,17 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
-use Composer\Pcre\Preg;
+use WPDT\Composer\Pcre\Preg;
 use Datetime;
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 class TimeValue
 {
     use ArrayEnabled;
-
-    private const EXTRACT_TIME = '/\b'
-        . '(\d+)' // match[1] - hour
-        . '(:' // start of match[2] (rest of string) - colon
-        . '(\d+' // start of match[3] - minute
-        . '(:\d+' // start of match[4] - colon and seconds
-        . '([.]\d+)?' // match[5] - optional decimal point followed by fractional seconds
-        . ')?' // end of match[4], which is optional
-        . ')' // end of match 3
-        // Excel does not require 'm' to trail 'a' or 'p'; Php does
-        . '(\s*(a|p))?' // match[6] optional whitespace followed by optional match[7] a or p
-        . ')' // end of match[2]
-        . '/i';
-
+    private const EXTRACT_TIME = '/\\b' . '(\\d+)' . '(:' . '(\\d+' . '(:\\d+' . '([.]\\d+)?' . ')?' . ')' . '(\\s*(a|p))?' . ')' . '/i';
     /**
      * TIMEVALUE.
      *
@@ -52,27 +38,26 @@ class TimeValue
      */
     public static function fromString($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
-
         // try to parse as time iff there is at least one digit
-        if (is_string($timeValue) && preg_match('/\d/', $timeValue) !== 1) {
+        if (\is_string($timeValue) && \preg_match('/\\d/', $timeValue) !== 1) {
             return ExcelError::VALUE();
         }
-
-        $timeValue = trim($timeValue ?? '', '"');
+        $timeValue = \trim($timeValue ?? '', '"');
         if (Preg::isMatch(self::EXTRACT_TIME, $timeValue, $matches)) {
-            if (empty($matches[6])) { // am/pm
+            if (empty($matches[6])) {
+                // am/pm
                 $hour = (int) $matches[1];
-                $timeValue = ($hour % 24) . $matches[2];
-            } elseif ($matches[6] === $matches[7]) { // Excel wants space before am/pm
+                $timeValue = $hour % 24 . $matches[2];
+            } elseif ($matches[6] === $matches[7]) {
+                // Excel wants space before am/pm
                 return ExcelError::VALUE();
             } else {
                 $timeValue = $matches[0] . 'm';
             }
         }
-
         $PHPDateArray = Helpers::dateParse($timeValue);
         $retValue = ExcelError::VALUE();
         if (Helpers::dateParseSucceeded($PHPDateArray)) {
@@ -84,7 +69,6 @@ class TimeValue
             $second = $PHPDateArray['second'];
             // OpenOffice-specific code removed - it works just like Excel
             $excelDateValue = SharedDateHelper::formattedPHPToExcel(1900, 1, 1, $hour, $minute, $second) - 1;
-
             $retType = Functions::getReturnDateType();
             if ($retType === Functions::RETURNDATE_EXCEL) {
                 $retValue = (float) $excelDateValue;
@@ -94,7 +78,6 @@ class TimeValue
                 $retValue = new DateTime('1900-01-01 ' . $PHPDateArray['hour'] . ':' . $PHPDateArray['minute'] . ':' . $PHPDateArray['second']);
             }
         }
-
         return $retValue;
     }
 }

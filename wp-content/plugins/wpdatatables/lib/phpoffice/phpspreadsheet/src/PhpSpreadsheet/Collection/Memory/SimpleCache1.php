@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Collection\Memory;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Collection\Memory;
 
 use DateInterval;
-use Psr\SimpleCache\CacheInterface;
-
+use WPDT\Psr\SimpleCache\CacheInterface;
 /**
  * This is the default implementation for in-memory cell collection.
  *
@@ -17,17 +16,14 @@ class SimpleCache1 implements CacheInterface
      * @var array Cell Cache
      */
     private $cache = [];
-
     /**
      * @return bool
      */
     public function clear()
     {
         $this->cache = [];
-
-        return true;
+        return \true;
     }
-
     /**
      * @param string $key
      *
@@ -36,10 +32,8 @@ class SimpleCache1 implements CacheInterface
     public function delete($key)
     {
         unset($this->cache[$key]);
-
-        return true;
+        return \true;
     }
-
     /**
      * @param iterable $keys
      *
@@ -50,10 +44,8 @@ class SimpleCache1 implements CacheInterface
         foreach ($keys as $key) {
             $this->delete($key);
         }
-
-        return true;
+        return \true;
     }
-
     /**
      * @param string $key
      * @param mixed  $default
@@ -65,10 +57,8 @@ class SimpleCache1 implements CacheInterface
         if ($this->has($key)) {
             return $this->cache[$key];
         }
-
         return $default;
     }
-
     /**
      * @param iterable $keys
      * @param mixed    $default
@@ -81,10 +71,8 @@ class SimpleCache1 implements CacheInterface
         foreach ($keys as $key) {
             $results[$key] = $this->get($key, $default);
         }
-
         return $results;
     }
-
     /**
      * @param string $key
      *
@@ -92,9 +80,8 @@ class SimpleCache1 implements CacheInterface
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->cache);
+        return \array_key_exists($key, $this->cache);
     }
-
     /**
      * @param string                 $key
      * @param mixed                  $value
@@ -105,10 +92,8 @@ class SimpleCache1 implements CacheInterface
     public function set($key, $value, $ttl = null)
     {
         $this->cache[$key] = $value;
-
-        return true;
+        return \true;
     }
-
     /**
      * @param iterable               $values
      * @param null|DateInterval|int $ttl
@@ -120,7 +105,6 @@ class SimpleCache1 implements CacheInterface
         foreach ($values as $key => $value) {
             $this->set($key, $value);
         }
-
-        return true;
+        return \true;
     }
 }

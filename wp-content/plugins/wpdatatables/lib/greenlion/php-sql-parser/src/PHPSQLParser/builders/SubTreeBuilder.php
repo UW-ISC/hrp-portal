@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SubTreeBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  *
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for [sub_tree] fields.
  * You can overwrite all functions to achieve another handling.
@@ -50,70 +50,71 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SubTreeBuilder implements Builder {
-
-    protected function buildColRef($parsed) {
+class SubTreeBuilder implements Builder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildInList($parsed) {
+    protected function buildInList($parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildQuery($parsed) {
+    protected function buildQuery($parsed)
+    {
         $builder = new QueryBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildUserVariable($parsed) {
+    protected function buildUserVariable($parsed)
+    {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSign($parsed) {
+    protected function buildSign($parsed)
+    {
         $builder = new SignBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed, $delim = " ") {
-        if ($parsed['sub_tree'] === '' || $parsed['sub_tree'] === false) {
+    public function build(array $parsed, $delim = " ")
+    {
+        if ($parsed['sub_tree'] === '' || $parsed['sub_tree'] === \false) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildOperator($v);
@@ -126,17 +127,14 @@ class SubTreeBuilder implements Builder {
             $sql .= $this->buildUserVariable($v);
             $sign = $this->buildSign($v);
             $sql .= $sign;
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('expression subtree', $k, $v, 'expr_type');
             }
-
             // We don't need whitespace between a sign and the following part.
             if ($sign === '') {
                 $sql .= $delim;
             }
         }
-        return substr($sql, 0, -strlen($delim));
+        return \substr($sql, 0, -\strlen($delim));
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateTableDefinitionBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the create definitions of CREATE TABLE. 
@@ -49,18 +49,18 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableDefinitionBuilder implements Builder {
-
-    protected function buildTableBracketExpression($parsed) {
+class CreateTableDefinitionBuilder implements Builder
+{
+    protected function buildTableBracketExpression($parsed)
+    {
         $builder = new TableBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
-        if (!isset($parsed) || $parsed['create-def'] === false) {
+    public function build(array $parsed)
+    {
+        if (!isset($parsed) || $parsed['create-def'] === \false) {
             return "";
         }
         return $this->buildTableBracketExpression($parsed['create-def']);
     }
 }
-?>

@@ -1,39 +1,34 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Lcm
 {
     //
     //    Private method to return an array of the factors of the input value
     //
-    private static function factors(float $value): array
+    private static function factors(float $value) : array
     {
-        $startVal = floor(sqrt($value));
-
+        $startVal = \floor(\sqrt($value));
         $factorArray = [];
         for ($i = $startVal; $i > 1; --$i) {
-            if (($value % $i) == 0) {
-                $factorArray = array_merge($factorArray, self::factors($value / $i));
-                $factorArray = array_merge($factorArray, self::factors($i));
-                if ($i <= sqrt($value)) {
+            if ($value % $i == 0) {
+                $factorArray = \array_merge($factorArray, self::factors($value / $i));
+                $factorArray = \array_merge($factorArray, self::factors($i));
+                if ($i <= \sqrt($value)) {
                     break;
                 }
             }
         }
         if (!empty($factorArray)) {
-            rsort($factorArray);
-
+            \rsort($factorArray);
             return $factorArray;
         }
-
         return [(int) $value];
     }
-
     /**
      * LCM.
      *
@@ -60,7 +55,7 @@ class Lcm
                 $value = Helpers::validateNumericNullSubstitution($value1, 1);
                 Helpers::validateNotNegative($value);
                 $arrayArgs[] = (int) $value;
-                $anyZeros += (int) !((bool) $value);
+                $anyZeros += (int) (!(bool) $value);
             }
             self::testNonNulls($anyNonNulls);
             if ($anyZeros) {
@@ -69,13 +64,12 @@ class Lcm
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $returnValue = 1;
         $allPoweredFactors = [];
         // Loop through arguments
         foreach ($arrayArgs as $value) {
-            $myFactors = self::factors(floor($value));
-            $myCountedFactors = array_count_values($myFactors);
+            $myFactors = self::factors(\floor($value));
+            $myCountedFactors = \array_count_values($myFactors);
             $myPoweredFactors = [];
             foreach ($myCountedFactors as $myCountedFactor => $myCountedPower) {
                 $myPoweredFactors[$myCountedFactor] = $myCountedFactor ** $myCountedPower;
@@ -85,11 +79,9 @@ class Lcm
         foreach ($allPoweredFactors as $allPoweredFactor) {
             $returnValue *= (int) $allPoweredFactor;
         }
-
         return $returnValue;
     }
-
-    private static function processPoweredFactors(array &$allPoweredFactors, array &$myPoweredFactors): void
+    private static function processPoweredFactors(array &$allPoweredFactors, array &$myPoweredFactors) : void
     {
         foreach ($myPoweredFactors as $myPoweredValue => $myPoweredFactor) {
             if (isset($allPoweredFactors[$myPoweredValue])) {
@@ -101,8 +93,7 @@ class Lcm
             }
         }
     }
-
-    private static function testNonNulls(int $anyNonNulls): void
+    private static function testNonNulls(int $anyNonNulls) : void
     {
         if (!$anyNonNulls) {
             throw new Exception(ExcelError::VALUE());

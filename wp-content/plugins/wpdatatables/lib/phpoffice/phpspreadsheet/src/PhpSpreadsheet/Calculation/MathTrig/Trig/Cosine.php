@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Trig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Trig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Helpers;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Helpers;
 class Cosine
 {
     use ArrayEnabled;
-
     /**
      * COS.
      *
@@ -23,19 +21,16 @@ class Cosine
      */
     public static function cos($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return cos($number);
+        return \cos($number);
     }
-
     /**
      * COSH.
      *
@@ -49,19 +44,16 @@ class Cosine
      */
     public static function cosh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return cosh($number);
+        return \cosh($number);
     }
-
     /**
      * ACOS.
      *
@@ -75,19 +67,16 @@ class Cosine
      */
     public static function acos($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return Helpers::numberOrNan(acos($number));
+        return Helpers::numberOrNan(\acos($number));
     }
-
     /**
      * ACOSH.
      *
@@ -101,16 +90,14 @@ class Cosine
      */
     public static function acosh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return Helpers::numberOrNan(acosh($number));
+        return Helpers::numberOrNan(\acosh($number));
     }
 }

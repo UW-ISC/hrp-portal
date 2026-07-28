@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Definition that allows a set of elements, and allows no children.
  * @note This is a hack to reuse code from HTMLPurifier_ChildDef_Required,
@@ -12,13 +14,11 @@ class HTMLPurifier_ChildDef_Optional extends HTMLPurifier_ChildDef_Required
     /**
      * @type bool
      */
-    public $allow_empty = true;
-
+    public $allow_empty = \true;
     /**
      * @type string
      */
     public $type = 'optional';
-
     /**
      * @param array $children
      * @param HTMLPurifier_Config $config
@@ -29,9 +29,9 @@ class HTMLPurifier_ChildDef_Optional extends HTMLPurifier_ChildDef_Required
     {
         $result = parent::validateChildren($children, $config, $context);
         // we assume that $children is not modified
-        if ($result === false) {
+        if ($result === \false) {
             if (empty($children)) {
-                return true;
+                return \true;
             } elseif ($this->whitespace) {
                 return $children;
             } else {
@@ -41,5 +41,4 @@ class HTMLPurifier_ChildDef_Optional extends HTMLPurifier_ChildDef_Required
         return $result;
     }
 }
-
 // vim: et sw=4 sts=4

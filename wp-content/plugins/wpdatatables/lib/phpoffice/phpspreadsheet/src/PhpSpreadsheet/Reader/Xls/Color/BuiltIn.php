@@ -1,22 +1,22 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader\Xls\Color;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Xls\Color;
 
 class BuiltIn
 {
     private const BUILTIN_COLOR_MAP = [
-        0x00 => '000000',
-        0x01 => 'FFFFFF',
-        0x02 => 'FF0000',
-        0x03 => '00FF00',
-        0x04 => '0000FF',
-        0x05 => 'FFFF00',
-        0x06 => 'FF00FF',
-        0x07 => '00FFFF',
-        0x40 => '000000', // system window text color
-        0x41 => 'FFFFFF', // system window background color
+        0x0 => '000000',
+        0x1 => 'FFFFFF',
+        0x2 => 'FF0000',
+        0x3 => '00FF00',
+        0x4 => '0000FF',
+        0x5 => 'FFFF00',
+        0x6 => 'FF00FF',
+        0x7 => '00FFFF',
+        0x40 => '000000',
+        // system window text color
+        0x41 => 'FFFFFF',
     ];
-
     /**
      * Map built-in color to RGB value.
      *

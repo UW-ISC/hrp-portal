@@ -1,13 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 class Trunc
 {
     use ArrayEnabled;
-
     /**
      * TRUNC.
      *
@@ -27,10 +25,9 @@ class Trunc
      */
     public static function evaluate($value = 0, $digits = 0)
     {
-        if (is_array($value) || is_array($digits)) {
+        if (\is_array($value) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $digits);
         }
-
         return Round::down($value, $digits);
     }
 }

@@ -1,20 +1,19 @@
 <?php
 
+namespace WPDT;
+
 class HTMLPurifier_DoctypeRegistry
 {
-
     /**
      * Hash of doctype names to doctype objects.
      * @type array
      */
     protected $doctypes;
-
     /**
      * Lookup table of aliases to real doctype names.
      * @type array
      */
     protected $aliases;
-
     /**
      * Registers a doctype to the registry
      * @note Accepts a fully-formed doctype object, or the
@@ -28,34 +27,19 @@ class HTMLPurifier_DoctypeRegistry
      * @param string $dtd_system
      * @return HTMLPurifier_Doctype Editable registered doctype
      */
-    public function register(
-        $doctype,
-        $xml = true,
-        $modules = array(),
-        $tidy_modules = array(),
-        $aliases = array(),
-        $dtd_public = null,
-        $dtd_system = null
-    ) {
-        if (!is_array($modules)) {
+    public function register($doctype, $xml = \true, $modules = array(), $tidy_modules = array(), $aliases = array(), $dtd_public = null, $dtd_system = null)
+    {
+        if (!\is_array($modules)) {
             $modules = array($modules);
         }
-        if (!is_array($tidy_modules)) {
+        if (!\is_array($tidy_modules)) {
             $tidy_modules = array($tidy_modules);
         }
-        if (!is_array($aliases)) {
+        if (!\is_array($aliases)) {
             $aliases = array($aliases);
         }
-        if (!is_object($doctype)) {
-            $doctype = new HTMLPurifier_Doctype(
-                $doctype,
-                $xml,
-                $modules,
-                $tidy_modules,
-                $aliases,
-                $dtd_public,
-                $dtd_system
-            );
+        if (!\is_object($doctype)) {
+            $doctype = new HTMLPurifier_Doctype($doctype, $xml, $modules, $tidy_modules, $aliases, $dtd_public, $dtd_system);
         }
         $this->doctypes[$doctype->name] = $doctype;
         $name = $doctype->name;
@@ -72,7 +56,6 @@ class HTMLPurifier_DoctypeRegistry
         }
         return $doctype;
     }
-
     /**
      * Retrieves reference to a doctype of a certain name
      * @note This function resolves aliases
@@ -86,13 +69,12 @@ class HTMLPurifier_DoctypeRegistry
             $doctype = $this->aliases[$doctype];
         }
         if (!isset($this->doctypes[$doctype])) {
-            throw new Exception('Doctype ' . htmlspecialchars($doctype) . ' does not exist');
+            throw new \Exception('Doctype ' . \htmlspecialchars($doctype) . ' does not exist');
             $anon = new HTMLPurifier_Doctype($doctype);
             return $anon;
         }
         return $this->doctypes[$doctype];
     }
-
     /**
      * Creates a doctype based on a configuration object,
      * will perform initialization on the doctype
@@ -107,7 +89,6 @@ class HTMLPurifier_DoctypeRegistry
     {
         return clone $this->get($this->getDoctypeFromConfig($config));
     }
-
     /**
      * Retrieves the doctype from the configuration object
      * @param HTMLPurifier_Config $config
@@ -138,5 +119,4 @@ class HTMLPurifier_DoctypeRegistry
         return $doctype;
     }
 }
-
 // vim: et sw=4 sts=4

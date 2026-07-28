@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace WPDT\ZipStream\Exception;
 
-namespace ZipStream\Exception;
-
-use ZipStream\Exception;
-
+use WPDT\ZipStream\Exception;
 /**
  * This Exception gets invoked if a file wasn't found
  */
@@ -18,6 +16,6 @@ class FileNotReadableException extends Exception
      */
     public function __construct(string $path)
     {
-        parent::__construct("The file with the path $path isn't readable.");
+        parent::__construct("The file with the path {$path} isn't readable.");
     }
 }

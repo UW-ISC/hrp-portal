@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace WPDT\ZipStream\Option;
 
-namespace ZipStream\Option;
-
-use MyCLabs\Enum\Enum;
-
+use WPDT\MyCLabs\Enum\Enum;
 /**
  * Class Version
  * @package ZipStream\Option
@@ -17,9 +15,10 @@ use MyCLabs\Enum\Enum;
  */
 class Version extends Enum
 {
-    public const STORE = 0x000A; // 1.00
-
-    public const DEFLATE = 0x0014; // 2.00
-
-    public const ZIP64 = 0x002D; // 4.50
+    public const STORE = 0xa;
+    // 1.00
+    public const DEFLATE = 0x14;
+    // 2.00
+    public const ZIP64 = 0x2d;
+    // 4.50
 }

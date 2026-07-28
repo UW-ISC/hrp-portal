@@ -1,12 +1,13 @@
 <?php
 
+namespace WPDT;
+
 class HTMLPurifier_HTMLModule_Name extends HTMLPurifier_HTMLModule
 {
     /**
      * @type string
      */
     public $name = 'Name';
-
     /**
      * @param HTMLPurifier_Config $config
      */
@@ -22,5 +23,4 @@ class HTMLPurifier_HTMLModule_Name extends HTMLPurifier_HTMLModule
         }
     }
 }
-
 // vim: et sw=4 sts=4

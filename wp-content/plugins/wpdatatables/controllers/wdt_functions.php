@@ -339,9 +339,6 @@ function wdtActivationCreateTables()
     if (get_option('wdtGoogleStableVersion') === false) {
         update_option('wdtGoogleStableVersion', 1);
     }
-    if (get_option('wdtHighChartStableVersion') === false) {
-        update_option('wdtHighChartStableVersion', 1);
-    }
     if (get_option('wdtApexStableVersion') === false) {
         update_option('wdtApexStableVersion', 1);
     }
@@ -458,10 +455,10 @@ function wdtUninstallDelete()
         delete_option('wdtPurchaseCodeStoreFormidable');
         delete_option('wdtEnvatoTokenEmailFormidable');
         delete_option('wdtGoogleStableVersion');
-        delete_option('wdtHighChartStableVersion');
         delete_option('wdtApexStableVersion');
         delete_option('wdtShowBundlesNotice');
         delete_option('wdtShowAmeliaBanner');
+        delete_option('wdtShowIvyFormsBanner');
         delete_option('wdtGoogleApiMaps');
         delete_option('wdtGoogleApiMapsValidated');
         delete_option('wdtHideUpdateModal');
@@ -557,6 +554,29 @@ function wdtUninstall()
 
 
 /**
+ * Whether the IvyForms promo banner should render for the current user.
+ *
+ * @return bool
+ */
+function wdt_ivyforms_promo_should_show_for_current_user()
+{
+    if (get_option('wdtShowIvyFormsBanner', 'yes') != "yes") {
+        return false;
+    }
+
+    if (wdt_is_ivyforms_plugin_active()) {
+        return false;
+    }
+
+    $user_id = (int) get_current_user_id();
+    if ($user_id && '1' === (string) get_user_meta($user_id, 'wdt_ivyforms_promo_dismissed', true)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Add rating massage on wpdt-admin pages after 2 weeks of using
  */
 function wdtAdminRatingMessages()
@@ -569,7 +589,7 @@ function wdtAdminRatingMessages()
     $installDate = get_option('wdtInstallDate');
     $currentDate = date('Y-m-d');
     $tempIgnoreDate = get_option('wdtTempFutureDate');
-    $wpdtPage = isset($_GET['page']) ? $_GET['page'] : '';
+    $wpdtPage = ( isset( $_GET['page'] ) && is_string( $_GET['page'] ) ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
     $urlAddonsPage = get_site_url() . '/wp-admin/admin.php?page=wpdatatables-add-ons';
 
     $tempIgnore = strtotime($currentDate) >= strtotime($tempIgnoreDate) ? true : false;
@@ -622,9 +642,47 @@ function wdtAdminRatingMessages()
         include WDT_TEMPLATE_PATH . 'admin/common/promote_amelia.php';
         wp_enqueue_style('wdt-promo-css', WDT_CSS_PATH . 'admin/amelia_promo_banner.css');
     }
+
+    if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false &&
+        wdt_ivyforms_promo_should_show_for_current_user()) {
+        include WDT_TEMPLATE_PATH . 'admin/common/promote_ivyforms.php';
+    }
 }
 
 add_action('admin_notices', 'wdtAdminRatingMessages');
+
+/**
+ * Enqueue IvyForms promo assets when the banner is eligible (same rules as markup in wdtAdminRatingMessages).
+ *
+ * @return void
+ */
+function wdt_ivyforms_promo_enqueue_admin_scripts()
+{
+    if (!is_admin()) {
+        return;
+    }
+
+    $wpdt_page = ( isset( $_GET['page'] ) && is_string( $_GET['page'] ) ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+    if (strpos($wpdt_page, 'wpdatatables') === false) {
+        return;
+    }
+
+    if (!wdt_ivyforms_promo_should_show_for_current_user()) {
+        return;
+    }
+
+    wp_enqueue_style('wdt-ivyforms-promo-css', WDT_CSS_PATH . 'admin/ivyforms_promo_banner.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_script('wdt-ivyforms-promo', WDT_JS_PATH . 'wpdatatables/admin/wdtIvyformsPromo.js', array('jquery'), WDT_CURRENT_VERSION, true);
+    wp_localize_script(
+        'wdt-ivyforms-promo',
+        'wdtIvyformsPromo',
+        array(
+            'install_failed' => __( 'Install failed.', 'wpdatatables' ),
+        )
+    );
+}
+
+add_action('admin_enqueue_scripts', 'wdt_ivyforms_promo_enqueue_admin_scripts');
 
 /**
  * Remove update info message
@@ -703,6 +761,24 @@ function wdtIsPluginInstalled($plugin_path)
     } else {
         return false;
     }
+}
+
+/**
+ * Whether IvyForms is active (matches integration wizard detection).
+ *
+ * @return bool
+ */
+function wdt_is_ivyforms_plugin_active()
+{
+    if (!class_exists('IvyForms\Services\API\IvyFormsAPI')) {
+        return false;
+    }
+
+    if (!method_exists('IvyForms\Services\API\IvyFormsAPI', 'isPluginActive')) {
+        return false;
+    }
+
+    return \IvyForms\Services\API\IvyFormsAPI::isPluginActive();
 }
 
 function wdtInstalledPluginsAmeliaPromotion()
@@ -795,6 +871,49 @@ function wdtRemoveAmeliaPromoNotice()
     exit;
 }
 add_action('wp_ajax_wdt_remove_promo_amelia_notice', 'wdtRemoveAmeliaPromoNotice');
+
+/**
+ * Permanently dismiss IvyForms promo admin notice.
+ *
+ * @return void
+ */
+function wdtRemoveIvyFormsPromoNotice()
+{
+    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'wdt_ivyforms_promo_dismiss')) {
+        wp_send_json_error(array('message' => esc_html__('Security check failed.', 'wpdatatables')), 403);
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => esc_html__('Unauthorized', 'wpdatatables')), 403);
+    }
+
+    update_option('wdtShowIvyFormsBanner', 'no');
+    wp_send_json_success();
+}
+
+add_action('wp_ajax_wdt_remove_ivyforms_promo_notice', 'wdtRemoveIvyFormsPromoNotice');
+
+/**
+ * Dismiss IvyForms promo for the current user only (stored in user meta; no browser storage).
+ *
+ * @return void
+ */
+function wdt_dismiss_ivyforms_promo_user()
+{
+    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'wdt_ivyforms_promo_user_dismiss')) {
+        wp_send_json_error(array('message' => esc_html__('Security check failed.', 'wpdatatables')), 403);
+    }
+
+    if (!is_user_logged_in() || !current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => esc_html__('Unauthorized', 'wpdatatables')), 403);
+    }
+
+    update_user_meta(get_current_user_id(), 'wdt_ivyforms_promo_dismissed', '1');
+
+    wp_send_json_success();
+}
+
+add_action('wp_ajax_wdt_dismiss_ivyforms_promo_user', 'wdt_dismiss_ivyforms_promo_user');
 
 /**
  * Remove Highcharts CDN notice message
@@ -1466,7 +1585,8 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
         'var8' => '%%no_val%%',
         'var9' => '%%no_val%%',
         'export_file_name' => '%%no_val%%',
-        'table_view' => 'regular'
+        'table_view' => 'regular',
+        'preview_mode' => '0'
     ), $atts));
 
     $id = absint($id);
@@ -1541,6 +1661,7 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
 
 
         $wpDataTable->setWpId($id);
+        $wpDataTable->setPreviewMode(absint($preview_mode) === 1);
 
         $columnDataPrepared = $wpDataTable->prepareColumnData($tableData);
 
@@ -1757,6 +1878,30 @@ function wdtCurrentUserCanEdit($tableEditorRoles, $id)
 }
 
 /**
+ * Whether the current user may insert, update, or delete table rows.
+ *
+ * Manual tables are always editable in wp-admin regardless of the editable flag.
+ * MySQL and other table types require editable=1 and passing editor role checks.
+ *
+ * @param object $tableData Table configuration from the database.
+ * @param int    $tableId   Table ID.
+ *
+ * @return bool
+ */
+function wdtUserCanModifyTableData($tableData, $tableId)
+{
+    if (current_user_can('manage_options') && is_admin() && 'manual' === $tableData->table_type) {
+        return true;
+    }
+
+    if (empty($tableData->editable)) {
+        return false;
+    }
+
+    return wdtCurrentUserCanEdit($tableData->editor_roles, $tableId);
+}
+
+/**
  * Removes all dangerous strings from query
  *
  * @param $query
@@ -1803,6 +1948,43 @@ function wdtSanitizeQuery($query)
     $query = apply_filters('wpdatatables_sanitize_query', $query);
 
     return $query;
+}
+
+/**
+ * Sanitize a shortcode / AJAX placeholder value before it is substituted into SQL.
+ *
+ * Unlike wdtSanitizeQuery(), this is only for scalar placeholder values (wdt_var1–9),
+ * not full query strings.
+ *
+ * @param mixed $value Raw placeholder value.
+ * @return string Safe value, or empty string if rejected.
+ */
+function wdtSanitizeSqlPlaceholderValue($value)
+{
+    if (null === $value || '' === $value) {
+        return '';
+    }
+
+    $value = (string) wp_unslash($value);
+    $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
+
+    if (preg_match('/[`\'";()\\\\]|--|#|\/\*|\*\//', $value)) {
+        return '';
+    }
+
+    if (preg_match(
+        '/\b(or|and|union|select|insert|update|delete|drop|create|alter|truncate|sleep|benchmark|'
+        . 'where|from|having|group|order|limit|offset|into|join|exists|information_schema|'
+        . 'load_file|outfile|dumpfile|extractvalue|updatexml|substring|ascii|concat|char|mid|'
+        . 'hex|unhex|pg_sleep|waitfor|delay|procedure|handler)\b/i',
+        $value
+    )) {
+        return '';
+    }
+
+    $value = apply_filters('wpdatatables_sanitize_sql_placeholder_value', $value);
+
+    return $value;
 }
 
 /**
@@ -1922,6 +2104,7 @@ if ($wp_version < 4.4) {
     }
 }
 
+//[<-- Full version -->]//
 global $wdtPluginSlug;
 
 $filePath = plugin_basename(__FILE__);
@@ -1992,7 +2175,7 @@ function wdtCheckInfo($response, $action, $args)
         return $response;
     }
 
-    if ($args->slug === $wdtPluginSlug) {
+    if (in_array($args->slug, [$wdtPluginSlug, 'wpdatatables'], true)) {
         // Try to get cached update data first
         $updateData = get_transient('wdt_update_data');
 
@@ -2053,6 +2236,7 @@ function wdtAddMessageOnUpdate($reply, $package, $updater)
 }
 
 add_filter('upgrader_pre_download', 'wdtAddMessageOnUpdate', 10, 3);
+//[<--/ Full version -->]//
 
 /**
  * Redirect on Welcome page after activate plugin
@@ -2111,14 +2295,6 @@ function wpdt_plugin_row_meta($links, $file, $plugin_data)
                 $plugin_data['Author']
             );
             $links[1] = sprintf(__('By %s'), $author_uri);
-        }
-        // Change View details link.
-        if (isset($links[2])) {
-            $links[2] = sprintf(
-                '<a href="%s" target="_blank">%s</a>',
-                esc_url('https://wpdatatables.com/features/'),
-                esc_html__('View details')
-            );
         }
         // Add Docs and Premium support links
         $row_meta['docs'] = '<a href="' . esc_url('https://wpdatatables.com/documentation/general/features-overview/') . '" aria-label="' . esc_attr__('Docs', 'wpdatatables') . '" target="_blank">' . esc_html__('Docs', 'wpdatatables') . '</a>';

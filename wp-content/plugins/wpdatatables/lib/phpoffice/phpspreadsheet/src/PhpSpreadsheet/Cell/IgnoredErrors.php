@@ -1,65 +1,50 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Cell;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Cell;
 
 class IgnoredErrors
 {
     /** @var bool */
-    private $numberStoredAsText = false;
-
+    private $numberStoredAsText = \false;
     /** @var bool */
-    private $formula = false;
-
+    private $formula = \false;
     /** @var bool */
-    private $twoDigitTextYear = false;
-
+    private $twoDigitTextYear = \false;
     /** @var bool */
-    private $evalError = false;
-
-    public function setNumberStoredAsText(bool $value): self
+    private $evalError = \false;
+    public function setNumberStoredAsText(bool $value) : self
     {
         $this->numberStoredAsText = $value;
-
         return $this;
     }
-
-    public function getNumberStoredAsText(): bool
+    public function getNumberStoredAsText() : bool
     {
         return $this->numberStoredAsText;
     }
-
-    public function setFormula(bool $value): self
+    public function setFormula(bool $value) : self
     {
         $this->formula = $value;
-
         return $this;
     }
-
-    public function getFormula(): bool
+    public function getFormula() : bool
     {
         return $this->formula;
     }
-
-    public function setTwoDigitTextYear(bool $value): self
+    public function setTwoDigitTextYear(bool $value) : self
     {
         $this->twoDigitTextYear = $value;
-
         return $this;
     }
-
-    public function getTwoDigitTextYear(): bool
+    public function getTwoDigitTextYear() : bool
     {
         return $this->twoDigitTextYear;
     }
-
-    public function setEvalError(bool $value): self
+    public function setEvalError(bool $value) : self
     {
         $this->evalError = $value;
-
         return $this;
     }
-
-    public function getEvalError(): bool
+    public function getEvalError() : bool
     {
         return $this->evalError;
     }

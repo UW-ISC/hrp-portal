@@ -45,7 +45,7 @@ class GFSelectColumns {
 
 		$form_id = absint( rgget( 'id' ) );
 		if ( empty( $form_id ) ) {
-			echo esc_html__( 'Oops! We could not locate your form. Please try again.', 'gravityforms' );
+			echo esc_html__( 'You don\'t have any forms yet.', 'gravityforms' );
 			exit;
 		}
 		?>

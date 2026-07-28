@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace WPDT\ZipStream\Option;
 
-namespace ZipStream\Option;
-
-use MyCLabs\Enum\Enum;
-
+use WPDT\MyCLabs\Enum\Enum;
 /**
  * Methods enum
  *
@@ -15,7 +13,6 @@ use MyCLabs\Enum\Enum;
  */
 class Method extends Enum
 {
-    public const STORE = 0x00;
-
-    public const DEFLATE = 0x08;
+    public const STORE = 0x0;
+    public const DEFLATE = 0x8;
 }

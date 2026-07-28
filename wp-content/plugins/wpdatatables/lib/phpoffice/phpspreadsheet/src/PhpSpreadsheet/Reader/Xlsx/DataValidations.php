@@ -1,33 +1,29 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use SimpleXMLElement;
-
 class DataValidations
 {
     /** @var Worksheet */
     private $worksheet;
-
     /** @var SimpleXMLElement */
     private $worksheetXml;
-
     public function __construct(Worksheet $workSheet, SimpleXMLElement $worksheetXml)
     {
         $this->worksheet = $workSheet;
         $this->worksheetXml = $worksheetXml;
     }
-
-    public function load(): void
+    public function load() : void
     {
         foreach ($this->worksheetXml->dataValidations->dataValidation as $dataValidation) {
             // Uppercase coordinate
-            $range = strtoupper((string) $dataValidation['sqref']);
-            $rangeSet = explode(' ', $range);
+            $range = \strtoupper((string) $dataValidation['sqref']);
+            $rangeSet = \explode(' ', $range);
             foreach ($rangeSet as $range) {
-                if (preg_match('/^[A-Z]{1,3}\d{1,7}/', $range, $matches) === 1) {
+                if (\preg_match('/^[A-Z]{1,3}\\d{1,7}/', $range, $matches) === 1) {
                     // Ensure left/top row of range exists, thereby
                     // adjusting high row/column.
                     $this->worksheet->getCell($matches[0]);
@@ -36,11 +32,10 @@ class DataValidations
         }
         foreach ($this->worksheetXml->dataValidations->dataValidation as $dataValidation) {
             // Uppercase coordinate
-            $range = strtoupper((string) $dataValidation['sqref']);
-            $rangeSet = explode(' ', $range);
+            $range = \strtoupper((string) $dataValidation['sqref']);
+            $rangeSet = \explode(' ', $range);
             foreach ($rangeSet as $range) {
                 $stRange = $this->worksheet->shrinkRangeToFit($range);
-
                 // Extract all cell references in $range
                 foreach (Coordinate::extractAllCellReferencesInRange($stRange) as $reference) {
                     // Create validation
@@ -48,11 +43,11 @@ class DataValidations
                     $docValidation->setType((string) $dataValidation['type']);
                     $docValidation->setErrorStyle((string) $dataValidation['errorStyle']);
                     $docValidation->setOperator((string) $dataValidation['operator']);
-                    $docValidation->setAllowBlank(filter_var($dataValidation['allowBlank'], FILTER_VALIDATE_BOOLEAN));
+                    $docValidation->setAllowBlank(\filter_var($dataValidation['allowBlank'], \FILTER_VALIDATE_BOOLEAN));
                     // showDropDown is inverted (works as hideDropDown if true)
-                    $docValidation->setShowDropDown(!filter_var($dataValidation['showDropDown'], FILTER_VALIDATE_BOOLEAN));
-                    $docValidation->setShowInputMessage(filter_var($dataValidation['showInputMessage'], FILTER_VALIDATE_BOOLEAN));
-                    $docValidation->setShowErrorMessage(filter_var($dataValidation['showErrorMessage'], FILTER_VALIDATE_BOOLEAN));
+                    $docValidation->setShowDropDown(!\filter_var($dataValidation['showDropDown'], \FILTER_VALIDATE_BOOLEAN));
+                    $docValidation->setShowInputMessage(\filter_var($dataValidation['showInputMessage'], \FILTER_VALIDATE_BOOLEAN));
+                    $docValidation->setShowErrorMessage(\filter_var($dataValidation['showErrorMessage'], \FILTER_VALIDATE_BOOLEAN));
                     $docValidation->setErrorTitle((string) $dataValidation['errorTitle']);
                     $docValidation->setError((string) $dataValidation['error']);
                     $docValidation->setPromptTitle((string) $dataValidation['promptTitle']);

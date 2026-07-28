@@ -1,11 +1,12 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Property list iterator. Do not instantiate this class directly.
  */
-class HTMLPurifier_PropertyListIterator extends FilterIterator
+class HTMLPurifier_PropertyListIterator extends \FilterIterator
 {
-
     /**
      * @type int
      */
@@ -14,18 +15,16 @@ class HTMLPurifier_PropertyListIterator extends FilterIterator
      * @type string
      */
     protected $filter;
-
     /**
      * @param Iterator $iterator Array of data to iterate over
      * @param string $filter Optional prefix to only allow values of
      */
-    public function __construct(Iterator $iterator, $filter = null)
+    public function __construct(\Iterator $iterator, $filter = null)
     {
         parent::__construct($iterator);
-        $this->l = strlen($filter);
+        $this->l = \strlen($filter);
         $this->filter = $filter;
     }
-
     /**
      * @return bool
      */
@@ -33,11 +32,10 @@ class HTMLPurifier_PropertyListIterator extends FilterIterator
     public function accept()
     {
         $key = $this->getInnerIterator()->key();
-        if (strncmp($key, $this->filter, $this->l) !== 0) {
-            return false;
+        if (\strncmp($key, $this->filter, $this->l) !== 0) {
+            return \false;
         }
-        return true;
+        return \true;
     }
 }
-
 // vim: et sw=4 sts=4

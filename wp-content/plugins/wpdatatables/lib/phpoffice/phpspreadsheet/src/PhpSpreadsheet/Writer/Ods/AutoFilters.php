@@ -1,34 +1,29 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Ods;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Ods;
 
-use PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
+use WPDT\PhpOffice\PhpSpreadsheet\Spreadsheet;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class AutoFilters
 {
     /**
      * @var XMLWriter
      */
     private $objWriter;
-
     /**
      * @var Spreadsheet
      */
     private $spreadsheet;
-
     public function __construct(XMLWriter $objWriter, Spreadsheet $spreadsheet)
     {
         $this->objWriter = $objWriter;
         $this->spreadsheet = $spreadsheet;
     }
-
     /** @var mixed */
-    private static $scrutinizerFalse = false;
-
-    public function write(): void
+    private static $scrutinizerFalse = \false;
+    public function write() : void
     {
         $wrapperWritten = self::$scrutinizerFalse;
         $sheetCount = $this->spreadsheet->getSheetCount();
@@ -36,31 +31,25 @@ class AutoFilters
             $worksheet = $this->spreadsheet->getSheet($i);
             $autofilter = $worksheet->getAutoFilter();
             if ($autofilter !== null && !empty($autofilter->getRange())) {
-                if ($wrapperWritten === false) {
+                if ($wrapperWritten === \false) {
                     $this->objWriter->startElement('table:database-ranges');
-                    $wrapperWritten = true;
+                    $wrapperWritten = \true;
                 }
                 $this->objWriter->startElement('table:database-range');
                 $this->objWriter->writeAttribute('table:orientation', 'column');
                 $this->objWriter->writeAttribute('table:display-filter-buttons', 'true');
-                $this->objWriter->writeAttribute(
-                    'table:target-range-address',
-                    $this->formatRange($worksheet, $autofilter)
-                );
+                $this->objWriter->writeAttribute('table:target-range-address', $this->formatRange($worksheet, $autofilter));
                 $this->objWriter->endElement();
             }
         }
-
-        if ($wrapperWritten === true) {
+        if ($wrapperWritten === \true) {
             $this->objWriter->endElement();
         }
     }
-
-    protected function formatRange(Worksheet $worksheet, Autofilter $autofilter): string
+    protected function formatRange(Worksheet $worksheet, Autofilter $autofilter) : string
     {
         $title = $worksheet->getTitle();
         $range = $autofilter->getRange();
-
         return "'{$title}'.{$range}";
     }
 }

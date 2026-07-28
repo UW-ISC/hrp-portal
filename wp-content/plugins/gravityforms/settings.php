@@ -280,26 +280,22 @@ class GFSettings {
 				</p>
 				<form action="" method="post">
 					<?php
-						if ( GFCommon::current_user_can_uninstall() ) {
+					if ( GFCommon::current_user_can_uninstall() ) {
 
-							wp_nonce_field( 'gform_uninstall', 'gform_uninstall_nonce' );
+						wp_nonce_field( 'gform_uninstall', 'gform_uninstall_nonce' );
 
-							$uninstall_button = sprintf(
-								'<input type="submit" name="uninstall" class="button red" value="%1$s" onclick="return confirm( \'%2$s\' );" onkeypress="return confirm( \'%2$s\' );" />',
-								esc_attr__( 'Uninstall Gravity Forms', 'gravityforms' ),
-								esc_js( __( "Warning! ALL Gravity Forms data, including form entries will be deleted. This cannot be undone. 'OK' to delete, 'Cancel' to stop", 'gravityforms' ) )
-							);
+						$alert_title   = esc_html__( 'Uninstall Gravity Forms', 'gravityforms' );
+						$alert_message = esc_html__( 'Warning! ALL Gravity Forms data, including form entries, will be deleted. This action cannot be undone. \'OK\' to delete, \'Cancel\' to stop.', 'gravityforms' );
 
-							/**
-							 * Allows for the modification of the Gravity Forms uninstall button.
-							 *
-							 * @since Unknown
-							 *
-							 * @param string $uninstall_button The HTML of the uninstall button.
-							 */
-							echo apply_filters( 'gform_uninstall_button', $uninstall_button ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$uninstall_button = sprintf(
+							'<input type="submit" name="uninstall" id="uninstall-button" data-dialog-title="%1$s" data-dialog-confirm="%2$s" class="button red" value="%3$s" />',
+							esc_attr( $alert_title ),
+							esc_attr( $alert_message ),
+							esc_attr__( 'Uninstall Gravity Forms', 'gravityforms' )
+						);
 
-						}
+						echo $uninstall_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
 					?>
 				</form>
 			</div>

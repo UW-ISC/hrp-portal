@@ -65,7 +65,7 @@ class GF_API_Keys_Table extends WP_List_Table {
 		$nonce_url = wp_nonce_url( '?page=gf_settings&subview=gravityformswebapi', 'gf_revoke_key' );
 
 		$actions = array(
-			'edit' => '<a href="#" class="rest-api-edit-key" data-id=" ' . esc_attr__( $item['key_id'] ) . ' " >' . esc_html__( 'Edit', 'gravityforms' ) . '</a>',
+			'edit' => '<a href="#" class="rest-api-edit-key" data-id=" ' . esc_attr( $item['key_id'] ) . ' " >' . esc_html__( 'Edit', 'gravityforms' ) . '</a>',
 			'delete' => sprintf( '<a data-wp-lists="delete:the-list:key_row_%d::status=delete&action=delete_key&key=%d" onclick="%s" href="%s" class="submitdelete">Revoke</a>', absint( $item['key_id'] ), absint( $item['key_id'] ), $confirm, $nonce_url ),
 		);
   

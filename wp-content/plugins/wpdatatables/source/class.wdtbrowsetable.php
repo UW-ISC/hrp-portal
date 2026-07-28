@@ -154,12 +154,14 @@ class WDTBrowseTable extends WP_List_Table
             $query = "SELECT COUNT(*) FROM (SELECT id, title,  table_type, connection, editable FROM {$wpdb->prefix}wpdatatables) as t";
         }
         if (isset($_REQUEST['s'])) {
-            if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE t.id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+            $searchTerm = sanitize_text_field(wp_unslash($_REQUEST['s']));
+            if (is_numeric($searchTerm)) {
+                $query .= $wpdb->prepare(" WHERE t.id LIKE %s", $searchTerm);
             } else {
-                $query .= " WHERE t.title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $searchLike = '%' . $wpdb->esc_like($searchTerm) . '%';
+                $query .= $wpdb->prepare(" WHERE t.title LIKE %s", $searchLike);
                 if (!$this->useNotSupportedMySQLVersion())
-                    $query .= " OR t.table_description LIKE '%" . sanitize_textarea_field($_REQUEST['s']) . "%'";
+                    $query .= $wpdb->prepare(" OR t.table_description LIKE %s", $searchLike);
             }
         }
 
@@ -190,12 +192,14 @@ class WDTBrowseTable extends WP_List_Table
         }
 
         if (isset($_REQUEST['s'])) {
-            if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE t.id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+            $searchTerm = sanitize_text_field(wp_unslash($_REQUEST['s']));
+            if (is_numeric($searchTerm)) {
+                $query .= $wpdb->prepare(" WHERE t.id LIKE %s", $searchTerm);
             } else {
-                $query .= " WHERE t.title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $searchLike = '%' . $wpdb->esc_like($searchTerm) . '%';
+                $query .= $wpdb->prepare(" WHERE t.title LIKE %s", $searchLike);
                 if (!$this->useNotSupportedMySQLVersion())
-                    $query .= " OR t.table_description LIKE '%" . sanitize_textarea_field($_REQUEST['s']) . "%'";
+                    $query .= $wpdb->prepare(" OR t.table_description LIKE %s", $searchLike);
             }
         }
 
@@ -440,7 +444,7 @@ class WDTBrowseTable extends WP_List_Table
         $current_url = apply_filters('wpdatatables_filter_browse_tables_order_current_url', $current_url, 'table');
 
         if (isset($_GET['orderby'])) {
-            $current_orderby = $_GET['orderby'];
+            $current_orderby = sanitize_text_field(wp_unslash($_GET['orderby']));
         } else {
             $current_orderby = '';
         }

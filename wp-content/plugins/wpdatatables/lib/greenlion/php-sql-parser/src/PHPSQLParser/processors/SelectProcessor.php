@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SelectProcessor.php
  *
@@ -29,8 +30,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * 
@@ -39,50 +39,50 @@ namespace PHPSQLParser\processors;
  * @author arothe
  * 
  */
-class SelectProcessor extends SelectExpressionProcessor {
-
-    public function process($tokens) {
+class SelectProcessor extends SelectExpressionProcessor
+{
+    public function process($tokens)
+    {
         $expression = "";
         $expressionList = array();
         foreach ($tokens as $token) {
             if ($this->isCommaToken($token)) {
-                $expression = parent::process(trim($expression));
+                $expression = parent::process(\trim($expression));
                 $expression['delim'] = ',';
                 $expressionList[] = $expression;
                 $expression = "";
-            } else if ($this->isCommentToken($token)) {
-                $expressionList[] = parent::processComment($token);
             } else {
-                switch (strtoupper($token)) {
-
-                // add more SELECT options here
-                case 'DISTINCT':
-                case 'DISTINCTROW':
-                case 'HIGH_PRIORITY':
-                case 'SQL_CACHE':
-                case 'SQL_NO_CACHE':
-                case 'SQL_CALC_FOUND_ROWS':
-                case 'STRAIGHT_JOIN':
-                case 'SQL_SMALL_RESULT':
-                case 'SQL_BIG_RESULT':
-                case 'SQL_BUFFER_RESULT':
-                    $expression = parent::process(trim($token));
-                    $expression['delim'] = ' ';
-                    $expressionList[] = $expression;
-                    $expression = "";
-                    break;
-
-                default:
-                    $expression .= $token;
+                if ($this->isCommentToken($token)) {
+                    $expressionList[] = parent::processComment($token);
+                } else {
+                    switch (\strtoupper($token)) {
+                        // add more SELECT options here
+                        case 'DISTINCT':
+                        case 'DISTINCTROW':
+                        case 'HIGH_PRIORITY':
+                        case 'SQL_CACHE':
+                        case 'SQL_NO_CACHE':
+                        case 'SQL_CALC_FOUND_ROWS':
+                        case 'STRAIGHT_JOIN':
+                        case 'SQL_SMALL_RESULT':
+                        case 'SQL_BIG_RESULT':
+                        case 'SQL_BUFFER_RESULT':
+                            $expression = parent::process(\trim($token));
+                            $expression['delim'] = ' ';
+                            $expressionList[] = $expression;
+                            $expression = "";
+                            break;
+                        default:
+                            $expression .= $token;
+                    }
                 }
             }
         }
         if ($expression) {
-            $expression = parent::process(trim($expression));
-            $expression['delim'] = false;
+            $expression = parent::process(\trim($expression));
+            $expression['delim'] = \false;
             $expressionList[] = $expression;
         }
         return $expressionList;
     }
 }
-?>

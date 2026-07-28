@@ -1,14 +1,12 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\TextData;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\TextData;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 class CaseConvert
 {
     use ArrayEnabled;
-
     /**
      * LOWERCASE.
      *
@@ -23,15 +21,12 @@ class CaseConvert
      */
     public static function lower($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
-
         $mixedCaseValue = Helpers::extractString($mixedCaseValue);
-
         return StringHelper::strToLower($mixedCaseValue);
     }
-
     /**
      * UPPERCASE.
      *
@@ -46,15 +41,12 @@ class CaseConvert
      */
     public static function upper($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
-
         $mixedCaseValue = Helpers::extractString($mixedCaseValue);
-
         return StringHelper::strToUpper($mixedCaseValue);
     }
-
     /**
      * PROPERCASE.
      *
@@ -69,12 +61,10 @@ class CaseConvert
      */
     public static function proper($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
-
         $mixedCaseValue = Helpers::extractString($mixedCaseValue);
-
         return StringHelper::strToTitle($mixedCaseValue);
     }
 }

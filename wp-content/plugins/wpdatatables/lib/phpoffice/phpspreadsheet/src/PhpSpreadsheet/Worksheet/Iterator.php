@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Worksheet;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Worksheet;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Spreadsheet;
 /**
  * @implements \Iterator<int, Worksheet>
  */
@@ -15,14 +14,12 @@ class Iterator implements \Iterator
      * @var Spreadsheet
      */
     private $subject;
-
     /**
      * Current iterator position.
      *
      * @var int
      */
     private $position = 0;
-
     /**
      * Create a new worksheet iterator.
      */
@@ -31,43 +28,38 @@ class Iterator implements \Iterator
         // Set subject
         $this->subject = $subject;
     }
-
     /**
      * Rewind iterator.
      */
-    public function rewind(): void
+    public function rewind() : void
     {
         $this->position = 0;
     }
-
     /**
      * Current Worksheet.
      */
-    public function current(): Worksheet
+    public function current() : Worksheet
     {
         return $this->subject->getSheet($this->position);
     }
-
     /**
      * Current key.
      */
-    public function key(): int
+    public function key() : int
     {
         return $this->position;
     }
-
     /**
      * Next value.
      */
-    public function next(): void
+    public function next() : void
     {
         ++$this->position;
     }
-
     /**
      * Are there more Worksheet instances available?
      */
-    public function valid(): bool
+    public function valid() : bool
     {
         return $this->position < $this->subject->getSheetCount() && $this->position >= 0;
     }

@@ -1,49 +1,47 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates a font family list according to CSS spec
  */
 class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
 {
-
     protected $mask = null;
-
     public function __construct()
     {
         // Lowercase letters
-        $l = range('a', 'z');
+        $l = \range('a', 'z');
         // Uppercase letters
-        $u = range('A', 'Z');
+        $u = \range('A', 'Z');
         // Digits
-        $d = range('0', '9');
+        $d = \range('0', '9');
         // Special bytes used by UTF-8
-        $b = array_map('chr', range(0x80, 0xFF));
+        $b = \array_map('chr', \range(0x80, 0xff));
         // All valid characters for the mask
-        $c = array_merge($l, $u, $d, $b);
-        // Concatenate all valid characters into a string 
+        $c = \array_merge($l, $u, $d, $b);
+        // Concatenate all valid characters into a string
         // Use '_- ' as an initial value
-        $this->mask = array_reduce($c, function ($carry, $value) {
+        $this->mask = \array_reduce($c, function ($carry, $value) {
             return $carry . $value;
         }, '_- ');
-
         /*
-            PHP's internal strcspn implementation is
-            O(length of string * length of mask), making it inefficient
-            for large masks.  However, it's still faster than
-            preg_match 8)
-          for (p = s1;;) {
-            spanp = s2;
-            do {
-              if (*spanp == c || p == s1_end) {
-                return p - s1;
-              }
-            } while (spanp++ < (s2_end - 1));
-            c = *++p;
-          }
-         */
+           PHP's internal strcspn implementation is
+           O(length of string * length of mask), making it inefficient
+           for large masks.  However, it's still faster than
+           preg_match 8)
+         for (p = s1;;) {
+           spanp = s2;
+           do {
+             if (*spanp == c || p == s1_end) {
+               return p - s1;
+             }
+           } while (spanp++ < (s2_end - 1));
+           c = *++p;
+         }
+        */
         // possible optimization: invert the mask.
     }
-
     /**
      * @param string $string
      * @param HTMLPurifier_Config $config
@@ -52,20 +50,13 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
      */
     public function validate($string, $config, $context)
     {
-        static $generic_names = array(
-            'serif' => true,
-            'sans-serif' => true,
-            'monospace' => true,
-            'fantasy' => true,
-            'cursive' => true
-        );
+        static $generic_names = array('serif' => \true, 'sans-serif' => \true, 'monospace' => \true, 'fantasy' => \true, 'cursive' => \true);
         $allowed_fonts = $config->get('CSS.AllowedFonts');
-
         // assume that no font names contain commas in them
-        $fonts = explode(',', $string);
+        $fonts = \explode(',', $string);
         $final = '';
         foreach ($fonts as $font) {
-            $font = trim($font);
+            $font = \trim($font);
             if ($font === '') {
                 continue;
             }
@@ -78,7 +69,7 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
             }
             // match a quoted name
             if ($font[0] === '"' || $font[0] === "'") {
-                $length = strlen($font);
+                $length = \strlen($font);
                 if ($length <= 2) {
                     continue;
                 }
@@ -86,27 +77,21 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
                 if ($font[$length - 1] !== $quote) {
                     continue;
                 }
-                $font = substr($font, 1, $length - 2);
+                $font = \substr($font, 1, $length - 2);
             }
-
             $font = $this->expandCSSEscape($font);
-
             // $font is a pure representation of the font name
-
             if ($allowed_fonts !== null && !isset($allowed_fonts[$font])) {
                 continue;
             }
-
-            if (ctype_alnum($font) && $font !== '') {
+            if (\ctype_alnum($font) && $font !== '') {
                 // very simple font, allow it in unharmed
                 $final .= $font . ', ';
                 continue;
             }
-
             // bugger out on whitespace.  form feed (0C) really
             // shouldn't show up regardless
-            $font = str_replace(array("\n", "\t", "\r", "\x0C"), ' ', $font);
-
+            $font = \str_replace(array("\n", "\t", "\r", "\f"), ' ', $font);
             // Here, there are various classes of characters which need
             // to be treated differently:
             //  - Alphanumeric characters are essentially safe.  We
@@ -182,14 +167,12 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
             // (that we will implement now), and once we do more
             // extensive research, we may feel comfortable with dropping
             // it down to edgy.
-
             // Edgy: alphanumeric, spaces, dashes, underscores and Unicode.  Use of
             // str(c)spn assumes that the string was already well formed
             // Unicode (which of course it is).
-            if (strspn($font, $this->mask) !== strlen($font)) {
+            if (\strspn($font, $this->mask) !== \strlen($font)) {
                 continue;
             }
-
             // Historical:
             // In the absence of innerHTML/cssText, these ugly
             // transforms don't pose a security risk (as \\ and \"
@@ -201,17 +184,14 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
             // $font = str_replace('\\', '\\5C ', $font);
             // $font = str_replace('"',  '\\22 ', $font);
             // $font = str_replace("'",  '\\27 ', $font);
-
             // font possibly with spaces, requires quoting
-            $final .= "'$font', ";
+            $final .= "'{$font}', ";
         }
-        $final = rtrim($final, ', ');
+        $final = \rtrim($final, ', ');
         if ($final === '') {
-            return false;
+            return \false;
         }
         return $final;
     }
-
 }
-
 // vim: et sw=4 sts=4

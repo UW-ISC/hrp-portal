@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DeleteStatementBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the whole Delete statement. You can overwrite
@@ -49,30 +49,29 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DeleteStatementBuilder implements Builder {
-
-    protected function buildWHERE($parsed) {
+class DeleteStatementBuilder implements Builder
+{
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildDELETE($parsed) {
+    protected function buildDELETE($parsed)
+    {
         $builder = new DeleteBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $this->buildDELETE($parsed['DELETE']) . " " . $this->buildFROM($parsed['FROM']);
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->buildWHERE($parsed['WHERE']);
         }
         return $sql;
     }
-
 }
-?>

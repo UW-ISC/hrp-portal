@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Averages extends AggregateBase
 {
     /**
@@ -23,40 +22,34 @@ class Averages extends AggregateBase
     public static function averageDeviations(...$args)
     {
         $aArgs = Functions::flattenArrayIndexed($args);
-
         // Return value
         $returnValue = 0.0;
-
         $aMean = self::average(...$args);
         if ($aMean === ExcelError::DIV0()) {
             return ExcelError::NAN();
         } elseif ($aMean === ExcelError::VALUE()) {
             return ExcelError::VALUE();
         }
-
         $aCount = 0;
         foreach ($aArgs as $k => $arg) {
             $arg = self::testAcceptedBoolean($arg, $k);
             // Is it a numeric value?
             // Strings containing numeric values are only counted if they are string literals (not cell values)
             //    and then only in MS Excel and in Open Office, not in Gnumeric
-            if ((is_string($arg)) && (!is_numeric($arg)) && (!Functions::isCellValue($k))) {
+            if (\is_string($arg) && !\is_numeric($arg) && !Functions::isCellValue($k)) {
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
-                $returnValue += abs($arg - $aMean);
+                $returnValue += \abs($arg - $aMean);
                 ++$aCount;
             }
         }
-
         // Return
         if ($aCount === 0) {
             return ExcelError::DIV0();
         }
-
         return $returnValue / $aCount;
     }
-
     /**
      * AVERAGE.
      *
@@ -72,14 +65,13 @@ class Averages extends AggregateBase
     public static function average(...$args)
     {
         $returnValue = $aCount = 0;
-
         // Loop through arguments
         foreach (Functions::flattenArrayIndexed($args) as $k => $arg) {
             $arg = self::testAcceptedBoolean($arg, $k);
             // Is it a numeric value?
             // Strings containing numeric values are only counted if they are string literals (not cell values)
             //    and then only in MS Excel and in Open Office, not in Gnumeric
-            if ((is_string($arg)) && (!is_numeric($arg)) && (!Functions::isCellValue($k))) {
+            if (\is_string($arg) && !\is_numeric($arg) && !Functions::isCellValue($k)) {
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
@@ -87,15 +79,12 @@ class Averages extends AggregateBase
                 ++$aCount;
             }
         }
-
         // Return
         if ($aCount > 0) {
             return $returnValue / $aCount;
         }
-
         return ExcelError::DIV0();
     }
-
     /**
      * AVERAGEA.
      *
@@ -111,13 +100,12 @@ class Averages extends AggregateBase
     public static function averageA(...$args)
     {
         $returnValue = null;
-
         $aCount = 0;
         // Loop through arguments
         foreach (Functions::flattenArrayIndexed($args) as $k => $arg) {
-            if (is_numeric($arg)) {
+            if (\is_numeric($arg)) {
                 // do nothing
-            } elseif (is_bool($arg)) {
+            } elseif (\is_bool($arg)) {
                 $arg = (int) $arg;
             } elseif (!Functions::isMatrixValue($k)) {
                 $arg = 0;
@@ -127,14 +115,11 @@ class Averages extends AggregateBase
             $returnValue += $arg;
             ++$aCount;
         }
-
         if ($aCount > 0) {
             return $returnValue / $aCount;
         }
-
         return ExcelError::DIV0();
     }
-
     /**
      * MEDIAN.
      *
@@ -150,25 +135,21 @@ class Averages extends AggregateBase
     public static function median(...$args)
     {
         $aArgs = Functions::flattenArray($args);
-
         $returnValue = ExcelError::NAN();
-
         $aArgs = self::filterArguments($aArgs);
-        $valueCount = count($aArgs);
+        $valueCount = \count($aArgs);
         if ($valueCount > 0) {
-            sort($aArgs, SORT_NUMERIC);
+            \sort($aArgs, \SORT_NUMERIC);
             $valueCount = $valueCount / 2;
-            if ($valueCount == floor($valueCount)) {
+            if ($valueCount == \floor($valueCount)) {
                 $returnValue = ($aArgs[$valueCount--] + $aArgs[$valueCount]) / 2;
             } else {
-                $valueCount = floor($valueCount);
+                $valueCount = \floor($valueCount);
                 $returnValue = $aArgs[$valueCount];
             }
         }
-
         return $returnValue;
     }
-
     /**
      * MODE.
      *
@@ -184,29 +165,21 @@ class Averages extends AggregateBase
     public static function mode(...$args)
     {
         $returnValue = ExcelError::NA();
-
         // Loop through arguments
         $aArgs = Functions::flattenArray($args);
         $aArgs = self::filterArguments($aArgs);
-
         if (!empty($aArgs)) {
             return self::modeCalc($aArgs);
         }
-
         return $returnValue;
     }
-
-    protected static function filterArguments(array $args): array
+    protected static function filterArguments(array $args) : array
     {
-        return array_filter(
-            $args,
-            function ($value) {
-                // Is it a numeric value?
-                return  is_numeric($value) && (!is_string($value));
-            }
-        );
+        return \array_filter($args, function ($value) {
+            // Is it a numeric value?
+            return \is_numeric($value) && !\is_string($value);
+        });
     }
-
     /**
      * Special variant of array_count_values that isn't limited to strings and integers,
      * but can work with floating point numbers as values.
@@ -221,7 +194,7 @@ class Averages extends AggregateBase
         $maxfreqkey = '';
         $maxfreqdatum = '';
         foreach ($data as $datum) {
-            $found = false;
+            $found = \false;
             ++$index;
             foreach ($frequencyArray as $key => $value) {
                 if ((string) $value['value'] == (string) $datum) {
@@ -237,25 +210,17 @@ class Averages extends AggregateBase
                             $maxfreqdatum = $datum;
                         }
                     }
-                    $found = true;
-
+                    $found = \true;
                     break;
                 }
             }
-
-            if ($found === false) {
-                $frequencyArray[] = [
-                    'value' => $datum,
-                    'frequency' => 1,
-                    'index' => $index,
-                ];
+            if ($found === \false) {
+                $frequencyArray[] = ['value' => $datum, 'frequency' => 1, 'index' => $index];
             }
         }
-
         if ($maxfreq <= 1) {
             return ExcelError::NA();
         }
-
         return $maxfreqdatum;
     }
 }

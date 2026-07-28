@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PositionBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for positions of the GROUP-BY clause. 
  * You can overwrite all functions to achieve another handling.
@@ -50,17 +50,18 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class OrderByPositionBuilder implements Builder {
-    protected function buildDirection($parsed) {
+class OrderByPositionBuilder implements Builder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::POSITION) {
             return "";
         }
         return $parsed['base_expr'] . $this->buildDirection($parsed);
     }
 }
-?>

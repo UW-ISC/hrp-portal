@@ -103,6 +103,7 @@ var wpdatatable_config = {
     customRowDisplay: '',
     loader: parseInt(wpdatatables_settings.wdtGlobalTableLoader),
     index_column: jQuery('#wdt-index-column').val(),
+    advanced_filter_option: 0,
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, nested_json, serialized, csv, excel
@@ -867,6 +868,14 @@ var wpdatatable_config = {
         jQuery('#wdt-global-sorting').prop('checked', sorting);
     },
     /**
+     * Enable or disable advanced filter option
+     * @param advanced_filter_option 1 or 0
+     */
+    setAdvancedFilteringOption: function (advanced_filter_option) {
+        wpdatatable_config.advanced_filter_option = advanced_filter_option;
+        jQuery('#wdt-advanced-filter-option').prop('checked', advanced_filter_option);
+    },
+    /**
      * Enable or disable Global Search block
      * @param globalSearch 1 or 0
      */
@@ -1598,6 +1607,7 @@ var wpdatatable_config = {
         wpdatatable_config.setSimpleResponsive(parseInt(tableJSON.simpleResponsive));
         wpdatatable_config.setVerticalScroll(parseInt(tableJSON.verticalScroll));
         wpdatatable_config.setSorting(parseInt(tableJSON.sorting));
+        wpdatatable_config.setAdvancedFilteringOption(parseInt(tableJSON.advanced_filter_option));
         wpdatatable_config.setShowTableTools(parseInt(tableJSON.tools), tableJSON.tabletools_config);
         wpdatatable_config.setTableToolsIncludeHTML(parseInt(tableJSON.showTableToolsIncludeHTML));
         wpdatatable_config.setTableToolsIncludeTitle(parseInt(tableJSON.showTableToolsIncludeTitle));

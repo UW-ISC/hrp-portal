@@ -495,6 +495,15 @@ class WDTTools
 
     public static function getTranslationStringsWpDataTables()
     {
+        $locale = get_user_locale();
+        $localeShort = substr($locale, 0, 2);
+        $localeFile = $localeShort . '.js';
+
+        $localePath = WDT_ROOT_PATH . 'assets/js/moment/locale/' . $localeFile;
+
+        if ( ! file_exists( $localePath ) ) {
+            $localeShort = strtolower($locale);
+        }
         return array(
             'success_wpdatatables' => __('Success!', 'wpdatatables'),
             'error_wpdatatables' => __('Error!', 'wpdatatables'),
@@ -583,6 +592,7 @@ class WDTTools
             'error_fetching_cart_info_wpdatatables' => __('Error fetching cart info.', 'wpdatatables'),
             'could_not_add_to_cart_wpdatatables' => __('Could not add this product to cart - the stock of this product could be limited.', 'wpdatatables'),
             'emtyfields_woo_front' => __('All of the following fields must be filled out: Taxonomy, Tax Field and Tax Terms.', 'wpdatatables'),
+            'wdt_locale_language' => $localeShort,
         );
     }
 
@@ -757,6 +767,38 @@ class WDTTools
         );
     }
 
+    public static function getTranslationStringsFolders()
+    {
+        return array(
+            'successFolders' => __('Success!', 'wpdatatables'),
+            'errorFolders' => __('Error!', 'wpdatatables'),
+            'collapseFolders' => __('Collapse folders option is saved!', 'wpdatatables'),
+            'showFolders' => __('Show folders option is saved!', 'wpdatatables'),
+            'unableSortFolders' => __('Unable to sort a folder. Please try again.', 'wpdatatables'),
+            'unableFIndFolders' => __('Unable to find a folder. Please try again.', 'wpdatatables'),
+            'showAllFolders' => __('Show all folders option is saved!.', 'wpdatatables'),
+            'closeAllFolders' => __('Close all folders option is saved!', 'wpdatatables'),
+            'chosenSortFolders' => __('Chosen sort order is saved.', 'wpdatatables'),
+            'columnVisibilityFolders' => __('Column visibility is changed!', 'wpdatatables'),
+            'unableColumnHideFolders' => __('Unable to hide a column. Please try again.', 'wpdatatables'),
+            'assignedToFolders' => __('s are assigned to the folder.', 'wpdatatables'),
+            'idsEmptyFolders' => __(' ids are empty.', 'wpdatatables'),
+            'unableAssignFolders' => __('Unable to assign a folder. Please try again.', 'wpdatatables'),
+            'idsItemEmptyFolders' => __('Item ids are empty.', 'wpdatatables'),
+            'unableAssignItemFolders' => __('Unable to assign the item to a folder. Please try again.', 'wpdatatables'),
+            'isAssignedToFolders' => __(' is assigned to the folder.', 'wpdatatables'),
+            'foldercreatedFolders' => __('Folder is created.', 'wpdatatables'),
+            'emptyDataFolders' => __('Data is empty. Please try again.', 'wpdatatables'),
+            'unableCreateFolders' => __('Unable to create folder. Please try again.', 'wpdatatables'),
+            'foldereditedFolders' => __('Folder is edited.', 'wpdatatables'),
+            'unableEditFolders' => __('Unable to edit a folder. Please try again.', 'wpdatatables'),
+            'folderdeletedFolders' => __('Folder is deleted.', 'wpdatatables'),
+            'unableDeleteFolders' => __('Unable to delete a folder. Please try again.', 'wpdatatables'),
+            'removedFromFolders' => __(' is removed from folder.', 'wpdatatables'),
+            'unableRemoveFromFolders' => __('Unable to remove the item from a folder. Please try again.', 'wpdatatables'),
+        );
+    }
+
     /**
      * Helper function that returns all update info
      * TODO (Update before new versions)
@@ -766,34 +808,22 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '24.04.2026.',
+            'release_date' => '24.07.2026.',
             'features' => [
                 // 0 => [
-                //     'text' => 'Added wpDataTables capabilities for viewing tables and charts.',
-                //     'link' => ''
-                // ],
-                // 1 => [
-                //     'text' => 'Added a new page for managing user permissions with wpDataTables capabilities for viewing tables and charts.',
+                //     'text' => '',
                 //     'link' => ''
                 // ],
             ],
             'improvements' => [
-               0 => [
-                   'text' => 'Improved security by preventing stored cross-site scripting via CSV/Excel data import.',
-                   'link' => ''
-               ],
+                // 0 => [
+                //     'text' => '',
+                //     'link' => ''
+                // ],
             ],
             'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed issue with HighChart Stock library not working properly.',
-                    'link' => ''
-                ],
-                1 => [
-                    'text' => 'Fixed issue with HighCharts stable version not working properly on the front-end.',
-                    'link' => ''
-                ],
-                2 => [
-                    'text' => 'Fixed issue with chart autoloader not working properly.',
+                    'text' => 'Fixed SQL injection risks in date/time filters, foreign-key IN list construction, and MCP LIKE query handling.',
                     'link' => ''
                 ],
             ],
@@ -1860,6 +1890,199 @@ class WDTTools
     }
 
     /**
+     * True if URL is safe for stored link/image cells (http/https with a real host, or root-relative path).
+     * Rejects junk like http://alert(1) produced when javascript: is mangled by esc_url().
+     *
+     * @param string $url
+     * @return bool
+     */
+    public static function isWpdtSafeWebUrl($url)
+    {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return false;
+        }
+        $parts = @parse_url($url);
+        if ($parts === false) {
+            return false;
+        }
+        // Root-relative path only (no scheme/host)
+        if (empty($parts['scheme']) && isset($parts['path']) && strpos($parts['path'], '/') === 0 && strpos($parts['path'], '//') !== 0) {
+            return true;
+        }
+        if (empty($parts['scheme']) || empty($parts['host'])) {
+            return false;
+        }
+        $scheme = strtolower($parts['scheme']);
+        if (!in_array($scheme, array('http', 'https'), true)) {
+            return false;
+        }
+        $host = strtolower($parts['host']);
+        if ($host === 'localhost') {
+            return true;
+        }
+        $ipCandidate = $host;
+        if (strlen($host) >= 2 && $host[0] === '[' && substr($host, -1) === ']') {
+            $ipCandidate = substr($host, 1, -1);
+        }
+        if (filter_var($ipCandidate, FILTER_VALIDATE_IP)) {
+            return true;
+        }
+        if (strpos($host, '.') === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Rich-text string cells (stripJsAttributes): remove href only for scriptable / unsafe URL shapes.
+     * Stricter host checks remain on src|poster|formaction via isWpdtSafeWebUrl in sanitizeCellHtmlUrlAttribute.
+     *
+     * @param string $url Already passed through esc_url().
+     * @return bool True if the href attribute should be removed.
+     */
+    private static function cellHtmlRichHrefMustStrip($url)
+    {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return true;
+        }
+        if (strpos($url, '//') === 0) {
+            return true;
+        }
+        $parts = @parse_url($url);
+        if ($parts === false) {
+            return true;
+        }
+        $scheme = isset($parts['scheme']) ? strtolower((string) $parts['scheme']) : '';
+        if ($scheme === '') {
+            return false;
+        }
+        if (in_array($scheme, array('javascript', 'vbscript', 'file'), true)) {
+            return true;
+        }
+        if ($scheme === 'data') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Normalize href/src for HTML from string cells; returns empty string to mean remove attribute.
+     * For src, poster, and formaction only http(s) URLs or safe root-relative paths (isWpdtSafeWebUrl).
+     * For href in generic string-cell HTML (stripJsAttributes), only dangerous schemes are removed after esc_url;
+     * dedicated link/image columns still use isWpdtSafeWebUrl in sanitizeLinkCellValueForDb / similar.
+     *
+     * @param string $attrLower lowercase attribute name
+     * @param string $raw
+     * @return string
+     */
+    public static function sanitizeCellHtmlUrlAttribute($attrLower, $raw)
+    {
+        $raw = trim((string) $raw);
+        if ($raw === '') {
+            return '';
+        }
+        if (preg_match('#^\s*(javascript|vbscript)\s*:#iu', $raw) || preg_match('#^\s*data\s*:\s*text\/html#iu', $raw)) {
+            return '';
+        }
+        $sanitized = esc_url($raw);
+        if ($sanitized === '') {
+            return '';
+        }
+        if (in_array($attrLower, array('src', 'poster', 'formaction'), true)) {
+            return self::isWpdtSafeWebUrl($sanitized) ? $sanitized : '';
+        }
+
+        if ($attrLower === 'href') {
+            return self::cellHtmlRichHrefMustStrip($sanitized) ? '' : $sanitized;
+        }
+
+        return $sanitized;
+    }
+
+    /**
+     * Sanitize URL Link column value before DB storage (frontend Excel / similar).
+     * Supports "url" or "url||label" (CVE-2026-8277: attribute breakouts, javascript: URIs).
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function sanitizeLinkCellValueForDb($value)
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        $value = wp_strip_all_tags(wp_unslash((string) $value));
+        $parts = explode('||', $value, 2);
+        $url = esc_url_raw(trim($parts[0]));
+        if ($url === '' || !self::isWpdtSafeWebUrl($url)) {
+            return '';
+        }
+        if (!isset($parts[1]) || trim((string) $parts[1]) === '') {
+            return $url;
+        }
+        $label = sanitize_text_field(wp_strip_all_tags($parts[1]));
+
+        return $label !== '' ? $url . '||' . $label : $url;
+    }
+
+    /**
+     * Sanitize E-mail column value ("email" or "email||label").
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function sanitizeEmailCellValueForDb($value)
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        $value = wp_strip_all_tags(wp_unslash((string) $value));
+        $parts = explode('||', $value, 2);
+        $email = sanitize_email(trim($parts[0]));
+        if ($email === '') {
+            return '';
+        }
+        if (!isset($parts[1]) || trim((string) $parts[1]) === '') {
+            return $email;
+        }
+        $label = sanitize_text_field(wp_strip_all_tags($parts[1]));
+
+        return $label !== '' ? $email . '||' . $label : $email;
+    }
+
+    /**
+     * Sanitize Image column value ("src" or "thumb||full" URLs).
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function sanitizeImageCellValueForDb($value)
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        $value = wp_strip_all_tags(wp_unslash((string) $value));
+        $parts = explode('||', $value, 2);
+        $thumb = esc_url_raw(trim($parts[0]));
+        if ($thumb === '' || !self::isWpdtSafeWebUrl($thumb)) {
+            return '';
+        }
+        if (!isset($parts[1]) || trim((string) $parts[1]) === '') {
+            return $thumb;
+        }
+        $full = esc_url_raw(trim($parts[1]));
+        if ($full === '' || !self::isWpdtSafeWebUrl($full)) {
+            return $thumb;
+        }
+
+        return $thumb . '||' . $full;
+    }
+
+    /**
      * Sanitizes the cell string and wraps it with quotes
      *
      * @param $string
@@ -1867,6 +2090,45 @@ class WDTTools
      *
      * @return string
      */
+    /**
+     * Restrict frontend form data to configured column headers (prevents SQL injection via array keys).
+     *
+     * @param array $formData   Associative form data keyed by column name.
+     * @param array $columnsData Column configuration objects from the database.
+     * @return array Filtered form data.
+     */
+    public static function filterFormDataToKnownColumns($formData, $columnsData)
+    {
+        $allowedHeaders = array();
+
+        foreach ($columnsData as $column) {
+            $allowedHeaders[] = $column->orig_header;
+        }
+
+        return array_intersect_key($formData, array_flip($allowedHeaders));
+    }
+
+    /**
+     * Format a row ID for a raw SQL WHERE clause on external database connections.
+     *
+     * @param mixed  $value       Raw ID value from the request.
+     * @param string $columnType  wpDataTables column type.
+     * @param mixed  $connection  Connection identifier or null for WordPress DB.
+     * @return string|int SQL-safe literal (quoted string or numeric).
+     */
+    public static function formatSqlWhereIdValue($value, $columnType, $connection)
+    {
+        if ('int' === $columnType) {
+            return (int) $value;
+        }
+
+        if ('float' === $columnType) {
+            return (float) $value;
+        }
+
+        return self::prepareStringCell($value, $connection);
+    }
+
     public static function prepareStringCell($string, $connection)
     {
         global $wpdb;
@@ -1901,6 +2163,70 @@ class WDTTools
         }
         $string = self::wrapQuotes($string, $connection);
         return $string;
+    }
+
+    /**
+     * Prepare a quoted SQL string literal for server-side search WHERE clauses.
+     *
+     * @param string $value Raw search value.
+     * @param mixed $connection Connection id or null for WP MySQL.
+     *
+     * @return string Quoted, escaped literal safe to embed in SQL fragments.
+     */
+    public static function prepareSearchLiteral($value, $connection)
+    {
+        $vendor = Connection::getVendor($connection);
+
+        if ($vendor === Connection::$MYSQL && ! Connection::isSeparate($connection)) {
+            global $wpdb;
+
+            return $wpdb->prepare('%s', $value);
+        }
+
+        return self::prepareStringCell($value, $connection);
+    }
+
+    /**
+     * Build a connection-aware LIKE comparison SQL fragment.
+     *
+     * @param string $qualifiedColumn Fully qualified column reference.
+     * @param string $rawValue Raw search term (without wildcards).
+     * @param mixed $connection Connection id or null for WP MySQL.
+     * @param string $prefix Wildcard prefix (e.g. '%').
+     * @param string $suffix Wildcard suffix (e.g. '%').
+     * @param bool $useLowerCast Use LOWER(CAST(...)) for PostgreSQL text columns.
+     *
+     * @return string
+     */
+    public static function buildLikeComparison($qualifiedColumn, $rawValue, $connection, $prefix = '%', $suffix = '%', $useLowerCast = false)
+    {
+        $vendor = Connection::getVendor($connection);
+
+        if ($vendor === Connection::$MYSQL && ! Connection::isSeparate($connection)) {
+            global $wpdb;
+            $pattern = $prefix . $wpdb->esc_like($rawValue) . $suffix;
+
+            return $qualifiedColumn . ' LIKE ' . $wpdb->prepare('%s', $pattern);
+        }
+
+        if ($vendor === Connection::$MSSQL) {
+            $pattern = $prefix . str_replace(
+                array('\\', '%', '_', '[', ']'),
+                array('\\\\', '\\%', '\\_', '\\[', '\\]'),
+                $rawValue
+            ) . $suffix;
+
+            return $qualifiedColumn . ' LIKE ' . self::prepareStringCell($pattern, $connection) . " ESCAPE '\\'";
+        }
+
+        $pattern = $prefix . str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $rawValue) . $suffix;
+        $literal = self::prepareStringCell($pattern, $connection);
+
+        if ($vendor === Connection::$POSTGRESQL && $useLowerCast) {
+            return 'LOWER(CAST(' . $qualifiedColumn . ' AS TEXT)) LIKE LOWER(' . $literal . ') ';
+        }
+
+        return $qualifiedColumn . ' LIKE ' . $literal;
     }
 
     /**
@@ -1941,10 +2267,64 @@ class WDTTools
                         $node->removeAttribute($i);
                     }
                 }
+                // iframe srcdoc can embed HTML/JS; not covered by href/src rules alone.
+                foreach ($domd->getElementsByTagName('*') as $node) {
+                    if ($node instanceof DOMElement && $node->hasAttribute('srcdoc')) {
+                        $node->removeAttribute('srcdoc');
+                    }
+                }
+                $urlAttributeNames = array('href', 'src', 'poster', 'formaction');
+                foreach ($domd->getElementsByTagName('*') as $node) {
+                    if (!$node->hasAttributes()) {
+                        continue;
+                    }
+                    $attrsToSanitize = array();
+                    foreach ($node->attributes as $attributeName => $attribute) {
+                        if (in_array(strtolower($attributeName), $urlAttributeNames, true)) {
+                            $attrsToSanitize[] = $attributeName;
+                        }
+                    }
+                    foreach ($attrsToSanitize as $attrName) {
+                        $raw = $node->getAttribute($attrName);
+                        if ($raw === '') {
+                            continue;
+                        }
+                        $attrLower = strtolower($attrName);
+                        $sanitized = self::sanitizeCellHtmlUrlAttribute($attrLower, $raw);
+                        if ($sanitized === '') {
+                            $node->removeAttribute($attrName);
+                        } else {
+                            $node->setAttribute($attrName, $sanitized);
+                        }
+                    }
+                }
+                // After removing unsafe href, unwrap <a> so we do not store meaningless <a>text</a> (string columns).
+                $anchorNodes = array();
+                foreach ($domd->getElementsByTagName('a') as $anchor) {
+                    $anchorNodes[] = $anchor;
+                }
+                foreach ($anchorNodes as $node) {
+                    if (!($node instanceof DOMElement)) {
+                        continue;
+                    }
+                    if (trim((string) $node->getAttribute('href')) !== '') {
+                        continue;
+                    }
+                    $parent = $node->parentNode;
+                    if (!$parent) {
+                        continue;
+                    }
+                    while ($node->firstChild) {
+                        $parent->insertBefore($node->firstChild, $node);
+                    }
+                    $parent->removeChild($node);
+                }
                 return substr($domd->saveHTML($domd->documentElement), 5, -6);
             }
         }
-        return $htmlString;
+
+        // Fail closed: no mb_convert_encoding, loadHTML failed, or DOM unusable — never return raw markup.
+        return wp_strip_all_tags($htmlString);
     }
 
     /**
@@ -1985,6 +2365,17 @@ class WDTTools
         }
         wp_enqueue_script('wdt-bootstrap-tagsinput', WDT_JS_PATH . 'bootstrap/bootstrap-tagsinput/bootstrap-tagsinput.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-moment', WDT_JS_PATH . 'moment/moment.js', array(), WDT_CURRENT_VERSION, true);
+        $locale = get_user_locale();
+        $localeShort = substr($locale, 0, 2);
+        $localeFile = $localeShort . '.js';
+
+        $localePath = WDT_ROOT_PATH . 'assets/js/moment/locale/' . $localeFile;
+
+        if ( ! file_exists( $localePath ) ) {
+            $localeShort = strtolower($locale);
+        }
+        wp_enqueue_script('moment-locale', WDT_JS_PATH . 'moment/locale/' . $localeShort . '.js', array('moment'), WDT_CURRENT_VERSION, true);
+
         wp_enqueue_script('wdt-bootstrap-datetimepicker', WDT_JS_PATH . 'bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-nouislider', WDT_JS_PATH . 'bootstrap/bootstrap-nouislider/bootstrap-nouislider.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-wNumb', WDT_JS_PATH . 'bootstrap/bootstrap-nouislider/wNumb.min.js', array(), WDT_CURRENT_VERSION, true);
@@ -2017,6 +2408,17 @@ class WDTTools
         wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-ajax-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/ajax-bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-moment', WDT_JS_PATH . 'moment/moment.js', array(), WDT_CURRENT_VERSION, true);
+        $locale = get_user_locale();
+        $localeShort = substr($locale, 0, 2);
+        $localeFile = $localeShort . '.js';
+
+        $localePath = WDT_ROOT_PATH . 'assets/js/moment/locale/' . $localeFile;
+
+        if ( ! file_exists( $localePath ) ) {
+            $localeShort = strtolower($locale);
+        }
+        wp_enqueue_script('moment-locale', WDT_JS_PATH . 'moment/locale/' . $localeShort . '.js', array('moment'), WDT_CURRENT_VERSION, true);
+
     }
 
     /**

@@ -1,11 +1,10 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Gcd
 {
     /**
@@ -27,7 +26,6 @@ class Gcd
     {
         return $b ? self::evaluateGCD($b, $a % $b) : $a;
     }
-
     /**
      * GCD.
      *
@@ -56,15 +54,13 @@ class Gcd
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (count($arrayArgs) <= 0) {
+        if (\count($arrayArgs) <= 0) {
             return ExcelError::VALUE();
         }
-        $gcd = (int) array_pop($arrayArgs);
+        $gcd = (int) \array_pop($arrayArgs);
         do {
-            $gcd = self::evaluateGCD($gcd, (int) array_pop($arrayArgs));
+            $gcd = self::evaluateGCD($gcd, (int) \array_pop($arrayArgs));
         } while (!empty($arrayArgs));
-
         return $gcd;
     }
 }

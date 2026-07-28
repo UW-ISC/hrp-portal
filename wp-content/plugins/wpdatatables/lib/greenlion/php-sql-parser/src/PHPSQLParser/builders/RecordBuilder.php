@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RecordBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the records within INSERT statement. 
  * You can overwrite all functions to achieve another handling.
@@ -51,49 +51,46 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class RecordBuilder implements Builder {
-
-    protected function buildOperator($parsed) {
+class RecordBuilder implements Builder
+{
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::RECORD) {
             return isset($parsed['base_expr']) ? $parsed['base_expr'] : '';
         }
         $sql = "";
         foreach ($parsed['data'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildColRef($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException(ExpressionType::RECORD, $k, $v, 'expr_type');
             }
-
             $sql .= ", ";
         }
-        $sql = substr($sql, 0, -2);
+        $sql = \substr($sql, 0, -2);
         return "(" . $sql . ")";
     }
-
 }
-?>

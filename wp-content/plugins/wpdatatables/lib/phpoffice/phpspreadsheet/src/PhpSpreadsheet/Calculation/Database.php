@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
 /**
  * @deprecated 1.17.0
@@ -42,7 +42,6 @@ class Database
     {
         return Database\DAverage::evaluate($database, $field, $criteria);
     }
-
     /**
      * DCOUNT.
      *
@@ -80,7 +79,6 @@ class Database
     {
         return Database\DCount::evaluate($database, $field, $criteria);
     }
-
     /**
      * DCOUNTA.
      *
@@ -114,7 +112,6 @@ class Database
     {
         return Database\DCountA::evaluate($database, $field, $criteria);
     }
-
     /**
      * DGET.
      *
@@ -149,7 +146,6 @@ class Database
     {
         return Database\DGet::evaluate($database, $field, $criteria);
     }
-
     /**
      * DMAX.
      *
@@ -184,7 +180,6 @@ class Database
     {
         return Database\DMax::evaluate($database, $field, $criteria);
     }
-
     /**
      * DMIN.
      *
@@ -219,7 +214,6 @@ class Database
     {
         return Database\DMin::evaluate($database, $field, $criteria);
     }
-
     /**
      * DPRODUCT.
      *
@@ -253,7 +247,6 @@ class Database
     {
         return Database\DProduct::evaluate($database, $field, $criteria);
     }
-
     /**
      * DSTDEV.
      *
@@ -288,7 +281,6 @@ class Database
     {
         return Database\DStDev::evaluate($database, $field, $criteria);
     }
-
     /**
      * DSTDEVP.
      *
@@ -323,7 +315,6 @@ class Database
     {
         return Database\DStDevP::evaluate($database, $field, $criteria);
     }
-
     /**
      * DSUM.
      *
@@ -357,7 +348,6 @@ class Database
     {
         return Database\DSum::evaluate($database, $field, $criteria);
     }
-
     /**
      * DVAR.
      *
@@ -392,7 +382,6 @@ class Database
     {
         return Database\DVar::evaluate($database, $field, $criteria);
     }
-
     /**
      * DVARP.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RenameStatement.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the RENAME statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,37 +50,34 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class RenameStatementBuilder implements Builder {
-
-    protected function buildReserved($parsed) {
+class RenameStatementBuilder implements Builder
+{
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    protected function processSourceAndDestTable($v) {
+    protected function processSourceAndDestTable($v)
+    {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return '';
         }
         return $v['source']['base_expr'] . ' TO ' . $v['destination']['base_expr'] . ',';
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $rename = $parsed['RENAME'];
         $sql = '';
         foreach ($rename['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildReserved($v);
             $sql .= $this->processSourceAndDestTable($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('RENAME subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
-        $sql = trim('RENAME ' . $sql);
-        return (substr($sql, -1) === ',' ? substr($sql, 0, -1) : $sql);
+        $sql = \trim('RENAME ' . $sql);
+        return \substr($sql, -1) === ',' ? \substr($sql, 0, -1) : $sql;
     }
 }
-
-?>

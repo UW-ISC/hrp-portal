@@ -1335,6 +1335,12 @@ function getAllFieldSettings(field) {
 		});
 	}
 
+	if ( field.type === 'post_custom_field' && field.inputType === 'fileupload' ) {
+		settingsArray = settingsArray.filter( function( setting ) {
+			return setting !== '.prepopulate_field_setting';
+		} );
+	}
+
 	/**
 	 * gform_editor_field_settings
 	 *
@@ -1434,7 +1440,16 @@ function TogglePageBreakSettings(){
 
 function SetDisableQuantity(isChecked){
 	SetFieldProperty('disableQuantity', isChecked);
-	if(isChecked)
+
+	let hasQtyField = false;
+	if ( ! isChecked ) {
+		// Ensure the qty input remains hidden if there is a linked quantity field.
+		const productFieldID = parseInt( field.id, 10 );
+		const qtyFields = GetFieldsByType( [ 'quantity' ] );
+		hasQtyField = qtyFields.some( qtyField => parseInt( qtyField.productField, 10 ) === productFieldID );
+	}
+
+	if(isChecked || hasQtyField)
 		jQuery(".field_selected .ginput_quantity_label, .field_selected .ginput_quantity").hide();
 	else
 		jQuery(".field_selected .ginput_quantity_label, .field_selected .ginput_quantity").show();
@@ -2754,6 +2769,11 @@ function StartChangePostCategoryType(type){
 function StartChangePostCustomFieldType( type ) {
 	if ( jQuery.inArray( type, [ 'radio', 'select', 'checkbox', 'multiselect' ] ) === -1 ) {
 		field.choices = null;
+	}
+
+	if ( type === 'fileupload' ) {
+		field.allowsPrepopulate = false;
+		field.inputName = '';
 	}
 
 	return StartChangeInputType(type, field);

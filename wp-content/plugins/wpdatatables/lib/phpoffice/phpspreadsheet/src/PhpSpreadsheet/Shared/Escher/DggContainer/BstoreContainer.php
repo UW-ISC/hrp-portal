@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Shared\Escher\DggContainer;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Shared\Escher\DggContainer;
 
 class BstoreContainer
 {
@@ -10,16 +10,14 @@ class BstoreContainer
      * @var BstoreContainer\BSE[]
      */
     private $BSECollection = [];
-
     /**
      * Add a BLIP Store Entry.
      */
-    public function addBSE(BstoreContainer\BSE $BSE): void
+    public function addBSE(BstoreContainer\BSE $BSE) : void
     {
         $this->BSECollection[] = $BSE;
         $BSE->setParent($this);
     }
-
     /**
      * Get the collection of BLIP Store Entries.
      *

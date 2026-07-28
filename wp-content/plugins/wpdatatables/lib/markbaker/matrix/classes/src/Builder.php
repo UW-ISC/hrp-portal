@@ -7,8 +7,7 @@
  * @copyright  Copyright (c) 2018 Mark Baker (https://github.com/MarkBaker/PHPMatrix)
  * @license    https://opensource.org/licenses/MIT    MIT
  */
-
-namespace Matrix;
+namespace WPDT\Matrix;
 
 /**
  * Matrix Builder class.
@@ -32,23 +31,10 @@ class Builder
         if ($columns === null) {
             $columns = $rows;
         }
-
         $rows = Matrix::validateRow($rows);
         $columns = Matrix::validateColumn($columns);
-
-        return new Matrix(
-            array_fill(
-                0,
-                $rows,
-                array_fill(
-                    0,
-                    $columns,
-                    $fillValue
-                )
-            )
-        );
+        return new Matrix(\array_fill(0, $rows, \array_fill(0, $columns, $fillValue)));
     }
-
     /**
      * Create a new identity matrix of specified dimensions
      * This will always be a square matrix, with the number of rows and columns matching the provided dimension
@@ -60,11 +46,9 @@ class Builder
     public static function createIdentityMatrix($dimensions, $fillValue = null)
     {
         $grid = static::createFilledMatrix($fillValue, $dimensions)->toArray();
-
         for ($x = 0; $x < $dimensions; ++$x) {
             $grid[$x][$x] = 1;
         }
-
         return new Matrix($grid);
     }
 }

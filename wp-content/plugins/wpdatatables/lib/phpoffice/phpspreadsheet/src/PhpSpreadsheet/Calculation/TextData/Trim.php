@@ -1,13 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\TextData;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\TextData;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 class Trim
 {
     use ArrayEnabled;
-
     /**
      * CLEAN.
      *
@@ -20,15 +18,12 @@ class Trim
      */
     public static function nonPrintable($stringValue = '')
     {
-        if (is_array($stringValue)) {
+        if (\is_array($stringValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $stringValue);
         }
-
         $stringValue = Helpers::extractString($stringValue);
-
-        return (string) preg_replace('/[\x00-\x1f]/', '', "$stringValue");
+        return (string) \preg_replace('/[\\x00-\\x1f]/', '', "{$stringValue}");
     }
-
     /**
      * TRIM.
      *
@@ -41,12 +36,10 @@ class Trim
      */
     public static function spaces($stringValue = '')
     {
-        if (is_array($stringValue)) {
+        if (\is_array($stringValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $stringValue);
         }
-
         $stringValue = Helpers::extractString($stringValue);
-
-        return trim(preg_replace('/ +/', ' ', trim("$stringValue", ' ')) ?? '', ' ');
+        return \trim(\preg_replace('/ +/', ' ', \trim("{$stringValue}", ' ')) ?? '', ' ');
     }
 }

@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 class Poisson
 {
     use ArrayEnabled;
-
     /**
      * POISSON.
      *
@@ -31,10 +29,9 @@ class Poisson
      */
     public static function distribution($value, $mean, $cumulative)
     {
-        if (is_array($value) || is_array($mean) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($mean) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $mean, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $mean = DistributionValidations::validateFloat($mean);
@@ -42,25 +39,21 @@ class Poisson
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value < 0) || ($mean < 0)) {
+        if ($value < 0 || $mean < 0) {
             return ExcelError::NAN();
         }
-
         if ($cumulative) {
             $summer = 0;
-            $floor = floor($value);
+            $floor = \floor($value);
             for ($i = 0; $i <= $floor; ++$i) {
                 /** @var float */
                 $fact = MathTrig\Factorial::fact($i);
                 $summer += $mean ** $i / $fact;
             }
-
-            return exp(0 - $mean) * $summer;
+            return \exp(0 - $mean) * $summer;
         }
         /** @var float */
         $fact = MathTrig\Factorial::fact($value);
-
-        return (exp(0 - $mean) * $mean ** $value) / $fact;
+        return \exp(0 - $mean) * $mean ** $value / $fact;
     }
 }

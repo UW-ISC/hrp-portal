@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ColumnTypeExpressionBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for bracket expressions within a column type. 
  * You can overwrite all functions to achieve another handling.
@@ -50,14 +50,15 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ColumnTypeBracketExpressionBuilder implements Builder {
-
-    protected function buildSubTree($parsed, $delim) {
+class ColumnTypeBracketExpressionBuilder implements Builder
+{
+    protected function buildSubTree($parsed, $delim)
+    {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
         }
@@ -66,4 +67,3 @@ class ColumnTypeBracketExpressionBuilder implements Builder {
         return $sql;
     }
 }
-?>
