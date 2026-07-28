@@ -70,19 +70,37 @@ class Red_404_Log extends Red_Log {
 	}
 
 	/**
+	 * @return array<string, string>
+	 */
+	protected static function get_export_field_labels() {
+		return [
+			'date' => 'date',
+			'method' => 'method',
+			'domain' => 'domain',
+			'url' => 'source',
+			'code' => 'code',
+			'referrer' => 'referrer',
+			'agent' => 'useragent',
+			'ip' => 'ip',
+			'count' => 'count',
+		];
+	}
+
+	/**
 	 * Get the CSV row for this log object
 	 *
 	 * @param object $row Log row.
-	 * @return array<int, string|int>
+	 * @return array<int, string>
 	 */
 	public static function get_csv_row( $row ) {
 		/** @var Log404Row $row */
+		// Raw values are returned here. Formula escaping is applied by Red_Log's CSV writers.
 		return [
-			$row->created,
-			$row->url,
-			$row->ip,
-			$row->referrer,
-			$row->agent,
+			(string) $row->created,
+			(string) $row->url,
+			(string) $row->ip,
+			(string) $row->referrer,
+			(string) $row->agent,
 		];
 	}
 }

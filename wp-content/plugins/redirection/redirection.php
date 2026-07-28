@@ -3,11 +3,11 @@
 Plugin Name: Redirection
 Plugin URI: https://redirection.me/
 Description: Manage all your 301 redirects and monitor 404 errors
-Version: 5.7.5
+Version: 5.9.0
 Author: John Godley
 Text Domain: redirection
 Requires PHP: 7.4
-Requires at least: 6.5
+Requires at least: 6.6
 ============================================================================================================
 For full license details see license.txt
 ============================================================================================================
@@ -37,13 +37,12 @@ if ( version_compare( PHP_VERSION, '7.4' ) < 0 ) {
 	return;
 }
 
-// TODO: remove this once version is stable
+// Temporary compatibility for sites serving stale cached code during upgrades.
+// Remove once the 5.8.x transition window has passed.
 if ( file_exists( __DIR__ . '/build/redirection-version.php' ) ) {
 	require_once __DIR__ . '/build/redirection-version.php';
 } else {
-	define( 'REDIRECTION_VERSION', '5.7.5' );
-	define( 'REDIRECTION_BUILD', 'e5bead9293c415a3ea00b2af86bd2010' );
-	define( 'REDIRECTION_MIN_WP', '6.5' );
+	require_once __DIR__ . '/redirection-version.php';
 }
 
 require_once __DIR__ . '/redirection-settings.php';
@@ -59,6 +58,66 @@ require_once __DIR__ . '/models/action.php';
 require_once __DIR__ . '/models/request.php';
 require_once __DIR__ . '/models/header.php';
 require_once __DIR__ . '/models/group.php';
+
+/**
+ * Autoload the migrated import/export classes only.
+ *
+ * This lets us adopt autoloading incrementally for admin/CLI-only paths
+ * without changing the rest of the plugin bootstrap in one step.
+ *
+ * @param string $requested_class Requested class name.
+ * @return void
+ */
+function redirection_autoload_import_export( $requested_class ) {
+	redirection_autoload_namespace( $requested_class, 'Redirection\\ImportExport\\', __DIR__ . '/includes/import-export/' );
+}
+
+/**
+ * Autoload a namespaced class from a plugin directory.
+ *
+ * @param string $requested_class Requested class name.
+ * @param string $prefix Namespace prefix.
+ * @param string $base_dir Base directory.
+ * @return void
+ */
+function redirection_autoload_namespace( $requested_class, $prefix, $base_dir ) {
+	if ( strncmp( $prefix, $requested_class, strlen( $prefix ) ) !== 0 ) {
+		return;
+	}
+
+	$relative_class = substr( $requested_class, strlen( $prefix ) );
+	if ( $relative_class === '' ) {
+		return;
+	}
+
+	$normalize = static function ( $value ) {
+		$value = preg_replace( '/(?<!^)[A-Z]/', '-$0', $value );
+
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		return str_replace( '_', '-', strtolower( $value ) );
+	};
+
+	$segments = explode( '\\', $relative_class );
+	$class_name = array_pop( $segments );
+	if ( ! is_string( $class_name ) || $class_name === '' ) {
+		return;
+	}
+
+	if ( count( $segments ) > 0 ) {
+		$base_dir .= implode( '/', array_map( $normalize, $segments ) ) . '/';
+	}
+
+	$path = $base_dir . 'class-' . $normalize( $class_name ) . '.php';
+
+	if ( file_exists( $path ) ) {
+		require_once $path;
+	}
+}
+
+spl_autoload_register( 'redirection_autoload_import_export' );
 
 /**
  * Clear PHP opcache when plugin is updated. This is to help with mid-update errors.
@@ -96,6 +155,18 @@ function red_is_wpcli() {
 	}
 
 	return false;
+}
+
+/**
+ * Detect a plain PHP CLI context (e.g., a cron script that loads wp-load.php
+ * directly). Distinct from red_is_wpcli(), which is only true under WP-CLI.
+ * Used to skip front-end redirect enforcement that would otherwise call die()
+ * and silently terminate the CLI process.
+ *
+ * @return bool
+ */
+function red_is_cli() {
+	return PHP_SAPI === 'cli';
 }
 
 /**

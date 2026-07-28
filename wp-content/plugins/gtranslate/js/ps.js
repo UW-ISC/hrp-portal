@@ -1,4 +1,4 @@
-(function(){
+(function(){if(!(document.currentScript instanceof HTMLScriptElement))return;
     var gt = window.gtranslateSettings || {};
     gt = gt[document.currentScript.getAttribute('data-gt-widget-id')] || gt;
 

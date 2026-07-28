@@ -1,17 +1,22 @@
 <?php
 
-/**
-	* @phpstan-import-type GroupJson from Red_Group
-*/
+namespace Redirection\ImportExport\Format;
 
-class Red_Rss_File extends Red_FileIO {
+use Redirection\ImportExport\FormatHandler;
+use Redirection\ImportExport\ImportRedirect;
+
+/**
+ * @phpstan-import-type GroupExport from \Red_Group
+ * @phpstan-import-type ImportResult from \Redirection\ImportExport\FormatHandler
+ */
+class Rss extends FormatHandler {
 	public function force_download() {
 		header( 'Content-type: text/xml; charset=' . get_option( 'blog_charset' ), true );
 	}
 
 	/**
-	 * @param array<Red_Item>  $items
-	 * @param array<GroupJson> $groups
+	 * @param array<\Red_Item>  $items
+	 * @param array<GroupExport> $groups
 	 * @return string
 	 */
 	public function get_data( array $items, array $groups ) {
@@ -24,7 +29,7 @@ class Red_Rss_File extends Red_FileIO {
 	xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel>
 	<title>Redirection - <?php bloginfo_rss( 'name' ); ?></title>
-	<description><?php esc_html( bloginfo_rss( 'description' ) ); ?></description>
+	<description><?php echo esc_html( get_bloginfo_rss( 'description' ) ); ?></description>
 	<pubDate><?php echo esc_html( (string) mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'gmt' ), false ) ); ?></pubDate>
 	<generator>
 		<?php echo esc_html( 'http://wordpress.org/?v=' ); ?>
@@ -51,12 +56,14 @@ class Red_Rss_File extends Red_FileIO {
 	}
 
 	/**
-	 * @param int $group Group ID to import into.
+	 * @param mixed $group Group resolver.
+	 * @param ImportRedirect $redirect Redirect saver.
 	 * @param string $filename Path to the file to import.
-	 * @param string|false $data File contents (or false if not pre-loaded).
-	 * @return int
+	 * @param bool $is_dry_run Whether this is a dry run.
+	 * @return ImportResult
 	 */
-	public function load( $group, $filename, $data ) {
-		return 0;
+	public function load( $group, $redirect, $filename, $is_dry_run, array $options = [] ) {
+		unset( $options );
+		return $this->get_import_result( $group, $redirect );
 	}
 }
