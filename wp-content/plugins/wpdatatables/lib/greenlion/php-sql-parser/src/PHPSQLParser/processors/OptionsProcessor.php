@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OptionsProcessor.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  *
  */
+namespace WPDT\PHPSQLParser\processors;
 
-namespace PHPSQLParser\processors;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class processes the statement options.
  *
@@ -49,29 +49,23 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OptionsProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
+class OptionsProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
         $resultList = array();
-
         foreach ($tokens as $token) {
-
             $tokenList = $this->splitSQLIntoTokens($token);
             $result = array();
-
             foreach ($tokenList as $reserved) {
-                $trim = trim($reserved);
+                $trim = \trim($reserved);
                 if ($trim === '') {
                     continue;
                 }
                 $result[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
             }
-            $resultList[] = array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($token),
-                                  'sub_tree' => $result);
+            $resultList[] = array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => \trim($token), 'sub_tree' => $result);
         }
-
         return $resultList;
     }
 }
-
-?>

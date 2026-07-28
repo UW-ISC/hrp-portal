@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Database;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Database;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class DGet extends DatabaseAbstract
 {
     /**
@@ -38,14 +37,11 @@ class DGet extends DatabaseAbstract
         if ($field === null) {
             return ExcelError::VALUE();
         }
-
         $columnData = self::getFilteredColumn($database, $field, $criteria);
-        if (count($columnData) > 1) {
+        if (\count($columnData) > 1) {
             return ExcelError::NAN();
         }
-
-        $row = array_pop($columnData);
-
-        return array_pop($row);
+        $row = \array_pop($columnData);
+        return \array_pop($row);
     }
 }

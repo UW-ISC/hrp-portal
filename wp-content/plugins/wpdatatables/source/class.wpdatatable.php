@@ -1,13 +1,13 @@
 <?php
 
-use jlawrence\eos\Parser;
-use PHPSQLParser\PHPSQLCreator;
-use PHPSQLParser\PHPSQLParser;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xls;
-use PhpOffice\PhpSpreadsheet\Reader\Ods;
-use PhpOffice\PhpSpreadsheet\Reader\Csv;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+use WPDT\jlawrence\eos\Parser;
+use WPDT\PHPSQLParser\PHPSQLCreator;
+use WPDT\PHPSQLParser\PHPSQLParser;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Xls;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Ods;
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Csv;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date;
 
 defined('ABSPATH') or die('Access denied.');
 
@@ -165,6 +165,8 @@ class WPDataTable
     private $_simple_template_id = 0;
     private  $_customRowDisplay = '';
     private $_index_column = 0;
+    private $_advanced_filter_option = 0;
+    private $_previewMode = false;
     protected $_transformValueColumns = array();
 
     /**
@@ -173,6 +175,22 @@ class WPDataTable
     public function isClearFilters()
     {
         return $this->_clearFilters;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPreviewMode()
+    {
+        return $this->_previewMode;
+    }
+
+    /**
+     * @param bool $previewMode
+     */
+    public function setPreviewMode($previewMode)
+    {
+        $this->_previewMode = (bool)$previewMode;
     }
 
     /**
@@ -1294,6 +1312,10 @@ class WPDataTable
     {
         $this->_table_wcag = $tableWCAG;
     }
+    public function isAdvancedFilterOption()
+    {
+        return $this->_advanced_filter_option;
+    }
 
     public function isLoaderVisible()
     {
@@ -1305,6 +1327,10 @@ class WPDataTable
         $this->_loader = $loader;
     }
 
+    public function setAdvancedFilterOption($advancedFilterOption)
+    {
+        $this->_advanced_filter_option = $advancedFilterOption;
+    }
     public function getSimpleTemplateId()
     {
         return $this->_simple_template_id;
@@ -2223,28 +2249,31 @@ class WPDataTable
      * @param string $vendor
      * @param string $table
      * @param string $column
-     * @param string $pattern
+     * @param string $rawValue Raw search term (without wildcards).
+     * @param string $prefix Wildcard prefix (e.g. '%').
+     * @param string $suffix Wildcard suffix (e.g. '%').
      *
      * @return string
      */
-    private function getLikeExpression($vendor, $table, $column, $pattern)
+    private function getLikeExpression($vendor, $table, $column, $rawValue, $prefix = '%', $suffix = '%')
     {
-        if ($vendor === Connection::$MYSQL) {
-            //$search .= '`' . $tableName . '`.`' . $aColumns[$i] . "` LIKE '%" . $columnSearch . "%' ";
-            return "$table.$column LIKE '$pattern'";
-        }
+        $qualifiedColumn = $table . '.' . $column;
 
-        if ($vendor === Connection::$MSSQL) {
-            return "$table.$column LIKE '$pattern'";
-        }
-
-        if ($vendor === Connection::$POSTGRESQL) {
-            return "LOWER(CAST($table.$column AS TEXT)) LIKE LOWER('$pattern') ";
-        }
+        return WDTTools::buildLikeComparison(
+            $qualifiedColumn,
+            $rawValue,
+            $this->connection,
+            $prefix,
+            $suffix,
+            $vendor === Connection::$POSTGRESQL
+        );
     }
 
     /**
-     * Return LIKE expression for given vendor
+     * Return a vendor-specific SQL date/time expression for filter values.
+     *
+     * The filter value is escaped as a quoted literal before being embedded —
+     * sanitize_text_field() alone does not neutralize single quotes.
      *
      * @param string $vendor
      * @param string $filterType
@@ -2280,55 +2309,58 @@ class WPDataTable
                 $date_format = str_replace('s', '%s', $date_format);
             }
 
-            return "STR_TO_DATE('$value', '$date_format')";
+            $literal = WDTTools::prepareSearchLiteral($value, $this->connection);
+
+            return "STR_TO_DATE($literal, '$date_format')";
         }
 
         if ($vendor === Connection::$MSSQL) {
             $type = $filterType === 'time-range' ? 'time' : 'datetime';
+            $literal = WDTTools::prepareSearchLiteral($value, $this->connection);
 
             switch ($wpDateFormat) {
                 case ('d/m/Y'):
-                    return "CONVERT($type, '$value', 103)";
+                    return "CONVERT($type, $literal, 103)";
                 case ('m/d/Y'):
-                    return "CONVERT($type, '$value', 101)";
+                    return "CONVERT($type, $literal, 101)";
                 case ('d.m.Y'):
-                    return "CONVERT($type, '$value', 104)";
+                    return "CONVERT($type, $literal, 104)";
                 case ('m.d.Y'):
-                    return "CONVERT($type, REPLACE ('$value', '.' , '/') , 101)";
+                    return "CONVERT($type, REPLACE ($literal, '.' , '/') , 101)";
                 case ('d-m-Y'):
-                    return "CONVERT($type, '$value', 105)";
+                    return "CONVERT($type, $literal, 105)";
                 case ('m-d-Y'):
-                    return "CONVERT($type, '$value', 110)";
+                    return "CONVERT($type, $literal, 110)";
                 case ('d.m.y'):
-                    return "CONVERT($type, '$value', 4)";
+                    return "CONVERT($type, $literal, 4)";
                 case ('d.m'):
-                    return "LEFT(CONVERT($type, '$value', 4), 5)";
+                    return "LEFT(CONVERT($type, $literal, 4), 5)";
                 case ('m.d.y'):
-                    return "CONVERT($type, REPLACE ('$value', '.' , '-'), 10)";
+                    return "CONVERT($type, REPLACE ($literal, '.' , '-'), 10)";
                 case ('d-m-y'):
-                    return "CONVERT($type, '$value', 5)";
+                    return "CONVERT($type, $literal, 5)";
                 case ('m-d-y'):
-                    return "CONVERT($type, '$value', 10)";
+                    return "CONVERT($type, $literal, 10)";
                 case ('d M Y'):
-                    return "CONVERT($type, '$value', 106)";
+                    return "CONVERT($type, $literal, 106)";
                 case ('M d, Y'):
-                    return "CONVERT($type, '$value', 107)";
+                    return "CONVERT($type, $literal, 107)";
                 case ('j F Y'):
-                    return "CONVERT($type, '$value', 106)";
+                    return "CONVERT($type, $literal, 106)";
                 case ('D, F j, Y'):
-                    return "CONVERT($type, '$value', 107)";
+                    return "CONVERT($type, $literal, 107)";
                 case ('D, M j, Y'):
-                    return "CONVERT($type, '$value', 107)";
+                    return "CONVERT($type, $literal, 107)";
                 case ('M Y'):
-                    return "CONVERT($type, '$value', 23)";
+                    return "CONVERT($type, $literal, 23)";
                 case ('F Y'):
-                    return "CONVERT($type, '$value', 23)";
+                    return "CONVERT($type, $literal, 23)";
                 case ('F j, Y'):
-                    return "CONVERT($type, '$value', 107)";
+                    return "CONVERT($type, $literal, 107)";
                 case ('j. F Y.'):
-                    return "CONVERT($type, REPLACE ('$value', '.' , '') , 106)";
+                    return "CONVERT($type, REPLACE ($literal, '.' , '') , 106)";
                 case ('Y'):
-                    return "CONVERT($type, '$value', 23)";
+                    return "CONVERT($type, $literal, 23)";
             }
         }
 
@@ -2369,9 +2401,27 @@ class WPDataTable
             }
 
             $date_format = trim($date_format);
+            $literal = WDTTools::prepareSearchLiteral($value, $this->connection);
 
-            return "to_timestamp('$value', '$date_format')$type";
+            return "to_timestamp($literal, '$date_format')$type";
         }
+    }
+
+    /**
+     * Build a vendor-escaped IN (...) list from foreign-key store values.
+     *
+     * @param array $values Map of store-column keys (used as IN list members).
+     *
+     * @return string Comma-separated quoted literals.
+     */
+    private function buildInListFromKeys($values)
+    {
+        $literals = array();
+        foreach (array_keys($values) as $key) {
+            $literals[] = WDTTools::prepareSearchLiteral($key, $this->connection);
+        }
+
+        return implode(', ', $literals);
     }
 
     /**
@@ -2425,6 +2475,7 @@ class WPDataTable
         $parsedOnlyOwnRows = '';
 
         $tableName = isset($parsedQuery['FROM']) ? $parsedQuery['FROM'][0]['table'] : '';
+        $quotedTableName = Connection::quoteQualifiedIdentifier($tableName, $vendor);
 
         if (isset($parsedQuery['DROP']) ||
             isset($parsedQuery['INSERT']) ||
@@ -2569,7 +2620,8 @@ class WPDataTable
                                 continue;
                             } else {
                                 if (is_null($wdtParameters['foreignKeyRule'][$_POST['columns'][$i]['name']])) {
-                                    $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . addslashes($_POST['search']['value']) . '%') . ' OR ';
+                                    $globalSearchValue = sanitize_text_field(wp_unslash($_POST['search']['value']));
+                                    $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $globalSearchValue) . ' OR ';
                                 } else {
                                     $foreignKeyRule = $wdtParameters['foreignKeyRule'][$_POST['columns'][$i]['name']];
                                     $joinedTable = WPDataTable::loadWpDataTable($foreignKeyRule->tableId);
@@ -2579,9 +2631,10 @@ class WPDataTable
                                     $filteredValues = preg_grep('~' . preg_quote(strtolower($_POST['search']['value']), '~') . '~', $distinctValues);
 
                                     if (!empty($filteredValues)) {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} IN (" . implode(', ', array_keys($filteredValues)) . ")  OR ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} IN (" . $this->buildInListFromKeys($filteredValues) . ")  OR ";
                                     } else {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . addslashes($_POST['search']['value']) . "' OR ";
+                                        $globalSearchValue = sanitize_text_field(wp_unslash($_POST['search']['value']));
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = " . WDTTools::prepareSearchLiteral($globalSearchValue, $this->connection) . ' OR ';
                                     }
                                 }
 
@@ -2616,7 +2669,7 @@ class WPDataTable
 
                     if (isset($_POST['columns'][$i]) && $_POST['columns'][$i]['searchable'] == true && ($columnSearchFromTable || $columnSearchFromDefaultValue)) {
 
-                        $columnSearch = $columnSearchFromTable ? $_POST['columns'][$i]['search']['value'] : $wdtParameters['filterDefaultValue'][$i];
+                        $columnSearch = $columnSearchFromTable ? sanitize_text_field(wp_unslash($_POST['columns'][$i]['search']['value'])) : $wdtParameters['filterDefaultValue'][$i];
                         if (!empty($search)) {
                             $search .= ' AND ';
                         }
@@ -2631,7 +2684,7 @@ class WPDataTable
                                             $left = str_replace(',', '', $left);
                                         }
                                         $left = (float)$left;
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} >= $left ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} >= $left ";
                                     }
                                     if ($right !== '') {
                                         if (get_option('wdtNumberFormat') == 1) {
@@ -2643,7 +2696,7 @@ class WPDataTable
                                         if (!empty($search) && $left !== '') {
                                             $search .= ' AND ';
                                         }
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} <= $right ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} <= $right ";
                                     }
                                     break;
                                 case 'date-range':
@@ -2652,21 +2705,22 @@ class WPDataTable
                                     list($left, $right) = explode('|', $columnSearch);
 
                                     if ($left && $right) {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} BETWEEN {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $left)} AND {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $right)} ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} BETWEEN {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $left)} AND {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $right)} ";
                                     } elseif ($left) {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} >= {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $left)} ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} >= {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $left)} ";
                                     } elseif ($right) {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} <= {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $right)} ";
+                                        $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} <= {$this->getDateTimeExpression($vendor, $wdtParameters['filterTypes'][$aColumns[$i]], $right)} ";
                                     }
                                     break;
                                 case 'select':
                                     if ($columnSearch == 'possibleValuesAddEmpty') {
-                                        $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '' OR {$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} IS NULL";
+                                        $qualifiedColumn = $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier}";
+                                        $search .= "({$qualifiedColumn} = '' OR {$qualifiedColumn} IS NULL) ";
                                     } else {
                                         if ($wdtParameters['exactFiltering'][$aColumns[$i]] == 1) {
-                                            $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $columnSearch . "' ";
+                                            $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = " . WDTTools::prepareSearchLiteral($columnSearch, $this->connection) . ' ';
                                         } else {
-                                            $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $columnSearch . '%');
+                                            $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $columnSearch) . ' ';
                                         }
                                     }
                                     break;
@@ -2694,14 +2748,19 @@ class WPDataTable
                                     }
                                     $j = 0;
                                     $useAndExactLogic = $wdtParameters['exactFiltering'][$aColumns[$i]] == 1 && $wdtParameters['andLogic'][$aColumns[$i]] == true;
-                                    $search .= $useAndExactLogic ? " (" . $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" : " (";
+                                    $search .= $useAndExactLogic ? " (" . $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" : " (";
                                     foreach ($checkboxSearches as $checkboxSearch) {
                                         if ($useAndExactLogic) {
                                             ++$j;
+                                            $escapedCheckboxSearch = substr(
+                                                WDTTools::prepareSearchLiteral($checkboxSearch, $this->connection),
+                                                1,
+                                                -1
+                                            );
                                             if (count($checkboxSearches) != $j) {
-                                                $search .= $checkboxSearch . ", ";
+                                                $search .= $escapedCheckboxSearch . ", ";
                                             } else {
-                                                $search .= $checkboxSearch . "' ";
+                                                $search .= $escapedCheckboxSearch . "' ";
                                             }
                                         } else {
                                             if ($j > 0) {
@@ -2709,9 +2768,9 @@ class WPDataTable
                                             }
 
                                             if ($wdtParameters['exactFiltering'][$aColumns[$i]] == 1) {
-                                                $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $checkboxSearch . "' ";
+                                                $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = " . WDTTools::prepareSearchLiteral($checkboxSearch, $this->connection) . ' ';
                                             } else {
-                                                $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $checkboxSearch . '%');
+                                                $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $checkboxSearch) . ' ';
                                             }
 
                                             $j++;
@@ -2723,12 +2782,12 @@ class WPDataTable
                                 case 'number':
                                     if (is_null($wdtParameters['foreignKeyRule'][$_POST['columns'][$i]['name']])) {
                                         if ($wdtParameters['exactFiltering'][$aColumns[$i]] == 1) {
-                                            $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $columnSearch . "' ";
+                                            $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = " . WDTTools::prepareSearchLiteral($columnSearch, $this->connection) . ' ';
                                         } else {
                                             if ($wdtParameters['filterTypes'][$aColumns[$i]] == 'number') {
-                                                $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $columnSearch . '%');
+                                                $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $columnSearch, '', '%') . ' ';
                                             } else {
-                                                $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $columnSearch . '%');
+                                                $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $columnSearch) . ' ';
                                             }
                                         }
                                     } else {
@@ -2744,14 +2803,14 @@ class WPDataTable
                                         }
 
                                         if (!empty($filteredValues)) {
-                                            $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} IN (" . implode(', ', array_keys($filteredValues)) . ")";
+                                            $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} IN (" . $this->buildInListFromKeys($filteredValues) . ")";
                                         } else {
-                                            $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $columnSearch . "' ";
+                                            $search .= $quotedTableName . ".{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = " . WDTTools::prepareSearchLiteral($columnSearch, $this->connection) . ' ';
                                         }
                                     }
                                     break;
                                 default:
-                                    $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $columnSearch . '%');
+                                    $search .= $this->getLikeExpression($vendor, $quotedTableName, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, $columnSearch) . ' ';
                             }
                         }
                     }
@@ -3566,8 +3625,8 @@ class WPDataTable
 
     /**
      * @throws WDTException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \WPDT\PhpOffice\PhpSpreadsheet\Exception
+     * @throws \WPDT\PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws Exception
      */
     public function excelBasedConstruct($xls_url, $wdtParameters = array())
@@ -3846,6 +3905,19 @@ class WPDataTable
     }
 
     /**
+     * Frontend modal shell markup (edit/delete dialogs target #wdt-frontend-modal).
+     *
+     * @return string
+     */
+    public static function getModalHtml()
+    {
+        ob_start();
+        self::renderModal();
+
+        return (string) ob_get_clean();
+    }
+
+    /**
      * Generates table HTML
      * @return string
      */
@@ -3854,16 +3926,37 @@ class WPDataTable
         /** @noinspection PhpUnusedLocalVariableInspection */
         $tableContent = $this->renderWithJSAndStyles();
 
+        $inlineModalHtml = '';
         ob_start();
         include WDT_TEMPLATE_PATH . 'frontend/wrap_template.inc.php';
         if (!self::$modalRendered) {
-            if (!is_admin()) {
+            $want_inline_modal = (
+                $this->isPreviewMode()
+                || apply_filters('wpdatatables_should_inline_frontend_modal', false)
+            );
+            /** @since split Divi 5 VB / REST preview mounts modal markup from AJAX instead of inlined HTML */
+            $do_inline_modal_markup = apply_filters(
+                'wpdatatables_should_inline_modal_in_table_markup',
+                $want_inline_modal,
+                $this
+            );
+
+            if ($want_inline_modal && ! $do_inline_modal_markup ) {
+                self::$modalRendered = true;
+            } elseif ($do_inline_modal_markup) {
+                $inlineModalHtml = self::getModalHtml();
+                self::$modalRendered = true;
+            } elseif (! is_admin()) {
                 add_action('wp_footer', array('WPDataTable', 'renderModal'));
+                self::$modalRendered = true;
             }
-            self::$modalRendered = true;
         }
         $returnData = ob_get_contents();
         ob_end_clean();
+
+        if ($inlineModalHtml !== '') {
+            $returnData .= $inlineModalHtml;
+        }
 
         // Generate the style block
         $returnData .= "<style>\n";
@@ -4618,6 +4711,7 @@ class WPDataTable
             (isset($advancedSettings->language) && $advancedSettings->language != '' ? $this->setInterfaceLanguage($advancedSettings->language) : get_option('wdtInterfaceLanguage') != '') ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             isset($advancedSettings->tableSkin) ? $this->setTableSkin($advancedSettings->tableSkin) : $this->setTableSkin(get_option('wdtBaseSkin'));
             isset($advancedSettings->table_wcag) ? $this->setTableWCAG($advancedSettings->table_wcag) : $this->setTableWCAG(0);
+            isset($advancedSettings->advanced_filter_option) ? $this->setAdvancedFilterOption($advancedSettings->advanced_filter_option) : $this->setAdvancedFilterOption(0);
             isset($advancedSettings->simple_template_id) ? $this->setSimpleTemplateId($advancedSettings->simple_template_id) : $this->setSimpleTemplateId(0);
             isset($advancedSettings->tableFontColorSettings) ? $this->setTableFontColorSettings($advancedSettings->tableFontColorSettings) : $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
             isset($advancedSettings->tableBorderRemoval) ? $this->setTableBorderRemoval($advancedSettings->tableBorderRemoval) : $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
@@ -4710,7 +4804,15 @@ class WPDataTable
         $columnIndex = 1;
         // Check the search values passed from URL
         if (isset($_GET['wdt_search'])) {
-            $this->setDefaultSearchValue($_GET['wdt_search']);
+            $wdtSearch = wp_unslash($_GET['wdt_search']);
+            // Defense-in-depth: repeatedly decode HTML entities so multi-encoded
+            // payloads (e.g. &lt;img onerror&gt; or &quot;) cannot survive sanitization
+            // and be re-decoded into active markup in the browser.
+            do {
+                $previousSearch = $wdtSearch;
+                $wdtSearch = html_entity_decode($wdtSearch, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            } while ($wdtSearch !== $previousSearch);
+            $this->setDefaultSearchValue(sanitize_text_field($wdtSearch));
         }
         if (isset($_GET['wdt_var1'])) {
             $wdtVar1 = urldecode(sanitize_text_field($_GET['wdt_var1']));
@@ -4939,8 +5041,10 @@ class WPDataTable
 
 
         // Check the default values passed from URL
-        if (isset($_GET['wdt_column_filter'])) {
+        if (isset($_GET['wdt_column_filter']) && is_array($_GET['wdt_column_filter'])) {
             foreach ($_GET['wdt_column_filter'] as $fltColKey => $fltDefVal) {
+                $fltColKey = sanitize_text_field(wp_unslash($fltColKey));
+                $fltDefVal = sanitize_text_field(wp_unslash($fltDefVal));
                 $wdtCol = $this->getColumn($fltColKey);
                 if (!empty($wdtCol)) {
                     $this->getColumn($fltColKey)->setFilterDefaultValue($fltDefVal);
@@ -4977,6 +5081,7 @@ class WPDataTable
         $obj->file_location = $this->getFileLocation();
         $obj->tableSkin = $this->getTableSkin();
         $obj->table_wcag = $this->isTableWCAG();
+        $obj->advanced_filter_option = $this->isAdvancedFilterOption();
         $obj->simple_template_id = $this->getSimpleTemplateId();
         $obj->scrollable = $this->isScrollable();
         $obj->fixedLayout = $this->isFixedLayout();
@@ -5478,8 +5583,14 @@ class WPDataTable
             if (isset($wdtVar9) && $wdtVar9 !== '') {
                 $obj->dataTableParams->ajax['url'] .= '&wdt_var9=' . urlencode($wdtVar9);
             }
-            if (isset($_GET['wdt_column_filter']) && $_GET['wdt_column_filter'] !== '') {
+            if (isset($_GET['wdt_column_filter']) && is_array($_GET['wdt_column_filter'])) {
                 foreach ($_GET['wdt_column_filter'] as $fltColKey => $fltDefVal) {
+                    if (!is_scalar($fltColKey) || !is_scalar($fltDefVal)) {
+                        continue;
+                    }
+
+                    $fltColKey = sanitize_text_field(wp_unslash($fltColKey));
+                    $fltDefVal = sanitize_text_field(wp_unslash($fltDefVal));
                     $obj->dataTableParams->ajax['url'] .= '&wdt_column_filter[' . urlencode($fltColKey) . ']=' . urlencode($fltDefVal);
                 }
             }
@@ -5543,7 +5654,7 @@ class WPDataTable
 
         $obj = apply_filters('wpdatatables_filter_table_description', $obj, $this->getWpId(), $this);
 
-        return json_encode($obj, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG);
+        return json_encode($obj, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP);
     }
 
 

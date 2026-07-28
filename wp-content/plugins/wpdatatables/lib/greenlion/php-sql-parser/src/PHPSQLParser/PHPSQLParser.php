@@ -38,12 +38,11 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
  */
+namespace WPDT\PHPSQLParser;
 
-namespace PHPSQLParser;
-use PHPSQLParser\positions\PositionCalculator;
-use PHPSQLParser\processors\DefaultProcessor;
-use PHPSQLParser\utils\PHPSQLParserConstants;
-
+use WPDT\PHPSQLParser\positions\PositionCalculator;
+use WPDT\PHPSQLParser\processors\DefaultProcessor;
+use WPDT\PHPSQLParser\utils\PHPSQLParserConstants;
 /**
  * This class implements the parser functionality.
  *
@@ -51,15 +50,13 @@ use PHPSQLParser\utils\PHPSQLParserConstants;
  * @author  André Rothe <arothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
-class PHPSQLParser {
-
+class PHPSQLParser
+{
     public $parsed;
-
     /**
      * @var Options
      */
     private $options;
-
     /**
      * Constructor. It simply calls the parse() function.
      * Use the public variable $parsed to get the output.
@@ -68,14 +65,13 @@ class PHPSQLParser {
      * @param bool $calcPositions True, if the output should contain [position], false otherwise.
      * @param array $options
      */
-    public function __construct($sql = false, $calcPositions = false, array $options = array()) {
+    public function __construct($sql = \false, $calcPositions = \false, array $options = array())
+    {
         $this->options = new Options($options);
-
         if ($sql) {
             $this->parse($sql, $calcPositions);
         }
     }
-
     /**
      * It parses the given SQL statement and generates a detailled
      * output array for every part of the statement. The method can
@@ -89,22 +85,19 @@ class PHPSQLParser {
      *
      * @return array An associative array with all meta information about the SQL statement.
      */
-    public function parse($sql, $calcPositions = false) {
-
+    public function parse($sql, $calcPositions = \false)
+    {
         $processor = new DefaultProcessor($this->options);
         $queries = $processor->process($sql);
-
         // calc the positions of some important tokens
         if ($calcPositions) {
             $calculator = new PositionCalculator();
             $queries = $calculator->setPositionsWithinSQL($sql, $queries);
         }
-
         // store the parsed queries
         $this->parsed = $queries;
         return $this->parsed;
     }
-
     /**
      * Add a custom function to the parser.  no return value
      *
@@ -112,10 +105,10 @@ class PHPSQLParser {
      *
      * @return null
      */
-    public function addCustomFunction($token) {
+    public function addCustomFunction($token)
+    {
         PHPSQLParserConstants::getInstance()->addCustomFunction($token);
     }
-
     /**
      * Remove a custom function from the parser.  no return value
      *
@@ -123,17 +116,17 @@ class PHPSQLParser {
      *
      * @return null
      */
-    public function removeCustomFunction($token) {
+    public function removeCustomFunction($token)
+    {
         PHPSQLParserConstants::getInstance()->removeCustomFunction($token);
     }
-
     /**
      * Returns the list of custom functions
      *
      * @return array Returns an array of all custom functions
      */
-    public function getCustomFunctions() {
+    public function getCustomFunctions()
+    {
         return PHPSQLParserConstants::getInstance()->getCustomFunctions();
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class Theme
 {
@@ -10,21 +10,18 @@ class Theme
      * @var string
      */
     private $themeName;
-
     /**
      * Colour Scheme Name.
      *
      * @var string
      */
     private $colourSchemeName;
-
     /**
      * Colour Map.
      *
      * @var string[]
      */
     private $colourMap;
-
     /**
      * Create a new Theme.
      *
@@ -39,7 +36,6 @@ class Theme
         $this->colourSchemeName = $colourSchemeName;
         $this->colourMap = $colourMap;
     }
-
     /**
      * Not called by Reader, never accessible any other time.
      *
@@ -51,7 +47,6 @@ class Theme
     {
         return $this->themeName;
     }
-
     /**
      * Not called by Reader, never accessible any other time.
      *
@@ -63,7 +58,6 @@ class Theme
     {
         return $this->colourSchemeName;
     }
-
     /**
      * Get colour Map Value by Position.
      *

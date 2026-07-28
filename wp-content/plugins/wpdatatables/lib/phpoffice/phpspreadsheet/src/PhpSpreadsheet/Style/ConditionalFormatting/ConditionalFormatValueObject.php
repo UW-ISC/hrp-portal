@@ -1,18 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting;
 
 class ConditionalFormatValueObject
 {
     /** @var mixed */
     private $type;
-
     /** @var mixed */
     private $value;
-
     /** @var mixed */
     private $cellFormula;
-
     /**
      * ConditionalFormatValueObject constructor.
      *
@@ -26,7 +23,6 @@ class ConditionalFormatValueObject
         $this->value = $value;
         $this->cellFormula = $cellFormula;
     }
-
     /**
      * @return mixed
      */
@@ -34,17 +30,14 @@ class ConditionalFormatValueObject
     {
         return $this->type;
     }
-
     /**
      * @param mixed $type
      */
-    public function setType($type): self
+    public function setType($type) : self
     {
         $this->type = $type;
-
         return $this;
     }
-
     /**
      * @return mixed
      */
@@ -52,17 +45,14 @@ class ConditionalFormatValueObject
     {
         return $this->value;
     }
-
     /**
      * @param mixed $value
      */
-    public function setValue($value): self
+    public function setValue($value) : self
     {
         $this->value = $value;
-
         return $this;
     }
-
     /**
      * @return mixed
      */
@@ -70,14 +60,12 @@ class ConditionalFormatValueObject
     {
         return $this->cellFormula;
     }
-
     /**
      * @param mixed $cellFormula
      */
-    public function setCellFormula($cellFormula): self
+    public function setCellFormula($cellFormula) : self
     {
         $this->cellFormula = $cellFormula;
-
         return $this;
     }
 }

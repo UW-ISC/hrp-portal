@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TableExpressionBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the table name and join options. 
  * You can overwrite all functions to achieve another handling.
@@ -50,47 +50,47 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class TableExpressionBuilder implements Builder {
-
-    protected function buildFROM($parsed) {
+class TableExpressionBuilder implements Builder
+{
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildRefClause($parsed) {
+    protected function buildRefClause($parsed)
+    {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed, $index = 0) {
+    public function build(array $parsed, $index = 0)
+    {
         if ($parsed['expr_type'] !== ExpressionType::TABLE_EXPRESSION) {
             return '';
         }
-        $sql = substr($this->buildFROM($parsed['sub_tree']), 5); // remove FROM keyword
+        $sql = \substr($this->buildFROM($parsed['sub_tree']), 5);
+        // remove FROM keyword
         $sql = '(' . $sql . ')';
         $sql .= $this->buildAlias($parsed);
-
         if ($index !== 0) {
             $sql = $this->buildJoin($parsed['join_type']) . $sql;
             $sql .= $this->buildRefType($parsed['ref_type']);
-            $sql .= $parsed['ref_clause'] === false ? '' : $this->buildRefClause($parsed['ref_clause']);
+            $sql .= $parsed['ref_clause'] === \false ? '' : $this->buildRefClause($parsed['ref_clause']);
         }
         return $sql;
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Chart\Renderer;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Chart\Renderer;
 
 /**
  * Jpgraph is not officially maintained by Composer at packagist.org.
@@ -12,25 +12,14 @@ namespace PhpOffice\PhpSpreadsheet\Chart\Renderer;
  */
 class MtJpGraphRenderer extends JpGraphRendererBase
 {
-    protected static function init(): void
+    protected static function init() : void
     {
-        static $loaded = false;
+        static $loaded = \false;
         if ($loaded) {
             return;
         }
-
-        \mitoteam\jpgraph\MtJpGraph::load([
-            'bar',
-            'contour',
-            'line',
-            'pie',
-            'pie3d',
-            'radar',
-            'regstat',
-            'scatter',
-            'stock',
-        ], true); // enable Extended mode
-
-        $loaded = true;
+        \WPDT\mitoteam\jpgraph\MtJpGraph::load(['bar', 'contour', 'line', 'pie', 'pie3d', 'radar', 'regstat', 'scatter', 'stock'], \true);
+        // enable Extended mode
+        $loaded = \true;
     }
 }

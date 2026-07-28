@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FromBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  *
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the [FROM] part. You can overwrite
  * all functions to achieve another handling.
@@ -50,56 +50,50 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class FromBuilder implements Builder {
-
-    protected function buildTable($parsed, $key) {
+class FromBuilder implements Builder
+{
+    protected function buildTable($parsed, $key)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $key);
     }
-
-    protected function buildTableExpression($parsed, $key) {
+    protected function buildTableExpression($parsed, $key)
+    {
         $builder = new TableExpressionBuilder();
         return $builder->build($parsed, $key);
     }
-
-    protected function buildSubQuery($parsed, $key) {
+    protected function buildSubQuery($parsed, $key)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed, $key);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
-        if (array_key_exists("UNION ALL", $parsed) || array_key_exists("UNION", $parsed)) {
+        if (\array_key_exists("UNION ALL", $parsed) || \array_key_exists("UNION", $parsed)) {
             foreach ($parsed as $union_type => $outer_v) {
-                $first = true;
-
+                $first = \true;
                 foreach ($outer_v as $item) {
                     if (!$first) {
-                        $sql .= " $union_type ";
+                        $sql .= " {$union_type} ";
+                    } else {
+                        $first = \false;
                     }
-                    else {
-                        $first = false;
-                    }
-
                     $select_builder = new SelectStatementBuilder();
-
-                    $len = strlen($sql);
+                    $len = \strlen($sql);
                     $sql .= $select_builder->build($item);
-
-                    if ($len === strlen($sql)) {
+                    if ($len === \strlen($sql)) {
                         throw new UnableToCreateSQLException('FROM', $union_type, $outer_v, 'expr_type');
                     }
                 }
             }
-        }
-        else {
+        } else {
             foreach ($parsed as $k => $v) {
-                $len = strlen($sql);
+                $len = \strlen($sql);
                 $sql .= $this->buildTable($v, $k);
                 $sql .= $this->buildTableExpression($v, $k);
                 $sql .= $this->buildSubquery($v, $k);
-
-                if ($len == strlen($sql)) {
+                if ($len == \strlen($sql)) {
                     throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');
                 }
             }
@@ -107,4 +101,3 @@ class FromBuilder implements Builder {
         return "FROM " . $sql;
     }
 }
-?>

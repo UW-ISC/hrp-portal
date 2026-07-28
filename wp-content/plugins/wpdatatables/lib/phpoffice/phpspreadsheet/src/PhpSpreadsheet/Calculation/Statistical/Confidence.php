@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Confidence
 {
     use ArrayEnabled;
-
     /**
      * CONFIDENCE.
      *
@@ -29,10 +27,9 @@ class Confidence
      */
     public static function CONFIDENCE($alpha, $stdDev, $size)
     {
-        if (is_array($alpha) || is_array($stdDev) || is_array($size)) {
+        if (\is_array($alpha) || \is_array($stdDev) || \is_array($size)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $alpha, $stdDev, $size);
         }
-
         try {
             $alpha = StatisticalValidations::validateFloat($alpha);
             $stdDev = StatisticalValidations::validateFloat($stdDev);
@@ -40,13 +37,11 @@ class Confidence
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($alpha <= 0) || ($alpha >= 1) || ($stdDev <= 0) || ($size < 1)) {
+        if ($alpha <= 0 || $alpha >= 1 || $stdDev <= 0 || $size < 1) {
             return ExcelError::NAN();
         }
         /** @var float */
         $temp = Distributions\StandardNormal::inverse(1 - $alpha / 2);
-
-        return Functions::scalar($temp * $stdDev / sqrt($size));
+        return Functions::scalar($temp * $stdDev / \sqrt($size));
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * XHTML 1.1 Presentation Module, defines simple presentation-related
  * markup. Text Extension Module.
@@ -12,12 +14,10 @@
  */
 class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule
 {
-
     /**
      * @type string
      */
     public $name = 'Presentation';
-
     /**
      * @param HTMLPurifier_Config $config
      */
@@ -27,16 +27,15 @@ class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule
         $this->addElement('sub', 'Inline', 'Inline', 'Common');
         $this->addElement('sup', 'Inline', 'Inline', 'Common');
         $b = $this->addElement('b', 'Inline', 'Inline', 'Common');
-        $b->formatting = true;
+        $b->formatting = \true;
         $big = $this->addElement('big', 'Inline', 'Inline', 'Common');
-        $big->formatting = true;
+        $big->formatting = \true;
         $i = $this->addElement('i', 'Inline', 'Inline', 'Common');
-        $i->formatting = true;
+        $i->formatting = \true;
         $small = $this->addElement('small', 'Inline', 'Inline', 'Common');
-        $small->formatting = true;
+        $small->formatting = \true;
         $tt = $this->addElement('tt', 'Inline', 'Inline', 'Common');
-        $tt->formatting = true;
+        $tt->formatting = \true;
     }
 }
-
 // vim: et sw=4 sts=4

@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Worksheet\Table;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Table;
 
-use PhpOffice\PhpSpreadsheet\Worksheet\Table;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Table;
 class TableStyle
 {
     const TABLE_STYLE_NONE = '';
@@ -67,49 +66,42 @@ class TableStyle
     const TABLE_STYLE_DARK9 = 'TableStyleDark9';
     const TABLE_STYLE_DARK10 = 'TableStyleDark10';
     const TABLE_STYLE_DARK11 = 'TableStyleDark11';
-
     /**
      * Theme.
      *
      * @var string
      */
     private $theme;
-
     /**
      * Show First Column.
      *
      * @var bool
      */
-    private $showFirstColumn = false;
-
+    private $showFirstColumn = \false;
     /**
      * Show Last Column.
      *
      * @var bool
      */
-    private $showLastColumn = false;
-
+    private $showLastColumn = \false;
     /**
      * Show Row Stripes.
      *
      * @var bool
      */
-    private $showRowStripes = false;
-
+    private $showRowStripes = \false;
     /**
      * Show Column Stripes.
      *
      * @var bool
      */
-    private $showColumnStripes = false;
-
+    private $showColumnStripes = \false;
     /**
      * Table.
      *
      * @var null|Table
      */
     private $table;
-
     /**
      * Create a new Table Style.
      *
@@ -119,112 +111,94 @@ class TableStyle
     {
         $this->theme = $theme;
     }
-
     /**
      * Get theme.
      */
-    public function getTheme(): string
+    public function getTheme() : string
     {
         return $this->theme;
     }
-
     /**
      * Set theme.
      */
-    public function setTheme(string $theme): self
+    public function setTheme(string $theme) : self
     {
         $this->theme = $theme;
-
         return $this;
     }
-
     /**
      * Get show First Column.
      */
-    public function getShowFirstColumn(): bool
+    public function getShowFirstColumn() : bool
     {
         return $this->showFirstColumn;
     }
-
     /**
      * Set show First Column.
      */
-    public function setShowFirstColumn(bool $showFirstColumn): self
+    public function setShowFirstColumn(bool $showFirstColumn) : self
     {
         $this->showFirstColumn = $showFirstColumn;
-
         return $this;
     }
-
     /**
      * Get show Last Column.
      */
-    public function getShowLastColumn(): bool
+    public function getShowLastColumn() : bool
     {
         return $this->showLastColumn;
     }
-
     /**
      * Set show Last Column.
      */
-    public function setShowLastColumn(bool $showLastColumn): self
+    public function setShowLastColumn(bool $showLastColumn) : self
     {
         $this->showLastColumn = $showLastColumn;
-
         return $this;
     }
-
     /**
      * Get show Row Stripes.
      */
-    public function getShowRowStripes(): bool
+    public function getShowRowStripes() : bool
     {
         return $this->showRowStripes;
     }
-
     /**
      * Set show Row Stripes.
      */
-    public function setShowRowStripes(bool $showRowStripes): self
+    public function setShowRowStripes(bool $showRowStripes) : self
     {
         $this->showRowStripes = $showRowStripes;
-
         return $this;
     }
-
     /**
      * Get show Column Stripes.
      */
-    public function getShowColumnStripes(): bool
+    public function getShowColumnStripes() : bool
     {
         return $this->showColumnStripes;
     }
-
     /**
      * Set show Column Stripes.
      */
-    public function setShowColumnStripes(bool $showColumnStripes): self
+    public function setShowColumnStripes(bool $showColumnStripes) : self
     {
         $this->showColumnStripes = $showColumnStripes;
-
         return $this;
     }
-
     /**
      * Get this Style's Table.
      */
-    public function getTable(): ?Table
+    public function getTable() : ?Table
     {
         return $this->table;
     }
-
     /**
      * Set this Style's Table.
      */
-    public function setTable(?Table $table = null): self
+    public function setTable(?Table $table = null) : self
     {
         $this->table = $table;
-
         return $this;
     }
 }

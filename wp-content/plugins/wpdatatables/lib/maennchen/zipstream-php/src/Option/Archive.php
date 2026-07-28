@@ -1,20 +1,16 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace WPDT\ZipStream\Option;
 
-namespace ZipStream\Option;
-
-use Psr\Http\Message\StreamInterface;
-
+use WPDT\Psr\Http\Message\StreamInterface;
 final class Archive
 {
     public const DEFAULT_DEFLATE_LEVEL = 6;
-
     /**
      * @var string
      */
     private $comment = '';
-
     /**
      * Size, in bytes, of the largest file to try
      * and load into memory (used by
@@ -25,7 +21,6 @@ final class Archive
      * @var int
      */
     private $largeFileSize = 20 * 1024 * 1024;
-
     /**
      * How to handle large files.  Legal values are
      * Method::STORE() (the default), or
@@ -38,30 +33,26 @@ final class Archive
      * @var Method
      */
     private $largeFileMethod;
-
     /**
      * Boolean indicating whether or not to send
      * the HTTP headers for this file.
      *
      * @var bool
      */
-    private $sendHttpHeaders = false;
-
+    private $sendHttpHeaders = \false;
     /**
      * The method called to send headers
      *
      * @var Callable
      */
     private $httpHeaderCallback = 'header';
-
     /**
      * Enable Zip64 extension, supporting very large
      * archives (any size > 4 GB or file count > 64k)
      *
      * @var bool
      */
-    private $enableZip64 = true;
-
+    private $enableZip64 = \true;
     /**
      * Enable streaming files with single read where
      * general purpose bit 3 indicates local file header
@@ -71,8 +62,7 @@ final class Archive
      *
      * @var bool
      */
-    private $zeroHeader = false;
-
+    private $zeroHeader = \false;
     /**
      * Enable reading file stat for determining file size.
      * When a 32-bit system reads file size that is
@@ -85,14 +75,12 @@ final class Archive
      *
      * @var bool
      */
-    private $statFiles = true;
-
+    private $statFiles = \true;
     /**
      * Enable flush after every write to output stream.
      * @var bool
      */
-    private $flushOutput = false;
-
+    private $flushOutput = \false;
     /**
      * HTTP Content-Disposition.  Defaults to
      * 'attachment', where
@@ -104,7 +92,6 @@ final class Archive
      * @var string
      */
     private $contentDisposition = 'attachment';
-
     /**
      * Note that this does nothing if you are
      * not sending HTTP headers.
@@ -112,136 +99,110 @@ final class Archive
      * @var string
      */
     private $contentType = 'application/x-zip';
-
     /**
      * @var int
      */
     private $deflateLevel = 6;
-
     /**
      * @var StreamInterface|resource
      */
     private $outputStream;
-
     /**
      * Options constructor.
      */
     public function __construct()
     {
         $this->largeFileMethod = Method::STORE();
-        $this->outputStream = fopen('php://output', 'wb');
+        $this->outputStream = \fopen('php://output', 'wb');
     }
-
-    public function getComment(): string
+    public function getComment() : string
     {
         return $this->comment;
     }
-
-    public function setComment(string $comment): void
+    public function setComment(string $comment) : void
     {
         $this->comment = $comment;
     }
-
-    public function getLargeFileSize(): int
+    public function getLargeFileSize() : int
     {
         return $this->largeFileSize;
     }
-
-    public function setLargeFileSize(int $largeFileSize): void
+    public function setLargeFileSize(int $largeFileSize) : void
     {
         $this->largeFileSize = $largeFileSize;
     }
-
-    public function getLargeFileMethod(): Method
+    public function getLargeFileMethod() : Method
     {
         return $this->largeFileMethod;
     }
-
-    public function setLargeFileMethod(Method $largeFileMethod): void
+    public function setLargeFileMethod(Method $largeFileMethod) : void
     {
         $this->largeFileMethod = $largeFileMethod;
     }
-
-    public function isSendHttpHeaders(): bool
+    public function isSendHttpHeaders() : bool
     {
         return $this->sendHttpHeaders;
     }
-
-    public function setSendHttpHeaders(bool $sendHttpHeaders): void
+    public function setSendHttpHeaders(bool $sendHttpHeaders) : void
     {
         $this->sendHttpHeaders = $sendHttpHeaders;
     }
-
-    public function getHttpHeaderCallback(): callable
+    public function getHttpHeaderCallback() : callable
     {
         return $this->httpHeaderCallback;
     }
-
-    public function setHttpHeaderCallback(callable $httpHeaderCallback): void
+    public function setHttpHeaderCallback(callable $httpHeaderCallback) : void
     {
         $this->httpHeaderCallback = $httpHeaderCallback;
     }
-
-    public function isEnableZip64(): bool
+    public function isEnableZip64() : bool
     {
         return $this->enableZip64;
     }
-
-    public function setEnableZip64(bool $enableZip64): void
+    public function setEnableZip64(bool $enableZip64) : void
     {
         $this->enableZip64 = $enableZip64;
     }
-
-    public function isZeroHeader(): bool
+    public function isZeroHeader() : bool
     {
         return $this->zeroHeader;
     }
-
-    public function setZeroHeader(bool $zeroHeader): void
+    public function setZeroHeader(bool $zeroHeader) : void
     {
         $this->zeroHeader = $zeroHeader;
     }
-
-    public function isFlushOutput(): bool
+    public function isFlushOutput() : bool
     {
         return $this->flushOutput;
     }
-
-    public function setFlushOutput(bool $flushOutput): void
+    public function setFlushOutput(bool $flushOutput) : void
     {
         $this->flushOutput = $flushOutput;
     }
-
-    public function isStatFiles(): bool
+    public function isStatFiles() : bool
     {
         return $this->statFiles;
     }
-
-    public function setStatFiles(bool $statFiles): void
+    public function setStatFiles(bool $statFiles) : void
     {
         $this->statFiles = $statFiles;
     }
-
-    public function getContentDisposition(): string
+    public function getContentDisposition() : string
     {
         return $this->contentDisposition;
     }
-
-    public function setContentDisposition(string $contentDisposition): void
+    public function setContentDisposition(string $contentDisposition) : void
     {
         $this->contentDisposition = $contentDisposition;
     }
-
-    public function getContentType(): string
+    public function getContentType() : string
     {
         return $this->contentType;
     }
-
-    public function setContentType(string $contentType): void
+    public function setContentType(string $contentType) : void
     {
         $this->contentType = $contentType;
     }
-
     /**
      * @return StreamInterface|resource
      */
@@ -249,27 +210,24 @@ final class Archive
     {
         return $this->outputStream;
     }
-
     /**
      * @param StreamInterface|resource $outputStream
      */
-    public function setOutputStream($outputStream): void
+    public function setOutputStream($outputStream) : void
     {
         $this->outputStream = $outputStream;
     }
-
     /**
      * @return int
      */
-    public function getDeflateLevel(): int
+    public function getDeflateLevel() : int
     {
         return $this->deflateLevel;
     }
-
     /**
      * @param int $deflateLevel
      */
-    public function setDeflateLevel(int $deflateLevel): void
+    public function setDeflateLevel(int $deflateLevel) : void
     {
         $this->deflateLevel = $deflateLevel;
     }

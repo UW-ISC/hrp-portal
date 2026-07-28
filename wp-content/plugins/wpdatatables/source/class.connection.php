@@ -133,6 +133,37 @@ class Connection
     }
 
     /**
+     * Quote SQL identifier, including schema-qualified names (e.g. public.table).
+     *
+     * @param string $identifier Table or column identifier.
+     * @param string $vendor Connection vendor.
+     *
+     * @return string
+     */
+    public static function quoteQualifiedIdentifier($identifier, $vendor)
+    {
+        if ($identifier === '' || $identifier === null) {
+            return '';
+        }
+
+        $leftQuote = self::getLeftColumnQuote($vendor);
+        $rightQuote = self::getRightColumnQuote($vendor);
+
+        if (strpos($identifier, '.') === false) {
+            $escaped = str_replace($rightQuote, $rightQuote . $rightQuote, $identifier);
+            return $leftQuote . $escaped . $rightQuote;
+        }
+
+        $quotedParts = array();
+        foreach (explode('.', $identifier) as $part) {
+            $escaped = str_replace($rightQuote, $rightQuote . $rightQuote, $part);
+            $quotedParts[] = $leftQuote . $escaped . $rightQuote;
+        }
+
+        return implode('.', $quotedParts);
+    }
+
+    /**
      * Checks if separate connection is used
      *
      * @param String $id of the connection, in case of empty string, connection is WP MySql

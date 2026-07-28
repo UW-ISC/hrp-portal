@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style;
 
 class Protection extends Supervisor
 {
@@ -8,21 +8,18 @@ class Protection extends Supervisor
     const PROTECTION_INHERIT = 'inherit';
     const PROTECTION_PROTECTED = 'protected';
     const PROTECTION_UNPROTECTED = 'unprotected';
-
     /**
      * Locked.
      *
      * @var string
      */
     protected $locked;
-
     /**
      * Hidden.
      *
      * @var string
      */
     protected $hidden;
-
     /**
      * Create a new Protection.
      *
@@ -33,18 +30,16 @@ class Protection extends Supervisor
      *                                    Leave this value at default unless you understand exactly what
      *                                        its ramifications are
      */
-    public function __construct($isSupervisor = false, $isConditional = false)
+    public function __construct($isSupervisor = \false, $isConditional = \false)
     {
         // Supervisor?
         parent::__construct($isSupervisor);
-
         // Initialise values
         if (!$isConditional) {
             $this->locked = self::PROTECTION_INHERIT;
             $this->hidden = self::PROTECTION_INHERIT;
         }
     }
-
     /**
      * Get the shared style component for the currently active cell in currently active sheet.
      * Only used for style supervisor.
@@ -55,10 +50,8 @@ class Protection extends Supervisor
     {
         /** @var Style */
         $parent = $this->parent;
-
         return $parent->getSharedComponent()->getProtection();
     }
-
     /**
      * Build style array from subcomponents.
      *
@@ -70,7 +63,6 @@ class Protection extends Supervisor
     {
         return ['protection' => $array];
     }
-
     /**
      * Apply styles from array.
      *
@@ -99,10 +91,8 @@ class Protection extends Supervisor
                 $this->setHidden($styleArray['hidden']);
             }
         }
-
         return $this;
     }
-
     /**
      * Get locked.
      *
@@ -113,10 +103,8 @@ class Protection extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getLocked();
         }
-
         return $this->locked;
     }
-
     /**
      * Set locked.
      *
@@ -132,10 +120,8 @@ class Protection extends Supervisor
         } else {
             $this->locked = $lockType;
         }
-
         return $this;
     }
-
     /**
      * Get hidden.
      *
@@ -146,10 +132,8 @@ class Protection extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getHidden();
         }
-
         return $this->hidden;
     }
-
     /**
      * Set hidden.
      *
@@ -165,10 +149,8 @@ class Protection extends Supervisor
         } else {
             $this->hidden = $hiddenType;
         }
-
         return $this;
     }
-
     /**
      * Get hash code.
      *
@@ -179,20 +161,13 @@ class Protection extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getHashCode();
         }
-
-        return md5(
-            $this->locked .
-            $this->hidden .
-            __CLASS__
-        );
+        return \md5($this->locked . $this->hidden . __CLASS__);
     }
-
-    protected function exportArray1(): array
+    protected function exportArray1() : array
     {
         $exportedArray = [];
         $this->exportArray2($exportedArray, 'locked', $this->getLocked());
         $this->exportArray2($exportedArray, 'hidden', $this->getHidden());
-
         return $exportedArray;
     }
 }

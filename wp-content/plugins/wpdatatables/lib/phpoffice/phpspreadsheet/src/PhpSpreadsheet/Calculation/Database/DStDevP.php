@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Database;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Database;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
 class DStDevP extends DatabaseAbstract
 {
     /**
@@ -39,9 +38,6 @@ class DStDevP extends DatabaseAbstract
         if ($field === null) {
             return ExcelError::VALUE();
         }
-
-        return StandardDeviations::STDEVP(
-            self::getFilteredColumn($database, $field, $criteria)
-        );
+        return StandardDeviations::STDEVP(self::getFilteredColumn($database, $field, $criteria));
     }
 }

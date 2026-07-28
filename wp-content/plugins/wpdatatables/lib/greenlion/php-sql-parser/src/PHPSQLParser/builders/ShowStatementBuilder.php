@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ShowStatementBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the SHOW statement. 
@@ -49,19 +49,20 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ShowStatementBuilder implements Builder {
-
-    protected function buildWHERE($parsed) {
+class ShowStatementBuilder implements Builder
+{
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSHOW($parsed) {
+    protected function buildSHOW($parsed)
+    {
         $builder = new ShowBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $this->buildSHOW($parsed);
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->buildWHERE($parsed['WHERE']);
@@ -69,4 +70,3 @@ class ShowStatementBuilder implements Builder {
         return $sql;
     }
 }
-?>

@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Implements safety checks for safe iframes.
  *
@@ -12,17 +14,14 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
      * @type string
      */
     public $name = 'SafeIframe';
-
     /**
      * @type bool
      */
-    public $always_load = true;
-
+    public $always_load = \true;
     /**
      * @type string
      */
     protected $regexp = null;
-
     // XXX: The not so good bit about how this is all set up now is we
     // can't check HTML.SafeIframe in the 'prepare' step: we have to
     // defer till the actual filtering.
@@ -33,9 +32,8 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
     public function prepare($config)
     {
         $this->regexp = $config->get('URI.SafeIframeRegexp');
-        return true;
+        return \true;
     }
-
     /**
      * @param HTMLPurifier_URI $uri
      * @param HTMLPurifier_Config $config
@@ -46,24 +44,23 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
     {
         // check if filter not applicable
         if (!$config->get('HTML.SafeIframe')) {
-            return true;
+            return \true;
         }
         // check if the filter should actually trigger
-        if (!$context->get('EmbeddedURI', true)) {
-            return true;
+        if (!$context->get('EmbeddedURI', \true)) {
+            return \true;
         }
-        $token = $context->get('CurrentToken', true);
+        $token = $context->get('CurrentToken', \true);
         if (!($token && $token->name == 'iframe')) {
-            return true;
+            return \true;
         }
         // check if we actually have some whitelists enabled
         if ($this->regexp !== null) {
-            return preg_match($this->regexp, $uri->toString());
+            return \preg_match($this->regexp, $uri->toString());
         }
         // check if the host is in a whitelist for safe iframe hosts
         $safeHosts = $config->get('URI.SafeIframeHosts');
         return $safeHosts !== null && isset($safeHosts[$uri->host]);
     }
 }
-
 // vim: et sw=4 sts=4

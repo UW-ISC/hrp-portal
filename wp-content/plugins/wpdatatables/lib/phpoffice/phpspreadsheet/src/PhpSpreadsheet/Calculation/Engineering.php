@@ -1,11 +1,10 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use Complex\Complex;
-use PhpOffice\PhpSpreadsheet\Calculation\Engineering\ComplexFunctions;
-use PhpOffice\PhpSpreadsheet\Calculation\Engineering\ComplexOperations;
-
+use WPDT\Complex\Complex;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering\ComplexFunctions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering\ComplexOperations;
 /**
  * @deprecated 1.18.0
  */
@@ -18,8 +17,7 @@ class Engineering
      *      Use Engineering\Constants::EULER instead
      * @see Engineering\Constants::EULER
      */
-    public const EULER = 2.71828182845904523536;
-
+    public const EULER = 2.718281828459045;
     /**
      * BESSELI.
      *
@@ -46,7 +44,6 @@ class Engineering
     {
         return Engineering\BesselI::BESSELI($x, $ord);
     }
-
     /**
      * BESSELJ.
      *
@@ -71,7 +68,6 @@ class Engineering
     {
         return Engineering\BesselJ::BESSELJ($x, $ord);
     }
-
     /**
      * BESSELK.
      *
@@ -97,7 +93,6 @@ class Engineering
     {
         return Engineering\BesselK::BESSELK($x, $ord);
     }
-
     /**
      * BESSELY.
      *
@@ -122,7 +117,6 @@ class Engineering
     {
         return Engineering\BesselY::BESSELY($x, $ord);
     }
-
     /**
      * BINTODEC.
      *
@@ -148,7 +142,6 @@ class Engineering
     {
         return Engineering\ConvertBinary::toDecimal($x);
     }
-
     /**
      * BINTOHEX.
      *
@@ -180,7 +173,6 @@ class Engineering
     {
         return Engineering\ConvertBinary::toHex($x, $places);
     }
-
     /**
      * BINTOOCT.
      *
@@ -212,7 +204,6 @@ class Engineering
     {
         return Engineering\ConvertBinary::toOctal($x, $places);
     }
-
     /**
      * DECTOBIN.
      *
@@ -248,7 +239,6 @@ class Engineering
     {
         return Engineering\ConvertDecimal::toBinary($x, $places);
     }
-
     /**
      * DECTOHEX.
      *
@@ -284,7 +274,6 @@ class Engineering
     {
         return Engineering\ConvertDecimal::toHex($x, $places);
     }
-
     /**
      * DECTOOCT.
      *
@@ -320,7 +309,6 @@ class Engineering
     {
         return Engineering\ConvertDecimal::toOctal($x, $places);
     }
-
     /**
      * HEXTOBIN.
      *
@@ -356,7 +344,6 @@ class Engineering
     {
         return Engineering\ConvertHex::toBinary($x, $places);
     }
-
     /**
      * HEXTODEC.
      *
@@ -383,7 +370,6 @@ class Engineering
     {
         return Engineering\ConvertHex::toDecimal($x);
     }
-
     /**
      * HEXTOOCT.
      *
@@ -423,7 +409,6 @@ class Engineering
     {
         return Engineering\ConvertHex::toOctal($x, $places);
     }
-
     /**
      * OCTTOBIN.
      *
@@ -465,7 +450,6 @@ class Engineering
     {
         return Engineering\ConvertOctal::toBinary($x, $places);
     }
-
     /**
      * OCTTODEC.
      *
@@ -492,7 +476,6 @@ class Engineering
     {
         return Engineering\ConvertOctal::toDecimal($x);
     }
-
     /**
      * OCTTOHEX.
      *
@@ -529,7 +512,6 @@ class Engineering
     {
         return Engineering\ConvertOctal::toHex($x, $places);
     }
-
     /**
      * COMPLEX.
      *
@@ -553,7 +535,6 @@ class Engineering
     {
         return Engineering\Complex::COMPLEX($realNumber, $imaginary, $suffix);
     }
-
     /**
      * IMAGINARY.
      *
@@ -575,7 +556,6 @@ class Engineering
     {
         return Engineering\Complex::IMAGINARY($complexNumber);
     }
-
     /**
      * IMREAL.
      *
@@ -596,7 +576,6 @@ class Engineering
     {
         return Engineering\Complex::IMREAL($complexNumber);
     }
-
     /**
      * IMABS.
      *
@@ -617,7 +596,6 @@ class Engineering
     {
         return ComplexFunctions::IMABS($complexNumber);
     }
-
     /**
      * IMARGUMENT.
      *
@@ -639,7 +617,6 @@ class Engineering
     {
         return ComplexFunctions::IMARGUMENT($complexNumber);
     }
-
     /**
      * IMCONJUGATE.
      *
@@ -660,7 +637,6 @@ class Engineering
     {
         return ComplexFunctions::IMCONJUGATE($complexNumber);
     }
-
     /**
      * IMCOS.
      *
@@ -681,7 +657,6 @@ class Engineering
     {
         return ComplexFunctions::IMCOS($complexNumber);
     }
-
     /**
      * IMCOSH.
      *
@@ -702,7 +677,6 @@ class Engineering
     {
         return ComplexFunctions::IMCOSH($complexNumber);
     }
-
     /**
      * IMCOT.
      *
@@ -723,7 +697,6 @@ class Engineering
     {
         return ComplexFunctions::IMCOT($complexNumber);
     }
-
     /**
      * IMCSC.
      *
@@ -744,7 +717,6 @@ class Engineering
     {
         return ComplexFunctions::IMCSC($complexNumber);
     }
-
     /**
      * IMCSCH.
      *
@@ -765,7 +737,6 @@ class Engineering
     {
         return ComplexFunctions::IMCSCH($complexNumber);
     }
-
     /**
      * IMSIN.
      *
@@ -786,7 +757,6 @@ class Engineering
     {
         return ComplexFunctions::IMSIN($complexNumber);
     }
-
     /**
      * IMSINH.
      *
@@ -807,7 +777,6 @@ class Engineering
     {
         return ComplexFunctions::IMSINH($complexNumber);
     }
-
     /**
      * IMSEC.
      *
@@ -828,7 +797,6 @@ class Engineering
     {
         return ComplexFunctions::IMSEC($complexNumber);
     }
-
     /**
      * IMSECH.
      *
@@ -849,7 +817,6 @@ class Engineering
     {
         return ComplexFunctions::IMSECH($complexNumber);
     }
-
     /**
      * IMTAN.
      *
@@ -870,7 +837,6 @@ class Engineering
     {
         return ComplexFunctions::IMTAN($complexNumber);
     }
-
     /**
      * IMSQRT.
      *
@@ -891,7 +857,6 @@ class Engineering
     {
         return ComplexFunctions::IMSQRT($complexNumber);
     }
-
     /**
      * IMLN.
      *
@@ -912,7 +877,6 @@ class Engineering
     {
         return ComplexFunctions::IMLN($complexNumber);
     }
-
     /**
      * IMLOG10.
      *
@@ -933,7 +897,6 @@ class Engineering
     {
         return ComplexFunctions::IMLOG10($complexNumber);
     }
-
     /**
      * IMLOG2.
      *
@@ -954,7 +917,6 @@ class Engineering
     {
         return ComplexFunctions::IMLOG2($complexNumber);
     }
-
     /**
      * IMEXP.
      *
@@ -975,7 +937,6 @@ class Engineering
     {
         return ComplexFunctions::IMEXP($complexNumber);
     }
-
     /**
      * IMPOWER.
      *
@@ -997,7 +958,6 @@ class Engineering
     {
         return ComplexFunctions::IMPOWER($complexNumber, $realNumber);
     }
-
     /**
      * IMDIV.
      *
@@ -1019,7 +979,6 @@ class Engineering
     {
         return ComplexOperations::IMDIV($complexDividend, $complexDivisor);
     }
-
     /**
      * IMSUB.
      *
@@ -1041,7 +1000,6 @@ class Engineering
     {
         return ComplexOperations::IMSUB($complexNumber1, $complexNumber2);
     }
-
     /**
      * IMSUM.
      *
@@ -1062,7 +1020,6 @@ class Engineering
     {
         return ComplexOperations::IMSUM(...$complexNumbers);
     }
-
     /**
      * IMPRODUCT.
      *
@@ -1083,7 +1040,6 @@ class Engineering
     {
         return ComplexOperations::IMPRODUCT(...$complexNumbers);
     }
-
     /**
      * DELTA.
      *
@@ -1108,7 +1064,6 @@ class Engineering
     {
         return Engineering\Compare::DELTA($a, $b);
     }
-
     /**
      * GESTEP.
      *
@@ -1132,7 +1087,6 @@ class Engineering
     {
         return Engineering\Compare::GESTEP($number, $step);
     }
-
     /**
      * BITAND.
      *
@@ -1154,7 +1108,6 @@ class Engineering
     {
         return Engineering\BitWise::BITAND($number1, $number2);
     }
-
     /**
      * BITOR.
      *
@@ -1176,7 +1129,6 @@ class Engineering
     {
         return Engineering\BitWise::BITOR($number1, $number2);
     }
-
     /**
      * BITXOR.
      *
@@ -1198,7 +1150,6 @@ class Engineering
     {
         return Engineering\BitWise::BITXOR($number1, $number2);
     }
-
     /**
      * BITLSHIFT.
      *
@@ -1220,7 +1171,6 @@ class Engineering
     {
         return Engineering\BitWise::BITLSHIFT($number, $shiftAmount);
     }
-
     /**
      * BITRSHIFT.
      *
@@ -1242,7 +1192,6 @@ class Engineering
     {
         return Engineering\BitWise::BITRSHIFT($number, $shiftAmount);
     }
-
     /**
      * ERF.
      *
@@ -1270,7 +1219,6 @@ class Engineering
     {
         return Engineering\Erf::ERF($lower, $upper);
     }
-
     /**
      * ERFPRECISE.
      *
@@ -1291,7 +1239,6 @@ class Engineering
     {
         return Engineering\Erf::ERFPRECISE($limit);
     }
-
     /**
      * ERFC.
      *
@@ -1317,7 +1264,6 @@ class Engineering
     {
         return Engineering\ErfC::ERFC($x);
     }
-
     /**
      *    getConversionGroups
      * Returns a list of the different conversion groups for UOM conversions.
@@ -1332,7 +1278,6 @@ class Engineering
     {
         return Engineering\ConvertUOM::getConversionCategories();
     }
-
     /**
      *    getConversionGroupUnits
      * Returns an array of units of measure, for a specified conversion group, or for all groups.
@@ -1349,7 +1294,6 @@ class Engineering
     {
         return Engineering\ConvertUOM::getConversionCategoryUnits($category);
     }
-
     /**
      * getConversionGroupUnitDetails.
      *
@@ -1365,7 +1309,6 @@ class Engineering
     {
         return Engineering\ConvertUOM::getConversionCategoryUnitDetails($category);
     }
-
     /**
      *    getConversionMultipliers
      * Returns an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM().
@@ -1380,7 +1323,6 @@ class Engineering
     {
         return Engineering\ConvertUOM::getConversionMultipliers();
     }
-
     /**
      *    getBinaryConversionMultipliers.
      *
@@ -1397,7 +1339,6 @@ class Engineering
     {
         return Engineering\ConvertUOM::getBinaryConversionMultipliers();
     }
-
     /**
      * CONVERTUOM.
      *

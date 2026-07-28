@@ -1277,7 +1277,32 @@ class WDTColumn
         $isPostgreSql = $vendor === Connection::$POSTGRESQL;
 
         $where = 'WHERE 1=1';
-        $where .= isset($_POST['q']) ? " AND ({$leftSysIdentifier}{$columnOrigHeader}{$rightSysIdentifier}) LIKE '%{$_POST['q']}%'" : '';
+        if (isset($_POST['q']) && $_POST['q'] !== '') {
+            $q_raw = sanitize_text_field(wp_unslash($_POST['q']));
+            if ($isMySql && !Connection::isSeparate($parentTable->connection)) {
+                global $wpdb;
+                $where .= $wpdb->prepare(
+                    " AND ({$leftSysIdentifier}{$columnOrigHeader}{$rightSysIdentifier}) LIKE %s",
+                    '%' . $wpdb->esc_like($q_raw) . '%'
+                );
+            } else {
+                if ($isMSSql) {
+                    // SQL Server treats \, %, _, [, ] as LIKE wildcards/meta; escape them and declare ESCAPE.
+                    $like_pattern = '%' . str_replace(
+                        array('\\', '%', '_', '[', ']'),
+                        array('\\\\', '\\%', '\\_', '\\[', '\\]'),
+                        $q_raw
+                    ) . '%';
+                    $where .= " AND ({$leftSysIdentifier}{$columnOrigHeader}{$rightSysIdentifier}) LIKE "
+                        . WDTTools::prepareStringCell($like_pattern, $parentTable->connection)
+                        . " ESCAPE '\\'";
+                } else {
+                    $like_pattern = '%' . str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $q_raw) . '%';
+                    $where .= " AND ({$leftSysIdentifier}{$columnOrigHeader}{$rightSysIdentifier}) LIKE "
+                        . WDTTools::prepareStringCell($like_pattern, $parentTable->connection);
+                }
+            }
+        }
 
         $wdtVar1 = $wdtVar1 === '' && isset($tableData->var1) ? $tableData->var1 : $wdtVar1;
         $wdtVar2 = $wdtVar2 === '' && isset($tableData->var2) ? $tableData->var2 : $wdtVar2;

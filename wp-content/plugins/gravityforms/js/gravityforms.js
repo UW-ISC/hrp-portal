@@ -92,7 +92,7 @@ gform.adminUtils = {
 
 		// Standalone logic for the web api settings page. Trigger unsaved changes if the setting doesn't match the checkbox state.
 		if ( this.getUrlParameter( 'subview' ) === 'gravityformswebapi' ) {
-			if ( gf_webapi_vars.api_enabled !== gf_webapi_vars.enable_api_checkbox_checked ) {
+			if ( window.gf_webapi_vars && window.gf_webapi_vars.api_enabled !== window.gf_webapi_vars.enable_api_checkbox_checked ) {
 				hasUnsavedChanges = true;
 			}
 		}
@@ -2898,6 +2898,7 @@ function gformValidateFileSize( field, max_file_size ) {
 				if (response.status && response.status == 'ok') {
 					response.data.id = file.id;
 					addFile(fieldId, response.data);
+					window.wp.a11y.speak( ( strings.file_uploaded ) + ': ' + uploadedName );
 				} else {
 					addMessage(up.settings.gf_vars.message_id, strings.unknown_error + ': ' + file.name);
 				}

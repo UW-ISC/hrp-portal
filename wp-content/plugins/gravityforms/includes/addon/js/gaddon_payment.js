@@ -44,3 +44,31 @@ function cancel_subscription( entryId ) {
 		}
 	);
 }
+
+function gaddon_cancel_subscription_confirmed( element ) {
+    var entryId = jQuery( element ).data( 'entry-id' );
+
+    jQuery( '#subscription_cancel_spinner' ).show();
+    jQuery( '#cancelsub' ).prop( 'disabled', true );
+
+    jQuery.post(
+        ajaxurl,
+        {
+            action:                     'gaddon_cancel_subscription',
+            entry_id:                   entryId,
+            gaddon_cancel_subscription: gaddon_payment_strings.subscriptionCancelNonce
+        },
+        function ( response ) {
+            jQuery( '#subscription_cancel_spinner' ).hide();
+            if ( response.success === true ) {
+                jQuery( '#gform_payment_status' ).html( gform.utils.escapeHtml( gaddon_payment_strings.subscriptionCanceled ) );
+                jQuery( '#cancelsub' ).hide();
+            } else {
+                jQuery( '#cancelsub' ).prop( 'disabled', false );
+                if ( response.success === false ) {
+                    gform.alert( gaddon_payment_strings.subscriptionError );
+                }
+            }
+        }
+    );
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engine;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engine;
 
 class CyclicReferenceStack
 {
@@ -10,7 +10,6 @@ class CyclicReferenceStack
      * @var mixed[]
      */
     private $stack = [];
-
     /**
      * Return the number of entries on the stack.
      *
@@ -18,19 +17,17 @@ class CyclicReferenceStack
      */
     public function count()
     {
-        return count($this->stack);
+        return \count($this->stack);
     }
-
     /**
      * Push a new entry onto the stack.
      *
      * @param mixed $value
      */
-    public function push($value): void
+    public function push($value) : void
     {
         $this->stack[$value] = $value;
     }
-
     /**
      * Pop the last entry from the stack.
      *
@@ -38,9 +35,8 @@ class CyclicReferenceStack
      */
     public function pop()
     {
-        return array_pop($this->stack);
+        return \array_pop($this->stack);
     }
-
     /**
      * Test to see if a specified entry exists on the stack.
      *
@@ -52,15 +48,13 @@ class CyclicReferenceStack
     {
         return isset($this->stack[$value]);
     }
-
     /**
      * Clear the stack.
      */
-    public function clear(): void
+    public function clear() : void
     {
         $this->stack = [];
     }
-
     /**
      * Return an array of all entries on the stack.
      *

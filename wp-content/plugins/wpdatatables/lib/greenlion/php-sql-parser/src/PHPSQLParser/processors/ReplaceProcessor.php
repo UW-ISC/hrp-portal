@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReplaceProcessor.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes the REPLACE statements.
@@ -48,11 +48,10 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ReplaceProcessor extends InsertProcessor {
-
-    public function process($tokenList, $token_category = 'REPLACE') {
+class ReplaceProcessor extends InsertProcessor
+{
+    public function process($tokenList, $token_category = 'REPLACE')
+    {
         return parent::process($tokenList, $token_category);
     }
-
 }
-?>

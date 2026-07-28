@@ -640,7 +640,7 @@ function wdtEdit()
             $tableID = (int)$_GET['table_id'];
             $tableData = WDTConfigController::loadSimpleTableConfig($tableID);
         } else if (isset($_GET['table_view'])) {
-            $tableData = WDTConfigController::loadTableConfig((int)$_GET['table_id'], $_GET['table_view']);
+            $tableData = WDTConfigController::loadTableConfig((int)$_GET['table_id'], sanitize_text_field(wp_unslash($_GET['table_view'])));
         } else {
             $tableData = WDTConfigController::loadTableConfig((int)$_GET['table_id']);
         }
@@ -655,7 +655,7 @@ function wdtEdit()
     if (isset($tableData) && isset($tableData->table)) {
         $connection = $tableData->table->connection;
     } elseif (isset($_GET['connection'])) {
-        $connection = $_GET['connection'];
+        $connection = sanitize_text_field(wp_unslash($_GET['connection']));
     } else {
         $connection = null;
     }

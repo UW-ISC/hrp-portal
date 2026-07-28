@@ -1,9 +1,10 @@
-var wpDataTablesHighchart = function () {
+let wpDataTablesHighchart = function () {
 
-    var obj = {
+    let obj = {
         container: '#wdtHighChartContainer',
         columnIndexes: [],
         numberFormat: 1,
+        chartType: '',
         connectedWPDataTable: null,
         renderCallback: null,
         chart: null,
@@ -130,7 +131,7 @@ var wpDataTablesHighchart = function () {
             }
         },
         setOptions: function (options) {
-            for (var property in options) {
+            for (let property in options) {
                 this.options[property] = options[property];
             }
             Highcharts.setOptions({
@@ -153,7 +154,7 @@ var wpDataTablesHighchart = function () {
             if (this.renderCallback !== null) {
                 this.renderCallback(this);
             }
-            var chartID = this.container.replace(/.*_(\d+)/, '$1');
+            let chartID = this.container.replace(/.*_(\d+)/, '$1');
             if (jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
                 jQuery(this.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                     if (jQuery(this).attr('data-id') === chartID) {
@@ -163,7 +164,19 @@ var wpDataTablesHighchart = function () {
             }
             this.chart = new Highcharts.Chart(this.options);
         },
+        clearSeriesTypeOverrides: function () {
+            if (!Array.isArray(this.options.series)) {
+                return;
+            }
+
+            for (let i = 0; i < this.options.series.length; i++) {
+                if (this.options.series[i] && this.options.series[i].type) {
+                    delete this.options.series[i].type;
+                }
+            }
+        },
         setType: function (type) {
+            this.chartType = type;
             switch (type) {
                 case 'highcharts_basic_area_chart':
                     this.options.chart.type = 'area';
@@ -216,6 +229,16 @@ var wpDataTablesHighchart = function () {
                     this.options.legend = {
                         enabled: false
                     };
+                    break;
+                case 'highcharts_bubble_chart':
+                case 'highcharts_sized_bubble_chart':
+                    this.options.chart.type = 'bubble';
+                    this.clearSeriesTypeOverrides();
+                    break;
+                case 'highcharts_bubble3d_chart':
+                case 'highcharts_sized_bubble3d_chart':
+                    this.options.chart.type = 'bubble';
+                    this.clearSeriesTypeOverrides();
                     break;
                 case 'highcharts_stacked_area_chart':
                     this.options.chart.type = 'area';
@@ -411,10 +434,10 @@ var wpDataTablesHighchart = function () {
                 chartConfig.type == 'highcharts_basic_column_chart' ||
                 chartConfig.type == 'highcharts_basic_area_chart' ||
                 chartConfig.type == 'highcharts_basic_bar_chart') {
-                var j = 0;
+                let j = 0;
 
                 Array.isArray(this.options.yAxis) ? this.options.yAxis.splice(1) : '';
-                for (var i in chartConfig.options.series) {
+                for (let i in chartConfig.options.series) {
                     this.options.series[j].name = chartConfig.options.series[i].label;
                     this.options.series[j].color = chartConfig.options.series[i].color;
                     if (chartConfig.options.series[i].type)
@@ -437,9 +460,44 @@ var wpDataTablesHighchart = function () {
                     }
 
                 }
+            } else if (chartConfig.type == 'highcharts_bubble3d_chart' ||
+                chartConfig.type == 'highcharts_sized_bubble3d_chart') {
+                for (let i in this.options.series) {
+                    if (!this.options.series[i]) {
+                        continue;
+                    }
+
+                    let rgbColor = this.hexToRgb(this.options.series[i].color);
+                    if (!rgbColor) {
+                        continue;
+                    }
+
+                    if (!this.options.series[i].marker) {
+                        this.options.series[i].marker = {};
+                    }
+                    if (!this.options.series[i].marker.fillColor) {
+                        this.options.series[i].marker.fillColor = {
+                            radialGradient: {cx: 0.4, cy: 0.3, r: 0.7}
+                        };
+                    }
+
+                    this.options.series[i].marker.fillColor.stops = [
+                        [
+                            0,
+                            "rgba(255,255,255,0.5)"
+                        ],
+                        [
+                            1,
+                            "rgba(" + rgbColor.r + "," + rgbColor.g + "," + rgbColor.b + ",0.5)"
+                        ]
+                    ]
+                }
             }
         },
         setChartConfig: function (chartConfig) {
+            if (chartConfig.type) {
+                this.chartType = chartConfig.type;
+            }
             // Chart
             this.setWidth(chartConfig.width);
             chartConfig.height ? this.options.chart.height = chartConfig.height : null;
@@ -456,10 +514,10 @@ var wpDataTablesHighchart = function () {
             this.options.chart.plotBorderColor = chartConfig.plot_border_color;
             // Series
             if (this.options.chart.type != 'pie') {
-                var j = 0;
+                let j = 0;
 
                 Array.isArray(this.options.yAxis) ? this.options.yAxis.splice(1) : '';
-                for (var i in chartConfig.series_data) {
+                for (let i in chartConfig.series_data) {
                     this.options.series[j].name = chartConfig.series_data[i].label;
                     this.options.series[j].color = chartConfig.series_data[i].color;
                     if (chartConfig.series_data[i].type)
@@ -480,6 +538,39 @@ var wpDataTablesHighchart = function () {
                     }
 
                     j++;
+                }
+
+                if (chartConfig.type === 'highcharts_bubble3d_chart' || chartConfig.type === 'highcharts_sized_bubble3d_chart') {
+                    for (let i in this.options.series) {
+                        if (!this.options.series[i]) {
+                            continue;
+                        }
+
+                        let rgbColor = this.hexToRgb(this.options.series[i].color);
+                        if (!rgbColor) {
+                            continue;
+                        }
+
+                        if (!this.options.series[i].marker) {
+                            this.options.series[i].marker = {};
+                        }
+                        if (!this.options.series[i].marker.fillColor) {
+                            this.options.series[i].marker.fillColor = {
+                                radialGradient: {cx: 0.4, cy: 0.3, r: 0.7}
+                            };
+                        }
+
+                        this.options.series[i].marker.fillColor.stops = [
+                            [
+                                0,
+                                "rgba(255,255,255,0.5)"
+                            ],
+                            [
+                                1,
+                                "rgba(" + rgbColor.r + "," + rgbColor.g + "," + rgbColor.b + ",0.5)"
+                            ]
+                        ]
+                    }
                 }
             }
             // Axes
@@ -642,91 +733,180 @@ var wpDataTablesHighchart = function () {
                 sName: 'chart_filter_follow',
                 fn: function (oSettings) {
                     obj.options.xAxis.categories = [];
-                    var seriesIndex = 0;
-                    var filteredData = obj.connectedWPDataTable._('tr', {"filter": "applied"}).toArray();
-                    for (var j in obj.columnIndexes) {
-                        var seriesDataEntry = [];
-                        if ((obj.columnIndexes.length > 0)
-                            && (j == 0)) {
-                            for (var i in filteredData) {
-                                obj.options.xAxis.categories.push(filteredData[i][obj.columnIndexes[j]]);
+                    let seriesIndex = 0;
+                    let filteredData = obj.connectedWPDataTable._('tr', {"filter": "applied"}).toArray();
+
+                    if (obj.options.chart.type === 'bubble') {
+                        obj.options.series.forEach(function (series) {
+                            series.data = [];
+                        });
+
+                        if (!obj.options.series.length) {
+                            return;
+                        }
+
+                        let decimalSep = obj.numberFormat == 1 ? '.' : ',';
+                        let thousandSep = obj.numberFormat == 1 ? ',' : '.';
+                        let isSizedBubble = obj.chartType === 'highcharts_sized_bubble_chart' ||
+                            obj.chartType === 'highcharts_sized_bubble3d_chart';
+
+                        for (let rowIndex in filteredData) {
+                            let row = filteredData[rowIndex];
+                            let selectedColumns = obj.columnIndexes.length
+                                ? obj.columnIndexes.map(function (index) {
+                                    return row[index];
+                                })
+                                : row;
+
+                            if (!selectedColumns || selectedColumns.length < 2) {
+                                continue;
                             }
-                        } else {
-                            for (var i in filteredData) {
-                                var entry = filteredData[i][obj.columnIndexes[j]];
-                                if (obj.options.chart.type == 'pie') {
-                                    if (obj.numberFormat == 1) {
-                                        seriesDataEntry.push({
-                                            name: obj.options.xAxis.categories[i],
-                                            y: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
-                                        });
-                                    } else {
-                                        seriesDataEntry.push({
-                                            name: obj.options.xAxis.categories[i],
-                                            y: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
-                                        });
+
+                            let firstValueAsNumber = parseFloat(wdtUnformatNumber(selectedColumns[0], decimalSep, thousandSep, true));
+                            let hasPointName = isNaN(firstValueAsNumber);
+                            let seriesStartIndex = hasPointName ? 1 : 0;
+
+                            if (isSizedBubble) {
+                                for (let columnIndex = seriesStartIndex; columnIndex < selectedColumns.length; columnIndex += 2) {
+                                    let seriesPosition = Math.floor((columnIndex - seriesStartIndex) / 2);
+                                    if (!obj.options.series[seriesPosition]) {
+                                        break;
                                     }
-                                } else if (obj.options.chart.type == 'treemap') {
-                                    if (obj.numberFormat == 1) {
-                                        seriesDataEntry.push({
-                                            colorValue: parseFloat(wdtUnformatNumber(entry, '.', ',', true)),
-                                            name: obj.options.xAxis.categories[i],
-                                            value: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
-                                        });
-                                    } else {
-                                        seriesDataEntry.push({
-                                            colorValue: parseFloat(wdtUnformatNumber(entry, ',', '.', true)),
-                                            name: obj.options.xAxis.categories[i],
-                                            value: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
-                                        });
+
+                                    let y = parseFloat(wdtUnformatNumber(selectedColumns[columnIndex], decimalSep, thousandSep, true));
+                                    if (isNaN(y)) {
+                                        continue;
                                     }
-                                } else {
-                                    if (obj.numberFormat == 1) {
-                                        seriesDataEntry.push({
-                                            name: obj.options.xAxis.categories[i],
-                                            y: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
+
+                                    let zRaw = typeof selectedColumns[columnIndex + 1] !== 'undefined' ? selectedColumns[columnIndex + 1] : 10;
+                                    let z = parseFloat(wdtUnformatNumber(zRaw, decimalSep, thousandSep, true));
+                                    if (isNaN(z)) {
+                                        z = 10;
+                                    }
+
+                                    let x = parseFloat(rowIndex);
+                                    if (hasPointName) {
+                                        obj.options.series[seriesPosition].data.push({
+                                            name: selectedColumns[0],
+                                            x: x,
+                                            y: y,
+                                            z: z
                                         });
                                     } else {
-                                        seriesDataEntry.push({
-                                            name: obj.options.xAxis.categories[i],
-                                            y: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
+                                        obj.options.series[seriesPosition].data.push([x, y, z]);
+                                    }
+                                }
+                            } else {
+                                for (let columnIndex = seriesStartIndex; columnIndex < selectedColumns.length; columnIndex++) {
+                                    let seriesPosition = columnIndex - seriesStartIndex;
+                                    if (!obj.options.series[seriesPosition]) {
+                                        break;
+                                    }
+
+                                    let y = parseFloat(wdtUnformatNumber(selectedColumns[columnIndex], decimalSep, thousandSep, true));
+                                    if (isNaN(y)) {
+                                        continue;
+                                    }
+
+                                    let x = parseFloat(rowIndex);
+                                    if (hasPointName) {
+                                        obj.options.series[seriesPosition].data.push({
+                                            name: selectedColumns[0],
+                                            x: x,
+                                            y: y,
+                                            z: 10
                                         });
+                                    } else {
+                                        obj.options.series[seriesPosition].data.push([x, y, 10]);
                                     }
                                 }
                             }
-
-                            if (obj.group_chart == 1) {
-                                var output = [];
-                                for (var i in seriesDataEntry) {
-                                    if (typeof output !== 'undefined' && output.length > 0) {
-                                        var value_key = 'none';
-                                        for (var j in output) {
-                                            if (value_key === 'none') {
-                                                if (output[j]['name'] == seriesDataEntry[i]['name']) {
-                                                    value_key = j;
-                                                }
-                                            }
-                                        }
-                                        if (value_key === 'none') {
-                                            output.push(seriesDataEntry[i]);
+                        }
+                    } else {
+                        for (let j in obj.columnIndexes) {
+                            let seriesDataEntry = [];
+                            if ((obj.columnIndexes.length > 0)
+                                && (j == 0)) {
+                                for (let i in filteredData) {
+                                    obj.options.xAxis.categories.push(filteredData[i][obj.columnIndexes[j]]);
+                                }
+                            } else {
+                                for (let i in filteredData) {
+                                    let entry = filteredData[i][obj.columnIndexes[j]];
+                                    if (obj.options.chart.type == 'pie') {
+                                        if (obj.numberFormat == 1) {
+                                            seriesDataEntry.push({
+                                                name: obj.options.xAxis.categories[i],
+                                                y: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
+                                            });
                                         } else {
-                                            for (var n in seriesDataEntry[i]) {
-                                                if (n != 'name') {
-                                                    output[value_key][n] += seriesDataEntry[i][n];
-                                                }
-                                            }
+                                            seriesDataEntry.push({
+                                                name: obj.options.xAxis.categories[i],
+                                                y: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
+                                            });
+                                        }
+                                    } else if (obj.options.chart.type == 'treemap') {
+                                        if (obj.numberFormat == 1) {
+                                            seriesDataEntry.push({
+                                                colorValue: parseFloat(wdtUnformatNumber(entry, '.', ',', true)),
+                                                name: obj.options.xAxis.categories[i],
+                                                value: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
+                                            });
+                                        } else {
+                                            seriesDataEntry.push({
+                                                colorValue: parseFloat(wdtUnformatNumber(entry, ',', '.', true)),
+                                                name: obj.options.xAxis.categories[i],
+                                                value: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
+                                            });
                                         }
                                     } else {
-                                        output.push(seriesDataEntry[i]);
+                                        if (obj.numberFormat == 1) {
+                                            seriesDataEntry.push({
+                                                name: obj.options.xAxis.categories[i],
+                                                y: parseFloat(wdtUnformatNumber(entry, '.', ',', true))
+                                            });
+                                        } else {
+                                            seriesDataEntry.push({
+                                                name: obj.options.xAxis.categories[i],
+                                                y: parseFloat(wdtUnformatNumber(entry, ',', '.', true))
+                                            });
+                                        }
                                     }
                                 }
 
-                                seriesDataEntry = output;
+                                if (obj.group_chart == 1) {
+                                    let output = [];
+                                    for (let i in seriesDataEntry) {
+                                        if (typeof output !== 'undefined' && output.length > 0) {
+                                            let value_key = 'none';
+                                            for (let j in output) {
+                                                if (value_key === 'none') {
+                                                    if (output[j]['name'] == seriesDataEntry[i]['name']) {
+                                                        value_key = j;
+                                                    }
+                                                }
+                                            }
+                                            if (value_key === 'none') {
+                                                output.push(seriesDataEntry[i]);
+                                            } else {
+                                                for (let n in seriesDataEntry[i]) {
+                                                    if (n != 'name') {
+                                                        output[value_key][n] += seriesDataEntry[i][n];
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            output.push(seriesDataEntry[i]);
+                                        }
+                                    }
 
+                                    seriesDataEntry = output;
+
+                                }
+
+                                obj.options.series[seriesIndex].data = seriesDataEntry;
+                                seriesIndex++;
                             }
-
-                            obj.options.series[seriesIndex].data = seriesDataEntry;
-                            seriesIndex++;
                         }
                     }
                     if (obj.group_chart == 1) {
@@ -742,7 +922,7 @@ var wpDataTablesHighchart = function () {
                         obj.renderCallback(obj);
                     }
                     obj.chart = new Highcharts.Chart(obj.options);
-                    var chartID = obj.container.replace(/.*_(\d+)/, '$1');
+                    let chartID = obj.container.replace(/.*_(\d+)/, '$1');
                     if (jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').length != 0) {
                         jQuery(obj.container).parent().find('.wdt-wrapper-chart-loader').each(function () {
                             if (jQuery(this).attr('data-id') === chartID) {
@@ -758,6 +938,15 @@ var wpDataTablesHighchart = function () {
                     });
                 }
             });
+        },
+
+        hexToRgb: function (hex) {
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
         }
     };
 

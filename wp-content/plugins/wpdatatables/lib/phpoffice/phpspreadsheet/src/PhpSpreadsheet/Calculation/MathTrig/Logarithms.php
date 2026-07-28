@@ -1,14 +1,12 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
 class Logarithms
 {
     use ArrayEnabled;
-
     /**
      * LOG_BASE.
      *
@@ -28,10 +26,9 @@ class Logarithms
      */
     public static function withBase($number, $base = 10)
     {
-        if (is_array($number) || is_array($base)) {
+        if (\is_array($number) || \is_array($base)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $base);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             Helpers::validatePositive($number);
@@ -40,10 +37,8 @@ class Logarithms
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return log($number, $base);
+        return \log($number, $base);
     }
-
     /**
      * LOG10.
      *
@@ -58,20 +53,17 @@ class Logarithms
      */
     public static function base10($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             Helpers::validatePositive($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return log10($number);
+        return \log10($number);
     }
-
     /**
      * LN.
      *
@@ -86,17 +78,15 @@ class Logarithms
      */
     public static function natural($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
-
         try {
             $number = Helpers::validateNumericNullBool($number);
             Helpers::validatePositive($number);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return log($number);
+        return \log($number);
     }
 }

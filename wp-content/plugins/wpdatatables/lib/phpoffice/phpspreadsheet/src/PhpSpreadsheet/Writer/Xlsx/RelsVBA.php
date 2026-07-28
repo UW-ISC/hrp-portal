@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx\Namespaces;
-use PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx\Namespaces;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
 class RelsVBA extends WriterPart
 {
     /**
@@ -21,10 +20,8 @@ class RelsVBA extends WriterPart
         } else {
             $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
         }
-
         // XML header
         $objWriter->startDocument('1.0', 'UTF-8', 'yes');
-
         // Relationships
         $objWriter->startElement('Relationships');
         $objWriter->writeAttribute('xmlns', Namespaces::RELATIONSHIPS);
@@ -34,7 +31,6 @@ class RelsVBA extends WriterPart
         $objWriter->writeAttribute('Target', 'vbaProjectSignature.bin');
         $objWriter->endElement();
         $objWriter->endElement();
-
         return $objWriter->getData();
     }
 }

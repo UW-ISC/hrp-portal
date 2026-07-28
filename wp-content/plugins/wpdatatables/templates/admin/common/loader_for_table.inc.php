@@ -1,6 +1,11 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 <?php
 /** @var $this WPDataTable */
+// Divi 5 VB preview injects HTML via innerHTML; a <div> inside <tbody> is invalid and can break the table in the builder.
+if (method_exists($this, 'isPreviewMode') && $this->isPreviewMode()) {
+    return;
+}
+
 $displayLengthHelper = $this->getDisplayLength() > count($this->getDataRows());
 $displayLength = $this->getDisplayLength() + 1;
 

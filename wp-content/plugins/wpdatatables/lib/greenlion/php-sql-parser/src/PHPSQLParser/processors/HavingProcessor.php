@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HavingProcessor.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\processors;
 
-namespace PHPSQLParser\processors;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the processor for the HAVING statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,16 +50,16 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class HavingProcessor extends ExpressionListProcessor {
-	
-    public function process($tokens, $select = array()) {
+class HavingProcessor extends ExpressionListProcessor
+{
+    public function process($tokens, $select = array())
+    {
         $parsed = parent::process($tokens);
-
         foreach ($parsed as $k => $v) {
             if ($v['expr_type'] === ExpressionType::COLREF) {
                 foreach ($select as $clause) {
                     if (!isset($clause['alias'])) {
-                    	continue;
+                        continue;
                     }
                     if (!$clause['alias']) {
                         continue;
@@ -71,9 +71,6 @@ class HavingProcessor extends ExpressionListProcessor {
                 }
             }
         }
-
         return $parsed;
     }
 }
-
-?>

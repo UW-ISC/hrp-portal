@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Definition for list containers ul and ol.
  *
@@ -20,10 +22,8 @@ class HTMLPurifier_ChildDef_List extends HTMLPurifier_ChildDef
      */
     // lying a little bit, so that we can handle ul and ol ourselves
     // XXX: This whole business with 'wrap' is all a bit unsatisfactory
-    public $elements = array('li' => true, 'ul' => true, 'ol' => true);
-
+    public $elements = array('li' => \true, 'ul' => \true, 'ol' => \true);
     public $whitespace;
-
     /**
      * @param array $children
      * @param HTMLPurifier_Config $config
@@ -33,34 +33,28 @@ class HTMLPurifier_ChildDef_List extends HTMLPurifier_ChildDef
     public function validateChildren($children, $config, $context)
     {
         // Flag for subclasses
-        $this->whitespace = false;
-
+        $this->whitespace = \false;
         // if there are no tokens, delete parent node
         if (empty($children)) {
-            return false;
+            return \false;
         }
-
         // if li is not allowed, delete parent node
         if (!isset($config->getHTMLDefinition()->info['li'])) {
-            trigger_error("Cannot allow ul/ol without allowing li", E_USER_WARNING);
-            return false;
+            \trigger_error("Cannot allow ul/ol without allowing li", \E_USER_WARNING);
+            return \false;
         }
-
         // the new set of children
         $result = array();
-
         // a little sanity check to make sure it's not ALL whitespace
-        $all_whitespace = true;
-
+        $all_whitespace = \true;
         $current_li = null;
-
         foreach ($children as $node) {
             if (!empty($node->is_whitespace)) {
                 $result[] = $node;
                 continue;
             }
-            $all_whitespace = false; // phew, we're not talking about whitespace
-
+            $all_whitespace = \false;
+            // phew, we're not talking about whitespace
             if ($node->name === 'li') {
                 // good
                 $current_li = $node;
@@ -78,17 +72,17 @@ class HTMLPurifier_ChildDef_List extends HTMLPurifier_ChildDef
                     $result[] = $current_li;
                 }
                 $current_li->children[] = $node;
-                $current_li->empty = false; // XXX fascinating! Check for this error elsewhere ToDo
+                $current_li->empty = \false;
+                // XXX fascinating! Check for this error elsewhere ToDo
             }
         }
         if (empty($result)) {
-            return false;
+            return \false;
         }
         if ($all_whitespace) {
-            return false;
+            return \false;
         }
         return $result;
     }
 }
-
 // vim: et sw=4 sts=4

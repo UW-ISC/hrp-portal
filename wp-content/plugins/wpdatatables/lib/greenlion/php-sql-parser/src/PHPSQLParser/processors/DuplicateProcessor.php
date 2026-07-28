@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DuplicateProcessor.php
  *
@@ -29,8 +30,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * 
@@ -39,11 +39,10 @@ namespace PHPSQLParser\processors;
  * @author arothe
  * 
  */
-class DuplicateProcessor extends SetProcessor {
-
-    public function process($tokens, $isUpdate = false) {
+class DuplicateProcessor extends SetProcessor
+{
+    public function process($tokens, $isUpdate = \false)
+    {
         return parent::process($tokens, $isUpdate);
     }
-
 }
-?>

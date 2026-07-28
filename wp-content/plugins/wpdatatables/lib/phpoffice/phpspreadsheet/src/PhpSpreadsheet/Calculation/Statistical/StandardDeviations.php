@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
 class StandardDeviations
 {
@@ -20,13 +20,11 @@ class StandardDeviations
     public static function STDEV(...$args)
     {
         $result = Variances::VAR(...$args);
-        if (!is_numeric($result)) {
+        if (!\is_numeric($result)) {
             return $result;
         }
-
-        return sqrt((float) $result);
+        return \sqrt((float) $result);
     }
-
     /**
      * STDEVA.
      *
@@ -42,13 +40,11 @@ class StandardDeviations
     public static function STDEVA(...$args)
     {
         $result = Variances::VARA(...$args);
-        if (!is_numeric($result)) {
+        if (!\is_numeric($result)) {
             return $result;
         }
-
-        return sqrt((float) $result);
+        return \sqrt((float) $result);
     }
-
     /**
      * STDEVP.
      *
@@ -64,13 +60,11 @@ class StandardDeviations
     public static function STDEVP(...$args)
     {
         $result = Variances::VARP(...$args);
-        if (!is_numeric($result)) {
+        if (!\is_numeric($result)) {
             return $result;
         }
-
-        return sqrt((float) $result);
+        return \sqrt((float) $result);
     }
-
     /**
      * STDEVPA.
      *
@@ -86,10 +80,9 @@ class StandardDeviations
     public static function STDEVPA(...$args)
     {
         $result = Variances::VARPA(...$args);
-        if (!is_numeric($result)) {
+        if (!\is_numeric($result)) {
             return $result;
         }
-
-        return sqrt((float) $result);
+        return \sqrt((float) $result);
     }
 }

@@ -70,14 +70,14 @@ class GFAsyncUpload {
 		$y    = substr( $time, 0, 4 );
 		$m    = substr( $time, 5, 2 );
 
-		//adding index.html files to all subfolders
-		if ( ! file_exists( GFFormsModel::get_upload_root() . '/index.html' ) ) {
+		// Adding index.html files to all subfolders.
+		if ( ! file_exists( GFFormsModel::get_upload_root() . 'index.html' ) ) { // get_upload_root returned value includes the trailing slash.
 			GFForms::add_security_files();
 		} else if ( ! file_exists( GFFormsModel::get_upload_path( $form_id ) . '/index.html' ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) );
 		} else if ( ! file_exists( GFFormsModel::get_upload_path( $form_id ) . "/$y/index.html" ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization 
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) . "/$y" );
-		} else {
+		} else if ( is_dir( GFFormsModel::get_upload_path( $form_id ) . "/$y/$m" ) ) { // Prevent adding the index file if the month upload folder is not created yet.
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) . "/$y/$m" );
 		}
 

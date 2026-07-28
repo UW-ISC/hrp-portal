@@ -1,11 +1,10 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx\Namespaces;
-use PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx\Namespaces;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
+use WPDT\PhpOffice\PhpSpreadsheet\Spreadsheet;
 class RelsRibbon extends WriterPart
 {
     /**
@@ -22,15 +21,13 @@ class RelsRibbon extends WriterPart
         } else {
             $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
         }
-
         // XML header
         $objWriter->startDocument('1.0', 'UTF-8', 'yes');
-
         // Relationships
         $objWriter->startElement('Relationships');
         $objWriter->writeAttribute('xmlns', Namespaces::RELATIONSHIPS);
         $localRels = $spreadsheet->getRibbonBinObjects('names');
-        if (is_array($localRels)) {
+        if (\is_array($localRels)) {
             foreach ($localRels as $aId => $aTarget) {
                 $objWriter->startElement('Relationship');
                 $objWriter->writeAttribute('Id', $aId);
@@ -40,7 +37,6 @@ class RelsRibbon extends WriterPart
             }
         }
         $objWriter->endElement();
-
         return $objWriter->getData();
     }
 }

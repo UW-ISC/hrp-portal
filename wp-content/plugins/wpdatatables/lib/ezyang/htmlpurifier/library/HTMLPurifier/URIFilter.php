@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Chainable filters for custom URI processing.
  *
@@ -27,27 +29,23 @@
  */
 abstract class HTMLPurifier_URIFilter
 {
-
     /**
      * Unique identifier of filter.
      * @type string
      */
     public $name;
-
     /**
      * True if this filter should be run after scheme validation.
      * @type bool
      */
-    public $post = false;
-
+    public $post = \false;
     /**
      * True if this filter should always be loaded.
      * This permits a filter to be named Foo without the corresponding
      * %URI.Foo directive existing.
      * @type bool
      */
-    public $always_load = false;
-
+    public $always_load = \false;
     /**
      * Performs initialization for the filter.  If the filter returns
      * false, this means that it shouldn't be considered active.
@@ -56,9 +54,8 @@ abstract class HTMLPurifier_URIFilter
      */
     public function prepare($config)
     {
-        return true;
+        return \true;
     }
-
     /**
      * Filter a URI object
      * @param HTMLPurifier_URI $uri Reference to URI object variable
@@ -68,7 +65,6 @@ abstract class HTMLPurifier_URIFilter
      *         URL is no good, true indicates continue processing. Note that
      *         all changes are committed directly on the URI object
      */
-    abstract public function filter(&$uri, $config, $context);
+    public abstract function filter(&$uri, $config, $context);
 }
-
 // vim: et sw=4 sts=4

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the SET part of INSERT statement. 
  * You can overwrite all functions to achieve another handling.
@@ -50,26 +50,24 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SetBuilder implements Builder {
-
-    protected function buildSetExpression($parsed) {
+class SetBuilder implements Builder
+{
+    protected function buildSetExpression($parsed)
+    {
         $builder = new SetExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildSetExpression($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('SET', $k, $v, 'expr_type');
             }
-
             $sql .= ",";
         }
-        return "SET " . substr($sql, 0, -1);
+        return "SET " . \substr($sql, 0, -1);
     }
 }
-?>

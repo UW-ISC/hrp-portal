@@ -1,28 +1,26 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Conditional;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Confidence;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Counts;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Maximum;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Permutations;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Trends;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Variances;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Conditional;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Confidence;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Counts;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Maximum;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Permutations;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\StandardDeviations;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Trends;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Variances;
 /**
  * @deprecated 1.18.0
  */
 class Statistical
 {
-    const LOG_GAMMA_X_MAX_VALUE = 2.55e305;
-    const EPS = 2.22e-16;
-    const MAX_VALUE = 1.2e308;
-    const SQRT2PI = 2.5066282746310005024157652848110452530069867406099;
-
+    const LOG_GAMMA_X_MAX_VALUE = 2.55E+305;
+    const EPS = 2.22E-16;
+    const MAX_VALUE = 1.2E+308;
+    const SQRT2PI = 2.5066282746310007;
     /**
      * AVEDEV.
      *
@@ -44,7 +42,6 @@ class Statistical
     {
         return Averages::averageDeviations(...$args);
     }
-
     /**
      * AVERAGE.
      *
@@ -65,7 +62,6 @@ class Statistical
     {
         return Averages::average(...$args);
     }
-
     /**
      * AVERAGEA.
      *
@@ -86,7 +82,6 @@ class Statistical
     {
         return Averages::averageA(...$args);
     }
-
     /**
      * AVERAGEIF.
      *
@@ -109,7 +104,6 @@ class Statistical
     {
         return Conditional::AVERAGEIF($range, $condition, $averageRange);
     }
-
     /**
      * BETADIST.
      *
@@ -131,7 +125,6 @@ class Statistical
     {
         return Statistical\Distributions\Beta::distribution($value, $alpha, $beta, $rMin, $rMax);
     }
-
     /**
      * BETAINV.
      *
@@ -153,7 +146,6 @@ class Statistical
     {
         return Statistical\Distributions\Beta::inverse($probability, $alpha, $beta, $rMin, $rMax);
     }
-
     /**
      * BINOMDIST.
      *
@@ -178,7 +170,6 @@ class Statistical
     {
         return Statistical\Distributions\Binomial::distribution($value, $trials, $probability, $cumulative);
     }
-
     /**
      * CHIDIST.
      *
@@ -197,7 +188,6 @@ class Statistical
     {
         return Statistical\Distributions\ChiSquared::distributionRightTail($value, $degrees);
     }
-
     /**
      * CHIINV.
      *
@@ -216,7 +206,6 @@ class Statistical
     {
         return Statistical\Distributions\ChiSquared::inverseRightTail($probability, $degrees);
     }
-
     /**
      * CONFIDENCE.
      *
@@ -236,7 +225,6 @@ class Statistical
     {
         return Confidence::CONFIDENCE($alpha, $stdDev, $size);
     }
-
     /**
      * CORREL.
      *
@@ -255,7 +243,6 @@ class Statistical
     {
         return Trends::CORREL($xValues, $yValues);
     }
-
     /**
      * COUNT.
      *
@@ -276,7 +263,6 @@ class Statistical
     {
         return Counts::COUNT(...$args);
     }
-
     /**
      * COUNTA.
      *
@@ -297,7 +283,6 @@ class Statistical
     {
         return Counts::COUNTA(...$args);
     }
-
     /**
      * COUNTBLANK.
      *
@@ -318,7 +303,6 @@ class Statistical
     {
         return Counts::COUNTBLANK($range);
     }
-
     /**
      * COUNTIF.
      *
@@ -340,7 +324,6 @@ class Statistical
     {
         return Conditional::COUNTIF($range, $condition);
     }
-
     /**
      * COUNTIFS.
      *
@@ -361,7 +344,6 @@ class Statistical
     {
         return Conditional::COUNTIFS(...$args);
     }
-
     /**
      * COVAR.
      *
@@ -380,7 +362,6 @@ class Statistical
     {
         return Trends::COVAR($yValues, $xValues);
     }
-
     /**
      * CRITBINOM.
      *
@@ -403,7 +384,6 @@ class Statistical
     {
         return Statistical\Distributions\Binomial::inverse($trials, $probability, $alpha);
     }
-
     /**
      * DEVSQ.
      *
@@ -424,7 +404,6 @@ class Statistical
     {
         return Statistical\Deviations::sumSquares(...$args);
     }
-
     /**
      * EXPONDIST.
      *
@@ -446,7 +425,6 @@ class Statistical
     {
         return Statistical\Distributions\Exponential::distribution($value, $lambda, $cumulative);
     }
-
     /**
      * F.DIST.
      *
@@ -471,7 +449,6 @@ class Statistical
     {
         return Statistical\Distributions\F::distribution($value, $u, $v, $cumulative);
     }
-
     /**
      * FISHER.
      *
@@ -491,7 +468,6 @@ class Statistical
     {
         return Statistical\Distributions\Fisher::distribution($value);
     }
-
     /**
      * FISHERINV.
      *
@@ -511,7 +487,6 @@ class Statistical
     {
         return Statistical\Distributions\Fisher::inverse($value);
     }
-
     /**
      * FORECAST.
      *
@@ -531,7 +506,6 @@ class Statistical
     {
         return Trends::FORECAST($xValue, $yValues, $xValues);
     }
-
     /**
      * GAMMA.
      *
@@ -549,7 +523,6 @@ class Statistical
     {
         return Statistical\Distributions\Gamma::gamma($value);
     }
-
     /**
      * GAMMADIST.
      *
@@ -570,7 +543,6 @@ class Statistical
     {
         return Statistical\Distributions\Gamma::distribution($value, $a, $b, $cumulative);
     }
-
     /**
      * GAMMAINV.
      *
@@ -590,7 +562,6 @@ class Statistical
     {
         return Statistical\Distributions\Gamma::inverse($probability, $alpha, $beta);
     }
-
     /**
      * GAMMALN.
      *
@@ -608,7 +579,6 @@ class Statistical
     {
         return Statistical\Distributions\Gamma::ln($value);
     }
-
     /**
      * GAUSS.
      *
@@ -627,7 +597,6 @@ class Statistical
     {
         return Statistical\Distributions\StandardNormal::gauss($value);
     }
-
     /**
      * GEOMEAN.
      *
@@ -650,7 +619,6 @@ class Statistical
     {
         return Statistical\Averages\Mean::geometric(...$args);
     }
-
     /**
      * GROWTH.
      *
@@ -667,11 +635,10 @@ class Statistical
      *
      * @return float[]
      */
-    public static function GROWTH($yValues, $xValues = [], $newValues = [], $const = true)
+    public static function GROWTH($yValues, $xValues = [], $newValues = [], $const = \true)
     {
         return Trends::GROWTH($yValues, $xValues, $newValues, $const);
     }
-
     /**
      * HARMEAN.
      *
@@ -693,7 +660,6 @@ class Statistical
     {
         return Statistical\Averages\Mean::harmonic(...$args);
     }
-
     /**
      * HYPGEOMDIST.
      *
@@ -713,14 +679,8 @@ class Statistical
      */
     public static function HYPGEOMDIST($sampleSuccesses, $sampleNumber, $populationSuccesses, $populationNumber)
     {
-        return Statistical\Distributions\HyperGeometric::distribution(
-            $sampleSuccesses,
-            $sampleNumber,
-            $populationSuccesses,
-            $populationNumber
-        );
+        return Statistical\Distributions\HyperGeometric::distribution($sampleSuccesses, $sampleNumber, $populationSuccesses, $populationNumber);
     }
-
     /**
      * INTERCEPT.
      *
@@ -739,7 +699,6 @@ class Statistical
     {
         return Trends::INTERCEPT($yValues, $xValues);
     }
-
     /**
      * KURT.
      *
@@ -760,7 +719,6 @@ class Statistical
     {
         return Statistical\Deviations::kurtosis(...$args);
     }
-
     /**
      * LARGE.
      *
@@ -782,7 +740,6 @@ class Statistical
     {
         return Statistical\Size::large(...$args);
     }
-
     /**
      * LINEST.
      *
@@ -800,11 +757,10 @@ class Statistical
      *
      * @return array|int|string The result, or a string containing an error
      */
-    public static function LINEST($yValues, $xValues = null, $const = true, $stats = false)
+    public static function LINEST($yValues, $xValues = null, $const = \true, $stats = \false)
     {
         return Trends::LINEST($yValues, $xValues, $const, $stats);
     }
-
     /**
      * LOGEST.
      *
@@ -822,11 +778,10 @@ class Statistical
      *
      * @return array|int|string The result, or a string containing an error
      */
-    public static function LOGEST($yValues, $xValues = null, $const = true, $stats = false)
+    public static function LOGEST($yValues, $xValues = null, $const = \true, $stats = \false)
     {
         return Trends::LOGEST($yValues, $xValues, $const, $stats);
     }
-
     /**
      * LOGINV.
      *
@@ -850,7 +805,6 @@ class Statistical
     {
         return Statistical\Distributions\LogNormal::inverse($probability, $mean, $stdDev);
     }
-
     /**
      * LOGNORMDIST.
      *
@@ -871,7 +825,6 @@ class Statistical
     {
         return Statistical\Distributions\LogNormal::cumulative($value, $mean, $stdDev);
     }
-
     /**
      * LOGNORM.DIST.
      *
@@ -889,11 +842,10 @@ class Statistical
      *
      * @return array|float|string The result, or a string containing an error
      */
-    public static function LOGNORMDIST2($value, $mean, $stdDev, $cumulative = false)
+    public static function LOGNORMDIST2($value, $mean, $stdDev, $cumulative = \false)
     {
         return Statistical\Distributions\LogNormal::distribution($value, $mean, $stdDev, $cumulative);
     }
-
     /**
      * MAX.
      *
@@ -915,7 +867,6 @@ class Statistical
     {
         return Maximum::max(...$args);
     }
-
     /**
      * MAXA.
      *
@@ -936,7 +887,6 @@ class Statistical
     {
         return Maximum::maxA(...$args);
     }
-
     /**
      * MAXIFS.
      *
@@ -957,7 +907,6 @@ class Statistical
     {
         return Conditional::MAXIFS(...$args);
     }
-
     /**
      * MEDIAN.
      *
@@ -978,7 +927,6 @@ class Statistical
     {
         return Statistical\Averages::median(...$args);
     }
-
     /**
      * MIN.
      *
@@ -1000,7 +948,6 @@ class Statistical
     {
         return Minimum::min(...$args);
     }
-
     /**
      * MINA.
      *
@@ -1021,7 +968,6 @@ class Statistical
     {
         return Minimum::minA(...$args);
     }
-
     /**
      * MINIFS.
      *
@@ -1042,7 +988,6 @@ class Statistical
     {
         return Conditional::MINIFS(...$args);
     }
-
     /**
      * MODE.
      *
@@ -1063,7 +1008,6 @@ class Statistical
     {
         return Statistical\Averages::mode(...$args);
     }
-
     /**
      * NEGBINOMDIST.
      *
@@ -1087,7 +1031,6 @@ class Statistical
     {
         return Statistical\Distributions\Binomial::negative($failures, $successes, $probability);
     }
-
     /**
      * NORMDIST.
      *
@@ -1110,7 +1053,6 @@ class Statistical
     {
         return Statistical\Distributions\Normal::distribution($value, $mean, $stdDev, $cumulative);
     }
-
     /**
      * NORMINV.
      *
@@ -1130,7 +1072,6 @@ class Statistical
     {
         return Statistical\Distributions\Normal::inverse($probability, $mean, $stdDev);
     }
-
     /**
      * NORMSDIST.
      *
@@ -1150,7 +1091,6 @@ class Statistical
     {
         return Statistical\Distributions\StandardNormal::cumulative($value);
     }
-
     /**
      * NORM.S.DIST.
      *
@@ -1171,7 +1111,6 @@ class Statistical
     {
         return Statistical\Distributions\StandardNormal::distribution($value, $cumulative);
     }
-
     /**
      * NORMSINV.
      *
@@ -1189,7 +1128,6 @@ class Statistical
     {
         return Statistical\Distributions\StandardNormal::inverse($value);
     }
-
     /**
      * PERCENTILE.
      *
@@ -1210,7 +1148,6 @@ class Statistical
     {
         return Statistical\Percentiles::PERCENTILE(...$args);
     }
-
     /**
      * PERCENTRANK.
      *
@@ -1233,7 +1170,6 @@ class Statistical
     {
         return Statistical\Percentiles::PERCENTRANK($valueSet, $value, $significance);
     }
-
     /**
      * PERMUT.
      *
@@ -1256,7 +1192,6 @@ class Statistical
     {
         return Permutations::PERMUT($numObjs, $numInSet);
     }
-
     /**
      * POISSON.
      *
@@ -1278,7 +1213,6 @@ class Statistical
     {
         return Statistical\Distributions\Poisson::distribution($value, $mean, $cumulative);
     }
-
     /**
      * QUARTILE.
      *
@@ -1299,7 +1233,6 @@ class Statistical
     {
         return Statistical\Percentiles::QUARTILE(...$args);
     }
-
     /**
      * RANK.
      *
@@ -1319,7 +1252,6 @@ class Statistical
     {
         return Statistical\Percentiles::RANK($value, $valueSet, $order);
     }
-
     /**
      * RSQ.
      *
@@ -1338,7 +1270,6 @@ class Statistical
     {
         return Trends::RSQ($yValues, $xValues);
     }
-
     /**
      * SKEW.
      *
@@ -1359,7 +1290,6 @@ class Statistical
     {
         return Statistical\Deviations::skew(...$args);
     }
-
     /**
      * SLOPE.
      *
@@ -1378,7 +1308,6 @@ class Statistical
     {
         return Trends::SLOPE($yValues, $xValues);
     }
-
     /**
      * SMALL.
      *
@@ -1400,7 +1329,6 @@ class Statistical
     {
         return Statistical\Size::small(...$args);
     }
-
     /**
      * STANDARDIZE.
      *
@@ -1420,7 +1348,6 @@ class Statistical
     {
         return Statistical\Standardize::execute($value, $mean, $stdDev);
     }
-
     /**
      * STDEV.
      *
@@ -1442,7 +1369,6 @@ class Statistical
     {
         return StandardDeviations::STDEV(...$args);
     }
-
     /**
      * STDEVA.
      *
@@ -1463,7 +1389,6 @@ class Statistical
     {
         return StandardDeviations::STDEVA(...$args);
     }
-
     /**
      * STDEVP.
      *
@@ -1484,7 +1409,6 @@ class Statistical
     {
         return StandardDeviations::STDEVP(...$args);
     }
-
     /**
      * STDEVPA.
      *
@@ -1505,7 +1429,6 @@ class Statistical
     {
         return StandardDeviations::STDEVPA(...$args);
     }
-
     /**
      * STEYX.
      *
@@ -1524,7 +1447,6 @@ class Statistical
     {
         return Trends::STEYX($yValues, $xValues);
     }
-
     /**
      * TDIST.
      *
@@ -1544,7 +1466,6 @@ class Statistical
     {
         return Statistical\Distributions\StudentT::distribution($value, $degrees, $tails);
     }
-
     /**
      * TINV.
      *
@@ -1563,7 +1484,6 @@ class Statistical
     {
         return Statistical\Distributions\StudentT::inverse($probability, $degrees);
     }
-
     /**
      * TREND.
      *
@@ -1580,11 +1500,10 @@ class Statistical
      *
      * @return float[]
      */
-    public static function TREND($yValues, $xValues = [], $newValues = [], $const = true)
+    public static function TREND($yValues, $xValues = [], $newValues = [], $const = \true)
     {
         return Trends::TREND($yValues, $xValues, $newValues, $const);
     }
-
     /**
      * TRIMMEAN.
      *
@@ -1607,7 +1526,6 @@ class Statistical
     {
         return Statistical\Averages\Mean::trim(...$args);
     }
-
     /**
      * VARFunc.
      *
@@ -1628,7 +1546,6 @@ class Statistical
     {
         return Variances::VAR(...$args);
     }
-
     /**
      * VARA.
      *
@@ -1649,7 +1566,6 @@ class Statistical
     {
         return Variances::VARA(...$args);
     }
-
     /**
      * VARP.
      *
@@ -1670,7 +1586,6 @@ class Statistical
     {
         return Variances::VARP(...$args);
     }
-
     /**
      * VARPA.
      *
@@ -1691,7 +1606,6 @@ class Statistical
     {
         return Variances::VARPA(...$args);
     }
-
     /**
      * WEIBULL.
      *
@@ -1713,7 +1627,6 @@ class Statistical
     {
         return Statistical\Distributions\Weibull::distribution($value, $alpha, $beta, $cumulative);
     }
-
     /**
      * ZTEST.
      *

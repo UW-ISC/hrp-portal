@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateTable.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the CREATE TABLE statement. You can overwrite
@@ -49,30 +49,29 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableBuilder implements Builder {
-
-    protected function buildCreateTableDefinition($parsed) {
+class CreateTableBuilder implements Builder
+{
+    protected function buildCreateTableDefinition($parsed)
+    {
         $builder = new CreateTableDefinitionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildCreateTableOptions($parsed) {
+    protected function buildCreateTableOptions($parsed)
+    {
         $builder = new CreateTableOptionsBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildCreateTableSelectOption($parsed) {
+    protected function buildCreateTableSelectOption($parsed)
+    {
         $builder = new CreateTableSelectOptionBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $parsed['name'];
         $sql .= $this->buildCreateTableDefinition($parsed);
         $sql .= $this->buildCreateTableOptions($parsed);
         $sql .= $this->buildCreateTableSelectOption($parsed);
         return $sql;
     }
-
 }
-?>

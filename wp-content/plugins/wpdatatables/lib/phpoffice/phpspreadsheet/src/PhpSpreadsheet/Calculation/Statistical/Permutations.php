@@ -1,17 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
-use PhpOffice\PhpSpreadsheet\Shared\IntOrFloat;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\IntOrFloat;
 class Permutations
 {
     use ArrayEnabled;
-
     /**
      * PERMUT.
      *
@@ -32,34 +30,31 @@ class Permutations
      */
     public static function PERMUT($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
-
         try {
             $numObjs = StatisticalValidations::validateInt($numObjs);
             $numInSet = StatisticalValidations::validateInt($numInSet);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($numObjs < $numInSet) {
             return ExcelError::NAN();
         }
         $result1 = MathTrig\Factorial::fact($numObjs);
-        if (is_string($result1)) {
+        if (\is_string($result1)) {
             return $result1;
         }
         $result2 = MathTrig\Factorial::fact($numObjs - $numInSet);
-        if (is_string($result2)) {
+        if (\is_string($result2)) {
             return $result2;
         }
         // phpstan thinks result1 and result2 can be arrays; they can't.
-        $result = round($result1 / $result2); // @phpstan-ignore-line
-
+        $result = \round($result1 / $result2);
+        // @phpstan-ignore-line
         return IntOrFloat::evaluate($result);
     }
-
     /**
      * PERMUTATIONA.
      *
@@ -77,23 +72,19 @@ class Permutations
      */
     public static function PERMUTATIONA($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
-
         try {
             $numObjs = StatisticalValidations::validateInt($numObjs);
             $numInSet = StatisticalValidations::validateInt($numInSet);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($numObjs < 0 || $numInSet < 0) {
             return ExcelError::NAN();
         }
-
         $result = $numObjs ** $numInSet;
-
         return IntOrFloat::evaluate($result);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CheckBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the CHECK statement part of CREATE TABLE. 
  * You can overwrite all functions to achieve another handling.
@@ -51,35 +51,33 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CheckBuilder implements Builder {
-
-    protected function buildSelectBracketExpression($parsed) {
+class CheckBuilder implements Builder
+{
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::CHECK) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildSelectBracketExpression($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE check subtree', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
 }
-?>

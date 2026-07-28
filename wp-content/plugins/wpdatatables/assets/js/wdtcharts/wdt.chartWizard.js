@@ -896,6 +896,10 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                             || constructedChartData.type == 'highcharts_stacked_column_chart'
                             || constructedChartData.type == 'highcharts_gauge_chart'
                             || constructedChartData.type == 'apexcharts_radar_chart'
+                            || constructedChartData.type == 'highcharts_bubble_chart'
+                            || constructedChartData.type == 'highcharts_bubble3d_chart'
+                            || constructedChartData.type == 'highcharts_sized_bubble_chart'
+                            || constructedChartData.type == 'highcharts_sized_bubble3d_chart'
                         ) {
                             $('div.chart-series-type').hide();
                             $('div.chart-show-yaxis').hide();
@@ -1401,6 +1405,10 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             || constructedChartData.type == 'highcharts_3d_column_chart'
             || constructedChartData.type == 'highcharts_stacked_column_chart'
             || constructedChartData.type == 'highcharts_gauge_chart'
+            || constructedChartData.type == 'highcharts_bubble_chart'
+            || constructedChartData.type == 'highcharts_bubble3d_chart'
+            || constructedChartData.type == 'highcharts_sized_bubble_chart'
+            || constructedChartData.type == 'highcharts_sized_bubble3d_chart'
         ) {
             $('div.chart-series-block').each(function (e) {
                 constructedChartData.series_data[$(this).data('orig_header')] = {

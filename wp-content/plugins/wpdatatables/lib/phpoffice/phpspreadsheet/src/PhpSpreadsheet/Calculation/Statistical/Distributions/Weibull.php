@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Weibull
 {
     use ArrayEnabled;
-
     /**
      * WEIBULL.
      *
@@ -31,10 +29,9 @@ class Weibull
      */
     public static function distribution($value, $alpha, $beta, $cumulative)
     {
-        if (is_array($value) || is_array($alpha) || is_array($beta) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($alpha) || \is_array($beta) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $alpha, $beta, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $alpha = DistributionValidations::validateFloat($alpha);
@@ -43,15 +40,12 @@ class Weibull
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value < 0) || ($alpha <= 0) || ($beta <= 0)) {
+        if ($value < 0 || $alpha <= 0 || $beta <= 0) {
             return ExcelError::NAN();
         }
-
         if ($cumulative) {
-            return 1 - exp(0 - ($value / $beta) ** $alpha);
+            return 1 - \exp(0 - ($value / $beta) ** $alpha);
         }
-
-        return ($alpha / $beta ** $alpha) * $value ** ($alpha - 1) * exp(0 - ($value / $beta) ** $alpha);
+        return $alpha / $beta ** $alpha * $value ** ($alpha - 1) * \exp(0 - ($value / $beta) ** $alpha);
     }
 }

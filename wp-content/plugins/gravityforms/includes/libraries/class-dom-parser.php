@@ -158,7 +158,22 @@ class Dom_Parser {
 	 * @return void
 	 */
 	private function remove_script() {
-		$this->content_modified = str_replace( $this->get_scripts(), '', $this->content );
+		// Fast path: exact match (works when the tag has not been modified).
+		$modified = str_replace( $this->get_scripts(), '', $this->content );
+
+		if ( $modified !== $this->content ) {
+			$this->content_modified = $modified;
+			return;
+		}
+
+		// If the <script> tag has extra attributes added by WordPress's custom CSS,
+		// use regex so we can match the opening tag regardless of extra attributes.
+		$script_body  = \GFCommon::get_hooks_javascript_code( false );
+		$escaped_body = preg_quote( $script_body, '/' );
+		$pattern      = '/<script[^>]*>' . $escaped_body . '<\/script>/s';
+		$modified     = preg_replace( $pattern, '', $this->content );
+
+		$this->content_modified = ( null !== $modified ) ? $modified : $this->content;
 	}
 
 	/**

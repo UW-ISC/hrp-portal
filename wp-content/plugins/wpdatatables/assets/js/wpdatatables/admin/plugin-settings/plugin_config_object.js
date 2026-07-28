@@ -345,12 +345,6 @@ var wpdatatable_plugin_config = {
         }
     },
 
-    setHighChartStableVersion: function (highChartStableVersion) {
-        wdt_current_config.wdtHighChartStableVersion = highChartStableVersion;
-        if (jQuery('#wdt-use-highcharts-stable-version').val() != highChartStableVersion) {
-            jQuery('#wdt-use-highcharts-stable-version').prop('checked', highChartStableVersion);
-        }
-    },
     setApexStableVersion: function (apexChartStableVersion) {
         wdt_current_config.wdtApexStableVersion = apexChartStableVersion;
         if (jQuery('#wdt-use-apexcharts-stable-version').val() != apexChartStableVersion) {

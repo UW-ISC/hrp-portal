@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * This is in almost every respect equivalent to an array except
  * that it keeps track of which keys were accessed.
@@ -8,13 +10,12 @@
  *     of PHP 5, you must not use the $hash[$key] syntax; if you do
  *     our version of offsetGet is never called.
  */
-class HTMLPurifier_StringHash extends ArrayObject
+class HTMLPurifier_StringHash extends \ArrayObject
 {
     /**
      * @type array
      */
     protected $accessed = array();
-
     /**
      * Retrieves a value, and logs the access.
      * @param mixed $index
@@ -23,10 +24,9 @@ class HTMLPurifier_StringHash extends ArrayObject
     #[\ReturnTypeWillChange]
     public function offsetGet($index)
     {
-        $this->accessed[$index] = true;
+        $this->accessed[$index] = \true;
         return parent::offsetGet($index);
     }
-
     /**
      * Returns a lookup array of all array indexes that have been accessed.
      * @return array in form array($index => true).
@@ -35,7 +35,6 @@ class HTMLPurifier_StringHash extends ArrayObject
     {
         return $this->accessed;
     }
-
     /**
      * Resets the access array.
      */
@@ -44,5 +43,4 @@ class HTMLPurifier_StringHash extends ArrayObject
         $this->accessed = array();
     }
 }
-
 // vim: et sw=4 sts=4

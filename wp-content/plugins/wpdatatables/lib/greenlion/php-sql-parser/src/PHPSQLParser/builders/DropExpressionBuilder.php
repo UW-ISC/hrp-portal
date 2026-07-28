@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DropExpressionBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the object list of a DROP statement.
  * You can overwrite all functions to achieve another handling.
@@ -51,53 +51,51 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DropExpressionBuilder implements Builder {
-
-    protected function buildTable($parsed, $index) {
+class DropExpressionBuilder implements Builder
+{
+    protected function buildTable($parsed, $index)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }
-
-    protected function buildDatabase($parsed) {
+    protected function buildDatabase($parsed)
+    {
         $builder = new DatabaseBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildSchema($parsed) {
+    protected function buildSchema($parsed)
+    {
         $builder = new SchemaBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildTemporaryTable($parsed) {
+    protected function buildTemporaryTable($parsed)
+    {
         $builder = new TempTableBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildView($parsed) {
+    protected function buildView($parsed)
+    {
         $builder = new ViewBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
             return "";
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildTable($v, 0);
             $sql .= $this->buildView($v);
             $sql .= $this->buildSchema($v);
             $sql .= $this->buildDatabase($v);
             $sql .= $this->buildTemporaryTable($v, 0);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('DROP object-list subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ', ';
         }
-        return substr($sql, 0, -2);
+        return \substr($sql, 0, -2);
     }
 }
-?>

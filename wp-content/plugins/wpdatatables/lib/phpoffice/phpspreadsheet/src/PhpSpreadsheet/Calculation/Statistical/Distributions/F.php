@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class F
 {
     use ArrayEnabled;
-
     /**
      * F.DIST.
      *
@@ -33,10 +31,9 @@ class F
      */
     public static function distribution($value, $u, $v, $cumulative)
     {
-        if (is_array($value) || is_array($u) || is_array($v) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($u) || \is_array($v) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $u, $v, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $u = DistributionValidations::validateInt($u);
@@ -45,20 +42,13 @@ class F
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($value < 0 || $u < 1 || $v < 1) {
             return ExcelError::NAN();
         }
-
         if ($cumulative) {
-            $adjustedValue = ($u * $value) / ($u * $value + $v);
-
+            $adjustedValue = $u * $value / ($u * $value + $v);
             return Beta::incompleteBeta($adjustedValue, $u / 2, $v / 2);
         }
-
-        return (Gamma::gammaValue(($v + $u) / 2) /
-                (Gamma::gammaValue($u / 2) * Gamma::gammaValue($v / 2))) *
-            (($u / $v) ** ($u / 2)) *
-            (($value ** (($u - 2) / 2)) / ((1 + ($u / $v) * $value) ** (($u + $v) / 2)));
+        return Gamma::gammaValue(($v + $u) / 2) / (Gamma::gammaValue($u / 2) * Gamma::gammaValue($v / 2)) * ($u / $v) ** ($u / 2) * ($value ** (($u - 2) / 2) / (1 + $u / $v * $value) ** (($u + $v) / 2));
     }
 }

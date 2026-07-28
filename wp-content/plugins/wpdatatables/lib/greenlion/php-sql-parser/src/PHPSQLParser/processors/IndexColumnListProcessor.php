@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexColumnListProcessor.php
  *
@@ -29,10 +30,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace WPDT\PHPSQLParser\processors;
 
-namespace PHPSQLParser\processors;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * 
  * This class processes the index column lists.
@@ -40,60 +40,50 @@ use PHPSQLParser\utils\ExpressionType;
  * @author arothe
  * 
  */
-class IndexColumnListProcessor extends AbstractProcessor {
-
-    protected function initExpression() {
-        return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
+class IndexColumnListProcessor extends AbstractProcessor
+{
+    protected function initExpression()
+    {
+        return array('name' => \false, 'no_quotes' => \false, 'length' => \false, 'dir' => \false);
     }
-
-    public function process($sql) {
+    public function process($sql)
+    {
         $tokens = $this->splitSQLIntoTokens($sql);
-
         $expr = $this->initExpression();
         $result = array();
         $base_expr = "";
-
         foreach ($tokens as $k => $token) {
-
-            $trim = trim($token);
+            $trim = \trim($token);
             $base_expr .= $token;
-
             if ($trim === "") {
                 continue;
             }
-
-            $upper = strtoupper($trim);
-
+            $upper = \strtoupper($trim);
             switch ($upper) {
-
-            case 'ASC':
-            case 'DESC':
-            # the optional order
-                $expr['dir'] = $trim;
-                break;
-
-            case ',':
-            # the next column
-                $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
-                        $expr);
-                $expr = $this->initExpression();
-                $base_expr = "";
-                break;
-
-            default:
-                if ($upper[0] === '(' && substr($upper, -1) === ')') {
-                    # the optional length
-                    $expr['length'] = $this->removeParenthesisFromStart($trim);
-                    continue 2;
-                }
-                # the col name
-                $expr['name'] = $trim;
-                $expr['no_quotes'] = $this->revokeQuotation($trim);
-                break;
+                case 'ASC':
+                case 'DESC':
+                    # the optional order
+                    $expr['dir'] = $trim;
+                    break;
+                case ',':
+                    # the next column
+                    $result[] = \array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr), $expr);
+                    $expr = $this->initExpression();
+                    $base_expr = "";
+                    break;
+                default:
+                    if ($upper[0] === '(' && \substr($upper, -1) === ')') {
+                        # the optional length
+                        $expr['length'] = $this->removeParenthesisFromStart($trim);
+                        continue 2;
+                    }
+                    # the col name
+                    $expr['name'] = $trim;
+                    $expr['no_quotes'] = $this->revokeQuotation($trim);
+                    break;
             }
         }
-        $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr), $expr);
+        $result[] = \array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr), $expr);
         return $result;
     }
 }
-?>

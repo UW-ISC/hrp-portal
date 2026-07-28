@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet;
+namespace WPDT\PhpOffice\PhpSpreadsheet;
 
 class Exception extends \Exception
 {

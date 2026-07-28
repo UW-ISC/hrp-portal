@@ -1,16 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Operations
 {
     use ArrayEnabled;
-
     /**
      * MOD.
      *
@@ -25,10 +23,9 @@ class Operations
      */
     public static function mod($dividend, $divisor)
     {
-        if (is_array($dividend) || is_array($divisor)) {
+        if (\is_array($dividend) || \is_array($divisor)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $dividend, $divisor);
         }
-
         try {
             $dividend = Helpers::validateNumericNullBool($dividend);
             $divisor = Helpers::validateNumericNullBool($divisor);
@@ -36,17 +33,14 @@ class Operations
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($dividend < 0.0) && ($divisor > 0.0)) {
-            return $divisor - fmod(abs($dividend), $divisor);
+        if ($dividend < 0.0 && $divisor > 0.0) {
+            return $divisor - \fmod(\abs($dividend), $divisor);
         }
-        if (($dividend > 0.0) && ($divisor < 0.0)) {
-            return $divisor + fmod($dividend, abs($divisor));
+        if ($dividend > 0.0 && $divisor < 0.0) {
+            return $divisor + \fmod($dividend, \abs($divisor));
         }
-
-        return fmod($dividend, $divisor);
+        return \fmod($dividend, $divisor);
     }
-
     /**
      * POWER.
      *
@@ -63,17 +57,15 @@ class Operations
      */
     public static function power($x, $y)
     {
-        if (is_array($x) || is_array($y)) {
+        if (\is_array($x) || \is_array($y)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $x, $y);
         }
-
         try {
             $x = Helpers::validateNumericNullBool($x);
             $y = Helpers::validateNumericNullBool($y);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         // Validate parameters
         if (!$x && !$y) {
             return ExcelError::NAN();
@@ -81,13 +73,10 @@ class Operations
         if (!$x && $y < 0.0) {
             return ExcelError::DIV0();
         }
-
         // Return
         $result = $x ** $y;
-
         return Helpers::numberOrNan($result);
     }
-
     /**
      * PRODUCT.
      *
@@ -102,29 +91,22 @@ class Operations
      */
     public static function product(...$args)
     {
-        $args = array_filter(
-            Functions::flattenArray($args),
-            function ($value) {
-                return $value !== null;
-            }
-        );
-
+        $args = \array_filter(Functions::flattenArray($args), function ($value) {
+            return $value !== null;
+        });
         // Return value
-        $returnValue = (count($args) === 0) ? 0.0 : 1.0;
-
+        $returnValue = \count($args) === 0 ? 0.0 : 1.0;
         // Loop through arguments
         foreach ($args as $arg) {
             // Is it a numeric value?
-            if (is_numeric($arg)) {
+            if (\is_numeric($arg)) {
                 $returnValue *= $arg;
             } else {
                 return ExcelError::throwError($arg);
             }
         }
-
         return (float) $returnValue;
     }
-
     /**
      * QUOTIENT.
      *
@@ -145,10 +127,9 @@ class Operations
      */
     public static function quotient($numerator, $denominator)
     {
-        if (is_array($numerator) || is_array($denominator)) {
+        if (\is_array($numerator) || \is_array($denominator)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numerator, $denominator);
         }
-
         try {
             $numerator = Helpers::validateNumericNullSubstitution($numerator, 0);
             $denominator = Helpers::validateNumericNullSubstitution($denominator, 0);
@@ -156,7 +137,6 @@ class Operations
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         return (int) ($numerator / $denominator);
     }
 }

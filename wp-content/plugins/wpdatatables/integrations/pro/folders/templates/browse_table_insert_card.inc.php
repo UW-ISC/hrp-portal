@@ -6,7 +6,7 @@ $unassignedItems = 0;
 $itemsType = 'table';
 $itemInstance = '';
 if (isset($_GET['page'])) {
-    $itemInstance = WPDataFoldersFactory::createPageBased($_GET['page']);
+    $itemInstance = WPDataFoldersFactory::createPageBased(sanitize_text_field(wp_unslash($_GET['page'])));
 }
 if ($itemInstance instanceof WPDataTablesFolders ||
     $itemInstance instanceof WPDataChartsFolders ||

@@ -1,19 +1,19 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates shorthand CSS property background.
  * @warning Does not support url tokens that have internal spaces.
  */
 class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
 {
-
     /**
      * Local copy of component validators.
      * @type HTMLPurifier_AttrDef[]
      * @note See HTMLPurifier_AttrDef_Font::$info for a similar impl.
      */
     protected $info;
-
     /**
      * @param HTMLPurifier_Config $config
      */
@@ -27,7 +27,6 @@ class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
         $this->info['background-position'] = $def->info['background-position'];
         $this->info['background-size'] = $def->info['background-size'];
     }
-
     /**
      * @param string $string
      * @param HTMLPurifier_Config $config
@@ -39,43 +38,40 @@ class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
         // regular pre-processing
         $string = $this->parseCDATA($string);
         if ($string === '') {
-            return false;
+            return \false;
         }
-
         // munge rgb() decl if necessary
         $string = $this->mungeRgb($string);
-
         // assumes URI doesn't have spaces in it
-        $bits = explode(' ', $string); // bits to process
-
+        $bits = \explode(' ', $string);
+        // bits to process
         $caught = array();
-        $caught['color'] = false;
-        $caught['image'] = false;
-        $caught['repeat'] = false;
-        $caught['attachment'] = false;
-        $caught['position'] = false;
-        $caught['size'] = false;
-
-        $i = 0; // number of catches
-
+        $caught['color'] = \false;
+        $caught['image'] = \false;
+        $caught['repeat'] = \false;
+        $caught['attachment'] = \false;
+        $caught['position'] = \false;
+        $caught['size'] = \false;
+        $i = 0;
+        // number of catches
         foreach ($bits as $bit) {
             if ($bit === '') {
                 continue;
             }
             foreach ($caught as $key => $status) {
                 if ($key != 'position') {
-                    if ($status !== false) {
+                    if ($status !== \false) {
                         continue;
                     }
                     $r = $this->info['background-' . $key]->validate($bit, $config, $context);
                 } else {
                     $r = $bit;
                 }
-                if ($r === false) {
+                if ($r === \false) {
                     continue;
                 }
                 if ($key == 'position') {
-                    if ($caught[$key] === false) {
+                    if ($caught[$key] === \false) {
                         $caught[$key] = '';
                     }
                     $caught[$key] .= $r . ' ';
@@ -86,28 +82,23 @@ class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
                 break;
             }
         }
-
         if (!$i) {
-            return false;
+            return \false;
         }
-        if ($caught['position'] !== false) {
-            $caught['position'] = $this->info['background-position']->
-                validate($caught['position'], $config, $context);
+        if ($caught['position'] !== \false) {
+            $caught['position'] = $this->info['background-position']->validate($caught['position'], $config, $context);
         }
-
         $ret = array();
         foreach ($caught as $value) {
-            if ($value === false) {
+            if ($value === \false) {
                 continue;
             }
             $ret[] = $value;
         }
-
         if (empty($ret)) {
-            return false;
+            return \false;
         }
-        return implode(' ', $ret);
+        return \implode(' ', $ret);
     }
 }
-
 // vim: et sw=4 sts=4

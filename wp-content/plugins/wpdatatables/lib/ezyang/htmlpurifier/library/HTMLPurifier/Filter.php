@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Represents a pre or post processing filter on HTML Purifier's output
  *
@@ -18,16 +20,13 @@
  * @note Methods are not declared abstract as it is perfectly legitimate
  *       for an implementation not to want anything to happen on a step
  */
-
 class HTMLPurifier_Filter
 {
-
     /**
      * Name of the filter for identification purposes.
      * @type string
      */
     public $name;
-
     /**
      * Pre-processor function, handles HTML before HTML Purifier
      * @param string $html
@@ -39,7 +38,6 @@ class HTMLPurifier_Filter
     {
         return $html;
     }
-
     /**
      * Post-processor function, handles HTML after HTML Purifier
      * @param string $html
@@ -52,5 +50,4 @@ class HTMLPurifier_Filter
         return $html;
     }
 }
-
 // vim: et sw=4 sts=4

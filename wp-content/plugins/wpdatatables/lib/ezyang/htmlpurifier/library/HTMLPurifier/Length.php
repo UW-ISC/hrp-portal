@@ -1,51 +1,42 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Represents a measurable length, with a string numeric magnitude
  * and a unit. This object is immutable.
  */
 class HTMLPurifier_Length
 {
-
     /**
      * String numeric magnitude.
      * @type string
      */
     protected $n;
-
     /**
      * String unit. False is permitted if $n = 0.
      * @type string|bool
      */
     protected $unit;
-
     /**
      * Whether or not this length is valid. Null if not calculated yet.
      * @type bool
      */
     protected $isValid;
-
     /**
      * Array Lookup array of units recognized by CSS 3
      * @type array
      */
-    protected static $allowedUnits = array(
-        'em' => true, 'ex' => true, 'px' => true, 'in' => true,
-        'cm' => true, 'mm' => true, 'pt' => true, 'pc' => true,
-        'ch' => true, 'rem' => true, 'vw' => true, 'vh' => true,
-        'vmin' => true, 'vmax' => true
-    );
-
+    protected static $allowedUnits = array('em' => \true, 'ex' => \true, 'px' => \true, 'in' => \true, 'cm' => \true, 'mm' => \true, 'pt' => \true, 'pc' => \true, 'ch' => \true, 'rem' => \true, 'vw' => \true, 'vh' => \true, 'vmin' => \true, 'vmax' => \true);
     /**
      * @param string $n Magnitude
      * @param bool|string $u Unit
      */
-    public function __construct($n = '0', $u = false)
+    public function __construct($n = '0', $u = \false)
     {
         $this->n = (string) $n;
-        $this->unit = $u !== false ? (string) $u : false;
+        $this->unit = $u !== \false ? (string) $u : \false;
     }
-
     /**
      * @param string $s Unit string, like '2em' or '3.4in'
      * @return HTMLPurifier_Length
@@ -56,15 +47,14 @@ class HTMLPurifier_Length
         if ($s instanceof HTMLPurifier_Length) {
             return $s;
         }
-        $n_length = strspn($s, '1234567890.+-');
-        $n = substr($s, 0, $n_length);
-        $unit = substr($s, $n_length);
+        $n_length = \strspn($s, '1234567890.+-');
+        $n = \substr($s, 0, $n_length);
+        $unit = \substr($s, $n_length);
         if ($unit === '') {
-            $unit = false;
+            $unit = \false;
         }
         return new HTMLPurifier_Length($n, $unit);
     }
-
     /**
      * Validates the number and unit.
      * @return bool
@@ -75,25 +65,24 @@ class HTMLPurifier_Length
         if ($this->n === '+0' || $this->n === '-0') {
             $this->n = '0';
         }
-        if ($this->n === '0' && $this->unit === false) {
-            return true;
+        if ($this->n === '0' && $this->unit === \false) {
+            return \true;
         }
-        if ($this->unit === false || !ctype_lower($this->unit)) {
-            $this->unit = strtolower($this->unit);
+        if ($this->unit === \false || !\ctype_lower($this->unit)) {
+            $this->unit = \strtolower($this->unit);
         }
         if (!isset(HTMLPurifier_Length::$allowedUnits[$this->unit])) {
-            return false;
+            return \false;
         }
         // Hack:
         $def = new HTMLPurifier_AttrDef_CSS_Number();
-        $result = $def->validate($this->n, false, false);
-        if ($result === false) {
-            return false;
+        $result = $def->validate($this->n, \false, \false);
+        if ($result === \false) {
+            return \false;
         }
         $this->n = $result;
-        return true;
+        return \true;
     }
-
     /**
      * Returns string representation of number.
      * @return string
@@ -101,11 +90,10 @@ class HTMLPurifier_Length
     public function toString()
     {
         if (!$this->isValid()) {
-            return false;
+            return \false;
         }
         return $this->n . $this->unit;
     }
-
     /**
      * Retrieves string numeric magnitude.
      * @return string
@@ -114,7 +102,6 @@ class HTMLPurifier_Length
     {
         return $this->n;
     }
-
     /**
      * Retrieves string unit.
      * @return string
@@ -123,7 +110,6 @@ class HTMLPurifier_Length
     {
         return $this->unit;
     }
-
     /**
      * Returns true if this length unit is valid.
      * @return bool
@@ -135,7 +121,6 @@ class HTMLPurifier_Length
         }
         return $this->isValid;
     }
-
     /**
      * Compares two lengths, and returns 1 if greater, -1 if less and 0 if equal.
      * @param HTMLPurifier_Length $l
@@ -145,18 +130,17 @@ class HTMLPurifier_Length
      */
     public function compareTo($l)
     {
-        if ($l === false) {
-            return false;
+        if ($l === \false) {
+            return \false;
         }
         if ($l->unit !== $this->unit) {
             $converter = new HTMLPurifier_UnitConverter();
             $l = $converter->convert($l, $this->unit);
-            if ($l === false) {
-                return false;
+            if ($l === \false) {
+                return \false;
             }
         }
         return $this->n - $l->n;
     }
 }
-
 // vim: et sw=4 sts=4

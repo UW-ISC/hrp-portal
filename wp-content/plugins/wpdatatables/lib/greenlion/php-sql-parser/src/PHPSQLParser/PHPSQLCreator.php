@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPSQLCreator.php
  *
@@ -38,24 +39,23 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser;
 
-namespace PHPSQLParser;
-use PHPSQLParser\exceptions\UnsupportedFeatureException;
-use PHPSQLParser\builders\SelectStatementBuilder;
-use PHPSQLParser\builders\DeleteStatementBuilder;
-use PHPSQLParser\builders\TruncateStatementBuilder;
-use PHPSQLParser\builders\UpdateStatementBuilder;
-use PHPSQLParser\builders\InsertStatementBuilder;
-use PHPSQLParser\builders\CreateStatementBuilder;
-use PHPSQLParser\builders\DropStatementBuilder;
-use PHPSQLParser\builders\RenameStatementBuilder;
-use PHPSQLParser\builders\ReplaceStatementBuilder;
-use PHPSQLParser\builders\ShowStatementBuilder;
-use PHPSQLParser\builders\BracketStatementBuilder;
-use PHPSQLParser\builders\UnionStatementBuilder;
-use PHPSQLParser\builders\UnionAllStatementBuilder;
-use PHPSQLParser\builders\AlterStatementBuilder;
-
+use WPDT\PHPSQLParser\exceptions\UnsupportedFeatureException;
+use WPDT\PHPSQLParser\builders\SelectStatementBuilder;
+use WPDT\PHPSQLParser\builders\DeleteStatementBuilder;
+use WPDT\PHPSQLParser\builders\TruncateStatementBuilder;
+use WPDT\PHPSQLParser\builders\UpdateStatementBuilder;
+use WPDT\PHPSQLParser\builders\InsertStatementBuilder;
+use WPDT\PHPSQLParser\builders\CreateStatementBuilder;
+use WPDT\PHPSQLParser\builders\DropStatementBuilder;
+use WPDT\PHPSQLParser\builders\RenameStatementBuilder;
+use WPDT\PHPSQLParser\builders\ReplaceStatementBuilder;
+use WPDT\PHPSQLParser\builders\ShowStatementBuilder;
+use WPDT\PHPSQLParser\builders\BracketStatementBuilder;
+use WPDT\PHPSQLParser\builders\UnionStatementBuilder;
+use WPDT\PHPSQLParser\builders\UnionAllStatementBuilder;
+use WPDT\PHPSQLParser\builders\AlterStatementBuilder;
 /**
  * This class generates SQL from the output of the PHPSQLParser. 
  *
@@ -63,82 +63,79 @@ use PHPSQLParser\builders\AlterStatementBuilder;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class PHPSQLCreator {
-
+class PHPSQLCreator
+{
     public $created;
-
-    public function __construct($parsed = false) {
+    public function __construct($parsed = \false)
+    {
         if ($parsed) {
             $this->create($parsed);
         }
     }
-
-    public function create($parsed) {
-        $k = key($parsed);
+    public function create($parsed)
+    {
+        $k = \key($parsed);
         switch ($k) {
-
-        case 'UNION':
-			$builder = new UnionStatementBuilder();
-			$this->created = $builder->build($parsed);
-			break;
-        case 'UNION ALL':
-            $builder = new UnionAllStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'SELECT':
-            $builder = new SelectStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'INSERT':
-            $builder = new InsertStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'REPLACE':
-            $builder = new ReplaceStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'DELETE':
-            $builder = new DeleteStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'TRUNCATE':
-            $builder = new TruncateStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'UPDATE':
-            $builder = new UpdateStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'RENAME':
-            $builder = new RenameStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'SHOW':
-            $builder = new ShowStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'CREATE':
-            $builder = new CreateStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'BRACKET':
-            $builder = new BracketStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'DROP':
-            $builder = new DropStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        case 'ALTER':
-            $builder = new AlterStatementBuilder();
-            $this->created = $builder->build($parsed);
-            break;
-        default:
-            throw new UnsupportedFeatureException($k);
-            break;
+            case 'UNION':
+                $builder = new UnionStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'UNION ALL':
+                $builder = new UnionAllStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'SELECT':
+                $builder = new SelectStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'INSERT':
+                $builder = new InsertStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'REPLACE':
+                $builder = new ReplaceStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'DELETE':
+                $builder = new DeleteStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'TRUNCATE':
+                $builder = new TruncateStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'UPDATE':
+                $builder = new UpdateStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'RENAME':
+                $builder = new RenameStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'SHOW':
+                $builder = new ShowStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'CREATE':
+                $builder = new CreateStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'BRACKET':
+                $builder = new BracketStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'DROP':
+                $builder = new DropStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            case 'ALTER':
+                $builder = new AlterStatementBuilder();
+                $this->created = $builder->build($parsed);
+                break;
+            default:
+                throw new UnsupportedFeatureException($k);
+                break;
         }
         return $this->created;
     }
 }
-
-?>

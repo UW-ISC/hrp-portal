@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Abstract base node class that all others inherit from.
  *
@@ -15,20 +17,17 @@ abstract class HTMLPurifier_Node
      * @type int
      */
     public $line;
-
     /**
      * Column number of the start token in the source document. Null if unknown.
      * @type int
      */
     public $col;
-
     /**
      * Lookup array of processing that this token is exempt from.
      * Currently, valid values are "ValidateAttributes".
      * @type array
      */
     public $armor = array();
-
     /**
      * When true, this node should be ignored as non-existent.
      *
@@ -36,14 +35,12 @@ abstract class HTMLPurifier_Node
      * responsible for removing them before passing on to child
      * validators.
      */
-    public $dead = false;
-
+    public $dead = \false;
     /**
      * Returns a pair of start and end tokens, where the end token
      * is null if it is not necessary. Does not include children.
      * @type array
      */
-    abstract public function toTokenPair();
+    public abstract function toTokenPair();
 }
-
 // vim: et sw=4 sts=4

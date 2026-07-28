@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReplaceBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
 /**
  * This class implements the builder for the [REPLACE] statement parts. 
  * You can overwrite all functions to achieve another handling.
@@ -50,51 +50,48 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ReplaceBuilder implements Builder {
-
-    protected function buildTable($parsed) {
+class ReplaceBuilder implements Builder
+{
+    protected function buildTable($parsed)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, 0);
     }
-
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed, 0);
     }
-
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ReplaceColumnListBuilder();
         return $builder->build($parsed, 0);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = '';
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildTable($v);
             $sql .= $this->buildSubQuery($v);
             $sql .= $this->buildColumnList($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildBracketExpression($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('REPLACE', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return 'REPLACE ' . substr($sql, 0, -1);
+        return 'REPLACE ' . \substr($sql, 0, -1);
     }
-
 }
-?>

@@ -1,46 +1,39 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Helper;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Helper;
 
 class Handler
 {
     /** @var string */
     private static $invalidHex = 'Y';
-
     // A bunch of methods to show that we continue
     // to capture messages even using PhpUnit 10.
-    public static function suppressed(): bool
+    public static function suppressed() : bool
     {
-        return @trigger_error('hello');
+        return @\trigger_error('hello');
     }
-
-    public static function deprecated(): string
+    public static function deprecated() : string
     {
-        return (string) hexdec(self::$invalidHex);
+        return (string) \hexdec(self::$invalidHex);
     }
-
-    public static function notice(string $value): void
+    public static function notice(string $value) : void
     {
-        date_default_timezone_set($value);
+        \date_default_timezone_set($value);
     }
-
-    public static function warning(): bool
+    public static function warning() : bool
     {
-        return file_get_contents(__FILE__ . 'noexist') !== false;
+        return \file_get_contents(__FILE__ . 'noexist') !== \false;
     }
-
-    public static function userDeprecated(): bool
+    public static function userDeprecated() : bool
     {
-        return trigger_error('hello', E_USER_DEPRECATED);
+        return \trigger_error('hello', \E_USER_DEPRECATED);
     }
-
-    public static function userNotice(): bool
+    public static function userNotice() : bool
     {
-        return trigger_error('userNotice', E_USER_NOTICE);
+        return \trigger_error('userNotice', \E_USER_NOTICE);
     }
-
-    public static function userWarning(): bool
+    public static function userWarning() : bool
     {
-        return trigger_error('userWarning', E_USER_WARNING);
+        return \trigger_error('userWarning', \E_USER_WARNING);
     }
 }

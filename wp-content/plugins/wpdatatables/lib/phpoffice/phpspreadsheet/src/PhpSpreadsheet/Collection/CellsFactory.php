@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Collection;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Collection;
 
-use PhpOffice\PhpSpreadsheet\Settings;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Settings;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 abstract class CellsFactory
 {
     /**
@@ -13,7 +12,7 @@ abstract class CellsFactory
      * @param Worksheet $worksheet Enable cell caching for this worksheet
      *
      * */
-    public static function getInstance(Worksheet $worksheet): Cells
+    public static function getInstance(Worksheet $worksheet) : Cells
     {
         return new Cells($worksheet, Settings::getCache());
     }

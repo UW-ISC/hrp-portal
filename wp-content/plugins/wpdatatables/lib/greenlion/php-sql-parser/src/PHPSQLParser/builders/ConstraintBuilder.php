@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ConstraintBuilder.php
  *
@@ -38,10 +39,9 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the constraint statement part of CREATE TABLE. 
  * You can overwrite all functions to achieve another handling.
@@ -50,20 +50,19 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ConstraintBuilder implements Builder {
-
-    protected function buildConstant($parsed) {
+class ConstraintBuilder implements Builder
+{
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::CONSTRAINT) {
             return '';
         }
-        $sql = $parsed['sub_tree'] === false ? '' : $this->buildConstant($parsed['sub_tree']);
-        return "CONSTRAINT" . (empty($sql) ? '' : (' ' . $sql));
+        $sql = $parsed['sub_tree'] === \false ? '' : $this->buildConstant($parsed['sub_tree']);
+        return "CONSTRAINT" . (empty($sql) ? '' : ' ' . $sql);
     }
-
 }
-?>

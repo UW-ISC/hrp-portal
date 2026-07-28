@@ -1,32 +1,27 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\LookupRef;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Matrix
 {
     use ArrayEnabled;
-
     /**
      * Helper function; NOT an implementation of any Excel Function.
      */
-    public static function isColumnVector(array $values): bool
+    public static function isColumnVector(array $values) : bool
     {
-        return count($values, COUNT_RECURSIVE) === (count($values, COUNT_NORMAL) * 2);
+        return \count($values, \COUNT_RECURSIVE) === \count($values, \COUNT_NORMAL) * 2;
     }
-
     /**
      * Helper function; NOT an implementation of any Excel Function.
      */
-    public static function isRowVector(array $values): bool
+    public static function isRowVector(array $values) : bool
     {
-        return count($values, COUNT_RECURSIVE) > 1 &&
-            (count($values, COUNT_NORMAL) === 1 || count($values, COUNT_RECURSIVE) === count($values, COUNT_NORMAL));
+        return \count($values, \COUNT_RECURSIVE) > 1 && (\count($values, \COUNT_NORMAL) === 1 || \count($values, \COUNT_RECURSIVE) === \count($values, \COUNT_NORMAL));
     }
-
     /**
      * TRANSPOSE.
      *
@@ -37,10 +32,9 @@ class Matrix
     public static function transpose($matrixData)
     {
         $returnMatrix = [];
-        if (!is_array($matrixData)) {
+        if (!\is_array($matrixData)) {
             $matrixData = [[$matrixData]];
         }
-
         $column = 0;
         foreach ($matrixData as $matrixRow) {
             $row = 0;
@@ -50,10 +44,8 @@ class Matrix
             }
             ++$column;
         }
-
         return $returnMatrix;
     }
-
     /**
      * INDEX.
      *
@@ -78,66 +70,52 @@ class Matrix
      */
     public static function index($matrix, $rowNum = 0, $columnNum = null)
     {
-        if (is_array($rowNum) || is_array($columnNum)) {
+        if (\is_array($rowNum) || \is_array($columnNum)) {
             return self::evaluateArrayArgumentsSubsetFrom([self::class, __FUNCTION__], 1, $matrix, $rowNum, $columnNum);
         }
-
         $rowNum = $rowNum ?? 0;
         $originalColumnNum = $columnNum;
         $columnNum = $columnNum ?? 0;
-
         try {
             $rowNum = LookupRefValidations::validatePositiveInt($rowNum);
             $columnNum = LookupRefValidations::validatePositiveInt($columnNum);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (!is_array($matrix) || ($rowNum > count($matrix))) {
+        if (!\is_array($matrix) || $rowNum > \count($matrix)) {
             return ExcelError::REF();
         }
-
-        $rowKeys = array_keys($matrix);
-        $columnKeys = @array_keys($matrix[$rowKeys[0]]);
-
-        if ($columnNum > count($columnKeys)) {
+        $rowKeys = \array_keys($matrix);
+        $columnKeys = @\array_keys($matrix[$rowKeys[0]]);
+        if ($columnNum > \count($columnKeys)) {
             return ExcelError::REF();
         }
-        if ($originalColumnNum === null && 1 < count($columnKeys)) {
+        if ($originalColumnNum === null && 1 < \count($columnKeys)) {
             return ExcelError::REF();
         }
-
         if ($columnNum === 0) {
             return self::extractRowValue($matrix, $rowKeys, $rowNum);
         }
-
         $columnNum = $columnKeys[--$columnNum];
         if ($rowNum === 0) {
-            return array_map(
-                function ($value) {
-                    return [$value];
-                },
-                array_column($matrix, $columnNum)
-            );
+            return \array_map(function ($value) {
+                return [$value];
+            }, \array_column($matrix, $columnNum));
         }
         $rowNum = $rowKeys[--$rowNum];
-
         return $matrix[$rowNum][$columnNum];
     }
-
     /** @return mixed */
     private static function extractRowValue(array $matrix, array $rowKeys, int $rowNum)
     {
         if ($rowNum === 0) {
             return $matrix;
         }
-
         $rowNum = $rowKeys[--$rowNum];
         $row = $matrix[$rowNum];
-        if (is_array($row)) {
+        if (\is_array($row)) {
             return [$rowNum => $row];
         }
-
         return $row;
     }
 }

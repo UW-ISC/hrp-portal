@@ -159,13 +159,15 @@ jQuery(document).ready(function ($) {
                 }
             }
         }
+        moment.locale(wpdatatables_frontend_strings.wdt_locale_language);
 
         $(this).datetimepicker(
             {
                 format: wdtDateFormat,
                 showClear: true,
                 keepOpen: false,
-                useCurrent: false
+                useCurrent: false,
+                locale: wpdatatables_frontend_strings.wdt_locale_language,
             }
         )
             .off('dp.show')

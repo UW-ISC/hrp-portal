@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation;
 
 use DateTimeInterface;
-
 /**
  * @deprecated 1.18.0
  */
@@ -24,7 +23,6 @@ class DateTime
     {
         return DateTimeExcel\Helpers::isLeapYear($year);
     }
-
     /**
      * getDateValue.
      *
@@ -44,7 +42,6 @@ class DateTime
             return $e->getMessage();
         }
     }
-
     /**
      * DATETIMENOW.
      *
@@ -70,7 +67,6 @@ class DateTime
     {
         return DateTimeExcel\Current::now();
     }
-
     /**
      * DATENOW.
      *
@@ -96,7 +92,6 @@ class DateTime
     {
         return DateTimeExcel\Current::today();
     }
-
     /**
      * DATE.
      *
@@ -155,7 +150,6 @@ class DateTime
     {
         return DateTimeExcel\Date::fromYMD($year, $month, $day);
     }
-
     /**
      * TIME.
      *
@@ -190,7 +184,6 @@ class DateTime
     {
         return DateTimeExcel\Time::fromHMS($hour, $minute, $second);
     }
-
     /**
      * DATEVALUE.
      *
@@ -224,7 +217,6 @@ class DateTime
     {
         return DateTimeExcel\DateValue::fromString($dateValue);
     }
-
     /**
      * TIMEVALUE.
      *
@@ -254,7 +246,6 @@ class DateTime
     {
         return DateTimeExcel\TimeValue::fromString($timeValue);
     }
-
     /**
      * DATEDIF.
      *
@@ -277,7 +268,6 @@ class DateTime
     {
         return DateTimeExcel\Difference::interval($startDate, $endDate, $unit);
     }
-
     /**
      * DAYS.
      *
@@ -301,7 +291,6 @@ class DateTime
     {
         return DateTimeExcel\Days::between($endDate, $startDate);
     }
-
     /**
      * DAYS360.
      *
@@ -334,11 +323,10 @@ class DateTime
      *
      * @return array|int|string Number of days between start date and end date
      */
-    public static function DAYS360($startDate = 0, $endDate = 0, $method = false)
+    public static function DAYS360($startDate = 0, $endDate = 0, $method = \false)
     {
         return DateTimeExcel\Days360::between($startDate, $endDate, $method);
     }
-
     /**
      * YEARFRAC.
      *
@@ -374,7 +362,6 @@ class DateTime
     {
         return DateTimeExcel\YearFrac::fraction($startDate, $endDate, $method);
     }
-
     /**
      * NETWORKDAYS.
      *
@@ -402,7 +389,6 @@ class DateTime
     {
         return DateTimeExcel\NetworkDays::count($startDate, $endDate, ...$dateArgs);
     }
-
     /**
      * WORKDAY.
      *
@@ -432,7 +418,6 @@ class DateTime
     {
         return DateTimeExcel\WorkDay::date($startDate, $endDays, ...$dateArgs);
     }
-
     /**
      * DAYOFMONTH.
      *
@@ -455,7 +440,6 @@ class DateTime
     {
         return DateTimeExcel\DateParts::day($dateValue);
     }
-
     /**
      * WEEKDAY.
      *
@@ -482,7 +466,6 @@ class DateTime
     {
         return DateTimeExcel\Week::day($dateValue, $style);
     }
-
     /**
      * STARTWEEK_SUNDAY.
      *
@@ -491,7 +474,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_SUNDAY
      */
     const STARTWEEK_SUNDAY = 1;
-
     /**
      * STARTWEEK_MONDAY.
      *
@@ -500,7 +482,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_MONDAY
      */
     const STARTWEEK_MONDAY = 2;
-
     /**
      * STARTWEEK_MONDAY_ALT.
      *
@@ -509,7 +490,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_MONDAY_ALT
      */
     const STARTWEEK_MONDAY_ALT = 11;
-
     /**
      * STARTWEEK_TUESDAY.
      *
@@ -518,7 +498,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_TUESDAY
      */
     const STARTWEEK_TUESDAY = 12;
-
     /**
      * STARTWEEK_WEDNESDAY.
      *
@@ -527,7 +506,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_WEDNESDAY
      */
     const STARTWEEK_WEDNESDAY = 13;
-
     /**
      * STARTWEEK_THURSDAY.
      *
@@ -536,7 +514,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_THURSDAY
      */
     const STARTWEEK_THURSDAY = 14;
-
     /**
      * STARTWEEK_FRIDAY.
      *
@@ -545,7 +522,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_FRIDAY
      */
     const STARTWEEK_FRIDAY = 15;
-
     /**
      * STARTWEEK_SATURDAY.
      *
@@ -554,7 +530,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_SATURDAY
      */
     const STARTWEEK_SATURDAY = 16;
-
     /**
      * STARTWEEK_SUNDAY_ALT.
      *
@@ -563,7 +538,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_SUNDAY_ALT
      */
     const STARTWEEK_SUNDAY_ALT = 17;
-
     /**
      * DOW_SUNDAY.
      *
@@ -572,7 +546,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_SUNDAY
      */
     const DOW_SUNDAY = 1;
-
     /**
      * DOW_MONDAY.
      *
@@ -581,7 +554,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_MONDAY
      */
     const DOW_MONDAY = 2;
-
     /**
      * DOW_TUESDAY.
      *
@@ -590,7 +562,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_TUESDAY
      */
     const DOW_TUESDAY = 3;
-
     /**
      * DOW_WEDNESDAY.
      *
@@ -599,7 +570,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_WEDNESDAY
      */
     const DOW_WEDNESDAY = 4;
-
     /**
      * DOW_THURSDAY.
      *
@@ -608,7 +578,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_THURSDAY
      */
     const DOW_THURSDAY = 5;
-
     /**
      * DOW_FRIDAY.
      *
@@ -617,7 +586,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_FRIDAY
      */
     const DOW_FRIDAY = 6;
-
     /**
      * DOW_SATURDAY.
      *
@@ -626,7 +594,6 @@ class DateTime
      * @see DateTimeExcel\Constants::DOW_SATURDAY
      */
     const DOW_SATURDAY = 7;
-
     /**
      * STARTWEEK_MONDAY_ISO.
      *
@@ -635,7 +602,6 @@ class DateTime
      * @see DateTimeExcel\Constants::STARTWEEK_MONDAY_ISO
      */
     const STARTWEEK_MONDAY_ISO = 21;
-
     /**
      * METHODARR.
      *
@@ -643,19 +609,7 @@ class DateTime
      *  Use DateTimeExcel\Constants::METHODARR
      * @see DateTimeExcel\Constants::METHODARR
      */
-    const METHODARR = [
-        self::STARTWEEK_SUNDAY => self::DOW_SUNDAY,
-        self::DOW_MONDAY,
-        self::STARTWEEK_MONDAY_ALT => self::DOW_MONDAY,
-        self::DOW_TUESDAY,
-        self::DOW_WEDNESDAY,
-        self::DOW_THURSDAY,
-        self::DOW_FRIDAY,
-        self::DOW_SATURDAY,
-        self::DOW_SUNDAY,
-        self::STARTWEEK_MONDAY_ISO => self::STARTWEEK_MONDAY_ISO,
-    ];
-
+    const METHODARR = [self::STARTWEEK_SUNDAY => self::DOW_SUNDAY, self::DOW_MONDAY, self::STARTWEEK_MONDAY_ALT => self::DOW_MONDAY, self::DOW_TUESDAY, self::DOW_WEDNESDAY, self::DOW_THURSDAY, self::DOW_FRIDAY, self::DOW_SATURDAY, self::DOW_SUNDAY, self::STARTWEEK_MONDAY_ISO => self::STARTWEEK_MONDAY_ISO];
     /**
      * WEEKNUM.
      *
@@ -689,11 +643,10 @@ class DateTime
      *
      * @return array|int|string Week Number
      */
-    public static function WEEKNUM($dateValue = 1, $method = /** @scrutinizer ignore-deprecated */ self::STARTWEEK_SUNDAY)
+    public static function WEEKNUM($dateValue = 1, $method = self::STARTWEEK_SUNDAY)
     {
         return DateTimeExcel\Week::number($dateValue, $method);
     }
-
     /**
      * ISOWEEKNUM.
      *
@@ -715,7 +668,6 @@ class DateTime
     {
         return DateTimeExcel\Week::isoWeekNumber($dateValue);
     }
-
     /**
      * MONTHOFYEAR.
      *
@@ -738,7 +690,6 @@ class DateTime
     {
         return DateTimeExcel\DateParts::month($dateValue);
     }
-
     /**
      * YEAR.
      *
@@ -761,7 +712,6 @@ class DateTime
     {
         return DateTimeExcel\DateParts::year($dateValue);
     }
-
     /**
      * HOUROFDAY.
      *
@@ -784,7 +734,6 @@ class DateTime
     {
         return DateTimeExcel\TimeParts::hour($timeValue);
     }
-
     /**
      * MINUTE.
      *
@@ -807,7 +756,6 @@ class DateTime
     {
         return DateTimeExcel\TimeParts::minute($timeValue);
     }
-
     /**
      * SECOND.
      *
@@ -830,7 +778,6 @@ class DateTime
     {
         return DateTimeExcel\TimeParts::second($timeValue);
     }
-
     /**
      * EDATE.
      *
@@ -859,7 +806,6 @@ class DateTime
     {
         return DateTimeExcel\Month::adjust($dateValue, $adjustmentMonths);
     }
-
     /**
      * EOMONTH.
      *

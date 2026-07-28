@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Database;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Database;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Variances;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Variances;
 class DVarP extends DatabaseAbstract
 {
     /**
@@ -39,9 +38,6 @@ class DVarP extends DatabaseAbstract
         if ($field === null) {
             return ExcelError::VALUE();
         }
-
-        return Variances::VARP(
-            self::getFilteredColumn($database, $field, $criteria)
-        );
+        return Variances::VARP(self::getFilteredColumn($database, $field, $criteria));
     }
 }

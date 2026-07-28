@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\RichText;
+namespace WPDT\PhpOffice\PhpSpreadsheet\RichText;
 
 class TextElement implements ITextElement
 {
@@ -10,7 +10,6 @@ class TextElement implements ITextElement
      * @var string
      */
     private $text;
-
     /**
      * Create a new TextElement instance.
      *
@@ -21,7 +20,6 @@ class TextElement implements ITextElement
         // Initialise variables
         $this->text = $text;
     }
-
     /**
      * Get text.
      *
@@ -31,7 +29,6 @@ class TextElement implements ITextElement
     {
         return $this->text;
     }
-
     /**
      * Set text.
      *
@@ -42,10 +39,8 @@ class TextElement implements ITextElement
     public function setText($text)
     {
         $this->text = $text;
-
         return $this;
     }
-
     /**
      * Get font. For this class, the return value is always null.
      *
@@ -55,7 +50,6 @@ class TextElement implements ITextElement
     {
         return null;
     }
-
     /**
      * Get hash code.
      *
@@ -63,9 +57,6 @@ class TextElement implements ITextElement
      */
     public function getHashCode()
     {
-        return md5(
-            $this->text .
-            __CLASS__
-        );
+        return \md5($this->text . __CLASS__);
     }
 }

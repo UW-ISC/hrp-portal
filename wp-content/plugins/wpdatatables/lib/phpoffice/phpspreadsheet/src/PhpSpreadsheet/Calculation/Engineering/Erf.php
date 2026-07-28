@@ -1,17 +1,14 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Engineering;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Engineering;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Erf
 {
     use ArrayEnabled;
-
-    private const TWO_SQRT_PI = 1.128379167095512574;
-
+    private const TWO_SQRT_PI = 1.1283791670955126;
     /**
      * ERF.
      *
@@ -37,22 +34,19 @@ class Erf
      */
     public static function ERF($lower, $upper = null)
     {
-        if (is_array($lower) || is_array($upper)) {
+        if (\is_array($lower) || \is_array($upper)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $lower, $upper);
         }
-
-        if (is_numeric($lower)) {
+        if (\is_numeric($lower)) {
             if ($upper === null) {
                 return self::erfValue($lower);
             }
-            if (is_numeric($upper)) {
+            if (\is_numeric($upper)) {
                 return self::erfValue($upper) - self::erfValue($lower);
             }
         }
-
         return ExcelError::VALUE();
     }
-
     /**
      * ERFPRECISE.
      *
@@ -70,13 +64,11 @@ class Erf
      */
     public static function ERFPRECISE($limit)
     {
-        if (is_array($limit)) {
+        if (\is_array($limit)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $limit);
         }
-
         return self::ERF($limit);
     }
-
     /**
      * Method to calculate the erf value.
      *
@@ -87,11 +79,11 @@ class Erf
     public static function erfValue($value)
     {
         $value = (float) $value;
-        if (abs($value) > 2.2) {
+        if (\abs($value) > 2.2) {
             return 1 - ErfC::ERFC($value);
         }
         $sum = $term = $value;
-        $xsqr = ($value * $value);
+        $xsqr = $value * $value;
         $j = 1;
         do {
             $term *= $xsqr / $j;
@@ -103,8 +95,7 @@ class Erf
             if ($sum == 0.0) {
                 break;
             }
-        } while (abs($term / $sum) > Functions::PRECISION);
-
+        } while (\abs($term / $sum) > Functions::PRECISION);
         return self::TWO_SQRT_PI * $sum;
     }
 }

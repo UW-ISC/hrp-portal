@@ -1,6 +1,6 @@
 <?php
 
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Date;
 
 defined('ABSPATH') or die('Access denied.');
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
 
-use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
-use PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter;
 class Column
 {
     const AUTOFILTER_FILTERTYPE_FILTER = 'filters';
@@ -15,7 +14,6 @@ class Column
     //    Even though the filter rule is constant, the filtered data can vary
     //        e.g. filtered by date = TODAY
     const AUTOFILTER_FILTERTYPE_TOPTENFILTER = 'top10';
-
     /**
      * Types of autofilter rules.
      *
@@ -31,63 +29,51 @@ class Column
         self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER,
         self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,
     ];
-
     // Multiple Rule Connections
     const AUTOFILTER_COLUMN_JOIN_AND = 'and';
     const AUTOFILTER_COLUMN_JOIN_OR = 'or';
-
     /**
      * Join options for autofilter rules.
      *
      * @var string[]
      */
-    private static $ruleJoins = [
-        self::AUTOFILTER_COLUMN_JOIN_AND,
-        self::AUTOFILTER_COLUMN_JOIN_OR,
-    ];
-
+    private static $ruleJoins = [self::AUTOFILTER_COLUMN_JOIN_AND, self::AUTOFILTER_COLUMN_JOIN_OR];
     /**
      * Autofilter.
      *
      * @var null|AutoFilter
      */
     private $parent;
-
     /**
      * Autofilter Column Index.
      *
      * @var string
      */
     private $columnIndex = '';
-
     /**
      * Autofilter Column Filter Type.
      *
      * @var string
      */
     private $filterType = self::AUTOFILTER_FILTERTYPE_FILTER;
-
     /**
      * Autofilter Multiple Rules And/Or.
      *
      * @var string
      */
     private $join = self::AUTOFILTER_COLUMN_JOIN_OR;
-
     /**
      * Autofilter Column Rules.
      *
      * @var Column\Rule[]
      */
     private $ruleset = [];
-
     /**
      * Autofilter Column Dynamic Attributes.
      *
      * @var mixed[]
      */
     private $attributes = [];
-
     /**
      * Create a new Column.
      *
@@ -99,14 +85,12 @@ class Column
         $this->columnIndex = $column;
         $this->parent = $parent;
     }
-
-    public function setEvaluatedFalse(): void
+    public function setEvaluatedFalse() : void
     {
         if ($this->parent !== null) {
-            $this->parent->setEvaluated(false);
+            $this->parent->setEvaluated(\false);
         }
     }
-
     /**
      * Get AutoFilter column index as string eg: 'A'.
      *
@@ -116,7 +100,6 @@ class Column
     {
         return $this->columnIndex;
     }
-
     /**
      * Set AutoFilter column index as string eg: 'A'.
      *
@@ -128,16 +111,13 @@ class Column
     {
         $this->setEvaluatedFalse();
         // Uppercase coordinate
-        $column = strtoupper($column);
+        $column = \strtoupper($column);
         if ($this->parent !== null) {
             $this->parent->testColumnInRange($column);
         }
-
         $this->columnIndex = $column;
-
         return $this;
     }
-
     /**
      * Get this Column's AutoFilter Parent.
      *
@@ -147,7 +127,6 @@ class Column
     {
         return $this->parent;
     }
-
     /**
      * Set this Column's AutoFilter Parent.
      *
@@ -157,10 +136,8 @@ class Column
     {
         $this->setEvaluatedFalse();
         $this->parent = $parent;
-
         return $this;
     }
-
     /**
      * Get AutoFilter Type.
      *
@@ -170,7 +147,6 @@ class Column
     {
         return $this->filterType;
     }
-
     /**
      * Set AutoFilter Type.
      *
@@ -181,18 +157,15 @@ class Column
     public function setFilterType($filterType)
     {
         $this->setEvaluatedFalse();
-        if (!in_array($filterType, self::$filterTypes)) {
+        if (!\in_array($filterType, self::$filterTypes)) {
             throw new PhpSpreadsheetException('Invalid filter type for column AutoFilter.');
         }
-        if ($filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && count($this->ruleset) > 2) {
+        if ($filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && \count($this->ruleset) > 2) {
             throw new PhpSpreadsheetException('No more than 2 rules are allowed in a Custom Filter');
         }
-
         $this->filterType = $filterType;
-
         return $this;
     }
-
     /**
      * Get AutoFilter Multiple Rules And/Or Join.
      *
@@ -202,7 +175,6 @@ class Column
     {
         return $this->join;
     }
-
     /**
      * Set AutoFilter Multiple Rules And/Or.
      *
@@ -214,16 +186,13 @@ class Column
     {
         $this->setEvaluatedFalse();
         // Lowercase And/Or
-        $join = strtolower($join);
-        if (!in_array($join, self::$ruleJoins)) {
+        $join = \strtolower($join);
+        if (!\in_array($join, self::$ruleJoins)) {
             throw new PhpSpreadsheetException('Invalid rule connection for column AutoFilter.');
         }
-
         $this->join = $join;
-
         return $this;
     }
-
     /**
      * Set AutoFilter Attributes.
      *
@@ -235,10 +204,8 @@ class Column
     {
         $this->setEvaluatedFalse();
         $this->attributes = $attributes;
-
         return $this;
     }
-
     /**
      * Set An AutoFilter Attribute.
      *
@@ -251,10 +218,8 @@ class Column
     {
         $this->setEvaluatedFalse();
         $this->attributes[$name] = $value;
-
         return $this;
     }
-
     /**
      * Get AutoFilter Column Attributes.
      *
@@ -264,7 +229,6 @@ class Column
     {
         return $this->attributes;
     }
-
     /**
      * Get specific AutoFilter Column Attribute.
      *
@@ -277,15 +241,12 @@ class Column
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
-
         return null;
     }
-
-    public function ruleCount(): int
+    public function ruleCount() : int
     {
-        return count($this->ruleset);
+        return \count($this->ruleset);
     }
-
     /**
      * Get all AutoFilter Column Rules.
      *
@@ -295,7 +256,6 @@ class Column
     {
         return $this->ruleset;
     }
-
     /**
      * Get a specified AutoFilter Column Rule.
      *
@@ -308,10 +268,8 @@ class Column
         if (!isset($this->ruleset[$index])) {
             $this->ruleset[$index] = new Column\Rule($this);
         }
-
         return $this->ruleset[$index];
     }
-
     /**
      * Create a new AutoFilter Column Rule in the ruleset.
      *
@@ -320,14 +278,12 @@ class Column
     public function createRule()
     {
         $this->setEvaluatedFalse();
-        if ($this->filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && count($this->ruleset) >= 2) {
+        if ($this->filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && \count($this->ruleset) >= 2) {
             throw new PhpSpreadsheetException('No more than 2 rules are allowed in a Custom Filter');
         }
         $this->ruleset[] = new Column\Rule($this);
-
-        return end($this->ruleset);
+        return \end($this->ruleset);
     }
-
     /**
      * Add a new AutoFilter Column Rule to the ruleset.
      *
@@ -338,10 +294,8 @@ class Column
         $this->setEvaluatedFalse();
         $rule->setParent($this);
         $this->ruleset[] = $rule;
-
         return $this;
     }
-
     /**
      * Delete a specified AutoFilter Column Rule
      * If the number of rules is reduced to 1, then we reset And/Or logic to Or.
@@ -356,14 +310,12 @@ class Column
         if (isset($this->ruleset[$index])) {
             unset($this->ruleset[$index]);
             //    If we've just deleted down to a single rule, then reset And/Or joining to Or
-            if (count($this->ruleset) <= 1) {
+            if (\count($this->ruleset) <= 1) {
                 $this->setJoin(self::AUTOFILTER_COLUMN_JOIN_OR);
             }
         }
-
         return $this;
     }
-
     /**
      * Delete all AutoFilter Column Rules.
      *
@@ -374,16 +326,14 @@ class Column
         $this->setEvaluatedFalse();
         $this->ruleset = [];
         $this->setJoin(self::AUTOFILTER_COLUMN_JOIN_OR);
-
         return $this;
     }
-
     /**
      * Implement PHP __clone to create a deep clone, not just a shallow copy.
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
             if ($key === 'parent') {
                 // Detach from autofilter parent
@@ -393,11 +343,12 @@ class Column
                 $this->ruleset = [];
                 foreach ($value as $k => $v) {
                     $cloned = clone $v;
-                    $cloned->setParent($this); // attach the new cloned Rule to this new cloned Autofilter Cloned object
+                    $cloned->setParent($this);
+                    // attach the new cloned Rule to this new cloned Autofilter Cloned object
                     $this->ruleset[$k] = $cloned;
                 }
             } else {
-                $this->$key = $value;
+                $this->{$key} = $value;
             }
         }
     }

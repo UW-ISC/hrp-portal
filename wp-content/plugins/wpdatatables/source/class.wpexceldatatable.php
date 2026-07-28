@@ -26,6 +26,16 @@ class WPExcelDataTable extends WPDataTable
         wp_enqueue_script('wpdatatables-urijs', WDT_JS_PATH . 'urijs/URI.min.js', array(), WDT_CURRENT_VERSION);
 
         wp_enqueue_script('moment', WDT_JS_PATH . 'moment/moment.js', array(), WDT_CURRENT_VERSION);
+        $locale = get_user_locale();
+        $localeShort = substr($locale, 0, 2);
+        $localeFile = $localeShort . '.js';
+
+        $localePath = WDT_ROOT_PATH . 'assets/js/moment/locale/' . $localeFile;
+
+        if ( ! file_exists( $localePath ) ) {
+            $localeShort = strtolower($locale);
+        }
+        wp_enqueue_script('moment-locale', WDT_JS_PATH . 'moment/locale/' . $localeShort . '.js', array('moment'), WDT_CURRENT_VERSION, true);
 
         wp_enqueue_media();
 
@@ -194,7 +204,7 @@ class WPExcelDataTable extends WPDataTable
 
         $obj = apply_filters('wpdatatables_excel_filter_table_description', $obj, $this->getWpId());
 
-        return json_encode($obj, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG);
+        return json_encode($obj, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DropStatement.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the whole DROP TABLE statement. 
@@ -49,15 +49,15 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DropStatementBuilder implements Builder {
-
-	protected function buildDROP( $parsed ) {
-		$builder = new DropBuilder();
-		return $builder->build( $parsed );
-	}
-
-	public function build( array $parsed ) {
-		return $this->buildDROP( $parsed );
-	}
+class DropStatementBuilder implements Builder
+{
+    protected function buildDROP($parsed)
+    {
+        $builder = new DropBuilder();
+        return $builder->build($parsed);
+    }
+    public function build(array $parsed)
+    {
+        return $this->buildDROP($parsed);
+    }
 }
-?>

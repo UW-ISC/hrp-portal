@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CreateIndexTypeBuilder.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  * 
  */
-
-namespace PHPSQLParser\builders;
+namespace WPDT\PHPSQLParser\builders;
 
 /**
  * This class implements the builder for the index type of a CREATE INDEX
@@ -50,13 +50,13 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateIndexTypeBuilder extends IndexTypeBuilder {
-
-    public function build(array $parsed) {
-        if (!isset($parsed['index-type']) || $parsed['index-type'] === false) {
+class CreateIndexTypeBuilder extends IndexTypeBuilder
+{
+    public function build(array $parsed)
+    {
+        if (!isset($parsed['index-type']) || $parsed['index-type'] === \false) {
             return '';
         }
         return parent::build($parsed['index-type']);
     }
 }
-?>

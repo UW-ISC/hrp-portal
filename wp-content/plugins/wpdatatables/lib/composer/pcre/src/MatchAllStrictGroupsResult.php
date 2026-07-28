@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  */
-
-namespace Composer\Pcre;
+namespace WPDT\Composer\Pcre;
 
 final class MatchAllStrictGroupsResult
 {
@@ -20,19 +19,16 @@ final class MatchAllStrictGroupsResult
      * @var array<int|string, list<string>>
      */
     public $matches;
-
     /**
      * @readonly
      * @var 0|positive-int
      */
     public $count;
-
     /**
      * @readonly
      * @var bool
      */
     public $matched;
-
     /**
      * @param 0|positive-int $count
      * @param array<list<string>> $matches

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexKeyBuilder.php
  *
@@ -38,11 +39,10 @@
  * @version   SVN: $Id$
  * 
  */
+namespace WPDT\PHPSQLParser\builders;
 
-namespace PHPSQLParser\builders;
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use WPDT\PHPSQLParser\exceptions\UnableToCreateSQLException;
+use WPDT\PHPSQLParser\utils\ExpressionType;
 /**
  * This class implements the builder for the index key part of a CREATE TABLE statement. 
  * You can overwrite all functions to achieve another handling.
@@ -51,49 +51,47 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class FulltextIndexBuilder implements Builder {
-
-    protected function buildReserved($parsed) {
+class FulltextIndexBuilder implements Builder
+{
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildIndexKey($parsed) {
+    protected function buildIndexKey($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::INDEX) {
             return "";
         }
         return $parsed['base_expr'];
     }
-    
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::FULLTEXT_IDX) {
             return "";
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = \strlen($sql);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildColumnList($v);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildIndexKey($v);
-
-            if ($len == strlen($sql)) {
+            if ($len == \strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE fulltext-index key subtree', $k, $v, 'expr_type');
             }
-
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return \substr($sql, 0, -1);
     }
 }
-?>

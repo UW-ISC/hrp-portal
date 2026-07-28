@@ -1,14 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\LookupRef;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\LookupRef;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Cell;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use WPDT\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class Offset
 {
     /**
@@ -47,112 +46,87 @@ class Offset
         $columns = Functions::flattenSingleValue($columns);
         $height = Functions::flattenSingleValue($height);
         $width = Functions::flattenSingleValue($width);
-
         if ($cellAddress === null || $cellAddress === '') {
             return ExcelError::VALUE();
         }
-
-        if (!is_object($cell)) {
+        if (!\is_object($cell)) {
             return ExcelError::REF();
         }
-
         [$cellAddress, $worksheet] = self::extractWorksheet($cellAddress, $cell);
-
         $startCell = $endCell = $cellAddress;
-        if (strpos($cellAddress, ':')) {
-            [$startCell, $endCell] = explode(':', $cellAddress);
+        if (\strpos($cellAddress, ':')) {
+            [$startCell, $endCell] = \explode(':', $cellAddress);
         }
         [$startCellColumn, $startCellRow] = Coordinate::coordinateFromString($startCell);
         [$endCellColumn, $endCellRow] = Coordinate::coordinateFromString($endCell);
-
         $startCellRow += $rows;
         $startCellColumn = Coordinate::columnIndexFromString($startCellColumn) - 1;
         $startCellColumn += $columns;
-
-        if (($startCellRow <= 0) || ($startCellColumn < 0)) {
+        if ($startCellRow <= 0 || $startCellColumn < 0) {
             return ExcelError::REF();
         }
-
         $endCellColumn = self::adjustEndCellColumnForWidth($endCellColumn, $width, $startCellColumn, $columns);
         $startCellColumn = Coordinate::stringFromColumnIndex($startCellColumn + 1);
-
         $endCellRow = self::adustEndCellRowForHeight($height, $startCellRow, $rows, $endCellRow);
-
-        if (($endCellRow <= 0) || ($endCellColumn < 0)) {
+        if ($endCellRow <= 0 || $endCellColumn < 0) {
             return ExcelError::REF();
         }
         $endCellColumn = Coordinate::stringFromColumnIndex($endCellColumn + 1);
-
         $cellAddress = "{$startCellColumn}{$startCellRow}";
-        if (($startCellColumn != $endCellColumn) || ($startCellRow != $endCellRow)) {
+        if ($startCellColumn != $endCellColumn || $startCellRow != $endCellRow) {
             $cellAddress .= ":{$endCellColumn}{$endCellRow}";
         }
-
         return self::extractRequiredCells($worksheet, $cellAddress);
     }
-
     /** @return mixed */
     private static function extractRequiredCells(?Worksheet $worksheet, string $cellAddress)
     {
-        return Calculation::getInstance($worksheet !== null ? $worksheet->getParent() : null)
-            ->extractCellRange($cellAddress, $worksheet, false);
+        return Calculation::getInstance($worksheet !== null ? $worksheet->getParent() : null)->extractCellRange($cellAddress, $worksheet, \false);
     }
-
-    private static function extractWorksheet(?string $cellAddress, Cell $cell): array
+    private static function extractWorksheet(?string $cellAddress, Cell $cell) : array
     {
         $cellAddress = self::assessCellAddress($cellAddress ?? '', $cell);
-
         $sheetName = '';
-        if (strpos($cellAddress, '!') !== false) {
-            [$sheetName, $cellAddress] = Worksheet::extractSheetTitle($cellAddress, true);
-            $sheetName = trim($sheetName, "'");
+        if (\strpos($cellAddress, '!') !== \false) {
+            [$sheetName, $cellAddress] = Worksheet::extractSheetTitle($cellAddress, \true);
+            $sheetName = \trim($sheetName, "'");
         }
-
-        $worksheet = ($sheetName !== '')
-            ? $cell->getWorksheet()->getParentOrThrow()->getSheetByName($sheetName)
-            : $cell->getWorksheet();
-
+        $worksheet = $sheetName !== '' ? $cell->getWorksheet()->getParentOrThrow()->getSheetByName($sheetName) : $cell->getWorksheet();
         return [$cellAddress, $worksheet];
     }
-
-    private static function assessCellAddress(string $cellAddress, Cell $cell): string
+    private static function assessCellAddress(string $cellAddress, Cell $cell) : string
     {
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/mui', $cellAddress) !== false) {
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/mui', $cellAddress) !== \false) {
             $cellAddress = Functions::expandDefinedName($cellAddress, $cell);
         }
-
         return $cellAddress;
     }
-
     /**
      * @param mixed $width
      * @param mixed $columns
      */
-    private static function adjustEndCellColumnForWidth(string $endCellColumn, $width, int $startCellColumn, $columns): int
+    private static function adjustEndCellColumnForWidth(string $endCellColumn, $width, int $startCellColumn, $columns) : int
     {
         $endCellColumn = Coordinate::columnIndexFromString($endCellColumn) - 1;
-        if (($width !== null) && (!is_object($width))) {
+        if ($width !== null && !\is_object($width)) {
             $endCellColumn = $startCellColumn + (int) $width - 1;
         } else {
             $endCellColumn += (int) $columns;
         }
-
         return $endCellColumn;
     }
-
     /**
      * @param mixed $height
      * @param mixed $rows
      * @param mixed $endCellRow
      */
-    private static function adustEndCellRowForHeight($height, int $startCellRow, $rows, $endCellRow): int
+    private static function adustEndCellRowForHeight($height, int $startCellRow, $rows, $endCellRow) : int
     {
-        if (($height !== null) && (!is_object($height))) {
+        if ($height !== null && !\is_object($height)) {
             $endCellRow = $startCellRow + (int) $height - 1;
         } else {
             $endCellRow += (int) $rows;
         }
-
         return $endCellRow;
     }
 }

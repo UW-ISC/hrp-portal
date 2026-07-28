@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Chart\Renderer;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Chart\Renderer;
 
 /**
  * Jpgraph is not oficially maintained in Composer, so the version there
@@ -15,26 +15,24 @@ namespace PhpOffice\PhpSpreadsheet\Chart\Renderer;
  */
 class JpGraph extends JpGraphRendererBase
 {
-    protected static function init(): void
+    protected static function init() : void
     {
-        static $loaded = false;
+        static $loaded = \false;
         if ($loaded) {
             return;
         }
-
         // JpGraph is no longer included with distribution, but user may install it.
         // So Scrutinizer's complaint that it can't find it is reasonable, but unfixable.
-        \JpGraph\JpGraph::load();
-        \JpGraph\JpGraph::module('bar');
-        \JpGraph\JpGraph::module('contour');
-        \JpGraph\JpGraph::module('line');
-        \JpGraph\JpGraph::module('pie');
-        \JpGraph\JpGraph::module('pie3d');
-        \JpGraph\JpGraph::module('radar');
-        \JpGraph\JpGraph::module('regstat');
-        \JpGraph\JpGraph::module('scatter');
-        \JpGraph\JpGraph::module('stock');
-
-        $loaded = true;
+        \WPDT\JpGraph\JpGraph::load();
+        \WPDT\JpGraph\JpGraph::module('bar');
+        \WPDT\JpGraph\JpGraph::module('contour');
+        \WPDT\JpGraph\JpGraph::module('line');
+        \WPDT\JpGraph\JpGraph::module('pie');
+        \WPDT\JpGraph\JpGraph::module('pie3d');
+        \WPDT\JpGraph\JpGraph::module('radar');
+        \WPDT\JpGraph\JpGraph::module('regstat');
+        \WPDT\JpGraph\JpGraph::module('scatter');
+        \WPDT\JpGraph\JpGraph::module('stock');
+        $loaded = \true;
     }
 }

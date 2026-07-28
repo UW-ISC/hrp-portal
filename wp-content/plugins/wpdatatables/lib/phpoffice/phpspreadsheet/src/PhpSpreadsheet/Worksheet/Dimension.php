@@ -1,9 +1,8 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Worksheet;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Worksheet;
 
-use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 abstract class Dimension
 {
     /**
@@ -11,29 +10,25 @@ abstract class Dimension
      *
      * @var bool
      */
-    private $visible = true;
-
+    private $visible = \true;
     /**
      * Outline level.
      *
      * @var int
      */
     private $outlineLevel = 0;
-
     /**
      * Collapsed.
      *
      * @var bool
      */
-    private $collapsed = false;
-
+    private $collapsed = \false;
     /**
      * Index to cellXf. Null value means row has no explicit cellXf format.
      *
      * @var null|int
      */
     private $xfIndex;
-
     /**
      * Create a new Dimension.
      *
@@ -44,15 +39,13 @@ abstract class Dimension
         // set dimension as unformatted by default
         $this->xfIndex = $initialValue;
     }
-
     /**
      * Get Visible.
      */
-    public function getVisible(): bool
+    public function getVisible() : bool
     {
         return $this->visible;
     }
-
     /**
      * Set Visible.
      *
@@ -61,18 +54,15 @@ abstract class Dimension
     public function setVisible(bool $visible)
     {
         $this->visible = $visible;
-
         return $this;
     }
-
     /**
      * Get Outline Level.
      */
-    public function getOutlineLevel(): int
+    public function getOutlineLevel() : int
     {
         return $this->outlineLevel;
     }
-
     /**
      * Set Outline Level.
      * Value must be between 0 and 7.
@@ -84,20 +74,16 @@ abstract class Dimension
         if ($level < 0 || $level > 7) {
             throw new PhpSpreadsheetException('Outline level must range between 0 and 7.');
         }
-
         $this->outlineLevel = $level;
-
         return $this;
     }
-
     /**
      * Get Collapsed.
      */
-    public function getCollapsed(): bool
+    public function getCollapsed() : bool
     {
         return $this->collapsed;
     }
-
     /**
      * Set Collapsed.
      *
@@ -106,20 +92,17 @@ abstract class Dimension
     public function setCollapsed(bool $collapsed)
     {
         $this->collapsed = $collapsed;
-
         return $this;
     }
-
     /**
      * Get index to cellXf.
      *
      * @return int
      */
-    public function getXfIndex(): ?int
+    public function getXfIndex() : ?int
     {
         return $this->xfIndex;
     }
-
     /**
      * Set index to cellXf.
      *
@@ -128,7 +111,6 @@ abstract class Dimension
     public function setXfIndex(int $XfIndex)
     {
         $this->xfIndex = $XfIndex;
-
         return $this;
     }
 }

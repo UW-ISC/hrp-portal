@@ -1,12 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial;
 
-use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 class Amortization
 {
     /**
@@ -39,25 +38,15 @@ class Amortization
      *
      * @return float|string (string containing the error type if there is an error)
      */
-    public static function AMORDEGRC(
-        $cost,
-        $purchased,
-        $firstPeriod,
-        $salvage,
-        $period,
-        $rate,
-        $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-    ) {
+    public static function AMORDEGRC($cost, $purchased, $firstPeriod, $salvage, $period, $rate, $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD)
+    {
         $cost = Functions::flattenSingleValue($cost);
         $purchased = Functions::flattenSingleValue($purchased);
         $firstPeriod = Functions::flattenSingleValue($firstPeriod);
         $salvage = Functions::flattenSingleValue($salvage);
         $period = Functions::flattenSingleValue($period);
         $rate = Functions::flattenSingleValue($rate);
-        $basis = ($basis === null)
-            ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-            : Functions::flattenSingleValue($basis);
-
+        $basis = $basis === null ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD : Functions::flattenSingleValue($basis);
         try {
             $cost = FinancialValidations::validateFloat($cost);
             $purchased = FinancialValidations::validateDate($purchased);
@@ -69,41 +58,35 @@ class Amortization
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $yearFracx = DateTimeExcel\YearFrac::fraction($purchased, $firstPeriod, $basis);
-        if (is_string($yearFracx)) {
+        if (\is_string($yearFracx)) {
             return $yearFracx;
         }
         /** @var float */
         $yearFrac = $yearFracx;
-
         $amortiseCoeff = self::getAmortizationCoefficient($rate);
-
         $rate *= $amortiseCoeff;
-        $rate = (float) (string) $rate; // ugly way to avoid rounding problem
-        $fNRate = round($yearFrac * $rate * $cost, 0);
+        $rate = (float) (string) $rate;
+        // ugly way to avoid rounding problem
+        $fNRate = \round($yearFrac * $rate * $cost, 0);
         $cost -= $fNRate;
         $fRest = $cost - $salvage;
-
         for ($n = 0; $n < $period; ++$n) {
-            $fNRate = round($rate * $cost, 0);
+            $fNRate = \round($rate * $cost, 0);
             $fRest -= $fNRate;
-
             if ($fRest < 0.0) {
                 switch ($period - $n) {
                     case 0:
                     case 1:
-                        return round($cost * 0.5, 0);
+                        return \round($cost * 0.5, 0);
                     default:
                         return 0.0;
                 }
             }
             $cost -= $fNRate;
         }
-
         return $fNRate;
     }
-
     /**
      * AMORLINC.
      *
@@ -129,25 +112,15 @@ class Amortization
      *
      * @return float|string (string containing the error type if there is an error)
      */
-    public static function AMORLINC(
-        $cost,
-        $purchased,
-        $firstPeriod,
-        $salvage,
-        $period,
-        $rate,
-        $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-    ) {
+    public static function AMORLINC($cost, $purchased, $firstPeriod, $salvage, $period, $rate, $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD)
+    {
         $cost = Functions::flattenSingleValue($cost);
         $purchased = Functions::flattenSingleValue($purchased);
         $firstPeriod = Functions::flattenSingleValue($firstPeriod);
         $salvage = Functions::flattenSingleValue($salvage);
         $period = Functions::flattenSingleValue($period);
         $rate = Functions::flattenSingleValue($rate);
-        $basis = ($basis === null)
-            ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-            : Functions::flattenSingleValue($basis);
-
+        $basis = $basis === null ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD : Functions::flattenSingleValue($basis);
         try {
             $cost = FinancialValidations::validateFloat($cost);
             $purchased = FinancialValidations::validateDate($purchased);
@@ -159,41 +132,31 @@ class Amortization
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $fOneRate = $cost * $rate;
         $fCostDelta = $cost - $salvage;
         //    Note, quirky variation for leap years on the YEARFRAC for this function
         $purchasedYear = DateTimeExcel\DateParts::year($purchased);
         $yearFracx = DateTimeExcel\YearFrac::fraction($purchased, $firstPeriod, $basis);
-        if (is_string($yearFracx)) {
+        if (\is_string($yearFracx)) {
             return $yearFracx;
         }
         /** @var float */
         $yearFrac = $yearFracx;
-
-        if (
-            $basis == FinancialConstants::BASIS_DAYS_PER_YEAR_ACTUAL
-            && $yearFrac < 1
-            && DateTimeExcel\Helpers::isLeapYear(Functions::scalar($purchasedYear))
-        ) {
+        if ($basis == FinancialConstants::BASIS_DAYS_PER_YEAR_ACTUAL && $yearFrac < 1 && DateTimeExcel\Helpers::isLeapYear(Functions::scalar($purchasedYear))) {
             $yearFrac *= 365 / 366;
         }
-
         $f0Rate = $yearFrac * $rate * $cost;
         $nNumOfFullPeriods = (int) (($cost - $salvage - $f0Rate) / $fOneRate);
-
         if ($period == 0) {
             return $f0Rate;
         } elseif ($period <= $nNumOfFullPeriods) {
             return $fOneRate;
-        } elseif ($period == ($nNumOfFullPeriods + 1)) {
+        } elseif ($period == $nNumOfFullPeriods + 1) {
             return $fCostDelta - $fOneRate * $nNumOfFullPeriods - $f0Rate;
         }
-
         return 0.0;
     }
-
-    private static function getAmortizationCoefficient(float $rate): float
+    private static function getAmortizationCoefficient(float $rate) : float
     {
         //    The depreciation coefficients are:
         //    Life of assets (1/rate)        Depreciation coefficient
@@ -202,7 +165,6 @@ class Amortization
         //    Between 5 and 6 years        2
         //    More than 6 years            2.5
         $fUsePer = 1.0 / $rate;
-
         if ($fUsePer < 3.0) {
             return 1.0;
         } elseif ($fUsePer < 4.0) {
@@ -210,7 +172,6 @@ class Amortization
         } elseif ($fUsePer <= 6.0) {
             return 2.0;
         }
-
         return 2.5;
     }
 }

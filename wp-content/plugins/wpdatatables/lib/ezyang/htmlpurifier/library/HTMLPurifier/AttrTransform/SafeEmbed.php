@@ -1,12 +1,13 @@
 <?php
 
+namespace WPDT;
+
 class HTMLPurifier_AttrTransform_SafeEmbed extends HTMLPurifier_AttrTransform
 {
     /**
      * @type string
      */
     public $name = "SafeEmbed";
-
     /**
      * @param array $attr
      * @param HTMLPurifier_Config $config
@@ -21,5 +22,4 @@ class HTMLPurifier_AttrTransform_SafeEmbed extends HTMLPurifier_AttrTransform
         return $attr;
     }
 }
-
 // vim: et sw=4 sts=4

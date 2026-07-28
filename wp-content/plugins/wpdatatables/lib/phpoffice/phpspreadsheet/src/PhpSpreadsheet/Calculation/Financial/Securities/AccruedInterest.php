@@ -1,18 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities;
 
-use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\YearFrac;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\YearFrac;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 class AccruedInterest
 {
-    public const ACCRINT_CALCMODE_ISSUE_TO_SETTLEMENT = true;
-
-    public const ACCRINT_CALCMODE_FIRST_INTEREST_TO_SETTLEMENT = false;
-
+    public const ACCRINT_CALCMODE_ISSUE_TO_SETTLEMENT = \true;
+    public const ACCRINT_CALCMODE_FIRST_INTEREST_TO_SETTLEMENT = \false;
     /**
      * ACCRINT.
      *
@@ -44,29 +41,16 @@ class AccruedInterest
      *
      * @return float|string Result, or a string containing an error
      */
-    public static function periodic(
-        $issue,
-        $firstInterest,
-        $settlement,
-        $rate,
-        $parValue = 1000,
-        $frequency = FinancialConstants::FREQUENCY_ANNUAL,
-        $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD,
-        $calcMethod = self::ACCRINT_CALCMODE_ISSUE_TO_SETTLEMENT
-    ) {
+    public static function periodic($issue, $firstInterest, $settlement, $rate, $parValue = 1000, $frequency = FinancialConstants::FREQUENCY_ANNUAL, $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD, $calcMethod = self::ACCRINT_CALCMODE_ISSUE_TO_SETTLEMENT)
+    {
         self::doNothing($calcMethod);
         $issue = Functions::flattenSingleValue($issue);
         $firstInterest = Functions::flattenSingleValue($firstInterest);
         $settlement = Functions::flattenSingleValue($settlement);
         $rate = Functions::flattenSingleValue($rate);
-        $parValue = ($parValue === null) ? 1000 : Functions::flattenSingleValue($parValue);
-        $frequency = ($frequency === null)
-            ? FinancialConstants::FREQUENCY_ANNUAL
-            : Functions::flattenSingleValue($frequency);
-        $basis = ($basis === null)
-            ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-            : Functions::flattenSingleValue($basis);
-
+        $parValue = $parValue === null ? 1000 : Functions::flattenSingleValue($parValue);
+        $frequency = $frequency === null ? FinancialConstants::FREQUENCY_ANNUAL : Functions::flattenSingleValue($frequency);
+        $basis = $basis === null ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD : Functions::flattenSingleValue($basis);
         try {
             $issue = SecurityValidations::validateIssueDate($issue);
             $settlement = SecurityValidations::validateSettlementDate($settlement);
@@ -79,21 +63,18 @@ class AccruedInterest
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $daysBetweenIssueAndSettlement = Functions::scalar(YearFrac::fraction($issue, $settlement, $basis));
-        if (!is_numeric($daysBetweenIssueAndSettlement)) {
+        if (!\is_numeric($daysBetweenIssueAndSettlement)) {
             //    return date error
             return $daysBetweenIssueAndSettlement;
         }
         $daysBetweenFirstInterestAndSettlement = Functions::scalar(YearFrac::fraction($firstInterest, $settlement, $basis));
-        if (!is_numeric($daysBetweenFirstInterestAndSettlement)) {
+        if (!\is_numeric($daysBetweenFirstInterestAndSettlement)) {
             //    return date error
             return $daysBetweenFirstInterestAndSettlement;
         }
-
         return $parValue * $rate * $daysBetweenIssueAndSettlement;
     }
-
     /**
      * ACCRINTM.
      *
@@ -116,21 +97,13 @@ class AccruedInterest
      *
      * @return float|string Result, or a string containing an error
      */
-    public static function atMaturity(
-        $issue,
-        $settlement,
-        $rate,
-        $parValue = 1000,
-        $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-    ) {
+    public static function atMaturity($issue, $settlement, $rate, $parValue = 1000, $basis = FinancialConstants::BASIS_DAYS_PER_YEAR_NASD)
+    {
         $issue = Functions::flattenSingleValue($issue);
         $settlement = Functions::flattenSingleValue($settlement);
         $rate = Functions::flattenSingleValue($rate);
-        $parValue = ($parValue === null) ? 1000 : Functions::flattenSingleValue($parValue);
-        $basis = ($basis === null)
-            ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
-            : Functions::flattenSingleValue($basis);
-
+        $parValue = $parValue === null ? 1000 : Functions::flattenSingleValue($parValue);
+        $basis = $basis === null ? FinancialConstants::BASIS_DAYS_PER_YEAR_NASD : Functions::flattenSingleValue($basis);
         try {
             $issue = SecurityValidations::validateIssueDate($issue);
             $settlement = SecurityValidations::validateSettlementDate($settlement);
@@ -141,18 +114,15 @@ class AccruedInterest
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $daysBetweenIssueAndSettlement = Functions::scalar(YearFrac::fraction($issue, $settlement, $basis));
-        if (!is_numeric($daysBetweenIssueAndSettlement)) {
+        if (!\is_numeric($daysBetweenIssueAndSettlement)) {
             //    return date error
             return $daysBetweenIssueAndSettlement;
         }
-
         return $parValue * $rate * $daysBetweenIssueAndSettlement;
     }
-
     /** @param mixed $arg */
-    private static function doNothing($arg): bool
+    private static function doNothing($arg) : bool
     {
         return (bool) $arg;
     }

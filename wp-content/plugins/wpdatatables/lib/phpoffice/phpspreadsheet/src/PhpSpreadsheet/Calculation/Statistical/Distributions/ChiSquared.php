@@ -1,18 +1,15 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class ChiSquared
 {
     use ArrayEnabled;
-
-    private const EPS = 2.22e-16;
-
+    private const EPS = 2.22E-16;
     /**
      * CHIDIST.
      *
@@ -29,17 +26,15 @@ class ChiSquared
      */
     public static function distributionRightTail($value, $degrees)
     {
-        if (is_array($value) || is_array($degrees)) {
+        if (\is_array($value) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $degrees = DistributionValidations::validateInt($degrees);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($degrees < 1) {
             return ExcelError::NAN();
         }
@@ -47,13 +42,10 @@ class ChiSquared
             if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
                 return 1;
             }
-
             return ExcelError::NAN();
         }
-
-        return 1 - (Gamma::incompleteGamma($degrees / 2, $value / 2) / Gamma::gammaValue($degrees / 2));
+        return 1 - Gamma::incompleteGamma($degrees / 2, $value / 2) / Gamma::gammaValue($degrees / 2);
     }
-
     /**
      * CHIDIST.
      *
@@ -72,10 +64,9 @@ class ChiSquared
      */
     public static function distributionLeftTail($value, $degrees, $cumulative)
     {
-        if (is_array($value) || is_array($degrees) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($degrees) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $degrees = DistributionValidations::validateInt($degrees);
@@ -83,7 +74,6 @@ class ChiSquared
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($degrees < 1) {
             return ExcelError::NAN();
         }
@@ -91,18 +81,13 @@ class ChiSquared
             if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
                 return 1;
             }
-
             return ExcelError::NAN();
         }
-
-        if ($cumulative === true) {
+        if ($cumulative === \true) {
             return 1 - self::distributionRightTail($value, $degrees);
         }
-
-        return ($value ** (($degrees / 2) - 1) * exp(-$value / 2)) /
-            ((2 ** ($degrees / 2)) * Gamma::gammaValue($degrees / 2));
+        return $value ** ($degrees / 2 - 1) * \exp(-$value / 2) / (2 ** ($degrees / 2) * Gamma::gammaValue($degrees / 2));
     }
-
     /**
      * CHIINV.
      *
@@ -119,31 +104,24 @@ class ChiSquared
      */
     public static function inverseRightTail($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
-
         try {
             $probability = DistributionValidations::validateProbability($probability);
             $degrees = DistributionValidations::validateInt($degrees);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($degrees < 1) {
             return ExcelError::NAN();
         }
-
-        $callback = function ($value) use ($degrees) {
-            return 1 - (Gamma::incompleteGamma($degrees / 2, $value / 2)
-                    / Gamma::gammaValue($degrees / 2));
+        $callback = function ($value) use($degrees) {
+            return 1 - Gamma::incompleteGamma($degrees / 2, $value / 2) / Gamma::gammaValue($degrees / 2);
         };
-
         $newtonRaphson = new NewtonRaphson($callback);
-
         return $newtonRaphson->execute($probability);
     }
-
     /**
      * CHIINV.
      *
@@ -160,24 +138,20 @@ class ChiSquared
      */
     public static function inverseLeftTail($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
-
         try {
             $probability = DistributionValidations::validateProbability($probability);
             $degrees = DistributionValidations::validateInt($degrees);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         if ($degrees < 1) {
             return ExcelError::NAN();
         }
-
         return self::inverseLeftTailCalculation($probability, $degrees);
     }
-
     /**
      * CHITEST.
      *
@@ -192,17 +166,15 @@ class ChiSquared
      */
     public static function test($actual, $expected)
     {
-        $rows = count($actual);
+        $rows = \count($actual);
         $actual = Functions::flattenArray($actual);
         $expected = Functions::flattenArray($expected);
-        $columns = intdiv(count($actual), $rows);
-
-        $countActuals = count($actual);
-        $countExpected = count($expected);
+        $columns = \intdiv(\count($actual), $rows);
+        $countActuals = \count($actual);
+        $countExpected = \count($expected);
         if ($countActuals !== $countExpected || $countActuals === 1) {
             return ExcelError::NAN();
         }
-
         $result = 0.0;
         for ($i = 0; $i < $countActuals; ++$i) {
             if ($expected[$i] == 0.0) {
@@ -210,44 +182,35 @@ class ChiSquared
             } elseif ($expected[$i] < 0.0) {
                 return ExcelError::NAN();
             }
-            $result += (($actual[$i] - $expected[$i]) ** 2) / $expected[$i];
+            $result += ($actual[$i] - $expected[$i]) ** 2 / $expected[$i];
         }
-
         $degrees = self::degrees($rows, $columns);
-
         $result = Functions::scalar(self::distributionRightTail($result, $degrees));
-
         return $result;
     }
-
-    protected static function degrees(int $rows, int $columns): int
+    protected static function degrees(int $rows, int $columns) : int
     {
         if ($rows === 1) {
             return $columns - 1;
         } elseif ($columns === 1) {
             return $rows - 1;
         }
-
         return ($columns - 1) * ($rows - 1);
     }
-
-    private static function inverseLeftTailCalculation(float $probability, int $degrees): float
+    private static function inverseLeftTailCalculation(float $probability, int $degrees) : float
     {
         // bracket the root
         $min = 0;
-        $sd = sqrt(2.0 * $degrees);
+        $sd = \sqrt(2.0 * $degrees);
         $max = 2 * $sd;
         $s = -1;
-
         while ($s * self::pchisq($max, $degrees) > $probability * $s) {
             $min = $max;
             $max += 2 * $sd;
         }
-
         // Find root using bisection
         $chi2 = 0.5 * ($min + $max);
-
-        while (($max - $min) > self::EPS * $chi2) {
+        while ($max - $min > self::EPS * $chi2) {
             if ($s * self::pchisq($chi2, $degrees) > $probability * $s) {
                 $min = $chi2;
             } else {
@@ -255,29 +218,24 @@ class ChiSquared
             }
             $chi2 = 0.5 * ($min + $max);
         }
-
         return $chi2;
     }
-
-    private static function pchisq(float $chi2, int $degrees): float
+    private static function pchisq(float $chi2, int $degrees) : float
     {
         return self::gammp($degrees, 0.5 * $chi2);
     }
-
-    private static function gammp(int $n, float $x): float
+    private static function gammp(int $n, float $x) : float
     {
         if ($x < 0.5 * $n + 1) {
             return self::gser($n, $x);
         }
-
         return 1 - self::gcf($n, $x);
     }
-
     // Return the incomplete gamma function P(n/2,x) evaluated by
     // series representation. Algorithm from numerical recipe.
     // Assume that n is a positive integer and x>0, won't check arguments.
     // Relative error controlled by the eps parameter
-    private static function gser(int $n, float $x): float
+    private static function gser(int $n, float $x) : float
     {
         /** @var float */
         $gln = Gamma::ln($n / 2);
@@ -293,21 +251,19 @@ class ChiSquared
                 break;
             }
         }
-
-        return $sum * exp(-$x + $a * log($x) - $gln);
+        return $sum * \exp(-$x + $a * \log($x) - $gln);
     }
-
     // Return the incomplete gamma function Q(n/2,x) evaluated by
     // its continued fraction representation. Algorithm from numerical recipe.
     // Assume that n is a postive integer and x>0, won't check arguments.
     // Relative error controlled by the eps parameter
-    private static function gcf(int $n, float $x): float
+    private static function gcf(int $n, float $x) : float
     {
         /** @var float */
         $gln = Gamma::ln($n / 2);
         $a = 0.5 * $n;
         $b = $x + 1 - $a;
-        $fpmin = 1.e-300;
+        $fpmin = 1.0E-300;
         $c = 1 / $fpmin;
         $d = 1 / $b;
         $h = $d;
@@ -315,21 +271,20 @@ class ChiSquared
             $an = -$i * ($i - $a);
             $b += 2;
             $d = $an * $d + $b;
-            if (abs($d) < $fpmin) {
+            if (\abs($d) < $fpmin) {
                 $d = $fpmin;
             }
             $c = $b + $an / $c;
-            if (abs($c) < $fpmin) {
+            if (\abs($c) < $fpmin) {
                 $c = $fpmin;
             }
             $d = 1 / $d;
             $del = $d * $c;
             $h = $h * $del;
-            if (abs($del - 1) < self::EPS) {
+            if (\abs($del - 1) < self::EPS) {
                 break;
             }
         }
-
-        return $h * exp(-$x + $a * log($x) - $gln);
+        return $h * \exp(-$x + $a * \log($x) - $gln);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Validates tel (for phone numbers).
  *
@@ -8,19 +10,16 @@
  * numbers so that they only include (possibly) a leading plus,
  * and then any number of digits and x'es.
  */
-
 class HTMLPurifier_URIScheme_tel extends HTMLPurifier_URIScheme
 {
     /**
      * @type bool
      */
-    public $browsable = false;
-
+    public $browsable = \false;
     /**
      * @type bool
      */
-    public $may_omit_host = true;
-
+    public $may_omit_host = \true;
     /**
      * @param HTMLPurifier_URI $uri
      * @param HTMLPurifier_Config $config
@@ -30,17 +29,17 @@ class HTMLPurifier_URIScheme_tel extends HTMLPurifier_URIScheme
     public function doValidate(&$uri, $config, $context)
     {
         $uri->userinfo = null;
-        $uri->host     = null;
-        $uri->port     = null;
-
+        $uri->host = null;
+        $uri->port = null;
         // Delete all non-numeric characters, commas, and non-x characters
         // from phone number, EXCEPT for a leading plus sign.
-        $uri->path = preg_replace('/(?!^\+)[^\dx,]/', '',
-                     // Normalize e(x)tension to lower-case
-                     str_replace('X', 'x', rawurldecode($uri->path)));
-
-        return true;
+        $uri->path = \preg_replace(
+            '/(?!^\\+)[^\\dx,]/',
+            '',
+            // Normalize e(x)tension to lower-case
+            \str_replace('X', 'x', \rawurldecode($uri->path))
+        );
+        return \true;
     }
 }
-
 // vim: et sw=4 sts=4

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DefaultProcessor.php
  *
@@ -38,8 +39,7 @@
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace WPDT\PHPSQLParser\processors;
 
 /**
  * This class processes the incoming sql string.
@@ -48,41 +48,37 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DefaultProcessor extends AbstractProcessor {
-
-    protected function isUnion($tokens) {
+class DefaultProcessor extends AbstractProcessor
+{
+    protected function isUnion($tokens)
+    {
         return UnionProcessor::isUnion($tokens);
     }
-
-    protected function processUnion($tokens) {
+    protected function processUnion($tokens)
+    {
         // this is the highest level lexical analysis. This is the part of the
         // code which finds UNION and UNION ALL query parts
         $processor = new UnionProcessor($this->options);
         return $processor->process($tokens);
     }
-
-    protected function processSQL($tokens) {
+    protected function processSQL($tokens)
+    {
         $processor = new SQLProcessor($this->options);
         return $processor->process($tokens);
     }
-
-    public function process($sql) {
-
+    public function process($sql)
+    {
         $inputArray = $this->splitSQLIntoTokens($sql);
         $queries = $this->processUnion($inputArray);
-
         // If there was no UNION or UNION ALL in the query, then the query is
         // stored at $queries[0].
         if (!empty($queries) && !$this->isUnion($queries)) {
             $queries = $this->processSQL($queries[0]);
         }
-
         return $queries;
     }
-
-    public function revokeQuotation($sql) {
+    public function revokeQuotation($sql)
+    {
         return parent::revokeQuotation($sql);
     }
 }
-
-?>

@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Exception as CalcException;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception as CalcException;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 class Counts extends AggregateBase
 {
     /**
@@ -22,7 +21,6 @@ class Counts extends AggregateBase
     public static function COUNT(...$args)
     {
         $returnValue = 0;
-
         // Loop through arguments
         $aArgs = Functions::flattenArrayIndexed($args);
         foreach ($aArgs as $k => $arg) {
@@ -30,14 +28,12 @@ class Counts extends AggregateBase
             // Is it a numeric value?
             // Strings containing numeric values are only counted if they are string literals (not cell values)
             //    and then only in MS Excel and in Open Office, not in Gnumeric
-            if (self::isAcceptedCountable($arg, $k, true)) {
+            if (self::isAcceptedCountable($arg, $k, \true)) {
                 ++$returnValue;
             }
         }
-
         return $returnValue;
     }
-
     /**
      * COUNTA.
      *
@@ -53,19 +49,16 @@ class Counts extends AggregateBase
     public static function COUNTA(...$args)
     {
         $returnValue = 0;
-
         // Loop through arguments
         $aArgs = Functions::flattenArrayIndexed($args);
         foreach ($aArgs as $k => $arg) {
             // Nulls are counted if literals, but not if cell values
-            if ($arg !== null || (!Functions::isCellValue($k))) {
+            if ($arg !== null || !Functions::isCellValue($k)) {
                 ++$returnValue;
             }
         }
-
         return $returnValue;
     }
-
     /**
      * COUNTBLANK.
      *
@@ -83,20 +76,18 @@ class Counts extends AggregateBase
         if ($range === null) {
             return 1;
         }
-        if (!is_array($range) || array_key_exists(0, $range)) {
+        if (!\is_array($range) || \array_key_exists(0, $range)) {
             throw new CalcException('Must specify range of cells, not any kind of literal');
         }
         $returnValue = 0;
-
         // Loop through arguments
         $aArgs = Functions::flattenArray($range);
         foreach ($aArgs as $arg) {
             // Is it a blank cell?
-            if (($arg === null) || ((is_string($arg)) && ($arg == ''))) {
+            if ($arg === null || \is_string($arg) && $arg == '') {
                 ++$returnValue;
             }
         }
-
         return $returnValue;
     }
 }

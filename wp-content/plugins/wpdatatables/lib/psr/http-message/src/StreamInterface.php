@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Psr\Http\Message;
+declare (strict_types=1);
+namespace WPDT\Psr\Http\Message;
 
 /**
  * Describes a data stream.
@@ -28,14 +27,12 @@ interface StreamInterface
      * @return string
      */
     public function __toString();
-
     /**
      * Closes the stream and any underlying resources.
      *
      * @return void
      */
     public function close();
-
     /**
      * Separates any underlying resources from the stream.
      *
@@ -44,14 +41,12 @@ interface StreamInterface
      * @return resource|null Underlying PHP stream, if any
      */
     public function detach();
-
     /**
      * Get the size of the stream if known.
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
      */
     public function getSize();
-
     /**
      * Returns the current position of the file read/write pointer
      *
@@ -59,21 +54,18 @@ interface StreamInterface
      * @throws \RuntimeException on error.
      */
     public function tell();
-
     /**
      * Returns true if the stream is at the end of the stream.
      *
      * @return bool
      */
     public function eof();
-
     /**
      * Returns whether or not the stream is seekable.
      *
      * @return bool
      */
     public function isSeekable();
-
     /**
      * Seek to a position in the stream.
      *
@@ -86,8 +78,7 @@ interface StreamInterface
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws \RuntimeException on failure.
      */
-    public function seek(int $offset, int $whence = SEEK_SET);
-
+    public function seek(int $offset, int $whence = \SEEK_SET);
     /**
      * Seek to the beginning of the stream.
      *
@@ -99,14 +90,12 @@ interface StreamInterface
      * @throws \RuntimeException on failure.
      */
     public function rewind();
-
     /**
      * Returns whether or not the stream is writable.
      *
      * @return bool
      */
     public function isWritable();
-
     /**
      * Write data to the stream.
      *
@@ -115,14 +104,12 @@ interface StreamInterface
      * @throws \RuntimeException on failure.
      */
     public function write(string $string);
-
     /**
      * Returns whether or not the stream is readable.
      *
      * @return bool
      */
     public function isReadable();
-
     /**
      * Read data from the stream.
      *
@@ -134,7 +121,6 @@ interface StreamInterface
      * @throws \RuntimeException if an error occurs.
      */
     public function read(int $length);
-
     /**
      * Returns the remaining contents in a string
      *
@@ -143,7 +129,6 @@ interface StreamInterface
      *     reading.
      */
     public function getContents();
-
     /**
      * Get stream metadata as an associative array or retrieve a specific key.
      *

@@ -24,12 +24,13 @@
 <?php if ($this->serverSide()): ?>
     <?php wp_nonce_field('wdtFrontendServerSideNonce' . $this->getWpId(), 'wdtNonceFrontendServerSide_' . $this->getWpId()); ?>
 <?php endif; ?>
+<?php wp_nonce_field('wdtFrontendElementorNonce' . $this->getWpId(), 'wdtFrontendelementorNonce_' . $this->getWpId(), false, true); ?>
 <input type="hidden" id="<?php echo esc_attr($this->getId()) ?>_desc"
-       value='<?php echo $this->getJsonDescription(); ?>'/>
+       value='<?php echo esc_attr($this->getJsonDescription()); ?>'/>
 
 <?php if (!$this->serverSide()): ?>
     <input type="hidden" id="<?php echo esc_attr($this->getId()) ?>_data"
-           value='<?php echo json_encode($this->getDataRows(), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG); ?>'/>
+           value='<?php echo esc_attr(json_encode($this->getDataRows(), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG)); ?>'/>
 <?php endif; ?>
 <?php if ($this->isGlobalSearch()): ?>
     <div id="<?php echo esc_attr($this->getId()) ?>_search_filter" class="wpExcelTable_search_filter">

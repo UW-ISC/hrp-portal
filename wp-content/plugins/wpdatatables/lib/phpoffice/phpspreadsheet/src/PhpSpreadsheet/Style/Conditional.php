@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Style;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Style;
 
-use PhpOffice\PhpSpreadsheet\IComparable;
-use PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\ConditionalDataBar;
-
+use WPDT\PhpOffice\PhpSpreadsheet\IComparable;
+use WPDT\PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\ConditionalDataBar;
 class Conditional implements IComparable
 {
     // Condition types
@@ -23,25 +22,7 @@ class Conditional implements IComparable
     const CONDITION_TIMEPERIOD = 'timePeriod';
     const CONDITION_DUPLICATES = 'duplicateValues';
     const CONDITION_UNIQUE = 'uniqueValues';
-
-    private const CONDITION_TYPES = [
-        self::CONDITION_BEGINSWITH,
-        self::CONDITION_CELLIS,
-        self::CONDITION_CONTAINSBLANKS,
-        self::CONDITION_CONTAINSERRORS,
-        self::CONDITION_CONTAINSTEXT,
-        self::CONDITION_DATABAR,
-        self::CONDITION_DUPLICATES,
-        self::CONDITION_ENDSWITH,
-        self::CONDITION_EXPRESSION,
-        self::CONDITION_NONE,
-        self::CONDITION_NOTCONTAINSBLANKS,
-        self::CONDITION_NOTCONTAINSERRORS,
-        self::CONDITION_NOTCONTAINSTEXT,
-        self::CONDITION_TIMEPERIOD,
-        self::CONDITION_UNIQUE,
-    ];
-
+    private const CONDITION_TYPES = [self::CONDITION_BEGINSWITH, self::CONDITION_CELLIS, self::CONDITION_CONTAINSBLANKS, self::CONDITION_CONTAINSERRORS, self::CONDITION_CONTAINSTEXT, self::CONDITION_DATABAR, self::CONDITION_DUPLICATES, self::CONDITION_ENDSWITH, self::CONDITION_EXPRESSION, self::CONDITION_NONE, self::CONDITION_NOTCONTAINSBLANKS, self::CONDITION_NOTCONTAINSERRORS, self::CONDITION_NOTCONTAINSTEXT, self::CONDITION_TIMEPERIOD, self::CONDITION_UNIQUE];
     // Operator types
     const OPERATOR_NONE = '';
     const OPERATOR_BEGINSWITH = 'beginsWith';
@@ -56,7 +37,6 @@ class Conditional implements IComparable
     const OPERATOR_NOTCONTAINS = 'notContains';
     const OPERATOR_BETWEEN = 'between';
     const OPERATOR_NOTBETWEEN = 'notBetween';
-
     const TIMEPERIOD_TODAY = 'today';
     const TIMEPERIOD_YESTERDAY = 'yesterday';
     const TIMEPERIOD_TOMORROW = 'tomorrow';
@@ -67,78 +47,65 @@ class Conditional implements IComparable
     const TIMEPERIOD_LAST_MONTH = 'lastMonth';
     const TIMEPERIOD_THIS_MONTH = 'thisMonth';
     const TIMEPERIOD_NEXT_MONTH = 'nextMonth';
-
     /**
      * Condition type.
      *
      * @var string
      */
     private $conditionType = self::CONDITION_NONE;
-
     /**
      * Operator type.
      *
      * @var string
      */
     private $operatorType = self::OPERATOR_NONE;
-
     /**
      * Text.
      *
      * @var string
      */
     private $text;
-
     /**
      * Stop on this condition, if it matches.
      *
      * @var bool
      */
-    private $stopIfTrue = false;
-
+    private $stopIfTrue = \false;
     /**
      * Condition.
      *
      * @var (bool|float|int|string)[]
      */
     private $condition = [];
-
     /**
      * @var ConditionalDataBar
      */
     private $dataBar;
-
     /**
      * Style.
      *
      * @var Style
      */
     private $style;
-
     /** @var bool */
-    private $noFormatSet = false;
-
+    private $noFormatSet = \false;
     /**
      * Create a new Conditional.
      */
     public function __construct()
     {
         // Initialise values
-        $this->style = new Style(false, true);
+        $this->style = new Style(\false, \true);
     }
-
-    public function getNoFormatSet(): bool
+    public function getNoFormatSet() : bool
     {
         return $this->noFormatSet;
     }
-
-    public function setNoFormatSet(bool $noFormatSet): self
+    public function setNoFormatSet(bool $noFormatSet) : self
     {
         $this->noFormatSet = $noFormatSet;
-
         return $this;
     }
-
     /**
      * Get Condition type.
      *
@@ -148,7 +115,6 @@ class Conditional implements IComparable
     {
         return $this->conditionType;
     }
-
     /**
      * Set Condition type.
      *
@@ -159,10 +125,8 @@ class Conditional implements IComparable
     public function setConditionType($type)
     {
         $this->conditionType = $type;
-
         return $this;
     }
-
     /**
      * Get Operator type.
      *
@@ -172,7 +136,6 @@ class Conditional implements IComparable
     {
         return $this->operatorType;
     }
-
     /**
      * Set Operator type.
      *
@@ -183,10 +146,8 @@ class Conditional implements IComparable
     public function setOperatorType($type)
     {
         $this->operatorType = $type;
-
         return $this;
     }
-
     /**
      * Get text.
      *
@@ -196,7 +157,6 @@ class Conditional implements IComparable
     {
         return $this->text;
     }
-
     /**
      * Set text.
      *
@@ -207,10 +167,8 @@ class Conditional implements IComparable
     public function setText($text)
     {
         $this->text = $text;
-
         return $this;
     }
-
     /**
      * Get StopIfTrue.
      *
@@ -220,7 +178,6 @@ class Conditional implements IComparable
     {
         return $this->stopIfTrue;
     }
-
     /**
      * Set StopIfTrue.
      *
@@ -231,10 +188,8 @@ class Conditional implements IComparable
     public function setStopIfTrue($stopIfTrue)
     {
         $this->stopIfTrue = $stopIfTrue;
-
         return $this;
     }
-
     /**
      * Get Conditions.
      *
@@ -244,7 +199,6 @@ class Conditional implements IComparable
     {
         return $this->condition;
     }
-
     /**
      * Set Conditions.
      *
@@ -254,14 +208,12 @@ class Conditional implements IComparable
      */
     public function setConditions($conditions)
     {
-        if (!is_array($conditions)) {
+        if (!\is_array($conditions)) {
             $conditions = [$conditions];
         }
         $this->condition = $conditions;
-
         return $this;
     }
-
     /**
      * Add Condition.
      *
@@ -272,10 +224,8 @@ class Conditional implements IComparable
     public function addCondition($condition)
     {
         $this->condition[] = $condition;
-
         return $this;
     }
-
     /**
      * Get Style.
      *
@@ -285,7 +235,6 @@ class Conditional implements IComparable
     {
         return $this->style;
     }
-
     /**
      * Set Style.
      *
@@ -294,10 +243,8 @@ class Conditional implements IComparable
     public function setStyle(Style $style)
     {
         $this->style = $style;
-
         return $this;
     }
-
     /**
      * get DataBar.
      *
@@ -307,7 +254,6 @@ class Conditional implements IComparable
     {
         return $this->dataBar;
     }
-
     /**
      * set DataBar.
      *
@@ -316,10 +262,8 @@ class Conditional implements IComparable
     public function setDataBar(ConditionalDataBar $dataBar)
     {
         $this->dataBar = $dataBar;
-
         return $this;
     }
-
     /**
      * Get hash code.
      *
@@ -327,35 +271,27 @@ class Conditional implements IComparable
      */
     public function getHashCode()
     {
-        return md5(
-            $this->conditionType .
-            $this->operatorType .
-            implode(';', $this->condition) .
-            $this->style->getHashCode() .
-            __CLASS__
-        );
+        return \md5($this->conditionType . $this->operatorType . \implode(';', $this->condition) . $this->style->getHashCode() . __CLASS__);
     }
-
     /**
      * Implement PHP __clone to create a deep clone, not just a shallow copy.
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
+            if (\is_object($value)) {
+                $this->{$key} = clone $value;
             } else {
-                $this->$key = $value;
+                $this->{$key} = $value;
             }
         }
     }
-
     /**
      * Verify if param is valid condition type.
      */
-    public static function isValidConditionType(string $type): bool
+    public static function isValidConditionType(string $type) : bool
     {
-        return in_array($type, self::CONDITION_TYPES);
+        return \in_array($type, self::CONDITION_TYPES);
     }
 }

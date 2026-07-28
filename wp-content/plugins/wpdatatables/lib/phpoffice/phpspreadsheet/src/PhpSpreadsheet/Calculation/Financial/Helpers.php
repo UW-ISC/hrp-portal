@@ -1,12 +1,11 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Financial;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial;
 
 use DateTimeInterface;
-use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Financial\Constants as FinancialConstants;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Helpers
 {
     /**
@@ -26,10 +25,9 @@ class Helpers
      */
     public static function daysPerYear($year, $basis = 0)
     {
-        if (!is_numeric($basis)) {
+        if (!\is_numeric($basis)) {
             return ExcelError::NAN();
         }
-
         switch ($basis) {
             case FinancialConstants::BASIS_DAYS_PER_YEAR_NASD:
             case FinancialConstants::BASIS_DAYS_PER_YEAR_360:
@@ -38,12 +36,10 @@ class Helpers
             case FinancialConstants::BASIS_DAYS_PER_YEAR_365:
                 return 365;
             case FinancialConstants::BASIS_DAYS_PER_YEAR_ACTUAL:
-                return (DateTimeExcel\Helpers::isLeapYear($year)) ? 366 : 365;
+                return DateTimeExcel\Helpers::isLeapYear($year) ? 366 : 365;
         }
-
         return ExcelError::NAN();
     }
-
     /**
      * isLastDayOfMonth.
      *
@@ -51,7 +47,7 @@ class Helpers
      *
      * @param DateTimeInterface $date The date for testing
      */
-    public static function isLastDayOfMonth(DateTimeInterface $date): bool
+    public static function isLastDayOfMonth(DateTimeInterface $date) : bool
     {
         return $date->format('d') === $date->format('t');
     }

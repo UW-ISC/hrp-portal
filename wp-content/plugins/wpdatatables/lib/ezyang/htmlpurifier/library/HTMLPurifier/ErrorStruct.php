@@ -1,5 +1,7 @@
 <?php
 
+namespace WPDT;
+
 /**
  * Records errors for particular segments of an HTML document such as tokens,
  * attributes or CSS properties. They can contain error structs (which apply
@@ -8,21 +10,18 @@
  */
 class HTMLPurifier_ErrorStruct
 {
-
     /**
      * Possible values for $children first-key. Note that top-level structures
      * are automatically token-level.
      */
-    const TOKEN     = 0;
-    const ATTR      = 1;
-    const CSSPROP   = 2;
-
+    const TOKEN = 0;
+    const ATTR = 1;
+    const CSSPROP = 2;
     /**
      * Type of this struct.
      * @type string
      */
     public $type;
-
     /**
      * Value of the struct we are recording errors for. There are various
      * values for this:
@@ -32,13 +31,11 @@ class HTMLPurifier_ErrorStruct
      * @type mixed
      */
     public $value;
-
     /**
      * Errors registered for this structure.
      * @type array
      */
     public $errors = array();
-
     /**
      * Child ErrorStructs that are from this structure. For example, a TOKEN
      * ErrorStruct would contain ATTR ErrorStructs. This is a multi-dimensional
@@ -46,7 +43,6 @@ class HTMLPurifier_ErrorStruct
      * @type array
      */
     public $children = array();
-
     /**
      * @param string $type
      * @param string $id
@@ -60,7 +56,6 @@ class HTMLPurifier_ErrorStruct
         }
         return $this->children[$type][$id];
     }
-
     /**
      * @param int $severity
      * @param string $message
@@ -70,5 +65,4 @@ class HTMLPurifier_ErrorStruct
         $this->errors[] = array($severity, $message);
     }
 }
-
 // vim: et sw=4 sts=4

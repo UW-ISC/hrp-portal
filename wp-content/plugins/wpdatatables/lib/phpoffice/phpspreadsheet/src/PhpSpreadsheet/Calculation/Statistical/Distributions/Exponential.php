@@ -1,15 +1,13 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 class Exponential
 {
     use ArrayEnabled;
-
     /**
      * EXPONDIST.
      *
@@ -30,10 +28,9 @@ class Exponential
      */
     public static function distribution($value, $lambda, $cumulative)
     {
-        if (is_array($value) || is_array($lambda) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($lambda) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $lambda, $cumulative);
         }
-
         try {
             $value = DistributionValidations::validateFloat($value);
             $lambda = DistributionValidations::validateFloat($lambda);
@@ -41,15 +38,12 @@ class Exponential
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        if (($value < 0) || ($lambda < 0)) {
+        if ($value < 0 || $lambda < 0) {
             return ExcelError::NAN();
         }
-
-        if ($cumulative === true) {
-            return 1 - exp(0 - $value * $lambda);
+        if ($cumulative === \true) {
+            return 1 - \exp(0 - $value * $lambda);
         }
-
-        return $lambda * exp(0 - $value * $lambda);
+        return $lambda * \exp(0 - $value * $lambda);
     }
 }

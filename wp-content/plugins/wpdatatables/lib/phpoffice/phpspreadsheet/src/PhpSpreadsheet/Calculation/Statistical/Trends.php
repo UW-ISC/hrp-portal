@@ -1,62 +1,53 @@
 <?php
 
-namespace PhpOffice\PhpSpreadsheet\Calculation\Statistical;
+namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Statistical;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
-use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use PhpOffice\PhpSpreadsheet\Shared\Trend\Trend;
-
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Exception;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
+use WPDT\PhpOffice\PhpSpreadsheet\Shared\Trend\Trend;
 class Trends
 {
     use ArrayEnabled;
-
-    private static function filterTrendValues(array &$array1, array &$array2): void
+    private static function filterTrendValues(array &$array1, array &$array2) : void
     {
         foreach ($array1 as $key => $value) {
-            if ((is_bool($value)) || (is_string($value)) || ($value === null)) {
+            if (\is_bool($value) || \is_string($value) || $value === null) {
                 unset($array1[$key], $array2[$key]);
             }
         }
     }
-
     /**
      * @param mixed $array1 should be array, but scalar is made into one
      * @param mixed $array2 should be array, but scalar is made into one
      */
-    private static function checkTrendArrays(&$array1, &$array2): void
+    private static function checkTrendArrays(&$array1, &$array2) : void
     {
-        if (!is_array($array1)) {
+        if (!\is_array($array1)) {
             $array1 = [$array1];
         }
-        if (!is_array($array2)) {
+        if (!\is_array($array2)) {
             $array2 = [$array2];
         }
-
         $array1 = Functions::flattenArray($array1);
         $array2 = Functions::flattenArray($array2);
-
         self::filterTrendValues($array1, $array2);
         self::filterTrendValues($array2, $array1);
-
         // Reset the array indexes
-        $array1 = array_merge($array1);
-        $array2 = array_merge($array2);
+        $array1 = \array_merge($array1);
+        $array2 = \array_merge($array2);
     }
-
-    protected static function validateTrendArrays(array $yValues, array $xValues): void
+    protected static function validateTrendArrays(array $yValues, array $xValues) : void
     {
-        $yValueCount = count($yValues);
-        $xValueCount = count($xValues);
-
-        if (($yValueCount === 0) || ($yValueCount !== $xValueCount)) {
+        $yValueCount = \count($yValues);
+        $xValueCount = \count($xValues);
+        if ($yValueCount === 0 || $yValueCount !== $xValueCount) {
             throw new Exception(ExcelError::NA());
         } elseif ($yValueCount === 1) {
             throw new Exception(ExcelError::DIV0());
         }
     }
-
     /**
      * CORREL.
      *
@@ -69,22 +60,18 @@ class Trends
      */
     public static function CORREL($yValues, $xValues = null)
     {
-        if (($xValues === null) || (!is_array($yValues)) || (!is_array($xValues))) {
+        if ($xValues === null || !\is_array($yValues) || !\is_array($xValues)) {
             return ExcelError::VALUE();
         }
-
         try {
             self::checkTrendArrays($yValues, $xValues);
             self::validateTrendArrays($yValues, $xValues);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getCorrelation();
     }
-
     /**
      * COVAR.
      *
@@ -103,12 +90,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getCovariance();
     }
-
     /**
      * FORECAST.
      *
@@ -126,10 +110,9 @@ class Trends
      */
     public static function FORECAST($xValue, $yValues, $xValues)
     {
-        if (is_array($xValue)) {
+        if (\is_array($xValue)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $xValue, $yValues, $xValues);
         }
-
         try {
             $xValue = StatisticalValidations::validateFloat($xValue);
             self::checkTrendArrays($yValues, $xValues);
@@ -137,12 +120,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getValueOfYForX($xValue);
     }
-
     /**
      * GROWTH.
      *
@@ -155,26 +135,23 @@ class Trends
      *
      * @return float[]
      */
-    public static function GROWTH($yValues, $xValues = [], $newValues = [], $const = true)
+    public static function GROWTH($yValues, $xValues = [], $newValues = [], $const = \true)
     {
         $yValues = Functions::flattenArray($yValues);
         $xValues = Functions::flattenArray($xValues);
         $newValues = Functions::flattenArray($newValues);
-        $const = ($const === null) ? true : (bool) Functions::flattenSingleValue($const);
-
+        $const = $const === null ? \true : (bool) Functions::flattenSingleValue($const);
         $bestFitExponential = Trend::calculate(Trend::TREND_EXPONENTIAL, $yValues, $xValues, $const);
         if (empty($newValues)) {
             $newValues = $bestFitExponential->getXValues();
         }
-
         $returnArray = [];
         foreach ($newValues as $xValue) {
             $returnArray[0][] = [$bestFitExponential->getValueOfYForX($xValue)];
         }
-
-        return $returnArray; //* @phpstan-ignore-line
+        return $returnArray;
+        //* @phpstan-ignore-line
     }
-
     /**
      * INTERCEPT.
      *
@@ -193,12 +170,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getIntersect();
     }
-
     /**
      * LINEST.
      *
@@ -212,54 +186,25 @@ class Trends
      *
      * @return array|int|string The result, or a string containing an error
      */
-    public static function LINEST($yValues, $xValues = null, $const = true, $stats = false)
+    public static function LINEST($yValues, $xValues = null, $const = \true, $stats = \false)
     {
-        $const = ($const === null) ? true : (bool) Functions::flattenSingleValue($const);
-        $stats = ($stats === null) ? false : (bool) Functions::flattenSingleValue($stats);
+        $const = $const === null ? \true : (bool) Functions::flattenSingleValue($const);
+        $stats = $stats === null ? \false : (bool) Functions::flattenSingleValue($stats);
         if ($xValues === null) {
             $xValues = $yValues;
         }
-
         try {
             self::checkTrendArrays($yValues, $xValues);
             self::validateTrendArrays($yValues, $xValues);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues, $const);
-
-        if ($stats === true) {
-            return [
-                [
-                    $bestFitLinear->getSlope(),
-                    $bestFitLinear->getIntersect(),
-                ],
-                [
-                    $bestFitLinear->getSlopeSE(),
-                    ($const === false) ? ExcelError::NA() : $bestFitLinear->getIntersectSE(),
-                ],
-                [
-                    $bestFitLinear->getGoodnessOfFit(),
-                    $bestFitLinear->getStdevOfResiduals(),
-                ],
-                [
-                    $bestFitLinear->getF(),
-                    $bestFitLinear->getDFResiduals(),
-                ],
-                [
-                    $bestFitLinear->getSSRegression(),
-                    $bestFitLinear->getSSResiduals(),
-                ],
-            ];
+        if ($stats === \true) {
+            return [[$bestFitLinear->getSlope(), $bestFitLinear->getIntersect()], [$bestFitLinear->getSlopeSE(), $const === \false ? ExcelError::NA() : $bestFitLinear->getIntersectSE()], [$bestFitLinear->getGoodnessOfFit(), $bestFitLinear->getStdevOfResiduals()], [$bestFitLinear->getF(), $bestFitLinear->getDFResiduals()], [$bestFitLinear->getSSRegression(), $bestFitLinear->getSSResiduals()]];
         }
-
-        return [
-            $bestFitLinear->getSlope(),
-            $bestFitLinear->getIntersect(),
-        ];
+        return [$bestFitLinear->getSlope(), $bestFitLinear->getIntersect()];
     }
-
     /**
      * LOGEST.
      *
@@ -273,60 +218,30 @@ class Trends
      *
      * @return array|int|string The result, or a string containing an error
      */
-    public static function LOGEST($yValues, $xValues = null, $const = true, $stats = false)
+    public static function LOGEST($yValues, $xValues = null, $const = \true, $stats = \false)
     {
-        $const = ($const === null) ? true : (bool) Functions::flattenSingleValue($const);
-        $stats = ($stats === null) ? false : (bool) Functions::flattenSingleValue($stats);
+        $const = $const === null ? \true : (bool) Functions::flattenSingleValue($const);
+        $stats = $stats === null ? \false : (bool) Functions::flattenSingleValue($stats);
         if ($xValues === null) {
             $xValues = $yValues;
         }
-
         try {
             self::checkTrendArrays($yValues, $xValues);
             self::validateTrendArrays($yValues, $xValues);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         foreach ($yValues as $value) {
             if ($value < 0.0) {
                 return ExcelError::NAN();
             }
         }
-
         $bestFitExponential = Trend::calculate(Trend::TREND_EXPONENTIAL, $yValues, $xValues, $const);
-
-        if ($stats === true) {
-            return [
-                [
-                    $bestFitExponential->getSlope(),
-                    $bestFitExponential->getIntersect(),
-                ],
-                [
-                    $bestFitExponential->getSlopeSE(),
-                    ($const === false) ? ExcelError::NA() : $bestFitExponential->getIntersectSE(),
-                ],
-                [
-                    $bestFitExponential->getGoodnessOfFit(),
-                    $bestFitExponential->getStdevOfResiduals(),
-                ],
-                [
-                    $bestFitExponential->getF(),
-                    $bestFitExponential->getDFResiduals(),
-                ],
-                [
-                    $bestFitExponential->getSSRegression(),
-                    $bestFitExponential->getSSResiduals(),
-                ],
-            ];
+        if ($stats === \true) {
+            return [[$bestFitExponential->getSlope(), $bestFitExponential->getIntersect()], [$bestFitExponential->getSlopeSE(), $const === \false ? ExcelError::NA() : $bestFitExponential->getIntersectSE()], [$bestFitExponential->getGoodnessOfFit(), $bestFitExponential->getStdevOfResiduals()], [$bestFitExponential->getF(), $bestFitExponential->getDFResiduals()], [$bestFitExponential->getSSRegression(), $bestFitExponential->getSSResiduals()]];
         }
-
-        return [
-            $bestFitExponential->getSlope(),
-            $bestFitExponential->getIntersect(),
-        ];
+        return [$bestFitExponential->getSlope(), $bestFitExponential->getIntersect()];
     }
-
     /**
      * RSQ.
      *
@@ -346,12 +261,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getGoodnessOfFit();
     }
-
     /**
      * SLOPE.
      *
@@ -370,12 +282,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getSlope();
     }
-
     /**
      * STEYX.
      *
@@ -394,12 +303,9 @@ class Trends
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues);
-
         return $bestFitLinear->getStdevOfResiduals();
     }
-
     /**
      * TREND.
      *
@@ -412,23 +318,21 @@ class Trends
      *
      * @return float[]
      */
-    public static function TREND($yValues, $xValues = [], $newValues = [], $const = true)
+    public static function TREND($yValues, $xValues = [], $newValues = [], $const = \true)
     {
         $yValues = Functions::flattenArray($yValues);
         $xValues = Functions::flattenArray($xValues);
         $newValues = Functions::flattenArray($newValues);
-        $const = ($const === null) ? true : (bool) Functions::flattenSingleValue($const);
-
+        $const = $const === null ? \true : (bool) Functions::flattenSingleValue($const);
         $bestFitLinear = Trend::calculate(Trend::TREND_LINEAR, $yValues, $xValues, $const);
         if (empty($newValues)) {
             $newValues = $bestFitLinear->getXValues();
         }
-
         $returnArray = [];
         foreach ($newValues as $xValue) {
             $returnArray[0][] = [$bestFitLinear->getValueOfYForX($xValue)];
         }
-
-        return $returnArray; //* @phpstan-ignore-line
+        return $returnArray;
+        //* @phpstan-ignore-line
     }
 }
