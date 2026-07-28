@@ -1,8 +1,32 @@
-/* global jQuery, ajaxurl, megamenu_location_dialog */
+/* global jQuery, ajaxurl, megamenu_location_dialog, MegamenuAdminModalExpand */
 (function ($) {
     "use strict";
 
+    var PREVIEW_VIEWPORT_STORAGE_KEY = "megamenu_admin_preview_viewport";
+
     var locationTitleBlurTimer = null;
+
+    function megamenuExpandApi() {
+        return window.MegamenuAdminModalExpand;
+    }
+
+    function megamenuPreviewViewportStorageRead() {
+        try {
+            var v = window.localStorage.getItem(PREVIEW_VIEWPORT_STORAGE_KEY);
+            if (v === "mobile" || v === "desktop") {
+                return v;
+            }
+        } catch (ignore) {}
+        return null;
+    }
+
+    function megamenuPreviewViewportStorageWrite(mode) {
+        try {
+            if (mode === "mobile" || mode === "desktop") {
+                window.localStorage.setItem(PREVIEW_VIEWPORT_STORAGE_KEY, mode);
+            }
+        } catch (ignore) {}
+    }
 
     function megamenuLocationDialogClearTitleBlurTimer() {
         if (locationTitleBlurTimer) {
@@ -30,10 +54,9 @@
     }
 
     function megamenuSyncBodyDialogOpenClass() {
-        var previewOpen = $("#megamenu-preview-dialog").hasClass("is-open");
         var locOpen = $("#megamenu-location-settings-dialog").hasClass("is-open");
         var scssOpen = $("#megamenu-scss-variables-dialog").hasClass("is-open");
-        $("body").toggleClass("megamenu-dialog-open", previewOpen || locOpen || scssOpen);
+        $("body").toggleClass("megamenu-dialog-open", locOpen || scssOpen);
     }
 
     /** Prefer localized URL (root-relative) so admin-ajax matches the current host:port. */
@@ -62,16 +85,11 @@
         if (!$tt.length) {
             return;
         }
-        var tpl = megamenuLocationDialogI18n("dialog_title_tpl");
-        var prefix = "Location Settings:";
-        if (tpl && tpl.indexOf("%s") !== -1) {
-            prefix = tpl.split("%s")[0];
-        }
-        prefix = String(prefix).replace(/\s+$/, "");
-        $tt
-            .find(".megamenu-location-settings-title-prefix")
-            .text(prefix ? prefix + " " : "");
         $tt.find(".megamenu-location-title").text(plainLabel || "");
+    }
+
+    function megamenuLocationDialogClearAssignedSubheading($dialog) {
+        $dialog.find(".megamenu-location-settings-dialog__assigned").first().empty();
     }
 
     /**
@@ -92,7 +110,9 @@
     }
 
     function megamenuLocationDialogSetLoading($dialog, loading) {
-        var $host = $dialog.find(".megamenu-admin-modal__loading-host").first();
+        var $host = $dialog
+            .find(".megamenu-location-settings-dialog__settings-view.megamenu-admin-modal__loading-host")
+            .first();
         if (!$host.length) {
             return;
         }
@@ -104,22 +124,603 @@
         }
     }
 
+    function megamenuLocationDialogSwapExpandI18n($dialog, mode) {
+        var isPreview = mode === "preview";
+        var exp = isPreview
+            ? $dialog.attr("data-i18n-preview-expand")
+            : $dialog.attr("data-i18n-settings-expand");
+        var coll = isPreview
+            ? $dialog.attr("data-i18n-preview-collapse")
+            : $dialog.attr("data-i18n-settings-collapse");
+        $dialog.attr("data-i18n-modal-expand", exp || "");
+        $dialog.attr("data-i18n-modal-collapse", coll || "");
+        var api = megamenuExpandApi();
+        if (api && typeof api.applyExpanded === "function") {
+            api.applyExpanded(
+                $dialog,
+                $dialog.hasClass(api.EXPANDED_CLASS)
+            );
+        }
+    }
+
+    function megamenuResetPreviewViewport($dialog) {
+        var $wrap = $dialog.find(".megamenu-preview-dialog__viewport-toggle");
+        var $desktop = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--desktop"
+        );
+        var $mobile = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--mobile"
+        );
+        $dialog.removeClass("megamenu-preview-dialog--mobile-preview");
+        $dialog.css("--megamenu-preview-mobile-width", "");
+        $wrap.removeClass(
+            "megamenu-preview-dialog__viewport-toggle--mobile-disabled"
+        );
+        $mobile
+            .prop("disabled", false)
+            .removeAttr("aria-disabled")
+            .removeClass("megamenu-preview-dialog__viewport-btn--unavailable")
+            .removeAttr("data-mega-tooltip")
+            .removeAttr("data-mega-tooltip-position");
+        $desktop
+            .addClass("is-active")
+            .attr("aria-pressed", "true");
+        $mobile
+            .removeClass("is-active")
+            .attr("aria-pressed", "false");
+    }
+
+    function megamenuSetPreviewViewportDesktop($dialog) {
+        var $desktop = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--desktop"
+        );
+        var $mobile = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--mobile"
+        );
+        $dialog.removeClass("megamenu-preview-dialog--mobile-preview");
+        $desktop
+            .addClass("is-active")
+            .attr("aria-pressed", "true");
+        $mobile
+            .removeClass("is-active")
+            .attr("aria-pressed", "false");
+        megamenuPreviewViewportStorageWrite("desktop");
+    }
+
+    function megamenuSetPreviewViewportMobile($dialog) {
+        var $desktop = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--desktop"
+        );
+        var $mobile = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--mobile"
+        );
+        if ($mobile.prop("disabled") || $mobile.attr("aria-disabled") === "true") {
+            return;
+        }
+        $dialog.addClass("megamenu-preview-dialog--mobile-preview");
+        $mobile
+            .addClass("is-active")
+            .attr("aria-pressed", "true");
+        $desktop
+            .removeClass("is-active")
+            .attr("aria-pressed", "false");
+        megamenuPreviewViewportStorageWrite("mobile");
+    }
+
+    function megamenuPreviewIframeAttachLoadHandler($dialog) {
+        var $iframe = $dialog.find(".megamenu-preview-dialog__iframe");
+        var $shell = $dialog.find(".megamenu-preview-dialog__iframe-shell");
+        $iframe.off("load.megamenuPreview").on("load.megamenuPreview", function () {
+            var href = "";
+            try {
+                href = String(
+                    this.contentWindow && this.contentWindow.location
+                        ? this.contentWindow.location.href
+                        : ""
+                );
+            } catch (ignore) {
+                href = "";
+            }
+            if (href === "about:blank" || href === "about:srcdoc") {
+                return;
+            }
+            $shell.removeClass("megamenu-admin-modal__loading-host--loading");
+            $shell.attr("aria-busy", "false");
+            var locAfterLoad = megamenuLocationFromDialog($dialog);
+            var storedAfterLoad = locAfterLoad
+                ? megamenuPreviewShellBgRead(locAfterLoad)
+                : "custom:transparent";
+            megamenuApplyPreviewShellBackground($dialog, storedAfterLoad);
+        });
+    }
+
+    function megamenuPreviewIframeStartLoading($dialog) {
+        var $shell = $dialog.find(".megamenu-preview-dialog__iframe-shell");
+        $shell.addClass("megamenu-admin-modal__loading-host--loading");
+        $shell.attr("aria-busy", "true");
+        megamenuPreviewIframeAttachLoadHandler($dialog);
+    }
+
+    function megamenuPreviewIframeStopLoading($dialog) {
+        var $shell = $dialog.find(".megamenu-preview-dialog__iframe-shell");
+        var $iframe = $dialog.find(".megamenu-preview-dialog__iframe");
+        $shell.removeClass("megamenu-admin-modal__loading-host--loading");
+        $shell.attr("aria-busy", "false");
+        $iframe.off("load.megamenuPreview");
+    }
+
+    var MMM_PREVIEW_SHELL_BG_PREFIX = "megamenu_preview_shell_bg_v1_";
+
+    function megamenuLocationDialogSlugForStorage(location) {
+        return encodeURIComponent(String(location || "").replace(/\s+/g, ""));
+    }
+
+    function megamenuPreviewShellBgStorageKey(location) {
+        return MMM_PREVIEW_SHELL_BG_PREFIX + megamenuLocationDialogSlugForStorage(location);
+    }
+
+    function megamenuPreviewShellBgRead(location) {
+        try {
+            var v = window.localStorage.getItem(
+                megamenuPreviewShellBgStorageKey(location)
+            );
+            if (
+                v &&
+                v.indexOf("custom:") === 0 &&
+                v.length < 500 &&
+                v.length > 7
+            ) {
+                return v;
+            }
+        } catch (ignore) {}
+        return "custom:rgba(67,67,67,0.5)";
+    }
+
+    function megamenuPreviewShellBgWrite(location, value) {
+        try {
+            window.localStorage.setItem(
+                megamenuPreviewShellBgStorageKey(location),
+                value
+            );
+        } catch (ignore) {}
+    }
+
+    function megamenuLocationFromDialog($dialog) {
+        var loc =
+            ($dialog && $dialog.data && $dialog.data("mmmLocation")) || "";
+        if (!loc && $dialog && $dialog.length) {
+            loc =
+                $dialog
+                    .find("form.megamenu-location-settings-dialog-form")
+                    .attr("data-location") || "";
+        }
+        return String(loc || "");
+    }
+
+    function megamenuPreviewShellCustomColorFromStored(value) {
+        if (!value || value.indexOf("custom:") !== 0) {
+            return "";
+        }
+        return value.slice(7);
+    }
+
+    function megamenuUpdatePreviewBgSwatch($dialog, cssColor) {
+        var $sw = $dialog.find(
+            ".megamenu-preview-dialog__bg-swatch--preview"
+        );
+        if (!$sw.length) {
+            return;
+        }
+        var t = String(cssColor || "")
+            .toLowerCase()
+            .trim();
+        $sw.removeClass(
+            "megamenu-preview-dialog__bg-swatch--preview-transparent"
+        );
+        if (
+            t === "transparent" ||
+            t === "rgba(0, 0, 0, 0)" ||
+            t === "rgba(0,0,0,0)"
+        ) {
+            $sw.addClass(
+                "megamenu-preview-dialog__bg-swatch--preview-transparent"
+            );
+            $sw.css({ "background-color": "", "background-image": "" });
+            return;
+        }
+        $sw.css({
+            "background-color": cssColor,
+            "background-image": "none",
+        });
+    }
+
+    function megamenuPreviewBgEnsurePickerBound($dialog) {
+        if (!$dialog || !$dialog.length) {
+            return;
+        }
+        if ($dialog.data("mmmPreviewBgPickerInit")) {
+            return;
+        }
+        var $inp = $dialog.find(
+            ".megamenu-preview-dialog__bg-custom-color-input"
+        );
+        if (
+            !$inp.length ||
+            typeof $.fn.customColorPicker !== "function"
+        ) {
+            return;
+        }
+        $inp.customColorPicker({
+            defaultColor: "#50575e",
+            showCssVarPalette: false,
+            palette: ["transparent", "#ffffff", "#50575e"],
+            onColorChange: function (finalColorString) {
+                var $in = $(this);
+                var $dlg = $in.closest(
+                    "#megamenu-location-settings-dialog"
+                );
+                if (!$dlg.length) {
+                    return;
+                }
+                var stored = "custom:" + finalColorString;
+                megamenuApplyPreviewShellBackground($dlg, stored);
+                megamenuUpdatePreviewBgSwatch($dlg, finalColorString);
+                var loc = megamenuLocationFromDialog($dlg);
+                if (loc) {
+                    megamenuPreviewShellBgWrite(loc, stored);
+                }
+            },
+        });
+        var $wrap = $inp.next(".mega-custom-color-input-wrapper");
+        $wrap.on("click.mmmPreviewBgSync", function () {
+            var $dlg = $inp.closest(
+                "#megamenu-location-settings-dialog"
+            );
+            megamenuPreviewBgOpenPicker($dlg, false);
+        });
+        $dialog.data("mmmPreviewBgPickerInit", true);
+    }
+
+    function megamenuPreviewBgOpenPicker($dialog, forceShowPicker) {
+        megamenuPreviewBgEnsurePickerBound($dialog);
+        var $inp = $dialog.find(
+            ".megamenu-preview-dialog__bg-custom-color-input"
+        );
+        if (!$inp.length || !$inp.data("customColorPickerApi")) {
+            return;
+        }
+        var current = $inp.customColorPicker("get");
+        var stored = "custom:" + current;
+        megamenuApplyPreviewShellBackground($dialog, stored);
+        megamenuUpdatePreviewBgSwatch($dialog, current);
+        var loc = megamenuLocationFromDialog($dialog);
+        if (loc) {
+            megamenuPreviewShellBgWrite(loc, stored);
+        }
+        if (
+            forceShowPicker &&
+            typeof $.fn.customColorPicker === "function" &&
+            $inp.length
+        ) {
+            $inp.customColorPicker("open");
+        }
+    }
+
+    function megamenuClosePreviewBgColorPickerIfOpen() {
+        var $dlg = $("#megamenu-location-settings-dialog");
+        if (!$dlg.length || !$dlg.hasClass("is-open")) {
+            return;
+        }
+        if (typeof $.fn.customColorPicker !== "function") {
+            return;
+        }
+        $dlg.find(".megamenu-preview-dialog__bg-custom-color-input").each(function () {
+            var $inp = $(this);
+            var $pc = $inp.data("picker-container-ref");
+            if ($pc && $pc.length && $pc.is(":visible")) {
+                $inp.customColorPicker("close");
+            }
+        });
+    }
+
+    function megamenuApplyPreviewIframeDocumentBodyBackground($iframe, color, isTransparent) {
+        var el = $iframe && $iframe.length ? $iframe[0] : null;
+        if (!el) {
+            return;
+        }
+        try {
+            var doc = el.contentDocument;
+            if (!doc || !doc.body) {
+                return;
+            }
+            var bodyEl = doc.body;
+            if (isTransparent) {
+                bodyEl.style.removeProperty("background-color");
+                bodyEl.style.removeProperty("background-image");
+            } else {
+                bodyEl.style.backgroundColor = color;
+                bodyEl.style.backgroundImage = "none";
+            }
+        } catch (ignore) {}
+    }
+
+    function megamenuApplyPreviewShellBackground($dialog, value) {
+        if (!$dialog || !$dialog.length) {
+            return;
+        }
+        var v = value;
+        if (!v || v.indexOf("custom:") !== 0) {
+            v = "custom:transparent";
+        }
+        var color = v.slice(7);
+        var $shell = $dialog.find(".megamenu-preview-dialog__iframe-shell");
+        var $iframe = $dialog.find(".megamenu-preview-dialog__iframe");
+
+        $shell.removeClass("megamenu-preview-dialog__iframe-shell--bg-custom");
+        $shell.css({
+            "background-color": "",
+            "background-image": "",
+            "background-size": "",
+            "background-position": "",
+        });
+
+        $iframe.css({
+            "background-color": "",
+            "background-image": "",
+            "background-size": "",
+            "background-position": "",
+        });
+
+        var t = String(color).trim().toLowerCase();
+        var isTransparent =
+            t === "transparent" ||
+            t === "rgba(0, 0, 0, 0)" ||
+            t === "rgba(0,0,0,0)";
+
+        megamenuApplyPreviewIframeDocumentBodyBackground(
+            $iframe,
+            color,
+            isTransparent
+        );
+    }
+
+    function megamenuSyncPreviewBgSwatch($dialog, storedValue) {
+        if (!storedValue || storedValue.indexOf("custom:") !== 0) {
+            return;
+        }
+        megamenuUpdatePreviewBgSwatch(
+            $dialog,
+            megamenuPreviewShellCustomColorFromStored(storedValue)
+        );
+    }
+
+    function megamenuRestorePreviewShellBgForDialog($dialog) {
+        megamenuPreviewBgEnsurePickerBound($dialog);
+        var loc = megamenuLocationFromDialog($dialog);
+        if (!loc) {
+            megamenuApplyPreviewShellBackground(
+                $dialog,
+                "custom:transparent"
+            );
+            megamenuSyncPreviewBgSwatch($dialog, "custom:transparent");
+            return;
+        }
+        var v = megamenuPreviewShellBgRead(loc);
+        megamenuApplyPreviewShellBackground($dialog, v);
+        megamenuSyncPreviewBgSwatch($dialog, v);
+        if (v.indexOf("custom:") === 0) {
+            var $inp = $dialog.find(
+                ".megamenu-preview-dialog__bg-custom-color-input"
+            );
+            var part = megamenuPreviewShellCustomColorFromStored(v);
+            if (
+                $inp.length &&
+                $inp.data("customColorPickerApi") &&
+                part
+            ) {
+                $inp.customColorPicker("set", part);
+            }
+        }
+    }
+
+    function megamenuLocationDialogSyncModePill($dialog, previewActive) {
+        var $s = $dialog.find(
+            ".megamenu-location-settings-dialog__mode-btn--settings"
+        );
+        var $p = $dialog.find(
+            ".megamenu-location-settings-dialog__mode-btn--preview"
+        );
+        if (!$s.length || !$p.length) {
+            return;
+        }
+        var settingsOn = !previewActive;
+        $s
+            .toggleClass("is-active", settingsOn)
+            .addClass("button-secondary")
+            .attr("aria-pressed", settingsOn ? "true" : "false");
+        $p
+            .toggleClass("is-active", !!previewActive)
+            .addClass("button-secondary")
+            .attr("aria-pressed", previewActive ? "true" : "false");
+    }
+
+    function megamenuLocationDialogTogglePreviewViews($dialog, previewOn) {
+        $dialog
+            .find(".megamenu-location-settings-dialog__settings-view")
+            .prop("hidden", !!previewOn);
+        $dialog
+            .find(".megamenu-location-settings-dialog__preview-view")
+            .prop("hidden", !previewOn);
+    }
+
+    function megamenuLocationDialogEnsurePreviewSourceButton($dialog) {
+        var $existing = $dialog.data("mmmPreviewSourceBtn");
+        if ($existing && $existing.length) {
+            return;
+        }
+        var loc =
+            $dialog.find("form.megamenu-location-settings-dialog-form").attr("data-location") ||
+            "";
+        if (!loc) {
+            return;
+        }
+        var $all = $(
+            '.megamenu-preview-open[data-location="' + loc + '"]'
+        );
+        var $cardBtn = $all.filter(":not([disabled])").first();
+        if (!$cardBtn.length) {
+            $cardBtn = $all.filter(function () {
+                return !!($(this).attr("data-preview-url") || "").length;
+            }).first();
+        }
+        if ($cardBtn.length) {
+            $dialog.data("mmmPreviewSourceBtn", $cardBtn);
+            megamenuPreparePreviewFromButton($cardBtn);
+        }
+    }
+
+    function megamenuLocationDialogEnterPreviewChrome($dialog) {
+        megamenuLocationDialogEnsurePreviewSourceButton($dialog);
+        $dialog.addClass("megamenu-location-settings-dialog--preview-visible");
+        megamenuLocationDialogTogglePreviewViews($dialog, true);
+        $dialog.find(".megamenu-location-settings-dialog__footer-settings").prop("hidden", true);
+        $dialog.find(".megamenu-location-settings-dialog__footer-preview").prop("hidden", false);
+        megamenuLocationDialogSwapExpandI18n($dialog, "preview");
+        megamenuLocationDialogSyncModePill($dialog, true);
+        megamenuRestorePreviewShellBgForDialog($dialog);
+    }
+
+    function megamenuLocationDialogEnterSettingsChrome($dialog) {
+        $dialog.removeClass("megamenu-location-settings-dialog--preview-visible");
+        megamenuLocationDialogTogglePreviewViews($dialog, false);
+        $dialog.find(".megamenu-location-settings-dialog__footer-settings").prop("hidden", false);
+        $dialog.find(".megamenu-location-settings-dialog__footer-preview").prop("hidden", true);
+        megamenuLocationDialogSwapExpandI18n($dialog, "settings");
+        megamenuLocationDialogSyncModePill($dialog, false);
+        var $btn = $dialog.find(".megamenu-location-settings-dialog-save");
+        var origLabel = $btn.data("mmm-save-label");
+        if (origLabel) $btn.html(origLabel);
+        $btn.prop("disabled", false);
+    }
+
+    function megamenuLocationDialogClearPreviewStateForNewLoad($dialog) {
+        megamenuResetPreviewViewport($dialog);
+        megamenuPreviewIframeStopLoading($dialog);
+        $dialog.find(".megamenu-preview-dialog__iframe").attr("src", "about:blank");
+        $dialog.removeAttr("data-active-preview-url");
+        $dialog.removeClass(
+            "megamenu-location-settings-dialog--preview-visible megamenu-preview-dialog--mobile-preview"
+        );
+        megamenuLocationDialogTogglePreviewViews($dialog, false);
+        megamenuLocationDialogSyncModePill($dialog, false);
+        $dialog.removeData("mmmPreviewSourceBtn");
+        $dialog.find(".megamenu-location-settings-dialog__footer-settings").prop("hidden", false);
+        $dialog.find(".megamenu-location-settings-dialog__footer-preview").prop("hidden", true);
+    }
+
+    function megamenuLocationDialogResetOnClose($dialog) {
+        if (!$dialog.length) {
+            return;
+        }
+        megamenuResetPreviewViewport($dialog);
+        megamenuPreviewIframeStopLoading($dialog);
+        $dialog.find(".megamenu-preview-dialog__iframe").attr("src", "about:blank");
+        $dialog.removeAttr("data-active-preview-url");
+        $dialog.removeClass(
+            "megamenu-location-settings-dialog--preview-visible megamenu-preview-dialog--mobile-preview"
+        );
+        megamenuLocationDialogTogglePreviewViews($dialog, false);
+        megamenuLocationDialogSyncModePill($dialog, false);
+        $dialog.removeData("mmmPreviewSourceBtn");
+        $dialog.find(".megamenu-location-settings-dialog__footer-settings").prop("hidden", false);
+        $dialog.find(".megamenu-location-settings-dialog__footer-preview").prop("hidden", true);
+        megamenuLocationDialogClearAssignedSubheading($dialog);
+    }
+
+    function megamenuPreparePreviewFromButton($btn) {
+        var $dialog = $("#megamenu-location-settings-dialog");
+        if (!$dialog.length) {
+            return;
+        }
+        var url = $btn.attr("data-preview-url");
+        if (!url) {
+            return;
+        }
+        megamenuResetPreviewViewport($dialog);
+        var api = megamenuExpandApi();
+        if (api && typeof api.restoreOnOpen === "function") {
+            api.restoreOnOpen($dialog);
+        }
+        var bpRaw = $btn.attr("data-responsive-breakpoint");
+        var bp = parseInt(bpRaw, 10);
+        if (isNaN(bp) || bp < 0) {
+            bp = 0;
+        }
+        var $toggleWrap = $dialog.find(".megamenu-preview-dialog__viewport-toggle");
+        var $mobileBtn = $dialog.find(
+            ".megamenu-preview-dialog__viewport-btn--mobile"
+        );
+        if (bp === 0) {
+            $mobileBtn
+                .attr("aria-disabled", "true")
+                .addClass("megamenu-preview-dialog__viewport-btn--unavailable");
+            $toggleWrap.addClass(
+                "megamenu-preview-dialog__viewport-toggle--mobile-disabled"
+            );
+            var disabledTip = $dialog.attr("data-i18n-mobile-preview-disabled") || "";
+            if (disabledTip) {
+                $mobileBtn
+                    .attr("data-mega-tooltip", disabledTip)
+                    .attr("data-mega-tooltip-position", "right");
+            }
+        } else {
+            $dialog.css("--megamenu-preview-mobile-width", bp + "px");
+        }
+        if (bp !== 0 && megamenuPreviewViewportStorageRead() === "mobile") {
+            megamenuSetPreviewViewportMobile($dialog);
+        }
+        $dialog.attr("data-active-preview-url", url);
+        megamenuPreviewIframeStartLoading($dialog);
+        $dialog.find(".megamenu-preview-dialog__iframe").attr("src", url);
+    }
+
+    function megamenuOpenLocationPreview($btn) {
+        var location = $btn.attr("data-location");
+        if (!location) {
+            return;
+        }
+        var menuId = $btn.attr("data-preview-menu-id") || "";
+        var $fake = $('<button type="button" />');
+        var attrs = {
+            "data-location": location,
+            "data-requires-menu": "0",
+        };
+        if (menuId) {
+            attrs["data-preview-menu-id"] = menuId;
+        }
+        $fake.attr(attrs);
+        megamenuOpenLocationSettingsDialog($fake, {
+            openPreviewAfterLoad: true,
+            previewButton: $btn,
+        });
+    }
+
+    window.megamenuOpenLocationPreview = megamenuOpenLocationPreview;
+
     function megamenuCloseLocationSettingsDialog() {
         var $dialog = $("#megamenu-location-settings-dialog");
         if (!$dialog.length) {
             return;
         }
-        if (
-            window.MegamenuAdminModalExpand &&
-            typeof window.MegamenuAdminModalExpand.collapseOnClose === "function"
-        ) {
-            window.MegamenuAdminModalExpand.collapseOnClose($dialog);
-        }
+        megamenuLocationDialogResetOnClose($dialog);
         megamenuLocationDialogSetLoading($dialog, false);
         megamenuLocationDialogClearTitleBlurTimer();
+        $dialog.off("click.mmmLocHintTab");
+        var locScrollHintRO = $dialog.data("mmmLocScrollHintRO");
+        if (locScrollHintRO) { locScrollHintRO.disconnect(); $dialog.removeData("mmmLocScrollHintRO"); }
+        $dialog.find(".mmm-scroll-hint").prop("hidden", true).removeClass("is-visible");
         $dialog.prop("hidden", true).removeClass("is-open");
         $("#megamenu-location-settings-dialog-body").empty();
-        $("#megamenu-location-settings-dialog-subtitle").text("").prop("hidden", true);
         $dialog
             .find(".megamenu-admin-modal__panel")
             .attr("aria-labelledby", "megamenu-location-settings-dialog-title");
@@ -138,10 +739,6 @@
             return;
         }
         $r.attr("data-mmm-plain-label", plainLabel);
-        $r.find(".mega-location-settings-open").attr(
-            "data-location-label",
-            plainLabel
-        );
         $r.find(".megamenu-preview-open").each(function () {
             var $p = $(this);
             $p.attr("data-preview-location-label", plainLabel);
@@ -162,6 +759,9 @@
             return;
         }
         if (($dialog.data("mmmLocation") || "") !== location) {
+            return;
+        }
+        if ($dialog.hasClass("megamenu-location-settings-dialog--preview-visible")) {
             return;
         }
         $dialog.data("mmmPlainLabel", plainLabel);
@@ -280,6 +880,7 @@
         var loc =
             ($root.find("form.megamenu-location-settings-dialog-form").attr("data-location") ||
                 "location").replace(/[^a-zA-Z0-9_-]/g, "-");
+        var $dialog = $root.closest("#megamenu-location-settings-dialog");
         $root.find(".megamenu-dialog-tablist").each(function () {
             var $nav = $(this);
             var $tabsRoot = $nav.closest(".megamenu-dialog-rail");
@@ -328,24 +929,6 @@
 
     window.megamenuSyncComponentsToggleWrappers = megamenuSyncComponentsToggleWrappers;
 
-    function megamenuBindDialogFieldBehaviours($root) {
-        $root
-            .find('select[name$="[effect_mobile]"]')
-            .off("change.mmmLocDlg")
-            .on("change.mmmLocDlg", function () {
-                var $row = $(this).closest("tr.mega-effect_mobile");
-                if (
-                    this.value === "slide_left" ||
-                    this.value === "slide_right"
-                ) {
-                    $row.addClass("mega-is-offcanvas");
-                } else {
-                    $row.removeClass("mega-is-offcanvas");
-                }
-            })
-            .trigger("change.mmmLocDlg");
-    }
-
     function megamenuApplyMmmRowState($row, enabled) {
         if (!$row || !$row.length) {
             return;
@@ -362,17 +945,17 @@
             "mega-location-enabled mega-location-disabled mega-location-disabled-assign-menu"
         );
         if (!hasMenu) {
-            $row.addClass("mega-location-disabled mega-location-disabled-assign-menu");
+            if (enabled) {
+                $row.addClass("mega-location-enabled");
+            } else {
+                $row.addClass("mega-location-disabled");
+            }
         } else if (enabled) {
             $row.addClass("mega-location-enabled");
         } else {
             $row.addClass("mega-location-disabled");
         }
 
-        $row.find(".mega-location-settings-open").each(function () {
-            var req = $(this).attr("data-requires-menu") === "1";
-            $(this).prop("disabled", req);
-        });
         var $prev = $row.find(".megamenu-preview-open");
         if ($prev.length) {
             var previewUrl = $prev.attr("data-preview-url") || "";
@@ -380,21 +963,55 @@
                 hasMenu && previewUrl.length > 0 && !!enabled;
             $prev.prop("disabled", !can);
         }
+
+        var $dlg = $("#megamenu-location-settings-dialog");
+        if (
+            $dlg.hasClass("is-open") &&
+            ($row.attr("data-mega-location") || "") ===
+                ($dlg.data("mmmLocation") || "")
+        ) {
+            megamenuLocationDialogSyncNoticesAndPreview($dlg);
+        }
     }
 
-    function megamenuOpenLocationSettingsDialog($trigger) {
-        var dlg = window.megamenu_location_dialog || {};
-        var location = $trigger.attr("data-location") || "";
-        var label = $trigger.attr("data-location-label") || location;
-        var requiresMenu = $trigger.attr("data-requires-menu") === "1";
-
-        if (requiresMenu) {
-            window.alert(
-                megamenuLocationDialogI18n("assign_menu") ||
-                    "Assign a menu first."
-            );
+    function megamenuLocationDialogSyncNoticesAndPreview($dialog) {
+        if (!$dialog || !$dialog.length) {
             return;
         }
+        var loc = $dialog.data("mmmLocation") || "";
+        if (!loc) {
+            return;
+        }
+        var $row = $(".mega-location").filter(function () {
+            return $(this).attr("data-mega-location") === loc;
+        }).first();
+        var hasMenu = $dialog.data("mmmHasNavMenu") === "1";
+        var mmmOn = $row.length
+            ? $row.hasClass("mega-location-mmm-on")
+            : $dialog.data("mmmLocationMmmOn") === "1";
+        var previewOk = hasMenu && mmmOn;
+        $dialog
+            .find(".megamenu-location-settings-dialog__notice--no-menu")
+            .prop("hidden", !!hasMenu);
+        $dialog
+            .find(".megamenu-location-settings-dialog__notice--mmm-off")
+            .prop("hidden", !!mmmOn);
+        $dialog
+            .find(".megamenu-location-settings-dialog__mode-btn--preview")
+            .prop("disabled", !previewOk);
+        if (!previewOk && $dialog.hasClass("megamenu-location-settings-dialog--preview-visible")) {
+            megamenuLocationDialogEnterSettingsChrome($dialog);
+        }
+    }
+
+    function megamenuOpenLocationSettingsDialog($trigger, opts) {
+        opts = opts || {};
+        var previewFirst =
+            opts.openPreviewAfterLoad &&
+            opts.previewButton &&
+            opts.previewButton.length;
+        var dlg = window.megamenu_location_dialog || {};
+        var location = $trigger.attr("data-location") || "";
 
         megamenuMountLocationSettingsDialogFromTemplate();
 
@@ -404,25 +1021,51 @@
             return;
         }
 
-        megamenuLocationDialogApplyHeadingLocationName($dialog, label);
+        megamenuLocationDialogClearPreviewStateForNewLoad($dialog);
+
+        megamenuLocationDialogApplyHeadingLocationName($dialog, "");
+        megamenuLocationDialogClearAssignedSubheading($dialog);
 
         $dialog.data("mmmLocation", location);
-        $dialog.data("mmmPlainLabel", label);
+        $dialog.data("mmmPlainLabel", "");
 
-        var assignedPrefix = megamenuLocationDialogI18n("assigned_menu_prefix");
-        var assignedMenu = $trigger.attr("data-assigned-menu");
-        var $sub = $("#megamenu-location-settings-dialog-subtitle");
-        var $panel = $dialog.find(".megamenu-admin-modal__panel");
-        if (assignedMenu && assignedPrefix) {
-            $sub.text(assignedPrefix + " " + assignedMenu).prop("hidden", false);
-            $panel.attr(
-                "aria-labelledby",
-                "megamenu-location-settings-dialog-title megamenu-location-settings-dialog-subtitle"
+        megamenuRestorePreviewShellBgForDialog($dialog);
+
+        var $cardRow = $trigger.closest(".mega-location");
+        var editingMenuId = 0;
+        if ($cardRow.length) {
+            var em = parseInt($cardRow.attr("data-mmm-editing-menu-id") || "0", 10);
+            if (!isNaN(em) && em > 0) {
+                editingMenuId = em;
+            }
+        }
+        if (!editingMenuId) {
+            editingMenuId =
+                parseInt(
+                    $trigger.attr("data-preview-menu-id") ||
+                        $trigger.attr("data-menu-id") ||
+                        "0",
+                    10
+                ) || 0;
+        }
+
+        if ($cardRow.length) {
+            $dialog.data(
+                "mmmHasNavMenu",
+                $cardRow.attr("data-has-nav-menu") === "1" ? "1" : "0"
             );
         } else {
-            $sub.text("").prop("hidden", true);
-            $panel.attr("aria-labelledby", "megamenu-location-settings-dialog-title");
+            var menuIdForState = editingMenuId;
+            var assignedName =
+                $trigger.attr("data-assigned-menu") ||
+                $trigger.attr("data-preview-assigned-menu") ||
+                "";
+            if (menuIdForState > 0 || assignedName) {
+                $dialog.data("mmmHasNavMenu", "1");
+            }
         }
+
+        megamenuLocationDialogSyncNoticesAndPreview($dialog);
 
         $body.empty();
         megamenuLocationDialogSetLoading($dialog, true);
@@ -434,7 +1077,16 @@
         ) {
             window.MegamenuAdminModalExpand.restoreOnOpen($dialog);
         }
+        if (previewFirst) {
+            $dialog.data("mmmPreviewSourceBtn", opts.previewButton);
+            megamenuPreparePreviewFromButton(opts.previewButton);
+            megamenuLocationDialogEnterPreviewChrome($dialog);
+        } else {
+            megamenuLocationDialogSwapExpandI18n($dialog, "settings");
+        }
         megamenuSyncBodyDialogOpenClass();
+
+        var cardsContext = dlg.cards_context || "page";
 
         $.post(
             megamenuLocationAjaxUrl(),
@@ -442,6 +1094,8 @@
                 action: "megamenu_get_location_settings_html",
                 nonce: dlg.nonce,
                 location: location,
+                cards_context: cardsContext,
+                editing_menu_id: editingMenuId,
             }
         )
             .done(function (res) {
@@ -451,9 +1105,91 @@
                     return;
                 }
                 $body.html(res.data.html);
+                if (res.data && typeof res.data.location_label === "string") {
+                    megamenuLocationDialogApplyHeadingLocationName(
+                        $dialog,
+                        res.data.location_label
+                    );
+                    $dialog.data("mmmPlainLabel", res.data.location_label);
+                }
+                if (
+                    res.data &&
+                    typeof res.data.assigned_summary_html === "string"
+                ) {
+                    $dialog
+                        .find(".megamenu-location-settings-dialog__assigned")
+                        .first()
+                        .html(res.data.assigned_summary_html);
+                }
+                if (
+                    res.data &&
+                    typeof res.data.has_nav_menu !== "undefined"
+                ) {
+                    $dialog.data(
+                        "mmmHasNavMenu",
+                        res.data.has_nav_menu ? "1" : "0"
+                    );
+                }
+                if (
+                    res.data &&
+                    typeof res.data.mmm_enabled !== "undefined"
+                ) {
+                    $dialog.data(
+                        "mmmLocationMmmOn",
+                        res.data.mmm_enabled ? "1" : "0"
+                    );
+                }
+                megamenuLocationDialogSyncNoticesAndPreview($dialog);
                 megamenuInitLocationDialogTabs($body);
-                megamenuBindDialogFieldBehaviours($body);
                 megamenuSyncComponentsToggleWrappers($body);
+                megamenuRestorePreviewShellBgForDialog($dialog);
+
+                // Scroll-down hint: show when panels content overflows.
+                (function() {
+                    var $panels = $body.find(".megamenu-dialog-panels");
+                    var $hint = $dialog.find(".mmm-scroll-hint");
+
+                    function updateScrollHint() {
+                        if (!$panels.length || !$hint.length) { return; }
+                        var el = $panels[0];
+                        var hasMore = el.scrollHeight > el.clientHeight + el.scrollTop + 2;
+                        $hint.toggleClass("is-visible", hasMore);
+                        $hint.attr("aria-hidden", hasMore ? "false" : "true");
+                    }
+
+                    // Remove [hidden] so opacity/visibility transitions can fire.
+                    $hint.removeAttr("hidden");
+
+                    $panels.off("scroll.mmmLocHint").on("scroll.mmmLocHint", updateScrollHint);
+
+                    $hint.off("click.mmmLocHint").on("click.mmmLocHint", function() {
+                        $panels[0].scrollBy({ top: 200, behavior: "smooth" });
+                    });
+
+                    $dialog.off("click.mmmLocHintTab").on("click.mmmLocHintTab", ".megamenu-dialog-tab", function() {
+                        window.setTimeout(updateScrollHint, 50);
+                    });
+
+                    // ResizeObserver re-checks on window resize and modal expand/collapse transitions.
+                    if (typeof ResizeObserver !== "undefined") {
+                        var ro = new ResizeObserver(updateScrollHint);
+                        ro.observe($panels[0]);
+                        $dialog.data("mmmLocScrollHintRO", ro);
+                    } else {
+                        window.requestAnimationFrame(function() {
+                            window.requestAnimationFrame(updateScrollHint);
+                        });
+                    }
+                }());
+                if (previewFirst) {
+                    window.setTimeout(function () {
+                        $dialog
+                            .find(
+                                ".megamenu-location-settings-dialog__mode-btn--preview"
+                            )
+                            .trigger("focus");
+                    }, 0);
+                }
             })
             .fail(function () {
                 window.alert(megamenuLocationDialogI18n("load_error"));
@@ -463,25 +1199,37 @@
                 megamenuLocationDialogSetLoading($dialog, false);
             });
 
-        var $close = $dialog.find(".megamenu-modal-close");
-        if ($close.length) {
-            $close.trigger("focus");
+        var $focusBtn = previewFirst
+            ? null
+            : $dialog.find(".megamenu-modal-close").first();
+        if ($focusBtn && $focusBtn.length) {
+            $focusBtn.trigger("focus");
         }
     }
 
     function megamenuSaveLocationSettingsDialog() {
         var $dialog = $("#megamenu-location-settings-dialog");
+        if ($dialog.hasClass("megamenu-location-settings-dialog--preview-visible")) {
+            return;
+        }
         var $form = $dialog.find("form.megamenu-location-settings-dialog-form");
         if (!$form.length) {
             return;
         }
 
+        var $btn = $dialog.find(".megamenu-location-settings-dialog-save");
+        var origLabel = $btn.text();
+        if (!$btn.data("mmm-save-label")) {
+            $btn.data("mmm-save-label", origLabel);
+        }
         var location = $form.attr("data-location") || "";
-        megamenuLocationDialogSetLoading($dialog, true);
+        var succeeded = false;
+
+        $btn.prop("disabled", true).text(megamenuLocationDialogI18n("saving") + "…");
 
         var done = function (ok) {
-            megamenuLocationDialogSetLoading($dialog, false);
             if (ok) {
+                succeeded = true;
                 var $r = $(
                     '.mega-location[data-mega-location="' + location + '"]'
                 ).first();
@@ -493,6 +1241,10 @@
                     megamenuApplyMmmRowState($r, enabled);
                     megamenuSyncEnabledBodyClassFromToggles();
                 }
+                $btn.html('<span class="dashicons dashicons-yes" aria-hidden="true"></span> ' + (megamenuLocationDialogI18n("saved_button") || "Saved"));
+            } else {
+                $btn.text(origLabel);
+                $btn.prop("disabled", false);
             }
         };
 
@@ -570,6 +1322,35 @@
         function (e) {
             e.preventDefault();
             megamenuOpenLocationSettingsDialog($(this));
+        }
+    );
+
+    $(document).on(
+        "click",
+        ".menu_settings.menu_settings_menu_locations.mega-location-cards-root .mega-location.postbox",
+        function (e) {
+            if (
+                $(e.target).closest(
+                    "a, button, input, select, textarea, label, " +
+                        ".components-form-toggle, " +
+                        ".mega-mmm-enable-toggle, " +
+                        ".mega-location-settings-open, " +
+                        ".megamenu-preview-open, " +
+                        ".mega-location__title-cluster, " +
+                        ".mega-location-card-title-input, " +
+                        ".mega-location__title-edit-field, " +
+                        ".mega-location__delete, " +
+                        ".mega-location-delete-link"
+                ).length
+            ) {
+                return;
+            }
+            e.preventDefault();
+            var $btn = $(this).find(".mega-location-settings-open").first();
+            if (!$btn.length) {
+                return;
+            }
+            megamenuOpenLocationSettingsDialog($btn);
         }
     );
 
@@ -719,10 +1500,59 @@
 
     $(document).on(
         "click",
+        "#megamenu-location-settings-dialog .megamenu-location-settings-dialog__mode-btn--settings",
+        function (e) {
+            e.preventDefault();
+            var $dialog = $("#megamenu-location-settings-dialog");
+            if (!$dialog.hasClass("is-open")) {
+                return;
+            }
+            megamenuLocationDialogEnterSettingsChrome($dialog);
+        }
+    );
+
+    $(document).on(
+        "click",
+        "#megamenu-location-settings-dialog .megamenu-location-settings-dialog__mode-btn--preview",
+        function (e) {
+            e.preventDefault();
+            var $dialog = $("#megamenu-location-settings-dialog");
+            if (!$dialog.hasClass("is-open")) {
+                return;
+            }
+            if (
+                $dialog
+                    .find(".megamenu-location-settings-dialog__mode-btn--preview")
+                    .prop("disabled")
+            ) {
+                return;
+            }
+            megamenuLocationDialogEnsurePreviewSourceButton($dialog);
+            var $src = $dialog.data("mmmPreviewSourceBtn");
+            if ($src && $src.length) {
+                megamenuPreparePreviewFromButton($src);
+            }
+            megamenuLocationDialogEnterPreviewChrome($dialog);
+        }
+    );
+
+    $(document).on(
+        "click",
         ".megamenu-location-settings-dialog-save",
         function (e) {
             e.preventDefault();
             megamenuSaveLocationSettingsDialog();
+        }
+    );
+
+    $(document).on(
+        "change input",
+        "#megamenu-location-settings-dialog-body",
+        function () {
+            var $btn = $("#megamenu-location-settings-dialog").find(".megamenu-location-settings-dialog-save");
+            var origLabel = $btn.data("mmm-save-label");
+            if (origLabel) $btn.text(origLabel);
+            $btn.prop("disabled", false);
         }
     );
 
@@ -747,6 +1577,80 @@
         }
     );
 
+    $(document).on("click", "button.megamenu-preview-open:not([disabled])", function (e) {
+        e.preventDefault();
+        megamenuOpenLocationPreview($(this));
+    });
+
+    $(document).on(
+        "click",
+        "#megamenu-location-settings-dialog .megamenu-preview-dialog__viewport-btn--desktop",
+        function (e) {
+            e.preventDefault();
+            var $dialog = $("#megamenu-location-settings-dialog");
+            if (
+                !$dialog.length ||
+                !$dialog.hasClass("is-open") ||
+                !$dialog.hasClass("megamenu-location-settings-dialog--preview-visible")
+            ) {
+                return;
+            }
+            megamenuSetPreviewViewportDesktop($dialog);
+        }
+    );
+
+    $(document).on(
+        "click",
+        "#megamenu-location-settings-dialog .megamenu-preview-dialog__viewport-btn--mobile",
+        function (e) {
+            e.preventDefault();
+            if ($(this).attr("aria-disabled") === "true") {
+                return;
+            }
+            var $dialog = $("#megamenu-location-settings-dialog");
+            if (
+                !$dialog.length ||
+                !$dialog.hasClass("is-open") ||
+                !$dialog.hasClass("megamenu-location-settings-dialog--preview-visible")
+            ) {
+                return;
+            }
+            megamenuSetPreviewViewportMobile($dialog);
+        }
+    );
+
+    $(document).on(
+        "click",
+        "#megamenu-location-settings-dialog .megamenu-preview-dialog__bg-open-picker",
+        function (e) {
+            e.preventDefault();
+            var $dialog = $("#megamenu-location-settings-dialog");
+            if (!$dialog.length || !$dialog.hasClass("is-open")) {
+                return;
+            }
+            megamenuPreviewBgOpenPicker($dialog, true);
+        }
+    );
+
+    $(document).on(
+        "focusin.megamenuPreviewBgPicker",
+        "#megamenu-location-settings-dialog",
+        function (e) {
+            var el = e.target;
+            if (!el || el.tagName !== "IFRAME") {
+                return;
+            }
+            if (!$(el).hasClass("megamenu-preview-dialog__iframe")) {
+                return;
+            }
+            megamenuClosePreviewBgColorPickerIfOpen();
+        }
+    );
+
+    $(window).on("blur.megamenuPreviewBgPicker", function () {
+        megamenuClosePreviewBgColorPickerIfOpen();
+    });
+
     $(document).on("keydown.megamenuLocationDlg", function (e) {
         if (e.key !== "Escape") {
             return;
@@ -768,6 +1672,23 @@
         if (!$dlg.hasClass("is-open")) {
             return;
         }
+        var closedMegaPicker = false;
+        $dlg.find(".mega-color-picker-input").each(function () {
+            var $inp = $(this);
+            var $pc = $inp.data("picker-container-ref");
+            if ($pc && $pc.length && $pc.is(":visible")) {
+                if (typeof $.fn.customColorPicker === "function") {
+                    $inp.customColorPicker("close");
+                }
+                closedMegaPicker = true;
+            }
+        });
+        if (closedMegaPicker) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return;
+        }
+        e.preventDefault();
         if (
             window.MegamenuAdminModalExpand &&
             typeof window.MegamenuAdminModalExpand.handleEscapeCollapseIfExpanded === "function" &&

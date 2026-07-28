@@ -97,7 +97,7 @@ class MLAAVIF {
 
 			// Replace the exif.jpg values with the original avif file values
 			$exif_array['exif_metadata']['FileName'] = pathinfo( $filepath, PATHINFO_BASENAME );
-			$exif_array['exif_metadata']['FileDateTime'] = (integer) filectime( $filepath ); // Date uploaded
+			$exif_array['exif_metadata']['FileDateTime'] = (int) filectime( $filepath ); // Date uploaded
 			$exif_array['exif_metadata']['FileSize'] = filesize( $filepath );
 			$exif_array['exif_metadata']['MimeType'] = 'image/avif';
 			$exif_array['exif_metadata']['COMPUTED']['IsColor'] = 1;

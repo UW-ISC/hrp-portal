@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/save-and-import-settings-for-multisite/
  *
  * @package MLA Multisite Extensions
- * @version 1.15
+ * @version 1.16
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
 Description: Adds Multisite filters to MLA shortcodes, supports the "Multisite Global Media" plugin, copies MLA option settings between sites.
 Author: David Lingren
-Version: 1.15
+Version: 1.16
 Author URI: http://davidlingren.com/
 
 Copyright 2017-2023 David Lingren
@@ -62,7 +62,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.15';
+	const PLUGIN_VERSION = '1.16';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -187,8 +187,8 @@ class MLAMultisiteExtensions {
 		}
 		
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -216,7 +216,7 @@ class MLAMultisiteExtensions {
 		}
 		
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 
 		if ( is_multisite() ) {
 			add_filter( 'mla_gallery_attributes', 'MLAMultisiteExtensions::mla_gallery_attributes', 10, 1 );
@@ -1565,7 +1565,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_filtered_terms() raw_query = " . var_export( $raw_query, true ), self::MLA_DEBUG_CATEGORY );
 
 		if ( !empty( $raw_query['global_media'] ) ) {
-			switch_to_blog( (integer) apply_filters( 'global_media.site_id', 1 ) );
+			switch_to_blog( (int) apply_filters( 'global_media.site_id', 1 ) );
 			add_action( 'mla_media_modal_query_items', 'MLAMultisiteExtensions::mla_media_modal_query_items', 10, 5 );
 		}
 

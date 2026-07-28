@@ -125,6 +125,20 @@
                         } else {
                             returnValue = undefined;
                         }
+                    } else if (methodName === 'open') {
+                        return this.each(function() {
+                            const api = $(this).data('customColorPickerApi');
+                            if (api && typeof api.open === 'function') {
+                                api.open();
+                            }
+                        });
+                    } else if (methodName === 'close') {
+                        return this.each(function() {
+                            const api = $(this).data('customColorPickerApi');
+                            if (api && typeof api.close === 'function') {
+                                api.close();
+                            }
+                        });
                     }
                 } else {
                     const settings = $.extend({
@@ -175,7 +189,16 @@
                             $textDisplayInput = $originalInput.data('text-display-input');
                         }
                         const $uiWrapper = $textDisplayInput.parent('.mega-custom-color-input-wrapper');
-                        instanceApi.currentSettings = $.extend({}, instanceApi.currentSettings || {}, settings);
+                        const prevSettings = instanceApi.currentSettings || {};
+                        const mergedSettings = $.extend({}, prevSettings, settings);
+                        if (
+                            (!mergedSettings.palette || mergedSettings.palette.length === 0) &&
+                            prevSettings.palette &&
+                            prevSettings.palette.length > 0
+                        ) {
+                            mergedSettings.palette = prevSettings.palette;
+                        }
+                        instanceApi.currentSettings = mergedSettings;
 
                         const pluginInstance = this; 
                         let $pickerContainer, $paletteContainerElement, $cssVarPaletteContainer, 
@@ -302,28 +325,67 @@
                             }
                         }
 
-                        instanceApi._drawPalette = function() { /* ... (unchanged, uses instanceApi.currentSettings) ... */ 
+                        instanceApi._drawPalette = function() {
                             if (!$paletteContainerElement) return;
                             $paletteContainerElement.empty();
-                            const combinedPaletteColors = new Set();
+                            const seenHex = new Set();
+
+                            function appendHexPaletteSwatch(hexUpper) {
+                                if (seenHex.has(hexUpper)) return;
+                                seenHex.add(hexUpper);
+                                const $swatch = $('<div class="mega-picker-swatch"></div>')
+                                    .css('background-color', hexUpper).attr('title', hexUpper)
+                                    .on('click', function() {
+                                        isCssVarMode = false; currentCssVarString = '';
+                                        const rgb = hexToRgb(hexUpper);
+                                        if (rgb) {
+                                            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                                            currentHslHue = hsl[0]; currentHslSaturation = hsl[1]; currentHslLightness = hsl[2];
+                                        }
+                                        currentAlpha = 1.0;
+                                        handleColorSelectionChange(true);
+                                    });
+                                $paletteContainerElement.append($swatch);
+                            }
+
                             if (instanceApi.currentSettings.palette && Array.isArray(instanceApi.currentSettings.palette)) {
                                 instanceApi.currentSettings.palette.forEach(colorString => {
-                                    if (typeof colorString === 'string' && colorString.startsWith('#')) {
-                                        const rgb = hexToRgb(colorString);
-                                        if (rgb) combinedPaletteColors.add(colorString.toUpperCase());
-                                    } else { console.warn("ColorPicker: Invalid color in predefined palette:", colorString); }
+                                    if (typeof colorString !== 'string') return;
+                                    const s = colorString.trim();
+                                    if (s.toLowerCase() === 'transparent') {
+                                        const $swatch = $('<div class="mega-picker-swatch mega-picker-swatch--transparent"></div>')
+                                            .attr('title', 'transparent')
+                                            .on('click', function() {
+                                                isCssVarMode = false; currentCssVarString = '';
+                                                currentAlpha = 0;
+                                                const fallbackHex = instanceApi.currentSettings.defaultColor || '#cccccc';
+                                                const rgb = hexToRgb(fallbackHex);
+                                                if (rgb) {
+                                                    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                                                    currentHslHue = hsl[0]; currentHslSaturation = hsl[1]; currentHslLightness = hsl[2];
+                                                }
+                                                handleColorSelectionChange(true);
+                                            });
+                                        $paletteContainerElement.append($swatch);
+                                    } else if (s.startsWith('#')) {
+                                        const rgb = hexToRgb(s);
+                                        if (rgb) appendHexPaletteSwatch(s.toUpperCase());
+                                    } else {
+                                        console.warn("ColorPicker: Invalid color in predefined palette:", colorString);
+                                    }
                                 });
                             }
+
                             $('.mega-color-picker-input.mega-plugin-enhanced').not($originalInput).each(function() {
-                                const otherOriginalInput = $(this); 
+                                const otherOriginalInput = $(this);
                                 const currentInputVal = otherOriginalInput.val();
                                 let baseHexForPalette = null;
                                 if (currentInputVal.toLowerCase().startsWith('var(')) {
                                     const resolved = resolveCssVariable(currentInputVal);
                                     if (resolved) baseHexForPalette = resolved.hex;
-                                    else baseHexForPalette = instanceApi.currentSettings.defaultColor; 
+                                    else baseHexForPalette = instanceApi.currentSettings.defaultColor;
                                 } else if (currentInputVal.toLowerCase() === 'transparent') {
-                                    baseHexForPalette = instanceApi.currentSettings.defaultColor; 
+                                    baseHexForPalette = instanceApi.currentSettings.defaultColor;
                                 } else if (currentInputVal.toLowerCase().startsWith('rgba') || currentInputVal.toLowerCase().startsWith('rgb(')) {
                                     const parsedRgba = parseRgbaString(currentInputVal);
                                     if (parsedRgba) baseHexForPalette = rgbToHex(parsedRgba.r, parsedRgba.g, parsedRgba.b);
@@ -331,22 +393,10 @@
                                     const rgb = hexToRgb(currentInputVal);
                                     if (rgb) baseHexForPalette = rgbToHex(rgb.r, rgb.g, rgb.b);
                                 }
-                                if (baseHexForPalette) combinedPaletteColors.add(baseHexForPalette.toUpperCase());
-                            });
-                            combinedPaletteColors.forEach(hex => {
-                                const $swatch = $('<div class="mega-palette-swatch"></div>')
-                                    .css('background-color', hex).attr('title', hex)
-                                    .on('click', function() {
-                                        isCssVarMode = false; currentCssVarString = ''; 
-                                        const rgb = hexToRgb(hex);
-                                        if (rgb) {
-                                            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-                                            currentHslHue = hsl[0]; currentHslSaturation = hsl[1]; currentHslLightness = hsl[2];
-                                        }
-                                        currentAlpha = 1.0; 
-                                        handleColorSelectionChange(true); 
-                                    });
-                                $paletteContainerElement.append($swatch);
+                                if (baseHexForPalette) {
+                                    const up = baseHexForPalette.toUpperCase();
+                                    if (!seenHex.has(up)) appendHexPaletteSwatch(up);
+                                }
                             });
                         }
 
@@ -364,7 +414,7 @@
                                 if (resolved) { 
                                     validVarsFound++;
                                     const displayColor = `rgba(${hexToRgb(resolved.hex).r}, ${hexToRgb(resolved.hex).g}, ${hexToRgb(resolved.hex).b}, ${resolved.alpha})`;
-                                    const $swatch = $('<div class="mega-css-var-palette-swatch"></div>')
+                                    const $swatch = $('<div class="mega-picker-swatch"></div>')
                                         .css('background-color', displayColor)
                                         .attr('title', varString) 
                                         .on('click', function() {
@@ -385,8 +435,8 @@
                         function _createPickerDOM() { /* ... (unchanged, uses instanceApi.currentSettings) ... */
                             if ($originalInput.data('picker-container-ref')) { 
                                 $pickerContainer = $originalInput.data('picker-container-ref');
-                                $paletteContainerElement = $pickerContainer.find('.mega-color-picker-palette'); 
-                                if (instanceApi.currentSettings.showCssVarPalette) $cssVarPaletteContainer = $pickerContainer.find('.mega-css-var-palette'); 
+                                $paletteContainerElement = $pickerContainer.find('.mega-picker-palette--colors'); 
+                                if (instanceApi.currentSettings.showCssVarPalette) $cssVarPaletteContainer = $pickerContainer.find('.mega-picker-palette--vars'); 
                                 $mainCanvas = $pickerContainer.find('.mega-color-picker-main'); mainCanvasEl = $mainCanvas[0];
                                 $selectorDot = $pickerContainer.find('.mega-color-picker-selector-dot');
                                 $hueCanvas = $pickerContainer.find('.mega-color-picker-hue-slider'); hueCanvasEl = $hueCanvas[0];
@@ -401,10 +451,10 @@
                                 return;
                             }
                             $pickerContainer = $('<div class="mega-color-picker-container"></div>').data('picker-instance', pluginInstance); 
-                            $paletteContainerElement = $('<div class="mega-color-picker-palette"></div>'); 
+                            $paletteContainerElement = $('<div class="mega-picker-palette mega-picker-palette--colors"></div>'); 
                             $pickerContainer.append($paletteContainerElement);
                             if (instanceApi.currentSettings.showCssVarPalette) { 
-                                $cssVarPaletteContainer = $('<div class="mega-css-var-palette"></div>'); 
+                                $cssVarPaletteContainer = $('<div class="mega-picker-palette mega-picker-palette--vars"></div>'); 
                                 $pickerContainer.append($cssVarPaletteContainer);
                             }
                             mainCanvasEl = $('<canvas class="mega-color-picker-main"></canvas>')[0]; $mainCanvas = $(mainCanvasEl);
@@ -479,21 +529,22 @@
                             instanceApi.currentSettings.onColorChange.call($originalInput, finalColorString, $originalInput); 
                         }
 
-                        function updateColorFromMainCanvas(event) { 
+                        function updateColorFromMainCanvas(event) {
                             if(!mainCanvasEl) return;
-                            isCssVarMode = false; currentCssVarString = ''; 
+                            isCssVarMode = false; currentCssVarString = '';
                             const rect = mainCanvasEl.getBoundingClientRect();
                             let x = event.clientX - rect.left; let y = event.clientY - rect.top;
                             const width = mainCanvasEl.width; const height = mainCanvasEl.height;
                             x = Math.max(0, Math.min(width, x)); y = Math.max(0, Math.min(height, y));
-                            
+
                             const s_hsv = x / width;
                             const v_hsv = 1 - (y / height);
-                            const [h, s_hsl, l_hsl] = hsvToHsl(currentHslHue, s_hsv, v_hsv); 
-                            
+                            const [h, s_hsl, l_hsl] = hsvToHsl(currentHslHue, s_hsv, v_hsv);
+
                             currentHslSaturation = s_hsl;
                             currentHslLightness = l_hsl;
-                            
+                            if (currentAlpha === 0) currentAlpha = 1;
+
                             handleColorSelectionChange();
                         }
                         function updateColorFromHueSlider(event) { 
@@ -604,6 +655,15 @@
                         instanceApi.getValue = function() {
                             return $originalInput.val();
                         };
+                        instanceApi.open = function() {
+                            _showPicker();
+                            if ($textDisplayInput && $textDisplayInput.length) {
+                                $textDisplayInput.trigger('focus');
+                            }
+                        };
+                        instanceApi.close = function() {
+                            _hidePicker();
+                        };
                         $originalInput.data('customColorPickerApi', instanceApi); 
 
                         initializeColor(); 
@@ -640,7 +700,7 @@
                             if (!$pickerContainer || !$pickerContainer.is(':visible')) {
                                 return;
                             }
-                            if (e.key !== 'Escape' && e.keyCode !== 27) {
+                            if (e.key !== 'Escape') {
                                 return;
                             }
                             e.preventDefault();

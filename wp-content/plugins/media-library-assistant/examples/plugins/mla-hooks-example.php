@@ -16,7 +16,7 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.17
+ * @version 1.18
  */
 
 /*
@@ -25,7 +25,7 @@ Plugin URI: http://davidlingren.com/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
 Tags: Hooks,MLA Gallery,Shortcode
 Author: David Lingren
-Version: 1.17
+Version: 1.18
 Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2023 David Lingren
@@ -160,7 +160,7 @@ class MLAGalleryHooksExample {
 		// For this example, we delete the selected file.
 		if ( isset( $shortcode_attributes['my_filter'] ) && 'allow file deletion' == $shortcode_attributes['my_filter'] ) {
 			if ( isset( $_REQUEST['attachment_ID'] ) ) {
-				$id = (integer) $_REQUEST['attachment_ID'];
+				$id = (int) $_REQUEST['attachment_ID'];
 				if ( current_user_can( 'delete_post', $id ) ) { 
 					$result = wp_delete_attachment( $id );
 				} else {
@@ -1226,7 +1226,7 @@ class MLAGalleryHooksExample {
 
 		// For the third example, we compose a URL to allow file deletion and add it to the caption.
 		if ( 'allow file deletion' == self::$shortcode_attributes['my_filter'] ) {
-			$id = (integer) $item_values['attachment_ID'];
+			$id = (int) $item_values['attachment_ID'];
 			if ( current_user_can( 'delete_post', $id ) ) { 
 				// Compose a new caption, adding the deletion link.
 				$mla_link_href = "{$item_values['page_url']}?attachment_ID={$id}";

@@ -1,3 +1,14 @@
+@if ($megamenu_pro_active == true) {
+    @if ($megamenu_pro_version < 2.5) {
+        #{$wrap} span.mega-menu-badge {
+	        @if $css_type == flex {
+	            all: revert;
+	        }
+            position: relative;
+        }
+    }
+}
+
 @if ($elementor_pro_active == true) {
 	.elementor-sticky__spacer #{$wrap} #{$menu},
 	.elementor-sticky__spacer #{$wrap} #{$menu} .mega-sub-menu {

@@ -1,22 +1,20 @@
 @use 'sass:math' as math;
 @use 'sass:color' as color;
 
-// ---------------------------------------------------------------------------
-// Admin palette — consolidated neutrals/borders: `$line` (WP-ish UI borders),
-// `$line-ui` (slightly stronger / dividers), `$surface` / `$surface-raised` (fills).
-// Form fields: `--megamenu-form-control-border` on `body.maxmegamenu-admin` (default `$neutral` / #8c8f94).
-// Accent: `$wp-admin-theme-color` → WordPress `var(--wp-admin-theme-color)` on `body`.
-// `$admin-blue-dark` → `var(--wp-admin-theme-color-darker-20)` (tracks active admin color scheme).
-// `$icon-dim` covers dim icons and muted text (merged from `$text-muted`; were #787c82 vs #777).
-// `$neutral` = form-border grey only; icon/option tints use `$icon-dim`.
-// ---------------------------------------------------------------------------
-$white: white;
-$black: hsl(0deg 0% 0%);
+// Megamenu admin neutral ramp (aligned with WP admin neutrals; override per site/theme via `:root`).
+:root {
+	--wp--preset--font-family--material-symbols: "Material Symbols", monospace;
+	--black: #1e1e1e; /* WP Base black */
+	--dark-gray: #2f2f2f; /* WP editor dark */
+	--semidark-gray: #3c3c3c; /* WP toolbar grey */
+	--gray: #757575; /* WP secondary text */
+	--medium-gray: #a7aaad; /* WP input border */
+	--light-gray: #dcdcde; /* WP surface border */
+	--feather-gray: #f6f7f7; /* WP sidebar background */
+}
 
-$wp-admin-theme-color: var(--wp-admin-theme-color);
-// Block editor “synced pattern” purple (see `wp-includes/css/dist/editor`); fallback matches core default.
-$wp-block-synced-color: var(--wp-block-synced-color, #7a00df);
-$admin-blue-dark: var(--wp-admin-theme-color-darker-20);
+// Matches `:root` `--black`; used for Sass `color.change` shadow alphas.
+$-shadow-source: #1e1e1e;
 
 $success: #46b450;
 
@@ -26,35 +24,18 @@ $error-link-hover: #8a2424;
 $error-surface: #ffdddd;
 $warning: #ffb900;
 
-$ink: #1d2327;
-$text: #444;
-$text-secondary: #646970;
-$text-placeholder: #a7aaad;
-$icon-dim: #787c82;
-$neutral: #8c8f94;
-
-$surface: #f6f7f7;
-$surface-raised: #f0f0f1;
-
-$line: #dcdcde;
-$line-ui: #c3c4c7;
-$line-strong: #50575e;
-$line-dark: #373737;
-
-// Native fields in plugin admin: `body.maxmegamenu-admin` sets `--megamenu-form-control-border` (#{$neutral}).
-$megamenu-form-control-border: var(--megamenu-form-control-border, #{$neutral});
+// Native fields in plugin admin: `body.maxmegamenu-admin` sets `--megamenu-form-control-border` (use `var(--megamenu-form-control-border, var(--gray))` at use sites).
 
 // Horizontal gap between settings-page rail nav and main canvas (matches dialog rail column width intent).
 $megamenu-settings-rail-gap: 24px;
 
-// Alpha / composed shadows (derived from $black; focus halos use `--wp-admin-theme-color--rgb`)
+// Alpha / composed shadows (tinted to match `--black`); focus halos use `--wp-admin-theme-color--rgb`.
 // Five levels: feather (a05) → light (a07) → mid (a12) → strong (a22) → scrim (a45).
-// a04 merged into a05 (0.01 gap); a1 merged into a12 (0.02 gap); a18/white-zero unused → removed.
-$shadow-a05: rgba($black, 0.05);
-$shadow-a07: rgba($black, 0.07);
-$shadow-a12: rgba($black, 0.12);
-$shadow-a22: rgba($black, 0.22);
-$shadow-a45: rgba($black, 0.45);
+$shadow-a05: color.change($-shadow-source, $alpha: 0.05);
+$shadow-a07: color.change($-shadow-source, $alpha: 0.07);
+$shadow-a12: color.change($-shadow-source, $alpha: 0.12);
+$shadow-a22: color.change($-shadow-source, $alpha: 0.22);
+$shadow-a45: color.change($-shadow-source, $alpha: 0.45);
 
 // Semantic elevation — four levels covering every shadow use in this file.
 $shadow-small:       0 1px 2px $shadow-a07;
@@ -62,7 +43,7 @@ $shadow-small-hover: 0 1px 2px $shadow-a05, 0 4px 16px $shadow-a07;
 $shadow-large:       0 1px 2px $shadow-a12, 0 12px 48px -8px $shadow-a22;
 $shadow-large-hover: 0 4px 28px $shadow-a22;
 // Chevron for `.mega-toolbar-native-select` (inline-end; `+ 3px` nudges left vs a 10px baseline).
-$mega-toolbar-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%2350575e' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round' d='M2.75 4.5L6 7.75 9.25 4.5'/%3E%3C/svg%3E");
+$mega-toolbar-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23757575' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round' d='M2.75 4.5L6 7.75 9.25 4.5'/%3E%3C/svg%3E");
 // Modal chrome (Gutenberg / component-style dialogs)
 $modal-radius: 10px;
 $modal-padding-x: 36px;
@@ -78,7 +59,7 @@ $mega-admin-icon-hit: 40px;
 $mega-admin-icon-glyph: 24px;
 
 // Standard `:focus-visible` ring for admin controls (color + offset; use inside `&:focus-visible { }`).
-@mixin mega-admin-focus-ring($color: $wp-admin-theme-color, $outline-offset: 2px) {
+@mixin mega-admin-focus-ring($color: var(--wp-admin-theme-color), $outline-offset: 2px) {
 	outline: 2px solid $color;
 	outline-offset: $outline-offset;
 }
@@ -101,62 +82,228 @@ $mega-admin-icon-glyph: 24px;
 	}
 }
 
-@mixin megamenu-admin-ghost-icon-button-shell(
+@mixin megamenu-admin-icon-button-secondary-layout(
 	$hit: $mega-admin-icon-hit,
 	$icon: $mega-admin-icon-glyph
 ) {
-	appearance: none;
-	-webkit-appearance: none;
 	box-sizing: border-box;
 	flex-shrink: 0;
 	width: $hit;
+	min-width: $hit;
 	height: $hit;
 	margin: 0;
 	padding: 0;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	border: 0;
-	border-radius: 4px;
-	background: transparent;
-	cursor: pointer;
-	color: $icon-dim;
 	line-height: 1;
-	box-shadow: none;
-	text-shadow: none;
-	transition:
-		background 0.15s ease,
-		color 0.15s ease;
 
 	@include megamenu-admin-icon-dashicon-child($icon);
 }
 
-@mixin megamenu-admin-ghost-icon-button-states {
-	&:focus:not(:hover) {
-		color: $ink;
-		background: $surface-raised;
-	}
-
-	&:hover {
-		color: $ink;
-		background: rgba(var(--wp-admin-theme-color--rgb), 0.04);
-	}
-
-	&:focus-visible {
-		@include mega-admin-focus-ring;
+@mixin megamenu-admin-modal-button-secondary {
+	&:not(.is-active) {
+		border: 0;
+		color: var(--gray);
 	}
 }
 
-// Square ghost control + centered Dashicon (no positioning — use in toolbars / footers).
-@mixin megamenu-admin-ghost-icon-button(
-	$hit: $mega-admin-icon-hit,
-	$icon: $mega-admin-icon-glyph
+// Modal "ghost" icon buttons: align with Gutenberg `.components-button` (foreground default,
+// accent on hover) + document-toolbar sizing / focus / theme-tint surfaces.
+@mixin megamenu-admin-modal-ghost-icon-btn {
+	$ghost-foreground: var(--wp-components-color-foreground, var(--black));
+	$ghost-hover-fg: var(--wp-components-color-accent, var(--wp-admin-theme-color));
+
+	appearance: none;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+	border-radius: 2px;
+	box-shadow: none;
+	text-shadow: none;
+	color: $ghost-foreground;
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
+	min-height: 32px;
+	margin: 0;
+	padding: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	cursor: pointer;
+	outline: 1px solid transparent;
+	transition:
+		background 0.1s linear,
+		box-shadow 0.1s linear,
+		color 0.1s ease;
+
+	@include megamenu-admin-icon-dashicon-child($mega-admin-icon-glyph);
+
+	.dashicons {
+		color: currentColor;
+	}
+
+	&:visited {
+		color: $ghost-foreground;
+	}
+
+	&:hover:not(:disabled) {
+		color: $ghost-hover-fg;
+		background: wp-admin-theme-rgba(0.04);
+
+		@supports (background: color-mix(in srgb, var(--wp-admin-theme-color) 4%, transparent)) {
+			background: color-mix(in srgb, var(--wp-admin-theme-color) 4%, transparent);
+		}
+	}
+
+	&:active:not(:disabled) {
+		background: wp-admin-theme-rgba(0.08);
+
+		@supports (background: color-mix(in srgb, var(--wp-admin-theme-color) 8%, transparent)) {
+			background: color-mix(in srgb, var(--wp-admin-theme-color) 8%, transparent);
+		}
+	}
+
+	&:focus {
+		outline: 1px solid transparent;
+	}
+
+	// Block editor document toolbar: outer theme ring + inset white (see `editor/style.css`).
+	&:focus:not(:active) {
+		box-shadow:
+			0 0 0 var(--wp-admin-border-width-focus, 2px) var(--wp-admin-theme-color),
+			inset 0 0 0 1px #fff;
+	}
+
+	&:disabled {
+		color: var(--medium-gray);
+		background: transparent;
+		opacity: 1;
+		box-shadow: none;
+	}
+}
+
+// Icon + label compact buttons: menu location card footer + location modal Settings/Preview toggle.
+@mixin megamenu-location-toolbar-button-layout {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+
+	.dashicons {
+		flex-shrink: 0;
+		width: 16px;
+		height: 16px;
+		font-size: 16px;
+		line-height: 1;
+	}
+}
+
+// Segmented mode pills (sliding theme thumb): header Settings/Preview + preview footer Desktop/Mobile.
+@mixin megamenu-location-settings-dialog-mode-pill-track {
+	gap: 4px;
+	align-self: center;
+	padding: 3px;
+	border-radius: 999px;
+	border: 1px solid var(--light-gray);
+	background: var(--light-gray);
+	box-sizing: border-box;
+	overflow: visible;
+	position: relative;
+
+	.megamenu-location-settings-dialog__mode-pill-slider {
+		position: absolute;
+		z-index: 0;
+		pointer-events: none;
+		inset-block: 3px;
+		inset-inline-start: 3px;
+		width: calc((100% - 10px) / 2);
+		border-radius: 999px;
+		background: var(--wp-admin-theme-color);
+		transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.megamenu-location-settings-dialog__mode-pill-slider {
+			transition-duration: 0.01ms;
+		}
+	}
+}
+
+@mixin megamenu-location-settings-dialog-mode-pill-slider-to-second(
+	$second-active-selector
 ) {
-	@include megamenu-admin-ghost-icon-button-shell($hit, $icon);
-	@include megamenu-admin-ghost-icon-button-states;
+	&:has(#{$second-active-selector}) .megamenu-location-settings-dialog__mode-pill-slider {
+		transform: translateX(calc(100% + 4px));
+	}
+
+	[dir="rtl"] &:has(#{$second-active-selector}) .megamenu-location-settings-dialog__mode-pill-slider {
+		transform: translateX(calc(-100% - 4px));
+	}
 }
 
-// Dashicon tile rendered on `::before` (menu icon grid); matches ghost button colors / radius / transitions.
+@mixin megamenu-location-settings-dialog-mode-pill-buttons {
+	.megamenu-location-toolbar-btn.megamenu-location-settings-dialog__mode-btn {
+		position: relative;
+		z-index: 1;
+		flex: 1 1 0;
+		min-width: 0;
+		justify-content: center;
+		margin: 0;
+		border: 0;
+		border-radius: 999px;
+		box-shadow: none;
+		background: transparent;
+		color: var(--black);
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 1.3;
+		padding: 6px 14px;
+		min-height: 30px;
+		transition:
+			color 0.2s ease,
+			background 0.12s ease;
+
+		.dashicons {
+			color: var(--gray);
+			transition: color 0.2s ease;
+		}
+
+		&:focus {
+			box-shadow: none;
+		}
+
+		&:focus-visible {
+			@include mega-admin-focus-ring(var(--wp-admin-theme-color), 1px);
+			z-index: 2;
+		}
+
+		&:not(.is-active) {
+			&:hover:not(:disabled) {
+				background: color-mix(in srgb, var(--black) 4%, var(--feather-gray));
+			}
+		}
+
+		&.is-active {
+			background: transparent;
+			color: white;
+			border: 0;
+
+			.dashicons {
+				color: white;
+			}
+
+			&:focus-visible {
+				outline-color: white;
+			}
+		}
+	}
+}
+
+// Dashicon tile rendered on `::before` (menu icon grid).
 @mixin megamenu-admin-icon-pseudo-dashicon-tile(
 	$hit: $mega-admin-icon-hit,
 	$glyph: $mega-admin-icon-glyph
@@ -171,7 +318,7 @@ $mega-admin-icon-glyph: 24px;
 	padding: 0;
 	border-radius: 4px;
 	background: transparent;
-	color: $icon-dim;
+	color: var(--gray);
 	line-height: 1;
 	font-size: $glyph;
 	cursor: pointer;
@@ -183,10 +330,8 @@ $mega-admin-icon-glyph: 24px;
 		box-shadow 0.15s ease;
 }
 
-// Shared close control: ghost icon button (header corner on menu item + location modals).
+// Shared positioning when `.megamenu-modal-close` is not inside `.megamenu-admin-modal__header-actions`.
 @mixin megamenu-modal-close-button {
-	@include megamenu-admin-ghost-icon-button-shell;
-	@include megamenu-admin-ghost-icon-button-states;
 	position: absolute;
 	top: 14px;
 	right: 12px;
@@ -195,11 +340,6 @@ $mega-admin-icon-glyph: 24px;
 
 .megamenu-modal-close {
 	@include megamenu-modal-close-button;
-
-	.dashicons {
-		display: block;
-		pointer-events: none;
-	}
 }
 
 
@@ -210,7 +350,7 @@ $mega-admin-icon-glyph: 24px;
 		bottom: 0;
 		left: 0;
 		height: 3px;
-		background-color: $wp-admin-theme-color;
+		background-color: var(--wp-admin-theme-color);
 		border-radius: 2px;
 		transition: left 0.3s ease-out, width 0.3s ease-out;
 		z-index: 1;
@@ -229,14 +369,14 @@ $mega-admin-icon-glyph: 24px;
 	padding: 3px 2px;
 	border-radius: 9999px;
 	box-sizing: border-box;
-	background: $white;
-	border: 1px solid $wp-admin-theme-color;
-	color: $wp-admin-theme-color;
+	background: white;
+	border: 1px solid var(--wp-admin-theme-color);
+	color: var(--wp-admin-theme-color);
 }
 
 // Shared vertical rail tabs: Appearance > Menus menu-item modal body + location settings modal.
 @mixin megamenu-dialog-side-tab(
-	$accent: $wp-admin-theme-color,
+	$accent: var(--wp-admin-theme-color),
 	$active-bg: transparent
 ) {
 	appearance: none;
@@ -253,7 +393,7 @@ $mega-admin-icon-glyph: 24px;
 	font-weight: 500;
 	line-height: 20px;
 	text-align: start;
-	color: $ink;
+	color: var(--black);
 	cursor: pointer;
 	border: 1px solid transparent;
 	border-radius: 0;
@@ -266,8 +406,8 @@ $mega-admin-icon-glyph: 24px;
 	}
 
 	&:hover {
-		background: $surface;
-		color: $ink;
+		background: var(--feather-gray);
+		color: var(--black);
 		border-color: transparent;
 	}
 
@@ -298,11 +438,11 @@ $mega-admin-icon-glyph: 24px;
 	box-sizing: border-box;
 	min-height: 32px;
 	padding: 6px 8px;
-	border: 1px dashed $line;
+	border: 1px dashed var(--light-gray);
 	border-radius: 4px;
-	background: color.scale($surface, $lightness: 1%);
+	background: var(--feather-gray);
 	cursor: pointer;
-	color: $icon-dim;
+	color: var(--gray);
 	transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 
 	.dashicons {
@@ -316,9 +456,9 @@ $mega-admin-icon-glyph: 24px;
 
 	&:hover,
 	&:focus-visible {
-		color: $wp-admin-theme-color;
+		color: var(--wp-admin-theme-color);
 		border-color: $focus-ring-blue-strong;
-		background: $white;
+		background: white;
 
 		.dashicons {
 			opacity: 1;
@@ -357,7 +497,6 @@ $mega-admin-icon-glyph: 24px;
 	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-y: auto;
-	background: $white;
 }
 
 @mixin megamenu-dialog-panels-shell($overflow: auto) {
@@ -368,7 +507,6 @@ $mega-admin-icon-glyph: 24px;
 	overflow: $overflow;
 	box-sizing: border-box;
 	position: relative;
-	background: $white;
 	border: 0;
 }
 
@@ -380,15 +518,15 @@ $mega-admin-icon-glyph: 24px;
 		top: calc(100% + 6px);
 		left: 50%;
 		transform: translateX(-50%);
-		background: $white;
-		color: $ink;
+		background: white;
+		color: var(--black);
 		padding: 6px 10px;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 		font-size: 12px;
 		font-weight: 400;
 		line-height: 1.4;
 		border-radius: 2px;
-		border: 1px solid $line-strong;
+		border: 1px solid var(--gray);
 		box-shadow: $shadow-small;
 		margin-left: 0;
 		width: auto;
@@ -408,9 +546,9 @@ $mega-admin-icon-glyph: 24px;
 		width: 9px;
 		height: 9px;
 		margin: 0;
-		background: $white;
-		border-left: 1px solid $line-strong;
-		border-top: 1px solid $line-strong;
+		background: white;
+		border-left: 1px solid var(--gray);
+		border-top: 1px solid var(--gray);
 		border-right: none;
 		border-bottom: none;
 		box-sizing: border-box;
@@ -450,7 +588,7 @@ $mega-admin-icon-glyph: 24px;
 
 // Full-cell overlay used to visually disable table rows.
 @mixin disabled-row-overlay {
-	background: $surface;
+	background: var(--feather-gray);
 	display: block;
 	position: absolute;
 	top: 0;
@@ -466,7 +604,7 @@ $mega-admin-icon-glyph: 24px;
 @mixin mega-toolbar-field-label {
 	font-size: 11px;
 	text-transform: uppercase;
-	color: $text;
+	color: var(--semidark-gray);
 	display: block;
 	margin: 0 0 2px 1px;
 }
@@ -482,14 +620,14 @@ $mega-admin-icon-glyph: 24px;
 	min-height: 40px;
 	margin: 0;
 	padding: 0 34px 0 10px;
-	border: 1px solid $megamenu-form-control-border;
+	border: 1px solid var(--megamenu-form-control-border, var(--gray));
 	border-radius: 4px;
-	background-color: $white;
+	background-color: white;
 	background-image: $mega-toolbar-select-chevron;
 	background-repeat: no-repeat;
 	background-position: right calc(10px + 3px) center;
 	background-size: 12px 12px;
-	color: $text;
+	color: var(--semidark-gray);
 	font-size: 14px;
 	line-height: 1.4;
 	font-weight: 400;
@@ -501,23 +639,23 @@ $mega-admin-icon-glyph: 24px;
 
 	&:hover,
 	&:focus {
-		color: $black;
-		background-color: $surface;
-		border-color: $neutral;
+		color: var(--black);
+		background-color: var(--feather-gray);
+		border-color: var(--gray);
 		background-image: $mega-toolbar-select-chevron;
 	}
 
 	&:focus-visible {
 		@include mega-admin-focus-ring;
-		border-color: $wp-admin-theme-color;
+		border-color: var(--wp-admin-theme-color);
 		background-image: $mega-toolbar-select-chevron;
 	}
 
 	&:disabled {
 		opacity: 0.6;
 		cursor: default;
-		background-color: $surface;
-		border-color: $megamenu-form-control-border;
+		background-color: var(--feather-gray);
+		border-color: var(--megamenu-form-control-border, var(--gray));
 		background-image: $mega-toolbar-select-chevron;
 	}
 }
@@ -563,15 +701,33 @@ $mega-admin-icon-glyph: 24px;
 @mixin mega-theme-editor-card-shell {
 	padding: 16px 20px;
 	border-radius: 8px;
-	border: 1px solid $megamenu-form-control-border;
-	background: $surface;
+	border: 1px solid var(--megamenu-form-control-border, var(--gray));
+	background: var(--feather-gray);
 	box-shadow: $shadow-small;
-	color: $text;
+	color: var(--semidark-gray);
 	box-sizing: border-box;
 	transition: box-shadow 0.2s ease;
 
 	&:hover {
 		box-shadow: $shadow-small-hover;
+	}
+}
+
+// Field label stack: table name cells (`td.mega-name`) and location modal Display Options (`.mmm-location-output-options__name.mega-name` — both use `.megamenu_outer_wrap`).
+body.maxmegamenu-admin .megamenu_outer_wrap {
+	.mega-name:has(.mega-description) .mega-name-title {
+		font-weight: 500;
+	}
+
+	.mega-description {
+		font-size: 13px;
+		color: var(--gray);
+		line-height: 1.5em;
+		width: 80%;
+
+		p {
+			font-size: 12px;
+		}
 	}
 }
 
@@ -671,7 +827,7 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 		width: 100%;
 		height: auto;
 	    min-height: 150px;
-		border: 1px solid $megamenu-form-control-border;
+		border: 1px solid var(--megamenu-form-control-border, var(--gray));
 	}
 
 	div.CodeMirror span.CodeMirror-matchingbracket {
@@ -696,6 +852,10 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			line-height: 2em;
 			padding-right: 30px;
 			vertical-align: top;
+		}
+
+		&.mega-name-wide {
+			width: 50%;
 		}
 
 		&.mega-value {
@@ -777,7 +937,7 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 				flex: 1 1 100%;
 				display: block;
 				font-size: 0.9em;
-				color: $icon-dim;
+				color: var(--gray);
 				line-height: 20px;
 				width: 100%;
 
@@ -805,21 +965,6 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 	}	
 
 
-	td.mega-name:has(.mega-description) .mega-name-title {
-		font-weight: 500;
-	}
-
-	.mega-description {
-		font-size: 13px;
-		color: $icon-dim;
-		line-height: 1.5em;
-		width: 80%;
-
-		p {
-			font-size: 12px;
-		}
-	}
-
 	ul.custom_styling_tips {
 		list-style-type: disc;
 		list-style-position: inside;
@@ -835,26 +980,22 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 		background: $error-surface;
 	}
 
-	label.mega-toggle_blocks {
+	div.mega-toggle_blocks {
 		width: 100%;
 		max-width: 100%;
 		box-sizing: border-box;
 		cursor: auto;
+		font-size: 1em;
 
 		.mega-value {
 		    padding-bottom: 0;
-		}
-
-		.mega-description {
-		    display: block;
-		    width: 100%;
-		    margin-top: 20px;
 		}
 
 		.toggle-bar-designer {
 			width: 100%;
 			max-width: 100%;
 			box-sizing: border-box;
+			position: relative;
 
 			.mega-blocks {
 				display: flex;
@@ -867,8 +1008,8 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			.mega-blocks .mega-center,
 			.mega-blocks .mega-right {
 			    box-sizing: border-box;
-			    border: 1px solid $line-ui;
-			    background: $surface;
+			    border: 1px solid var(--light-gray);
+			    background: var(--feather-gray);
 			    height: 60px;
 			    padding: 10px;
 			    margin-top: 15px;
@@ -876,16 +1017,16 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			    flex-basis: 33.3333%;
 			}
 			.mega-blocks .mega-left {
-				border-right: 0px;
+				border-right: 0;
 				flex: 1;
 			}
 			.mega-blocks .mega-center {
-			    border-left: 1px dashed $line-ui;
-			    border-right: 1px dashed $line-ui;
+			    border-left: 1px dashed var(--light-gray);
+			    border-right: 1px dashed var(--light-gray);
 			    justify-content: center;
 			}
 			.mega-blocks .mega-right {
-			    border-left: 0px;
+			    border-left: 0;
 			    flex: 1;
 			    justify-content: flex-end;
 			}
@@ -893,7 +1034,7 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			    margin: 0 0 0 5px;
 			}
 			.mega-blocks .block.mega-open .block-title {
-			    border-bottom: 1px solid $white;
+			    border-bottom: 1px solid white;
 			    border-radius: 3px 3px 0 0;
 			}
 			.mega-blocks .block .block-title {
@@ -902,10 +1043,10 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			    height: 35px;
 			    line-height: 35px;
 			    font-size: 0.9em;
-			    background: $white;
-			    color: $text;
+			    background: white;
+			    color: var(--semidark-gray);
 			    cursor: move;
-			    border: 1px solid $line-ui;
+			    border: 1px solid var(--light-gray);
 			    position: relative;
 			    z-index: 2;
 			    border-radius: 3px;
@@ -929,33 +1070,88 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			    display: none;
 			    width: 300px;
 			    vertical-align: top;
-			    background: $white;
+			    background: white;
 			    text-align: left;
-			    color: $text;
+			    color: var(--semidark-gray);
 			    position: absolute;
 			    left: 0px;
 			    top: 34px;
 			    z-index: 1;
-			    border: 1px solid $megamenu-form-control-border;
-
-			    .mega-custom-color-input-wrapper {
-			    	margin-left: auto;
-			    }
+			    border: 1px solid var(--megamenu-form-control-border, var(--gray));
 			}
 
-			.mega-blocks .mega-right .block .block-settings {
-			    left: auto;
-			    right: 0;
+			.mega-blocks .block.mega-open {
+				position: static;
+
+				.block-settings {
+					position: fixed;
+					left: 160px;
+					right: 0;
+					margin-left: auto;
+					margin-right: auto;
+					top: 50%;
+					bottom: auto;
+					width: calc(100% - 160px - 10%);
+					transform: translateY(-50%);
+					z-index: 40;
+					max-width: 700px;
+					height: max-content;
+					min-width: 0;
+					min-height: 0;
+					overflow: visible;
+					border-radius: 4px;
+					box-shadow:
+						$shadow-large-hover,
+						0 0 0 1px $shadow-a07;
+					border: none;
+				}
+			}
+
+			.mega-blocks .block .block-settings-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				margin-bottom: 10px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid var(--light-gray);
+
+				h3 {
+					margin: 0;
+					padding: 0;
+					border: 0;
+					flex: 1;
+				}
+
+				.mega-block-close {
+					flex-shrink: 0;
+					background: none;
+					border: 0;
+					padding: 2px;
+					cursor: pointer;
+					color: var(--gray);
+					line-height: 1;
+
+					&:hover {
+						color: var(--semidark-gray);
+					}
+
+					.dashicons {
+						font-size: 18px;
+						width: 18px;
+						height: 18px;
+					}
+				}
 			}
 
 			.mega-blocks .block h3 {
 			    margin-top: 5px;
-			    border-bottom: 1px solid $line-ui;
+			    border-bottom: 1px solid var(--light-gray);
 			    padding-bottom: 10px;
 			}
 
 			// Label text left, inputs grouped on the right (sentence case — no toolbar all-caps).
-			.block-settings label {
+			.block-settings > label {
 				width: 100%;
 				display: flex;
 				flex-direction: row;
@@ -968,29 +1164,30 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 				font-size: 13px;
 				font-weight: 400;
 				line-height: 1.4;
-				color: $text;
+				color: var(--semidark-gray);
 				text-transform: none;
 			}
 
-			.block-settings label:last-of-type {
+			.block-settings > label:last-of-type {
 				margin-bottom: 0;
 			}
 
-			.block-settings label .mega-description {
+			.block-settings > label .mega-description {
 				flex: 1 0 100%;
 				width: 100%;
 				text-transform: none;
 				font-size: 12px;
 				font-weight: 400;
 				line-height: 1.45;
-				color: $icon-dim;
+				color: var(--gray);
 				margin: 4px 0 0;
 			}
 
-			.block-settings label input,
-			.block-settings label select,
-			.block-settings label input[type='number'],
-			.block-settings label .icon_dropdown {
+			.block-settings > label input,
+			.block-settings > label select,
+			.block-settings > label input[type='number'],
+			.block-settings > label .icon_dropdown,
+			.block-settings > label .select2-container {
 				flex: 0 1 auto;
 				width: auto;
 				min-width: 0;
@@ -1000,10 +1197,10 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 				font-size: 14px;
 				font-weight: 400;
 				text-transform: none;
-				color: $text;
+				color: var(--semidark-gray);
 			}
 
-			.block-settings label textarea {
+			.block-settings > label textarea {
 				flex: 0 1 auto;
 				width: auto;
 				min-width: 0;
@@ -1014,37 +1211,45 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 				font-size: 14px;
 				font-weight: 400;
 				text-transform: none;
-				color: $text;
+				color: var(--semidark-gray);
 			}
 
-			.block-settings label input[type='number'] {
+			.block-settings > label input[type='number'] {
 				height: 32px;
 				line-height: 32px;
 			}
 
-			.block-settings .mega-custom-color-input-wrapper {
+			.block-settings > label .mmm_image_selector {
 				flex: 0 1 auto;
 				margin-left: auto;
-				width: auto;
 				max-width: min(240px, 58%);
 			}
 
-			.block-settings label .mmm_image_selector {
-				flex: 0 1 auto;
-				margin-left: auto;
-				max-width: min(240px, 58%);
+			.block-settings .mega-color-picker-input-text {
+				display: none;
 			}
 
 			// Beat `.mega-blocks .block input[type=text] { width: 50%; }` — keep controls on the right, not half-bar width.
-			.mega-blocks .block .block-settings label input[type='text'],
-			.mega-blocks .block .block-settings label input[type='number'] {
+			.mega-blocks .block .block-settings > label input[type='text'],
+			.mega-blocks .block .block-settings > label input[type='number'] {
 				width: auto;
 				max-width: min(240px, 58%);
 			}
 
-			.mega-blocks .block .block-settings label textarea {
+			.mega-blocks .block .block-settings > label textarea {
 				width: auto;
 				max-width: min(100%, 320px);
+			}
+
+			.block-settings-footer {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-top: 16px;
+
+				.mega-delete {
+					@include mega-admin-trash-icon-button;
+				}
 			}
 
 			.block-settings .mega-delete {
@@ -1053,11 +1258,11 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			}
 
 			.toggle-left {
-				border-right: 1px dashed $line-ui;
+				border-right: 1px dashed var(--light-gray);
 			}
 
 			.toggle-right {
-			    border-left: 0px solid $line-ui;
+			    border-left: 0px solid var(--light-gray);
 			    text-align: right;
 
 			}
@@ -1067,10 +1272,6 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 			    display: inline-block;
 			    vertical-align: top;
 			    margin: 0 5px 0 0;
-
-			    input[type=text] {
-				    width: 50%;
-				}
 			}
 		}
 	}
@@ -1085,7 +1286,7 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 	label span.mega-short-desc {
 		font-size: 11px;
 		text-transform: uppercase;
-		color: $icon-dim;
+		color: var(--gray);
 		display: block;
 		margin: 0 0 5px;
 	}
@@ -1140,10 +1341,27 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 
 }
 
+// Compile-error SCSS dump (WP admin notice + AJAX notice): CodeMirror lives outside `.megamenu_outer_wrap table`.
+body.maxmegamenu-admin .megamenu-compile-failed-scss-editor {
+	.CodeMirror {
+		max-height: 480px;
+	}
+
+	.CodeMirror-scroll {
+		max-height: 480px;
+	}
+}
+
 // Menu item modal: label column vertical padding (overrides global `.megamenu_outer_wrap table td`).
 body.maxmegamenu-admin .megamenu-menu-item-dialog .megamenu_outer_wrap table td.mega-name {
 	padding-top: 10px;
 	padding-bottom: 10px;
+}
+
+// All Max Mega Menu admin modals: label column (`td.mega-name`) width and gutter.
+body.maxmegamenu-admin .megamenu-admin-modal .megamenu_outer_wrap table td.mega-name {
+	width: 40%;
+	padding-right: 10px;
 }
 
 // Pro "Styling" tab: name/enable column widths + row striping; dim name/value from checkbox via :has (no JS).
@@ -1185,7 +1403,7 @@ body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_
 
 	td:after {
 		content: "";
-		background: $surface-raised;
+		background: var(--light-gray);
 		display: block;
 		position: absolute;
 		top: 0;
@@ -1273,6 +1491,28 @@ body.rtl.maxmegamenu-admin .megamenu-admin-modal {
 	right: 160px;
 }
 
+body.desktop-mode-chromeless.maxmegamenu-admin .megamenu-admin-modal {
+	left: 0;
+	right: 0;
+	top: 0;
+}
+
+.desktop-mode-chromeless .megamenu_outer_wrap:not(.megamenu-admin-modal *) .megamenu-dialog-tablist {
+	display: none;
+}
+
+body.desktop-mode-chromeless.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail:not(.megamenu-admin-modal *) {
+	grid-template-columns: 1fr;
+}
+
+body.desktop-mode-chromeless.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail:not(.megamenu-admin-modal *) > .mega-tablist {
+	display: none;
+}
+
+body.desktop-mode-chromeless.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail:not(.megamenu-admin-modal *) > .megamenu-dialog-panels {
+	grid-column: 1;
+}
+
 body.maxmegamenu-admin .wp-media-buttons {
 	.button {
 		margin: 0;
@@ -1297,6 +1537,20 @@ body.maxmegamenu-admin .button.button-compact.button-icon-only {
 	padding: 0 6px;
 }
 
+// Saved-state dashicon alignment inside compact buttons.
+body.maxmegamenu-admin .button.button-compact:has(.dashicons) {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+body.maxmegamenu-admin .button.button-compact .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	line-height: 1;
+}
+
 // Core accordion / postbox overflow would clip ::before/::after tooltips on the Menus screen.
 body.maxmegamenu-admin #mega_menu_meta_box,
 body.maxmegamenu-admin #mega_menu_meta_box-content,
@@ -1305,36 +1559,79 @@ body.maxmegamenu-admin #mega_menu_meta_box .accordion-section-content {
 	overflow: visible !important;
 }
 
-// Menu Locations tab: full-width intro stacks above the card grid (no table column layout).
-body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels .menu_settings.menu_settings_menu_locations {
-	> .mega-menu-locations-page-intro {
-		margin: 0 0 50px;
-		max-width: 100%;
-		box-sizing: border-box;
+// Menu Locations tab: lead copy under page title (core `.description` typography).
+body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations > p.description {
+	margin: 20px 0;
+}
 
-		.mega-description {
-			margin: 0;
-			max-width: 52em;
-			color: $icon-dim;
-			font-size: 13px;
-			line-height: 1.5;
+// Menu Locations page: `h3.first` underline (global `h3` rule uses `border-bottom`; match card chrome to `--medium-gray`).
+body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations > h3.first {
+	border-bottom-color: var(--medium-gray);
+}
 
-			p {
-				margin: 0 0 1em;
+// `.megamenu-location-toolbar-btn`: Settings/Preview on location cards + modal header (see mixin).
+body.maxmegamenu-admin .megamenu-location-toolbar-btn.button.button-compact {
+	@include megamenu-location-toolbar-button-layout;
+}
 
-				&:last-child {
-					margin-bottom: 0;
-				}
-			}
-		}
+body.maxmegamenu-admin .megamenu-admin-modal__header-top .megamenu-location-toolbar-btn.button.button-compact:not(.button-secondary) {
+	border: 0;
+	box-shadow: none;
+}
 
-		.mega-menu-locations-page-intro__empty {
-			margin: 1em 0 0;
-			color: $icon-dim;
-			font-size: 13px;
-			line-height: 1.5;
+// Modal secondary controls: inactive tab/segment styling and other non-ghost secondaries.
+// Ghost icon controls use `megamenu-admin-modal-ghost-icon-btn` (next block).
+body.maxmegamenu-admin .megamenu-admin-modal button.button-secondary {
+	@include megamenu-admin-modal-button-secondary;
+
+	&.is-active {
+		border-width: 2px;
+	}
+
+	&:focus {
+		box-shadow: none;
+	}
+}
+
+// Ghost icon buttons: high-specificity chain wins over core `.button-secondary` without `!important`.
+body.maxmegamenu-admin
+	.megamenu-admin-modal
+	button.button.button-secondary.megamenu-admin-modal-icon-btn.button-compact,
+body.maxmegamenu-admin
+	.megamenu-admin-modal
+	button.button.button-secondary.megamenu-location-settings-dialog-edit-theme {
+	@include megamenu-admin-modal-ghost-icon-btn;
+}
+
+// Block editor: `.is-pressed` on document tools uses near-black; MMM uses `__expand-btn--expanded` with `var(--black)`.
+body.maxmegamenu-admin
+	.megamenu-admin-modal
+	button.button.button-secondary.megamenu-admin-modal-icon-btn.megamenu-admin-modal__expand-btn.megamenu-admin-modal__expand-btn--expanded {
+	background: var(--black);
+	color: #fff;
+
+	&:hover:not(:disabled) {
+		color: #fff;
+		background: var(--black);
+	}
+
+	&:active:not(:disabled) {
+		color: #fff;
+		background: var(--semidark-gray);
+
+		@supports (background: color-mix(in srgb, var(--black) 90%, #fff)) {
+			background: color-mix(in srgb, var(--black) 90%, #fff);
 		}
 	}
+}
+
+// Min card height: Max Mega Menu settings pages only (not Appearance > Menus).
+body.maxmegamenu-admin:not(.nav-menus-php) .menu_settings.menu_settings_menu_locations.mega-location-cards-root .mega-location-cards > .mega-location.postbox {
+	min-height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	box-sizing: border-box;
 }
 
 // Location cards (Menu Locations + Max Mega Menu meta box on nav-menus.php): one root, optional `--meta` for narrow column.
@@ -1344,6 +1641,10 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 24px;
 		width: 100%;
+
+		body.maxmegamenu-admin.nav-menus-php & {
+			gap: 20px;
+		}
 
 		&:empty {
 			display: none;
@@ -1358,26 +1659,61 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 		}
 	}
 
-	// Same chrome as menu item modal `.mega-col-add-widget` (dashed add slot).
+	// Dashed “add location” slot (same layout as `.mega-col-add-widget`, without text `color` rules — inherits UA/link styling).
 	a.mega-location-add-card {
-		@include mega-col-add-widget-appearance;
-		height: 150px;
-		min-height: 150px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		box-sizing: border-box;
+		min-height: 100px;
+		padding: 6px 8px;
+		border: 1px dashed var(--wp-admin-theme-color);
+		border-radius: 4px;
+		background: white;
+		cursor: pointer;
+		transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 		gap: 6px;
 		text-decoration: none;
 		vertical-align: middle;
 		font-size: 13px;
 		font-weight: 500;
+
+		.dashicons {
+			font-size: 18px;
+			width: 18px;
+			height: 18px;
+			line-height: 1;
+			opacity: 0.45;
+			transition: opacity 0.2s ease;
+		}
+
+		&:hover,
+		&:focus-visible {
+			border-style: solid;
+			border-color: $focus-ring-blue-strong;
+			background: white;
+			box-shadow: $shadow-small-hover;
+
+			.dashicons {
+				opacity: 1;
+			}
+		}
+
+		&:focus-visible {
+			@include mega-admin-focus-ring;
+		}
 	}
 
 	.mega-location.postbox {
 		margin: 0;
 		min-width: 0;
-		border: 1px solid $line-ui;
+		border: 1px solid var(--medium-gray);
 		border-radius: 4px;
 		box-shadow: $shadow-small;
-		background: $white;
+		background: white;
 		font-size: 14px;
+		cursor: pointer;
 
 		&:hover {
 			box-shadow: $shadow-small-hover;
@@ -1391,21 +1727,18 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 			}
 		}
 
-		&.mega-location-mmm-off > .mega-inside > footer .wp-media-buttons .button,
-		&.mega-location-disabled > .mega-inside > footer .wp-media-buttons .button {
-			margin: 0;
-			opacity: 0.5;
-			filter: grayscale(1);
-		}
-
 		> .mega-inside {
 			margin: 0;
 			padding: 20px;
 			box-sizing: border-box;
+
+			body.maxmegamenu-admin.nav-menus-php & {
+				padding: 16px;
+			}
 		}
 
 		.mega-location__header {
-			padding: 0 0 10px;
+			padding: 0;
 			border: 0;
 		}
 
@@ -1425,18 +1758,24 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 			font-size: 16px;
 			font-weight: 600;
 			line-height: 1.35;
-			color: $ink;
+			color: var(--black);
 			flex: 1 1 auto;
 			min-width: 0;
+
+			body.maxmegamenu-admin.nav-menus-php & {
+				font-size: 14px;
+			}
 		}
 
 		.mega-location__title-icon {
 			flex-shrink: 0;
-			width: 22px;
-			height: 22px;
-			font-size: 22px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 20px;
+			height: 20px;
+			font-size: 20px;
 			line-height: 1;
-			color: $text-secondary;
 		}
 
 		.mega-location__title--editable .mega-location__title-cluster {
@@ -1458,6 +1797,9 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			text-decoration: underline solid var(--medium-gray) 1px;
+			text-underline-offset: 3px;
+			text-decoration-skip-ink: auto;
 		}
 
 		/* Our `display: block` above beats UA `[hidden]` — restore hiding when editing. */
@@ -1466,10 +1808,38 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 		}
 
 		.mega-location__title-edit {
-			@include megamenu-admin-ghost-icon-button-shell;
+			box-sizing: border-box;
 			flex-shrink: 0;
+			width: 20px;
+			min-width: 20px;
+			height: 20px;
+			min-height: 0;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			border-radius: 0;
+			background: transparent;
+			box-shadow: none;
+			color: var(--gray);
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+			vertical-align: middle;
+			cursor: pointer;
 			opacity: 0;
 			transition: opacity 0.15s ease;
+
+			@include megamenu-admin-icon-dashicon-child(16px);
+
+			&:hover,
+			&:focus,
+			&:active {
+				border: 0;
+				background: transparent;
+				box-shadow: none;
+				color: var(--black);
+			}
 
 			&:focus-visible {
 				@include mega-admin-focus-ring;
@@ -1551,10 +1921,14 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 			display: flex;
 			flex-direction: column;
 			gap: 8px;
-			padding: 0 0 10px;
+			padding: 10px 0 0 0;
 			font-size: 13px;
 			line-height: 1.5;
-			color: $text-secondary;
+			color: var(--gray);
+
+			body.maxmegamenu-admin.nav-menus-php & {
+				display: none;
+			}
 		}
 
 		.mega-location__meta p {
@@ -1562,41 +1936,21 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 		}
 
 		.mega-location__assigned-link {
-			color: $wp-admin-theme-color;
+			color: var(--wp-admin-theme-color);
 			font-weight: 400;
-			text-decoration: underline;
-			text-underline-offset: 2px;
+			text-decoration: none;
 
 			&:hover,
 			&:focus {
-				color: $admin-blue-dark;
+				color: var(--wp-admin-theme-color-darker-20);
 			}
 		}
+	}
 
-		&.mega-location-disabled-assign-menu .mega-location__header-row .components-form-toggle {
-			opacity: 0.5;
-			pointer-events: none;
-			filter: grayscale(1);
-		}
-
-		> .mega-inside > footer.mega-location__footer {
-			display: flex;
-			padding: 15px 0 0;
-			border: 0;
-		}
-
-		footer.mega-location__footer .wp-media-buttons {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 10px;
-			align-items: center;
-			margin: 0;
-		}
-
-		button.megamenu-preview-open:disabled,
-		button.megamenu-preview-open[disabled] {
-			cursor: not-allowed;
-		}
+	// Menu location cards only: `@wordpress/components` toggle uses `--wp-components-color-accent` (WP admin theme blue).
+	.mega-mmm-enable-toggle {
+		--wp-components-color-primary: var(--wp-admin-theme-color);
+		--wp-components-color-accent: var(--wp-admin-theme-color);
 	}
 
 	&.mega-location-cards-root--meta {
@@ -1606,66 +1960,12 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 		}
 
 		.mega-location.postbox {
-			&.mega-location-mmm-off > .mega-inside > footer.mega-location__footer {
-				max-height: 0;
-				min-height: 0;
-				padding-top: 0;
-				padding-bottom: 0;
-				gap: 0;
-				opacity: 0;
-				pointer-events: none;
-				visibility: hidden;
-				overflow: hidden;
-				transition:
-					max-height 0.35s ease,
-					padding 0.35s ease,
-					opacity 0.25s ease,
-					visibility 0s linear 0.35s;
-
-				@media (prefers-reduced-motion: reduce) {
-					transition-duration: 0.01ms;
-					transition-delay: 0s;
-				}
-
-				.wp-media-buttons .button {
-					opacity: 1;
-					filter: none;
-				}
-			}
-
-			> .mega-inside > footer.mega-location__footer {
-				max-height: 320px;
-				opacity: 1;
-				pointer-events: auto;
-				visibility: visible;
-				transition:
-					max-height 0.35s ease,
-					padding 0.35s ease,
-					opacity 0.28s ease,
-					visibility 0s linear;
-
-				@media (prefers-reduced-motion: reduce) {
-					transition-duration: 0.01ms;
-				}
-
-				.wp-media-buttons {
-					float: none;
-					clear: none;
-					width: 100%;
-					max-width: 100%;
-					box-sizing: border-box;
-					margin: 0;
-					gap: 10px;
-				}
-			}
-
 			.mega-location__header-row {
 				flex-wrap: nowrap;
 			}
 		}
 
 		.mega-location__assigned,
-		footer.mega-location__footer .delete,
 		.mega-location__delete,
 		button.mega-location-delete-link {
 			display: none !important;
@@ -1679,11 +1979,11 @@ body.maxmegamenu-admin .menu_settings.menu_settings_menu_locations.mega-location
 
 // Plugin admin screens: white #wpwrap main canvas (Appearance > Menus keeps core WP chrome).
 body.maxmegamenu-admin:not(.nav-menus-php) #wpwrap {
-	background-color: $white;
+	background-color: white;
 }
 
-// Lock document scroll while any mega admin dialog is open (menu item, preview, location settings, theme editor).
-// `html` + `body`: dialog-menu-item-settings.js; `body` only: dialog-preview.js, dialog-location-settings.js, theme-editor.js.
+// Lock document scroll while any mega admin dialog is open (menu item, location settings + preview, theme editor).
+// `html` + `body`: dialog-menu-item-settings.js; `body` only: dialog-location-settings.js, theme-editor.js.
 html.megamenu-dialog-open,
 body.megamenu-dialog-open {
 	overflow: hidden;
@@ -1696,11 +1996,10 @@ body.megamenu-dialog-open #wpwrap {
 
 body.maxmegamenu-admin.nav-menus-php {
 
-
 	&.megamenu-dialog-open {
 		ul#adminmenu a.wp-has-current-submenu:after,
 		ul#adminmenu>li.current>a.current:after {
-			border-right-color: $line-dark;
+			border-right-color: var(--semidark-gray);
 		}
 	}
 
@@ -1759,16 +2058,16 @@ body.maxmegamenu-admin.nav-menus-php {
 				font-weight: normal;
 				padding: 3px 5px;
 				margin: 0;
-				color: $text;
+				color: var(--semidark-gray);
 				border-radius: 3px;
-				background: $surface;
-				border: 1px solid $line;
+				background: var(--feather-gray);
+				border: 1px solid var(--light-gray);
 
 				&.active,
 				&:hover {
-					background: $wp-admin-theme-color;
-					border-color: $wp-admin-theme-color;
-					color: $white;
+					background: var(--wp-admin-theme-color);
+					border-color: var(--wp-admin-theme-color);
+					color: white;
 				}
 			}
 
@@ -1830,15 +2129,24 @@ body.maxmegamenu-admin.nav-menus-php {
 			position: sticky;
 			bottom: 0;
 			z-index: 1;
-			background: $white;
+			background: white;
 		}
 
 		.megamenu-dialog-panels {
-			padding: 20px 32px 0;
+			padding: 0;
 			width: auto;
 			height: auto;
 			align-self: stretch;
 			position: relative;
+
+			> .megamenu_content {
+				padding: 20px 32px 0;
+				box-sizing: border-box;
+			}
+
+			> .megamenu_content.menu_icon {
+				padding-top: 0;
+			}
 
 			&:has(.mega-widget.open) {
 				isolation: isolate;
@@ -2022,8 +2330,8 @@ body.maxmegamenu-admin.nav-menus-php {
 
 				> .drop-area {
 					margin-top: 20px;
-					border: 1px dashed $line-ui;
-					background: $surface;
+					border: 1px dashed var(--light-gray);
+					background: var(--feather-gray);
 					max-height: 100px !important;
 				}
 
@@ -2035,7 +2343,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					gap: 4px;
 
 					.dashicons {
-						color: $white;
+						color: white;
 						line-height: 1;
 						width: 16px;
 						height: 16px;
@@ -2050,8 +2358,8 @@ body.maxmegamenu-admin.nav-menus-php {
 					display: flex;
 					flex-direction: column;
 					align-items: stretch;
-					background-color: $surface;
-					border: 1px solid $line-ui;
+					background-color: var(--feather-gray);
+					border: 1px solid var(--light-gray);
 					border-radius: 4px;
 					box-shadow: $shadow-small;
 					padding: 20px;
@@ -2122,12 +2430,12 @@ body.maxmegamenu-admin.nav-menus-php {
 
 						.mega-row-actions .dashicons.mega-settings-open {
 							opacity: 1;
-							color: $ink;
+							color: var(--black);
 						}
 
 						.mega-row-actions .dashicons {
 							opacity: 1;
-							color: $icon-dim;
+							color: var(--gray);
 							transition: color 0.15s ease, background 0.15s ease;
 						}
 
@@ -2185,7 +2493,7 @@ body.maxmegamenu-admin.nav-menus-php {
 						}
 
 						.mega-row-actions:hover .dashicons {
-							color: $ink;
+							color: var(--black);
 						}
 
 						.mega-row-settings {
@@ -2235,13 +2543,13 @@ body.maxmegamenu-admin.nav-menus-php {
 					box-sizing: border-box;
 
 					&.mega-col-add-target .mega-col-wrap {
-						border-color: $wp-admin-theme-color;
-						box-shadow: 0 0 0 1px $wp-admin-theme-color;
+						border-color: var(--wp-admin-theme-color);
+						box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
 					}
 
 					.mega-col-wrap {
-						background-color: $white;
-						border: 1px solid $line-ui;
+						background-color: white;
+						border: 1px solid var(--light-gray);
 						border-radius: 2px;
 						box-shadow: $shadow-small;
 						margin: 0;
@@ -2263,24 +2571,24 @@ body.maxmegamenu-admin.nav-menus-php {
 						.mega-col-add-widget {
 							@include mega-col-add-widget-appearance;
 							margin-top: auto;
-							border-color: $line-ui;
-							background: $white;
-							color: $ink;
+							border-color: var(--light-gray);
+							background: white;
+							color: var(--black);
 
 							.dashicons {
 								opacity: 0.85;
-								color: $icon-dim;
+								color: var(--gray);
 							}
 
 							&:hover,
 							&:focus-visible {
-								color: $wp-admin-theme-color;
-								border-color: $wp-admin-theme-color;
-								background: $white;
+								color: var(--wp-admin-theme-color);
+								border-color: var(--wp-admin-theme-color);
+								background: white;
 
 								.dashicons {
 									opacity: 1;
-									color: $wp-admin-theme-color;
+									color: var(--wp-admin-theme-color);
 								}
 							}
 						}
@@ -2308,8 +2616,8 @@ body.maxmegamenu-admin.nav-menus-php {
 								min-height: 42px;
 								box-sizing: border-box;
 								padding: 4px 10px;
-								background: $white;
-								border: 1px solid $line-ui;
+								background: white;
+								border: 1px solid var(--light-gray);
 								border-radius: 2px;
 								box-shadow: $shadow-small;
 								overflow: hidden;
@@ -2319,16 +2627,16 @@ body.maxmegamenu-admin.nav-menus-php {
 							}
 
 							&:hover .mega-widget-top {
-								border: 1px solid $text;
+								border: 1px solid var(--semidark-gray);
 								box-shadow: $shadow-small-hover;
 							}
 
 							&.open .mega-widget-top {
-								border: 1px solid $line-dark;
+								border: 1px solid var(--semidark-gray);
 							}
 
 							&.open .mega-widget-inner {
-								border: 1px solid $line-dark;
+								border: 1px solid var(--semidark-gray);
 							}
 
 							.mega-widget-title {
@@ -2348,7 +2656,7 @@ body.maxmegamenu-admin.nav-menus-php {
 								.mega-widget-desc {
 									font-weight: normal;
 									font-size: 11px;
-									color: $text-secondary;
+									color: var(--gray);
 									font-style: italic;
 								}
 							}
@@ -2364,7 +2672,7 @@ body.maxmegamenu-admin.nav-menus-php {
 								position: static;
 								margin: 0;
 								padding: 0;
-								background: $white;
+								background: white;
 								border: 0;
 							}
 
@@ -2466,12 +2774,12 @@ body.maxmegamenu-admin.nav-menus-php {
 
 							.dashicons.mega-settings-open {
 								opacity: 1;
-								color: $ink;
+								color: var(--black);
 							}
 
 							.dashicons {
 								opacity: 1;
-								color: $icon-dim;
+								color: var(--gray);
 								transition: color 0.15s ease;
 								width: 14px;
 								height: 14px;
@@ -2488,7 +2796,7 @@ body.maxmegamenu-admin.nav-menus-php {
 							}
 
 							&:hover .dashicons {
-								color: $ink;
+								color: var(--black);
 							}
 						}
 
@@ -2515,22 +2823,22 @@ body.maxmegamenu-admin.nav-menus-php {
 
 								&:hover,
 								&:focus-visible {
-									color: $admin-blue-dark;
+									color: var(--wp-admin-theme-color-darker-20);
 								}
 
 								&:focus-visible {
-									@include mega-admin-focus-ring($wp-admin-theme-color, 1px);
+									@include mega-admin-focus-ring(var(--wp-admin-theme-color), 1px);
 								}
 							}
 
 							button.mega-col-expand:disabled,
 							button.mega-col-contract:disabled {
-								color: $text-placeholder;
+								color: var(--medium-gray);
 								cursor: not-allowed;
 
 								&:hover,
 								&:focus-visible {
-									color: $text-placeholder;
+									color: var(--medium-gray);
 								}
 
 								.dashicons {
@@ -2579,8 +2887,8 @@ body.maxmegamenu-admin.nav-menus-php {
 					margin: 8px 0 20px;
 					padding: 12px 14px;
 					box-sizing: border-box;
-					background: $white;
-					border: 1px solid $line-ui;
+					background: white;
+					border: 1px solid var(--light-gray);
 					border-radius: 2px;
 					box-shadow: none;
 				}
@@ -2591,7 +2899,7 @@ body.maxmegamenu-admin.nav-menus-php {
 						font-size: 11px;
 						text-transform: uppercase;
 						margin-right: 5px;
-						color: $ink;
+						color: var(--black);
 						font-weight: 600;
 						letter-spacing: 0.02em;
 					}
@@ -2602,8 +2910,8 @@ body.maxmegamenu-admin.nav-menus-php {
 						display: block;
 						width: 100%;
 						margin: 5px 0 10px 0;
-						color: $ink;
-						border-color: $megamenu-form-control-border;
+						color: var(--black);
+						border-color: var(--megamenu-form-control-border, var(--gray));
 					}
 				}
 
@@ -2622,7 +2930,7 @@ body.maxmegamenu-admin.nav-menus-php {
 						font-size: 11px;
 						text-transform: uppercase;
 						display: inline-block;
-						color: $ink;
+						color: var(--black);
 						font-weight: 600;
 						letter-spacing: 0.02em;
 					}
@@ -2630,8 +2938,8 @@ body.maxmegamenu-admin.nav-menus-php {
 					input,
 					select {
 						font-size: 13px;
-						color: $ink;
-						border-color: $megamenu-form-control-border;
+						color: var(--black);
+						border-color: var(--megamenu-form-control-border, var(--gray));
 					}
 				}
 				.mega-row-header .dashicons,
@@ -2671,8 +2979,8 @@ body.maxmegamenu-admin.nav-menus-php {
 				align-items: flex-start;
 				align-content: flex-start;
 				gap: 0;
-				background: $surface;
-				border: 1px solid $line;
+				background: var(--feather-gray);
+				border: 1px solid var(--light-gray);
 				padding: 5px;
 				width: 100%;
 				box-sizing: border-box;
@@ -2683,13 +2991,13 @@ body.maxmegamenu-admin.nav-menus-php {
 					margin-left: 10px;
 					font-style: italic;
 					margin-top: 10px;
-					color: $text;
+					color: var(--semidark-gray);
 					flex: 1 0 100%;
 				}
 
 				.drop-area {
 					display: block;
-					border: 1px solid $surface;
+					border: 1px solid var(--feather-gray);
 					box-sizing: border-box;
 				}
 
@@ -2706,7 +3014,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				box-sizing: border-box;
 				width: 160px;
 				margin: 0;
-				color: $text;
+				color: var(--semidark-gray);
 				font-size: 12px;
 				display: block;
 				border: 5px solid transparent;
@@ -2714,10 +3022,10 @@ body.maxmegamenu-admin.nav-menus-php {
 
 				&:hover {
 					.mega-widget-top {
-						border: 1px solid $text;
+						border: 1px solid var(--semidark-gray);
 					}
 					.mega-widget-inner {
-						border: 1px solid $text;
+						border: 1px solid var(--semidark-gray);
 					}
 				}
 
@@ -2728,7 +3036,7 @@ body.maxmegamenu-admin.nav-menus-php {
 
 			.mega-widget.open {
 				.mega-widget-top {
-					border: 1px solid $text;
+					border: 1px solid var(--semidark-gray);
 					cursor: move;
 					position: relative;
 					z-index: 50;
@@ -2739,7 +3047,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				}
 
 				.mega-widget-inner {
-					border: 1px solid $text;
+					border: 1px solid var(--semidark-gray);
 					// Absolute within the panels container (rows, cols, and the open widget are all
 					// position: static so `.megamenu-dialog-panels` is the nearest positioned ancestor).
 					// JS sets --mmm-panels-scroll to the panels' scrollTop when the widget opens, so
@@ -2766,7 +3074,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					overscroll-behavior: contain;
 					display: flex;
 					flex-direction: column;
-					background: $white;
+					background: white;
 					box-shadow:
 						$shadow-large-hover,
 						0 0 0 1px $shadow-a07,
@@ -2805,7 +3113,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					gap: 8px;
 					padding: 8px 0 10px;
 					margin: 0;
-					border-bottom: 1px solid $line;
+					border-bottom: 1px solid var(--light-gray);
 				}
 
 				.mega-widget-inner .mega-widget-dialog-title {
@@ -2816,7 +3124,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					font-size: 14px;
 					font-weight: 600;
 					line-height: 1.35;
-					color: $ink;
+					color: var(--black);
 					border-bottom: 0;
 				}
 
@@ -2832,7 +3140,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					border: 0;
 					border-radius: 4px;
 					background: transparent;
-					color: $icon-dim;
+					color: var(--gray);
 					cursor: pointer;
 					box-sizing: border-box;
 
@@ -2845,8 +3153,8 @@ body.maxmegamenu-admin.nav-menus-php {
 
 					&:hover,
 					&:focus-visible {
-						color: $ink;
-						background: $surface;
+						color: var(--black);
+						background: var(--feather-gray);
 					}
 
 					&:focus-visible {
@@ -2867,8 +3175,8 @@ body.maxmegamenu-admin.nav-menus-php {
 					margin-top: 0;
 					padding-top: 10px;
 					padding-bottom: 12px;
-					border-top: 1px solid $line;
-					background: $white;
+					border-top: 1px solid var(--light-gray);
+					background: white;
 				}
 
 				.mega-widget-action {
@@ -2889,9 +3197,9 @@ body.maxmegamenu-admin.nav-menus-php {
 				box-sizing: border-box;
 				border: 0;
 				box-shadow: none;
-				border: 1px solid $line;
+				border: 1px solid var(--light-gray);
 				padding: 0 10px;
-				background: $white;
+				background: white;
 				overflow: hidden;
 			}
 
@@ -2908,7 +3216,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				min-width: 0;
 
 				h4 {
-					color: $text;
+					color: var(--semidark-gray);
 					margin: 0;
 					padding: 0;
 					overflow: hidden;
@@ -2943,7 +3251,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				.mega-widget-title {
 					h4 {
 						&:before {
-							color: $text;
+							color: var(--semidark-gray);
 							font: normal 16px/1 'dashicons';
 							speak: none;
 							-webkit-font-smoothing: antialiased;
@@ -3007,7 +3315,7 @@ body.maxmegamenu-admin.nav-menus-php {
 			.mega-widget-inner {
 				display: none;
 				width: 100%;
-				background: $white;
+				background: white;
 
 				form {
 					padding: 0 15px 15px 15px;
@@ -3037,7 +3345,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				position: static;
 				font-weight: normal;
 				opacity: 1;
-				background: $white;
+				background: white;
 
 				.mega-col-span {
 					@include mega-col-span-pill;
@@ -3053,7 +3361,7 @@ body.maxmegamenu-admin.nav-menus-php {
 
 						&:hover,
 						&:focus-visible {
-							color: $admin-blue-dark;
+							color: var(--wp-admin-theme-color-darker-20);
 						}
 
 						&::after {
@@ -3061,7 +3369,7 @@ body.maxmegamenu-admin.nav-menus-php {
 						}
 
 						&:focus-visible {
-							@include mega-admin-focus-ring($wp-admin-theme-color, 1px);
+							@include mega-admin-focus-ring(var(--wp-admin-theme-color), 1px);
 						}
 					}
 
@@ -3093,11 +3401,11 @@ body.maxmegamenu-admin.nav-menus-php {
 				-webkit-font-smoothing: antialiased;
 				-moz-osx-font-smoothing: grayscale;
 				text-decoration: none !important;
-				color: $icon-dim;
+				color: var(--gray);
 				box-shadow: none;
 
 				&:hover {
-					color: $text;
+					color: var(--semidark-gray);
 					cursor: pointer;
 				}
 
@@ -3112,7 +3420,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				display: inline-flex;
 				align-items: center;
 				line-height: 1.2;
-				color: $icon-dim;
+				color: var(--gray);
 				font-size: 11px;
 			}
 
@@ -3142,7 +3450,7 @@ body.maxmegamenu-admin.nav-menus-php {
 
 			.mega-widget-option.disabled {
 				&:hover {
-					color: $icon-dim;
+					color: var(--gray);
 				}
 			}
 
@@ -3167,6 +3475,19 @@ body.maxmegamenu-admin.nav-menus-php {
 		}
 
 		.menu_icon {
+			.menu_icon__header {
+				position: sticky;
+				top: 0;
+				z-index: 2;
+				background: #fff;
+				padding-top: 20px;
+				padding-bottom: 20px;
+
+				> h4 {
+					margin-top: 0;
+				}
+			}
+
 			.icon_selector {
 				display: flex;
 				flex-flow: row wrap;
@@ -3179,6 +3500,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					width: 40px;
 					height: 40px;
 					box-sizing: border-box;
+					position: relative;
 				}
 
 				> div.mmm-icon-filter-hidden {
@@ -3189,31 +3511,34 @@ body.maxmegamenu-admin.nav-menus-php {
 					display: block;
 					width: 40px;
 					height: 40px;
+					position: relative;
+					z-index: 0;
+					cursor: pointer;
+					user-select: none;
 
 					&:before {
-						content: attr(rel);
+						content: var(--mmm-i);
 						speak: none;
 						@include megamenu-admin-icon-pseudo-dashicon-tile;
 					}
 				}
 
 				input.radio {
-					&:empty {
-						margin-left: -9999px;
-
-						~ {
-							label {
-								position: relative;
-								cursor: pointer;
-								user-select: none;
-							}
-						}
-					}
+					position: absolute;
+					inset: 0;
+					width: 40px;
+					height: 40px;
+					margin: 0;
+					padding: 0;
+					box-sizing: border-box;
+					opacity: 0;
+					cursor: pointer;
+					z-index: 1;
 
 					&:checked {
 						~ {
 							label {
-								color: $icon-dim;
+								color: var(--gray);
 							}
 						}
 					}
@@ -3224,20 +3549,20 @@ body.maxmegamenu-admin.nav-menus-php {
 				}
 
 				> div:has(input:checked) label:before {
-					color: $wp-admin-theme-color;
+					color: var(--wp-admin-theme-color);
 					background: transparent;
-					box-shadow: inset 0 0 0 2px $wp-admin-theme-color;
+					box-shadow: inset 0 0 0 2px var(--wp-admin-theme-color);
 				}
 
 				> div:has(input:checked):hover label:before {
-					color: $wp-admin-theme-color;
-					background: $surface-raised;
-					box-shadow: inset 0 0 0 2px $wp-admin-theme-color;
+					color: var(--wp-admin-theme-color);
+					background: var(--light-gray);
+					box-shadow: inset 0 0 0 2px var(--wp-admin-theme-color);
 				}
 
 				> div:has(input:not(:checked)):hover label:before {
-					color: $ink;
-					background: $surface-raised;
+					color: var(--black);
+					background: var(--light-gray);
 				}
 
 				.dash {
@@ -3250,6 +3575,101 @@ body.maxmegamenu-admin.nav-menus-php {
 							font-family: dashicons;
 						}
 					}
+				}
+
+				.material {
+					label {
+						&:before {
+							font-family: var(--wp--preset--font-family--material-symbols);
+							font-style: normal;
+							font-weight: 400;
+							-webkit-font-smoothing: antialiased;
+						}
+					}
+				}
+
+				div.disabled label:before {
+					content: "";
+				}
+			}
+
+			// Max Mega Menu Pro: FA / Genericons tiles use `label[rel]` for the glyph (HTML entity), not `--mmm-i`.
+			.megamenu_tab_fontawesome,
+			.megamenu_tab_fontawesome5,
+			.megamenu_tab_fontawesome6,
+			.megamenu_tab_genericons {
+				.icon_selector label[rel]:before {
+					content: attr(rel);
+					speak: none;
+					@include megamenu-admin-icon-pseudo-dashicon-tile(40px, 24px);
+				}
+			}
+
+			.megamenu_tab_fontawesome .icon_selector .fa label[rel]:before {
+				font-family: FontAwesome;
+			}
+
+			.megamenu_tab_fontawesome5 .icon_selector {
+				.fas label[rel]:before,
+				.far label[rel]:before {
+					font-family: 'Font Awesome 5 Free';
+				}
+
+				.far label[rel]:before {
+					font-weight: 400;
+				}
+
+				.fas label[rel]:before {
+					font-weight: 900;
+				}
+
+				.fab label[rel]:before {
+					font-family: 'Font Awesome 5 Brands';
+					font-weight: 400;
+				}
+
+				.fal label[rel]:before {
+					font-family: 'Font Awesome 5 Free';
+					font-weight: 300;
+				}
+
+				.fas.pro label[rel]:before,
+				.far.pro label[rel]:before,
+				.fal.pro label[rel]:before {
+					font-family: 'Font Awesome 5 Pro';
+				}
+			}
+
+			.megamenu_tab_fontawesome6 .icon_selector {
+				.fab label[rel]:before {
+					font: var(--fa-font-brands);
+					font-size: 24px;
+				}
+
+				.far label[rel]:before {
+					font: var(--fa-font-regular);
+					font-size: 24px;
+				}
+
+				.fas label[rel]:before {
+					font: var(--fa-font-solid);
+					font-size: 24px;
+				}
+			}
+
+			.megamenu_tab_genericons .icon_selector .genericon label[rel]:before {
+				font-family: Genericons;
+			}
+
+			.mega-material-notice {
+				margin: 12px 0;
+				padding: 10px 12px;
+				background: var(--feather-gray);
+				border-left: 4px solid var(--wp-admin-theme-color, #3858e9);
+				font-size: 13px;
+
+				strong {
+					font-weight: 600;
 				}
 			}
 		}
@@ -3294,24 +3714,23 @@ body.maxmegamenu-admin.nav-menus-php {
 			}
 			> h4 {
 				display: flow-root;
-				border-bottom: 1px solid $line;
+				border-bottom: 1px solid var(--light-gray);
 				padding: 0 0 12px 0;
-				font-size: 1.05em;
 				font-weight: 600;
-				color: $ink;
+				color: var(--black);
 				margin: 1.5em 0 1em 0;
 			}
 		}
 
 		select {
 			border-radius: 4px;
-			border-color: $megamenu-form-control-border;
-			background-color: $white;
+			border-color: var(--megamenu-form-control-border, var(--gray));
+			background-color: white;
 		}
 
 		.description,
 		.mega-description {
-			color: $text-secondary;
+			color: var(--gray);
 			font-style: italic;
 		}
 
@@ -3357,9 +3776,9 @@ body.maxmegamenu-admin.nav-menus-php {
 		&.megamenu_disabled,
 		&[aria-disabled="true"] {
 			cursor: not-allowed;
-			color: $icon-dim !important;
-			background: $surface !important;
-			border-color: $line !important;
+			color: var(--gray) !important;
+			background: var(--feather-gray) !important;
+			border-color: var(--light-gray) !important;
 			box-shadow: none !important;
 		}
 
@@ -3367,9 +3786,9 @@ body.maxmegamenu-admin.nav-menus-php {
 		&.megamenu_disabled:active,
 		&[aria-disabled="true"]:hover,
 		&[aria-disabled="true"]:active {
-			color: $icon-dim !important;
-			background: $surface !important;
-			border-color: $line !important;
+			color: var(--gray) !important;
+			background: var(--feather-gray) !important;
+			border-color: var(--light-gray) !important;
 			box-shadow: none !important;
 		}
 
@@ -3380,14 +3799,14 @@ body.maxmegamenu-admin.nav-menus-php {
 			width: 12px;
 			height: 12px;
 			line-height: 12px;
-			color: rgba($white, 0.92);
+			color: rgba(white, 0.92);
 			display: inline-block;
 			flex-shrink: 0;
 		}
 
 		&.megamenu_disabled:before,
 		&[aria-disabled="true"]:before {
-			color: $text-placeholder;
+			color: var(--medium-gray);
 		}
 	}
 
@@ -3438,7 +3857,30 @@ body.maxmegamenu-admin.nav-menus-php {
 // Same `body` block continues below with theme editor / `#wpbody` layout (icon dropdown, Menu Themes tabs, etc.).
 body.maxmegamenu-admin {
 
-	--megamenu-form-control-border: #{$neutral};
+	--megamenu-form-control-border: var(--gray);
+	--mmm-admin-bar-offset: 0;
+
+	// @wordpress/components defaults (e.g. form toggles) prefer `--wp-components-color-accent` with a blue
+	// fallback. Tie component accents to the active admin color scheme so location cards + dialogs match
+	// Modern purple / user scheme instead of isolated Gutenberg blue.
+	--wp-components-color-primary: var(--wp-admin-theme-color);
+	--wp-components-color-accent: var(--wp-admin-theme-color);
+	--wp-components-color-accent-darker-10: var(
+		--wp-admin-theme-color-darker-10,
+		var(--wp-admin-theme-color)
+	);
+	--wp-components-color-accent-darker-20: var(
+		--wp-admin-theme-color-darker-20,
+		var(--wp-admin-theme-color)
+	);
+
+	&.admin-bar {
+		--mmm-admin-bar-offset: 32px;
+
+		@media screen and (max-width: 782px) {
+			--mmm-admin-bar-offset: 46px;
+		}
+	}
 
 	.megamenu_outer_wrap {
 		input[type='text'],
@@ -3461,21 +3903,6 @@ body.maxmegamenu-admin {
 	.megamenu-admin-modal td.mega-value p {
 		margin: 0;
 		font-style: italic;
-	}
-
-	input.button-primary.is-busy,
-	button.button-primary.is-busy {
-		pointer-events: none;
-		background-size: 100px 100% !important;
-		background-image: linear-gradient(
-			-45deg,
-			var(--wp-admin-theme-color) 28%,
-			var(--wp-admin-theme-color-darker-20) 0,
-			var(--wp-admin-theme-color-darker-20) 72%,
-			var(--wp-admin-theme-color) 0
-		) !important;
-		border-color: var(--wp-admin-theme-color) !important;
-		animation: busy-animation 2.5s linear infinite;
 	}
 
 	[data-mega-tooltip] {
@@ -3508,9 +3935,9 @@ body.maxmegamenu-admin {
 			width: 9px;
 			height: 9px;
 			margin: 0;
-			background: $white;
-			border-left: 1px solid $line-strong;
-			border-bottom: 1px solid $line-strong;
+			background: white;
+			border-left: 1px solid var(--gray);
+			border-bottom: 1px solid var(--gray);
 			border-right: none;
 			border-top: none;
 			box-sizing: border-box;
@@ -3534,9 +3961,9 @@ body.maxmegamenu-admin {
 			width: 9px;
 			height: 9px;
 			margin: 0;
-			background: $white;
-			border-top: 1px solid $line-strong;
-			border-right: 1px solid $line-strong;
+			background: white;
+			border-top: 1px solid var(--gray);
+			border-right: 1px solid var(--gray);
 			border-bottom: none;
 			border-left: none;
 			box-sizing: border-box;
@@ -3594,7 +4021,7 @@ body.maxmegamenu-admin {
 	.megamenu-admin-modal {
 		display: none;
 		position: fixed;
-		z-index: 159000;
+		z-index: 100050;
 		top: var(--wp-admin--admin-bar--height, 32px);
 		right: 0;
 		bottom: 0;
@@ -3655,7 +4082,7 @@ body.maxmegamenu-admin {
 			margin-inline: auto;
 			margin-block: auto;
 			align-self: center;
-			background: $white;
+			background: white;
 			border-radius: $modal-radius;
 			box-shadow: $shadow-large;
 			overflow: hidden;
@@ -3676,26 +4103,36 @@ body.maxmegamenu-admin {
 		&__header {
 			flex: 0 0 auto;
 			position: relative;
-			z-index: 1;
+			z-index: 3;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			gap: 12px;
+			gap: 24px;
 			width: 100%;
 			box-sizing: border-box;
-			padding: 24px;
+			padding: 0;
+			background: white;
 			min-height: 0;
 			border-bottom: 0;
-			box-shadow: $shadow-small;
-			background: $white;
+			box-shadow:
+				0 1px 2px $shadow-a05,
+				0 2px 10px $shadow-a07;
 
 			.megamenu-admin-modal__title-group {
 				display: flex;
-				flex-direction: column;
-				gap: 6px;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 12px 16px;
 				flex: 1 1 auto;
 				min-width: 0;
-				padding-right: 40px;
+				width: 100%;
+				box-sizing: border-box;
+			}
+
+			.megamenu-admin-modal__title-group > .megamenu-admin-modal__title {
+				flex: 1 1 auto;
+				min-width: 0;
 			}
 
 			.megamenu-admin-modal__title {
@@ -3704,11 +4141,11 @@ body.maxmegamenu-admin {
 				gap: 8px;
 				margin: 0;
 				min-width: 0;
-				font-size: 1.25rem;
+				font-size: 16px;
 				font-weight: 600;
 				line-height: 1.3;
 				letter-spacing: 0;
-				color: $ink;
+				color: var(--black);
 
 				br {
 					display: none;
@@ -3721,7 +4158,7 @@ body.maxmegamenu-admin {
 				height: 24px;
 				font-size: 24px;
 				line-height: 1;
-				color: $text-secondary;
+				color: var(--gray);
 			}
 
 			.megamenu-admin-modal__title-text {
@@ -3741,7 +4178,7 @@ body.maxmegamenu-admin {
 					Cantarell,
 					"Helvetica Neue",
 					sans-serif;
-				color: $text-secondary;
+				color: var(--gray);
 				line-height: 1.3;
 				letter-spacing: 0;
 			}
@@ -3752,10 +4189,9 @@ body.maxmegamenu-admin {
 			}
 
 			.megamenu-admin-modal__header-actions {
-				position: absolute;
-				top: 14px;
-				right: 12px;
-				z-index: 2;
+				position: static;
+				flex-shrink: 0;
+				margin-inline-start: auto;
 				display: inline-flex;
 				flex-direction: row;
 				align-items: center;
@@ -3769,26 +4205,13 @@ body.maxmegamenu-admin {
 				}
 
 					.megamenu-admin-modal__expand-btn {
-					@include megamenu-admin-ghost-icon-button-shell;
-					@include megamenu-admin-ghost-icon-button-states;
 					position: static;
 					top: auto;
 					right: auto;
 					z-index: auto;
 
-					.megamenu-admin-modal__expand-icon {
-						pointer-events: none;
-						width: 24px;
-						height: 24px;
-						font-size: 24px;
-						line-height: 1;
-						display: inline-flex;
-						align-items: center;
-						justify-content: center;
-
-						&--contract {
-							display: none;
-						}
+					.megamenu-admin-modal__expand-icon--contract {
+						display: none;
 					}
 
 					&.megamenu-admin-modal__expand-btn--expanded {
@@ -3797,10 +4220,27 @@ body.maxmegamenu-admin {
 						}
 
 						.megamenu-admin-modal__expand-icon--contract {
-							display: inline-flex;
+							display: inline-block;
 						}
 					}
 				}
+			}
+		}
+
+		&__header-top {
+			display: flex;
+			align-items: center;
+			justify-content: stretch;
+			gap: 24px;
+			padding: 24px;
+			position: relative;
+			box-sizing: border-box;
+			width: 100%;
+			min-height: 0;
+
+			.megamenu-admin-modal__title-group {
+				flex: 1 1 auto;
+				min-width: 0;
 			}
 		}
 
@@ -3810,7 +4250,6 @@ body.maxmegamenu-admin {
 			overflow: hidden;
 			padding: 0;
 			box-sizing: border-box;
-			background: $white;
 			display: flex;
 			flex-direction: column;
 
@@ -3837,7 +4276,7 @@ body.maxmegamenu-admin {
 			align-items: center;
 			justify-content: center;
 			gap: 12px;
-			background: rgba($surface-raised, 0.94);
+			background: var(--light-gray);
 			pointer-events: none;
 		}
 
@@ -3849,8 +4288,8 @@ body.maxmegamenu-admin {
 			box-sizing: border-box;
 			width: 36px;
 			height: 36px;
-			border: 3px solid $line;
-			border-top-color: $wp-admin-theme-color;
+			border: 3px solid var(--light-gray);
+			border-top-color: var(--wp-admin-theme-color);
 			border-radius: 50%;
 			animation: megamenu-admin-modal-loading-spin 0.7s linear infinite;
 		}
@@ -3878,12 +4317,11 @@ body.maxmegamenu-admin {
 			padding: 8px $modal-padding-x 0;
 		}
 
-		&.megamenu-menu-item-dialog &__body,
-		&.megamenu-preview-dialog &__body {
+		&.megamenu-menu-item-dialog &__body {
 			padding: 0;
 		}
 
-		// Footer bar: location settings (Save + spinner), preview dialog (viewport toggle). Menu item modal has no footer row.
+		// Footer bar: location settings (Save), preview (viewport). Menu item modal has no footer row.
 		&__footer {
 			flex: 0 0 auto;
 			display: flex;
@@ -3892,7 +4330,6 @@ body.maxmegamenu-admin {
 			gap: 12px;
 			padding: 24px;
 			border-top: 0;
-			background: $white;
 
 			p.submit {
 				margin: 0;
@@ -3905,98 +4342,75 @@ body.maxmegamenu-admin {
 				margin: 0;
 				visibility: hidden;
 			}
-
-			// Secondary actions: text-style control (reference “Cancel”).
-			.button:not(.button-primary) {
-				background: transparent;
-				border-color: transparent;
-				color: $wp-admin-theme-color;
-				box-shadow: none;
-
-				&:hover,
-				&:focus {
-					background: $surface;
-					border-color: transparent;
-					color: $admin-blue-dark;
-				}
-			}
 		}
+	}
+
+	// Scroll-down hint: bottom-center of the *panels* column (rail is 230px + 1fr; not the full dialog width).
+	.mmm-scroll-hint {
+		position: absolute;
+		bottom: 20px;
+		left: calc(50% + 230px / 2);
+		transform: translateX(-50%);
+		z-index: 5;
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		padding: 5px 12px 5px 8px;
+		background: white;
+		border: 1px solid var(--wp-admin-theme-color);
+		border-radius: 20px;
+		box-shadow: $shadow-small, 0 2px 6px $shadow-a12;
+		color: var(--semidark-gray);
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 1.4;
+		cursor: pointer;
+		white-space: nowrap;
+		// Hidden until JS activates; visibility controls interactivity during fade.
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: opacity 0.2s ease, visibility 0s 0.2s;
+
+		&.is-visible {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+			transition: opacity 0.2s ease, visibility 0s;
+		}
+
+		// Before JS runs (or after close), snap to hidden via display:none.
+		&[hidden] {
+			display: none !important;
+		}
+
+		.dashicons {
+			font-size: 14px;
+			width: 14px;
+			height: 14px;
+			line-height: 1;
+			color: var(--gray);
+		}
+
+		&:hover {
+			background: var(--feather-gray);
+			border-color: var(--wp-admin-theme-color-darker-20);
+			box-shadow: $shadow-small-hover;
+		}
+
+		&:focus-visible {
+			@include mega-admin-focus-ring;
+		}
+	}
+
+	// Appearance > Menus + RTL: rail columns swap (panels first / inline-start) — re-center over panels.
+	&.rtl.nav-menus-php .megamenu-menu-item-dialog .mmm-scroll-hint {
+		left: calc(50% - 230px / 2);
 	}
 
 	// Menu item modal body grid (sibling of .megamenu-admin-modal to avoid Sass duplicating `body` when nesting `.megamenu-admin-modal__*`).
 	// Collapsed panel width/height match preview + location (shared `&__panel` above).
 	.megamenu-admin-modal.megamenu-menu-item-dialog {
-		.megamenu-admin-modal__header {
-			#megamenu-menu-item-dialog-breadcrumb.megamenu-menu-item-dialog-breadcrumb {
-				margin: 0;
-				height: 26px;
-				display: flex;
-				align-items: center;
-				box-sizing: border-box;
-				font-size: 13px;
-				font-family:
-					-apple-system,
-					BlinkMacSystemFont,
-					"Segoe UI",
-					Roboto,
-					Oxygen-Sans,
-					Ubuntu,
-					Cantarell,
-					"Helvetica Neue",
-					sans-serif;
-				color: $text-secondary;
-				line-height: 1.3;
-				letter-spacing: 0;
-
-				.megamenu-menu-item-dialog-breadcrumb__inner {
-					display: flex;
-					align-items: center;
-					width: 100%;
-					min-width: 0;
-					box-sizing: border-box;
-				}
-
-				.megamenu-menu-item-dialog-breadcrumb__text {
-					flex: 1 1 auto;
-					min-width: 0;
-					display: flex;
-					flex-wrap: wrap;
-					align-items: center;
-					column-gap: 6px;
-					row-gap: 2px;
-					line-height: 1.35;
-
-					.megamenu-menu-item-dialog-breadcrumb__start-icon.dashicons {
-						flex-shrink: 0;
-						position: relative;
-						top: -2px;
-						width: 18px;
-						height: 18px;
-						font-size: 18px;
-						line-height: 1;
-						color: $text-secondary;
-					}
-				}
-
-				.megamenu-menu-item-dialog-breadcrumb__sep.dashicons {
-					flex-shrink: 0;
-					display: inline-flex;
-					align-items: center;
-					justify-content: center;
-					width: 14px;
-					height: 1.35em;
-					font-size: 14px;
-					line-height: 1;
-					margin: 0;
-					color: $text-placeholder;
-
-					&::before {
-						line-height: 1;
-					}
-				}
-			}
-		}
-
 		.megamenu-admin-modal__header-actions .megamenu-menu-item-dialog-saving-indicator {
 			display: inline-flex;
 			align-items: center;
@@ -4020,7 +4434,7 @@ body.maxmegamenu-admin {
 				height: 22px;
 				font-size: 22px;
 				line-height: 1;
-				color: $text-secondary;
+				color: var(--gray);
 				animation: mm-rotation 2s infinite linear;
 			}
 		}
@@ -4087,20 +4501,140 @@ body.maxmegamenu-admin {
 		}
 	}
 
-	.megamenu-admin-modal.megamenu-preview-dialog {
-		.megamenu-admin-modal__loading-spinner {
-			border-top-color: $wp-block-synced-color;
+	.megamenu-admin-modal.megamenu-location-settings-dialog.megamenu-location-settings-dialog--preview-visible {
+		.megamenu-admin-modal__body.megamenu-location-settings-dialog__body-stack {
+			background-color: white;
+			background-image: none;
 		}
 
-		.megamenu-admin-modal__header {
-			.megamenu-admin-modal__header-actions {
-				.megamenu-preview-dialog__refresh-btn {
-					@include megamenu-admin-ghost-icon-button-shell;
-					@include megamenu-admin-ghost-icon-button-states;
-					position: static;
-					top: auto;
-					right: auto;
-					z-index: auto;
+		.megamenu-location-settings-dialog__preview-panel {
+			flex: 1 1 auto;
+			min-height: 360px;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+		}
+
+		.megamenu-location-settings-dialog__preview-toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 12px 20px;
+			width: 100%;
+			flex: 0 0 auto;
+		}
+
+		.megamenu-preview-dialog__preview-bg-field {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+
+			.megamenu-preview-dialog__bg-custom-cell {
+				--mmm-preview-bg-hit: 30px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				align-self: center;
+				flex: 0 0 38px;
+				box-sizing: border-box;
+				width: 38px;
+				height: 38px;
+				min-width: 38px;
+				min-height: 38px;
+				padding: 3px;
+				border-radius: 999px;
+				border: 1px solid var(--light-gray);
+				background: var(--light-gray);
+				z-index: 1;
+
+				> .megamenu-preview-dialog__bg-custom-color-input {
+					position: absolute;
+					width: 1px;
+					height: 1px;
+					padding: 0;
+					margin: 0;
+					border: 0;
+					opacity: 0;
+					pointer-events: none;
+				}
+
+				.mega-custom-color-input-wrapper {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					width: var(--mmm-preview-bg-hit);
+					height: var(--mmm-preview-bg-hit);
+					margin: 0;
+					transform: translate(-50%, -50%);
+					z-index: 2;
+					border-radius: 50%;
+					opacity: 0;
+					cursor: pointer;
+
+					.mega-color-picker-input-text {
+						display: none !important;
+					}
+
+					.mega-custom-color-input-swatch {
+						display: none !important;
+					}
+				}
+
+				.megamenu-preview-dialog__bg-open-picker {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					width: var(--mmm-preview-bg-hit);
+					height: var(--mmm-preview-bg-hit);
+					margin: 0;
+					transform: translate(-50%, -50%);
+					z-index: 0;
+					flex-shrink: 0;
+					padding: 0;
+					border: 0;
+					border-radius: 50%;
+					box-shadow: none;
+					background: transparent;
+					align-items: center;
+					justify-content: center;
+
+					&:not(:disabled):hover {
+						background: color-mix(in srgb, var(--black) 4%, var(--feather-gray));
+					}
+
+					&:focus-visible {
+						@include mega-admin-focus-ring(var(--gray), 2px);
+					}
+				}
+			}
+
+			.megamenu-preview-dialog__bg-swatch--preview {
+				display: block;
+				width: var(--mmm-preview-bg-hit);
+				height: var(--mmm-preview-bg-hit);
+				border-radius: 50%;
+				box-sizing: border-box;
+				flex-shrink: 0;
+				background-color: white;
+				box-shadow: inset 0 0 0 0.5px var(--light-gray);
+				background-image: linear-gradient(
+					135deg,
+					white 44%,
+					var(--gray) 44%,
+					var(--gray) 56%,
+					white 56%
+				);
+
+				&.megamenu-preview-dialog__bg-swatch--preview-transparent {
+					background-color: white;
+					background-image: linear-gradient(
+						135deg,
+						white 44%,
+						var(--gray) 44%,
+						var(--gray) 56%,
+						white 56%
+					);
 				}
 			}
 		}
@@ -4114,11 +4648,7 @@ body.maxmegamenu-admin {
 			display: flex;
 			justify-content: center;
 			align-items: stretch;
-			$checker-base: $surface-raised;
-			$checker-tile: color.mix($black, $checker-base, 6%);
-			background-color: $checker-base;
-			background-image: repeating-conic-gradient($checker-base 0% 25%, $checker-tile 0% 50%);
-			background-size: 16px 16px;
+			background: transparent;
 		}
 
 		.megamenu-preview-dialog__iframe {
@@ -4126,9 +4656,16 @@ body.maxmegamenu-admin {
 			width: 100%;
 			max-width: 100%;
 			border: 0;
-			background: transparent;
 			min-height: 0;
 			transition: max-width 0.2s ease-out;
+			background-color: white;
+			background-image:
+				linear-gradient(45deg, var(--light-gray) 25%, transparent 25%),
+				linear-gradient(-45deg, var(--light-gray) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, var(--light-gray) 75%),
+				linear-gradient(-45deg, transparent 75%, var(--light-gray) 75%);
+			background-size: 16px 16px;
+			background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 		}
 
 		&.megamenu-preview-dialog--mobile-preview .megamenu-preview-dialog__iframe {
@@ -4140,54 +4677,6 @@ body.maxmegamenu-admin {
 			justify-content: flex-start;
 			align-items: center;
 			gap: 0;
-		}
-
-		.megamenu-preview-dialog__viewport-toggle {
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
-		}
-
-		.megamenu-preview-dialog__viewport-btn {
-			@include megamenu-admin-ghost-icon-button-shell;
-			@include megamenu-admin-ghost-icon-button-states;
-
-			&--active {
-				background: $white;
-				border: 1px solid $wp-admin-theme-color;
-				color: $wp-admin-theme-color;
-				box-shadow: none;
-			}
-
-			// Keep the selected viewport tile solid white (states mixin tints inactive controls on hover/focus).
-			&--active:hover,
-			&--active:focus:not(:hover) {
-				background: $white;
-				color: $wp-admin-theme-color;
-			}
-
-			&:disabled {
-				opacity: 0.45;
-				cursor: not-allowed;
-
-				&:hover,
-				&:focus:not(:hover) {
-					background: transparent;
-					color: $icon-dim;
-				}
-			}
-
-			&--unavailable {
-				opacity: 0.45;
-				cursor: not-allowed;
-				pointer-events: auto;
-
-				&:hover,
-				&:focus:not(:hover) {
-					background: transparent;
-					color: $icon-dim;
-				}
-			}
 		}
 	}
 
@@ -4214,9 +4703,8 @@ body.maxmegamenu-admin {
 			margin: 0;
 			overflow: auto;
 			padding: 0;
-			border: 1px solid $line;
+			border: 1px solid var(--light-gray);
 			border-radius: $modal-radius;
-			background: $white;
 			font-size: 12px;
 			line-height: 1.45;
 		}
@@ -4226,8 +4714,8 @@ body.maxmegamenu-admin {
 			padding: 10px 0 10px 14px;
 			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 			font-weight: 600;
-			color: $text-secondary;
-			border-bottom: 1px solid $line;
+			color: var(--gray);
+			border-bottom: 1px solid var(--light-gray);
 		}
 
 		.megamenu-scss-vars-list dd {
@@ -4236,8 +4724,8 @@ body.maxmegamenu-admin {
 			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 			word-break: break-word;
 			white-space: pre-wrap;
-			border-bottom: 1px solid $line;
-			color: $ink;
+			border-bottom: 1px solid var(--light-gray);
+			color: var(--black);
 		}
 
 		.megamenu-scss-vars-list dt:last-of-type,
@@ -4247,20 +4735,190 @@ body.maxmegamenu-admin {
 	}
 
 	.megamenu-admin-modal.megamenu-location-settings-dialog {
-		.megamenu-admin-modal__loading-spinner {
-			border-top-color: $wp-block-synced-color;
+		--wp-components-color-primary: var(--wp-admin-theme-color);
+		--wp-components-color-accent: var(--wp-admin-theme-color);
+
+		.megamenu-admin-modal__header-top .megamenu-admin-modal__title-group {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+			align-items: center;
+			column-gap: 12px;
+			row-gap: 8px;
 		}
 
-		.megamenu-admin-modal__title .megamenu-admin-modal__title-text {
-			display: inline-flex;
-			align-items: center;
-			gap: 5px;
+		.megamenu-location-settings-dialog__title-start {
 			min-width: 0;
+		}
+
+		.megamenu-admin-modal__header-top .megamenu-admin-modal__header-actions {
+			justify-self: end;
+			margin-inline-start: 0;
+		}
+
+		.megamenu-location-settings-dialog__title-heading.megamenu-admin-modal__title {
+			min-width: 0;
+		}
+
+		.megamenu-location-settings-dialog__assigned {
+			margin: 6px 0 0;
 			max-width: 100%;
 		}
 
-		.megamenu-location-settings-title-prefix {
+		.megamenu-location-settings-dialog__title-cluster {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			min-width: 0;
+		}
+
+		.megamenu-location-settings-dialog__title-pin.dashicons {
 			flex-shrink: 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 20px;
+			height: 20px;
+			font-size: 20px;
+			line-height: 1;
+		}
+
+		// Segmented toggles: header Settings/Preview + footer viewport share track chrome.
+		.megamenu-location-settings-dialog__mode-pill {
+			display: inline-flex;
+			align-items: center;
+			justify-self: center;
+			gap: 6px;
+		}
+
+		// Header Settings/Preview + footer viewport: shared track chrome.
+		.megamenu-location-settings-dialog__mode-pill--settings-preview,
+		.megamenu-location-settings-dialog__mode-pill--viewport-preview {
+			@include megamenu-location-settings-dialog-mode-pill-track;
+		}
+
+		.megamenu-location-settings-dialog__mode-pill--settings-preview,
+		.megamenu-location-settings-dialog__mode-pill--viewport-preview {
+			background: var(--feather-gray);
+		}
+
+		.megamenu-location-settings-dialog__mode-pill--settings-preview .megamenu-location-settings-dialog__mode-pill-slider {
+			background: var(--wp-admin-theme-color);
+		}
+
+		.megamenu-location-settings-dialog__mode-pill--settings-preview {
+			@include megamenu-location-settings-dialog-mode-pill-slider-to-second(
+				".megamenu-location-settings-dialog__mode-btn--preview.is-active"
+			);
+		}
+
+		.megamenu-location-settings-dialog__mode-pill--viewport-preview {
+			@include megamenu-location-settings-dialog-mode-pill-slider-to-second(
+				".megamenu-preview-dialog__viewport-btn--desktop.is-active"
+			);
+		}
+
+		.megamenu-location-settings-dialog__mode-pill--settings-preview,
+		.megamenu-location-settings-dialog__mode-pill--viewport-preview {
+			@include megamenu-location-settings-dialog-mode-pill-buttons;
+		}
+
+		// Preview footer: circular icon-only segments; dark grey thumb (not theme blue).
+		.megamenu-location-settings-dialog__mode-pill--viewport-preview {
+			--mmm-viewport-pill-hit: 30px;
+
+			.megamenu-location-settings-dialog__mode-pill-slider {
+				width: var(--mmm-viewport-pill-hit);
+				height: var(--mmm-viewport-pill-hit);
+				border-radius: 50%;
+				background: var(--gray);
+			}
+
+			.megamenu-location-toolbar-btn.megamenu-location-settings-dialog__mode-btn {
+				flex: 0 0 var(--mmm-viewport-pill-hit);
+				width: var(--mmm-viewport-pill-hit);
+				height: var(--mmm-viewport-pill-hit);
+				min-width: var(--mmm-viewport-pill-hit);
+				min-height: var(--mmm-viewport-pill-hit);
+				padding: 0;
+				border-radius: 50%;
+				align-items: center;
+				justify-content: center;
+
+				&:focus-visible {
+					@include mega-admin-focus-ring(var(--gray), 2px);
+				}
+
+				&.is-active:focus-visible {
+					outline-color: white;
+				}
+			}
+		}
+
+		// Settings/Preview segment: inactive-button focus ring after shared `mode-pill-buttons` (`.is-active:focus-visible` keeps white ring via shared rules).
+		.megamenu-location-settings-dialog__mode-pill--settings-preview .megamenu-location-toolbar-btn.megamenu-location-settings-dialog__mode-btn:not(.is-active):focus-visible {
+			@include mega-admin-focus-ring(var(--wp-admin-theme-color), 1px);
+		}
+
+		.megamenu-location-settings-dialog__notices {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			width: 100%;
+			margin: 0 0 14px;
+			box-sizing: border-box;
+
+			.notice {
+				margin: 0;
+				padding: 8px 12px;
+			}
+		}
+
+		// Collapse wrapper when both preview notices are hidden (DOM is never :empty).
+		.megamenu-location-settings-dialog__notices:not(:has(.megamenu-location-settings-dialog__notice:not([hidden]))) {
+			display: none;
+		}
+
+		.megamenu-location-settings-dialog__mode-btn--preview:disabled {
+			cursor: not-allowed;
+			opacity: 0.55;
+		}
+
+		.megamenu-location-settings-dialog__mode-btn--preview {
+			.megamenu-location-settings-dialog__preview-mode-icon--active {
+				display: none;
+			}
+
+			&.is-active {
+				.megamenu-location-settings-dialog__preview-mode-icon--idle {
+					display: none;
+				}
+
+				.megamenu-location-settings-dialog__preview-mode-icon--active {
+					display: inline-flex;
+				}
+			}
+		}
+
+		.megamenu-location-settings-dialog__body-stack {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			min-height: 0;
+		}
+
+		.megamenu-location-settings-dialog__settings-view,
+		.megamenu-location-settings-dialog__preview-view {
+			flex: 1 1 auto;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+
+		// `[hidden]` must win over `display: flex` above (otherwise both panes stay in the flex layout ~50/50).
+		.megamenu-location-settings-dialog__settings-view[hidden],
+		.megamenu-location-settings-dialog__preview-view[hidden] {
+			display: none !important;
 		}
 
 		.megamenu-location-title {
@@ -4268,41 +4926,6 @@ body.maxmegamenu-admin {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-		}
-
-		.megamenu-location-settings-dialog__footer .megamenu-location-settings-dialog-save.button.button-primary {
-			background: $wp-block-synced-color;
-			border-color: $wp-block-synced-color;
-			color: $white;
-			box-shadow: none;
-			text-shadow: none;
-
-			&:hover:not(:disabled):not([aria-disabled="true"]) {
-				filter: brightness(0.92);
-			}
-
-			&:active:not(:disabled):not([aria-disabled="true"]) {
-				filter: brightness(0.86);
-			}
-
-			&:focus {
-				box-shadow:
-					0 0 0 1px $white,
-					0 0 0 3px $wp-block-synced-color;
-			}
-
-			&:focus-visible {
-				outline: none;
-				box-shadow:
-					0 0 0 1px $white,
-					0 0 0 3px $wp-block-synced-color;
-			}
-
-			&:disabled,
-			&[aria-disabled="true"] {
-				filter: none;
-				opacity: 0.65;
-			}
 		}
 
 		.megamenu-admin-modal__body {
@@ -4332,11 +4955,6 @@ body.maxmegamenu-admin {
 					gap: 6px;
 				}
 
-				.megamenu-location-settings-dialog-edit-theme {
-					min-width: $mega-admin-icon-hit;
-					@include megamenu-admin-ghost-icon-button;
-				}
-
 				.megamenu-dialog-rail {
 					flex: 1 1 auto;
 					min-height: 0;
@@ -4358,32 +4976,135 @@ body.maxmegamenu-admin {
 						margin: 0;
 					}
 
-					.mega-effect_mobile_direction {
+					td.mega-value > label.mega-effect_mobile_direction {
 						display: none;
 					}
 
-					&.mega-is-offcanvas .mega-effect_mobile_direction {
+					&:has(select[name$="[effect_mobile]"] option[value="slide_left"]:checked)
+						td.mega-value
+						> label.mega-effect_mobile_direction,
+					&:has(select[name$="[effect_mobile]"] option[value="slide_right"]:checked)
+						td.mega-value
+						> label.mega-effect_mobile_direction {
 						display: flex;
 						flex-direction: column;
 						align-items: flex-start;
 					}
 				}
 
-				// Vertical rail tabs: synced-pattern accent + section dashicons (PHP/JS only add `is-active`).
+				// Off-canvas + Sliding Panels: behaviour/default-state rows apply to accordion-style submenus only.
+				table.mobile.mmm-settings-table {
+					&:has(select[name$="[effect_mobile]"] option[value="slide_left"]:checked):has(
+							select[name$="[effect_mobile_direction]"] option[value="horizontal"]:checked
+						)
+						tr.mega-mobile_behaviour,
+					&:has(select[name$="[effect_mobile]"] option[value="slide_left"]:checked):has(
+							select[name$="[effect_mobile_direction]"] option[value="horizontal"]:checked
+						)
+						tr.mega-mobile_state,
+					&:has(select[name$="[effect_mobile]"] option[value="slide_right"]:checked):has(
+							select[name$="[effect_mobile_direction]"] option[value="horizontal"]:checked
+						)
+						tr.mega-mobile_behaviour,
+					&:has(select[name$="[effect_mobile]"] option[value="slide_right"]:checked):has(
+							select[name$="[effect_mobile_direction]"] option[value="horizontal"]:checked
+						)
+						tr.mega-mobile_state {
+						display: none;
+					}
+				}
+
+				.mega-tab-content-output_options textarea {
+					flex: 1 1 auto;
+					min-height: 0;
+					width: 100%;
+					box-sizing: border-box;
+					font-family: monospace;
+					font-size: 13px;
+					line-height: 1.45;
+					border: 0;
+					background: transparent;
+					resize: vertical;
+					color: var(--semidark-gray);
+					padding: 0;
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-instruction {
+					margin: 0;
+					max-width: 100%;
+					font-size: 13px;
+					line-height: 1.45;
+					color: var(--semidark-gray);
+				}
+
+				// Display Options: stacked rows in location modal.
+				.mega-tab-content-output_options .mmm-location-output-options {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					width: 100%;
+					box-sizing: border-box;
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-options__row {
+					display: grid;
+					grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+					column-gap: 20px;
+					align-items: stretch;
+					padding: 10px;
+					border: 0;
+					border-radius: 0;
+					background: transparent;
+					box-shadow: none;
+					box-sizing: border-box;
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-options__row--heading {
+					grid-template-columns: 1fr;
+					padding: 10px;
+
+					.mmm-location-output-options__heading h5 {
+						margin: 0;
+					}
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-options__name.mega-name {
+					min-width: 0;
+					margin: 0;
+					padding-right: 10px;
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-options__value.mega-value {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					min-width: 0;
+					min-height: 0;
+					height: 100%;
+					margin: 0;
+					padding: 0;
+					border-radius: 0;
+					border: 0;
+					background: transparent;
+					box-sizing: border-box;
+				}
+
+				.mega-tab-content-output_options .mmm-location-output-options__value.mega-value > label {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					flex: 1 1 auto;
+					min-height: 0;
+					gap: 8px;
+					margin: 0;
+					width: 100%;
+					font-size: 13px;
+					line-height: 1.45;
+					color: var(--gray);
+				}
+
+				// Section dashicons per rail tab (`megamenu-dialog-side-tab` supplies active/focus accent).
 				.mega-tablist button {
-					&:focus-visible {
-						@include mega-admin-focus-ring($wp-block-synced-color);
-					}
-
-					&.is-active {
-						color: $wp-block-synced-color;
-						border-inline-start-color: $wp-block-synced-color;
-
-						&::before {
-							color: $wp-block-synced-color;
-						}
-					}
-
 					&::before {
 						content: "\f111";
 					}
@@ -4426,14 +5147,50 @@ body.maxmegamenu-admin {
 				}
 			}
 		}
+
+		// Rail tabs: active accent matches WP admin theme.
+		.mega-tablist button {
+			&.is-active {
+				color: var(--wp-admin-theme-color);
+				border-inline-start-color: var(--wp-admin-theme-color);
+
+				&::before {
+					color: var(--wp-admin-theme-color);
+				}
+			}
+
+			&:focus-visible {
+				@include mega-admin-focus-ring(var(--wp-admin-theme-color));
+			}
+		}
+
+		button.megamenu-location-settings-dialog-save.button.button-primary {
+			background: var(--wp-admin-theme-color);
+			border-color: var(--wp-admin-theme-color);
+			color: white;
+
+			&:hover:not(:disabled),
+			&:active:not(:disabled) {
+				background: var(--wp-admin-theme-color-darker-10, var(--wp-admin-theme-color));
+				border-color: var(--wp-admin-theme-color-darker-10, var(--wp-admin-theme-color));
+				color: white;
+			}
+
+			&:focus-visible {
+				box-shadow:
+					0 0 0 1px white,
+					0 0 0 3px var(--wp-admin-theme-color);
+				outline: 2px solid transparent;
+			}
+		}
 	}
 
-	// Vertical rail: tab button chrome (WP admin blue). Location settings dialog overrides with synced accent in `.megamenu-location-settings-dialog__surface`.
+	// Vertical rail: tab button chrome (WP admin accent); shared `@include megamenu-dialog-side-tab`.
 	.mega-tablist button {
 		@include megamenu-dialog-side-tab;
 
 		&::before {
-			color: $icon-dim;
+			color: var(--gray);
 			display: inline-block;
 			font-family: dashicons;
 			speak: none;
@@ -4478,7 +5235,7 @@ body.maxmegamenu-admin {
 
 	.megamenu_wrap.megamenu-dialog-rail {
 		@include megamenu-dialog-rail-grid($megamenu-settings-rail-gap, 0);
-		background: $white;
+		background: white;
 
 		@include tablet {
 			grid-template-columns: 1fr;
@@ -4524,14 +5281,14 @@ body.maxmegamenu-admin {
 		.select2-choice {
 		    padding: 0 5px;
 		    height: 28px;
-		    color: $line;
-		    border: 1px solid $megamenu-form-control-border;
+		    color: var(--light-gray);
+		    border: 1px solid var(--megamenu-form-control-border, var(--gray));
 		}
 
 		.select2-chosen i:before {
 		    line-height: 28px;
 		    font-size: 16px;
-		    color: $text;
+		    color: var(--semidark-gray);
 		}
 
 	}
@@ -4542,24 +5299,139 @@ body.maxmegamenu-admin {
 	}
 
 	.select2-results {
+		margin: 4px 0 0 0;
+		padding: 4px;
+		list-style: none;
 		display: flex;
 		flex-flow: row wrap;
 		align-items: center;
-	}
 
-	.select2-results li {
-	    flex: 0 0 auto;
+		// Group container LI
+		.select2-result-with-children {
+			width: 100% !important;
+			flex: 0 0 100% !important;
+			display: block !important;
+			margin: 0 0 12px 0;
+			box-sizing: border-box;
 
-	    &:first-child {
-	    	i {
-		    	display: none;
+			// Group Header label (e.g. Dashicons)
+			> .select2-result-label {
+				display: block !important;
+				font-size: 11px !important;
+				font-weight: 600 !important;
+				text-transform: uppercase !important;
+				color: #646970 !important;
+				letter-spacing: 0.5px !important;
+				padding: 8px 6px 4px !important;
+				border-bottom: 1px solid #f0f0f1 !important;
+				margin-bottom: 8px !important;
+				background: transparent !important;
 			}
-	    }
 
-		.select2-result-label {
-			font-size: 0.9em;
+			// Sub-list holding the icons
+			.select2-result-sub {
+				margin: 0 !important;
+				padding: 0 4px !important;
+				list-style: none;
+				display: grid !important;
+				grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)) !important;
+				gap: 8px !important;
+				justify-items: center !important;
+
+				// Each individual icon item LI
+				li.select2-result-focusable {
+					display: flex !important;
+					align-items: center !important;
+					justify-content: center !important;
+					width: 36px !important;
+					height: 36px !important;
+					border: 1px solid transparent !important;
+					border-radius: 4px !important;
+					cursor: pointer;
+					box-sizing: border-box;
+					flex: none !important;
+
+					&:hover, &.select2-highlighted {
+						background: #f0f0f1 !important;
+						border-color: #dcdcde !important;
+					}
+
+					&.select2-selected {
+						background: #e5f5fa !important;
+						border-color: #00a0d2 !important;
+						color: #0073aa !important;
+					}
+
+					.select2-result-label {
+						padding: 0 !important;
+						margin: 0 !important;
+						font-size: inherit !important;
+						text-transform: none !important;
+						display: inline-flex !important;
+						align-items: center !important;
+						justify-content: center !important;
+						width: 100% !important;
+						height: 100% !important;
+						border: none !important;
+
+						i {
+							margin: 0 !important;
+							display: inline-block !important;
+							width: 20px !important;
+							height: 20px !important;
+							font-size: 20px !important;
+							line-height: 1 !important;
+							text-align: center !important;
+						}
+					}
+				}
+			}
 		}
-	}	
+
+		// Handle flat list items (direct children of .select2-results)
+		> li.select2-result-focusable {
+			flex: 0 0 auto !important;
+			display: flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			width: 36px !important;
+			height: 36px !important;
+			border: 1px solid transparent !important;
+			border-radius: 4px !important;
+			cursor: pointer;
+			box-sizing: border-box;
+
+			&:first-child {
+				i {
+					display: none !important;
+				}
+			}
+
+			&:hover, &.select2-highlighted {
+				background: #f0f0f1 !important;
+				border-color: #dcdcde !important;
+			}
+
+			.select2-result-label {
+				padding: 0 !important;
+				margin: 0 !important;
+				display: inline-flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				font-size: 0.9em !important;
+
+				i {
+					margin: 0 !important;
+					display: inline-block !important;
+					width: 20px !important;
+					height: 20px !important;
+					font-size: 20px !important;
+					line-height: 1 !important;
+					text-align: center !important;
+				}
+			}
+		}
+	}
 
 	.icon_dropdown .select2-choice > .select2-chosen i,
 	.select2-result-label i {
@@ -4580,6 +5452,348 @@ body.maxmegamenu-admin {
 	    -moz-osx-font-smoothing: grayscale;
 	}
 
+	.mmm-icon-selector-container {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+
+		* {
+			box-sizing: border-box;
+		}
+	}
+
+	.mmm-icon-selector-trigger {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 28px;
+		padding: 0;
+		background: #fff;
+		border: 1px solid var(--megamenu-form-control-border, var(--gray));
+		border-radius: 4px;
+		cursor: pointer;
+		color: #2c3338;
+		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+		position: relative;
+
+		&:hover {
+			border-color: #8c8f94;
+			color: #1d2327;
+		}
+
+		&:focus {
+			border-color: #2271b1;
+			box-shadow: 0 0 0 1px #2271b1;
+			outline: none;
+		}
+	}
+
+	.mmm-icon-selector-trigger-preview {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+		color: #2c3338;
+
+		svg {
+			width: 18px;
+			height: 18px;
+			display: block;
+			stroke: currentColor;
+			stroke-width: 2.5;
+		}
+
+		i {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 1;
+			display: inline-block;
+			text-align: center;
+		}
+	}
+
+	.mega-material-symbol {
+		font-family: var(--wp--preset--font-family--material-symbols) !important;
+		font-style: normal;
+		font-weight: 400;
+		-webkit-font-smoothing: antialiased;
+
+		&:before {
+			content: attr(data-ms-icon);
+		}
+	}
+
+	.mmm-icon-selector-trigger-label {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin-right: 15px;
+	}
+
+	.mmm-icon-selector-dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 9999;
+		margin-top: 4px;
+		background: #fff;
+		border: 1px solid #ccd0d4;
+		border-radius: 4px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		width: 200px;
+	}
+
+	.mmm-icon-selector-search-wrap {
+		padding: 8px;
+		border-bottom: 1px solid #f0f0f1;
+		background: #f6f7f7;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+	}
+
+	.mmm-icon-selector-search {
+		width: 100% !important;
+		height: 30px !important;
+		padding: 4px 8px !important;
+		border: 1px solid #8c8f94 !important;
+		border-radius: 4px !important;
+		background: #fff !important;
+		font-size: 13px !important;
+
+		&:focus {
+			border-color: #2271b1 !important;
+			box-shadow: 0 0 0 1px #2271b1 !important;
+			outline: none !important;
+		}
+	}
+
+	.mmm-icon-selector-list {
+		overflow-y: auto;
+		padding: 4px;
+	}
+
+	.mmm-icon-selector-group-title {
+		font-size: 10px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		font-weight: 600;
+		color: #646970;
+		padding: 8px 8px 4px 8px;
+		border-bottom: 1px solid #f0f0f1;
+		margin-bottom: 6px;
+	}
+
+	.mmm-icon-selector-group-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+		justify-items: center;
+		gap: 8px;
+		padding: 4px;
+		margin-bottom: 10px;
+	}
+
+	.mmm-icon-selector-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 4px;
+		cursor: pointer;
+		color: var(--gray);
+		transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+		&:hover, &.mmm-focused {
+			background: var(--light-gray);
+			color: var(--black);
+		}
+
+		&.mmm-selected {
+			color: var(--wp-admin-theme-color);
+			box-shadow: inset 0 0 0 2px var(--wp-admin-theme-color);
+		}
+
+		&.mmm-selected:hover, &.mmm-selected.mmm-focused {
+			background: var(--light-gray);
+			color: var(--wp-admin-theme-color);
+		}
+
+		&[data-value="disabled"] {
+			width: auto;
+			margin: 4px 8px;
+			box-sizing: border-box;
+			height: 30px;
+			justify-content: flex-start;
+			padding: 0 8px;
+			font-size: 13px;
+			color: #646970;
+
+			.mmm-icon-selector-item-preview {
+				border: 1px dashed #ccd0d4;
+				background: #f6f7f7;
+				position: relative;
+
+				&::after {
+					content: "";
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%) rotate(-45deg);
+					width: 12px;
+					height: 1px;
+					background: #d63638;
+				}
+			}
+		}
+	}
+
+	.mmm-icon-selector-item-preview {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		flex-shrink: 0;
+
+		svg {
+			width: 20px;
+			height: 20px;
+			display: block;
+			stroke: currentColor;
+		}
+
+		i {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 1;
+			display: inline-block;
+			text-align: center;
+		}
+	}
+
+	.mmm-multi-preview {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+		place-items: center;
+		width: 100%;
+
+		.mmm-multi-preview-item {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 18px;
+			height: 18px;
+			flex-shrink: 0;
+
+			svg {
+				width: 16px;
+				height: 16px;
+				display: block;
+				stroke: currentColor;
+				stroke-width: 2.5;
+			}
+
+			i {
+				font-size: 16px;
+				width: 16px;
+				height: 16px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+
+	.mmm-icon-selector-multi {
+		.mmm-icon-selector-trigger {
+			width: 120px;
+			padding: 0 12px;
+			min-width: 120px;
+		}
+
+		.mmm-icon-selector-trigger-preview {
+			width: 100%;
+			height: auto;
+		}
+
+		.mmm-icon-selector-dropdown {
+			width: 400px;
+		}
+
+		.mmm-icon-selector-list {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+			align-items: start;
+		}
+
+		.mmm-icon-selector-item[data-value="disabled"] {
+			grid-column: 1 / -1;
+		}
+
+		.mmm-icon-selector-group-container {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			padding: 4px 8px;
+		}
+
+		.mmm-icon-selector-item {
+			width: 100%;
+			height: 32px;
+			padding: 0;
+			box-sizing: border-box;
+
+			&[data-value="disabled"] {
+				width: auto;
+				margin: 4px 8px;
+			}
+		}
+
+		.mmm-icon-selector-item-preview:not(.mmm-disabled-preview) {
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.mmm-disabled-preview {
+		border: 1px dashed #ccd0d4;
+		border-radius: 2px;
+		background: #f6f7f7;
+		position: relative;
+		width: 16px;
+		height: 16px;
+		margin-right: 8px;
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) rotate(-45deg);
+			width: 12px;
+			height: 1px;
+			background: #d63638;
+		}
+	}
+
+	.mmm-icon-selector-item-label {
+		display: none;
+	}
+
+	.mmm-icon-selector-item[data-value="disabled"] {
+		.mmm-icon-selector-item-label {
+			display: inline-block;
+			margin-left: 8px;
+		}
+	}
+
 	.megamenu_header {
 		position: relative;
 		z-index: 1;
@@ -4588,10 +5802,10 @@ body.maxmegamenu-admin {
 		justify-content: space-between;
 		align-items: flex-start;
 		gap: 8px 20px;
-		background: $white;
+		background: white;
 		padding: 30px 20px;
 		margin-bottom: 20px;
-		border-bottom: 1px solid $surface;
+		border-bottom: 1px solid var(--feather-gray);
 		box-shadow:
 			0 1px 2px $shadow-a05,
 			0 2px 10px $shadow-a07;
@@ -4625,41 +5839,21 @@ body.maxmegamenu-admin {
 		}
 
 		.megamenu_header_right {
-			flex: 0 0 auto;
 			margin-inline-start: auto;
-			font-size: 0.9em;
-			line-height: 30px;
+		}
 
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				justify-content: flex-end;
-				gap: 0 14px;
-				margin: 0;
-				padding: 0;
-				list-style: none;
-			}
-
-			li {
-				margin: 0;
-				line-height: 30px;
-
-				&.mega-highlight {
-					border-radius: 5px;
-					background: $wp-admin-theme-color;
-
-					a {
-						color: $white;
-						line-height: 30px;
-						padding: 0 10px;
-					}
-				}
-			}
+		.megamenu_header_right ul {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 14px;
+			list-style: none;
+			margin: 0;
+			padding: 0;
 		}
 
 		.version {
-			color: $icon-dim;
+			color: var(--gray);
 			margin-bottom: 0;
 			font-size: 12px;
 		}
@@ -4702,7 +5896,7 @@ body.maxmegamenu-admin {
 
 					// Match `.mega-tablist button::before` (block tab + inline-block icon).
 					&::before {
-						color: $icon-dim;
+						color: var(--gray);
 						display: inline-block;
 						font-family: dashicons;
 						speak: none;
@@ -4732,7 +5926,7 @@ body.maxmegamenu-admin {
 						&.is-active {
 							border-inline-start-color: transparent;
 							box-shadow: none;
-							border-bottom-color: $wp-admin-theme-color;
+							border-bottom-color: var(--wp-admin-theme-color);
 						}
 
 						&::before {
@@ -4774,7 +5968,7 @@ body.maxmegamenu-admin {
 		font-size: 1.1em;
 		margin: 17px 0 5px 0;
 		text-indent: 1px;
-	    border-bottom: 1px solid $line;
+	    border-bottom: 1px solid var(--light-gray);
 	    padding: 0 0 10px 0;
 	}
 
@@ -4805,24 +5999,6 @@ body.maxmegamenu-admin {
 		}
 	}
 
-	.megamenu_wrap .megamenu_submit .saved {
-	    background: transparent;
-	    line-height: 28px;
-	    margin: 0 0 0 5px;
-	    flex: 0 0 auto;
-	    border-radius: 0;
-		color: $wp-admin-theme-color;
-	    text-transform: uppercase;
-	    font-weight: bold;
-	}
-
-	.megamenu_wrap .megamenu_submit .saved .dashicons {
-		color: $wp-admin-theme-color;
-	    width: 26px;
-	    line-height: 28px;
-	    height: 28px;
-	}
-
 	// Shared admin utility / tab callouts (was duplicated under location modal + Menu Locations settings).
 	.mega-vertical-align-top {
 		vertical-align: top;
@@ -4834,7 +6010,7 @@ body.maxmegamenu-admin {
 	}
 
 	.megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels {
-		padding: 20px 24px 32px 0;
+		padding: 20px 24px 0 0;
 		box-sizing: border-box;
 		min-height: 400px;
 
@@ -4851,9 +6027,11 @@ body.maxmegamenu-admin {
 		}
 
 		.megamenu-nav-tab-wrapper {
-			position: relative;
+			position: sticky;
+			top: 0;
+			z-index: 22;
 			margin: 0;
-			padding: 0;
+			padding: 6px 0 10px;
 			display: inline-flex;
 			align-items: center;
 			align-content: center;
@@ -4862,6 +6040,8 @@ body.maxmegamenu-admin {
 			width: 100%;
 			border: 0;
 			box-sizing: border-box;
+			background: white;
+			box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 
 			@include tablet {
 				gap: 16px;
@@ -4876,7 +6056,7 @@ body.maxmegamenu-admin {
 				height: 100%;
 				align-content: center;
 				flex-wrap: wrap;
-				color: $text;
+				color: var(--semidark-gray);
 				font-weight: 500;
 				font-size: 14px;
 				padding: 0 5px;
@@ -4888,14 +6068,14 @@ body.maxmegamenu-admin {
 				text-align: inherit;
 
 				&:hover {
-					color: $wp-admin-theme-color;
+					color: var(--wp-admin-theme-color);
 				}
 
 				&.nav-tab-active {
-					background: $white;
+					background: white;
 					position: relative;
 					z-index: 1;
-					color: $wp-admin-theme-color;
+					color: var(--wp-admin-theme-color);
 				}
 			}
 
@@ -4906,12 +6086,174 @@ body.maxmegamenu-admin {
 		.menu_settings {
 
 			&.menu_settings_menu_themes {
+				form.theme_editor {
+					// Fill the viewport column so the sticky save bar sits on the bottom even on short tabs.
+					// `--mmm-theme-editor-outside-form`: header, theme selector, rails, wp padding (approximate).
+					--mmm-theme-editor-outside-form: clamp(260px, 38vh, 480px);
+					--mmm-theme-editor-form-tabs-nav-submit: clamp(140px, 18vh, 200px);
+
+					display: flex;
+					flex-direction: column;
+					box-sizing: border-box;
+					min-height: calc(
+						100dvh - var(--mmm-admin-bar-offset, 0px) - var(--mmm-theme-editor-outside-form)
+					);
+					.mega-theme-font-option {
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						min-height: 28px;
+						vertical-align: middle;
+
+						.mega-theme-font-option__reveal {
+							display: none;
+							align-items: center;
+							justify-content: center;
+							box-sizing: border-box;
+							width: 2.5rem;
+							height: 28px;
+							min-height: 28px;
+							margin: 0;
+							padding: 0;
+							border: 1px solid #949494;
+							border-radius: 2px;
+							background: #fff;
+							box-shadow: 0 0 0 transparent;
+							color: var(--semidark-gray);
+							cursor: pointer;
+							line-height: 1;
+							vertical-align: middle;
+							appearance: none;
+
+							&:hover {
+								border-color: var(--medium-gray);
+								color: var(--black);
+							}
+
+							&:focus {
+								border-color: var(--wp-admin-theme-color, #2271b1);
+								box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
+								outline: 2px solid transparent;
+								outline-offset: 0;
+							}
+
+							.dashicons {
+								width: 18px;
+								height: 18px;
+								font-size: 18px;
+								line-height: 1;
+							}
+						}
+
+						.mega-theme-font-option__select {
+							min-width: 12em;
+							max-width: 100%;
+						}
+
+						&.mega-theme-font-option--collapsed {
+							.mega-theme-font-option__reveal {
+								display: inline-flex;
+							}
+
+							.mega-theme-font-option__select {
+								display: none;
+							}
+						}
+					}
+
+					> .megamenu-nav-tab-wrapper {
+						flex: 0 0 auto;
+					}
+
+					> div.mega-tab-content {
+						flex: 1 1 auto;
+						min-height: max(
+							0px,
+							calc(
+								100dvh - var(--mmm-admin-bar-offset, 0px) - var(--mmm-theme-editor-outside-form) -
+									var(--mmm-theme-editor-form-tabs-nav-submit)
+							)
+						);
+					}
+
+					> .megamenu_submit {
+						position: sticky;
+						bottom: 0;
+						flex: 0 0 auto;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						align-items: center;
+						justify-content: flex-start;
+						column-gap: 16px;
+						row-gap: 10px;
+						margin-top: auto;
+						margin-bottom: 0;
+						z-index: 25;
+						background: white;
+						padding: 20px 0 22px;
+						box-sizing: border-box;
+						box-shadow:
+							0 -1px 0 var(--light-gray),
+							0 -8px 24px $shadow-a07;
+
+						> p.submit {
+							flex: 0 0 auto;
+							margin: 0;
+							padding: 0;
+
+						}
+
+						.megamenu-theme-editor-submit__preview-after {
+							display: flex;
+							flex-wrap: wrap;
+							align-items: center;
+							gap: 10px 12px;
+							min-width: 0;
+						}
+
+						.megamenu-preview-after__row {
+							display: flex;
+							flex-wrap: wrap;
+							align-items: center;
+							gap: 10px 12px;
+							min-width: 0;
+						}
+
+						.megamenu-preview-after__toggle-label {
+							display: inline-flex;
+							align-items: center;
+							gap: 8px;
+							margin: 0;
+							cursor: pointer;
+							font-size: 13px;
+							line-height: 1.4;
+							color: var(--semidark-gray);
+						}
+
+						.megamenu-preview-after__toggle-label .components-form-toggle {
+							flex-shrink: 0;
+						}
+
+						.megamenu-preview-after__label-text {
+							font-size: inherit;
+							line-height: inherit;
+							color: inherit;
+						}
+
+						.megamenu-preview-after__location-select {
+							@include mega-toolbar-native-select;
+							width: auto;
+							min-width: 160px;
+							max-width: min(300px, 100%);
+						}
+					}
+				}
 
 				.theme_selector {
 					margin-bottom: 20px;
 					display: flex;
 					flex-wrap: wrap;
-					align-items: flex-end;
 					row-gap: 12px;
 					column-gap: 32px;
 					overflow: visible;
@@ -4925,8 +6267,7 @@ body.maxmegamenu-admin {
 						min-width: 0;
 					}
 
-					.theme-editor-actions-group,
-					.theme-editor-preview-group {
+					.theme-editor-actions-group {
 						display: flex;
 						flex-direction: column;
 						align-items: flex-start;
@@ -4936,13 +6277,11 @@ body.maxmegamenu-admin {
 
 					// Same treatment as `label span.mega-short-desc` in `.megamenu_outer_wrap table` (location dialog / theme fields).
 					.theme-selector-field .mega-short-desc,
-					.theme-editor-actions-group .mega-short-desc,
-					.theme-editor-preview-group .mega-short-desc {
+					.theme-editor-actions-group .mega-short-desc {
 						@include mega-toolbar-field-label;
 					}
 
-					.theme-editor-actions-group > .mega-short-desc,
-					.theme-editor-preview-group > .mega-short-desc {
+					.theme-editor-actions-group > .mega-short-desc {
 						margin: 0 0 0 1px;
 					}
 
@@ -4958,17 +6297,13 @@ body.maxmegamenu-admin {
 				form.theme_editor .mega-toggle-block-selector-field {
 					display: flex;
 					flex-direction: column;
-					align-items: stretch;
+					align-items: flex-start;
 					gap: 4px;
 					margin: 0 0 20px;
 					max-width: 100%;
 
-					// Label uses `for=` — without this it stretches full width and every click in that row focuses the select.
 					.mega-short-desc {
 						@include mega-toolbar-field-label;
-						align-self: flex-start;
-						width: fit-content;
-						max-width: 100%;
 					}
 
 					select#toggle-block-selector {
@@ -4985,7 +6320,7 @@ body.maxmegamenu-admin {
 					overflow: visible;
 				}
 
-				// Theme toolbar icon buttons — `@include megamenu-admin-ghost-icon-button` (same as modal close / preview refresh).
+				// Theme toolbar icon buttons — markup: `.button.button-secondary.button-compact.mega-theme-editor-action`.
 				.mega-theme-editor-actions button.mega-theme-editor-action.megamenu-preview-open {
 					font: inherit;
 					text-align: center;
@@ -4996,26 +6331,11 @@ body.maxmegamenu-admin {
 					opacity: 0.65;
 				}
 
-				.mega-theme-editor-action {
+				.mega-theme-editor-action:not(.mega-theme-editor-action--location-preview) {
 					position: relative;
 					overflow: visible;
 					text-decoration: none;
-					@include megamenu-admin-ghost-icon-button;
-					// Match `mega-toolbar-native-select` / theme editor fields.
-					border: 1px solid $megamenu-form-control-border;
-					background: $white;
-
-					&:focus {
-						border-color: $neutral;
-					}
-
-					&:hover {
-						border-color: var(--wp-admin-theme-color-darker-20);
-					}
-
-					&:focus-visible {
-						border-color: $wp-admin-theme-color;
-					}
+					@include megamenu-admin-modal-ghost-icon-btn;
 
 					&.mega-theme-editor-action--export .dashicons,
 					&.mega-theme-editor-action--import .dashicons {
@@ -5036,6 +6356,7 @@ body.maxmegamenu-admin {
 			    	.mega-toggle_blocks td:after,
 			    	.mega-toggle_bar_background td:after,
 			    	.mega-toggle_bar_height td:after,
+			    	.mega-toggle_bar_border_radius td:after,
 			    	.mega-mobile_menu_overlay td:after,
 			    	.mega-mobile_menu_force_width td:after {
 			    		@include disabled-row-overlay;
@@ -5071,7 +6392,7 @@ body.maxmegamenu-admin {
 				    }
 
 				    h5 {
-					    border: 1px solid $line-ui;
+					    border: 1px solid var(--light-gray);
 					    padding: 10px;
 					    box-sizing: border-box;
 					    border-left: 3px solid $success;
@@ -5080,11 +6401,46 @@ body.maxmegamenu-admin {
 					    margin: 0 10px;
 				    }
 			    }
+
+			    table.mmm-settings-table td.mega-heading-cell {
+			    	vertical-align: top;
+			    	padding-bottom: 0;
+
+			    	h5 {
+			    		margin: 0;
+			    		font-size: 12px;
+			    	}
+
+			    	p.mega-description {
+			    		margin: 0;
+			    		font-size: 13px;
+			    		line-height: 1.45;
+			    		color: var(--gray);
+			    	}
+			    }
+
+			    table.mmm-settings-table tr:first-of-type td.mega-heading-cell {
+			    	padding-bottom: 20px;
+			    	padding-top: 0;
+			    }
+
+			    table.mmm-settings-table td.mega-heading-cell .mega-description {
+			    	font-style: italic;
+			    }
 			}
 		}
 
 	}
 
+}
+
+// Theme editor (Menu Themes): tab strip stays under WP admin bar when sticky; save row pins to viewport bottom.
+body.maxmegamenu-admin.admin-bar .megamenu_wrap.megamenu-dialog-rail > .megamenu-dialog-panels .megamenu-nav-tab-wrapper {
+	top: 32px;
+
+	@media screen and (max-width: 782px) {
+		top: 46px;
+	}
 }
 
 @keyframes mm-mega-widget-selector-pulse {
@@ -5106,8 +6462,16 @@ body.maxmegamenu-admin {
 	}
 }
 
-@keyframes busy-animation {
-	0% {
-		background-position: 200px 0;
-	}
+body.folded.maxmegamenu-admin .toggle-bar-designer .mega-blocks .block.mega-open .block-settings {
+	left: 36px;
+	width: calc(100% - 36px - 10%);
+}
+
+body.maxmegamenu-admin:has(.toggle-bar-designer .mega-open)::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: 30;
+	pointer-events: auto;
+	background: rgba(0, 0, 0, 0.4);
 }

@@ -58,6 +58,7 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 			add_action( 'admin_footer', [ $this, 'maybe_print_menu_item_dialog_markup' ], 5 );
 			add_filter( 'hidden_meta_boxes', [ $this, 'show_mega_menu_metabox' ] );
 
+
 			add_filter( 'siteorigin_panels_is_admin_page', [ $this, 'enable_site_origin_page_builder' ] );
 
 			if ( function_exists( 'siteorigin_panels_admin_enqueue_scripts' ) ) {
@@ -199,25 +200,26 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 				<button type="button" class="megamenu-admin-modal__backdrop" aria-label="<?php echo esc_attr__( 'Close', 'megamenu' ); ?>"></button>
 				<div class="megamenu-admin-modal__panel" role="dialog" aria-modal="true" aria-labelledby="megamenu-menu-item-dialog-title" tabindex="-1">
 					<div class="megamenu-admin-modal__header">
-						<div class="megamenu-admin-modal__title-group">
-							<h2 id="megamenu-menu-item-dialog-title" class="megamenu-admin-modal__title">
-								<span class="megamenu-admin-modal__title-text"></span>
-							</h2>
-							<p id="megamenu-menu-item-dialog-breadcrumb" class="megamenu-menu-item-dialog-breadcrumb" hidden></p>
-						</div>
-						<div class="megamenu-admin-modal__header-meta"></div>
-						<div class="megamenu-admin-modal__header-actions">
+						<div class="megamenu-admin-modal__header-top">
+							<div class="megamenu-admin-modal__title-group">
+								<h2 id="megamenu-menu-item-dialog-title" class="megamenu-admin-modal__title">
+									<span class="megamenu-admin-modal__title-text"></span>
+								</h2>
+							<div class="megamenu-admin-modal__header-meta"></div>
+							<div class="megamenu-admin-modal__header-actions">
 							<span class="megamenu-menu-item-dialog-saving-indicator" hidden aria-live="polite">
 								<span class="dashicons dashicons-update megamenu-menu-item-dialog-saving-indicator__icon" aria-hidden="true"></span>
 								<span class="screen-reader-text"><?php echo esc_html__( 'Saving…', 'megamenu' ); ?></span>
 							</span>
-							<button type="button" class="megamenu-admin-modal__expand-btn" aria-expanded="false" aria-label="<?php echo esc_attr__( 'Expand to fill workspace', 'megamenu' ); ?>">
+							<button type="button" class="button button-secondary button-compact megamenu-admin-modal-icon-btn megamenu-admin-modal__expand-btn" aria-expanded="false" aria-label="<?php echo esc_attr__( 'Expand to fill workspace', 'megamenu' ); ?>">
 								<span class="dashicons dashicons-fullscreen-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--expand" aria-hidden="true"></span>
 								<span class="dashicons dashicons-fullscreen-exit-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--contract" aria-hidden="true"></span>
 							</button>
-							<button type="button" class="megamenu-modal-close" aria-label="<?php echo esc_attr__( 'Close', 'megamenu' ); ?>">
+							<button type="button" class="button button-secondary button-compact megamenu-admin-modal-icon-btn megamenu-modal-close" aria-label="<?php echo esc_attr__( 'Close', 'megamenu' ); ?>">
 								<span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
 							</button>
+							</div>
+							</div>
 						</div>
 					</div>
 					<div class="megamenu-admin-modal__body megamenu-admin-modal__loading-host">
@@ -226,6 +228,10 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 							<span class="screen-reader-text"><?php echo esc_html__( 'Loading.', 'megamenu' ); ?></span>
 						</div>
 						<div class="megamenu_outer_wrap megamenu-dialog-rail"></div>
+					<button type="button" class="mmm-scroll-hint" hidden aria-hidden="true">
+						<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Scroll down', 'megamenu' ); ?></span>
+					</button>
 					</div>
 				</div>
 			</div>
@@ -270,13 +276,9 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 
 			wp_enqueue_script( 'dialog-modal-expand' );
 
-			wp_enqueue_script(
-				'dialog-preview',
-				MEGAMENU_BASE_URL . 'js/admin/dialog-preview.js',
-				[ 'jquery', 'dialog-modal-expand' ],
-				MEGAMENU_VERSION,
-				true
-			);
+			if ( class_exists( 'Mega_Menu_Locations' ) ) {
+				Mega_Menu_Locations::register_and_localize_location_settings_dialog();
+			}
 
 			if ( ! wp_script_is( 'dialog-tabs', 'registered' ) ) {
 				wp_register_script(
@@ -286,10 +288,6 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 					MEGAMENU_VERSION,
 					true
 				);
-			}
-
-			if ( class_exists( 'Mega_Menu_Locations' ) ) {
-				Mega_Menu_Locations::register_and_localize_location_settings_dialog();
 			}
 
 			wp_enqueue_script(
@@ -314,7 +312,6 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 					'jquery-ui-core',
 					'jquery-ui-sortable',
 					'dialog-menu-item-settings',
-					'dialog-preview',
 					'dialog-tabs',
 					'dialog-location-settings',
 				],

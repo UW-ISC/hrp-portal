@@ -203,7 +203,7 @@ class SMC_Sync_Support {
 
 		if ( is_array( $results ) ) {
 			foreach ( $results as $result ) {
-				$assignments[ $result->post_parent ][ $result->ID ][ $result->term_taxonomy_id ] = (integer) $result->term_taxonomy_id;
+				$assignments[ $result->post_parent ][ $result->ID ][ $result->term_taxonomy_id ] = (int) $result->term_taxonomy_id;
 			}
 //error_log( __LINE__ . ' SMC_Sync_Support::get_posts_per_view child term $assignments = ' . var_export( $assignments, true ), 0 );
 		} else {
@@ -274,9 +274,9 @@ class SMC_Sync_Support {
 
 		if ( is_array( $results ) ) {
 			foreach ( $results as $result ) {
-				$assignments[ $result->ID ][ 'ttids' ][ $result->term_taxonomy_id ] = (integer) $result->term_taxonomy_id;
+				$assignments[ $result->ID ][ 'ttids' ][ $result->term_taxonomy_id ] = (int) $result->term_taxonomy_id;
 				if ( 'all' == $fields ) {
-					$assignments[ $result->ID ][ 'terms' ][ $result->taxonomy ][ $result->term_taxonomy_id ] = array( 'term_id' => (integer) $result->term_id, 'slug' => $result->slug );
+					$assignments[ $result->ID ][ 'terms' ][ $result->taxonomy ][ $result->term_taxonomy_id ] = array( 'term_id' => (int) $result->term_id, 'slug' => $result->slug );
 				}
 			}
 //error_log( __LINE__ . ' SMC_Sync_Support::get_posts_per_view all $assignments = ' . var_export( $assignments, true ), 0 );
@@ -286,9 +286,9 @@ class SMC_Sync_Support {
 
 		// Check for Default Post Category exclusion
 		$default_tt_id = 0;
-		if ( (boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
 			// Get the actual TTID, just to be safe
-			$default_term = get_term( (integer) get_option( 'default_category' ), 'category' );
+			$default_term = get_term( (int) get_option( 'default_category' ), 'category' );
 //error_log( __LINE__ ." SMC_Sync_Support::get_posts_per_view ID term = " . var_export( $default_term, true ), 0 );
 			if ( $default_term instanceof WP_Term ) {
 				$default_tt_id = $default_term->term_taxonomy_id;
@@ -410,7 +410,7 @@ class SMC_Sync_Support {
 		foreach( $terms as $term ) {
 			if ( array_key_exists( $term->taxonomy, $active_taxonomies ) ) {
 				$taxonomies[ $term->taxonomy ] = $term->taxonomy;
-				$results[ $term->object_id ][ $term->taxonomy ][ $term->term_taxonomy_id ] = array( 'id' => (integer) $term->term_id, 'slug' => $term->slug );
+				$results[ $term->object_id ][ $term->taxonomy ][ $term->term_taxonomy_id ] = array( 'id' => (int) $term->term_id, 'slug' => $term->slug );
 			}
 		}
 //error_log( __LINE__ . ' SMC_Sync_Support::get_terms $taxonomies = ' . var_export( $taxonomies, true ), 0 );
@@ -419,7 +419,7 @@ class SMC_Sync_Support {
 		// Check for Default Post Category exclusion
 		if ( ( ( boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) && in_array( 'category', $taxonomies ) ) {
 			if ( 'post' === $parent->post_type && 'auto-draft' !== $parent->post_status ) {
-				$default_term_id = (integer) get_option( 'default_category' );
+				$default_term_id = (int) get_option( 'default_category' );
 //error_log( __LINE__ ." SMC_Sync_Support::get_terms \$default_term_id = " . var_export( $default_term_id, true ), 0 );
 				if ( !empty( $results[ $parent_id ]['category'] ) ) {
 					foreach ( $results[ $parent_id ]['category'] as $index => $term ) {
@@ -488,8 +488,8 @@ class SMC_Sync_Support {
 		
 		// Check for Default Post Category exclusion
 		$default_term_id = 0;
-		if ( (boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
-			$default_term_id = (integer) get_option( 'default_category' );
+		if ( (bool) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
+			$default_term_id = (int) get_option( 'default_category' );
 //error_log( __LINE__ ." SMC_Sync_Support::sync_all \$default_term_id = " . var_export( $default_term_id, true ), 0 );
 		} // exclude category
 		

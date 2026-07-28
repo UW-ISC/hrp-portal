@@ -12,7 +12,7 @@
  * opened on 12/03/2024 by "vgo0":
  *
  * @package Unattached Fixit
- * @version 1.05
+ * @version 1.06
  */
 
 /*
@@ -20,7 +20,7 @@ Plugin Name: MLA Unattached Fixit
 Plugin URI: http://davidlingren.com/
 Description: Removes Unattached items from the Media Library
 Author: David Lingren
-Version: 1.05
+Version: 1.06
 Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
@@ -57,7 +57,7 @@ class Unattached_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.05';
+	const CURRENT_VERSION = '1.06';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -233,20 +233,20 @@ class Unattached_Fixit {
 		$range_clause = '';
 				
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
 			$range_clause = '( ID >= ' . $lower_bound . ' ) AND ( ID <= ' . $upper_bound . ' ) AND ';
 		} elseif ( $lower_bound ) {
 			$range_clause = '( ID = ' . $lower_bound . ' ) AND ';
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_limit' ] ) ) {
-			$limit_clause = 'LIMIT ' . (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_limit' ];
+			$limit_clause = 'LIMIT ' . (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_limit' ];
 		} else {
 			$limit_clause = '';
 		}

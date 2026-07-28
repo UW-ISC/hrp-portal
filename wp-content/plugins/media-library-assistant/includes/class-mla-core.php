@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.35';
+	const CURRENT_MLA_VERSION = '3.39';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -455,8 +455,8 @@ class MLACore {
 		load_plugin_textdomain( $text_domain, false, MLA_PLUGIN_BASENAME . '/languages/' );
 
 		MLACoreOptions::mla_localize_option_definitions_array();
-		MLAObjects::mla_build_taxonomies();
-
+		MLAObjects::mla_build_taxonomies(); // Run again to translate labels, if needed
+		
 		if ( 'disabled' == MLACore::mla_get_option( MLACoreOptions::MLA_FEATURED_IN_TUNING ) ) {
 			MLACore::$process_featured_in = false;
 		}
@@ -591,8 +591,8 @@ class MLACore {
 	 *
 	 * @since 2.30
 	 *
-	 * @param	array	associative array with setting => value pairs
-	 * @param	object || NULL	current post object, if available
+	 * @param	array	$settings associative array with setting => value pairs
+	 * @param	object/NULL	$post current post object, if available
 	 */
 	public static function mla_media_view_settings_filter( $settings, $post ) {
 		if ( class_exists( 'MLAModal' ) ) {
@@ -841,10 +841,10 @@ class MLACore {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string 	Name of the desired option
-	 * @param	boolean	True to ignore current setting and return default values
-	 * @param	boolean	True to ignore default values and return only stored values
-	 * @param	array	Custom option definitions
+	 * @param	string 	$option Name of the desired option
+	 * @param	boolean	$get_default True to ignore current setting and return default values
+	 * @param	boolean $get_stored True to ignore default values and return only stored values
+	 * @param	array	$option_table Custom option definitions
 	 * 
 	 *
 	 * @return	mixed	Value(s) for the option or false if the option is not a defined MLA option
@@ -882,9 +882,9 @@ class MLACore {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string 	Name of the desired option
-	 * @param	mixed 	New value for the desired option
-	 * @param	array	Custom option definitions
+	 * @param	string 	$option Name of the desired option
+	 * @param	mixed 	$newvalue New value for the desired option
+	 * @param	array	$option_table Custom option definitions
 	 *
 	 * @return	boolean	True if the value was changed or false if the update failed
 	 */
@@ -899,7 +899,7 @@ class MLACore {
 
 		if ( array_key_exists( $option, $option_table ) ) {
 			if ( isset( $option_table[ $option ]['autoload'] ) ) {
-				$autoload = (boolean) $option_table[ $option ]['autoload'];
+				$autoload = (bool) $option_table[ $option ]['autoload'];
 			} else {
 				$autoload = true;
 			}
@@ -915,8 +915,8 @@ class MLACore {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string 	Name of the desired option
-	 * @param	array	Custom option definitions
+	 * @param	string 	$option Name of the desired option
+	 * @param	array	$option_table Custom option definitions
 	 *
 	 * @return	boolean	True if the option was deleted, otherwise false
 	 */
@@ -945,8 +945,8 @@ class MLACore {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	string 	Complete path and/or name of the template file, option name or the raw template
-	 * @param	string 	Optional type of template source; 'path', 'file' (default), 'option', 'string'
+	 * @param	string 	$source Complete path and/or name of the template file, option name or the raw template
+	 * @param	string 	$type Optional type of template source; 'path', 'file' (default), 'option', 'string'
 	 *
 	 * @return	string|array|false|NULL
 	 *			string for files that do not contain template divider comments,
@@ -1097,7 +1097,7 @@ class MLACore {
  	 *
 	 * @since 3.30
 	 *
-	 * @param	string	item name
+	 * @param	string	$mla_item item name
 	 *
 	 * @return	string encrypted item name
 	 */
@@ -1120,7 +1120,7 @@ class MLACore {
  	 *
 	 * @since 3.30
 	 *
-	 * @param	string encrypted item name
+	 * @param	string $mla_item encrypted item name
 	 *
 	 * @return	string decrypted item name
 	 */
@@ -1145,8 +1145,8 @@ class MLACore {
  	 *
 	 * @since 2.20
 	 *
-	 * @param	string	Taxonomy name, e.g., attachment_category
-	 * @param	string	Optional. 'support' (default), 'quick-edit' or 'filter'
+	 * @param	string	$tax_name Taxonomy name, e.g., attachment_category
+	 * @param	string	$support_type Optional. 'support' (default), 'quick-edit', etc.
 	 *
 	 * @return	boolean|string
 	 *			true if the taxonomy is supported in this way else false.
@@ -1158,54 +1158,54 @@ class MLACore {
 
 		switch ( $support_type ) {
 			case 'support': 
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_support'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'] );
 				}
 
 				$tax_support = isset( $tax_options['tax_support'] ) ? $tax_options['tax_support'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'];
 				return array_key_exists( $tax_name, $tax_support );
 			case 'quick-edit':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_quick_edit'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'] );
 				}
 
 				$tax_quick_edit = isset( $tax_options['tax_quick_edit'] ) ? $tax_options['tax_quick_edit'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'];
 				return array_key_exists( $tax_name, $tax_quick_edit );
 			case 'term-search':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_term_search'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'] );
 				}
 
 				$tax_term_search = isset( $tax_options['tax_term_search'] ) ? $tax_options['tax_term_search'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'];
 				return array_key_exists( $tax_name, $tax_term_search );
 			case 'flat-checklist':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_flat_checklist'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'] );
 				}
 
 				$tax_flat_checklist = isset( $tax_options['tax_flat_checklist'] ) ? $tax_options['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'];
 				return array_key_exists( $tax_name, $tax_flat_checklist );
 			case 'checked-on-top':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_checked_on_top'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
 				}
 
 				$tax_checked_on_top = isset( $tax_options['tax_checked_on_top'] ) ? $tax_options['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
 				return array_key_exists( $tax_name, $tax_checked_on_top );
 			case 'checklist-add-term':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_checklist_add_term'][ $tax_name ] );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 				}
 
@@ -1217,26 +1217,26 @@ class MLACore {
 					return $tax_filter;
 				}
 
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_filter = isset( $_REQUEST['tax_filter'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_filter'] ) ) : '';
 					return ( $tax_name == $tax_filter );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'] );
 				}
 
 				return ( $tax_name == $tax_filter );
 			case 'metakey':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_metakey'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey'] ) ) : '';
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 				}
 
 				return isset( $tax_options['tax_metakey'] ) ? $tax_options['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 			case 'metakey_sort':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_metakey_sort'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey_sort'] ) ) : '';
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 				}
 
@@ -1262,71 +1262,71 @@ class MLACore {
 
 		switch ( $support_type ) {
 			case 'support': 
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_support = isset( $_REQUEST['tax_support'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_support'] ) ) : array();
 					return array_keys( $tax_support );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_support'] ) ? $tax_options['tax_support'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'] );
 			case 'quick-edit':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_quick_edit = isset( $_REQUEST['tax_quick_edit'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_quick_edit'] ) ) : array();
 					return array_keys( $tax_quick_edit );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_quick_edit'] ) ? $tax_options['tax_quick_edit'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'] );
 			case 'term-search':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_term_search = isset( $_REQUEST['tax_term_search'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_term_search'] ) ) : array();
 					return array_keys( $tax_term_search );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_term_search'] ) ? $tax_options['tax_term_search'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'] );
 			case 'flat-checklist':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_flat_checklist = isset( $_REQUEST['tax_flat_checklist'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_flat_checklist'] ) ) : array();
 					return array_keys( $tax_flat_checklist );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_flat_checklist'] ) ? $tax_options['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'] );
 			case 'checked-on-top':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_checked_on_top = isset( $_REQUEST['tax_checked_on_top'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_checked_on_top'] ) ) : array();
 					return array_keys( $tax_checked_on_top );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_checked_on_top'] ) ? $tax_options['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
 			case 'checklist-add-term':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					$tax_checklist_add_term = isset( $_REQUEST['tax_checklist_add_term'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_checklist_add_term'] ) ) : array();
 					return array_keys( $tax_checklist_add_term );
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 				}
 
 				return array_keys( isset( $tax_options['tax_checklist_add_term'] ) ? $tax_options['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 			case 'filter':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_filter'] ) ? (array) sanitize_text_field( wp_unslash( $_REQUEST['tax_filter'] ) ) : array();
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return (array) MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 				}
 
 				return (array) isset( $tax_options['tax_filter'] ) ? $tax_options['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 			case 'metakey':
-				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_metakey'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tax_metakey'] ) ) : '';
-				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 				}
 
@@ -1406,8 +1406,8 @@ class MLACore {
 	 *
 	 * @since 1.40
 	 *
-	 * @param	string	View slug, unique identifier
-	 * @param	string	A specification, e.g., "custom:Field,null" or "audio,application/vnd.*ms*"
+	 * @param	string	$slug View slug, unique identifier
+	 * @param string $specification A specification, e.g., "custom:Field,null" or "audio,application/vnd.*ms*"
 	 *
 	 * @return	array	post_mime_type specification or custom field query
 	 */
@@ -1420,22 +1420,22 @@ class MLACore {
 		);
 
 		$specification = self::mla_parse_view_specification( $specification );
-		if ( !empty( $specification['mime'] ) ) {
+		if ( ! empty( $specification['mime'] ) ) {
 			$query['post_mime_type'] = $specification['mime']['value'];
 		}
 		
-		if ( !empty( $specification['shortcode'] ) ) {
+		if ( ! empty( $specification['shortcode'] ) ) {
 			$shortcode_query = array( 'slug' => $slug, 'shortcode' => $specification['shortcode']['value'] );
 			$query['shortcode_query'] = $shortcode_query;
 		}
 		
-		if ( !empty( $specification['custom'] ) ) {
+		if ( ! empty( $specification['custom'] ) ) {
 			$meta_query = array( 'slug' => $slug , 'relation' => 'OR', 'patterns' => array () );
 			switch( $specification['custom']['option'] ) {
 				case 'match':
 					$patterns = array_map( 'trim', explode( ',', $specification['custom']['value'] ) );
 					foreach ( (array) $patterns as $pattern ) {
-						$meta_key = ( !empty( $specification['custom']['name'] ) ) ? array( 'key' => $specification['custom']['name'] ) : array();
+						$meta_key = ( ! empty( $specification['custom']['name'] ) ) ? array( 'key' => $specification['custom']['name'] ) : array();
 						$pattern = preg_replace( '/\*+/', '%', $pattern );
 						if ( false !== strpos( $pattern, '%' ) ) {
 							// Preserve the pattern - it will be used in the "where" filter
@@ -1452,14 +1452,14 @@ class MLACore {
 
 					break;
 				case 'null':
-					if ( !empty( $specification['custom']['name'] ) ) {
+					if ( ! empty( $specification['custom']['name'] ) ) {
 						$meta_query['key'] = $specification['custom']['name'];
 					}
 
 					$meta_query['value'] = 'NULL';
 					break;
 				default: // '', 'any'
-					if ( !empty( $specification['custom']['name'] ) ) {
+					if ( ! empty( $specification['custom']['name'] ) ) {
 						$meta_query[] = array( 'key' => $specification['custom']['name'], 'value' => NULL, 'compare' => '!=' );
 					} else {
 						$meta_query[] = array( 'value' => NULL, 'compare' => '!=' );
@@ -1478,7 +1478,7 @@ class MLACore {
 	 *
 	 * @since 1.40
 	 *
-	 * @param	string|array	A specification, e.g., "custom:Field,null" or "audio,application/vnd.*ms*"
+	 * @param string|array $specification A specification, e.g., "custom:Field,null" or "audio,application/vnd.*ms*"
 	 *
 	 * @return	array	( ['prefix'] => string, ['name'] => string, ['value'] => string, ['option'] => string, optional ['error'] => string )
 	 */
@@ -1514,12 +1514,12 @@ class MLACore {
 		}
 //error_log( __LINE__ . ' MLACore::mla_parse_view_specification result = ' . var_export( $result, true ), 0 );
 		
-		if ( !empty( $result['shortcode'] ) ) {
+		if ( ! empty( $result['shortcode'] ) ) {
 			$tail = substr( $result['shortcode']['value'], strlen( 'shortcode:' ) );
 			$result['shortcode']['value'] = MLAShortcode_Support::mla_validate_attributes( $tail );
 		}
 
-		if ( !empty( $result['custom'] ) ) {
+		if ( ! empty( $result['custom'] ) ) {
 			$match_count = preg_match( '/^(.+):(.+)/', $result['custom']['value'], $matches );
 			$result['custom']['value'] = '';
 			
@@ -1566,10 +1566,10 @@ class MLACore {
 					$result['custom']['name'] = $tail;
 				}
 			}
-		} // !empty( $result['custom']
+		} // ! empty( $result['custom']
 
 		// Validate the results
-		if ( !empty( $result['mime'] ) ) {
+		if ( ! empty( $result['mime'] ) ) {
 			$mime_types = array_map( 'trim', explode( ',', $result['mime']['value'] ) );
 			foreach ( (array) $mime_types as $raw_mime_type ) {
 				$no_wildcards = str_replace( '*', 'X', $raw_mime_type );
@@ -1581,7 +1581,7 @@ class MLACore {
 			} // foreach
 		} 
 			
-		if ( !empty( $result['custom'] ) ) {
+		if ( ! empty( $result['custom'] ) ) {
 			if ( 'custom' === $result['custom']['prefix'] ) {
 				if ( ! in_array( $result['custom']['option'], array( '', 'any', 'match', 'null' ) ) ) {
 					/* translators: 1: ERROR tag 2: option, e.g., any, match, null */
@@ -1607,9 +1607,9 @@ class MLACore {
 	 *
 	 * @since 1.71
 	 *
-	 * @param object The current post
-	 * @param array The meta box parameters
-	 * @param string Optional prefix to make HTML ID unique
+	 * @param object $target_post The current post
+	 * @param array $box The meta box parameters
+	 * @param string $prefix Optional prefix to make HTML ID unique
 	 *
 	 * @return void Echoes HTML for the form fields
 	 */
@@ -1846,7 +1846,7 @@ class MLACore {
 	 *
 	 * @since 2.12
 	 *
-	 * @var	string
+	 * @var	array
 	 */
 	private static $mla_debug_messages = array();
 
@@ -2158,11 +2158,11 @@ class MLA_Checklist_Walker extends Walker_Category {
 	 *
 	 * @since 1.80
 	 *
-	 * @param string Passed by reference. Used to append additional content.
-	 * @param object Taxonomy data object.
-	 * @param int    Depth of category in reference to parents. Default 0.
-	 * @param array  An array of arguments. @see wp_list_categories()
-	 * @param int    ID of the current category.
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param object $taxonomy_object Taxonomy data object.
+	 * @param int    $depth Depth of category in reference to parents. Default 0.
+	 * @param array  $args An array of arguments. @see wp_list_categories()
+	 * @param int    $id ID of the current category.
 	 */
 	function start_el( &$output, $taxonomy_object, $depth = 0, $args = array(), $id = 0 ) {
 		extract($args);
@@ -2191,17 +2191,19 @@ class MLA_Checklist_Walker extends Walker_Category {
 	 * @since 1.80
 	 *
 	 * @param string $output   Passed by reference. Used to append additional content.
-	 * @param object $category The current term object.
+	 * @param object $taxonomy_object The current term object.
 	 * @param int    $depth    Depth of the term in reference to parents. Default 0.
 	 * @param array  $args     An array of arguments. @see wp_terms_checklist()
 	 */
-	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+	function end_el( &$output, $taxonomy_object, $depth = 0, $args = array() ) {
 		$output .= "</li>\n";
 	}
 }// Class MLA_Checklist_Walker
 
 // Custom Taxonomies and WordPress objects.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-objects.php' );
+// Run mla_build_taxonomies early to ensure taxonomies are registered before WordPress needs them.
+add_action( 'init', 'MLAObjects::mla_build_taxonomies', 5 );
 add_action( 'init', 'MLAObjects::initialize', 0x800 ); // 0x7FFFFFFF );
 
 // MIME Type functions; some filters required in all modes.
@@ -2213,6 +2215,6 @@ require_once( MLA_PLUGIN_PATH . 'includes/class-mla-image-sizes.php' );
 add_action( 'init', 'MLAImage_Size::initialize', 0x800 ); // 0x7FFFFFFF );
 
 // Admin Columns plugin support
-add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );
-add_action( 'ac/list_screens', 'MLACore::register_list_screen', 10, 0 );
+//add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );
+//add_action( 'ac/list_screens', 'MLACore::register_list_screen', 10, 0 );
 ?>

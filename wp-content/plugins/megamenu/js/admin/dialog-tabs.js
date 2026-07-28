@@ -5,7 +5,7 @@
 (function (window) {
     "use strict";
 
-    var BOUND = "data-megamenu-dialog-tabs-bound";
+    const BOUND = "data-megamenu-dialog-tabs-bound";
 
     function slugify(key) {
         return String(key).replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -23,7 +23,7 @@
      * @param {function(): void} [options.onAfterActivate]
      */
     function bindVerticalRail(options) {
-        var tablist = options.tablist;
+        const tablist = options.tablist;
         if (!tablist || tablist.nodeType !== 1) {
             return;
         }
@@ -36,15 +36,15 @@
             tablist.setAttribute("role", "tablist");
         }
 
-        var tabSelector = options.tabSelector || "button.megamenu-dialog-tab";
-        var panelsRoot = options.panelsRoot;
-        var panelsSelector = options.panelsSelector;
-        var idPrefix = options.idPrefix || "megamenu-dlg-tab";
-        var getPanelKey = options.getPanelKey;
-        var panelMatches = options.panelMatches;
-        var onAfterActivate = options.onAfterActivate;
+        const tabSelector = options.tabSelector || "button.megamenu-dialog-tab";
+        const panelsRoot = options.panelsRoot;
+        const panelsSelector = options.panelsSelector;
+        const idPrefix = options.idPrefix || "megamenu-dlg-tab";
+        const getPanelKey = options.getPanelKey;
+        const panelMatches = options.panelMatches;
+        const onAfterActivate = options.onAfterActivate;
 
-        var tabs = tablist.querySelectorAll(tabSelector);
+        const tabs = tablist.querySelectorAll(tabSelector);
         if (!tabs.length || !panelsRoot) {
             return;
         }
@@ -54,29 +54,29 @@
         }
 
         function findPanelForKey(key) {
-            var found = null;
-            Array.prototype.forEach.call(listPanels(), function (p) {
+            let found = null;
+            for (const p of listPanels()) {
                 if (panelMatches(p, key)) {
                     found = p;
                 }
-            });
+            }
             return found;
         }
 
-        Array.prototype.forEach.call(tabs, function (btn) {
+        for (const btn of tabs) {
             if (btn.tagName !== "BUTTON") {
-                return;
+                continue;
             }
             btn.setAttribute("type", "button");
-            var key = getPanelKey(btn);
+            const key = getPanelKey(btn);
             if (!key) {
-                return;
+                continue;
             }
-            var tabId = idPrefix + "-tab-" + slugify(key);
-            var panelId = idPrefix + "-panel-" + slugify(key);
+            const tabId = idPrefix + "-tab-" + slugify(key);
+            const panelId = idPrefix + "-panel-" + slugify(key);
             btn.setAttribute("role", "tab");
             btn.setAttribute("id", tabId);
-            var panel = findPanelForKey(key);
+            const panel = findPanelForKey(key);
             if (panel) {
                 panel.setAttribute("role", "tabpanel");
                 panel.setAttribute("id", panelId);
@@ -87,25 +87,25 @@
                 "aria-selected",
                 btn.classList.contains("is-active") ? "true" : "false"
             );
-        });
+        }
 
         function activateTab(activeBtn) {
-            var key = getPanelKey(activeBtn);
+            const key = getPanelKey(activeBtn);
             if (!key) {
                 return;
             }
 
-            Array.prototype.forEach.call(tabs, function (btn) {
+            for (const btn of tabs) {
                 btn.classList.remove("is-active");
                 btn.setAttribute("aria-selected", "false");
-            });
+            }
             activeBtn.classList.add("is-active");
             activeBtn.setAttribute("aria-selected", "true");
 
-            Array.prototype.forEach.call(listPanels(), function (panel) {
-                var show = panelMatches(panel, key);
+            for (const panel of listPanels()) {
+                const show = panelMatches(panel, key);
                 panel.style.display = show ? "block" : "none";
-            });
+            }
 
             if (typeof onAfterActivate === "function") {
                 onAfterActivate();
@@ -113,7 +113,7 @@
         }
 
         tablist.addEventListener("click", function (ev) {
-            var btn = ev.target.closest(tabSelector);
+            const btn = ev.target.closest(tabSelector);
             if (!btn || !tablist.contains(btn) || btn.tagName !== "BUTTON") {
                 return;
             }
@@ -121,7 +121,7 @@
             activateTab(btn);
         });
 
-        var initial = tablist.querySelector(tabSelector + ".is-active");
+        const initial = tablist.querySelector(tabSelector + ".is-active");
         if (initial) {
             activateTab(initial);
         }

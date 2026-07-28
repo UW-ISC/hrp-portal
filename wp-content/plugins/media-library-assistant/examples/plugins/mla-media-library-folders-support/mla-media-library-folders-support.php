@@ -9,7 +9,7 @@
  * https://wordpress.org/support/topic/customizing-upload-options/
  *
  * @package MLA Media Library Folders Support
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -17,7 +17,7 @@ Plugin Name: MLA Media Library Folders Support
 Plugin URI: http://davidlingren.com/
 Description: Supports Media Library Folders in the Media/Assistant admin screen
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2023 David Lingren
@@ -50,7 +50,7 @@ class MLAMediaLibraryFoldersSupport {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.00';
+	const PLUGIN_VERSION = '1.01';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -175,8 +175,8 @@ class MLAMediaLibraryFoldersSupport {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -184,7 +184,7 @@ class MLAMediaLibraryFoldersSupport {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 		
 		// The remaining filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() ) {

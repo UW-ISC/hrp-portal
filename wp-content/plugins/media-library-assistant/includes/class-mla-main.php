@@ -537,7 +537,7 @@ class MLA {
 		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_LIBRARY ) ) {
 			$menu_position = 4;
 		} else {
-			$menu_position = (integer) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
+			$menu_position = (int) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
 		}
 
 		$hook = add_submenu_page( 'upload.php', $page_title, $menu_title, 'upload_files', MLACore::ADMIN_PAGE_SLUG, 'MLA::mla_render_admin_page' );
@@ -833,7 +833,7 @@ class MLA {
 			if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_LIBRARY ) ) {
 				$menu_position = 4;
 			} else {
-				$menu_position = (integer) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
+				$menu_position = (int) MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_ORDER );
 			}
 
 			if ( $menu_position ) {

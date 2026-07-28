@@ -40,7 +40,7 @@ class SMC_Automatic_Support {
 	public static function initialize() {
 		// Look for Postie chron job
 		if ( isset( $_REQUEST['doing_wp_cron'] ) && class_exists( 'Postie', false ) ) {
-			if ( false === (boolean) SMC_Settings_Support::get_option( 'postie_sync' ) ) {
+			if ( false === (bool) SMC_Settings_Support::get_option( 'postie_sync' ) ) {
 				//error_log( __LINE__ . ' SMC_Automatic_Support::initialize() no Postie Support', 0 );
 				return;
 			}
@@ -133,7 +133,7 @@ class SMC_Automatic_Support {
 
 		// Handle the case of setting terms during original post insert
 		if ( empty( $postarr['ID'] ) ) {
-			if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 				$post_type = isset( $postarr['post_type'] ) ? $postarr['post_type'] : 'post';
 				SMC_Automatic_support::rule_update_post_terms( 0, $post_type, NULL, NULL, 'before' );
 			}
@@ -157,7 +157,7 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . " SMC_Automatic_Support::filter_wp_insert_post( {$post_ID}, {$update} ) \$post = " . var_export( $post, true), 0 );
 
 		// Handle the case of setting terms during original post insert
-		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 			SMC_Automatic_support::rule_update_post_terms( $post_ID, NULL, NULL, NULL, 'after' );
 		}
 	} // action_wp_insert_post
@@ -178,7 +178,7 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . " SMC_Automatic_Support::action_pre_post_update( {$post_id} ) \$data = " . var_export( $data, true), 0 );
 		//error_log( __LINE__ . " SMC_Automatic_Support::action_pre_post_update( {$post_id} ) \$post = " . var_export(get_post( $post_id ), true), 0 );
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 			SMC_Automatic_support::rule_update_post_terms( $post_id, NULL, NULL, NULL, 'before' );
 		}
 
@@ -187,11 +187,11 @@ class SMC_Automatic_Support {
 			return;
 		}
 		
-		if ( (boolean) SMC_Settings_Support::get_option( 'attach_orphan' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'attach_orphan' ) ) {
 			SMC_Automatic_support::rule_attach_orphan( $data['post_parent'], $post_id, true );
 		}
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'reattach_item' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'reattach_item' ) ) {
 			SMC_Automatic_support::rule_reattach_item( $data['post_parent'], $post_id, true );
 		}
  	} // action_pre_post_update
@@ -211,11 +211,11 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_edit_attachment $post_id = ' . var_export( $post_id, true), 0 );
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_edit_attachment $post = ' . var_export( get_post( $post_id ), true), 0 );
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'attach_orphan' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'attach_orphan' ) ) {
 			SMC_Automatic_support::rule_attach_orphan( NULL, $post_id, false );
 		}
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'reattach_item' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'reattach_item' ) ) {
 			SMC_Automatic_support::rule_reattach_item( NULL, $post_id, false );
 		}
  	} // action_edit_attachment
@@ -238,7 +238,7 @@ class SMC_Automatic_Support {
 		// Flush the cache of parent/child term assignments to force resynch
 		SMC_Sync_Support::get_posts_per_view( NULL, true );
 		
-		if ( (boolean) SMC_Settings_Support::get_option( 'upload_item' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'upload_item' ) ) {
 			SMC_Automatic_support::rule_upload_item( $post_id );
 		}
  	} // action_add_attachment
@@ -261,13 +261,13 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_post_updated $post_after = ' . var_export( $post_after, true), 0 );
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_post_updated $post_before = ' . var_export( $post_before, true), 0 );
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'insert_orphan' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'insert_orphan' ) ) {
 			$inserted_items = SMC_Automatic_support::compare_inserted_items( $post_after, $post_before );
 //error_log( __LINE__ . ' SMC_Automatic_Support::action_post_updated orphan $inserted_items = ' . var_export( $inserted_items, true), 0 );
 			SMC_Automatic_support::rule_insert_orphan( $post_after, $post_before, $inserted_items );
 		}
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'insert_attached' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'insert_attached' ) ) {
 			if ( empty( $inserted_items ) ) {
 				$inserted_items = SMC_Automatic_support::compare_inserted_items( $post_after, $post_before );
 //error_log( __LINE__ . ' SMC_Automatic_Support::action_post_updated attached $inserted_items = ' . var_export( $inserted_items, true), 0 );
@@ -276,7 +276,7 @@ class SMC_Automatic_Support {
 			SMC_Automatic_support::rule_insert_attached( $post_after, $post_before, $inserted_items );
 		}
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 			SMC_Automatic_support::rule_update_post_terms( $post_id, NULL, NULL, NULL, 'after' );
 		}
  	} // action_post_updated
@@ -299,7 +299,7 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_add_post_meta $meta_key = ' . var_export( $meta_key, true), 0 );
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_add_post_meta $meta_value = ' . var_export( $meta_value, true), 0 );
 
-		if ( ( '_thumbnail_id' == $meta_key ) && (boolean) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
+		if ( ( '_thumbnail_id' == $meta_key ) && (bool) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
 			SMC_Automatic_support::rule_remove_feature( $object_id, $meta_value, true );
 		}
  	} // action_add_post_meta
@@ -325,15 +325,15 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_added_post_meta $meta_value = ' . var_export( $meta_value, true), 0 );
 
 		if ( '_thumbnail_id' == $meta_key ) {
-			if ( (boolean) SMC_Settings_Support::get_option( 'set_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'set_feature' ) ) {
 				SMC_Automatic_support::rule_set_feature( $object_id, $meta_value );
 			}
 
-			if ( (boolean) SMC_Settings_Support::get_option( 'reattach_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'reattach_feature' ) ) {
 				SMC_Automatic_support::rule_reattach_feature( $object_id, $meta_value );
 			}
 
-			if ( (boolean) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
 				SMC_Automatic_support::rule_remove_feature( $object_id, $meta_value, false );
 			}
 		}
@@ -359,7 +359,7 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_update_post_meta $meta_key = ' . var_export( $meta_key, true), 0 );
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_update_post_meta $meta_value = ' . var_export( $meta_value, true), 0 );
 
-		if ( ( '_thumbnail_id' == $meta_key ) && (boolean) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
+		if ( ( '_thumbnail_id' == $meta_key ) && (bool) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
 			SMC_Automatic_support::rule_remove_feature( $object_id, $meta_value, true );
 		}
  	} // action_update_post_meta
@@ -385,15 +385,15 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_updated_post_meta $meta_value = ' . var_export( $meta_value, true), 0 );
 
 		if ( '_thumbnail_id' == $meta_key ) {
-			if ( (boolean) SMC_Settings_Support::get_option( 'set_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'set_feature' ) ) {
 				SMC_Automatic_support::rule_set_feature( $object_id, $meta_value );
 			}
 
-			if ( (boolean) SMC_Settings_Support::get_option( 'reattach_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'reattach_feature' ) ) {
 				SMC_Automatic_support::rule_reattach_feature( $object_id, $meta_value );
 			}
 
-			if ( (boolean) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
+			if ( (bool) SMC_Settings_Support::get_option( 'remove_feature' ) ) {
 				SMC_Automatic_support::rule_remove_feature( $object_id, $meta_value, false );
 			}
 		}
@@ -460,7 +460,7 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . " SMC_Automatic_Support::action_set_object_terms( {$object_id}, {$taxonomy}, {$append} ) \$tt_ids = " . var_export( $tt_ids, true), 0 );
 		//error_log( __LINE__ . " SMC_Automatic_Support::action_set_object_terms( {$object_id}, {$taxonomy}, {$append} ) \$old_tt_ids = " . var_export( $old_tt_ids, true), 0 );
 
-		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+		if ( (bool) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 			SMC_Automatic_support::rule_update_post_terms( $object_id, $taxonomy, $tt_ids, $old_tt_ids, 'during' );
 		}
  	} // action_set_object_terms

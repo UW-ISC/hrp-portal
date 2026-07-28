@@ -1089,6 +1089,11 @@ function supercache_filename() {
 	if ( is_array( $cached_direct_pages ) && in_array( $_SERVER['REQUEST_URI'], $cached_direct_pages ) ) {
 		$extra_str = '';
 	}
+
+	// The filename must always be a single path segment. Filters above may
+	// return arbitrary data, so restrict it to a safe set of characters.
+	$extra_str = preg_replace( '/[^a-zA-Z0-9_-]/', '', (string) $extra_str );
+
 	$filename = 'index' . $extra_str . '.html';
 
 	return $filename;
@@ -2191,6 +2196,15 @@ function wp_cache_ob_callback( $buffer ) {
 	}
 }
 
+function wpsc_skip_debug_output( $buffer ) {
+	return strpos( $buffer, '<html' ) === false ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) ||
+		( defined( 'WC_API_REQUEST' ) && WC_API_REQUEST ) ||
+		( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) ||
+		( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() );
+}
+
 function wp_cache_append_tag( &$buffer ) {
 	global $wp_cache_gmt_offset, $wp_super_cache_comments;
 	global $cache_enabled, $super_cache_enabled;
@@ -2210,7 +2224,7 @@ function wp_cache_append_tag( &$buffer ) {
 		$msg = "Live page served on $timestamp";
 	}
 
-	if ( strpos( $buffer, '<html' ) === false ) {
+	if ( wpsc_skip_debug_output( $buffer ) ) {
 		wp_cache_debug( site_url( $_SERVER['REQUEST_URI'] ) . ' - ' . $msg );
 		return false;
 	}
@@ -2229,7 +2243,7 @@ function wp_cache_add_to_buffer( &$buffer, $text ) {
 		return false;
 	}
 
-	if ( strpos( $buffer, '<html' ) === false ) {
+	if ( wpsc_skip_debug_output( $buffer ) ) {
 		wp_cache_debug( site_url( $_SERVER['REQUEST_URI'] ) . ' - ' . $text );
 		return false;
 	}
@@ -2404,7 +2418,9 @@ function wp_cache_get_ob( &$buffer ) {
 			if ( ! $fr2 ) {
 				wp_cache_debug( 'Error. Supercache could not write to ' . str_replace( ABSPATH, '', $tmp_cache_filename ), 1 );
 				wp_cache_add_to_buffer( $buffer, "File not cached! Super Cache Couldn't write to: " . str_replace( ABSPATH, '', $tmp_cache_filename ) );
-				@fclose( $fr );
+				if ( $fr ) {
+					fclose( $fr ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+				}
 				@unlink( $tmp_wpcache_filename );
 				wp_cache_writers_exit();
 				return wp_cache_maybe_dynamic( $buffer );
@@ -2416,7 +2432,9 @@ function wp_cache_get_ob( &$buffer ) {
 				if ( ! $gz ) {
 					wp_cache_debug( 'Error. Supercache could not write to ' . str_replace( ABSPATH, '', $tmp_cache_filename ) . '.gz', 1 );
 					wp_cache_add_to_buffer( $buffer, "File not cached! Super Cache Couldn't write to: " . str_replace( ABSPATH, '', $tmp_cache_filename ) . '.gz' );
-					@fclose( $fr );
+					if ( $fr ) {
+						fclose( $fr ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+					}
 					@unlink( $tmp_wpcache_filename );
 					@fclose( $fr2 );
 					@unlink( $tmp_cache_filename );
@@ -3014,6 +3032,10 @@ function wp_cache_get_postid_from_comment( $comment_id, $status = 'NA' ) {
 	}
 
 	$comment = get_comment( $comment_id, ARRAY_A );
+	if ( ! $comment ) {
+		wp_cache_debug( 'Comment not found; skipping cache update.' );
+		return;
+	}
 	if ( $status != 'NA' ) {
 		$comment['old_comment_approved'] = $comment['comment_approved'];
 		$comment['comment_approved']     = $status;
@@ -3070,6 +3092,10 @@ function wp_cache_clear_cache_on_menu() {
 /* Clear out the cache directory. */
 function wp_cache_clear_cache( $blog_id = 0 ) {
 	global $cache_path;
+
+	// Normalize non-integer callers (e.g. 'all', false) to 0 so they take the
+	// single-site path instead of reaching get_blog_option() via the blog branch.
+	$blog_id = (int) $blog_id;
 
 	if ( $blog_id == 0 ) {
 		wp_cache_debug( 'Clearing all cached files in wp_cache_clear_cache()', 4 );

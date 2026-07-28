@@ -350,7 +350,11 @@ class MLAEdit {
 	 */
 	public static function mla_update_bulk_edit_form_presets( $option, $new_values ) {
 		if ( 'checked' !== MLACore::mla_get_option( $option . '_per_user' ) ) {
-			return MLACore::mla_update_option( $option, $new_values );
+			if ( current_user_can( 'edit_others_posts' ) ) {
+				return MLACore::mla_update_option( $option, $new_values );
+			}
+
+			return false;
 		}
 	
 		// Handle per-user option
@@ -644,27 +648,27 @@ class MLAEdit {
 
 		// The right-hand column contains the standard and custom fields
 		if ( !empty( $fieldset_values['post_title'] ) ) {
-			$page_values['post_title_value'] = $fieldset_values['post_title'];
+			$page_values['post_title_value'] = esc_attr( $fieldset_values['post_title'] );
 		}
 		
 		if ( !empty( $fieldset_values['post_excerpt'] ) ) {
-			$page_values['post_excerpt_value'] = $fieldset_values['post_excerpt'];
+			$page_values['post_excerpt_value'] = esc_attr( $fieldset_values['post_excerpt'] );
 		}
 		
 		if ( !empty( $fieldset_values['post_content'] ) ) {
-			$page_values['post_content_value'] = $fieldset_values['post_content'];
+			$page_values['post_content_value'] = esc_attr( $fieldset_values['post_content'] );
 		}
 		
 		if ( !empty( $fieldset_values['image_alt'] ) ) {
-			$page_values['image_alt_value'] = $fieldset_values['image_alt'];
+			$page_values['image_alt_value'] = esc_attr( $fieldset_values['image_alt'] );
 		}
 		
 		if ( !empty( $fieldset_values['post_date'] ) ) {
-			$page_values['post_date_value'] = $fieldset_values['post_date'];
+			$page_values['post_date_value'] = esc_attr( $fieldset_values['post_date'] );
 		}
 		
 		if ( !empty( $fieldset_values['post_parent'] ) ) {
-			$page_values['post_parent_value'] = $fieldset_values['post_parent'];
+			$page_values['post_parent_value'] = esc_attr( $fieldset_values['post_parent'] );
 		}
 		
 		// Apply authors preset
@@ -715,7 +719,7 @@ class MLAEdit {
 			  );
 			  
 			  if ( !empty( $fieldset_values['custom_fields'][ $details['name'] ] ) ) {
-				  $element_values['value'] = $fieldset_values['custom_fields'][ $details['name'] ];
+				  $element_values['value'] = esc_attr( $fieldset_values['custom_fields'][ $details['name'] ] );
 			  }
 
 			  $custom_fields .= MLAData::mla_parse_template( self::$fieldset_template_array['custom_field'], $element_values );

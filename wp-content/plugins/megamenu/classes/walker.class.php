@@ -160,18 +160,15 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$item_output = "<!-- widget is empty -->";
 				}
 
-			//} else if ( 'block' === $item->type ) {
-			//  /** This filter is documented in wp-includes/post-template.php */
-			//  $item_output = apply_filters( 'the_content', $item->content );
 			} else {
 
 				$atts = [];
 
 				$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
 				$atts['target'] = ! empty( $item->target ) ? $item->target : '';
-				$atts['class']  = '';
+				$atts['class']  = [];
 				$atts['rel']    = ! empty( $item->xfn ) ? $item->xfn : '';
-				$atts['href'] = ! empty( $item->url ) ? $item->url : '';
+				$atts['href']   = ! empty( $item->url ) ? $item->url : '';
 
 				if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 					unset( $atts['href'] );
@@ -179,12 +176,16 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				}
 
 				if ( isset( $settings['icon'] ) && $settings['icon'] != 'disabled' && $settings['icon'] != 'custom' ) {
-					$atts['class'] = $settings['icon'];
+					$atts['class'] = array_filter( explode( ' ', $settings['icon'] ) );
+					$atts          = apply_filters( 'megamenu_icon_link_atts', $atts, $settings['icon'] );
 				}
 
 				if ( isset( $settings['icon'] ) && $settings['icon'] == 'custom' ) {
-					$atts['class'] = 'mega-custom-icon';
+					$atts['class'] = [ 'mega-custom-icon' ];
 				}
+
+				// Convert class array to string before broader attribute filters and rendering.
+				$atts['class'] = implode( ' ', array_unique( array_values( array_filter( $atts['class'] ) ) ) );
 
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && ( $item->parent_submenu_type == 'flyout' || $item->parent_submenu_type == 'tabbed') ) {
 
@@ -258,7 +259,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 						}
 					}
 
-					$item_output .= "></span>";
+					$item_output .= '></span>';
 				}
 
 				$item_output .= '</a>';

@@ -14,7 +14,7 @@
  * https://wordpress.org/support/topic/see-only-unfeatured-images-in-add-media-modal/
  *
  * @package MLA Not Featured View Example
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -22,7 +22,7 @@ Plugin Name:MLA Not Featured View Example
 Plugin URI: http://davidlingren.com/
 Description: Adds a Media/Assistant submenu table view for items NOT featured in any posts/pages.
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2023 David Lingren
@@ -116,7 +116,7 @@ class MLANotFeaturedViewExample {
 
 		// Calculate the common values once per page load
 		if ( is_null( $posts_per_view ) ) {
-			$items = (integer) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} AS item LEFT JOIN ( SELECT DISTINCT sub.meta_value FROM {$wpdb->postmeta} AS sub WHERE ( sub.meta_key = '_thumbnail_id' ) ) AS meta ON item.ID = meta.meta_value WHERE meta.meta_value IS NULL AND item.post_type = 'attachment' AND item.post_status = 'inherit'" );
+			$items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} AS item LEFT JOIN ( SELECT DISTINCT sub.meta_value FROM {$wpdb->postmeta} AS sub WHERE ( sub.meta_key = '_thumbnail_id' ) ) AS meta ON item.ID = meta.meta_value WHERE meta.meta_value IS NULL AND item.post_type = 'attachment' AND item.post_status = 'inherit'" );
 			$posts_per_view = array( 'notfeatured' => $items );
 
 			$view_singular = array (

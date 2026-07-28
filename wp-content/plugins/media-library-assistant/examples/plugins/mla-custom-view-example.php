@@ -10,7 +10,7 @@
  * https://wordpress.org/support/topic/filter-by-post-status/
  *
  * @package MLA Custom View Example
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -18,7 +18,7 @@ Plugin Name:MLA Custom View Example
 Plugin URI: http://davidlingren.com/
 Description: Adds a Media/Assistant submenu table view for items attached to non-published parent posts/pages.
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
@@ -105,7 +105,7 @@ class MLACustomViewExample {
 		 * Calculate the common values once per page load
 		 */
 		if ( is_null( $posts_per_view ) ) {
-			$items = (integer) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} AS item INNER JOIN {$wpdb->posts} AS parent ON item.post_parent = parent.ID WHERE item.post_parent > 0 AND item.post_type = 'attachment' AND item.post_status = 'inherit' AND parent.post_status IN ( 'draft', 'future', 'pending', 'trash' )" );
+			$items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} AS item INNER JOIN {$wpdb->posts} AS parent ON item.post_parent = parent.ID WHERE item.post_parent > 0 AND item.post_type = 'attachment' AND item.post_status = 'inherit' AND parent.post_status IN ( 'draft', 'future', 'pending', 'trash' )" );
 			$posts_per_view = array( 'unpublished' => $items );
 
 			$view_singular = array (

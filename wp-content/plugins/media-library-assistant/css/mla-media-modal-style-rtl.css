@@ -43,6 +43,17 @@ body.mla-media-modal .media-modal-content .media-frame select.attachment-filters
     height: 28px;
 }
 
+/* For WordPress 7.0+, MLA adds an enclosing div around the select element */
+body.mla-media-modal .media-modal-content .media-frame div.media-filter-container select.attachment-filters {
+    width: auto;
+    max-width: 12rem;
+    margin-left: 10px;
+    margin-top: 10px;
+    vertical-align: middle;
+    line-height: 28px;
+    height: 28px;
+}
+
 body.mla-media-modal .attachments-browser .media-toolbar-secondary .media-button {
     margin: 10px 0 0 10px;
     vertical-align: middle;

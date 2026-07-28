@@ -57,7 +57,7 @@
  * https://wordpress.org/support/topic/insert-fixit-tool-no-clobber-option/
  *
  * @package Insert Fixit
- * @version 1.28
+ * @version 1.29
  */
 
 /*
@@ -65,7 +65,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.28
+Version: 1.29
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2023 David Lingren
@@ -98,7 +98,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.28';
+	const CURRENT_VERSION = '1.29';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -664,13 +664,13 @@ class Insert_Fixit {
 //error_log( __LINE__ . " Insert_Fixit::_build_attached_items_cache delete_transient return = " . var_export( $return, true ), 0 );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
 		} else {
 			$lower_bound = 1; // exclude unattached items (post_parent = 0)
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
 		} elseif ( 1 < $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -746,13 +746,13 @@ class Insert_Fixit {
 		$return = delete_transient( self::SLUG_PREFIX . 'image_inserts' );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -891,13 +891,13 @@ class Insert_Fixit {
 		$return = delete_transient( self::SLUG_PREFIX . 'figcaption_inserts' );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -937,7 +937,7 @@ class Insert_Fixit {
 				foreach( $matches[1] as $match ) {
 					$match = explode( ',', $match );
 					foreach( $match as $index ) {
-						$gallery_items[ $index ] = (integer) $index;
+						$gallery_items[ $index ] = (int) $index;
 					}
 				}
 			}
@@ -950,7 +950,7 @@ class Insert_Fixit {
 
 				// media item ID
 				foreach( $matches[2] as $index => $match ) {
-					$item_id = (integer) $match[0];
+					$item_id = (int) $match[0];
 					$match = array();
 					
 					// Missing figcaptions return an empty string in $matches[4], not an array
@@ -1014,13 +1014,13 @@ class Insert_Fixit {
 		$return = delete_transient( self::SLUG_PREFIX . 'featured_objects' );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -1103,13 +1103,13 @@ class Insert_Fixit {
 		$return = delete_transient( self::SLUG_PREFIX . 'item_references' );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -1225,13 +1225,13 @@ class Insert_Fixit {
 //error_log( __LINE__ . " Insert_Fixit::_build_image_objects_cache delete_transient return = " . var_export( $return, true ), 0 );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ) {
-			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
+			$lower_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ) {
-			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
+			$upper_bound = (int) $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ];
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -2219,7 +2219,7 @@ class Insert_Fixit {
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items root ancestor = " . var_export( $ancestor, true ), 0 );
 								}
 								if ( ( ! is_wp_error( $ancestor ) ) && isset( $ancestor['term_id'] ) ) {
-									$term_map[ $term->term_id ] = (integer) $ancestor['term_id'];
+									$term_map[ $term->term_id ] = (int) $ancestor['term_id'];
 								}
 							}
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items updated term_map = " . var_export( $term_map, true ), 0 );
@@ -2232,7 +2232,7 @@ class Insert_Fixit {
 						$item_term = term_exists( $term->name, $item_taxonomy );
 
 						if ( $item_term !== 0 && $item_term !== NULL ) {
-							$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
+							$item_terms[ $item_term['term_id'] ] = (int) $item_term['term_id'];
 						} else {
 							if ( $term->parent && !empty( $term_map[ $term->parent ] ) ) {
 								$item_term = wp_insert_term( $term->name, $item_taxonomy, array( 'parent' => $term_map[ $term->parent ] ) );
@@ -2243,7 +2243,7 @@ class Insert_Fixit {
 							}
 
 							if ( ( ! is_wp_error( $item_term ) ) && isset( $item_term['term_id'] ) ) {
-								$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
+								$item_terms[ $item_term['term_id'] ] = (int) $item_term['term_id'];
 							}
 						}
 					} else {
@@ -2348,11 +2348,11 @@ class Insert_Fixit {
 						$parent_term = term_exists( $term->name, $parent_taxonomy );
 
 						if ( $parent_term !== 0 && $parent_term !== NULL ) {
-							$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
+							$parent_terms[ $parent_term['term_id'] ] = (int) $parent_term['term_id'];
 						} else {
 							$parent_term = wp_insert_term( $term->name, $parent_taxonomy );
 							if ( ( ! is_wp_error( $parent_term ) ) && isset( $parent_term['term_id'] ) ) {
-								$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
+								$parent_terms[ $parent_term['term_id'] ] = (int) $parent_term['term_id'];
 							}
 						}
 					} else {

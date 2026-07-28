@@ -2023,7 +2023,7 @@ class MLA_Custom_Feed_Query {
 	 *
 	 * @since 1.10
 	 *
-	 * @return mixed Number of changes (integer) or failure (false) of the operation
+	 * @return mixed Number of changes (int) or failure (false) of the operation
 	 */
 	public static function mla_put_custom_feed_settings() {
 		if ( NULL === self::$_custom_feed_settings ) {

@@ -222,7 +222,9 @@ class MLASettings_View {
 
 		// Process bulk actions that affect an array of items
 		$bulk_action = MLASettings::mla_current_bulk_action();
-		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
+		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
+			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 				// Convert post-ID to slug; separate loop required because delete changes post_IDs
 				$slugs = array();

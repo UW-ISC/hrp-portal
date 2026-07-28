@@ -190,7 +190,6 @@
 
             var $headerMeta = $dialog.find(".megamenu-admin-modal__header-meta");
             var $titleText = $dialog.find("#megamenu-menu-item-dialog-title .megamenu-admin-modal__title-text");
-            var $breadcrumb = $dialog.find("#megamenu-menu-item-dialog-breadcrumb");
             var $panel = $dialog.find(".megamenu-admin-modal__panel");
             var $modalBody = $dialog.find(".megamenu-admin-modal__body.megamenu-admin-modal__loading-host");
             var $outerWrap = $dialog.find(".megamenu-admin-modal__body .megamenu_outer_wrap");
@@ -224,10 +223,13 @@
                 $headerMeta.empty();
                 $(MENU_ITEM_DIALOG_SEL + " .megamenu-menu-item-dialog-saving-indicator").prop("hidden", true);
                 $titleText.empty();
-                $breadcrumb.empty().prop("hidden", true);
                 $panel.attr("aria-labelledby", "megamenu-menu-item-dialog-title");
                 setMenuItemDialogLoading(false);
                 $outerWrap.empty();
+                $dialog.off("click.mmmHintTab");
+                var scrollHintRO = $dialog.data("mmmScrollHintRO");
+                if (scrollHintRO) { scrollHintRO.disconnect(); $dialog.removeData("mmmScrollHintRO"); }
+                $dialog.find(".mmm-scroll-hint").prop("hidden", true).removeClass("is-visible");
                 $("html, body").removeClass("megamenu-dialog-open");
                 clearAllDirtyTabs();
             };
@@ -247,7 +249,7 @@
 
             /** Closes the modal on Escape unless a core WP modal is open; closes an open widget form first. */
             escapeHandler = function(e) {
-                if (e.key !== "Escape" && e.keyCode !== 27) {
+                if (e.key !== "Escape") {
                     return;
                 }
                 if ($("body").hasClass("modal-open")) {
@@ -358,7 +360,6 @@
                     setMenuItemDialogLoading(true);
                     $headerMeta.empty();
                     $titleText.empty();
-                    $breadcrumb.empty().prop("hidden", true);
                     $panel.attr("aria-labelledby", "megamenu-menu-item-dialog-title");
                     $outerWrap.empty();
                 },
@@ -370,6 +371,9 @@
                     var active_tab = "mega_menu";
                     var tabs_container = $("<div class='megamenu-dialog-tablist mega-tablist' role='tablist' />");
                     var content_container = $("<div class='megamenu-dialog-panels' />");
+
+                    /** Scrolls the checked icon tile into view in whichever icon sub-tab is currently visible. */
+                    var scrollIconIntoView = null;
 
                     $.each(json, function(idx) {
 
@@ -383,11 +387,13 @@
                             return;
                         }
 
-                        if (idx === "breadcrumb_html") {
+                        var tabMeta = this;
+                        if (typeof tabMeta !== "object" || tabMeta === null) {
                             return;
                         }
-
-                        var content = $("<div />").addClass("megamenu_content").addClass(idx).html(this.content).hide();
+                        var tabHtml = typeof tabMeta.content === "string" ? tabMeta.content : "";
+                        var tabButtonLabel = typeof tabMeta.title === "string" ? tabMeta.title : "";
+                        var content = $("<div />").addClass("megamenu_content").addClass(idx).html(tabHtml).hide();
                         
                         // bind save button action
                         content.find("form").on("submit", function(e) {
@@ -407,11 +413,112 @@
                         });
 
                         if (idx === "menu_icon") {
+                            var ICON_LAZY_CHUNK = 300;
+                            var iconPayload = tabMeta.icon_payload || null;
                             var form = content.find("form.icon_selector").not(".icon_selector_custom");
                             var iconFilterTimer = null;
                             var ICON_FILTER_DEBOUNCE_MS = 150;
-                            /** Rows get this class instead of inline display (cheaper batch updates; CSS owns visibility). */
                             var ICON_FILTER_HIDDEN_CLASS = "mmm-icon-filter-hidden";
+
+                            function buildIconRow(item, currentIcon, isDashicon) {
+                                var value = isDashicon ? item.value : "material-" + item.name;
+                                var row = document.createElement("div");
+                                row.className = isDashicon ? item.type : "material";
+                                var inp = document.createElement("input");
+                                inp.className = "radio";
+                                inp.id = value;
+                                inp.type = "radio";
+                                inp.name = "settings[icon]";
+                                inp.value = value;
+                                if (!isDashicon) { inp.setAttribute("rel", item.name); }
+                                inp.checked = currentIcon === value;
+                                var lab = document.createElement("label");
+                                lab.setAttribute("for", value);
+                                lab.setAttribute("title", isDashicon ? item.value : String(item.name).replace(/_/g, " "));
+                                lab.style.setProperty("--mmm-i", "\"\\" + (isDashicon ? item.hex : item.cp) + "\"");
+                                row.appendChild(inp);
+                                row.appendChild(lab);
+                                return row;
+                            }
+
+                            scrollIconIntoView = function () {
+                                var visible = content.find(".icon_selector:visible")[0];
+                                if (!visible) {
+                                    return;
+                                }
+                                var checked = visible.querySelector("input.radio:checked, input[type='radio']:checked");
+                                if (checked && checked.parentElement) {
+                                    checked.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                                }
+                            };
+
+                            function ensureIconLazyBuilt(tabRel) {
+                                if (!iconPayload || !tabRel || tabRel.indexOf("megamenu_tab_") !== 0) {
+                                    return;
+                                }
+                                var key = tabRel.replace("megamenu_tab_", "");
+                                if (key !== "dashicons" && key !== "material_symbols") {
+                                    return;
+                                }
+                                if (!iconPayload[key] || !Array.isArray(iconPayload[key])) {
+                                    return;
+                                }
+                                var formEl = content.find("form.icon_selector_" + key)[0];
+                                if (!formEl) {
+                                    return;
+                                }
+                                var host = formEl.querySelector("[data-mmm-icon-lazy=\"" + key + "\"]");
+                                if (!host || host.mmmLazyStarted) {
+                                    return;
+                                }
+                                host.mmmLazyStarted = true;
+                                var items = iconPayload[key];
+                                var currentIcon = iconPayload.current_icon != null ? String(iconPayload.current_icon) : "disabled";
+                                var offset = 0;
+                                var isDashicon = key === "dashicons";
+
+                                function appendChunk() {
+                                    if (!host.parentNode) {
+                                        return;
+                                    }
+                                    var end = Math.min(offset + ICON_LAZY_CHUNK, items.length);
+                                    var frag = document.createDocumentFragment();
+                                    for (var i = offset; i < end; i++) {
+                                        frag.appendChild(buildIconRow(items[i], currentIcon, isDashicon));
+                                    }
+                                    formEl.insertBefore(frag, host);
+                                    offset = end;
+                                    if (offset < items.length) {
+                                        window.requestAnimationFrame(appendChunk);
+                                    } else {
+                                        host.removeAttribute("aria-busy");
+                                        if (host.parentNode) {
+                                            host.parentNode.removeChild(host);
+                                        }
+                                        applyIconFilter();
+                                        if (typeof scrollIconIntoView === "function") {
+                                            window.requestAnimationFrame(scrollIconIntoView);
+                                        }
+                                    }
+                                }
+                                window.requestAnimationFrame(appendChunk);
+                            }
+
+                            function primeVisibleIconLazy() {
+                                var vis = content.find("div[class^='megamenu_tab_']").filter(function () {
+                                    return $(this).css("display") !== "none";
+                                }).first();
+                                if (!vis.length) { return; }
+                                var match = (vis.attr("class") || "").match(/\bmegamenu_tab_\S+/);
+                                if (match) { ensureIconLazyBuilt(match[0]); }
+                            }
+
+                            window.requestAnimationFrame(function () {
+                                window.requestAnimationFrame(function () {
+                                    primeVisibleIconLazy();
+                                    scrollIconIntoView();
+                                });
+                            });
 
                             function applyIconFilter() {
                                 var q = (content.find(".filter_icons").val() || "").toLowerCase().trim();
@@ -435,13 +542,15 @@
 
                                 for (i = 0; i < rows.length; i++) {
                                     row = rows[i];
+                                    if (row.classList && row.classList.contains("mmm-icon-grid-host")) {
+                                        continue;
+                                    }
                                     inputEl = row.querySelector("input.radio, input[type='radio']");
                                     haystack = (inputEl && inputEl.id ? inputEl.id : "").toLowerCase();
                                     row.classList.toggle(ICON_FILTER_HIDDEN_CLASS, haystack.indexOf(q) === -1);
                                 }
                             }
 
-                            // bind save button action
                             form.on("change", function(e) {
                                 start_saving();
                                 clearTabDirty(idx);
@@ -469,6 +578,9 @@
                                 $li.siblings().removeClass("active");
                                 content.children("div[class^='megamenu_tab_']").hide();
                                 content.children("div." + tab_id).show();
+
+                                ensureIconLazyBuilt(tab_id);
+                                window.requestAnimationFrame(scrollIconIntoView);
                             });
 
                             content.find(".filter_icons").on("input", function() {
@@ -534,7 +646,7 @@
                             .addClass("megamenu-dialog-tab")
                             .addClass(idx)
                             .attr("data-tab", idx)
-                            .text(this.title);
+                            .text(tabButtonLabel);
 
                         tabs_container.append(tab);
 
@@ -554,28 +666,67 @@
                             panelMatches: function (panel, key) {
                                 return panel.classList.contains("megamenu_content") && panel.classList.contains(key);
                             },
-                            onAfterActivate: syncDirtyTabIndicators
+                            onAfterActivate: function () {
+                                syncDirtyTabIndicators();
+                                var activeKey = tabs_container.find("button.megamenu-dialog-tab.is-active").attr("data-tab");
+                                var panelsEl = $outerWrap.find(".megamenu-dialog-panels")[0];
+                                if (activeKey === "menu_icon") {
+                                    if (typeof scrollIconIntoView === "function") {
+                                        window.requestAnimationFrame(scrollIconIntoView);
+                                    }
+                                } else if (panelsEl) {
+                                    panelsEl.scrollTop = 0;
+                                }
+                            }
                         });
                     }
 
                     $(".megamenu-dialog-tab." + active_tab + ":first", tabs_container).trigger("click");
 
-                    if (json.breadcrumb_html) {
-                        $breadcrumb.html(json.breadcrumb_html).prop("hidden", false);
-                    } else {
-                        $breadcrumb.empty().prop("hidden", true);
-                    }
-
-                    var ariaLabelledBy = "megamenu-menu-item-dialog-title";
-                    if (json.breadcrumb_html) {
-                        ariaLabelledBy += " megamenu-menu-item-dialog-breadcrumb";
-                    }
-                    $panel.attr("aria-labelledby", ariaLabelledBy);
+                    $panel.attr("aria-labelledby", "megamenu-menu-item-dialog-title");
 
                     $headerMeta.empty();
                     $outerWrap.append(tabs_container).append(content_container);
 
                     $dialog.find(".megamenu-modal-close").trigger("focus");
+
+                    // Scroll-down hint: show when panels content overflows.
+                    (function() {
+                        var $panels = $outerWrap.find(".megamenu-dialog-panels");
+                        var $hint = $dialog.find(".mmm-scroll-hint");
+
+                        function updateScrollHint() {
+                            if (!$panels.length || !$hint.length) { return; }
+                            var el = $panels[0];
+                            var hasMore = el.scrollHeight > el.clientHeight + el.scrollTop + 2;
+                            $hint.toggleClass("is-visible", hasMore);
+                            $hint.attr("aria-hidden", hasMore ? "false" : "true");
+                        }
+
+                        // Remove [hidden] so opacity/visibility transitions can fire.
+                        $hint.removeAttr("hidden");
+
+                        $panels.off("scroll.mmmHint").on("scroll.mmmHint", updateScrollHint);
+
+                        $hint.off("click.mmmHint").on("click.mmmHint", function() {
+                            $panels[0].scrollBy({ top: 200, behavior: "smooth" });
+                        });
+
+                        $dialog.off("click.mmmHintTab").on("click.mmmHintTab", ".megamenu-dialog-tab", function() {
+                            window.setTimeout(updateScrollHint, 50);
+                        });
+
+                        // ResizeObserver re-checks on window resize and modal expand/collapse transitions.
+                        if (typeof ResizeObserver !== "undefined") {
+                            var ro = new ResizeObserver(updateScrollHint);
+                            ro.observe($panels[0]);
+                            $dialog.data("mmmScrollHintRO", ro);
+                        } else {
+                            window.requestAnimationFrame(function() {
+                                window.requestAnimationFrame(updateScrollHint);
+                            });
+                        }
+                    }());
 
                     if (
                         window.megamenuSyncComponentsToggleWrappers &&
@@ -1737,5 +1888,33 @@
         panel.init();
 
     };
+
+    // Clicking an already-selected icon radio deselects it and falls back to #disabled.
+    $(document).on(
+        "mousedown",
+        MENU_ITEM_DIALOG_SEL + " input[name='settings[icon]']",
+        function () {
+            $(this).data("mmmWasChecked", this.checked);
+        }
+    );
+
+    $(document).on(
+        "click",
+        MENU_ITEM_DIALOG_SEL + " input[name='settings[icon]']",
+        function () {
+            if (this.value === "disabled" || !$(this).data("mmmWasChecked")) {
+                return;
+            }
+            var $disabled = $(this).closest("form").find("input#disabled");
+            if (!$disabled.length) {
+                $disabled = $(MENU_ITEM_DIALOG_SEL).find("input#disabled").first();
+            }
+            if (!$disabled.length) {
+                return;
+            }
+            this.checked = false;
+            $disabled.prop("checked", true).trigger("change");
+        }
+    );
 
 }(jQuery));
