@@ -24,25 +24,82 @@ class MLATagCloud {
 	private static $mla_debug = false;
 
 	/**
-	 * These are the default parameters for term list display
+	 * These are the default shortcode parameters for tag cloud display, when combined
+	 * with the item_specific_arguments and mla_get_terms_parameters below.
 	 *
-	 * @since 3.13
+	 * @since 3.39
 	 *
 	 * @var	array
 	 */
-	private static $term_list_item_specific_arguments = array(
+	private static $default_shortcode_arguments = array(
+			'smallest' => 8,
+			'largest' => 22,
+			'default_size' => 12,
+			'unit' => 'pt',
+			'separator' => "\n",
+			'single_text' => '%s item',
+			'multiple_text' => '%s items',
+
+			'echo' => false,
+			'link' => 'current',
+			'mla_item_parameter' => 'current_item',
+			'current_item' => '',
+			'current_item_class' => 'mla_current_item',
+			'show_count' => false,
+
+			'itemtag' => 'ul',
+			'termtag' => 'li',
+			'captiontag' => '',
+			'columns' => '3',
+
+			'mla_output' => 'flat',
+			'mla_style' => NULL,
+			'mla_markup' => NULL,
+			'mla_float' => 'left', // is_rtl() ? 'right' : 'left',
+			'mla_itemwidth' => 'calculate',
+			'mla_margin' => '1.5%',
+			'mla_debug' => false,
+
+			'option_all_text' => '',
+			'option_all_value' => NULL,
+			'option_no_terms_text' => '',
+			'option_no_terms_value' => NULL,
+			'option_any_terms_text' => '',
+			'option_any_terms_value' => NULL,
+
+			// Pagination parameters
+			'term_id' => NULL,
+			'mla_end_size'=> 1,
+			'mla_mid_size' => 2,
+			'mla_prev_text' => '', // '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
+			'mla_next_text' => '', // __( 'Next', 'media-library-assistant' ) . ' &raquo;',
+			'mla_page_parameter' => 'mla_cloud_current',
+			'mla_cloud_current' => 1,
+			'mla_paginate_total' => NULL,
+			'mla_paginate_rows' => NULL,
+			'mla_paginate_type' => 'plain'
+	);
+
+	/**
+	 * These are the default item-specific parameters for tag cloud display
+	 *
+	 * @since 3.39
+	 *
+	 * @var	array
+	 */
+	private static $item_specific_arguments = array(
 			'mla_link_attributes' => '',
+			'mla_target' => '',
 			'mla_link_class' => '',
+			'mla_link_style' => '',
+			'mla_rollover_text' => '',
 			'mla_link_href' => '',
 			'mla_link_text' => '',
-			'mla_rollover_text' => '',
+			'mla_nolink_text' => '',
+
 			'mla_caption' => '',
 			'mla_item_value' => '',
-
-			'mla_control_name' => '',
-			'mla_option_text' => '',
-			'mla_option_value' => '',
-		);
+	);
 
 	/**
 	 * Valid mla_output values
@@ -109,104 +166,20 @@ class MLATagCloud {
 			'page_url' => get_page_link(),
 		);
 
-		// These are the default parameters for tag cloud display
-		$mla_item_specific_arguments = array(
-			'mla_link_attributes' => '',
-			'mla_link_class' => '',
-			'mla_link_style' => '',
-			'mla_link_href' => '',
-			'mla_link_text' => '',
-			'mla_nolink_text' => '',
-			'mla_rollover_text' => '',
-			'mla_caption' => '',
-			'mla_item_value' => '',
-		);
-
 		$defaults = array_merge(
 			MLAShortcode_Support::$mla_get_terms_parameters,
+			self::$default_shortcode_arguments,
 			array(
-			'smallest' => 8,
-			'largest' => 22,
-			'default_size' => 12,
-			'unit' => 'pt',
-			'separator' => "\n",
-			'single_text' => '%s item',
-			'multiple_text' => '%s items',
-
-			'echo' => false,
-			'link' => 'view',
-			'current_item' => '',
-			'current_item_class' => 'mla_current_item',
-
-			'itemtag' => 'ul',
-			'termtag' => 'li',
-			'captiontag' => '',
-			'columns' => MLACore::mla_get_option('mla_tag_cloud_columns'),
-
-			'mla_output' => 'flat',
-			'mla_style' => NULL,
-			'mla_markup' => NULL,
 			'mla_float' => is_rtl() ? 'right' : 'left',
-			'mla_itemwidth' => MLACore::mla_get_option('mla_tag_cloud_itemwidth'),
-			'mla_margin' => MLACore::mla_get_option('mla_tag_cloud_margin'),
-			'mla_target' => '',
-			'mla_debug' => false,
-
-			'option_all_text' => '',
-			'option_all_value' => NULL,
-			'option_no_terms_text' => '',
-			'option_no_terms_value' => NULL,
-			'option_any_terms_text' => '',
-			'option_any_terms_value' => NULL,
-
-			// Pagination parameters
-			'term_id' => NULL,
-			'mla_end_size'=> 1,
-			'mla_mid_size' => 2,
 			'mla_prev_text' => '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
 			'mla_next_text' => __( 'Next', 'media-library-assistant' ) . ' &raquo;',
-			'mla_page_parameter' => 'mla_cloud_current',
-			'mla_cloud_current' => 1,
-			'mla_paginate_total' => NULL,
-			'mla_paginate_type' => 'plain'),
-
-			$mla_item_specific_arguments
+			),
+			self::$item_specific_arguments
 		);
 
-		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
+		// Filter the attributes before $mla_item_parameter, $mla_page_parameter and "request:" processing.
 		$attr = apply_filters( 'mla_tag_cloud_raw_attributes', $attr );
 
-		/*
-		 * The mla_paginate_current parameter can be changed to support
-		 * multiple clouds per page.
-		 */
-		if ( ! isset( $attr['mla_page_parameter'] ) ) {
-			$attr['mla_page_parameter'] = $defaults['mla_page_parameter'];
-		}
-
-		// The mla_page_parameter can contain page_level parameters like {+page_ID+}
-		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
-		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
-		 
-		/*
-		 * Special handling of mla_page_parameter to make "MLA pagination" easier.
-		 * Look for this parameter in $_REQUEST if it's not present in the shortcode itself.
-		 */
-		if ( ! isset( $attr[ $mla_page_parameter ] ) ) {
-			if ( isset( $_REQUEST[ $mla_page_parameter ] ) ) {
-				$attr[ $mla_page_parameter ] = sanitize_text_field( wp_unslash( $_REQUEST[ $mla_page_parameter ] ) );
-			}
-		}
-		 
-		// Special handling of current_item; look for this parameter in $_REQUEST if it's not present in the shortcode itself.
-		if ( isset( $attr['current_item'] ) ) {
-			$attr['current_item'] = sanitize_title( $attr['current_item'] );
-		} else {
-			if ( isset( $_REQUEST['current_item'] ) ) {
-				$attr['current_item'] = sanitize_title( wp_unslash( $_REQUEST['current_item'] ) );
-			}
-		}
-		 
 		// Determine markup template to get default arguments
 		$arguments = shortcode_atts( $defaults, $attr );
 		if ( $arguments['mla_markup'] ) {
@@ -220,21 +193,31 @@ class MLATagCloud {
 
 		if ( empty( $template ) ) {
 			$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
+			$mla_output = $output_parameters[0];
+			$mla_output_qualifier = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
 
-			if ( !in_array( $output_parameters[0], array_merge( self::$valid_mla_output_values, self::$valid_mla_output_pagination_values ) ) ) {
-				$output_parameters[0] = 'flat';
+			if ( !in_array( $mla_output, array_merge( self::$valid_mla_output_values, self::$valid_mla_output_pagination_values ) ) ) {
+				$mla_output = 'flat';
 			}
 
-			if ( 'grid' === $output_parameters[0] ) {
-				$template = MLACore::mla_get_option('default_tag_cloud_markup');
-			} elseif ( in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
-				if ( ( 'dlist' === $output_parameters[0] ) || ('list' === $output_parameters[0] && 'dd' === $arguments['captiontag'] ) ) {
+			if ( 'grid' === $mla_output ) {
+				$template = 'tag-cloud';
+			} elseif ( in_array( $mla_output, array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
+				if ( ( 'dlist' === $mla_output ) || ('list' === $mla_output && 'dd' === $arguments['captiontag'] ) ) {
 					$template = 'tag-cloud-dl';
 				} else {
 					$template = 'tag-cloud-ul';
 				}
+
+				if ( 'div' === $mla_output_qualifier ) {
+					$template .= '-div';
+				}
 			} else {
-				$template = NULL;
+				if ( 'div' === $mla_output_qualifier ) {
+					$template = 'flat-div';
+				} else {
+					$template =NULL;
+				}
 			}
 		}
 
@@ -247,6 +230,46 @@ class MLATagCloud {
 		}
 
 		/*
+		 * The current_item and mla_paginate_current parameters can be changed
+		 * to support multiple clouds per page.
+		 */
+		if ( ! isset( $attr['mla_item_parameter'] ) ) {
+			$attr['mla_item_parameter'] = $defaults['mla_item_parameter'];
+		}
+
+		if ( ! isset( $attr['mla_page_parameter'] ) ) {
+			$attr['mla_page_parameter'] = $defaults['mla_page_parameter'];
+		}
+
+		/*
+		 * The current_item and mla_paginate_current parameters can contain
+		 * page_level parameters like {+page_ID+}
+		 */
+		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_item_parameter'] ) );
+		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+
+		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
+		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+
+		/*
+		 * Special handling of current_item and mla_page_parameter to make "MLA pagination" easier.
+		 * Look for these parameters in $_REQUEST if they're not present in the shortcode itself.
+		 */
+		if ( isset( $attr[ $mla_item_parameter ] ) ) {
+			$attr[ $mla_item_parameter ] = sanitize_title( $attr[ $mla_item_parameter ] );
+		} else {
+			if ( isset( $_REQUEST[ $mla_item_parameter ] ) ) {
+				$attr[ $mla_item_parameter ] = sanitize_title( wp_unslash( $_REQUEST[ $mla_item_parameter ] ) );
+			}
+		}
+		 
+		if ( ! isset( $attr[ $mla_page_parameter ] ) ) {
+			if ( isset( $_REQUEST[ $mla_page_parameter ] ) ) {
+				$attr[ $mla_page_parameter ] = sanitize_text_field( wp_unslash( $_REQUEST[ $mla_page_parameter ] ) );
+			}
+		}
+		 
+		/*
 		 * Look for page-level, 'request:' and 'query:' substitution parameters,
 		 * which can be added to any input parameter
 		 */
@@ -255,7 +278,7 @@ class MLATagCloud {
 			 * item-specific Display Content parameters must be evaluated
 			 * later, when all of the information is available.
 			 */
-			if ( array_key_exists( $attr_key, $mla_item_specific_arguments ) ) {
+			if ( array_key_exists( $attr_key, self::$item_specific_arguments ) ) {
 				continue;
 			}
 
@@ -268,15 +291,22 @@ class MLATagCloud {
 		$arguments = shortcode_atts( $defaults, $attr );
 
 		/*
-		 * $mla_page_parameter, if non-default, doesn't make it through the shortcode_atts
-		 * filter, so we handle it separately
+		 * $mla_item_parameter and $mla_page_parameter, if non-default, don't make it
+		 * through the shortcode_atts filter, so we handle them separately.
 		 */
+		if ( empty( $arguments[ $mla_item_parameter ] ) ) {
+			if ( !empty( $attr[ $mla_item_parameter ] ) ) {
+				$arguments[ $mla_item_parameter ] = $attr[ $mla_item_parameter ];
+			} else {
+				$arguments[ $mla_item_parameter ] = $defaults['current_item'];
+			}
+		}
+
 		if ( empty( $arguments[ $mla_page_parameter ] ) ) {
 			if ( !empty( $attr[ $mla_page_parameter ] ) ) {
 				$arguments[ $mla_page_parameter ] = $attr[ $mla_page_parameter ];
 			} else {
 				$arguments[ $mla_page_parameter ] = $defaults['mla_cloud_current'];
-
 			}
 		}
 
@@ -289,8 +319,8 @@ class MLATagCloud {
 		$current_is_slug = in_array( $arguments['mla_item_value'], array( '{+slug+}', '[+slug+]' ) );
 
 		// Clean up the current_item to separate term_id from slug
-		if ( ! ( empty( $arguments['current_item'] ) || $current_is_slug ) ) {
-			$arguments['current_item'] = (integer) $arguments['current_item'];
+		if ( ! ( empty( $arguments[ $mla_item_parameter ] ) || $current_is_slug ) ) {
+			$arguments[ $mla_item_parameter ] = (int) $arguments[ $mla_item_parameter ];
 		}
 
 		$arguments = apply_filters( 'mla_tag_cloud_arguments', $arguments );
@@ -328,44 +358,34 @@ class MLATagCloud {
 		}
 
 		$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
-
 		if ( !in_array( $output_parameters[0], array_merge( self::$valid_mla_output_values, self::$valid_mla_output_pagination_values ) ) ) {
 			$output_parameters[0] = 'flat';
 		}
+
+		$mla_output = $arguments['mla_output'] = $output_parameters[0];
+		$mla_output_qualifier = $arguments['mla_output_qualifier'] = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
 
 		$default_itemtag = 'dl';
 		$default_termtag = 'dt';
 		$default_captiontag = 'dd';
 
-		if ( $is_grid = 'grid' === $output_parameters[0] ) {
-			$default_style = MLACore::mla_get_option('default_tag_cloud_style');
-			$default_markup = MLACore::mla_get_option('default_tag_cloud_markup');
+		$is_flat = 'flat' === $mla_output;
+		$is_flat_div = $is_flat && ( 'div' === $mla_output_qualifier );
+		$is_list = in_array( $mla_output, array( 'list', 'ulist', 'olist', 'dlist' ) );
+		$is_list_div = $is_list && ( 'div' === $mla_output_qualifier );
+		$is_grid = 'grid' === $mla_output;
+		$is_pagination = in_array( $mla_output, self::$valid_mla_output_pagination_values ); 
 
-			if ( NULL === $arguments['mla_style'] ) {
-				$arguments['mla_style'] = $default_style;
-			}
+		$default_style = 'none';
+		$default_markup = NULL;
 
-			if ( NULL === $arguments['mla_markup'] ) {
-				$arguments['mla_markup'] = $default_markup;
-			}
-
-			if ( empty( $attr['itemtag'] ) ) {
-				$arguments['itemtag'] = $default_itemtag;
-			}
-
-			if ( empty( $attr['termtag'] ) ) {
-				$arguments['termtag'] = $default_termtag;
-			}
-
-			if ( empty( $attr['captiontag'] ) ) {
-				$arguments['captiontag'] = $default_captiontag;
-			}
+		if ( $is_flat_div ) {
+			$default_style = 'tag-cloud-flat-div';
+			$default_markup = 'tag-cloud-flat-div';
 		}
 
-		if ( $is_list = in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
-			$default_style = 'none';
-
-			if ( 'list' === $output_parameters[0] && 'dd' === $arguments['captiontag'] ) {
+		if ( $is_list ) {
+			if ( 'list' === $mla_output && 'dd' === $arguments['captiontag'] ) {
 				$default_markup = 'tag-cloud-dl';
 				$arguments['itemtag'] = $default_itemtag;
 				$arguments['termtag'] = $default_termtag;
@@ -374,7 +394,7 @@ class MLATagCloud {
 				$arguments['termtag'] = 'li';
 				$arguments['captiontag'] = '';
 
-				switch ( $output_parameters[0] ) {
+				switch ( $mla_output ) {
 					case 'dlist':
 						$default_markup = 'tag-cloud-dl';
 						$arguments['itemtag'] = $default_itemtag;
@@ -393,6 +413,11 @@ class MLATagCloud {
 						$arguments['captiontag'] = $default_captiontag = '';
 				}
 
+				if ( $is_list_div ) {
+					$default_style = 'tag-cloud-ul-div';
+					$default_markup .= '-div';
+				}
+
 				if ( ! empty( $attr['itemtag'] ) ) {
 					$arguments['itemtag'] = $attr['itemtag'];
 				}
@@ -405,19 +430,34 @@ class MLATagCloud {
 					$arguments['captiontag'] = $attr['captiontag'];
 				}
 			}
+		}
 
-			if ( NULL === $arguments['mla_style'] ) {
-				$arguments['mla_style'] = $default_style;
+		if ( $is_grid ) {
+			$default_style = 'tag-cloud';
+			$default_markup = 'tag-cloud';
+
+			if ( empty( $attr['itemtag'] ) ) {
+				$arguments['itemtag'] = $default_itemtag;
 			}
 
-			if ( NULL === $arguments['mla_markup'] ) {
-				$arguments['mla_markup'] = $default_markup;
+			if ( empty( $attr['termtag'] ) ) {
+				$arguments['termtag'] = $default_termtag;
+			}
+
+			if ( empty( $attr['captiontag'] ) ) {
+				$arguments['captiontag'] = $default_captiontag;
 			}
 		}
 
-		$is_pagination = in_array( $output_parameters[0], self::$valid_mla_output_pagination_values ); 
+		if ( NULL === $arguments['mla_style'] ) {
+			$arguments['mla_style'] = $default_style;
+		}
 
-		// Convert lists to arrays
+		if ( NULL === $arguments['mla_markup'] ) {
+			$arguments['mla_markup'] = $default_markup;
+		}
+
+			// Convert lists to arrays
 		if ( is_string( $arguments['taxonomy'] ) ) {
 			$arguments['taxonomy'] = explode( ',', $arguments['taxonomy'] );
 		}
@@ -428,6 +468,25 @@ class MLATagCloud {
 
 		if ( is_string( $arguments['post_status'] ) ) {
 			$arguments['post_status'] = explode( ',', $arguments['post_status'] );
+		}
+
+		// Short-circuit the process if we're paginating with a specified row count
+		if ( $is_pagination && ( NULL !== $arguments['mla_paginate_rows'] ) ) {
+			$found_rows = absint( $arguments['mla_paginate_rows'] );
+
+			// Handle 'previous_page', 'next_page', and 'paginate_links'
+			if ( isset( $attr['limit'] ) ) {
+				$attr['posts_per_page'] = $attr['limit'];
+				$arguments['posts_per_page'] = $attr['limit'];
+			} else {
+				$attr['posts_per_page'] = get_option('posts_per_page');
+				$arguments['posts_per_page'] = $attr['posts_per_page'];
+			}
+
+			$pagination_result = MLAShortcode_Support::mla_process_pagination_output_types( $output_parameters, $page_values, $arguments, $attr, $found_rows );
+			if ( false !== $pagination_result ) {
+				return $pagination_result;
+			}
 		}
 
 		$tags = MLAShortcode_Support::mla_get_terms( $arguments );
@@ -559,7 +618,7 @@ class MLATagCloud {
 			if ( ! empty( $arguments['option_any_terms_value'] ) ) {
 				$new_term_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_terms_value'], $page_values );
 				if ( is_numeric( $new_term_value ) ) {
-					$new_term_id = (integer) $new_term_value;
+					$new_term_id = (int) $new_term_value;
 					$new_term_slug = sanitize_title( $arguments['option_any_terms_text'] );
 				} else {
 					$new_term_slug = sanitize_title( $new_term_value );
@@ -597,7 +656,7 @@ class MLATagCloud {
 			if ( ! empty( $arguments['option_no_terms_value'] ) ) {
 				$new_term_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_terms_value'], $page_values );
 				if ( is_numeric( $new_term_value ) ) {
-					$new_term_id = (integer) $new_term_value;
+					$new_term_id = (int) $new_term_value;
 					$new_term_slug = sanitize_title( $arguments['option_no_terms_text'] );
 				} else {
 					$new_term_slug = sanitize_title( $new_term_value );
@@ -635,7 +694,7 @@ class MLATagCloud {
 			if ( ! empty( $arguments['option_all_value'] ) ) {
 				$new_term_value = MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_value'], $page_values );
 				if ( is_numeric( $new_term_value ) ) {
-					$new_term_id = (integer) $new_term_value;
+					$new_term_id = (int) $new_term_value;
 					$new_term_slug = sanitize_title( $arguments['option_all_text'] );
 				} else {
 					$new_term_slug = sanitize_title( $new_term_value );
@@ -717,8 +776,8 @@ class MLATagCloud {
 			$float = is_rtl() ? 'right' : 'left';
 		}
 
-		$arguments['smallest'] = (integer) $arguments['smallest'];
-		$arguments['largest'] = (integer) $arguments['largest'];
+		$arguments['smallest'] = (int) $arguments['smallest'];
+		$arguments['largest'] = (int) $arguments['largest'];
 		$arguments['separator'] = wp_kses( $arguments['separator'], 'post' );
 		$arguments['single_text'] = esc_attr( $arguments['single_text'] );
 		$arguments['multiple_text'] = esc_attr( $arguments['multiple_text'] );
@@ -731,7 +790,7 @@ class MLATagCloud {
 		
 		$arguments['link'] = strtolower( $arguments['link'] );
 		if ( ! in_array( $arguments['link'], array( 'current', 'view', 'edit', 'span', 'none' ) ) ) {
-			$arguments['link'] = 'view';
+			$arguments['link'] = 'current';
 		}
 
 		$font_spread = $arguments['largest'] - $arguments['smallest'];
@@ -746,7 +805,8 @@ class MLATagCloud {
 			'mla_style' => $arguments['mla_style'],
 			'mla_markup' => $arguments['mla_markup'],
 			'taxonomy' => implode( '-', $arguments['taxonomy'] ),
-			'current_item' => $arguments['current_item'],
+			'current_item' => $arguments[ $mla_item_parameter ],
+			'current_item_class' => $arguments['current_item_class'],
 			'itemtag' => MLAShortcode_Support::mla_esc_tag( $arguments['itemtag'], $default_itemtag ),
 			'termtag' => MLAShortcode_Support::mla_esc_tag( $arguments['termtag'], $default_termtag ),
 			'captiontag' => MLAShortcode_Support::mla_esc_tag( $arguments['captiontag'], $default_captiontag ),
@@ -773,7 +833,7 @@ class MLATagCloud {
 		) );
 
 		$style_template = $gallery_style = '';
-		$use_mla_tag_cloud_style = ( $is_grid || $is_list ) && ( 'none' !== strtolower( $style_values['mla_style'] ) );
+		$use_mla_tag_cloud_style = ( $is_flat_div || $is_list || $is_grid ) && ( 'none' !== strtolower( $style_values['mla_style'] ) );
 		if ( apply_filters( 'use_mla_tag_cloud_style', $use_mla_tag_cloud_style, $style_values['mla_style'] ) ) {
 			$style_template = MLATemplate_support::mla_fetch_custom_template( $style_values['mla_style'], 'tag-cloud', 'style' );
 			if ( empty( $style_template ) ) {
@@ -805,7 +865,7 @@ class MLATagCloud {
 
 		$markup_values = $style_values;
 
-		if ( $is_grid || $is_list ) {
+		if ( $is_flat_div || $is_list || $is_grid ) {
 			$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'tag-cloud', 'markup', 'open' );
 			if ( false === $open_template ) {
 				$markup_values['mla_markup'] = $default_markup;
@@ -825,9 +885,13 @@ class MLATagCloud {
 				$row_open_template = '';
 			}
 
-			$item_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'tag-cloud', 'markup', 'item' );
-			if ( empty( $item_template ) ) {
+			if ( $is_flat_div ) {
 				$item_template = '';
+			} else {
+			$item_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'tag-cloud', 'markup', 'item' );
+				if ( empty( $item_template ) ) {
+					$item_template = '';
+				}
 			}
 
 			if ( $is_grid ) {
@@ -858,12 +922,15 @@ class MLATagCloud {
 
 			$gallery_open = apply_filters( 'mla_tag_cloud_open_parse', $gallery_open, $open_template, $markup_values );
 			$cloud .= $gallery_style . $gallery_open;
-		} // is_grid || is_list
+		} // $is_flat_div || $is_list || $is_grid
 		elseif ( $is_pagination ) {
 			// Handle 'previous_page', 'next_page', and 'paginate_links'
 			if ( isset( $attr['limit'] ) ) {
 				$attr['posts_per_page'] = $attr['limit'];
 				$arguments['posts_per_page'] = $attr['limit'];
+			} else {
+				$attr['posts_per_page'] = get_option('posts_per_page');
+				$arguments['posts_per_page'] = $attr['posts_per_page'];
 			}
 
 			$pagination_result = MLAShortcode_Support::mla_process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $found_rows );
@@ -872,13 +939,11 @@ class MLATagCloud {
 			}
 
 			// For "previous_link", "current_link" and "next_link", discard all of the $tags except the appropriate choice
-			$link_type = $output_parameters[0];
-
-			if ( ! in_array( $link_type, array ( 'previous_link', 'current_link', 'next_link' ) ) ) {
+			if ( ! in_array( $mla_output, array ( 'previous_link', 'current_link', 'next_link' ) ) ) {
 				return ''; // unknown output type
 			}
 
-			$is_wrap = isset( $output_parameters[1] ) && 'wrap' === $output_parameters[1];
+			$is_wrap = 'wrap' === $mla_output_qualifier;
 			if ( empty( $markup_values['current_item'] ) ) {
 				$target_id = -2; // won't match anything
 			} else {
@@ -896,7 +961,7 @@ class MLATagCloud {
 					}
 				}
 
-				switch ( $link_type ) {
+				switch ( $mla_output ) {
 					case 'previous_link':
 						$target_id = $id - 1;
 						break;
@@ -913,7 +978,7 @@ class MLATagCloud {
 			if ( isset( $tags[ $target_id ] ) ) {
 				$target = $tags[ $target_id ];
 			} elseif ( $is_wrap ) {
-				switch ( $link_type ) {
+				switch ( $mla_output ) {
 					case 'previous_link':
 						$target = array_pop( $tags );
 						break;
@@ -941,7 +1006,7 @@ class MLATagCloud {
 			$current_item_delimiter = '?';
 		}
 
-		$mla_cloud_current = (integer) $arguments[ $mla_page_parameter ];
+		$mla_cloud_current = (int) $arguments[ $mla_page_parameter ];
 		$column_index = 0;
 		foreach ( $tags as $key => $tag ) {
 			$item_values = $markup_values;
@@ -963,8 +1028,8 @@ class MLATagCloud {
 			$item_values['taxonomy'] = $tag->taxonomy;
 			$item_values['description'] = wptexturize( $tag->description );
 			$item_values['parent'] = $tag->parent;
-			$item_values['count'] = isset ( $tag->count ) ? (integer) $tag->count : 0; 
-			$item_values['term_count'] = isset ( $tag->term_count ) ? (integer) $tag->term_count : 0; 
+			$item_values['count'] = isset ( $tag->count ) ? (int) $tag->count : 0; 
+			$item_values['term_count'] = isset ( $tag->term_count ) ? (int) $tag->term_count : 0; 
 			$item_values['scaled_count'] = $tag->scaled_count;
 
 			if ( in_array( $tag->slug, array( 'ignore.terms.assigned', 'no.terms.assigned', 'any.terms.assigned' ) ) ) {
@@ -1001,13 +1066,13 @@ class MLATagCloud {
 			$item_values['termlink'] = '';
 			$item_values['thelink'] = '';
 
-			if ( ! empty( $arguments['current_item'] ) ) {
-				if ( is_integer( $arguments['current_item'] ) ) {
-					if ( intval( $tag->term_id ) === $arguments['current_item'] ) {
+			if ( ! empty( $arguments[ $mla_item_parameter ] ) ) {
+				if ( is_integer( $arguments[ $mla_item_parameter ] ) ) {
+					if ( intval( $tag->term_id ) === $arguments[ $mla_item_parameter ] ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				} else {
-					if ( sanitize_title_for_query( $tag->slug ) === sanitize_title_for_query( $arguments['current_item'] ) ) {
+					if ( sanitize_title_for_query( $tag->slug ) === sanitize_title_for_query( $arguments[ $mla_item_parameter ] ) ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				}
@@ -1015,7 +1080,7 @@ class MLATagCloud {
 
 			// Add item_specific field-level substitution parameters
 			$new_text = isset( $item_template ) ? $item_template : '';
-			foreach( $mla_item_specific_arguments as $index => $value ) {
+			foreach( self::$item_specific_arguments as $index => $value ) {
 				$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
 			}
 
@@ -1057,7 +1122,7 @@ class MLATagCloud {
 
 			$item_values['link_attributes'] = $link_attributes;
 
-			// Ignore option- all,any_terms,no_terms
+			// Ignore no_terms option
 			if ( -1 !== $item_values['count'] ) {
 				$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
 			}
@@ -1073,16 +1138,21 @@ class MLATagCloud {
 				$link_href = '';
 			}
 
+			$item_values['link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 			if ( ! empty( $arguments['mla_link_style'] ) ) {
 				$item_values['link_style'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_style'], $item_values ) );
-			} else {
-				$item_values['link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 			}
 
+			$item_values['link_text'] = $item_values['name'];
 			if ( ! empty( $arguments['mla_link_text'] ) ) {
 				$item_values['link_text'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_text'], $item_values ), 'post' );
-			} else {
-				$item_values['link_text'] = $item_values['name'];
+			}
+
+			if ( ! empty( $arguments['show_count'] ) && ( 'true' === strtolower( $arguments['show_count'] ) ) ) {
+				// Ignore option- no_terms
+				if ( -1 !== $item_values['count'] ) {
+					$item_values['link_text'] .= ' (' . $item_values['count'] . ')';
+				}
 			}
 
 			// Currentlink, editlink, termlink and thelink
@@ -1162,6 +1232,13 @@ class MLATagCloud {
 				$cloud .= join( $markup_values['separator'], $tag_links );
 				break;
 			} // switch format
+
+			if ( $is_flat_div ) {
+				$markup_values = apply_filters( 'mla_tag_cloud_close_values', $markup_values );
+				$close_template = apply_filters( 'mla_tag_cloud_close_template', $close_template );
+				$parse_value = MLAData::mla_parse_template( $close_template, $markup_values );
+				$cloud .= apply_filters( 'mla_tag_cloud_close_parse', $parse_value, $close_template, $markup_values );
+			}
 		}
 
 		if ( 'array' === $arguments['mla_output'] || empty( $arguments['echo'] ) ) {

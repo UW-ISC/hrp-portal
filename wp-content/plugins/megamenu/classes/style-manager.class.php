@@ -8,7 +8,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 	/**
 	 * Manages the plugin's CSS generation, caching, and enqueueing, including
-	 * SCSS compilation, filesystem storage, and PolyLang/WPML language support.
+	 * SCSS compilation and filesystem storage. WPML is handled in {@see Mega_Menu_Integration_Wpml}. Polylang is handled in {@see Mega_Menu_Integration_Polylang}.
 	 *
 	 * @since   1.0
 	 * @package MegaMenu
@@ -37,7 +37,8 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @since 1.0
 		 */
 		public function __construct() {
-			$this->settings = get_option( 'megamenu_settings' );
+			$settings       = get_option( 'megamenu_settings', [] );
+			$this->settings = is_array( $settings ) ? $settings : [];
 		}
 
 
@@ -55,23 +56,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 999 );
 			add_action( 'wp_head', [ $this, 'head_css' ], 9999 );
 			add_action( 'megamenu_delete_cache', [ $this, 'delete_cache' ] );
-			add_action( 'megamenu_delete_cache', [ $this, 'clear_external_caches' ] );
 			add_action( 'after_switch_theme', [ $this, 'delete_cache' ] );
 
 			add_filter( 'pre_set_theme_mod_nav_menu_locations', [ $this, 'schedule_delete_cache_on_nav_menu_locations_change' ], 10, 2 );
 
 			add_action( 'megamenu_head_css', [ $this, 'head_css' ], 999 );
-
-			// PolyLang
-			if ( function_exists( 'pll_current_language' ) ) {
-				add_filter( 'megamenu_css_transient_key', [ $this, 'polylang_transient_key' ] );
-				add_filter( 'megamenu_css_filename', [ $this, 'polylang_css_filename' ] );
-				add_action( 'megamenu_after_delete_cache', [ $this, 'polylang_delete_cache' ] );
-			} elseif ( defined( 'ICL_LANGUAGE_CODE' ) ) { // WPML
-				add_filter( 'megamenu_css_transient_key', [ $this, 'wpml_transient_key' ] );
-				add_filter( 'megamenu_css_filename', [ $this, 'wpml_css_filename' ] );
-				add_action( 'megamenu_after_delete_cache', [ $this, 'wpml_delete_cache' ] );
-			}
 
 			add_filter( 'megamenu_scripts_in_footer', [ $this, 'scripts_in_footer' ] );
 			add_filter( "filesystem_method", [ $this, "use_direct_filesystem_method" ], 10, 4 );
@@ -94,7 +83,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				return 'direct';
 			}
 
-		    return $method; 
+		    return $method;
 		}
 
 
@@ -105,11 +94,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @return bool True to load scripts in the footer, false to load in the head.
 		 */
 		public function scripts_in_footer() {
-			if ( isset( $this->settings['js'] ) && $this->settings['js'] == 'head' ) {
-				return false;
-			}
-
-			return true;
+			return ( $this->settings['js'] ?? '' ) !== 'head';
 		}
 
 
@@ -271,23 +256,32 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Generate and cache the CSS for all active menus.
-		 * CSS is compiled by scssphp using the file located in /css/megamenu.scss.
+		 * Compile CSS for all active menu locations (same rules as {@see generate_css()}).
 		 *
-		 * @since 1.0
-		 * @return string Compiled CSS string, or an error comment if generation failed.
+		 * @since 3.9.3
+		 * @param bool $fail_on_location_error When true, return a {@see WP_Error} if any location fails to compile.
+		 *                                     When false, skip failed locations (legacy {@see generate_css()} behaviour).
+		 * @return string|WP_Error Full CSS string including filters and `.wp-block {}` hack, or {@see WP_Error}.
+		 *
+		 * The {@see 'megamenu_include_location_in_compiled_css'} filter controls whether each location is compiled (default true).
 		 */
-		public function generate_css() {
+		private function compile_active_menu_css( $fail_on_location_error = false ) {
 
 			if ( function_exists( 'wp_raise_memory_limit' ) ) {
-				wp_raise_memory_limit(); // attempt to raise memory limit to 256MB
+				wp_raise_memory_limit();
 			}
 
-			// the settings may have changed since the class was instantiated,
-			// reset them here
-			$this->settings = get_option( 'megamenu_settings' );
+			$settings       = get_option( 'megamenu_settings', [] );
+			$this->settings = is_array( $settings ) ? $settings : [];
 
-			if ( ! $this->settings ) {
+			if ( empty( $this->settings ) ) {
+				if ( $fail_on_location_error ) {
+					return new WP_Error(
+						'megamenu_no_settings',
+						__( 'CSS generation failed: no menu settings found.', 'megamenu' )
+					);
+				}
+
 				return '/** CSS Generation Failed. No menu settings found **/';
 			}
 
@@ -300,12 +294,17 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$css .= ".mega-menu-last-modified-{$time} { content: '{$date}'; }\n\n";
 
 			foreach ( Mega_Menu_Location::get_all() as $location ) {
-				if ( $location->is_enabled() && $location->get_menu_id() > 0 && ! $this->is_polylang_location( $location->id ) ) {
+				if ( $location->is_active() && apply_filters( 'megamenu_include_location_in_compiled_css', true, $location->id ) ) {
 					$compiled_css = $location->generate_css();
 
-					if ( ! is_wp_error( $compiled_css ) ) {
-						$css .= $compiled_css;
+					if ( is_wp_error( $compiled_css ) ) {
+						if ( $fail_on_location_error ) {
+							return $compiled_css;
+						}
+						continue;
 					}
+
+					$css .= $compiled_css;
 				}
 			}
 
@@ -313,23 +312,33 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$css = apply_filters( 'megamenu_compiled_css', $css );
 
 				$css .= ".wp-block {}"; // hack required for loading CSS in site editor https://github.com/WordPress/gutenberg/issues/40603#issuecomment-1112807162
-
-				$this->set_cached_css( $css );
-				$this->save_to_filesystem( $css );
 			}
 
 			return $css;
 		}
 
+
 		/**
-		 * Whether the given location slug is a PolyLang-generated location.
+		 * Generate and cache the CSS for all active menus.
+		 * CSS is compiled by scssphp using the file located in /css/megamenu.scss.
 		 *
-		 * @since 1.9
-		 * @param string $location The menu location slug.
-		 * @return int|false Position of '___' separator if found, false otherwise.
+		 * @since 1.0
+		 * @return string Compiled CSS string, or an error comment if generation failed.
 		 */
-		public function is_polylang_location( $location ) {
-			return strpos( $location, '___' );
+		public function generate_css() {
+
+			$css = $this->compile_active_menu_css( false );
+
+			if ( is_wp_error( $css ) ) {
+				return '';
+			}
+
+			if ( $this->settings && strlen( $css ) ) {
+				$this->set_cached_css( $css );
+				$this->save_to_filesystem( $css );
+			}
+
+			return $css;
 		}
 
 		/**
@@ -369,10 +378,8 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 					return;
 				}
 
-				$settings        = get_option( 'megamenu_settings' );
-				$settings['css'] = 'head';
-				update_option( 'megamenu_settings', $settings );
-				$this->settings = get_option( 'megamenu_settings' );
+				$this->settings['css'] = 'head';
+				update_option( 'megamenu_settings', $this->settings );
 
 				update_option( 'megamenu_failed_to_write_css_to_filesystem', 'true' );
 			}
@@ -380,15 +387,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		}
 
 
-		/**
-		 * Return all possible file path locations where the SCSS file may be found.
-		 *
-		 * @since 2.2.3
-		 * @param string $location Menu location slug.
-		 * @param array  $theme    Theme settings array.
-		 * @param int    $menu_id  Menu term ID.
-		 * @return array Ordered list of absolute SCSS file paths to check.
-		 */
 		/**
 		 * Before a theme is saved, attempt to compile it to verify it produces valid CSS.
 		 * Delegates to Mega_Menu_Theme for backward compatibility.
@@ -433,8 +431,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$this->enqueue_fs_style();
 			}
 
-			wp_enqueue_style( 'dashicons' );
-
 			do_action( 'megamenu_enqueue_public_scripts' );
 
 		}
@@ -456,11 +452,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$scripts_in_footer = MEGAMENU_SCRIPTS_IN_FOOTER;
 			}
 
-			///** change the script handle to prevent conflict with theme files */
-			//function megamenu_script_handle() {
-			//    return "maxmegamenu";
-			//}
-			//add_filter("megamenu_javascript_handle", "megamenu_script_handle");*/
 			$handle = apply_filters( 'megamenu_javascript_handle', 'megamenu' );
 
 			wp_enqueue_script( $handle, $js_path, $dependencies, MEGAMENU_VERSION, $scripts_in_footer );
@@ -539,13 +530,19 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 
 		/**
-		 * Delete the cached CSS and regenerate it.
+		 * Regenerate CSS, flush the filesystem directory, and repopulate the cache.
 		 *
-		 * @since 1.9
-		 * @return true
+		 * @return bool True on success, false if CSS compilation produced a WP_Error.
 		 */
 		public function delete_cache() {
 			global $wp_filesystem;
+
+			$css = $this->compile_active_menu_css( true );
+
+			if ( is_wp_error( $css ) ) {
+				do_action( 'megamenu_delete_cache_failed', $css );
+				return false;
+			}
 
 			if ( ! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -559,7 +556,12 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			delete_transient( $this->get_transient_key() );
 
-			$this->generate_css();
+			if ( strlen( $css ) ) {
+				$this->set_cached_css( $css );
+				$this->save_to_filesystem( $css );
+			}
+
+			$this->clear_external_caches();
 
 			do_action( 'megamenu_after_delete_cache' );
 
@@ -598,17 +600,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @return string 'fs' (filesystem), 'head', or 'disabled'.
 		 */
 		private function get_css_output_method() {
-			return isset( $this->settings['css'] ) ? $this->settings['css'] : 'fs';
-		}
-
-		/**
-		 * Return the configured CSS type.
-		 *
-		 * @since 1.0
-		 * @return string 'standard' or 'flex'.
-		 */
-		private function get_css_type() {
-			return isset( $this->settings['css_type'] ) ? $this->settings['css_type'] : 'standard';
+			return $this->settings['css'] ?? 'fs';
 		}
 
 
@@ -628,8 +620,9 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			$method = $this->get_css_output_method();
 
-			if ( in_array( $method, [ 'disabled', 'fs' ] ) ) {
-				echo '<style class="megamenu-css">/** Mega Menu CSS: ' . esc_html( $method ) . " **/</style>\n";
+			// Filesystem and disabled modes use linked styles or no CSS — do not emit a
+			// placeholder <style class="megamenu-css"> (breaks block editor iframe rules in WP 6.9+).
+			if ( in_array( $method, [ 'disabled', 'fs' ], true ) ) {
 				return;
 			}
 
@@ -640,101 +633,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		}
 
 
-		/**
-		 * Delete all language-specific CSS transients created when PolyLang is installed.
-		 *
-		 * @since 1.9
-		 * @return void
-		 */
-		public function polylang_delete_cache() {
-			global $polylang;
-
-			foreach ( $polylang->model->get_languages_list() as $term ) {
-				delete_transient( 'megamenu_css_' . $term->locale );
-			}
-		}
-
-
-		/**
-		 * Modify the CSS transient key to make it unique to the current PolyLang language.
-		 *
-		 * @since 1.9
-		 * @param string $key The base transient key.
-		 * @return string Language-suffixed transient key.
-		 */
-		public function polylang_transient_key( $key ) {
-
-			$locale = strtolower( pll_current_language( 'locale' ) );
-
-			if ( strlen( $locale ) ) {
-				$key = $key . '_' . $locale;
-			}
-
-			return $key;
-		}
-
-
-		/**
-		 * Modify the CSS filename to make it unique to the current PolyLang language.
-		 *
-		 * @since 1.9
-		 * @param string $filename The base CSS filename (without extension).
-		 * @return string Language-suffixed filename.
-		 */
-		public function polylang_css_filename( $filename ) {
-
-			$locale = strtolower( pll_current_language( 'locale' ) );
-
-			if ( strlen( $locale ) ) {
-				$filename .= '_' . $locale;
-			}
-
-			return $filename;
-		}
-
-
-		/**
-		 * Delete all language-specific CSS transients created when WPML is installed.
-		 *
-		 * @since 1.9
-		 * @return void
-		 */
-		public function wpml_delete_cache() {
-
-			$languages = icl_get_languages( 'skip_missing=N' );
-
-			foreach ( $languages as $language ) {
-				delete_transient( 'megamenu_css_' . $language['language_code'] );
-			}
-		}
-
-
-		/**
-		 * Modify the CSS transient key to make it unique to the current WPML language.
-		 *
-		 * @since 1.9
-		 * @param string $key The base transient key.
-		 * @return string Language-suffixed transient key.
-		 */
-		public function wpml_transient_key( $key ) {
-			$key .= '_' . ICL_LANGUAGE_CODE;
-
-			return $key;
-		}
-
-
-		/**
-		 * Modify the CSS filename to make it unique to the current WPML language.
-		 *
-		 * @since 1.9
-		 * @param string $filename The base CSS filename (without extension).
-		 * @return string Language-suffixed filename.
-		 */
-		public function wpml_css_filename( $filename ) {
-			$filename .= '_' . ICL_LANGUAGE_CODE;
-
-			return $filename;
-		}
 	}
 
 endif;

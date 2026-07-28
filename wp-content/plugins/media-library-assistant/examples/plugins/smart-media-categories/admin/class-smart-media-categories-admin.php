@@ -764,12 +764,12 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 					break;
 				case '106':
 					$parent_clause = sprintf( _n( '%d parent', '%d parents', $smc_message[1], 'smart-media-categories' ), $smc_message[1] );
-					$children_clause = sprintf( _n( '%d child', '%d children', (integer)$smc_message[2], 'smart-media-categories' ), $smc_message[2] );
+					$children_clause = sprintf( _n( '%d child', '%d children',  (int) $smc_message[2], 'smart-media-categories' ), $smc_message[2] );
 					$messages[ $message_type ]['updated'] = sprintf( __( 'All Children synced %1$s to %2$s.', 'smart-media-categories' ), $children_clause, $parent_clause );
 					break;
 				case '107':
 					$parent_clause = sprintf( _n( '%d parent', '%d parents', $smc_message[1], 'smart-media-categories' ), $smc_message[1] );
-					$children_clause = sprintf( _n( '%d child', '%d children', (integer)$smc_message[2], 'smart-media-categories' ), $smc_message[2] );
+					$children_clause = sprintf( _n( '%d child', '%d children',  (int) $smc_message[2], 'smart-media-categories' ), $smc_message[2] );
 					$messages[ $message_type ]['updated'] = sprintf( __( 'Bulk Edit synced %1$s to %2$s.', 'smart-media-categories' ), $children_clause, $parent_clause );
 					break;
 			}

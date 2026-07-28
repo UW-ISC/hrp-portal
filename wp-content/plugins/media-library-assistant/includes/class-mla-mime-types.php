@@ -371,7 +371,7 @@ class MLAMime {
 	 * @since 1.40
 	 *
 	 * @param	array	Mime types keyed by the file extension regex corresponding to those types
-	 * @param	mixed	User ID (integer) or object for checking against 'unfiltered_html' capability
+	 * @param	mixed	User ID (int) or object for checking against 'unfiltered_html' capability
 	 *
 	 * @return	array	Updated allowed MIME types
 	 */
@@ -1322,13 +1322,14 @@ class MLAMime {
 				'post_mime_type' => 'checked="checked"',
 				'table_view' => 'checked="checked"',
 				'menu_order' => '',
-				'description' => ''
+				'description' => '',
+				'post_ID' => 0,
 			);
 		}
 
 		// Validate changed slug value
-		if ( $slug != $original_slug ) {
-			if ( $slug != $request['slug'] ) {
+		if ( $slug !== $original_slug ) {
+			if ( $slug !== $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
 				$messages .= sprintf( '<br>' . __( 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 			}
@@ -1380,8 +1381,9 @@ class MLAMime {
 		$new_type['table_view'] = isset( $request['table_view'] ) ? $request['table_view'] : $original_type['table_view'];
 		$new_type['menu_order'] = isset( $request['menu_order'] ) ? absint( $request['menu_order'] ) : $original_type['menu_order'];
 		$new_type['description'] = isset( $request['description'] ) ? sanitize_text_field( $request['description'] ) : $original_type['description'];
+		$new_type['post_ID'] = $original_type['post_ID'];
 
-		if ( ( $slug == $original_slug ) && ( self::$mla_post_mime_templates[ $slug ] == $new_type ) ) {
+		if ( ( $slug === $original_slug ) && ( self::$mla_post_mime_templates[ $slug ] === $new_type ) ) {
 			return array(
 				/* translators: 1: slug */
 				'message' => substr( $messages . '<br>' . sprintf( __( 'Edit view "%1$s"; no changes detected', 'media-library-assistant' ), $slug ), 4),
@@ -1391,7 +1393,7 @@ class MLAMime {
 
 		self::$mla_post_mime_templates[ $slug ] = $new_type;
 
-		if ( $slug != $original_slug ) {
+		if ( $slug !== $original_slug ) {
 			unset( self::$mla_post_mime_templates[ $original_slug ] );
 		}
 

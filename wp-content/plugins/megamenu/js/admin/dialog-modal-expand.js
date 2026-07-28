@@ -6,14 +6,14 @@
 (function ($) {
     "use strict";
 
-    var EXPANDED_CLASS = "megamenu-admin-modal--wpcontent-expanded";
+    const EXPANDED_CLASS = "megamenu-admin-modal--wpcontent-expanded";
 
     function readPreference(storageKey) {
         if (!storageKey) {
             return false;
         }
         try {
-            var v = window.localStorage.getItem(storageKey);
+            const v = window.localStorage.getItem(storageKey);
             return v === "1" || v === "true";
         } catch (ignore) {
             return false;
@@ -39,21 +39,21 @@
         if (!$modal || !$modal.length) {
             return;
         }
-        var on = !!expanded;
+        const on = !!expanded;
         $modal.toggleClass(EXPANDED_CLASS, on);
-        var $btn = $modal.find(".megamenu-admin-modal__expand-btn");
+        const $btn = $modal.find(".megamenu-admin-modal__expand-btn");
         if (!$btn.length) {
             return;
         }
-        var expandLabel = $modal.attr("data-i18n-modal-expand") || "";
-        var collapseLabel = $modal.attr("data-i18n-modal-collapse") || "";
+        const expandLabel = $modal.attr("data-i18n-modal-expand") || "";
+        const collapseLabel = $modal.attr("data-i18n-modal-collapse") || "";
         $btn.attr("aria-expanded", on ? "true" : "false");
         $btn.attr("aria-label", on ? collapseLabel : expandLabel);
         $btn.toggleClass("megamenu-admin-modal__expand-btn--expanded", on);
     }
 
     function restoreOnOpen($modal) {
-        var key = getStorageKey($modal);
+        const key = getStorageKey($modal);
         applyExpanded($modal, readPreference(key));
     }
 
@@ -71,7 +71,7 @@
      * @return {boolean}
      */
     function handleEscapeCollapseIfExpanded($modal, e) {
-        if (e.key !== "Escape" && e.keyCode !== 27) {
+        if (e.key !== "Escape") {
             return false;
         }
         if (!$modal || !$modal.length || !$modal.hasClass("is-open")) {
@@ -80,16 +80,16 @@
         if (!$modal.hasClass(EXPANDED_CLASS)) {
             return false;
         }
-        var $expandBtn = $modal.find(".megamenu-admin-modal__expand-btn");
+        const $expandBtn = $modal.find(".megamenu-admin-modal__expand-btn");
         if (!$expandBtn.length) {
             return false;
         }
-        var active = document.activeElement;
+        const active = document.activeElement;
         if (active !== $expandBtn[0] && !$.contains($expandBtn[0], active)) {
             return false;
         }
         e.preventDefault();
-        var key = getStorageKey($modal);
+        const key = getStorageKey($modal);
         applyExpanded($modal, false);
         storePreference(key, false);
         return true;
@@ -97,15 +97,15 @@
 
     $(document).on("click", ".megamenu-admin-modal__expand-btn", function (e) {
         e.preventDefault();
-        var $modal = $(this).closest(".megamenu-admin-modal");
+        const $modal = $(this).closest(".megamenu-admin-modal");
         if (!$modal.length || !$modal.hasClass("is-open")) {
             return;
         }
-        var key = getStorageKey($modal);
+        const key = getStorageKey($modal);
         if (!key) {
             return;
         }
-        var next = !$modal.hasClass(EXPANDED_CLASS);
+        const next = !$modal.hasClass(EXPANDED_CLASS);
         applyExpanded($modal, next);
         storePreference(key, next);
     });

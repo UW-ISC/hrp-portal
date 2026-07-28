@@ -14,7 +14,7 @@
  * https://wordpress.org/support/topic/cloning-category-tags-settings-from-uploades-file-to-upload-page/
  *
  * @package MLA Preset Terms Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -22,7 +22,7 @@ Plugin Name: MLA Preset Terms Example
 Plugin URI: http://davidlingren.com/
 Description: Adds "Preset Terms" to Media/Assistant rollover actions, redirecting to Media/Add New (Upload New Media) screen with terms copied from the selected item
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -123,7 +123,7 @@ class MLAPresetTermsExample {
 		//error_log( __LINE__ . " MLAPresetTermsExample::mla_upload_bulk_edit_form_fieldset_values( {$filter_root} ) \$fieldset_values = " . var_export( $fieldset_values, true ), 0 );
 
 		if ( isset( $_REQUEST['mla_preset_terms_ID'] ) && ( 'mla_upload_bulk_edit_form_initial' === $filter_root ) ) {
-			$mla_preset_terms_ID = (integer) $_REQUEST['mla_preset_terms_ID'];
+			$mla_preset_terms_ID = (int) $_REQUEST['mla_preset_terms_ID'];
 		} else {
 			return $fieldset_values;
 		}

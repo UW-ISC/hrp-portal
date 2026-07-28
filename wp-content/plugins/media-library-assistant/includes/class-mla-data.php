@@ -165,15 +165,24 @@ class MLAData {
 			}
 		} // foreach result
 
+		$result = '';
+
 		// single-element array, return as string
-		if ( 1 == count( $final ) ) {
+		if ( 1 === count( $final ) ) {
 			// Don't flatten a string value key
 			if ( isset( $final[0] ) ) {
-				$final = $final[0];
+				$result = $final[0];
+			} else {
+				$result = $final;
+			}
+		} else {
+			// No embedded arrays were found, so it's safe to flatten the result
+			foreach ( $final as $key => $value ) {
+				$result = implode( '', $final );
 			}
 		}
 
-		return $final;
+		return $result;
 	}
 
 	/**
@@ -183,10 +192,10 @@ class MLAData {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	string	A formatting string containing [+placeholders+]
-	 * @param	array	An associative array containing keys and values e.g. array('key' => 'value')
+	 * @param	string	$tpl A formatting string containing [+placeholders+]
+	 * @param	array	$markup_values An associative array containing keys and values e.g. array('key' => 'value')
 	 *
-	 * @return	strng	Placeholders corresponding to the keys of the markup_values will be replaced with their values.
+	 * @return	string	Placeholders corresponding to the keys of the markup_values will be replaced with their values.
 	 */
 	public static function mla_parse_template( $tpl, $markup_values ) {
 		// If templates are present we must step through $tpl and expand them
@@ -1051,14 +1060,14 @@ class MLAData {
 
 					switch ( $modifier ) {
 						case 'i18n':
-							$value = date_i18n( $format, (integer) $value );
+							$value = date_i18n( $format, (int) $value );
 							break;
 						case 'age':
-							$value = sprintf( $format, human_time_diff( (integer) $value ) );
+							$value = sprintf( $format, human_time_diff( (int) $value ) );
 							break;
 						default:
 							// date "Returns a string formatted according to the given format string using the given integer"
-							$value = date( $format, (integer) $value );
+							$value = date( $format, (int) $value );
 					}
 				}
 
@@ -1576,7 +1585,7 @@ class MLAData {
 
 					break;
 				case 'page_terms':
-					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (integer) $markup_values[ 'page_ID' ] : 0;
+					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (int) $markup_values[ 'page_ID' ] : 0;
 					
 					if ( 0 < $page_id ) {
 						$text = self::_expand_terms( $value, $page_id );
@@ -1588,7 +1597,7 @@ class MLAData {
 
 					break;
 				case 'parent_terms':
-					$parent_id = isset( $markup_values[ 'parent' ] ) ? (integer) $markup_values[ 'parent' ] : 0;
+					$parent_id = isset( $markup_values[ 'parent' ] ) ? (int) $markup_values[ 'parent' ] : 0;
 					
 					if ( 0 < $parent_id ) {
 						$text = self::_expand_terms( $value, $parent_id );
@@ -1606,7 +1615,7 @@ class MLAData {
 
 					break;
 				case 'page_custom':
-					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (integer) $markup_values[ 'page_ID' ] : 0;
+					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (int) $markup_values[ 'page_ID' ] : 0;
 					
 					if ( 0 < $page_id ) {
 						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $page_id );
@@ -1614,7 +1623,7 @@ class MLAData {
 
 					break;
 				case 'parent_custom':
-					$parent_id = isset( $markup_values[ 'parent' ] ) ? (integer) $markup_values[ 'parent' ] : 0;
+					$parent_id = isset( $markup_values[ 'parent' ] ) ? (int) $markup_values[ 'parent' ] : 0;
 					
 					if ( 0 < $parent_id ) {
 						$markup_values[ $markup_key ] = self::_expand_custom_field( $value, $parent_id );
@@ -2391,7 +2400,10 @@ class MLAData {
 			MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xml_string set option failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		}
 
-		xml_parser_free($xml_parser);
+		// Deprecated in PHP 8.5.0
+		if ( ! MLATest::$php_8dot0_plus ) {
+			xml_parser_free( $xml_parser );
+		}
 
 		if ( empty( $xml_values ) ) {
 			return NULL;
@@ -4150,7 +4162,7 @@ return $results;
 
 			// Replace the exif.jpg values with the original webp file values
 			$exif_array['exif_metadata']['FileName'] = $data['filename'];
-			$exif_array['exif_metadata']['FileDateTime'] = (integer) filectime( $path ); // Date uploaded
+			$exif_array['exif_metadata']['FileDateTime'] = (int) filectime( $path ); // Date uploaded
 			$exif_array['exif_metadata']['FileSize'] = $data['filesize'];
 			$exif_array['exif_metadata']['MimeType'] = $data['mime_type'];
 			$exif_array['exif_metadata']['COMPUTED']['IsColor'] = 1;
@@ -5090,17 +5102,17 @@ return $results;
 			}
 
 			if ( $keep_existing = isset( $meta_value[0x80000001] ) ) {
-				$keep_existing = (boolean) $meta_value[0x80000001];
+				$keep_existing = (bool) $meta_value[0x80000001];
 				unset( $meta_value[0x80000001] );
 			}
 
 			if ( $no_null = isset( $meta_value[0x80000002] ) ) {
-				$no_null = (boolean) $meta_value[0x80000002];
+				$no_null = (bool) $meta_value[0x80000002];
 				unset( $meta_value[0x80000002] );
 			}
 
 			if ( $replace_all = isset( $meta_value[0x80000003] ) ) {
-				$replace_all = (boolean) $meta_value[0x80000003];
+				$replace_all = (bool) $meta_value[0x80000003];
 				unset( $meta_value[0x80000003] );
 			}
 

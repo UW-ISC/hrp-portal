@@ -74,7 +74,7 @@ class MLATemplate_Support {
 				),
 				'tag-cloud' => array(
 					'label' => 'Tag Cloud',
-					'default_names' => array( 'tag-cloud' ),
+					'default_names' => array( 'tag-cloud', 'tag-cloud-flat-div', 'tag-cloud-ul-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -110,7 +110,7 @@ class MLATemplate_Support {
 				),
 				'custom-list' => array(
 					'label' => 'Custom Field List',
-					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-checklist-div' ),
+					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-ul-div', 'custom-list-dl-div', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -196,7 +196,7 @@ class MLATemplate_Support {
 				),
 				'tag-cloud' => array(
 					'label' => 'Tag Cloud',
-					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl' ),
+					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl', 'tag-cloud-flat-div', 'tag-cloud-ul-div', 'tag-cloud-dl-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -298,7 +298,7 @@ class MLATemplate_Support {
 				),
 				'custom-list' => array(
 					'label' => 'Custom Field List',
-					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
+					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-ul-div', 'custom-list-dl-div', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => 'Description',
@@ -428,7 +428,7 @@ class MLATemplate_Support {
 				),
 				'tag-cloud' => array(
 					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'tag-cloud' ),
+					'default_names' => array( 'tag-cloud', 'tag-cloud-flat-div', 'tag-cloud-ul-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
@@ -464,7 +464,7 @@ class MLATemplate_Support {
 				),
 				'custom-list' => array(
 					'label' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-checklist-div' ),
+					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-ul-div', 'custom-list-dl-div', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
@@ -550,7 +550,7 @@ class MLATemplate_Support {
 				),
 				'tag-cloud' => array(
 					'label' => _x( 'Tag Cloud', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl' ),
+					'default_names' => array( 'tag-cloud', 'tag-cloud-ul', 'tag-cloud-dl', 'tag-cloud-flat-div', 'tag-cloud-ul-div', 'tag-cloud-dl-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
@@ -652,7 +652,7 @@ class MLATemplate_Support {
 				),
 				'custom-list' => array(
 					'label' => _x( 'Custom Field List', 'table_view_singular', 'media-library-assistant' ),
-					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
+					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-ul-div', 'custom-list-dl-div', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),

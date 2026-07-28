@@ -1226,7 +1226,7 @@ class MLAQuery {
 		if ( ( (int) $count ) > 0 ) {
 			$clean_request['offset'] = $offset;
 			$clean_request['posts_per_page'] = $count;
-		} elseif ( ( (int) $count ) == -1 ) {
+		} elseif ( ( (int) $count ) === -1 ) {
 			$clean_request['posts_per_page'] = $count;
 		}
 
@@ -1784,7 +1784,7 @@ class MLAQuery {
 
 //error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters( {$index}, {$phrase} ) the_terms = " . var_export( $the_terms, true ), 0 );
 				foreach( $the_terms as $the_term ) {
-					$tax_terms[ $the_term->taxonomy ][ $the_term->term_id ] = (integer) $the_term->term_taxonomy_id;
+					$tax_terms[ $the_term->taxonomy ][ $the_term->term_id ] = (int) $the_term->term_taxonomy_id;
 
 					if ( isset( $tax_counts[ $the_term->taxonomy ][ $the_term->term_id ] ) ) {
 						$tax_counts[ $the_term->taxonomy ][ $the_term->term_id ]++;
@@ -2141,22 +2141,22 @@ class MLAQuery {
 		 * Four clauses are used because all four conditions can be present at once.
 		 */
 		if ( self::$query_parameters[self::MLA_ALT_TEXT_SUBQUERY] ) {
-			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, '_wp_attachment_image_alt' );
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, esc_sql( '_wp_attachment_image_alt' ) );
 			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, self::MLA_ALT_TEXT_SUBQUERY, $wpdb->posts );
 		}
 
 		if ( self::$query_parameters[self::MLA_FILE_SUBQUERY] ) {
-			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, '_wp_attached_file' );
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, esc_sql( '_wp_attached_file' ) );
 			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, self::MLA_FILE_SUBQUERY, $wpdb->posts );
 		}
 
 		if ( self::$query_parameters[self::MLA_TABLE_VIEW_SUBQUERY] ) {
-			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, self::$query_parameters['postmeta_key'] );
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, esc_sql( self::$query_parameters['postmeta_key'] ) );
 			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, self::MLA_TABLE_VIEW_SUBQUERY, $wpdb->posts );
 		}
 
 		if ( self::$query_parameters[self::MLA_ORDERBY_SUBQUERY] ) {
-			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, self::$query_parameters['orderby_key'] );
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, esc_sql( self::$query_parameters['orderby_key'] ) );
 			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, self::MLA_ORDERBY_SUBQUERY, $wpdb->posts );
 		}
 

@@ -38,9 +38,8 @@ jQuery(function ($) {
 
     function debounce(fn, waitMs) {
         let t = null;
-        return function () {
+        return function (...args) {
             const ctx = this;
-            const args = arguments;
             window.clearTimeout(t);
             t = window.setTimeout(function () {
                 fn.apply(ctx, args);
@@ -68,9 +67,9 @@ jQuery(function ($) {
         }
         const s = String(value);
         const L = s.length;
-        const last2 = L >= 2 ? s.substr(L - 2) : "";
-        const last3 = L >= 3 ? s.substr(L - 3) : "";
-        const last1 = L >= 1 ? s.substr(L - 1) : "";
+        const last2 = L >= 2 ? s.slice(-2) : "";
+        const last3 = L >= 3 ? s.slice(-3) : "";
+        const last1 = L >= 1 ? s.slice(-1) : "";
         if (
             last2 === "px" ||
             last2 === "em" ||
@@ -160,29 +159,90 @@ jQuery(function ($) {
         $('input[name="settings[disable_mobile_toggle]"]').on("change", syncMobileToggleTabDisabled);
     }
 
-    function syncEffectMobileOffcanvasRow($select) {
-        const v = $select.val();
-        const offcanvas = v === "slide_left" || v === "slide_right";
-        $select.closest("tr.mega-effect_mobile").toggleClass("mega-is-offcanvas", offcanvas);
+    /**
+     * Shared CodeMirror utility exposed on window so companion plugins can use
+     * the same initialization pattern without duplicating guard and wiring code.
+     *
+     * init(element, onChange) — initialize wp.codeEditor on a textarea; no-ops if
+     *   wp/cm_settings are absent or the element was already initialized.
+     * save(element) — flush the CM value back into the hidden textarea so that
+     *   jQuery $.serialize() picks up the current content.
+     * refresh(element) — tell CM to remeasure itself after becoming visible.
+     */
+    window.megamenuCodeEditor = {
+        init: function (element, onChange) {
+            if (typeof wp === "undefined" || typeof wp.codeEditor === "undefined" || typeof cm_settings === "undefined") {
+                return null;
+            }
+            const $el = $(element);
+            if ($el.data("megamenuCmInit")) {
+                return null;
+            }
+            $el.data("megamenuCmInit", true);
+            const editor = wp.codeEditor.initialize($el, cm_settings);
+            if (editor && editor.codemirror && typeof onChange === "function") {
+                editor.codemirror.on("change", onChange);
+            }
+            return editor;
+        },
+        save: function (element) {
+            const $cm = $(element).next(".CodeMirror");
+            if ($cm.length && $cm[0].CodeMirror) {
+                $cm[0].CodeMirror.save();
+            }
+        },
+        refresh: function (element) {
+            const $cm = $(element).next(".CodeMirror");
+            if ($cm.length && $cm[0].CodeMirror) {
+                $cm[0].CodeMirror.refresh();
+            }
+        },
+    };
+
+    /**
+     * Settings object for wp.codeEditor.initialize (page.php stores wp_enqueue_code_editor() under cm_settings.codeEditor).
+     *
+     * @returns {object}
+     */
+    function megamenuGetThemeCodeEditorSettings() {
+        if (typeof cm_settings === "undefined") {
+            return {};
+        }
+        if (cm_settings.codeEditor && typeof cm_settings.codeEditor === "object") {
+            return $.extend(true, {}, cm_settings.codeEditor);
+        }
+        return $.extend(true, {}, cm_settings);
     }
 
-    function initEffectMobileOffcanvas() {
-        $('select[name$="[effect_mobile]"]')
-            .each(function () {
-                syncEffectMobileOffcanvasRow($(this));
-            })
-            .on("change", function () {
-                syncEffectMobileOffcanvasRow($(this));
-            });
+    /**
+     * Read-only SCSS CodeMirror for compile error notices (select/copy allowed; editing disabled).
+     */
+    function megamenuInitCompileFailedScssEditor() {
+        if (typeof wp === "undefined" || typeof wp.codeEditor === "undefined") {
+            return;
+        }
+        const $ta = $("#megamenu-compile-failed-scss");
+        if (!$ta.length || $ta.data("megamenuCmInit")) {
+            return;
+        }
+        if ($ta.next(".CodeMirror").length) {
+            return;
+        }
+        const base = megamenuGetThemeCodeEditorSettings();
+        const settings = $.extend(true, {}, base, {
+            codemirror: $.extend({}, base.codemirror || {}, { readOnly: true }),
+        });
+        wp.codeEditor.initialize($ta, settings);
+        $ta.data("megamenuCmInit", true);
+        window.setTimeout(function () {
+            window.megamenuCodeEditor.refresh($ta[0]);
+        }, CODE_MIRROR_TAB_REFRESH_MS);
     }
 
     function initCodeMirrorTab() {
-        if (typeof wp === "undefined" || typeof wp.codeEditor === "undefined" || typeof cm_settings === "undefined") {
-            return;
-        }
         const $themeTextarea = $("#megamenu-theme-textarea-custom_css");
         if ($themeTextarea.length) {
-            wp.codeEditor.initialize($themeTextarea, cm_settings);
+            window.megamenuCodeEditor.init($themeTextarea[0], markThemeEditorDirty);
         }
 
         $('[data-tab="mega-tab-content-custom_styling"]').on("click", function () {
@@ -200,17 +260,16 @@ jQuery(function ($) {
      * Sync custom styling CodeMirror content into the underlying textarea before serializing the theme form.
      */
     function megamenuSaveCustomCssFromCodeMirror() {
-        const $cm = $(".mega-tab-content-custom_styling .CodeMirror");
-        if ($cm.length && $cm[0].CodeMirror) {
-            $cm[0].CodeMirror.save();
+        const $ta = $("#megamenu-theme-textarea-custom_css");
+        if ($ta.length) {
+            window.megamenuCodeEditor.save($ta[0]);
         }
     }
 
     function megamenuSyncThemeEditorDialogBodyClass() {
-        const previewOpen = $("#megamenu-preview-dialog").hasClass("is-open");
         const locOpen = $("#megamenu-location-settings-dialog").hasClass("is-open");
         const scssOpen = $("#megamenu-scss-variables-dialog").hasClass("is-open");
-        $("body").toggleClass("megamenu-dialog-open", previewOpen || locOpen || scssOpen);
+        $("body").toggleClass("megamenu-dialog-open", locOpen || scssOpen);
     }
 
     function megamenuMountScssVariablesDialogFromTemplate() {
@@ -356,17 +415,38 @@ jQuery(function ($) {
         });
     }
 
+    function markThemeEditorDirty() {
+        const $btn = $("form.theme_editor").find("button#submit, input#submit");
+        const origLabel = $btn.data("mmm-save-label");
+        if (origLabel) {
+            $btn.is("input") ? $btn.val(origLabel) : $btn.text(origLabel);
+        }
+        $btn.prop("disabled", false);
+    }
+
     const COLOR_PICKER_OPTIONS = {
         defaultColor: "#DDDDDD",
         showCssVarPalette: false,
+        onColorChange: function() {
+            markThemeEditorDirty();
+            const $btn = $(this).closest(".block").find(".mega-block-save");
+            if ($btn.length) {
+                const origLabel = $btn.data("mmm-save-label");
+                if (origLabel) $btn.text(origLabel);
+                $btn.prop("disabled", false);
+            }
+        },
     };
 
+    const COLOR_PICKER_EXCLUDE_PREVIEW_BG =
+        ".mega-color-picker-input:not(.megamenu-preview-dialog__bg-custom-color-input)";
+
     function bindColorPickersInFragment($root) {
-        $(".mega-color-picker-input", $root).customColorPicker(COLOR_PICKER_OPTIONS);
+        $(COLOR_PICKER_EXCLUDE_PREVIEW_BG, $root).customColorPicker(COLOR_PICKER_OPTIONS);
     }
 
     function initColorPickers() {
-        $(".mega-color-picker-input").customColorPicker(COLOR_PICKER_OPTIONS);
+        $(COLOR_PICKER_EXCLUDE_PREVIEW_BG).customColorPicker(COLOR_PICKER_OPTIONS);
 
         $(".mega-copy_color").on("click", function () {
             const from = $(this).prev().find(".mega-color-picker-input").customColorPicker("get");
@@ -403,43 +483,25 @@ jQuery(function ($) {
         }
     }
 
-    function megaIconDropdownFormat(icon) {
-        const cls = icon && icon.element && $(icon.element).attr("data-class");
-        if (!cls) {
-            return "";
-        }
-        return '<i class="' + cls + '"></i>';
-    }
-
-    function getIconSelect2Options() {
-        return {
-            containerCssClass: "tpx-select2-container select2-container-sm",
-            dropdownCssClass: "tpx-select2-drop",
-            minimumResultsForSearch: -1,
-            formatResult: megaIconDropdownFormat,
-            formatSelection: megaIconDropdownFormat,
-        };
-    }
-
     /**
-     * Initializes Select2 on .icon_dropdown within $context, or on all such selects if $context is omitted.
+     * Initializes Custom Icon Selector on .icon_dropdown within $context, or on all such selects if $context is omitted.
      *
      * @param {JQuery} [$context] Root element (e.g. AJAX fragment); omit for full document pass.
      */
-    function bindIconSelect2($context) {
+    function bindIconSelect($context) {
         const $selects =
             $context && $context.length ? $context.find(".icon_dropdown") : $(".icon_dropdown");
         $selects.each(function () {
             const $el = $(this);
-            if ($el.data("select2")) {
+            if ($el.data("mmmIconSelector")) {
                 return;
             }
-            $el.select2(getIconSelect2Options());
+            $el.mmmIconSelector();
         });
     }
 
-    function initIconSelect2() {
-        bindIconSelect2();
+    function initIconSelect() {
+        bindIconSelect();
     }
 
     /**
@@ -470,7 +532,7 @@ jQuery(function ($) {
         function isToggleBarDismissSuppressedForTarget($target) {
             return (
                 $target.closest(
-                    ".select2-container--open, .select2-dropdown, " +
+                    ".mmm-icon-selector-dropdown, " +
                         ".iris-picker, .iris-border, .wp-picker-holder, " +
                         ".mega-color-picker-container, " +
                         ".media-modal, .media-modal-backdrop, .ui-dialog"
@@ -493,13 +555,13 @@ jQuery(function ($) {
         });
 
         $(document).on("keydown.toggleBarDesignerDismiss", function (e) {
-            if (e.key !== "Escape" && e.keyCode !== 27) {
+            if (e.key !== "Escape") {
                 return;
             }
             if (!$toggleRoot.find(".block.mega-open").length) {
                 return;
             }
-            if ($(".select2-container--open").length) {
+            if ($(".mmm-icon-selector-dropdown:visible").length) {
                 return;
             }
             if ($(".mega-color-picker-container:visible").length) {
@@ -564,6 +626,40 @@ jQuery(function ($) {
             reindexToggleBarBlocks();
         });
 
+        $toggleRoot.on("click", ".mega-block-close", function () {
+            closeToggleBarBlockPanels();
+        });
+
+        $toggleRoot.on("click", ".mega-block-save", function () {
+            const $btn = $(this);
+            const originalText = $btn.text();
+            if (!$btn.data("mmm-save-label")) {
+                $btn.data("mmm-save-label", originalText);
+            }
+            const settings = window.megamenu_settings || {};
+            $btn.prop("disabled", true).text(settings.saving + "…");
+            var savedOk = false;
+            megamenuAjaxSaveThemeEditor({
+                onSuccess: function () {
+                    savedOk = true;
+                },
+                onComplete: function () {
+                    if (savedOk) {
+                        $btn.html('<span class="dashicons dashicons-yes" aria-hidden="true"></span> ' + (settings.saved || "Saved"));
+                    } else {
+                        $btn.prop("disabled", false).text(originalText);
+                    }
+                },
+            });
+        });
+
+        $toggleRoot.on("change input", ".block-settings :input", function () {
+            const $btn = $(this).closest(".block").find(".mega-block-save");
+            const origLabel = $btn.data("mmm-save-label");
+            if (origLabel) $btn.text(origLabel);
+            $btn.prop("disabled", false);
+        });
+
         $toggleRoot.on("click", ".block-title", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -580,6 +676,7 @@ jQuery(function ($) {
                 $toggleRoot.find(".block-settings").hide();
                 $block.addClass("mega-open");
                 $settings.show();
+                $(document).trigger("megamenu_toggle_block_opened", [$block[0]]);
             }
         });
 
@@ -605,7 +702,7 @@ jQuery(function ($) {
                     const $response = $(response);
 
                     bindColorPickersInFragment($response);
-                    bindIconSelect2($response);
+                    bindIconSelect($response);
 
                     $(".mega-blocks .mega-left").append($response);
                     reindexToggleBarBlocks();
@@ -619,165 +716,291 @@ jQuery(function ($) {
     /**
      * AJAX save theme editor form (same payload as Save).
      *
-     * @param {object} opts
-     * @param {JQuery} [opts.$busyPreviewButton] If set, only this control shows busy (not the Save button).
-     * @param {boolean} [opts.showSuccessBanner=true] Append saved message next to Save on success.
-     * @param {function} [opts.onSuccess] Called after a successful save (receives JSON message object).
+     * @param {object}   [opts]
+     * @param {function} [opts.onSuccess]  Called on success (receives JSON response).
+     * @param {function} [opts.onComplete] Called after success or error (always fires).
      */
     function megamenuAjaxSaveThemeEditor(opts) {
-        opts = $.extend(
-            {
-                $busyPreviewButton: null,
-                showSuccessBanner: true,
-                onSuccess: null,
-            },
-            opts || {}
-        );
+        opts = $.extend({ onSuccess: null, onComplete: null }, opts || {});
+
         const settings = window.megamenu_settings || {};
         const $form = $("form.theme_editor");
+
         if (!$form.length) {
-            if (opts.onSuccess) {
-                opts.onSuccess({});
-            }
+            opts.onSuccess?.({});
+            opts.onComplete?.();
             return;
         }
+
         $(".theme_result_message").remove();
-        const $submit = $form.find("button#submit, input#submit");
-        const isInputSubmit = $submit.is("input");
-        const getSubmitLabel = function () {
-            return isInputSubmit ? $submit.val() : $submit.text();
-        };
-        const setSubmitLabel = function (text) {
-            if (isInputSubmit) {
-                $submit.val(text);
-            } else {
-                $submit.text(text);
-            }
-        };
-        const original_value = getSubmitLabel();
-        const $previewBusy =
-            opts.$busyPreviewButton && opts.$busyPreviewButton.length ? opts.$busyPreviewButton : null;
-
-        function setBusy(on) {
-            if ($previewBusy) {
-                $previewBusy.prop("disabled", !!on).toggleClass("is-busy", !!on);
-            } else if (on) {
-                $submit.addClass("is-busy");
-                setSubmitLabel(settings.saving + "…");
-            }
-        }
-
-        function clearBusy() {
-            if ($previewBusy) {
-                $previewBusy.prop("disabled", false).removeClass("is-busy");
-            } else {
-                $submit.removeClass("is-busy");
-                setSubmitLabel(original_value);
-            }
-        }
-
-        setBusy(true);
 
         $.ajax({
-            url: ajaxurl,
+            url:  ajaxurl,
             data: $form.serialize(),
             type: "POST",
+
             success: function (response) {
                 if (isStructuredThemeSaveResponse(response)) {
                     if (response.success === true) {
-                        if (opts.showSuccessBanner) {
-                            const success = $("<p>").addClass("saved theme_result_message");
-                            const icon = $("<span>").addClass("dashicons dashicons-yes");
-                            success.append(icon).append(document.createTextNode(response.data));
-                            $(".megamenu_submit").append(success);
-                        }
-                        if (opts.onSuccess) {
-                            opts.onSuccess(response);
-                        }
+                        opts.onSuccess?.(response);
                         return;
                     }
+
                     if (response.success === false) {
-                        const errScss = $("<p>")
-                            .html(settings.theme_save_error + " ")
-                            .append(settings.theme_save_error_refresh)
-                            .append("<br /><br />")
-                            .append(response.data);
-                        appendSubmitAfterFailMessage(errScss);
+                        appendSubmitAfterFailMessage(
+                            $("<div>").addClass("megamenu-theme-save-error-body")
+                                .append($("<p>").html(settings.theme_save_error + " ").append(settings.theme_save_error_refresh))
+                                .append($("<div>").html(response.data).contents())
+                        );
+                        megamenuInitCompileFailedScssEditor();
                         return;
                     }
-                    const errUnexpected = $("<p>")
-                        .html(settings.theme_save_error + "<br />")
-                        .append(
-                            document.createTextNode(
-                                typeof response.data !== "undefined" ? String(response.data) : ""
-                            )
-                        );
-                    appendSubmitAfterFailMessage(errUnexpected);
+
+                    appendSubmitAfterFailMessage(
+                        $("<p>").html(settings.theme_save_error + "<br />")
+                            .append(document.createTextNode(response.data !== undefined ? String(response.data) : ""))
+                    );
                     return;
                 }
 
                 const rawText = typeof response === "string" ? response : String(response);
-                let errOther;
-                if (rawText.indexOf("exhausted") >= 0) {
-                    errOther = $("<p>")
-                        .html(settings.theme_save_error + " ")
+                const $err = rawText.indexOf("exhausted") >= 0
+                    ? $("<p>").html(settings.theme_save_error + " ")
                         .append(settings.theme_save_error_exhausted + " ")
                         .append(settings.theme_save_error_memory_limit + " ")
                         .append(getMemoryLimitLink(settings))
                         .append("<br />")
-                        .append(rawText);
-                } else {
-                    errOther = $("<p>")
-                        .html(settings.theme_save_error + "<br />")
-                        .append(rawText);
-                }
-                appendSubmitAfterFailMessage(errOther);
+                        .append(rawText)
+                    : $("<p>").html(settings.theme_save_error + "<br />").append(rawText);
+                appendSubmitAfterFailMessage($err);
             },
+
             error: function (xhr) {
-                let error;
-                if (xhr.status === 500) {
-                    error = $("<p>")
-                        .html(settings.theme_save_error_500 + " ")
+                const $err = xhr.status === 500
+                    ? $("<p>").html(settings.theme_save_error_500 + " ")
                         .append(settings.theme_save_error_memory_limit + " ")
-                        .append(getMemoryLimitLink(settings));
-                } else if (xhr.responseText === "-1") {
-                    error = $("<p>")
-                        .html(settings.theme_save_error + " " + settings.theme_save_error_nonce_failed);
-                }
-                if (error) {
-                    appendSubmitAfterFailMessage(error);
-                }
+                        .append(getMemoryLimitLink(settings))
+                    : xhr.responseText === "-1"
+                        ? $("<p>").html(settings.theme_save_error + " " + settings.theme_save_error_nonce_failed)
+                        : null;
+                if ($err) appendSubmitAfterFailMessage($err);
             },
+
             complete: function () {
-                clearBusy();
+                opts.onComplete?.();
             },
         });
     }
 
-    function initThemeEditorAjax() {
-        window.megamenuSaveThemeEditorThenPreview = function ($btn) {
-            megamenuAjaxSaveThemeEditor({
-                $busyPreviewButton: $btn,
-                showSuccessBanner: false,
-                onSuccess: function () {
-                    if (typeof window.megamenuOpenLocationPreview === "function") {
-                        window.megamenuOpenLocationPreview($btn);
-                    }
-                },
-            });
+    const MMM_PREVIEW_AFTER_SAVE_KEY = "megamenu_theme_editor_preview_after_save";
+    const MMM_PREVIEW_AFTER_SAVE_LOC_KEY = "megamenu_theme_editor_preview_after_save_location";
+
+    function megamenuThemeEditorReadPreviewMetaRows() {
+        const el = document.getElementById("megamenu-theme-editor-preview-meta");
+        if (!el || !el.textContent) {
+            return [];
+        }
+        try {
+            const rows = JSON.parse(el.textContent);
+            return $.isArray(rows) ? rows : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function megamenuThemeEditorProxyPreviewButtonFromRow(row) {
+        const attrs = {
+            "data-location": row.location,
+            "data-preview-url": row.preview_url,
+            "data-preview-title": row.preview_title,
+            "data-preview-location-label": row.location_label,
+            "data-preview-assigned-menu": row.assigned_menu || "",
+            "data-assigned-menu": row.assigned_menu || "",
+            "data-responsive-breakpoint": String(
+                row.responsive_breakpoint != null ? row.responsive_breakpoint : 0
+            ),
         };
+        const mid =
+            row.assigned_menu_id != null ? parseInt(String(row.assigned_menu_id), 10) : 0;
+        if (mid > 0) {
+            attrs["data-preview-menu-id"] = String(mid);
+        }
+        return $("<button>", { type: "button", class: "megamenu-preview-open" }).attr(attrs);
+    }
+
+    function megamenuThemeEditorFirstPreviewableSlug(rows) {
+        let i;
+        for (i = 0; i < rows.length; i++) {
+            const r = rows[i];
+            if (r && r.previewable && r.location) {
+                return r.location;
+            }
+        }
+        return rows[0] && rows[0].location ? rows[0].location : "";
+    }
+
+    function megamenuThemeEditorStorageSet(key, value) {
+        try {
+            if (value === null || typeof value === "undefined") {
+                window.localStorage.removeItem(key);
+            } else {
+                window.localStorage.setItem(key, value);
+            }
+        } catch (e) {}
+    }
+
+    function megamenuThemeEditorStorageGet(key) {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function megamenuThemeEditorSyncPreviewComponentsToggle() {
+        const $input = $("#megamenu-theme-save-then-preview");
+        const $wrap = $input.closest(".components-form-toggle");
+        if ($wrap.length) {
+            $wrap.toggleClass("is-checked", !!$input.prop("checked"));
+        }
+    }
+
+    function megamenuThemeEditorApplyStoredPreviewPreferences() {
+        const rows = megamenuThemeEditorReadPreviewMetaRows();
+        if (!rows.length) {
+            return;
+        }
+        const $cb = $("#megamenu-theme-save-then-preview");
+        const $loc = $("#megamenu-theme-save-preview-location");
+        if (!$cb.length || !$loc.length) {
+            return;
+        }
+        const storedOn = megamenuThemeEditorStorageGet(MMM_PREVIEW_AFTER_SAVE_KEY);
+        if (storedOn === "1" || storedOn === "true") {
+            $cb.prop("checked", true);
+        } else if (storedOn === "0" || storedOn === "false") {
+            $cb.prop("checked", false);
+        }
+        let slug = megamenuThemeEditorStorageGet(MMM_PREVIEW_AFTER_SAVE_LOC_KEY);
+        let valid = false;
+        let j;
+        if (slug) {
+            for (j = 0; j < rows.length; j++) {
+                if (rows[j].location === slug) {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+        if (!valid) {
+            slug = megamenuThemeEditorFirstPreviewableSlug(rows) || rows[0].location;
+        }
+        $loc.val(slug);
+        megamenuThemeEditorSyncPreviewComponentsToggle();
+    }
+
+    function megamenuThemeEditorOnPreviewToggleChange() {
+        megamenuThemeEditorSyncPreviewComponentsToggle();
+        megamenuThemeEditorStorageSet(
+            MMM_PREVIEW_AFTER_SAVE_KEY,
+            $("#megamenu-theme-save-then-preview").prop("checked") ? "1" : "0"
+        );
+    }
+
+    function megamenuThemeEditorPersistPreviewLocation() {
+        const v = $("#megamenu-theme-save-preview-location").val();
+        if (v) {
+            megamenuThemeEditorStorageSet(MMM_PREVIEW_AFTER_SAVE_LOC_KEY, v);
+        }
+    }
+
+    function megamenuThemeEditorMaybeOpenPreviewAfterSuccess() {
+        const $cb = $("#megamenu-theme-save-then-preview");
+        if (!$cb.length || !$cb.prop("checked")) {
+            return;
+        }
+        const rows = megamenuThemeEditorReadPreviewMetaRows();
+        if (!rows.length) {
+            return;
+        }
+        const slug = $("#megamenu-theme-save-preview-location").val();
+        let row = null;
+        let k;
+        for (k = 0; k < rows.length; k++) {
+            if (rows[k].location === slug) {
+                row = rows[k];
+                break;
+            }
+        }
+        if (!row || !row.previewable) {
+            return;
+        }
+        const $bpInput = $("input.mega-setting-responsive_breakpoint");
+        if ($bpInput.length) {
+            const bpVal = parseInt($bpInput.val(), 10);
+            if (!isNaN(bpVal) && bpVal >= 0) {
+                row = $.extend({}, row, { responsive_breakpoint: bpVal });
+            }
+        }
+        const $proxy = megamenuThemeEditorProxyPreviewButtonFromRow(row);
+        if (typeof window.megamenuOpenLocationPreview === "function") {
+            window.megamenuOpenLocationPreview($proxy);
+        }
+    }
+
+    function initThemeEditorPreviewAfterSave() {
+        const rows = megamenuThemeEditorReadPreviewMetaRows();
+        if (!rows.length) {
+            return;
+        }
+        megamenuThemeEditorApplyStoredPreviewPreferences();
+        $(document).on("change", "#megamenu-theme-save-then-preview", megamenuThemeEditorOnPreviewToggleChange);
+        $(document).on(
+            "change",
+            "#megamenu-theme-save-preview-location",
+            megamenuThemeEditorPersistPreviewLocation
+        );
+    }
+
+    function initThemeEditorAjax() {
+        initThemeEditorPreviewAfterSave();
 
         $(".theme_editor").on("submit", function (e) {
             e.preventDefault();
+            const $form   = $(this);
+            const $submit = $form.find("button#submit, input#submit");
+            const isInput = $submit.is("input");
+            const getLabel = () => isInput ? $submit.val() : $submit.text();
+            const setLabel = (t) => isInput ? $submit.val(t) : $submit.text(t);
+            const origLabel = getLabel();
+            if (!$submit.data("mmm-save-label")) {
+                $submit.data("mmm-save-label", origLabel);
+            }
+            const settings = window.megamenu_settings || {};
+            $submit.prop("disabled", true);
+            setLabel(settings.saving + "…");
+            let succeeded = false;
             megamenuAjaxSaveThemeEditor({
-                showSuccessBanner: true,
-                onSuccess: null,
+                onSuccess: function () {
+                    succeeded = true;
+                    megamenuThemeEditorMaybeOpenPreviewAfterSuccess();
+                },
+                onComplete: function () {
+                    if (succeeded) {
+                        if (isInput) {
+                            $submit.val(origLabel);
+                        } else {
+                            $submit.html('<span class="dashicons dashicons-yes" aria-hidden="true"></span> ' + (settings.saved || "Saved"));
+                        }
+                    } else {
+                        setLabel(origLabel);
+                        $submit.prop("disabled", false);
+                    }
+                },
             });
         });
 
-        $(".theme_editor").on("change", function () {
-            $(".theme_result_message").css("visibility", "hidden");
-        });
+        $(".theme_editor").on("change input", markThemeEditorDirty);
     }
 
     /**
@@ -889,11 +1112,25 @@ jQuery(function ($) {
                 tab.addEventListener("click", function (e) {
                     e.preventDefault();
                     activateTab(nav, tab, slider);
+                    var tabKey = tab.getAttribute("data-tab");
+                    if (tabKey) {
+                        history.replaceState(null, "", "#" + tabKey.replace(/^mega-tab-content-/, ""));
+                    }
                 });
             });
 
-            if (current) {
-                activateTab(nav, current, slider);
+            var startTab = current;
+            var hash = window.location.hash.replace(/^#/, "");
+            if (hash) {
+                Array.prototype.forEach.call(tabs, function (t) {
+                    if (t.getAttribute("data-tab") === "mega-tab-content-" + hash) {
+                        startTab = t;
+                    }
+                });
+            }
+
+            if (startTab) {
+                activateTab(nav, startTab, slider);
             } else {
                 activateTab(nav, tabs[0], slider);
             }
@@ -976,15 +1213,69 @@ jQuery(function ($) {
         });
     }
 
+    function initMenuFontLibraryLink() {
+        $(document).on("change", "select[data-font-library-url]", function () {
+            if ($(this).val() !== "__megamenu_font_library__") {
+                return;
+            }
+            var url = $(this).data("font-library-url");
+            $(this).val("inherit");
+            window.open(url, "_blank");
+        });
+    }
+
+    /**
+     * Theme editor "font" type: inherit / Menu Font Family shows a + button; choosing a real font keeps the select visible.
+     */
+    function megaThemeFontOptionSyncCollapsed($wrap) {
+        const $sel = $wrap.find(".mega-theme-font-option__select");
+        if (!$sel.length) {
+            return;
+        }
+        const v = $sel.val();
+        const inherit = !v || v === "inherit";
+        $wrap.toggleClass("mega-theme-font-option--collapsed", inherit);
+        $wrap.find(".mega-theme-font-option__reveal").attr("aria-expanded", inherit ? "false" : "true");
+    }
+
+    function initThemeEditorInheritedFontPickers() {
+        $("form.theme_editor .mega-theme-font-option").each(function () {
+            megaThemeFontOptionSyncCollapsed($(this));
+        });
+
+        $(document).on("click", "form.theme_editor .mega-theme-font-option__reveal", function (e) {
+            e.preventDefault();
+            const $wrap = $(this).closest(".mega-theme-font-option");
+            $wrap.removeClass("mega-theme-font-option--collapsed");
+            $(this).attr("aria-expanded", "true");
+            $wrap.find(".mega-theme-font-option__select").trigger("focus");
+        });
+
+        $(document).on("change", "form.theme_editor .mega-theme-font-option__select", function () {
+            megaThemeFontOptionSyncCollapsed($(this).closest(".mega-theme-font-option"));
+        });
+
+        $(document).on("blur", "form.theme_editor .mega-theme-font-option__select", function () {
+            const $sel = $(this);
+            const $wrap = $sel.closest(".mega-theme-font-option");
+            window.setTimeout(function () {
+                if ($wrap.find(":focus").length) {
+                    return;
+                }
+                megaThemeFontOptionSyncCollapsed($wrap);
+            }, 0);
+        });
+    }
+
     function init() {
         initDestructiveConfirm();
         initMobileTabSync();
         initMobileToggleSync();
-        initEffectMobileOffcanvas();
         initCodeMirrorTab();
+        megamenuInitCompileFailedScssEditor();
         initColorPickers();
         initThemeSelector();
-        initIconSelect2();
+        initIconSelect();
         initToggleBarDesigner();
         initThemeEditorAjax();
         initThemeNavTabSlider();
@@ -992,6 +1283,8 @@ jQuery(function ($) {
         initThemeEditorValidationScroll();
         initThemeEditorFieldValidation();
         initScssVariablesDialog();
+        initMenuFontLibraryLink();
+        initThemeEditorInheritedFontPickers();
     }
 
     init();

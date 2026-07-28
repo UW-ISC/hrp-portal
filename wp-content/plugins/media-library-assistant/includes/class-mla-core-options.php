@@ -1174,50 +1174,6 @@ class MLACoreOptions {
 					'name' => __( 'Default [mla_gallery] Templates and Settings', 'media-library-assistant' ),
 					'type' => 'subheader', 'help' => ''),
 
-			'default_tag_cloud_style' =>
-				array('tab' => '',
-					'name' => __( 'Style Template', 'media-library-assistant' ),
-					'type' => 'select',
-					'std' => 'tag-cloud',
-					'options' => array(),
-					'texts' => array(),
-					/* translators: 1: template type 2: shortcode */
-					'help' => sprintf( __( 'Select the default %1$s for your %2$s shortcodes.', 'media-library-assistant' ), __( 'Style Template', 'media-library-assistant' ), '[mla_tag_cloud]' ) ),
-
-			'default_tag_cloud_markup' =>
-				array('tab' => '',
-					'name' => __( 'Markup Template', 'media-library-assistant' ),
-					'type' => 'select',
-					'std' => 'tag-cloud',
-					'options' => array(),
-					'texts' => array(),
-					/* translators: 1: template type 2: shortcode */
-					'help' => sprintf( __( 'Select the default %1$s for your %2$s shortcodes.', 'media-library-assistant' ), __( 'markup template', 'media-library-assistant' ), '[mla_tag_cloud]' ) ),
-
-			'mla_tag_cloud_columns' =>
-				array('tab' => '',
-					'name' => __( 'Default columns', 'media-library-assistant' ),
-					'type' => 'text',
-					'std' => '3',
-					'size' => 3,
-					'help' => __( 'Enter the number of [mla_tag_cloud] columns; must be a positive integer.', 'media-library-assistant' )),
-
-			'mla_tag_cloud_margin' =>
-				array('tab' => '',
-					'name' => __( 'Default mla_margin', 'media-library-assistant' ),
-					'type' => 'text',
-					'std' => '1.5%',
-					'size' => 10,
-					'help' => __( 'Enter the CSS "margin" property value, in length (px, em, pt, etc.), percent (%), "auto" or "inherit".<br>&nbsp;&nbsp;Enter "none" to remove the property entirely.', 'media-library-assistant' )),
-
-			'mla_tag_cloud_itemwidth' =>
-				array('tab' => '',
-					'name' => __( 'Default mla_itemwidth', 'media-library-assistant' ),
-					'type' => 'text',
-					'std' => 'calculate',
-					'size' => 10,
-					'help' => __( 'Enter the CSS "width" property value, in length (px, em, pt, etc.), percent (%), "auto" or "inherit".<br>&nbsp;&nbsp;Enter "calculate" (the default) to calculate the value taking the "margin" value into account.<br>&nbsp;&nbsp;Enter "exact" to calculate the value without considering the "margin" value.<br>&nbsp;&nbsp;Enter "none" to remove the property entirely.', 'media-library-assistant' )),
-
 			'default_style' =>
 				array('tab' => 'mla_gallery',
 					'name' => __( 'Style Template', 'media-library-assistant' ),

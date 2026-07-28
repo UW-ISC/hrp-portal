@@ -115,7 +115,7 @@ class MLAObjects {
 	 * @return	void
 	 */
 	private static function _add_taxonomy_support( ) {
-		//error_log( __LINE__ . ' DEBUG: MLAObjects::_add_taxonomy_support', 0 );
+		// error_log( __LINE__ . ' DEBUG: MLAObjects::_add_taxonomy_support', 0 );
 		
 		MLACore::mla_initialize_tax_checked_on_top();
 		$taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'names' );

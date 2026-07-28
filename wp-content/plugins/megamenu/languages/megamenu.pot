@@ -20,7 +20,7 @@ msgstr ""
 #: classes/pages/page.php:76
 #: classes/pages/page.php:78
 #: classes/pages/page.php:166
-#: classes/widgets/widget.class.php:25
+#: integration/widget/widget.class.php:25
 #: integration/block/location/build/index.js:1
 #: integration/block/location/src/edit.js:81
 msgid "Max Mega Menu"
@@ -637,7 +637,7 @@ msgstr ""
 
 #: classes/pages/locations.php:47
 #: classes/pages/locations.php:758
-#: classes/widgets/widget-elementor.class.php:112
+#: integration/elementor/widget-elementor.class.php:112
 msgid "Menu Locations"
 msgstr ""
 
@@ -983,9 +983,12 @@ msgstr ""
 msgid "Click"
 msgstr ""
 
-#: classes/pages/locations.php:2116
-#: classes/pages/locations.php:2205
-#: classes/pages/themes.php:3329
+#: classes/pages/locations.php:2319
+msgid "Show / Hide"
+msgstr ""
+
+#: classes/pages/locations.php:2230
+#: classes/pages/themes.php:3350
 msgid "None"
 msgstr ""
 
@@ -1032,8 +1035,8 @@ msgstr ""
 msgid "Off Canvas →"
 msgstr ""
 
-#: classes/pages/locations.php:2252
-msgid "Up / Down ↕"
+#: classes/pages/locations.php:2366
+msgid "Accordion"
 msgstr ""
 
 #: classes/pages/locations.php:2345
@@ -2599,75 +2602,75 @@ msgstr ""
 msgid "Menu Item"
 msgstr ""
 
-#: classes/widgets/widget-elementor-template.class.php:27
+#: integration/elementor/widget-elementor-template.class.php:27
 msgid "Outputs a saved Elementor template."
 msgstr ""
 
-#: classes/widgets/widget-elementor-template.class.php:103
+#: integration/elementor/widget-elementor-template.class.php:103
 msgid "No Elementor Templates found."
 msgstr ""
 
-#: classes/widgets/widget-elementor-template.class.php:113
+#: integration/elementor/widget-elementor-template.class.php:113
 msgid "Template"
 msgstr ""
 
-#: classes/widgets/widget-elementor-template.class.php:115
-#: classes/widgets/widget-reusable-block.class.php:123
+#: integration/elementor/widget-elementor-template.class.php:115
+#: integration/block/widget-reusable-block.class.php:123
 msgid "- Select -"
 msgstr ""
 
-#: classes/widgets/widget-elementor.class.php:93
+#: integration/elementor/widget-elementor.class.php:93
 msgid "Menu Location"
 msgstr ""
 
-#: classes/widgets/widget-elementor.class.php:103
+#: integration/elementor/widget-elementor.class.php:103
 msgid "Choose Location"
 msgstr ""
 
 #. translators: %s: link to the Menu Locations admin page
-#: classes/widgets/widget-elementor.class.php:124
+#: integration/elementor/widget-elementor.class.php:124
 #, php-format
 msgid "Go to the %s page to create your first menu location."
 msgstr ""
 
-#: classes/widgets/widget-reusable-block.class.php:29
+#: integration/block/widget-reusable-block.class.php:29
 msgid "Outputs a saved block pattern."
 msgstr ""
 
-#: classes/widgets/widget-reusable-block.class.php:108
+#: integration/block/widget-reusable-block.class.php:108
 msgid "No reusable blocks available."
 msgstr ""
 
-#: classes/widgets/widget-reusable-block.class.php:116
-#: classes/widgets/widget.class.php:111
+#: integration/block/widget-reusable-block.class.php:116
+#: integration/widget/widget.class.php:111
 msgid "Title:"
 msgstr ""
 
-#: classes/widgets/widget-reusable-block.class.php:121
+#: integration/block/widget-reusable-block.class.php:121
 msgid "Block"
 msgstr ""
 
-#: classes/widgets/widget.class.php:26
+#: integration/widget/widget.class.php:26
 msgid "Outputs a menu for a selected theme location."
 msgstr ""
 
-#: classes/widgets/widget.class.php:114
+#: integration/widget/widget.class.php:114
 msgid "Menu Location:"
 msgstr ""
 
-#: classes/widgets/widget.class.php:119
+#: integration/widget/widget.class.php:119
 msgid "Select location"
 msgstr ""
 
-#: classes/widgets/widget.class.php:137
+#: integration/widget/widget.class.php:137
 msgid "Active locations"
 msgstr ""
 
-#: classes/widgets/widget.class.php:147
+#: integration/widget/widget.class.php:147
 msgid "Inactive locations"
 msgstr ""
 
-#: classes/widgets/widget.class.php:159
+#: integration/widget/widget.class.php:159
 msgid "No menu locations found"
 msgstr ""
 

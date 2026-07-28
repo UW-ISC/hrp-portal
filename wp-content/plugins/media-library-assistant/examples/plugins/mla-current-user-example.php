@@ -4,7 +4,7 @@ Plugin Name: MLA Current User Example
 Plugin URI: http://davidlingren.com/
 Description: Uses the current logged in user to supply an "Author" parameter for the query
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
@@ -66,7 +66,7 @@ class MLACurrentUserExample {
 		// Delete the selected file.
 		if ( isset( $shortcode_attributes['my_filter'] ) && 'allow file deletion' == $shortcode_attributes['my_filter'] ) {
 			if ( isset( $_REQUEST['attachment_ID'] ) ) {
-				$id = (integer) $_REQUEST['attachment_ID'];
+				$id = (int) $_REQUEST['attachment_ID'];
 				if ( current_user_can( 'delete_post', $id ) ) { 
 					$result = wp_delete_attachment( $id );
 				} else {
@@ -168,7 +168,7 @@ class MLACurrentUserExample {
 	 */
 	public static function mla_gallery_item_values_filter( $item_values ) {
 		if ( isset( self::$shortcode_attributes['my_filter'] ) && ( 'allow file deletion' == self::$shortcode_attributes['my_filter'] ) ) {
-			$id = (integer) $item_values['attachment_ID'];
+			$id = (int) $item_values['attachment_ID'];
 			if ( current_user_can( 'delete_post', $id ) ) { 
 				// Compose a new caption, adding the deletion link.
 				$mla_link_href = "{$item_values['page_url']}?attachment_ID={$id}";

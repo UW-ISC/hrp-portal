@@ -62,17 +62,26 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		public function output_menu_public_toggle_block_html( $html, $settings, $args ) {
 			$closed_text = isset( $settings['closed_text'] ) ? do_shortcode( stripslashes( $settings['closed_text'] ) ) : 'MENU';
 			$open_text   = isset( $settings['open_text'] ) ? do_shortcode( stripslashes( $settings['open_text'] ) ) : 'MENU';
+			$icon_only   = isset( $settings['icon_only'] ) && $settings['icon_only'] === 'on';
+			$aria_label  = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : '';
 
 		    // Retrieve CSS version
 		    $css_version = Mega_Menu_Style_Manager::get_css_version();
 		    // Only use button HTML if CSS version is >= 3.5.1
 		    if ( version_compare( $css_version, '3.5.1', '>=' ) ) {
-				$html = "<button class='mega-toggle-standard mega-toggle-label'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
+				if ( $icon_only ) {
+					$html = "<button class='mega-toggle-standard mega-toggle-label'></button>";
+				} else {
+					$html = "<button class='mega-toggle-standard mega-toggle-label'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></button>";
+				}
 				$processor = new WP_HTML_Tag_Processor( $html );
 				if ( $processor->next_tag( 'button' ) ) {
 					$processor->set_attribute( 'aria-haspopup', 'true' );
 					$processor->set_attribute( 'aria-expanded', 'false' );
 					$processor->set_attribute( 'aria-controls', 'mega-menu-' . $args['theme_location'] );
+					if ( $aria_label !== '' ) {
+						$processor->set_attribute( 'aria-label', $aria_label );
+					}
 				}
 				$html = $processor->get_updated_html();
 		    } else {
@@ -86,7 +95,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				$html = $processor->get_updated_html();
 		    }
 
-			return apply_filters( 'megamenu_toggle_menu_toggle_html', $html );
+			return apply_filters( 'megamenu_toggle_menu_toggle_html', $html, $settings );
 		}
 
 
@@ -141,6 +150,8 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				'icon_color'    => isset( $menu_theme['toggle_font_color'] ) ? $menu_theme['toggle_font_color'] : 'rgb(221, 221, 221)',
 				'text_size'     => '14px',
 				'icon_size'     => '24px',
+				'icon_only'     => '',
+				'aria_label'    => '',
 			];
 
 			return $defaults;
@@ -386,17 +397,29 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 					if ( isset( $settings['type'] ) && $settings['type'] == 'menu_toggle' ) {
 
 						if ( isset( $settings['closed_icon'] ) ) {
-							$closed_icon_parts = explode( '-', $settings['closed_icon'] );
+							$closed_icon_raw   = $settings['closed_icon'];
+							$closed_icon_parts = explode( '-', $closed_icon_raw );
 							$closed_icon       = end( $closed_icon_parts );
 						} else {
-							$closed_icon = 'disabled';
+							$closed_icon_raw = '';
+							$closed_icon     = 'disabled';
 						}
 
 						if ( isset( $settings['open_icon'] ) ) {
-							$open_icon_parts = explode( '-', $settings['open_icon'] );
+							$open_icon_raw   = $settings['open_icon'];
+							$open_icon_parts = explode( '-', $open_icon_raw );
 							$open_icon       = end( $open_icon_parts );
 						} else {
-							$open_icon = 'disabled';
+							$open_icon_raw = '';
+							$open_icon     = 'disabled';
+						}
+
+						$closed_icon_is_svg = strpos( $closed_icon_raw, 'svg-' ) === 0;
+						$open_icon_is_svg   = strpos( $open_icon_raw, 'svg-' ) === 0;
+
+						$icon_font = $this->get_toggle_icon_font( $closed_icon_raw );
+						if ( $icon_font === "''" && ! empty( $open_icon_raw ) ) {
+							$icon_font = $this->get_toggle_icon_font( $open_icon_raw );
 						}
 
 						$styles = [
@@ -404,13 +427,15 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 							'align'         => isset( $settings['align'] ) ? "'" . $settings['align'] . "'" : "'right'",
 							'closed_text'   => "''", // deprecated
 							'open_text'     => "''", // deprecated
-							'closed_icon'   => $closed_icon != 'disabled' ? "'\\" . $closed_icon . "'" : "''",
-							'open_icon'     => $open_icon != 'disabled' ? "'\\" . $open_icon . "'" : "''",
+							'closed_icon'   => ( ! $closed_icon_is_svg && $closed_icon !== 'disabled' ) ? "'\\" . $closed_icon . "'" : "''",
+							'open_icon'     => ( ! $open_icon_is_svg && $open_icon !== 'disabled' ) ? "'\\" . $open_icon . "'" : "''",
 							'text_color'    => isset( $settings['text_color'] ) ? $settings['text_color'] : '#fff',
 							'icon_color'    => isset( $settings['icon_color'] ) ? $settings['icon_color'] : '#fff',
 							'icon_position' => isset( $settings['icon_position'] ) ? "'" . $settings['icon_position'] . "'" : 'after',
 							'text_size'     => isset( $settings['text_size'] ) && strlen( $settings['text_size'] ) ? $settings['text_size'] : '14px',
 							'icon_size'     => isset( $settings['icon_size'] ) && strlen( $settings['icon_size'] ) ? $settings['icon_size'] : '24px',
+							'icon_font'        => $icon_font,
+						'icon_font_weight' => $this->get_toggle_icon_font_weight( ! empty( $closed_icon_raw ) ? $closed_icon_raw : $open_icon_raw ),
 						];
 
 						$menu_toggle_blocks[ $index ] = $styles;
@@ -703,13 +728,20 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		<div class='block'>
 			<div class='block-title'><span title='<?php _e( 'Spacer', 'megamenu' ); ?>' class="dashicons dashicons-leftright"></span></div>
 			<div class='block-settings'>
-				<h3><?php _e( 'Spacer Settings', 'megamenu' ); ?></h3>
+				<?php $this->print_toggle_block_panel_header( __( 'Spacer Settings', 'megamenu' ) ); ?>
 				<input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='spacer' />
 				<input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align']; ?>'>
-				<label>
-					<?php _e( 'Width', 'megamenu' ); ?><input type='text' class='closed_text' name='toggle_blocks[<?php echo $block_id; ?>][width]' value='<?php echo $settings['width']; ?>' />
-				</label>
-				<?php $this->print_toggle_block_delete_control(); ?>
+				<table class="mmm-settings-table">
+					<tbody>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Spacer', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Empty space between toggle bar blocks.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Width', 'megamenu' ); ?></span><input type='text' class='closed_text' name='toggle_blocks[<?php echo $block_id; ?>][width]' value='<?php echo $settings['width']; ?>' /></label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<?php $this->print_toggle_block_panel_footer(); ?>
 			</div>
 		</div>
 
@@ -747,44 +779,50 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		<div class='block'>
 			<div class='block-title'><?php _e( 'TOGGLE', 'megamenu' ); ?> <span title='<?php _e( 'Menu Toggle', 'megamenu' ); ?>' class="dashicons dashicons-menu"></span></div>
 			<div class='block-settings'>
-				<h3><?php _e( 'Menu Toggle Settings', 'megamenu' ); ?></h3>
+				<?php $this->print_toggle_block_panel_header( __( 'Menu Toggle Settings', 'megamenu' ) ); ?>
 				<input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle' />
 				<input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align']; ?>'>
-				<label>
-					<?php _e( 'Closed Text', 'megamenu' ); ?><input type='text' class='closed_text' name='toggle_blocks[<?php echo $block_id; ?>][closed_text]' value='<?php echo stripslashes( esc_attr( $settings['closed_text'] ) ); ?>' />
-				</label>
-				<label>
-					<?php _e( 'Open Text', 'megamenu' ); ?><input type='text' class='open_text' name='toggle_blocks[<?php echo $block_id; ?>][open_text]' value='<?php echo stripslashes( esc_attr( $settings['open_text'] ) ); ?>' />
-				</label>
-				<label>
-					<?php _e( 'Closed Icon', 'megamenu' ); ?>
-					<?php $this->print_icon_option( 'closed_icon', $block_id, $settings['closed_icon'], $this->toggle_icons() ); ?>
-				</label>
-				<label>
-					<?php _e( 'Open Icon', 'megamenu' ); ?>
-					<?php $this->print_icon_option( 'open_icon', $block_id, $settings['open_icon'], $this->toggle_icons() ); ?>
-				</label>
-				<label>
-					<?php _e( 'Text Color', 'megamenu' ); ?>
-					<?php $this->print_toggle_color_option( 'text_color', $block_id, $settings['text_color'] ); ?>
-				</label>
-				<label>
-					<?php _e( 'Text Size', 'megamenu' ); ?><input type='text' class='text_size' name='toggle_blocks[<?php echo $block_id; ?>][text_size]' value='<?php echo stripslashes( esc_attr( $settings['text_size'] ) ); ?>' />
-				</label>
-				<label>
-					<?php _e( 'Icon Color', 'megamenu' ); ?>
-					<?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?>
-				</label>
-				<label>
-					<?php _e( 'Icon Size', 'megamenu' ); ?><input type='text' class='icon_size' name='toggle_blocks[<?php echo $block_id; ?>][icon_size]' value='<?php echo stripslashes( esc_attr( $settings['icon_size'] ) ); ?>' />
-				</label>
-				<label>
-					<?php _e( 'Icon Position', 'megamenu' ); ?><select name='toggle_blocks[<?php echo $block_id; ?>][icon_position]'>
-						<option value='before' <?php selected( $settings['icon_position'], 'before' ); ?> ><?php _e( 'Before', 'megamenu' ); ?></option>
-						<option value='after' <?php selected( $settings['icon_position'], 'after' ); ?> ><?php _e( 'After', 'megamenu' ); ?></option>
-					</select>
-				</label>
-				<?php $this->print_toggle_block_delete_control(); ?>
+				<table class="mmm-settings-table">
+					<tbody>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Closed', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Shown when the menu is closed.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Icon', 'megamenu' ); ?></span><?php $this->print_icon_option( 'closed_icon', $block_id, $settings['closed_icon'], $this->toggle_icons() ); ?></label>
+								<label><span class='mega-short-desc'><?php _e( 'Text', 'megamenu' ); ?></span><input type='text' class='closed_text' name='toggle_blocks[<?php echo $block_id; ?>][closed_text]' value='<?php echo stripslashes( esc_attr( $settings['closed_text'] ) ); ?>' /></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Open', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Shown when the menu is open.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Icon', 'megamenu' ); ?></span><?php $this->print_icon_option( 'open_icon', $block_id, $settings['open_icon'], $this->toggle_icons() ); ?></label>
+								<label><span class='mega-short-desc'><?php _e( 'Text', 'megamenu' ); ?></span><input type='text' class='open_text' name='toggle_blocks[<?php echo $block_id; ?>][open_text]' value='<?php echo stripslashes( esc_attr( $settings['open_text'] ) ); ?>' /></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Icon', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Style the toggle icon.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Color', 'megamenu' ); ?></span><?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?></label>
+								<label><span class='mega-short-desc'><?php _e( 'Size', 'megamenu' ); ?></span><input type='text' class='icon_size' name='toggle_blocks[<?php echo $block_id; ?>][icon_size]' value='<?php echo stripslashes( esc_attr( $settings['icon_size'] ) ); ?>' /></label>
+								<label><span class='mega-short-desc'><?php _e( 'Position', 'megamenu' ); ?></span><select name='toggle_blocks[<?php echo $block_id; ?>][icon_position]'><option value='before' <?php selected( $settings['icon_position'], 'before' ); ?>><?php _e( 'Before', 'megamenu' ); ?></option><option value='after' <?php selected( $settings['icon_position'], 'after' ); ?>><?php _e( 'After', 'megamenu' ); ?></option></select></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Text', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Style the toggle text label.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Color', 'megamenu' ); ?></span><?php $this->print_toggle_color_option( 'text_color', $block_id, $settings['text_color'] ); ?></label>
+								<label><span class='mega-short-desc'><?php _e( 'Size', 'megamenu' ); ?></span><input type='text' class='text_size' name='toggle_blocks[<?php echo $block_id; ?>][text_size]' value='<?php echo stripslashes( esc_attr( $settings['text_size'] ) ); ?>' /></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Accessibility', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Hide text labels and add an aria-label for icon-only display.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Icon Only', 'megamenu' ); ?></span><input type='checkbox' name='toggle_blocks[<?php echo $block_id; ?>][icon_only]' value='on' <?php checked( $settings['icon_only'], 'on' ); ?> /></label>
+								<label><span class='mega-short-desc'><?php _e( 'Aria Label', 'megamenu' ); ?></span><input type='text' class='aria_label' name='toggle_blocks[<?php echo $block_id; ?>][aria_label]' value='<?php echo stripslashes( esc_attr( $settings['aria_label'] ) ); ?>' /></label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<?php $this->print_toggle_block_panel_footer(); ?>
 			</div>
 		</div>
 
@@ -851,30 +889,69 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		<div class='block'>
 			<div class='block-title'><?php _e( 'TOGGLE', 'megamenu' ); ?> <span title='<?php _e( 'Menu Toggle', 'megamenu' ); ?>' class="dashicons dashicons-menu"></span></div>
 			<div class='block-settings'>
-				<h3><?php _e( 'Animated Menu Toggle Settings', 'megamenu' ); ?></h3>
+				<?php $this->print_toggle_block_panel_header( __( 'Animated Menu Toggle Settings', 'megamenu' ) ); ?>
 				<input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle_animated' />
 				<input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align']; ?>'>
 				<input type='hidden' class='style' name='toggle_blocks[<?php echo $block_id; ?>][style]' value='slider'>
-				
-				<label>
-					<?php _e( 'Color', 'megamenu' ); ?>
-					<?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?>
-				</label>
-				<label>
-					<?php _e( 'Size', 'megamenu' ); ?><select name='toggle_blocks[<?php echo $block_id; ?>][icon_scale]'>
-						<option value='0.6' <?php selected( $settings['icon_scale'], '0.6' ); ?> ><?php _e( 'Small', 'megamenu' ); ?></option>
-						<option value='0.8' <?php selected( $settings['icon_scale'], '0.8' ); ?> ><?php _e( 'Medium', 'megamenu' ); ?></option>
-						<option value='1.0' <?php selected( $settings['icon_scale'], '1.0' ); ?> ><?php _e( 'Large', 'megamenu' ); ?></option>
-						<option value='1.2' <?php selected( $settings['icon_scale'], '1.2' ); ?> ><?php _e( 'X Large', 'megamenu' ); ?></option>
-					</select>
-				</label>
-				<label>
-					<?php _e( 'Label', 'megamenu' ); ?><input type='text' class='aria_label' name='toggle_blocks[<?php echo $block_id; ?>][aria_label]' value='<?php echo stripslashes( esc_attr( $settings['aria_label'] ) ); ?>' />
-				</label>
-				<?php $this->print_toggle_block_delete_control(); ?>
+				<table class="mmm-settings-table">
+					<tbody>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Icon', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Style the animated hamburger icon.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Color', 'megamenu' ); ?></span><?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?></label>
+								<label><span class='mega-short-desc'><?php _e( 'Size', 'megamenu' ); ?></span><select name='toggle_blocks[<?php echo $block_id; ?>][icon_scale]'>
+									<option value='0.6' <?php selected( $settings['icon_scale'], '0.6' ); ?>><?php _e( 'Small', 'megamenu' ); ?></option>
+									<option value='0.8' <?php selected( $settings['icon_scale'], '0.8' ); ?>><?php _e( 'Medium', 'megamenu' ); ?></option>
+									<option value='1.0' <?php selected( $settings['icon_scale'], '1.0' ); ?>><?php _e( 'Large', 'megamenu' ); ?></option>
+									<option value='1.2' <?php selected( $settings['icon_scale'], '1.2' ); ?>><?php _e( 'X Large', 'megamenu' ); ?></option>
+								</select></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="mega-name mega-name-wide"><div class="mega-name-title"><?php _e( 'Accessibility', 'megamenu' ); ?></div><div class="mega-description"><?php _e( 'Screen reader label for the toggle button.', 'megamenu' ); ?></div></td>
+							<td class="mega-value">
+								<label><span class='mega-short-desc'><?php _e( 'Label', 'megamenu' ); ?></span><input type='text' class='aria_label' name='toggle_blocks[<?php echo $block_id; ?>][aria_label]' value='<?php echo stripslashes( esc_attr( $settings['aria_label'] ) ); ?>' /></label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<?php $this->print_toggle_block_panel_footer(); ?>
 			</div>
 		</div>
 
+			<?php
+		}
+
+
+		/**
+		 * Header for a toggle block settings panel — title + close button.
+		 *
+		 * @param string $title Localised panel title.
+		 * @return void
+		 */
+		public function print_toggle_block_panel_header( $title ) {
+			?>
+		<div class="block-settings-header">
+			<h3><?php echo esc_html( $title ); ?></h3>
+			<button type="button" class="mega-block-close" aria-label="<?php echo esc_attr__( 'Close', 'megamenu' ); ?>">
+				<span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
+			</button>
+		</div>
+			<?php
+		}
+
+
+		/**
+		 * Footer for a toggle block settings panel — save + delete controls.
+		 *
+		 * @return void
+		 */
+		public function print_toggle_block_panel_footer() {
+			?>
+		<div class="block-settings-footer">
+			<?php $this->print_toggle_block_delete_control(); ?>
+			<button type="button" class="mega-block-save button button-primary button-compact"><?php echo esc_html__( 'Save', 'megamenu' ); ?></button>
+		</div>
 			<?php
 		}
 
@@ -885,7 +962,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @since 3.9.0
 		 * @return void
 		 */
-		private function print_toggle_block_delete_control() {
+		public function print_toggle_block_delete_control() {
 
 			?>
 		<button type="button" class="mega-delete" data-mega-tooltip="<?php echo esc_attr__( 'Delete', 'megamenu' ); ?>" data-mega-tooltip-position="right" aria-label="<?php echo esc_attr__( 'Delete', 'megamenu' ); ?>">
@@ -906,22 +983,30 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @return void
 		 */
 		public function print_icon_option( $key, $block_id, $value, $icons ) {
-
 			?>
-			<select class='icon_dropdown' name='toggle_blocks[<?php echo $block_id; ?>][<?php echo $key; ?>]'>
-				<?php
-
-					echo "<option value='disabled'>" . __( 'Disabled', 'megamenu' ) . '</option>';
-
-				foreach ( $icons as $code => $class ) {
-					$name = str_replace( 'dashicons-', '', $class );
-					$name = ucwords( str_replace( [ '-', 'arrow' ], ' ', $name ) );
-					echo "<option data-class='{$class}' value='{$code}'" . selected( $value, $code, false ) . '>' . $name . '</option>';
-				}
-
-				?>
+			<select class='icon_dropdown' name='toggle_blocks[<?php echo esc_attr( $block_id ); ?>][<?php echo esc_attr( $key ); ?>]'>
+				<option value='disabled'><?php esc_html_e( 'Disabled', 'megamenu' ); ?></option>
+				<?php foreach ( $icons as $group ) : ?>
+					<optgroup label="<?php echo esc_attr( $group['label'] ); ?>">
+						<?php foreach ( $group['icons'] as $icon_key => $icon ) :
+							$data_attrs = '';
+							if ( isset( $icon['class'] ) ) {
+								$data_attrs .= " data-class='" . esc_attr( $icon['class'] ) . "'";
+							}
+							if ( isset( $icon['svg'] ) ) {
+								$data_attrs .= " data-svg='" . esc_attr( $icon['svg'] ) . "'";
+							}
+							if ( ! empty( $icon['attrs'] ) ) {
+								foreach ( $icon['attrs'] as $attr_name => $attr_value ) {
+									$data_attrs .= ' ' . esc_attr( $attr_name ) . "='" . esc_attr( $attr_value ) . "'";
+								}
+							}
+						?>
+							<option value='<?php echo esc_attr( $icon_key ); ?>'<?php echo $data_attrs; ?><?php selected( $value, $icon_key ); ?>><?php echo esc_html( $icon['label'] ); ?></option>
+						<?php endforeach; ?>
+					</optgroup>
+				<?php endforeach; ?>
 			</select>
-
 			<?php
 		}
 
@@ -952,37 +1037,40 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 
 		/**
-		 * List of all available toggle Dashicon classes.
+		 * List of all available toggle icons.
 		 *
 		 * @since 2.1
-		 * @return array Map of hex code keys to Dashicon CSS class names.
+		 * @return array Icon definitions keyed by value.
 		 */
 		public function toggle_icons() {
+			return apply_filters( 'megamenu_theme_toggle_icons', [] );
+		}
 
-			$icons = [
-				'dash-f333' => 'dashicons-menu',
-				'dash-f228' => 'dashicons-menu-alt',
-				'dash-f329' => 'dashicons-menu-alt2',
-				'dash-f349' => 'dashicons-menu-alt3',
-				'dash-f214' => 'dashicons-editor-justify',
-				'dash-f158' => 'dashicons-no',
-				'dash-f335' => 'dashicons-no-alt',
-				'dash-f132' => 'dashicons-plus',
-				'dash-f502' => 'dashicons-plus-alt',
-				'dash-f460' => 'dashicons-minus',
-				'dash-f153' => 'dashicons-dismiss',
-				'dash-f142' => 'dashicons-arrow-up',
-				'dash-f140' => 'dashicons-arrow-down',
-				'dash-f342' => 'dashicons-arrow-up-alt',
-				'dash-f346' => 'dashicons-arrow-down-alt',
-				'dash-f343' => 'dashicons-arrow-up-alt2',
-				'dash-f347' => 'dashicons-arrow-down-alt2',
-			];
+		/**
+		 * Return the SCSS $icon_font value for a raw icon key.
+		 *
+		 * Returns the unquoted identifier 'svg' for SVG icons so SCSS can gate
+		 * ::after output with `@if $icon_font == svg`. Returns a quoted CSS
+		 * font-family string for font-based icons, or '' when no icon is set.
+		 *
+		 * @param string $icon_raw Raw icon key (e.g. 'dash-f333', 'mat-e5d2', 'svg-hamburger').
+		 * @return string SCSS-ready value.
+		 */
+		private function get_toggle_icon_font( $icon_raw ) {
+			if ( strpos( $icon_raw, 'svg-' ) === 0 ) {
+				return 'svg';
+			}
+			if ( strpos( $icon_raw, 'dash-' ) === 0 ) {
+				return "'dashicons'";
+			}
+			if ( strpos( $icon_raw, 'mat-' ) === 0 ) {
+				return "'Material Symbols'";
+			}
+			return apply_filters( 'megamenu_toggle_icon_font', "''", $icon_raw );
+		}
 
-			$icons = apply_filters( 'megamenu_toggle_icons', $icons );
-
-			return $icons;
-
+		private function get_toggle_icon_font_weight( $icon_raw ) {
+			return apply_filters( 'megamenu_toggle_icon_font_weight', 'normal', $icon_raw );
 		}
 
 	}

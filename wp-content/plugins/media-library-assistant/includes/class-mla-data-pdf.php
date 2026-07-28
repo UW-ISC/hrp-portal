@@ -140,7 +140,7 @@ class MLAPDF {
 				if ( 'n' == $matches[3] ) {
 					$key = ( $object_id * 1000 ) + $matches[2];
 					if ( ! isset( self::$pdf_indirect_objects[ $key ] ) ) {
-						self::$pdf_indirect_objects[ $key ] = array( 'number' => $object_id, 'generation' => (integer) $matches[2], 'start' => (integer) $matches[1] );
+						self::$pdf_indirect_objects[ $key ] = array( 'number' => $object_id, 'generation' => (int) $matches[2], 'start' => (int) $matches[1] );
 					}
 				}
 
@@ -248,8 +248,8 @@ class MLAPDF {
 		$object_ids = array();
 		$subsections = explode( ' ', $index_string );
 		while ( 1 < count( $subsections ) ) {
-		$first_object = (integer) array_shift( $subsections );
-			$object_count = (integer) array_shift( $subsections );
+		$first_object = (int) array_shift( $subsections );
+			$object_count = (int) array_shift( $subsections );
 			while ( $object_count-- ) {
 				$object_ids[] = $first_object++;
 			}
@@ -381,16 +381,16 @@ class MLAPDF {
 				$length = 0;
 			}
 
-			$stream_dictionary = explode( ' ', substr( $stream, 0, (integer) $dictionary['First']['value'] ) );
-			$stream_content = substr( $stream, (integer) $dictionary['First']['value'] );
+			$stream_dictionary = explode( ' ', substr( $stream, 0, (int) $dictionary['First']['value'] ) );
+			$stream_content = substr( $stream, (int) $dictionary['First']['value'] );
 
-			$object_count = (integer) $dictionary['N']['value'];
+			$object_count = (int) $dictionary['N']['value'];
 			$object_offsets = array();
 			$prior_id = 0;
 			$prior_offset = 0;
 			while ( $object_count-- ) {
-				$current_id = (integer) array_shift( $stream_dictionary );
-				$current_offset = (integer) array_shift( $stream_dictionary );
+				$current_id = (int) array_shift( $stream_dictionary );
+				$current_offset = (int) array_shift( $stream_dictionary );
 				$object_offsets[ $current_id ] = array( 'offset' => $current_offset );
 
 				if ( $prior_id ) {
@@ -980,7 +980,7 @@ class MLAPDF {
 
 				// Parse the cross-reference stream following the dictionary, if present
 				if ( isset( $dictionary['Type'] ) && 'XRef' == $dictionary['Type']['value'] ) {
-					$offset = $file_offset + $chunk_offset + (integer) $dictionary['/length'];
+					$offset = $file_offset + $chunk_offset + (int) $dictionary['/length'];
 					$entry_parms_string = $dictionary['W']['value'];
 					$index_string = isset( $dictionary['Index'] ) ? $dictionary['Index']['value'] : '0 ' . $dictionary['Size']['value'];
 					$compressed = isset( $dictionary['Filter'] ) && 'FlateDecode' == $dictionary['Filter']['value']; 
@@ -1049,7 +1049,7 @@ class MLAPDF {
 			return array( 'xmp' => array(), 'pdf' => $metadata );
 		}
 
-		$startxref = (integer) $matches[1][ $match_count - 1 ][0];
+		$startxref = (int) $matches[1][ $match_count - 1 ][0];
 		$trailer_dictionaries = self::_extract_pdf_trailer( $file_name, $startxref );
 		if ( is_array( $trailer_dictionaries ) ) {
 			$info_reference = NULL;

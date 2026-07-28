@@ -7,7 +7,7 @@
  * available in the [mla_custom_list] shortcode.
  *
  * @package MLA Custom List Hooks Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -15,7 +15,7 @@ Plugin Name: MLA Custom List Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_custom_list] shortcode
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2023 David Lingren
@@ -551,11 +551,11 @@ class MLACustomListHooksExample {
 			$green = 255;
 			$red = $blue = 0;
 			if ( $half_spread ) {
-				$green = (integer) 255.0 - ( 255.0 * ( absint( $scaled_count - $mid_point ) / $half_spread ) );
+				$green = (int) 255.0 - ( 255.0 * ( absint( $scaled_count - $mid_point ) / $half_spread ) );
 				if ( $scaled_count < $mid_point ) {
-					$red = (integer) 255.0 * ( ( $mid_point - $scaled_count ) / $half_spread );
+					$red = (int) 255.0 * ( ( $mid_point - $scaled_count ) / $half_spread );
 				} elseif ( $scaled_count > $mid_point ) {
-					$blue = (integer) 255.0 * ( ( $scaled_count - $mid_point ) / $half_spread );
+					$blue = (int) 255.0 * ( ( $scaled_count - $mid_point ) / $half_spread );
 				}
 			}
 			 

@@ -3,64 +3,77 @@
 
     @if length($menu_toggle_blocks) > 0 {
         @each $item in $menu_toggle_blocks {
-            $id: nth($item, 1);
-            $align: nth($item, 2);
-            $closed_text: nth($item, 3);
-            $open_text: nth($item, 4);
-            $closed_icon: nth($item, 5);
-            $open_icon: nth($item, 6);
-            $text_color: nth($item, 7);
-            $icon_color: nth($item, 8);
+            $id:            nth($item, 1);
+            $align:         nth($item, 2);
+            $closed_icon:   nth($item, 5);
+            $open_icon:     nth($item, 6);
+            $text_color:    nth($item, 7);
+            $icon_color:    nth($item, 8);
             $icon_position: nth($item, 9);
-            $text_size: nth($item, 10);
-            $icon_size: nth($item, 11);
+            $text_size:     nth($item, 10);
+            $icon_size:         nth($item, 11);
+            $icon_font:         nth($item, 12);
+            $icon_font_weight:  nth($item, 13);
 
             @if type-of($id) == number {
 
                 .mega-toggle-block-#{$id} button.mega-toggle-standard {
+                    @if $css_type == flex {
+                        all: revert;
+                        appearance: none;
+                        background: none;
+                        border: 0;
+                        padding: 0;
+                        margin: 0;
+                    }
+
                     cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: if($icon_position == before, row-reverse, row);
+                    gap: 5px;
                     color: $text_color;
                     font-size: $text_size;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    gap: 5px;
 
-                    @if $icon_position == before {
-                        flex-direction: row-reverse;
-                    }
+                    .mega-toggle-label-open  { display: none; }
+                    .mega-toggle-label-closed { display: flex; }
 
-                    .mega-toggle-label-open {
-                        display: none;
-                    }
-                    
-                    .mega-toggle-label-closed {
-                        display: flex;
-                    }
+                    @if $icon_font == svg {
+                        .mega-svg-icon {
+                            display: inline-flex;
+                            align-items: center;
+                            color: $icon_color;
 
-                    &:after {
-                        display: inline-block;
-                        content: $closed_icon;
-                        font-family: 'dashicons';
-                        font-size: $icon_size;
-                        color: $icon_color;
+                            svg {
+                                display: block;
+                                width: $icon_size;
+                                height: $icon_size;
+                                stroke: currentColor;
+                                fill: none;
+                            }
+                        }
+                        .mega-svg-icon-open { display: none; }
+                    } @else if $closed_icon != '' or $open_icon != '' {
+                        &:after {
+                            display: inline-block;
+                            content: $closed_icon;
+                            font-family: $icon_font;
+                            font-weight: $icon_font_weight;
+                            font-size: $icon_size;
+                            color: $icon_color;
+                        }
                     }
                 }
 
-                &.mega-menu-open {
+                &.mega-menu-open .mega-toggle-block-#{$id} button {
+                    .mega-toggle-label-open  { display: flex; }
+                    .mega-toggle-label-closed { display: none; }
 
-                    .mega-toggle-block-#{$id} button {
-
-                        &:after {
-                            content: $open_icon;
-                        }
-
-                        .mega-toggle-label-open {
-                            display: flex;
-                        }
-                        .mega-toggle-label-closed {
-                            display: none;
-                        }
+                    @if $icon_font == svg {
+                        .mega-svg-icon-closed { display: none; }
+                        .mega-svg-icon-open  { display: inline-flex; }
+                    } @else if $open_icon != '' {
+                        &:after { content: $open_icon; }
                     }
                 }
             }
@@ -96,8 +109,6 @@
             @if type-of($id) == number {
 
                 .mega-toggle-block-#{$id} {
-                    cursor: pointer;
-
                     /*! 
                     * Hamburgers 
                     * @description Tasty CSS-animated hamburgers 
@@ -108,6 +119,10 @@
                     .mega-toggle-animated {
                         padding: 0;
                         display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        height: 100%;
                         cursor: pointer;
                         transition-property: opacity, filter;
                         transition-duration: 0.15s;

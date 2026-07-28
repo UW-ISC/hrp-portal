@@ -186,10 +186,10 @@ class MLASettings_CustomFields {
 
 		do_action( 'mla_begin_mapping', $source, NULL );
 		foreach ( $post_ids as $key => $post_id ) {
-			$updates = MLAOptions::mla_evaluate_custom_field_mapping( (integer) $post_id, 'custom_field_mapping', $settings );
+			$updates = MLAOptions::mla_evaluate_custom_field_mapping( (int) $post_id, 'custom_field_mapping', $settings );
 			$examine_count += 1;
 			if ( ! empty( $updates ) && isset( $updates['custom_updates'] ) ) {
-				$results = MLAData::mla_update_item_postmeta( (integer) $post_id, $updates['custom_updates'] );
+				$results = MLAData::mla_update_item_postmeta( (int) $post_id, $updates['custom_updates'] );
 				if ( ! empty( $results ) ) {
 					$update_count += 1;
 				}
@@ -662,7 +662,9 @@ class MLASettings_CustomFields {
 
 		// Process bulk actions that affect an array of items
 		$bulk_action = MLASettings::mla_current_bulk_action();
-		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
+		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
+			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 			if ( array_key_exists( $bulk_action, MLA_Custom_Fields_List_Table::mla_get_bulk_actions() ) ) {
 				if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 					$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();

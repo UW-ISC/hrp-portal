@@ -14,7 +14,7 @@
  * https://wordpress.org/support/topic/select-multiple-files-for-download/
  * 
  * @package MLA Gallery Download Checklist
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -22,7 +22,7 @@ Plugin Name: MLA Gallery Download Checklist
 Plugin URI: http://davidlingren.com/
 Description: Generate HTML form elements and download checked items as a ZIP archive
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
 Copyright 2024 David Lingren
@@ -55,7 +55,7 @@ class MLAGalleryDownloadChecklist {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.01';
+	const PLUGIN_VERSION = '1.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -169,8 +169,8 @@ class MLAGalleryDownloadChecklist {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -178,7 +178,7 @@ class MLAGalleryDownloadChecklist {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 
 		// Are we processing the download link?
 		if( defined('DOING_AJAX') && DOING_AJAX ) {

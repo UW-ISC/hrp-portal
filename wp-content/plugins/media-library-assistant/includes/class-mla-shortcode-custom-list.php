@@ -24,7 +24,77 @@ class MLACustomList {
 	private static $mla_debug = false;
 
 	/**
-	 * These are the default parameters for custom field list display
+	 * These are the default shortcode parameters for custom list display, when combined
+	 * with the item_specific_arguments and mla_get_custom_values_parameters below.
+	 *
+	 * @since 3.39
+	 *
+	 * @var	array
+	 */
+	private static $default_shortcode_arguments = array(
+			'meta_value' => '',
+			'mla_output' => 'flat',
+			'mla_output_qualifier' => '',
+			'link' => 'current',
+
+			'mla_style' => NULL,
+			'mla_markup' => NULL,
+
+			'show_count' => false,
+			'mla_item_parameter' => 'current_item',
+			'current_item' => '',
+			'current_item_class' => 'mla_current_item',
+			'single_text' => '%s item',
+			'multiple_text' => '%s items',
+			'separator' => "\n",
+
+			'mla_control_name' => '',
+			'hide_if_empty' => false,
+			'mla_multi_select' => '',
+
+			'smallest' => 8,
+			'largest' => 22,
+			'default_size' => 12,
+			'unit' => 'pt',
+
+			'columns' => 3,
+			'mla_float' => 'left', // is_rtl() ? 'right' : 'left',
+			'mla_margin' => '1.5%',
+			'mla_itemwidth' => '33.3%',
+
+			'itemtag' => 'ul',
+			'valuetag' => 'li',
+			'captiontag' => '',
+
+			'option_all_text' => '',
+			'option_all_value' => NULL,
+			'option_no_values_text' => '',
+			'option_no_values_value' => NULL,
+			'option_any_values_text' => '',
+			'option_any_values_value' => NULL,
+
+			'option_none_text' => '',
+			'option_none_value' => NULL,
+
+			// Pagination parameters
+			'numberposts' => 0,
+			'posts_per_page' => 0,
+			'mla_end_size'=> 1,
+			'mla_mid_size' => 2,
+			'mla_prev_text' => '&laquo; Previous', // '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
+			'mla_next_text' => 'Next &raquo;', // __( 'Next', 'media-library-assistant' ) . ' &raquo;',
+			'mla_page_parameter' => 'mla_custom_list_current',
+			'mla_custom_list_current' => 1,
+			'mla_paginate_total' => NULL,
+			'mla_paginate_rows' => NULL,
+			'mla_paginate_type' => 'plain',
+
+			'mla_debug' => false,
+			'echo' => false,
+		);
+
+	/**
+	 * These are the default item-specific parameters for custom field list display
 	 *
 	 * @since 3.13
 	 *
@@ -32,15 +102,17 @@ class MLACustomList {
 	 */
 	private static $item_specific_arguments = array(
 			'mla_link_attributes' => '',
+			'mla_target' => '',
 			'mla_link_class' => '',
 			'mla_link_style' => '',
+			'mla_rollover_text' => '',
 			'mla_link_href' => '',
 			'mla_link_text' => '',
-			'mla_rollover_text' => '',
+			'mla_nolink_text' => '',
+
 			'mla_caption' => '',
 			'mla_item_value' => '',
 
-			'mla_control_name' => '',
 			'mla_option_text' => '',
 			'mla_option_value' => '',
 		);
@@ -62,7 +134,7 @@ class MLACustomList {
 		'no_count' => false,
 		'include' => '',
 		'exclude' => '',
-		'minimum' => 0,
+		'minimum' => 1,
 		'number' => 0,
 		'orderby' => 'meta_value',
 		'order' => 'ASC',
@@ -153,7 +225,6 @@ class MLACustomList {
 		$clause_parameters = array( $arguments['meta_key'] );
 		$clause[] = $wpdb->prepare( 'WHERE pm.meta_key = \'' . join( ',', $placeholders ) . '\'', $clause_parameters ); // phpcs:ignore
 
-//		$clause[] = 'WHERE pm.meta_key = \'' . $arguments['meta_key'] . '\'';
 		$clause[] = ') AS sq';
 		$clause[] = 'ON p.ID = sq.post_id';
 		$clause[] = 'WHERE 1=1';
@@ -246,10 +317,10 @@ class MLACustomList {
 //error_log( __LINE__ . ' _compose_item_specific_values value = ' . var_export( $value, true ), 0 );
 //error_log( __LINE__ . ' _compose_item_specific_values attr = ' . var_export( $attr, true ), 0 );
 //error_log( __LINE__ . ' _compose_item_specific_values arguments = ' . var_export( $arguments, true ), 0 );
-		$column_index =  ( (integer) $item_values['index'] ) - 1;
+		$column_index =  ( (int) $item_values['index'] ) - 1;
 		$mla_item_parameter = $arguments['mla_item_parameter'];
 		$mla_page_parameter = $arguments['mla_page_parameter'];
-		$mla_custom_list_current = (integer) $arguments[ $mla_page_parameter ];
+		$mla_custom_list_current = (int) $arguments[ $mla_page_parameter ];
 		$is_list = in_array( $item_values['mla_output'], array( 'ulist', 'olist', 'dlist' ) );
 		$is_dropdown = 'dropdown' === $item_values['mla_output'];
 		$is_checklist = 'checklist' === $item_values['mla_output'];
@@ -263,8 +334,8 @@ class MLACustomList {
 
 		$item_values['meta_value'] = wptexturize( $value->meta_value );
 		$item_values['meta_text'] = wptexturize( $value->meta_value );
-		$item_values['count'] = isset ( $value->count ) ? (integer) $value->count : 0; 
-		$item_values['scaled_count'] = isset ( $value->scaled_count ) ? (integer) $value->scaled_count : 0; 
+		$item_values['count'] = isset ( $value->count ) ? (int) $value->count : 0; 
+		$item_values['scaled_count'] = isset ( $value->scaled_count ) ? (int) $value->scaled_count : 0; 
 
 		if ( in_array( $value->meta_value, array( 'ignore.values.assigned', 'no.values.assigned', 'any.values.assigned' ) ) ) {
 			$item_values['font_size'] = absint( $arguments['default_size'] );
@@ -376,16 +447,14 @@ class MLACustomList {
 			$link_href = '';
 		}
 
+		$item_values['link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 		if ( ! empty( $arguments['mla_link_style'] ) ) {
 			$item_values['link_style'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_style'], $item_values ) );
-		} else {
-			$item_values['link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 		}
 
+		$item_values['link_text'] = $item_values['meta_text'];
 		if ( ! empty( $arguments['mla_link_text'] ) ) {
 			$item_values['link_text'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_text'], $item_values ), 'post' );
-		} else {
-			$item_values['link_text'] = $item_values['meta_text'];
 		}
 
 		if ( ! empty( $arguments['show_count'] ) && ( 'true' === strtolower( $arguments['show_count'] ) ) ) {
@@ -468,10 +537,11 @@ class MLACustomList {
 //error_log( __LINE__ . ' _compose_custom_pagination arguments = ' . var_export( $arguments, true ), 0 );
 //error_log( __LINE__ . ' _compose_custom_pagination attr = ' . var_export( $attr, true ), 0 );
 
-		$link_type = $arguments['mla_output'];
+		$mla_output = $arguments['mla_output'];
+		$mla_output_qualifier = $arguments['mla_output_qualifier'];
 
 		// Handle true pagination outputs
-		if ( in_array( $link_type, array( 'previous_page', 'next_page', 'paginate_links' ) ) ) {
+		if ( in_array( $mla_output, array( 'previous_page', 'next_page', 'paginate_links' ) ) ) {
 			// posts_per_page and numberposts are used in mla_process_pagination_output_types
 			if ( isset( $attr['limit'] ) ) {
 				$arguments['posts_per_page'] = $attr['limit'];
@@ -481,7 +551,7 @@ class MLACustomList {
 				$arguments['numberposts'] = 0;
 			}
 	
-			$output_parameters = array( $arguments['mla_output'], $arguments['mla_output_qualifier'] );
+			$output_parameters = array( $mla_output, $mla_output_qualifier );
 			$pagination_result = MLAShortcode_Support::mla_process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $markup_values['database_rows'] );
 //error_log( __LINE__ . ' _compose_custom_pagination pagination_result = ' . var_export( $pagination_result, true ), 0 );
 			if ( false !== $pagination_result ) {
@@ -492,11 +562,11 @@ class MLACustomList {
 		}
 
 		// For "previous_link", "current_link" and "next_link", discard all of the $tags except the appropriate choice
-		if ( ! in_array( $link_type, array ( 'previous_link', 'current_link', 'next_link' ) ) ) {
+		if ( ! in_array( $mla_output, array ( 'previous_link', 'current_link', 'next_link' ) ) ) {
 			return ''; // unknown output type
 		}
 
-		$is_wrap = 'wrap' === $arguments['mla_output_qualifier'];
+		$is_wrap = in_array( $mla_output_qualifier, array( 'wrap', 'always_wrap' ) );
 		if ( empty( $arguments['current_item'] ) ) {
 			$target_index = -2; // won't match anything
 		} else {
@@ -510,7 +580,7 @@ class MLACustomList {
 			}
 //error_log( __LINE__ . ' _compose_custom_pagination index = ' . var_export( $index, true ), 0 );
 
-			switch ( $link_type ) {
+			switch ( $mla_output ) {
 				case 'previous_link':
 					$target_index = $index - 1;
 					break;
@@ -527,8 +597,8 @@ class MLACustomList {
 		$target = NULL;
 		if ( isset( $values[ $target_index ] ) ) {
 			$target = $values[ $target_index ];
-		} elseif ( $is_wrap ) {
-			switch ( $link_type ) {
+		} elseif ( $is_wrap && ( ! empty( $target_value ) || ( 'always_wrap' === $mla_output_qualifier ) ) ) {
+			switch ( $mla_output ) {
 				case 'previous_link':
 					$target = array_pop( $values );
 					break;
@@ -697,14 +767,17 @@ class MLACustomList {
 //error_log( __LINE__ . ' _compose_custom_list arguments = ' . var_export( $arguments, true ), 0 );
 		$value = reset( $values );
 		$mla_item_parameter = $arguments['mla_item_parameter'];
+		$mla_output = $arguments['mla_output'];
+		$mla_output_qualifier = $arguments['mla_output_qualifier'];
 
 		// Determine output type and templates
-		$is_flat = 'flat' === $arguments['mla_output'];
-		$is_flat_div = $is_flat && ( 'div' === $arguments['mla_output_qualifier'] );
-		$is_list = in_array( $arguments['mla_output'], array( 'ulist', 'olist', 'dlist' ) );
-		$is_dropdown = 'dropdown' === $arguments['mla_output'];
-		$is_checklist = 'checklist' === $arguments['mla_output'];
-		$is_checklist_div = $is_checklist && ( 'div' === $arguments['mla_output_qualifier'] );
+		$is_flat = 'flat' === $mla_output;
+		$is_flat_div = $is_flat && ( 'div' === $mla_output_qualifier );
+		$is_list = in_array( $mla_output, array( 'ulist', 'olist', 'dlist' ) );
+		$is_list_div = $is_list && ( 'div' === $mla_output_qualifier );
+		$is_dropdown = 'dropdown' === $mla_output;
+		$is_checklist = 'checklist' === $mla_output;
+		$is_checklist_div = $is_checklist && ( 'div' === $mla_output_qualifier );
 
 		$open_template = '';
 		$item_template = '';
@@ -851,68 +924,11 @@ class MLACustomList {
 
 		$defaults = array_merge(
 			self::$mla_get_custom_values_parameters,
-			array(
-			'meta_value' => '',
-			'mla_output' => 'flat',
-			'mla_output_qualifier' => '',
-
-			'show_count' => false,
-			'current_item' => '',
-			'mla_item_parameter' => 'current_item',
-
-			'smallest' => 8,
-			'largest' => 22,
-			'default_size' => 12,
-			'unit' => 'pt',
-			'separator' => "\n",
-
-			'single_text' => '%s item',
-			'multiple_text' => '%s items',
-			'link' => 'current',
-			'current_item_class' => 'mla_current_item',
-
-			'mla_style' => NULL,
-			'mla_markup' => NULL,
-
-			'columns' => 3,
+			self::$default_shortcode_arguments,
+			array (
 			'mla_float' => is_rtl() ? 'right' : 'left',
-			'mla_margin' => '1.5%',
-			'mla_itemwidth' => '33.3%',
-
-			'itemtag' => 'ul',
-			'valuetag' => 'li',
-			'captiontag' => '',
-
-			'mla_nolink_text' => '',
-			'mla_target' => '',
-			'hide_if_empty' => false,
-
-			'option_all_text' => '',
-			'option_all_value' => NULL,
-			'option_no_values_text' => '',
-			'option_no_values_value' => NULL,
-			'option_any_values_text' => '',
-			'option_any_valuess_value' => NULL,
-
-			'mla_multi_select' => '',
-			'option_none_text' => '',
-			'option_none_value' => NULL,
-
-			// Pagination parameters
-			'numberposts' => 0,
-			'posts_per_page' => 0,
-			'mla_end_size'=> 1,
-			'mla_mid_size' => 2,
 			'mla_prev_text' => '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
 			'mla_next_text' => __( 'Next', 'media-library-assistant' ) . ' &raquo;',
-			'mla_page_parameter' => 'mla_custom_list_current',
-			'mla_custom_list_current' => 1,
-			'mla_paginate_total' => NULL,
-			'mla_paginate_rows' => NULL,
-			'mla_paginate_type' => 'plain',
-
-			'mla_debug' => false,
-			'echo' => false,
 			),
 			self::$item_specific_arguments
 		);
@@ -1014,12 +1030,12 @@ class MLACustomList {
 			$output_parameters[0] = 'flat';
 		}
 
-		$arguments['mla_output'] = $output_parameters[0];
-		$arguments['mla_output_qualifier'] = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
+		$mla_output = $arguments['mla_output'] = $output_parameters[0];
+		$mla_output_qualifier = $arguments['mla_output_qualifier'] = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
 
 		// Set default template if not specified in $attr
 		if ( empty( $template ) ) {
-			switch ( $arguments['mla_output'] ) {
+			switch ( $mla_output ) {
 				case 'ulist':
 				case 'olist':
 					$template = 'custom-list-ul';
@@ -1099,8 +1115,8 @@ class MLACustomList {
 			$output_parameters[0] = 'flat';
 		}
 
-		$arguments['mla_output'] = $output_parameters[0];
-		$arguments['mla_output_qualifier'] = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
+		$mla_output = $arguments['mla_output'] = $output_parameters[0];
+		$mla_output_qualifier = $arguments['mla_output_qualifier'] = isset( $output_parameters[1] ) ? $output_parameters[1] : '';
 
 		$arguments = apply_filters( 'mla_custom_list_arguments', $arguments );
 
@@ -1136,12 +1152,19 @@ class MLACustomList {
 			}
 		}
 
-		$is_pagination = in_array( $arguments['mla_output'], self::$valid_mla_output_pagination_values );
-		$is_flat = 'flat' === $arguments['mla_output'];
-		$is_flat_div = $is_flat && ( 'div' === $arguments['mla_output_qualifier'] );
+		$is_pagination = in_array( $mla_output, self::$valid_mla_output_pagination_values );
+		$is_flat = 'flat' === $mla_output;
+		$is_flat_div = $is_flat && ( 'div' === $mla_output_qualifier );
+		$is_list = in_array( $mla_output, array( 'dlist', 'olist', 'ulist' ) );
+		$is_list_div = $is_list && ( 'div' === $mla_output_qualifier );
 
-		$default_style = 'custom-list';
-		$default_markup = 'custom-list-ul';
+		if ( $is_list_div ) {
+			$default_style = 'custom-list-ul-div';
+			$default_markup = 'custom-list-ul-div';
+		} else {
+			$default_style = 'custom-list';
+			$default_markup = 'custom-list-ul';
+		}
 
 		if ( $is_pagination ) {
 			$default_style = 'none';
@@ -1160,7 +1183,7 @@ class MLACustomList {
 		$default_valuetag = 'dt';
 		$default_captiontag = 'dd';
 
-		if ( $is_grid = 'grid' === $arguments['mla_output'] ) {
+		if ( $is_grid = 'grid' === $mla_output ) {
 			$default_markup = 'custom-list-grid';
 
 			if ( empty( $attr['itemtag'] ) ) {
@@ -1176,10 +1199,16 @@ class MLACustomList {
 			}
 		}
 
-		if ( $is_list = in_array( $arguments['mla_output'], array( 'dlist', 'olist', 'ulist' ) ) ) {
-			switch ( $arguments['mla_output'] ) {
+		if ( $is_list ) {
+			switch ( $mla_output ) {
 				case 'dlist':
-					$default_markup = 'custom-list-dl';
+					if ( $is_list_div ) {
+//						$default_style = 'custom-list-dl-div';
+						$default_markup = 'custom-list-dl-div';
+					} else {
+						$default_markup = 'custom-list-dl';
+					}
+
 					$arguments['itemtag'] = $default_itemtag;
 					$arguments['valuetag'] = $default_valuetag;
 					$arguments['captiontag'] = $default_captiontag;
@@ -1210,7 +1239,7 @@ class MLACustomList {
 		}
 
 		// Set default "cloud" arguments for non-flat output formats
-		if ( !$is_flat ) {
+		if ( ! $is_flat ) {
 			if ( empty( $attr['smallest'] ) ) {
 				$arguments['smallest'] = $arguments['default_size'];
 			}
@@ -1220,14 +1249,14 @@ class MLACustomList {
 			}
 		}
 		
-		if ( $is_dropdown = 'dropdown' === $arguments['mla_output'] ) {
+		if ( $is_dropdown = 'dropdown' === $mla_output ) {
 			$default_markup = 'custom-list-dropdown';
 			$arguments['itemtag'] = empty( $attr['itemtag'] ) ? 'select' : $attr['itemtag'];
 			$arguments['valuetag'] = 'option';
 		}
 
-		if ( $is_checklist = 'checklist' === $arguments['mla_output'] ) {
-			if ( 'div' === $arguments['mla_output_qualifier'] ) {
+		if ( $is_checklist = 'checklist' === $mla_output ) {
+			if ( 'div' === $mla_output_qualifier ) {
 				$default_style = 'custom-list-checklist-div';
 				$default_markup = 'custom-list-checklist-div';
 			} else {
@@ -1267,7 +1296,7 @@ class MLACustomList {
 			if ( is_wp_error( $values ) ) {
 				$list =  '<strong>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . $values->get_error_message() . '</strong>, ' . $values->get_error_data( $values->get_error_code() );
 	
-				if ( 'array' === $arguments['mla_output'] ) {
+				if ( 'array' === $mla_output ) {
 					return array( $list );
 				}
 	
@@ -1282,7 +1311,7 @@ class MLACustomList {
 
 		// Fill in the item_specific link properties, calculate list parameters
 		if ( isset( $values['found_rows'] ) ) {
-			$found_rows = (integer) $values['found_rows'];
+			$found_rows = (int) $values['found_rows'];
 			unset( $values['found_rows'] );
 		} else {
 			$found_rows = count( $values );
@@ -1310,7 +1339,7 @@ class MLACustomList {
 				$list = '';
 			}
 
-			if ( 'array' === $arguments['mla_output'] ) {
+			if ( 'array' === $mla_output ) {
 				$list .= $arguments['mla_nolink_text'];
 
 				if ( empty( $list ) ) {
@@ -1328,8 +1357,12 @@ class MLACustomList {
 					$arguments['option_none_text'] = esc_attr__( 'no-values', 'media-library-assistant' );
 				}
 
-				if ( ! empty( $arguments['option_none_value'] ) ) {
-					$arguments['option_none_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_none_value'], $page_values ) );
+				if ( ! is_null( $arguments['option_none_value'] ) ) {
+					if ( empty( $arguments['option_none_value'] ) ) {
+						$arguments['option_none_value'] = '';
+					} else {
+						$arguments['option_none_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_none_value'], $page_values ) );
+					}
 				} else {
 					$arguments['option_none_value'] = $arguments['option_none_text']; // already escaped
 				}
@@ -1386,7 +1419,7 @@ class MLACustomList {
 			}
 		} // foreach value
 
-		if ( !$show_empty ) {
+		if ( ! $show_empty ) {
 			$add_all_option = ! empty( $arguments['option_all_text'] );
 			$add_any_values_option = ! empty( $arguments['option_any_values_text'] );
 			$add_no_values_option = ! empty( $arguments['option_no_values_text'] );
@@ -1410,8 +1443,12 @@ class MLACustomList {
 		if ( $add_all_option ) {
 			$found_rows += 1;
 			$option_all_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_text'], $page_values ), 'post' );
-			if ( ! empty( $arguments['option_all_value'] ) ) {
-				$option_all_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_value'], $page_values ) );
+			if ( ! is_null( $arguments['option_all_value'] ) ) {
+				if ( empty( $arguments['option_all_value'] ) ) {
+					$option_all_value = '';
+				} else {
+					$option_all_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_all_value'], $page_values ) );
+				}
 			}
 		}
 
@@ -1420,8 +1457,12 @@ class MLACustomList {
 		if ( $add_any_values_option ) {
 			$found_rows += 1;
 			$option_any_values_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_text'], $page_values ), 'post' );
-			if ( ! empty( $arguments['option_any_values_value'] ) ) {
-				$option_any_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_value'], $page_values ) );
+			if ( ! is_null( $arguments['option_any_values_value'] ) ) {
+				if ( empty( $arguments['option_any_values_value'] ) ) {
+					$option_any_values_value = '';
+				} else {
+					$option_any_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_any_values_value'], $page_values ) );
+				}
 			}
 		}
 
@@ -1430,8 +1471,12 @@ class MLACustomList {
 		if ( $add_no_values_option ) {
 			$found_rows += 1;
 			$option_no_values_text = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_text'], $page_values ), 'post' );
-			if ( ! empty( $arguments['option_no_values_value'] ) ) {
-				$option_no_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_value'], $page_values ) );
+			if ( ! is_null( $arguments['option_no_values_value'] ) ) {
+				if ( empty( $arguments['option_no_values_value'] ) ) {
+					$option_no_values_value = '';
+				} else {
+					$option_no_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_value'], $page_values ) );
+				}
 			}
 		}
 
@@ -1490,12 +1535,13 @@ class MLACustomList {
 		$font_step = $font_spread / $spread;
 
 		$style_values = array_merge( $page_values, array(
-			'mla_output' => $arguments['mla_output'],
-			'mla_output_qualifier' => $arguments['mla_output_qualifier'],
+			'mla_output' => $mla_output,
+			'mla_output_qualifier' => $mla_output_qualifier,
 			'mla_style' => $arguments['mla_style'],
 			'mla_markup' => $arguments['mla_markup'],
 			'meta_key' => $arguments['meta_key'],
 			'current_item' => $arguments['current_item'],
+			'current_item_class' => $arguments['current_item_class'],
 			'itemtag' => MLAShortcode_Support::mla_esc_tag( $arguments['itemtag'], $default_itemtag ),
 			'itemtag_attributes' => '',
 			'itemtag_class' => 'custom-list custom-list-key-' . sanitize_title( $arguments['meta_key'] ), 
@@ -1631,7 +1677,7 @@ class MLACustomList {
 			}
 		}
 
-		if ( 'array' === $arguments['mla_output'] || empty($arguments['echo']) ) {
+		if ( 'array' === $mla_output || empty($arguments['echo']) ) {
 			return $list;
 		}
 
@@ -1743,9 +1789,9 @@ class MLACustomList {
 	 *
 	 * @since 3.13
 	 *
-	 * @param	array	taxonomies to search and query parameters
+	 * @param	array	meta_key and query parameters
 	 *
-	 * @return	array	array of term objects, empty if none found
+	 * @return	array	array of custom field objects, empty if none found
 	 */	
 	public static function mla_get_custom_values( $attr ) {
 		global $wpdb;
@@ -1761,6 +1807,11 @@ class MLACustomList {
 		$attr = apply_filters( 'mla_get_custom_values_query_attributes', $attr );
 		$arguments = shortcode_atts( self::$mla_get_custom_values_parameters, $attr );
 		$arguments = apply_filters( 'mla_get_custom_values_query_arguments', $arguments );
+
+		// Wthout a meta_key there's no point in going on
+		if ( empty( $arguments['meta_key'] ) ) {
+			return array();
+		}
 
 		// Build an array of individual clauses that can be filtered
 		$clauses = array( 'fields' => '', 'join' => '', 'where' => '', 'orderby' => '', 'limits' => '', );
@@ -1856,7 +1907,7 @@ class MLACustomList {
 
 			// Apply a non-empty argument before we replace it.
 			if ( ! empty( $arguments['include'] ) ) {
-				$includes = array_intersect( $includes, str_getcsv( $arguments['include'] ) );
+				$includes = array_intersect( $includes, wp_parse_id_list( $arguments['include'] ) );
 			}
 
 			// If there are no values we want an empty list
@@ -1870,7 +1921,7 @@ class MLACustomList {
 
 		// Add include/exclude constraints to WHERE cluse
 		if ( ! empty( $arguments['include'] ) ) {
-		    $includes = str_getcsv( $arguments['include'] );
+		    $includes = wp_parse_id_list( $arguments['include'] );
 			foreach ( $includes as $include ) {
 				$placeholders[] = '%s';
 				$clause_parameters[] = $include;
@@ -1878,7 +1929,7 @@ class MLACustomList {
 
 			$clause[] = 'AND m.meta_value IN (' . join( ',', $placeholders ) . ')';
 		} elseif ( ! empty( $arguments['exclude'] ) ) {
-		    $excludes = str_getcsv( $arguments['exclude'] );
+		    $excludes = wp_parse_id_list( $arguments['exclude'] );
 			foreach ( $excludes as $exclude ) {
 				$placeholders[] = '%s';
 				$clause_parameters[] = $exclude;
@@ -1912,29 +1963,50 @@ class MLACustomList {
 
 		// For the inner/initial query, always select the most popular terms
 		if ( $no_orderby = 'true' === trim( strtolower( (string) $arguments['no_orderby'] ) ) ) {
-			$arguments['orderby'] = 'count';
-			$arguments['order']  = 'DESC';
+			if ( $no_count ) {
+				$arguments['orderby'] = 'none';
+				$arguments['order']  = 'DESC';
+			} else {
+				$arguments['orderby'] = 'count';
+				$arguments['order']  = 'DESC';
+			}
 		}
 
 		// Add sort order
+		$clauses['orderby'] = '';
 		if ( 'none' !== strtolower( $arguments['orderby'] ) ) {
+			// Defeat special logic in mla_validate_sql_orderby
+			if ( 'meta_value' === strtolower( $arguments['orderby'] ) ) {
+				$arguments['orderby'] = 'xmeta_value';
+			}
+
 			if ( 'true' === strtolower( $arguments['preserve_case'] ) ) {
-				$binary_keys = array( 'meta_value', );
+				$binary_keys = array( 'xmeta_value', );
 			} else {
 				$binary_keys = array();
 			}
 
-			$allowed_keys = array(
-				'empty_orderby_default' => 'meta_value',
-				'count' => 'count',
-				'meta_value' => 'meta_value',
-				'random' => 'RAND()',
-			);
+			if ( $no_count ) {
+				$allowed_keys = array(
+					'empty_orderby_default' => 'meta_value',
+					'xmeta_value' => 'm.meta_value',
+					'random' => 'RAND()',
+				);
+			} else {
+				$allowed_keys = array(
+					'empty_orderby_default' => 'meta_value',
+					'count' => 'count',
+					'xmeta_value' => 'meta_value',
+					'random' => 'RAND()',
+				);
+			}
 
-			$orderby_parameters = array( $arguments['orderby'], $arguments['order'],  );
-			$clauses['orderby'] = 'ORDER BY ' . MLAShortcode_Support::mla_validate_sql_orderby( $orderby_parameters, '', $allowed_keys, $binary_keys );
-		} else {
-			$clauses['orderby'] = '';
+			$orderby_parameters = array( 'orderby' => $arguments['orderby'], 'order' => $arguments['order'],  );
+			$orderby_clause = MLAShortcode_Support::mla_validate_sql_orderby( $orderby_parameters, '', $allowed_keys, $binary_keys );
+
+			if ( ! empty( $orderby_clause ) ) {
+				$clauses['orderby'] = 'ORDER BY ' . $orderby_clause;
+			}
 		}
 
 		// Add pagination
@@ -1983,7 +2055,7 @@ class MLACustomList {
 		// $final_clauses, if present, require an SQL subquery
 		$final_clauses = array();
 
-		if ( ! empty( $clauses['orderby'] ) && 'ORDER BY count DESC' != $clauses['orderby'] ) {
+		if ( ! empty( $clauses['orderby'] ) && 'ORDER BY count DESC' !== $clauses['orderby'] ) {
 			$final_clauses[] = $clauses['orderby'];
 		}
 

@@ -24,28 +24,97 @@ class MLAArchiveList {
 	private static $mla_debug = false;
 
 	/**
-	 * These are the default parameters for archive list display
+	 * These are the default shortcode parameters for archive list display,
+	 * when combined with the item_specific_arguments below.
+	 *
+	 * @since 3.39
+	 *
+	 * @var	array
+	 */
+	private static $default_shortcode_arguments = array(
+			'archive_type' => 'yearly',
+			'archive_source' => 'post_date',
+			'archive_key' => '', // for source = custom
+			'mla_output' => 'dropdown',
+			'mla_output_qualifier' => '',
+			'link' => 'current',
+
+			'mla_style' => NULL,
+			'mla_markup' => NULL,
+
+			'show_count' => true,
+			'hide_if_empty' => false,
+			'mla_archive_parameter' => 'mla_archive_current',
+			'mla_archive_current' => '',
+			'current_archive_class' => 'mla_archive_current',
+			'append_current_item' => 'true',
+			'archive_order' => 'DESC',
+			'archive_limit' => '0',
+			'archive_label' => '', // 'short', 'long'
+			'separator' => "\n",
+
+			'smallest' => 12, // 8
+			'largest' => 12, // 22
+			'default_size' => 12,
+			'unit' => 'pt',
+
+			'listtag' => '',
+			'listtag_name' => 'mla_archive_current',
+			'listtag_id' => '', // $page_values['selector'],
+			'listtag_class' => 'mla-archive-list',
+			'listtag_attributes' => '',
+			'itemtag' => '',
+
+			'option_all_label' => '',
+			'option_all_value' => NULL,
+			'option_no_values_label' => '',
+			'option_no_values_value' => NULL,
+			'option_any_values_label' => '',
+			'option_any_values_value' => NULL,
+
+			'option_none_label' => '',
+			'option_none_value' => NULL,
+
+			// Pagination parameters
+			'limit' => 0,
+			'offset' => 0,
+			'mla_end_size'=> 1,
+			'mla_mid_size' => 2,
+			'mla_prev_text' => '', // '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
+			'mla_next_text' => '', // __( 'Next', 'media-library-assistant' ) . ' &raquo;',
+			'mla_page_parameter' => 'mla_archive_list_current',
+			'mla_archive_list_current' => 1,
+			'mla_paginate_total' => NULL,
+			'mla_paginate_rows' => NULL,
+			'mla_paginate_type' => 'plain',
+
+			'mla_debug' => '',
+			'echo' => 'false',
+		);
+
+	/**
+	 * These are the default item-specific parameters for archive list display
 	 *
 	 * @since 3.31
 	 *
 	 * @var	array
 	 */
 	private static $item_specific_arguments = array(
-		'itemtag_id' => '',
-		'itemtag_class' => 'archive-list-item',
-		'itemtag_attributes' => '',
-		'itemtag_value' => '',
-		'itemtag_label' => '',
+			'mla_link_attributes' => '',
+			'mla_link_id' => '',
+			'mla_target' => '',
+			'mla_link_class' => '',
+			'mla_link_style' => '',
+			'mla_rollover_text' => '',
+			'mla_link_href' => '',
+			'mla_link_text' => '',
+			'mla_nolink_text' => '',
 
-		'mla_link_id' => '',
-		'mla_link_class' => '',
-		'mla_link_style' => '',
-		'mla_rollover_text' => '',
-		'mla_link_attributes' => '',
-		'mla_link_href' => '',
-		'mla_link_text' => '',
-		'mla_nolink_text' => 'No archives',
-		'mla_link_href' => '',
+			'itemtag_id' => '',
+			'itemtag_class' => 'archive-list-item',
+			'itemtag_attributes' => '',
+			'itemtag_value' => '',
+			'itemtag_label' => '',
 	);
 
 	/**
@@ -368,7 +437,7 @@ class MLAArchiveList {
 				$open_content = MLAData::mla_parse_template( $open_template, $markup_values );
 				$list .= apply_filters( 'mla_archive_list_open_parse', $open_content, $open_template, $markup_values );
 			}
-		} // is_list || is_dropdown
+		} // is_list || is_dropdown || $is_flat_div
 
 		// Find delimiter for currentlink, currentlink_url
 		if ( strpos( $markup_values['page_url'], '?' ) ) {
@@ -408,6 +477,7 @@ class MLAArchiveList {
 			'font_size' => '',
 
 			'item_link_id' => '',
+			'item_link_target' => '',
 			'item_link_class' => '',
 			'item_link_rollover' => '',
 			'item_link_style' => '',
@@ -427,6 +497,8 @@ class MLAArchiveList {
 		// mla_nolink_text is used for pure pagination values
 		if ( ! empty( $item_default_values['option_none_label'] ) ) {
 			$arguments['mla_nolink_text'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
+		} else {
+			$arguments['mla_nolink_text'] = 'No archives';
 		}
 
 		// Handle an empty, visible archive
@@ -434,8 +506,12 @@ class MLAArchiveList {
 			// Apply the Display Content parameters
 			$attributes = array();
 
-			if ( ! empty( $item_default_values['option_none_value'] ) ) {
-				$item_default_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values ) );
+			if ( ! is_null( $item_default_values['option_none_value'] ) ) {
+				if ( empty( $item_default_values['option_none_value'] ) ) {
+					$item_default_values['current_value'] = '';
+				} else {
+					$item_default_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values ) );
+				}
 			} else {
 				$item_default_values['current_value'] = 'no-archives';
 			}
@@ -498,6 +574,13 @@ class MLAArchiveList {
 
 			return false;
 		} else { // Empty, visible archive
+				// Add the archive source to the special values
+				if ( 'custom' === $markup_values['archive_source'] ) {
+					$prefix = 'custom:' . $markup_values['archive_key'] . ',';
+				} else {
+					$prefix = $markup_values['archive_source'] . ',';
+				}
+
 
 			// Add the "option all" element, if specified
 			if ( ! empty( $item_default_values['option_all_label'] ) ) {
@@ -506,10 +589,126 @@ class MLAArchiveList {
 
 				$item_default_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_all_label'], $item_default_values ) );
 
-				if ( ! empty( $item_default_values['option_all_value'] ) ) {
-					$item_default_values['current_value'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values ) );
+				if ( ! is_null( $item_default_values['option_all_value'] ) ) {
+					if ( empty( $item_default_values['option_all_value'] ) ) {
+						$item_default_values['current_value'] = '';
+					} else {
+						$item_default_values['current_value'] = $prefix . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values ) );
+					}
 				} else {
-					$item_default_values['current_value'] = '';
+					$item_default_values['current_value'] = $prefix . 'ignore.values.assigned';
+				}
+
+				if ( ! empty( $item_default_values['itemtag_id'] ) ) {
+					$item_default_values['item_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
+					$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
+				}
+
+				if ( ! empty( $item_default_values['item_selected'] ) ) {
+					$item_default_values['item_class'] .= ' ' . sanitize_html_class( $item_default_values['current_archive_class'] );
+				}
+
+				if ( ! empty( $item_default_values['itemtag_class'] ) ) {
+					$item_default_values['item_class'] .= ' ' .  sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
+				}
+
+				$item_default_values['item_class'] = trim ( $item_default_values['item_class'] );
+
+				if ( ! empty( $item_default_values['item_class'] ) ) {
+					$attributes[] = 'class="' . $item_default_values['item_class'] . '"';
+				}
+
+				if ( ! empty( $item_default_values['itemtag_attributes'] ) ) {
+					$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
+				}
+
+				if ( ! empty( $attributes ) ) {
+					$item_default_values['item_attributes'] = implode( ' ', $attributes ) . ' ';
+				}
+
+				$item_default_values['thelink'] = $item_default_values['item_label'];
+
+				$item_values = apply_filters( 'mla_archive_list_item_values', $item_default_values, 'option_all' );
+				if ( $is_list || $is_dropdown ) {
+					$item_template = apply_filters( 'mla_archive_list_item_template', $item_template );
+					$item_content = MLAData::mla_parse_template( $item_template, $item_values );
+					$list .= apply_filters( 'mla_archive_list_item_parse', $item_content, $item_template, $item_values );
+				} else {
+					$links[] = $item_values['item_label'];
+				} 
+			} // Option all value
+
+			// Add the "option no values" element, if specified
+			if ( ! empty( $item_default_values['option_no_values_label'] ) ) {
+				// Apply the Display Content parameters
+				$attributes = array();
+
+				$item_default_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_no_values_label'], $item_default_values ) );
+
+				if ( ! is_null( $item_default_values['option_no_values_value'] ) ) {
+					if ( empty( $item_default_values['option_no_values_value'] ) ) {
+						$item_default_values['current_value'] = '';
+					} else {
+						$item_default_values['current_value'] = $prefix . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_no_values_value'], $item_default_values ) );
+					}
+				} else {
+					$item_default_values['current_value'] = $prefix . 'no.values.assigned';
+				}
+
+				if ( ! empty( $item_default_values['itemtag_id'] ) ) {
+					$item_default_values['item_id'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
+					$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
+				}
+
+				if ( ! empty( $item_default_values['item_selected'] ) ) {
+					$item_default_values['item_class'] .= ' ' . sanitize_html_class( $item_default_values['current_archive_class'] );
+				}
+
+				if ( ! empty( $item_default_values['itemtag_class'] ) ) {
+					$item_default_values['item_class'] .= ' ' .  sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
+				}
+
+				$item_default_values['item_class'] = trim ( $item_default_values['item_class'] );
+
+				if ( ! empty( $item_default_values['item_class'] ) ) {
+					$attributes[] = 'class="' . $item_default_values['item_class'] . '"';
+				}
+
+				if ( ! empty( $item_default_values['itemtag_attributes'] ) ) {
+					$attributes[] = MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
+				}
+
+				if ( ! empty( $attributes ) ) {
+					$item_default_values['item_attributes'] = implode( ' ', $attributes ) . ' ';
+				}
+
+				$item_default_values['thelink'] = $item_default_values['item_label'];
+
+				$item_values = apply_filters( 'mla_archive_list_item_values', $item_default_values, 'option_all' );
+				if ( $is_list || $is_dropdown ) {
+					$item_template = apply_filters( 'mla_archive_list_item_template', $item_template );
+					$item_content = MLAData::mla_parse_template( $item_template, $item_values );
+					$list .= apply_filters( 'mla_archive_list_item_parse', $item_content, $item_template, $item_values );
+				} else {
+					$links[] = $item_values['item_label'];
+				} 
+			} // Option no values value
+
+			// Add the "option any values" element, if specified
+			if ( ! empty( $item_default_values['option_any_values_label'] ) ) {
+				// Apply the Display Content parameters
+				$attributes = array();
+
+				$item_default_values['item_label'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_any_values_label'], $item_default_values ) );
+
+				if ( ! is_null( $item_default_values['option_any_values_value'] ) ) {
+					if ( empty( $item_default_values['option_any_values_value'] ) ) {
+						$item_default_values['current_value'] = '';
+					} else {
+						$item_default_values['current_value'] = $prefix . esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_default_values['option_any_values_value'], $item_default_values ) );
+					}
+				} else {
+					$item_default_values['current_value'] = $prefix . 'any.values.assigned';
 				}
 
 				if ( ! empty( $item_default_values['itemtag_id'] ) ) {
@@ -593,10 +792,10 @@ class MLAArchiveList {
 
 			$month_stamp = 0;
 			if ( ! empty( $item->month ) ) {
-				$item->m = sprintf( '%1$04d%2$02d', (integer) $item->year, (integer) $item->month );
+				$item->m = sprintf( '%1$04d%2$02d', (int) $item->year, (int) $item->month );
 
 				if ( ! empty( $item->day ) ) {
-					$item->yyyymmdd = sprintf( '%1$04d-%2$02d-%3$02d', (integer) $item->year, (integer) $item->month, (integer) $item->day );
+					$item->yyyymmdd = sprintf( '%1$04d-%2$02d-%3$02d', (int) $item->year, (int) $item->month, (int) $item->day );
 					$month_stamp = strtotime( $item->yyyymmdd );
 				} else {
 					$month_stamp = strtotime( $item->m . '01' );
@@ -613,13 +812,13 @@ class MLAArchiveList {
 			// Compute the current_value and current_labels based on the archive type
 			switch ( $markup_values['archive_type'] ) {
 				case 'daily':
-					$item->current_value = sprintf( 'D(%1$04d%2$02d%3$02d)', (integer) $item->year, (integer) $item->month, (integer) $item->day );
-					$item->current_label_short = sprintf( '%1$04d/%2$02d/%3$02d', (integer) $item->year, (integer) $item->month, (integer) $item->day );
-					$item->current_label_long = sprintf( '%1$s %2$02d, %3$04d', $item->month_long, (integer) $item->day, (integer) $item->year );
-					$item->viewlink_url = get_day_link( (integer) $item->year, (integer) $item->month, (integer) $item->day );
+					$item->current_value = sprintf( 'D(%1$04d%2$02d%3$02d)', (int) $item->year, (int) $item->month, (int) $item->day );
+					$item->current_label_short = sprintf( '%1$04d/%2$02d/%3$02d', (int) $item->year, (int) $item->month, (int) $item->day );
+					$item->current_label_long = sprintf( '%1$s %2$02d, %3$04d', $item->month_long, (int) $item->day, (int) $item->year );
+					$item->viewlink_url = get_day_link( (int) $item->year, (int) $item->month, (int) $item->day );
 					break;
 				case 'weekly':
-					$item->current_value = sprintf( 'W(%1$04d%2$02d)', (integer) $item->year, (integer) $item->week );
+					$item->current_value = sprintf( 'W(%1$04d%2$02d)', (int) $item->year, (int) $item->week );
 					$item->current_label_short = $item->week_start_short;
 					$item->current_label_long = $item->week_start;
 					$item->viewlink_url = add_query_arg(
@@ -631,17 +830,17 @@ class MLAArchiveList {
 					);
 					break;
 				case 'monthly':
-					$item->current_value = sprintf( 'M(%1$04d%2$02d)', (integer) $item->year, (integer) $item->month );
+					$item->current_value = sprintf( 'M(%1$04d%2$02d)', (int) $item->year, (int) $item->month );
 					$item->current_label_short = sprintf( '%1$s %2$s', $item->month_short, $item->year );
 					$item->current_label_long = sprintf( '%1$s %2$s', $item->month_long, $item->year );
-					$item->viewlink_url = get_month_link( (integer) $item->year, (integer) $item->month );
+					$item->viewlink_url = get_month_link( (int) $item->year, (int) $item->month );
 					break;
 				case 'yearly':
 				default:
-					$item->current_value = sprintf( 'Y(%1$04d)', (integer) $item->year );
-					$item->current_label_short = sprintf( '%1$04d', (integer) $item->year );
-					$item->current_label_long = sprintf( '%1$04d', (integer) $item->year );
-					$item->viewlink_url = get_year_link( (integer) $item->year );
+					$item->current_value = sprintf( 'Y(%1$04d)', (int) $item->year );
+					$item->current_label_short = sprintf( '%1$04d', (int) $item->year );
+					$item->current_label_long = sprintf( '%1$04d', (int) $item->year );
+					$item->viewlink_url = get_year_link( (int) $item->year );
 			}
 
 			// Add the archive source to the current value
@@ -792,6 +991,11 @@ class MLAArchiveList {
 				$attributes[] = 'id="' . $item_values['item_id'] . '"';
 			}
 
+			if ( ! empty( $item_values['mla_target'] ) ) {
+				$item_values['item_link_target'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_target'], $item_values ) );
+				$attributes[] = 'target="' . $item_values['item_link_target'] . '" ';
+			}
+
 			if ( ! empty( $item_values['mla_link_class'] ) ) {
 				$item_values['item_link_class'] = sanitize_html_class( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_class'], $item_values ) );
 				$attributes[] = 'class="' . $item_values['item_link_class'] . '"';
@@ -804,10 +1008,9 @@ class MLAArchiveList {
 				$attributes[] = 'title="' . $item_values['item_link_rollover'] . '"';
 			}
 
+			$item_values['item_link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 			if ( ! empty( $arguments['mla_link_style'] ) ) {
 				$item_values['item_link_style'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_style'], $item_values ) );
-			} else {
-				$item_values['item_link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
 			}
 
 			$attributes[] = 'style="' . $item_values['item_link_style'] . '"';
@@ -820,10 +1023,9 @@ class MLAArchiveList {
 				$item_values['item_link_attributes'] = implode( ' ', $attributes ) . ' ';
 			}
 
+			$item_values['item_link_text'] = $item_values['current_label'];
 			if ( ! empty( $item_values['mla_link_text'] ) ) {
 				$item_values['item_link_text'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_text'], $item_values ) );
-			} else {
-				$item_values['item_link_text'] = $item_values['current_label'];
 			}
 
 			if ( ! empty( $item_values['show_count'] ) && ( 'true' === strtolower( $item_values['show_count'] ) ) ) {
@@ -1061,9 +1263,15 @@ class MLAArchiveList {
 		}
 
 		self::$archive_list_items = $wpdb->get_results( $query );
+		$found_rows = count ( self::$archive_list_items );
+
+		// Handle the case where a query returns no valid archive values`
+		if ( 1 === $found_rows && empty( self::$archive_list_items[0]->year ) ) {
+			self::$archive_list_items = array();
+			$found_rows = 0;
+		}
 
 		// Adjust for pagination
-		$found_rows = count ( self::$archive_list_items );
 		$offset = absint( $query_arguments['offset'] );
 		$limit = absint( $query_arguments['limit'] );
 		if ( 0 < $offset || 0 < $limit ) {
@@ -1233,60 +1441,11 @@ class MLAArchiveList {
 		);
 
 		$default_arguments = array_merge(
-			array(
-			'archive_type' => 'yearly',
-			'archive_source' => 'post_date',
-			'archive_key' => '', // for source = custom
-			'link' => 'current',
-			'mla_output' => 'dropdown',
-			'mla_output_qualifier' => '',
-			'separator' => "\n",
-
-			'smallest' => 12, // 8
-			'largest' => 12, // 22
-			'default_size' => 12,
-			'unit' => 'pt',
-
-			'mla_archive_parameter' => 'mla_archive_current',
-			'mla_archive_current' => '',
-			'append_current_item' => 'true',
-			'archive_order' => 'DESC',
-			'archive_limit' => '0',
-			'archive_label' => '', // 'short', 'long'
-			'show_count' => 'true',
-			'hide_if_empty' => 'false',
-
-			'listtag' => '',
-			'listtag_name' => 'mla_archive_current',
-			'listtag_id' => $page_values['selector'],
-			'listtag_class' => 'mla-archive-list',
-			'listtag_attributes' => '',
-			'itemtag' => '',
-			'current_archive_class' => 'mla_archive_current',
-
-			'mla_style' => NULL,
-			'mla_markup' => NULL,
-
-			'option_all_value' => '',
-			'option_all_label' => '',
-			'option_none_value' => '',
-			'option_none_label' => '',
-
-			// Pagination parameters
-			'limit' => 0,
-			'offset' => 0,
-			'mla_end_size'=> 1,
-			'mla_mid_size' => 2,
-			'mla_prev_text' => '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
-			'mla_next_text' => __( 'Next', 'media-library-assistant' ) . ' &raquo;',
-			'mla_page_parameter' => 'mla_archive_list_current',
-			'mla_archive_list_current' => 1,
-			'mla_paginate_total' => NULL,
-			'mla_paginate_rows' => NULL,
-			'mla_paginate_type' => 'plain',
-
-			'mla_debug' => '',
-			'echo' => 'false',
+			self::$default_shortcode_arguments,
+			array (
+				'listtag_id' => $page_values['selector'],
+				'mla_prev_text' => '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
+				'mla_next_text' => __( 'Next', 'media-library-assistant' ) . ' &raquo;',
 			),
 			self::$item_specific_arguments
 		);
@@ -1405,10 +1564,16 @@ class MLAArchiveList {
 		// Update default argument values to simplify template substitution parameters
 		$arguments['mla_archive_parameter'] = $mla_archive_parameter;
 		$arguments['mla_archive_current'] = $arguments[ $mla_archive_parameter ];
-		$arguments['listtag_name'] = $mla_archive_parameter;
-		$arguments['current_archive_class'] = $mla_archive_parameter;
 		$arguments['mla_page_parameter'] = $mla_page_parameter;
 		$arguments['mla_archive_list_current'] = $arguments[ $mla_page_parameter ];
+
+		if ( ! isset( $attr['listtag_name'] ) ) {
+			$arguments['listtag_name'] = $mla_archive_parameter;
+		}
+
+		if ( ! isset( $attr['current_archive_class'] ) ) {
+			$arguments['current_archive_class'] = $mla_archive_parameter;
+		}
 
 		// Process the pagination parameter, if present
 		if ( isset( $arguments[ $mla_page_parameter ] ) ) {
@@ -1602,36 +1767,36 @@ class MLAArchiveList {
 
 		// Save the validated arguments for processing in posts_clauses_request, _compose_archive_list
 		self::$archive_list_arguments = $arguments;
-		$other_arguments = array_diff_assoc( $attr, self::$archive_list_arguments );
+		$get_shortcode_arguments = array_diff_key( $attr, self::$archive_list_arguments );
 
 		if ( self::$mla_debug ) {
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() _REQUEST = " . var_export( $_REQUEST, true ) );
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() self::\$archive_list_attr = " . var_export( self::$archive_list_attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() self::\$archive_list_arguments = " . var_export( self::$archive_list_arguments, true ) );
-			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() other_arguments = " . var_export( $other_arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() get_shortcode_arguments = " . var_export( $get_shortcode_arguments, true ) );
 		}
 
-		// The other arguments can contain page_level parameters like {+page_ID+}, request: or query: parameters
+		// The get_shortcode_arguments can contain page_level parameters like {+page_ID+}, request: or query: parameters
 		$markup_values = $page_values;
-		foreach ( $other_arguments as $key => $value ) {
+		foreach ( $get_shortcode_arguments as $key => $value ) {
 			if ( is_string( $value ) ) {
 				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $value ) );
-				$markup_values = MLAData::mla_expand_field_level_parameters( $attr_value, $other_arguments, $markup_values );
+				$markup_values = MLAData::mla_expand_field_level_parameters( $attr_value, $get_shortcode_arguments, $markup_values );
 				$value = MLAData::mla_parse_array_template( $attr_value, $markup_values, 'array' );
 			}
 
 			if ( empty( $value ) ) {
-				unset( $other_arguments[ $key ] );
+				unset( $get_shortcode_arguments[ $key ] );
 			} else {
-				$other_arguments[ $key ] = $value;
+				$get_shortcode_arguments[ $key ] = $value;
 			}
 		}
  
- 		if ( empty( $other_arguments['post_parent'] ) ) {
-			$other_arguments['post_parent'] = 'all';
+ 		if ( empty( $get_shortcode_arguments['post_parent'] ) ) {
+			$get_shortcode_arguments['post_parent'] = 'all';
 		}
 
-		$shortcode_arguments = array_merge( $other_arguments, array(
+		$get_shortcode_arguments = array_merge( $get_shortcode_arguments, array(
 			'no_found_rows' => true,
 			'fields' => 'ids',
 			'cache_results' => false,
@@ -1640,7 +1805,7 @@ class MLAArchiveList {
 		) );
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() shortcode_arguments = " . var_export( $shortcode_arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() get_shortcode_arguments = " . var_export( $get_shortcode_arguments, true ) );
 		}
 
 		if ( $is_pagination && ( NULL !== $arguments['mla_paginate_rows'] ) ) {
@@ -1664,7 +1829,7 @@ class MLAArchiveList {
 			 * the items are created in the mla_archive_posts_clauses_request filter
 			 * and stored in the self::$archive_list_items array.
 			 */
-			$attachments = MLAShortcodes::mla_get_shortcode_attachments( $ID, $shortcode_arguments, false, $mla_debug );
+			$attachments = MLAShortcodes::mla_get_shortcode_attachments( $ID, $get_shortcode_arguments, false, $mla_debug );
 
 			remove_filter( 'posts_clauses_request', 'MLAArchiveList::mla_archive_posts_clauses_request', 10 );
 			remove_filter( 'posts_pre_query', 'MLAArchiveList::mla_archive_posts_pre_query', 10 );

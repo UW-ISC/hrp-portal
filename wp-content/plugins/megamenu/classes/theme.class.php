@@ -67,6 +67,18 @@ if ( ! class_exists( 'Mega_Menu_Theme' ) ) :
 
 
 		/**
+		 * Return the full SCSS source for this theme (without compiling), using a
+		 * dummy location — the same source that test_compilation() would compile.
+		 *
+		 * @return string Full SCSS source string.
+		 */
+		public function get_scss() {
+			$test_location = new Mega_Menu_Location( 'test', 'Test', [] );
+			return $test_location->get_scss( $this );
+		}
+
+
+		/**
 		 * Return the default theme settings array.
 		 *
 		 * @return self
@@ -90,10 +102,12 @@ if ( ! class_exists( 'Mega_Menu_Theme' ) ) :
 					'arrow_down'                           => 'dash-f140',
 					'arrow_left'                           => 'dash-f141',
 					'arrow_right'                          => 'dash-f139',
+					'arrow_rotate'                         => 'off',
 					'close_icon'                           => 'dash-f158',
 					'close_icon_font_size'                 => '16px',
 					'close_icon_color'                     => '#fff',
 					'close_icon_label'                     => 'Close',
+					'menu_font_family'                     => 'inherit',
 					'font_size'                            => '14px', // deprecated
 					'font_color'                           => '#666', // deprecated
 					'font_family'                          => 'inherit', // deprecated

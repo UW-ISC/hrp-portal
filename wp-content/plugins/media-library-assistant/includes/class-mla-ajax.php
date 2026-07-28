@@ -422,8 +422,8 @@ class MLA_Ajax {
 				$clean_terms = array();
 				
 				foreach( $terms as $term ) {
-					if ( (integer) $term ) {
-						$clean_terms[] = (integer) $term;
+					if ( (int) $term ) {
+						$clean_terms[] = (int) $term;
 					}
 				}
 

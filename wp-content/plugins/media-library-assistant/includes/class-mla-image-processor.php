@@ -87,12 +87,13 @@ class MLAImageProcessor {
 	 * @param	string	$file Input file, e.g., a PDF document
 	 * @param	string	$frame Page/frame within the file, zero-based
 	 * @param	string	$resolution Output file DPI. Default 72.
+	 * @param	boolean	$best_fit Apply geometry-based fitting to the output file.
 	 * @param	string	$output_type Output MIME type; 'image/jpeg' or 'image/png'.
 	 * @param	string	$explicit_path Optional. Non-standard location to override default search, e.g., 'C:\Program Files (x86)\gs\gs9.15\bin\gswin32c.exe'
 	 *
 	 * @return	boolean	true if conversion succeeds else false
 	 */
-	private static function _ghostscript_convert( $file, $frame, $resolution, $output_type, $explicit_path = '' ) {
+	private static function _ghostscript_convert( $file, $frame, $resolution, $best_fit, $output_type, $explicit_path = '' ) {
 		// Look for exec() - from http://stackoverflow.com/a/12980534/866618
 		$blacklist = preg_split( '/,\s*/', ini_get('disable_functions') . ',' . ini_get('suhosin.executor.func.blacklist') );
 		if ( in_array('exec', $blacklist) ) {
@@ -170,11 +171,13 @@ class MLAImageProcessor {
 				$extension = '.png';
 			}
 
+			$fit_page = $best_fit ? '-dFitPage' : '';
+
 			// Generate a unique temporary file
 			$output_file = self::_get_temp_file( $extension );
 
-			$cmd = escapeshellarg( $ghostscript_path ) . ' -sDEVICE=%1$s -r%2$dx%2$d -dFirstPage=%3$d -dLastPage=%3$d -dFitPage -o %4$s %5$s 2>&1';
-			$cmd = sprintf( $cmd, $device, $resolution, ( $frame + 1 ), escapeshellarg( $output_file ), escapeshellarg( $file ) );
+			$cmd = escapeshellarg( $ghostscript_path ) . ' -sDEVICE=%1$s -r%2$dx%2$d -dFirstPage=%3$d -dLastPage=%3$d %4$s -o %5$s %6$s 2>&1';
+			$cmd = sprintf( $cmd, $device, $resolution, ( $frame + 1 ), $fit_page, escapeshellarg( $output_file ), escapeshellarg( $file ) );
 			exec( $cmd, $stdout, $return );
 			if ( 0 != $return ) {
 				self::_mla_debug_add( "ERROR: _ghostscript_convert exec returned '{$return}, cmd = " . var_export( $cmd, true ) );
@@ -348,15 +351,17 @@ class MLAImageProcessor {
 		$quality = isset( $args['quality'] ) ? abs( (int) $args['quality'] ) : 0;
 		$frame = isset( $args['frame'] ) ? abs( (int) $args['frame'] ) : 0;
 		$resolution = isset( $args['resolution'] ) ? abs( (int) $args['resolution'] ) : 72;
-		$best_fit = isset( $args['best_fit'] ) ? (boolean) $args['best_fit'] : false;
+		$best_fit = isset( $args['best_fit'] ) ? (bool) $args['best_fit'] : false;
 		$ghostscript_path = isset( $args['ghostscript_path'] ) ? $args['ghostscript_path'] : '';
 
 		// Retain WordPress type for _prepare_image and adjust defaults
 		if ( 'WordPress' === $type ) {
 			$mime_type = 'image/jpeg';
 			$resolution = isset( $args['resolution'] ) ? abs( (int) $args['resolution'] ) : 128;
+			$geo_fit = false;
 		} else {
 			$mime_type = $type;
+			$geo_fit = $best_fit;
 		}
 
 		// Convert the file to an image format and load it
@@ -374,7 +379,7 @@ class MLAImageProcessor {
 			self::$image->setResolution( $resolution, $resolution );
 
 			$try_step = __LINE__ . ' _ghostscript_convert';
-			$result = self::_ghostscript_convert( $input_file, $frame, $resolution, $mime_type, $ghostscript_path );
+			$result = self::_ghostscript_convert( $input_file, $frame, $resolution, $geo_fit, $mime_type, $ghostscript_path );
 
 			if ( false === $result ) {
 				try {
@@ -486,6 +491,8 @@ class MLAImageProcessor {
 		$quality = isset( $_REQUEST['mla_stream_quality'] ) ? abs( (int) $_REQUEST['mla_stream_quality'] ) : 0;
 		$frame = isset( $_REQUEST['mla_stream_frame'] ) ? abs( (int) $_REQUEST['mla_stream_frame'] ) : 0;
 		$resolution = isset( $_REQUEST['mla_stream_resolution'] ) ? abs( (int) $_REQUEST['mla_stream_resolution'] ) : 72;
+		$best_fit = isset( $_REQUEST['mla_stream_fit'] ) ? ( '1' === $_REQUEST['mla_stream_fit'] ) : false;
+
 		/*
 		 * If mla_ghostscript_path is present, a non-standard GS location can be found in a file written by
 		 * the [mla_gallery] shortcode processor.
@@ -519,7 +526,7 @@ class MLAImageProcessor {
 			self::$image->setResolution( $resolution, $resolution );
 
 			//$result = false;
-			$result = self::_ghostscript_convert( $file, $frame, $resolution, $type, $ghostscript_path );
+			$result = self::_ghostscript_convert( $file, $frame, $resolution, $best_fit, $type, $ghostscript_path );
 
 			if ( false === $result ) {
 				try {
@@ -548,12 +555,6 @@ class MLAImageProcessor {
 
 		// Prepare the output image; resize and flatten, if necessary
 		try {
-			if ( isset( $_REQUEST['mla_stream_fit'] ) ) {
-				$best_fit = ( '1' == $_REQUEST['mla_stream_fit'] );
-			} else {
-				$best_fit = false;
-			}
-
 			self::_prepare_image( $width, $height, $best_fit, $type, $quality );
 			}
 		catch ( Exception $e ) {

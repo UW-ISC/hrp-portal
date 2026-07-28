@@ -33,6 +33,15 @@ class MLATest {
 	public static $wp_4dot3_plus = null;
 
 	/**
+	 * True if PHP version is 8.0.0 or newer
+	 *
+	 * @since 3.39
+	 *
+	 * @var	boolean
+	 */
+	public static $php_8dot0_plus = null;
+
+	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 0.60
@@ -42,6 +51,7 @@ class MLATest {
 	public static function initialize() {
 		MLATest::$wp_3dot5 = ( version_compare( get_bloginfo( 'version' ), '3.5.0', '>=' ) && version_compare( get_bloginfo( 'version' ), '3.5.99', '<=' ) );
 		MLATest::$wp_4dot3_plus = version_compare( get_bloginfo( 'version' ), '4.2.99', '>=' );
+		MLATest::$php_8dot0_plus = version_compare( phpversion(), '7.9.99', '>=' );
 
 		// This is the earliest effective place to change error_reporting
 		$php_reporting = trim( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_REPORTING ) );
