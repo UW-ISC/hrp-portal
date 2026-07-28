@@ -19,7 +19,7 @@
  * https://wordpress.org/support/topic/taxonomy-in-the-assistant-listing/
  *
  * @package MLA Path Mapping Example
- * @version 1.13
+ * @version 1.14
  */
 
 /*
@@ -27,7 +27,7 @@ Plugin Name: MLA Path Mapping Example
 Plugin URI: http://davidlingren.com/
 Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features, and has tools to copy term definitions and assignments between taxonomies.
 Author: David Lingren
-Version: 1.13
+Version: 1.14
 Author URI: http://davidlingren.com/
 
 Copyright 2018-2025 David Lingren
@@ -61,7 +61,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.13';
+	const PLUGIN_VERSION = '1.14';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -185,8 +185,8 @@ class MLAPathMappingExample {
 		add_filter( 'mla_mapping_updates', 'MLAPathMappingExample::mla_mapping_updates', 10, 5 );
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -212,7 +212,7 @@ class MLAPathMappingExample {
 		}
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 
 		// Load template array for front-end shortcodes
 		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
@@ -572,7 +572,7 @@ class MLAPathMappingExample {
 			} else {
 				$new_term = self::_maybe_insert_destination_term( $destination_taxonomy, $term->term_id, false, true );
 				self::$source_terms[ $term->term_id ]['destination_term'] = $new_term['term_id'];
-				$destination_terms[] = (integer) $new_term['term_id'];
+				$destination_terms[] = (int) $new_term['term_id'];
 			}
 		}
 

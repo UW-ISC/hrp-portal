@@ -7,7 +7,7 @@
  * https://wordpress.org/support/topic/plugin-mla-simple-mapping-hooks-example/
  *
  * @package MLA Postie Post After Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -15,7 +15,7 @@ Plugin Name: MLA Postie Post After Example
 Plugin URI: http://davidlingren.com/
 Description: Applies MLA mapping rules to child attachments after Postie creates a parent post from an email
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2020 David Lingren
@@ -93,7 +93,7 @@ class MLAPostiePostAfterExample {
 		$results = $wpdb->get_results( $wpdb->prepare( $query, $query_parameters ) );
 
 		foreach ( $results as $result ) {
-			$item_id = (integer) $result->ID;
+			$item_id = (int) $result->ID;
 			
 			do_action( 'mla_begin_mapping', 'single_custom', $item_id );
 			$updates = MLAOptions::mla_evaluate_custom_field_mapping( $item_id, 'single_attachment_mapping' );

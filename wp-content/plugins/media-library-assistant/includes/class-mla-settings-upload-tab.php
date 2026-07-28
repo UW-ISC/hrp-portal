@@ -371,6 +371,8 @@ class MLASettings_Upload {
 
 		// Process bulk actions that affect an array of items
 		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
+			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 				$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
 				if ( 'select' == $bulk_action ) {

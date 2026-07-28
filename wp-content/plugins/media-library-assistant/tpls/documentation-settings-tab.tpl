@@ -1,6 +1,6 @@
 ﻿<!-- template="documentation-tab" -->
 <h2>Plugin and Shortcode Documentation. In this tab, jump to:</h2>
-<div class="mla-display-settings-page" id="mla-display-settings-documentation-tab" style="width:710px">
+<div id="mla-display-settings-documentation-tab" class="mla-display-settings-page" style="width:710px">
 <p class="submit mla-settings-submit" [+example_style+]>
 Browse and install: 
 <a href="[+example_url+]" class="button button-primary">Example Plugins</a><br />
@@ -13,116 +13,57 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <div id="mla-doc-gallery-shortcode" class="mla-doc-shortcode-div"><a href="#mla_gallery"><strong>MLA Gallery Shortcode</strong></a>
 <ul class="mla-doc-toc-list">
 <li><a href="#documentation_sources">Option/Parameter Documentation Sources</a></li>
-<li><a href="#gallery_substitution">Substitution Parameters</a></li>
+<li><a href="#gallery_using_substitution">Using Substitution Parameters</a></li>
 <li><a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a></li>
-<li><a href="#gallery_display_style">Gallery Display Style</a></li>
-<li><a href="#gallery_display_content">Gallery Display Content</a></li>
-<li><a href="#thumbnail_substitution">Thumbnail Substitution,<br />Featured Images and mla_viewer</a></li>
-<li><a href="#order_orderby">Order, Orderby</a></li>
-<li><a href="#size">Size</a></li>
-<li><a href="#link">Link</a></li>
-<li><a href="#named_transfer">Transfer by Item Name</a></li>
+<li><a href="#gallery_display_output">Output Formats</a></li>
+<li><a href="#gallery_link">Item Link</a></li>
+<li><a href="#gallery_display_templates">Display Style and Markup Templates</a></li>
+<li><a href="#gallery_image_size">Gallery Image Size</a></li>
 <li><a href="#mla_minimum">Minimum Gallery Size</a></li>
-<li><a href="#include_exclude">Include, Exclude</a></li>
-<li><a href="#post_id_ids_post_parent">Post ID, "ids", Post Parent</a></li>
-<li><a href="#author_author_name">Author, Author Name</a></li>
-<li><a href="#category_parameters">Category Parameters</a></li>
-<li><a href="#tag_parameters">Tag Parameters</a></li>
+<li><a href="#thumbnail_substitution">Thumbnail Substitution,<br />Featured Images and mla_viewer</a></li>
+<li><a href="#named_transfer">Transfer by Item Name</a></li>
+<li><a href="#gallery_grid">Grid Parameters</a></li>
+<li><a href="#gallery_special_items">Special Items</a></li>
+<li><a href="#gallery_display_tags">Display Tags</a></li>
+<li><a href="#gallery_hyperlinks">Hyperlink Parameters</a></li>
+<li>
+<a href="#gallery_other">Other Parameters</a>
+</li>
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
+<li><a href="#debugging_output">Debugging Output</a></li>
+<li><a href="#cache_parameters">Caching Parameters</a></li>
+<li><a href="#fields_parameter">Fields Parameter</a></li>
+</ul></li>
+<li><a href="#gallery_data_selection">MLA Gallery Data Selection Parameters</a></li>
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
+<li><a href="#ids_include_exclude">"ids", Include, Exclude</a></li>
+<li><a href="#post_id_post_parent">Post ID, Post Parent</a></li>
+<li><a href="#post_mime_type_parameter">Post MIME Type</a></li>
 <li><a href="#simple_taxonomy_parameters">Simple Taxonomy Parameters</a></li>
 <li><a href="#taxonomy_parameters_tax_input">Compound Taxonomy Parameters, "tax_input"</a></li>
 <li><a href="#taxonomy_queries">Taxonomy Queries, the "tax_query"</a></li>
 <li><a href="#taxonomy_keyword_search">Taxonomy term keyword(s) search</a></li>
-<li><a href="#post_mime_type_parameter">Post MIME Type</a></li>
-<li><a href="#post_type_post_status">Post Type, Post Status</a></li>
-<li><a href="#pagination_parameters">Pagination Parameters</a></li>
-<li><a href="#date_parameters">Simple Date Parameters</a></li>
-<li><a href="#date_queries">Date and Time Queries, the "date query"</a></li>
+<li><a href="#category_parameters">Category Parameters</a></li>
+<li><a href="#tag_parameters">Tag Parameters</a></li>
 <li><a href="#custom_field_parameters">Simple Custom Field Parameters</a></li>
 <li><a href="#custom_field_queries">Custom Field Queries, the "meta_query"</a></li>
+<li><a href="#date_parameters">Simple Date Parameters</a></li>
+<li><a href="#date_queries">Date and Time Queries, the "date query"</a></li>
 <li><a href="#search_keywords">Keyword(s) Search</a></li>
-<li><a href="#cache_parameters">Caching Parameters</a></li>
-<li><a href="#fields_parameter">Fields Parameter</a></li>
-<li><a href="#debugging_output">Debugging Output</a></li>
-<li><a href="#mla_gallery_hooks">MLA Gallery Filters (Hooks)</a></li>
-</ul></div>
-<div  id="mla-doc-archive-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_archive_list"><strong>MLA Archive List Shortcode</strong></a>
-<ul class="mla-doc-toc-list">
-<li><a href="#archive_type">Archive Type</a></li>
-<li><a href="#archive_source">Archive Source</a></li>
-<li><a href="#archive_list_output_formats">Archive List Output Formats</a></li>
-<li><a href="#archive_list_display_templates">Archive List Display Style and Markup<br />(all output formats except "flat")</a></li>
-<li><a href="#archive_list_display_content">Archive List Display Style and Content</a></li>
-<li><a href="#archive_list_link">Archive List Item Link Values<br />(Array, Flat and List)</a></li>
-<li><a href="#archive_list_cloud">Archive List Cloud Values (Flat and List)</a></li>
-<li><a href="#archive_list_other">Archive List Other Parameters</a></li>
-<li><a href="#archive_list_data_selection">Archive List Data Selection Parameters</a></li>
-<li><a href="#archive_list_substitution">Archive List Substitution Parameters</a></li>
-<li><a href="#archive_list_pagination">Archive List Pagination Parameters</a></li>
-<li><a href="#archive_list_examples">Archive List Examples</a></li>
-<li><a href="#archive_list_hooks">MLA Archive List Filters (Hooks)</a></li>
-</ul></div>
-</div>
-<div id="mla-doc-shortcodes-column-2" class="mla-doc-shortcode-column">
-<div  id="mla-doc-cloud-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_tag_cloud"><strong>MLA Tag Cloud Shortcode</strong></a>
-<ul class="mla-doc-toc-list">
-<li><a href="#tag_cloud_output">Tag Cloud Output Formats</a></li>
-<li><a href="#tag_cloud_items">Tag Cloud Item Parameters</a></li>
-<li><a href="#tag_cloud_link">Tag Cloud Item Link</a></li>
-<li><a href="#tag_cloud_display_style">Tag Cloud Display Style (list and grid)</a></li>
-<li><a href="#tag_cloud_display_content">Tag Cloud Display Content</a></li>
-<li><a href="#tag_cloud_data_selection">Tag Cloud Data Selection Parameters</a></li>
-<li><a href="#tag_cloud_debugging_output">Tag Cloud Debugging Output</a></li>
-<li><a href="#tag_cloud_substitution">Tag Cloud Substitution Parameters</a></li>
-<li><a href="#tag_cloud_pagination">Tag Cloud Pagination Parameters</a></li>
-<li><a href="#tag_cloud_pagination_example">A Tag Cloud Pagination Example</a></li>
-<li><a href="#mla_tag_cloud_hooks">MLA Tag Cloud Filters (Hooks)</a></li>
-</ul></div>
-<div  id="mla-doc-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_term_list"><strong>MLA Term List Shortcode</strong></a>
-<ul class="mla-doc-toc-list">
-<li><a href="#term_list_output_formats">Term List Output Formats</a></li>
-<li><a href="#term_list_output_structure">Term List Output Structure</a></li>
-<li><a href="#term_list_items">Term List Item Parameters</a></li>
-<li><a href="#term_list_items_afl">Term List Item Parameters (Array, Flat and List)</a></li>
-<li><a href="#term_list_link">Term List Item Link Values (Array, Flat and List)</a></li>
-<li><a href="#term_list_display_style_ldc">Term List Display Style (List, Dropdown and Checklist)</a></li>
-<li><a href="#term_list_display_style">Term List Display Style (List and Checklist)</a></li>
-<li><a href="#term_list_display_style_d">Term List Display Style (Dropdown)</a></li>
-<li><a href="#term_list_display_content_all">Term List Display Content (all Output Formats)</a></li>
-<li><a href="#term_list_display_content_afl">Term List Display Content (Array, Flat and List)</a></li>
-<li><a href="#term_list_display_content">Term List Display Content (Dropdown and Checklist)</a></li>
-<li><a href="#term_list_other">Term List Other Parameters</a></li>
-<li><a href="#term_list_data_selection">Term List Data Selection Parameters</a></li>
-<li><a href="#term_list_data_selection_h">Term List Data Selection Parameters (Hierarchical Output)</a></li>
-<li><a href="#term_list_substitution">Term List Substitution Parameters</a></li>
-<li><a href="#mla_term_list_examples">MLA Term List Examples</a></li>
-<li><a href="#mla_term_list_hooks">MLA Term List Filters (Hooks)</a></li>
-</ul></div>
-<div  id="mla-doc-cf-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_cf_list"><strong>MLA Custom Field List Shortcode</strong></a>
-<ul class="mla-doc-toc-list">
-<li><a href="#cf_list_output">Custom Field List Output Formats</a></li>
-<li><a href="#cf_list_items">Custom Field List Item Parameters</a></li>
-<li><a href="#cf_list_items_flat">Custom Field List Item Parameters<br />("cloud" formats: flat, list and grid)</a></li>
-<li><a href="#cf_list_items_flga">Custom Field List Item Parameters<br />(except dropdown and checklist formats)</a></li>
-<li><a href="#cf_list_link">Custom Field List Item Link</a></li>
-<li><a href="#cf_list_display_templates">Custom Field List Display Style and Markup<br />(all output formats except "flat")</a></li>
-<li><a href="#cf_list_display_grid">Custom Field List Display Style<br />(grid)</a></li>
-<li><a href="#cf_list_display_style">Custom Field List Display Style<br />(list, grid and checklist)</a></li>
-<li><a href="#cf_list_display_content">Custom Field List Display Content</a></li>
-<li><a href="#cf_list_display_content_html">Custom Field List Display Content<br />(dropdown and checklist)</a></li>
-<li><a href="#cf_list_other">Custom Field List Other Parameters</a></li>
-<li><a href="#cf_list_data_selection">Custom Field List Data Selection Parameters</a></li>
-<li><a href="#cf_list_substitution">Custom Field List Substitution Parameters</a></li>
-<li><a href="#cf_list_pagination">Custom Field List Pagination Parameters</a></li>
-<li><a href="#cf_list_pagination_example">A Custom Field List Pagination Example</a></li>
-<li><a href="#mla_cf_list_hooks">MLA Custom Field List Filters (Hooks)</a></li>
-</ul></div>
-</div></div>
-<ul style="list-style-position:inside; list-style:disc; line-height: 18px; clear:both">
+<li><a href="#author_author_name">Author, Author Name</a></li>
+<li><a href="#post_type_post_status">Post Type, Post Status</a></li>
+<li><a href="#order_orderby">Order, Orderby</a></li>
+</ul></li>
+<li><a href="#gallery_pagination">Pagination Parameters</a></li>
+<li><a href="#gallery_substitution">Substitution Parameters</a></li>
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
+<li><a href="#gallery_specific">Gallery-specific substitution parameters</a></li>
+<li><a href="#mla_style_parameters">Substitution parameters for style templates</a></li>
+<li><a href="#mla_markup_parameters">Substitution parameters for markup templates</a></li>
+<li><a href="#mla_attachment_parameters">Attachment-specific substitution parameters for the markup template Item part</a></li>
+</ul></li>
 <li>
-<a href="#shortcode_api"><strong>Calling shortcode functions from PHP code; the MLA shortcode API</strong></a>
-</li>
-<li>
-<a href="#gallery_examples"><strong>MLA Gallery Examples</strong></a>
+<a href="#gallery_examples">MLA Gallery Examples</a>
 </li>
 <li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#simple_examples">Simple Examples</a></li>
@@ -130,8 +71,86 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#cloud_and_gallery">Tag Cloud and Gallery</a></li>
 <li><a href="#search_form_and_gallery">Search Form and Gallery</a></li>
 </ul></li>
+<li><a href="#mla_gallery_hooks">MLA Gallery Filters (Hooks)</a></li>
+</ul></div>
+<div  id="mla-doc-archive-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_archive_list"><strong>MLA Archive List Shortcode</strong></a>
+<ul class="mla-doc-toc-list">
+<li><a href="#archive_type">Archive Type</a></li>
+<li><a href="#archive_source">Archive Source</a></li>
+<li><a href="#archive_list_output">Output Formats</a></li>
+<li><a href="#archive_list_link">Item Link</a></li>
+<li><a href="#archive_list_display_templates">Display Style and Markup Templates</a></li>
+<li><a href="#archive_list_display_content">Display Style and Content</a></li>
+<li><a href="#archive_list_cloud">Cloud Parameters</a></li>
+<li><a href="#archive_list_special_items">Special Items</a></li>
+<li><a href="#archive_list_display_tags">Display Tags</a></li>
+<li><a href="#archive_list_hyperlinks">Hyperlink Parameters</a></li>
+<li><a href="#archive_list_other">Other Parameters</a></li>
+<li><a href="#archive_list_data_selection">Data Selection Parameters</a></li>
+<li><a href="#archive_list_pagination">Pagination Parameters</a></li>
+<li><a href="#archive_list_substitution">Substitution Parameters</a></li>
+<li><a href="#archive_list_examples">MLA Archive List Examples</a></li>
+<li><a href="#archive_list_hooks">MLA Archive List Filters (Hooks)</a></li>
+</ul></div>
+</div>
+<div id="mla-doc-shortcodes-column-2" class="mla-doc-shortcode-column">
+<div  id="mla-doc-cloud-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_tag_cloud"><strong>MLA Tag Cloud Shortcode</strong></a>
+<ul class="mla-doc-toc-list">
+<li><a href="#tag_cloud_output">Output Formats</a></li>
+<li><a href="#tag_cloud_link">Item Link</a></li>
+<li><a href="#tag_cloud_display_templates">Display Style and Markup Templates</a></li>
+<li><a href="#tag_cloud_display_content">Display Style and Content</a></li>
+<li><a href="#tag_cloud_cloud">Cloud Parameters</a></li>
+<li><a href="#tag_cloud_grid">Grid Parameters</a></li>
+<li><a href="#tag_cloud_special_items">Special_items</a></li>
+<li><a href="#tag_cloud_display_tags">Display Tags</a></li>
+<li><a href="#tag_cloud_hyperlinks">Hyperlink Parameters</a></li>
+<li><a href="#tag_cloud_other">Other Parameters</a></li>
+<li><a href="#tag_cloud_data_selection">Data Selection Parameters</a></li>
+<li><a href="#tag_cloud_pagination">Pagination Parameters</a></li>
+<li><a href="#tag_cloud_substitution">Substitution Parameters</a></li>
+<li><a href="#tag_cloud_examples">MLA Tag Cloud Examples</a></li>
+<li><a href="#mla_tag_cloud_hooks">MLA Tag Cloud Filters (Hooks)</a></li>
+</ul></div>
+<div  id="mla-doc-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_term_list"><strong>MLA Term List Shortcode</strong></a>
+<ul class="mla-doc-toc-list">
+<li><a href="#term_list_output">Output Formats</a></li>
+<li><a href="#term_list_output_structure">Output Structure</a></li>
+<li><a href="#term_list_link">Item Link</a></li>
+<li><a href="#term_list_display_templates">Display Style and Markup Templates</a></li>
+<li><a href="#term_list_display_content">Display Style and Content</a></li>
+<li><a href="#term_list_special_items">Special Items</a></li>
+<li><a href="#term_list_display_tags">Display Tags</a></li>
+<li><a href="#term_list_hyperlinks">Hyperlink Parameters</a></li>
+<li><a href="#term_list_other">Other Parameters</a></li>
+<li><a href="#term_list_data_selection">Data Selection Parameters</a></li>
+<li><a href="#term_list_data_selection_h">Data Selection Parameters (Hierarchical Output)</a></li>
+<li><a href="#term_list_substitution">Substitution Parameters</a></li>
+<li><a href="#mla_term_list_examples">MLA Term List Examples</a></li>
+<li><a href="#mla_term_list_hooks">MLA Term List Filters (Hooks)</a></li>
+</ul></div>
+<div  id="mla-doc-cf-list-shortcode"  class="mla-doc-shortcode-div"><a href="#mla_cf_list"><strong>MLA Custom Field List Shortcode</strong></a>
+<ul class="mla-doc-toc-list">
+<li><a href="#cf_list_output">Output Formats</a></li>
+<li><a href="#cf_list_link">Item Link</a></li>
+<li><a href="#cf_list_display_templates">Display Style and Markup Templates</a></li>
+<li><a href="#cf_list_display_content">Display Style and Content</a></li>
+<li><a href="#cf_list_cloud">Cloud Parameters</a></li>
+<li><a href="#cf_list_grid">Grid Parameters</a></li>
+<li><a href="#cf_list_special_items">Special Items</a></li>
+<li><a href="#cf_list_display_tags">Display Tags</a></li>
+<li><a href="#cf_list_hyperlinks">Hyperlink Parameters</a></li>
+<li><a href="#cf_list_other">Other Parameters</a></li>
+<li><a href="#cf_list_data_selection">Data Selection Parameters</a></li>
+<li><a href="#cf_list_pagination">Pagination Parameters</a></li>
+<li><a href="#cf_list_substitution">Substitution Parameters</a></li>
+<li><a href="#cf_list_examples">MLA Custom Field List Examples</a></li>
+<li><a href="#mla_cf_list_hooks">MLA Custom Field List Filters (Hooks)</a></li>
+</ul></div>
+</div></div>
+<ul style="list-style-position:inside; list-style:disc; line-height: 18px; clear:both">
 <li>
-<a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a>
+<a href="#shortcode_api"><strong>Calling shortcode functions from PHP code; the MLA shortcode API</strong></a>
 </li>
 <li>
 <a href="#alt_shortcode"><strong>Support for Other Gallery-generating Shortcodes</strong></a>
@@ -153,10 +172,6 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 </li>
 <li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#argument_parameters">Argument substitution parameters</a></li>
-<li><a href="#gallery_specific">Gallery-specific substitution parameters</a></li>
-<li><a href="#mla_style_parameters">Substitution parameters for style templates</a></li>
-<li><a href="#mla_markup_parameters">Substitution parameters for markup templates</a></li>
-<li><a href="#mla_attachment_parameters">Attachment-specific substitution parameters for the markup template Item part</a></li>
 </ul></li>
 <li>
 <a href="#mla_table_example"><strong>A table-based Style and Markup template example</strong></a>
@@ -261,8 +276,8 @@ have a look at the <a title="MLA Internationalization Guide.pdf" href="[+transla
 <p>
 If you are a developer interested in how this plugin is put together, you should
 have a look at the <a title="Consult the phpDocs documentation" href="[+phpDocs_url+]" target="_blank" class="mla-doc-bold-link">phpDocs documentation</a>.
-<a name="mla_gallery"></a>
 </p>
+<p><a name="mla_gallery"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -273,25 +288,23 @@ The <code>[mla_gallery]</code> shortcode is used in a post, page or custom post 
 <ul class="mla_settings">
 <li>Full support for WordPress categories, tags and custom taxonomies. You can select items with any of the taxonomy parameters documented in the WP_Query class.</li>
 <li>Support for all post_mime_type values, not just images.</li>
+<li>Many data selection parameters including custom field and date queries and keyword(s) search.</li>
 <li>Media Library items need not be "attached" to the post. You can build a gallery with any combination of items in the Library using taxonomy terms, custom fields and more.</li>
 <li>Control over the styles, markup and content of each gallery using the Style and Markup Templates documented below.</li>
 <li>Access to a wide range of content using the Attachment-specific and Field-level Substitution parameters documented below. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given gallery item.</li>
 <li>You can combine <code>[mla_gallery]</code> data selection with other popular gallery-generating plugins to get the best of both.
 </li>
 </ul>
-<p>
-&nbsp;
-<a name="documentation_sources"></a>
-</p>
+<p><a name="documentation_sources"></a></p>
 <h4>Option/Parameter Documentation Sources</h4>
 <p>
 If you're new to Media Library Assistant and the <code>[mla_gallery]</code> shortcode you should read through the material in the <a href="#gallery_examples">MLA Gallery Examples</a> section.
 </p>
 <p>
 All of the options/parameters documented for the <code>[gallery]</code> shortcode are supported by the <code>[mla_gallery]</code> shortcode; you can find them in the <a href="http://codex.wordpress.org/Gallery_Shortcode" title="WordPress Codex link" target="_blank">WordPress Codex</a>. Most of the parameters documented for the WP_Query class are also supported; see the <a href="https://developer.wordpress.org/reference/classes/wp_query/" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>. Because the <code>[mla_gallery]</code> shortcode is designed to work with Media Library items, there are some parameter differences and extensions; these are documented below.
-<a name="gallery_substitution"></a>
 </p>
-<h4>Substitution Parameters</h4>
+<p><a name="gallery_using_substitution"></a></p>
+<h4>Using Substitution Parameters</h4>
 <p>
 Substitution parameters are a powerful way to add general and attachment-specific values to the gallery display. For example, if you code "<code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. There are dozens of parameter names like `date` and `description` divided in several categories:
 </p>
@@ -326,8 +339,8 @@ Click on any of the category names in the above table to go to the Documentation
 </p>
 <p>
 To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
-<a name="complex_shortcodes"></a>
 </p>
+<p><a name="complex_shortcodes"></a></p>
 <h4>Entering Long/Complex Shortcodes</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The <a href="https://codex.wordpress.org/Shortcode_API" title="Shortcode API Documentation" target="_blank">WordPress Shortcode API</a> has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. If you have trouble with your shortcode, such as an "Invalid mla_gallery tax_query" message, try these rules to correct the problem:
@@ -372,9 +385,71 @@ WordPress parses the second, "enclosing" syntax in a different way that can elim
 </p>
 <p>
 For simple <code>[mla_gallery]</code> shortcodes, code your parameters within the shortcode square brackets and follow the rules above. For more complex shortcodes, the enclosing syntax can avoid many of the limitations WordPress imposes on shortcode parsing.
-<a name="gallery_display_style"></a>
 </p>
-<h4>Gallery Display Style</h4>
+<p><a name="gallery_display_output"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Output Formats</h4>
+<p>
+ The default format, "gallery", composes a gallery of Media Library items. The other values completely replace gallery output with links to the "previous" or "next" item/page or pagination links as described in the Pagination Parameters section.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_output</td>
+<td>determines the type of output the shortcode will return.  The default format is "<strong>gallery</strong>".</td>
+</tr>
+</table>
+<p>
+The <code>[mla_gallery]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links". You can find details for pagination format parameters in the <a href="#gallery_pagination">Pagination Parameters</a> section below.
+</p>
+<p><a name="gallery_link"></a></p>
+<h4>Item Link</h4>
+<p>
+The Link parameter, e.g., <code>link=permalink</code> (the default), specifies the target and type of link from the gallery item to the attachment or other destination. You can also specify a non-hyperlink treatment for the item.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">permalink, post</td>
+<td>Link to the attachment's "media page". This is the default value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">original</td>
+<td>Link directly to the original, full-size, image file for scaled images or to the attachment file for unscaled images.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">file, full</td>
+<td>Link directly to the attachment file. See also the "Transfer by Item Name" section just below.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">download</td>
+<td>Forces a file download instead of opening the file in the browser.  See also the "Transfer by Item Name" section just below.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large</td>
+<td>For image attachments, the size of the image file you want to link to.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
+<td>For image attachments, any additional image size that was registered with add_image_size(). If the specified size is not available or if the attachment is not an image, the link will go directly to the attachment file.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
+<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. Several of the examples below illustrate the various applications for this parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">span</td>
+<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Eliminates the hyperlink tag surrounding the thumbnail image or text. You can use the "mla_link_text" parameter to customize the contents.</td>
+</tr>
+</table>
+<p>
+Note that the handling of `link=file` and `link=download` values can be altered by specifying <code>mla_named_transfer=true</code> as described in the next section.
+<p><a name="gallery_display_templates"></a></p>
+<h4>Display Style and Markup Templates</h4>
 <p>
 Two <code>[mla_gallery]</code> parameters provide a way to apply custom style and markup templates to your <code>[mla_gallery]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. On the "Shortcodes" tab you can also select one of your custom templates to replace the built-in default template for all <code>[mla_gallery]</code> shortcodes the do not contain one of these parameters.
 </p>
@@ -388,137 +463,46 @@ Two <code>[mla_gallery]</code> parameters provide a way to apply custom style an
 <td>replaces the default markup template for an <code>[mla_gallery]</code> shortcode</td>
 </tr>
 </table>
+</p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<p><a name="gallery_image_size"></a></p>
+<h4>Gallery Image Size</h4>
 <p>
-Four <code>[mla_gallery]</code> parameters provide control over the placement, size and spacing of gallery items without requiring the use of custom Style templates.
+The Size parameter, e.g., <code>size=thumbnail</code> (the default), specifies the image size to use for the thumbnail display; "thumbnail" is the default value. You can also substitute an appropriate icon for some or all items or replace the thumbnail image with the item title.
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">columns</td>
-<td>specifies the number of columns. The gallery will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
+<td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large,&nbsp;full</td>
+<td valign="top">For image types, the size of the image you want to display. If the specific size is not available for an image an existing size will be substituted. For non-image types the title of the item will be displayed. "thumbnail" is the default value.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_float</td>
-<td>specifies the CSS float attribute of the ".gallery-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
+<td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
+<td>For image types, any additional image size that was registered with add_image_size(). If the specified size is not available or if the attachment is not an image the title of the item will be displayed.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".gallery-item" style. The default value is "1.5%", a percent of the total gallery width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+<td class="mla-doc-table-label">icon</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files. If, however, a non-image item has a "Featured Image" it will replace the icon.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".gallery-item" style. You can specify a percent of the total gallery width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the width property from the styles template altogether.
-<br />&nbsp;<br />
-Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
-<br />&nbsp;<br />
-For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
+<td class="mla-doc-table-label">icon_feature</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image. If, however, an item has a "Featured Image" it will replace the icon.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_only</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Suppress thumbnail display and substitute the title of the item.</td>
 </tr>
 </table>
+<p><a name="mla_minimum"></a></p>
+<h4>Minimum Gallery Size</h4>
 <p>
-These parameters are only important if the gallery thumbnails are too large to fit within the width of the page on which they appear. For example, if you code <code>[mla_gallery size=full]</code>, the browser will automatically scale down large images to fit within the width attribute (in percent) of the ".gallery-item" style. The default 1.5% margin will ensure that the images do not overlap; you can increase it to add more space between the gallery items. You can also reduce the itemwidth parameter to increase the left and right space between the items.
+You can add <code>mla_minimum=(count)</code> to display an empty gallery if the number of items available for display is less than the number specified. For example, to display an empty gallery when just one item is available, code <code>mla_minimum=2</code>.
 </p>
-<p>
-The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the gallery. You can also code <code>mla_style=theme</code>, if your theme supports it, to use the theme's stylesheet to control the format of the gallery.
-</p>
-<p>
-Three parameters provide control over the XHTML tags used to enclose each part of the gallery items.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>the name of the XHTML tag used to enclose each item in the gallery. The default is "dl"; if your theme supports HTML5, the default is "figure".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">icontag</td>
-<td>the name of the XHTML tag used to enclose each thumbnail icon in the gallery. The default is "dt"; if your theme supports HTML5, the default is "div".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>the name of the XHTML tag used to enclose each caption. The default is "dd"; if your theme supports HTML5, the default is "figcaption".</td>
-</tr>
-</table>
-<p>
-These parameters work together to change the gallery markup. For example, to change the gallery markup to use div, span and p tags: 
-</p>
-<p>
-<code>[gallery itemtag="div" icontag="span" captiontag="p"]</code>
-<a name="gallery_display_content"></a>
-</p>
-<h4>Gallery Display Content</h4>
-<p>
-Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the contents of gallery items without requiring the use of custom Markup templates.  
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_output</td>
-<td>completely replaces gallery output with links to the "previous" or "next" item/page or pagination links. Complete documentation is in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>adds the HTML "title" attribute in the hyperlink for each gallery item. This is the attachment title text displayed when the mouse rolls or hovers over the gallery thumbnail. Note that as of WordPress 3.7 there is no default "title" attribute; for older WordPress versions this parameter will replace the default "title".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td>adds an HTML "class" attribute to the hyperlink for each gallery item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML "href" attribute in the hyperlink for each gallery item; see below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the thumbnail image or attachment title text displayed for each gallery item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_image_attributes</td>
-<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_image_class</td>
-<td><strong>adds</strong> one or more values to the HTML "class" attribute in the "img" tag of the thumbnail image or icon displayed for each gallery item. Existing class values are retained, not replaced.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_image_alt</td>
-<td>replaces the HTML "alt" attribute in the "img" tag of the thumbnail image or icon displayed for each gallery item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_caption</td>
-<td>replaces the attachment caption text displayed beneath the thumbnail of each gallery item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there are no gallery items or no pagination link.</td>
-</tr>
-</table>
-<p>
-The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
-</p>
-<p>
-All but the "mla_target" parameter support the <a href="#mla_markup_parameters">Markup</a>, <a href="#mla_attachment_parameters">Attachment-specific</a>, <a href="#mla_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code <code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
-</p>
-<p>
-The "mla_link_href" parameter is a great way to change the destination your gallery item links to or add arguments to the link for later processing. For example, to make a gallery item link back to the page/post it is attached to, you can code: <code>mla_link_href='{+site_url+}/?page_id={+parent+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+link_url+}?myarg1=myvalue1&amp;amp;myarg2=myvalue2'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameter modified by this parameter is "link". Other markup parameters such as "pagelink", "filelink" and "link_url" are not modified.
-</p>
-<p>
-The "mla_link_attributes" and "mla_image_attributes" parameters accept any value and adds it to the "&lt;a&gt;" or "&lt;img&gt;" tags for the gallery item. For example, you can create a Shadowbox JS (plugin) album by adding <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code> to your shortcode query (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets (as this example does). In this case, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
-</p>
-<p>
-The "mla_caption" parameter can be used, for example, to replace the default caption to a hyperlink containing the item's Title You can code something like this:<br />
-&nbsp;<br /> 
-<code>[mla_gallery size=icon post_mime_type=application/pdf post_parent=all link=file]<br />
-mla_caption='&lt;a href="{+file_url+}" target="_blank"&gt;{+title+}&lt;/a&gt;'<br />
-[/mla_gallery]</code><br />
-&nbsp;<br />
-Note the use of the alternative "enclosing shortcode" syntax in this example, which avoids the WordPress issues with including HTML markup in shortcode parameters.
-<a name="thumbnail_substitution"></a>
-</p>
+<p><a name="thumbnail_substitution"></a></p>
 <h4>Thumbnail Substitution, Featured Images and mla_viewer</h4>
 <p>
 There are two ways you can provide a thumbnail image for gallery display: 1) you can add a Featured Image to any Media Library item or 2) you can use the <code>mla_viewer</code>	parameter to have one generated when the gallery is displayed.
@@ -607,159 +591,10 @@ Check this option to enable the explicit check for Ghostscript support required 
 <li><strong>Ghostscript path</strong><br />
 If your Ghostscript software is in a non-standard location, enter the full path and name of the executable here. The value you enter will be used as-is and the search for Ghostscript in the usual locations will be bypassed.</li>
 </ul>
-<a name="order_orderby"></a>&nbsp;
-<h4>Order, Orderby</h4>
 <p>
-The Orderby parameter specifies which database field(s) are used to sort the gallery. You can sort the gallery by one or more of these values (there is additional information on some of these values in the <a href="https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>):
+<a href="#backtotop">Go to Top</a>
 </p>
-<table>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>No order.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ID</td>
-<td>Order by post id. Note capitalization.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">author</td>
-<td>Order by author (id, not display name).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">date</td>
-<td>Order by date uploaded.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">description, content</td>
-<td>Order by attachment description.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">title</td>
-<td>Order by attachment title.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">caption, excerpt</td>
-<td>Order by attachment caption. </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">slug, name</td>
-<td>Order by attachment name.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">modified</td>
-<td>Order by last modified date.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">parent</td>
-<td>Order by post/page parent id.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">menu_order</td>
-<td>Order by page order.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mime_type</td>
-<td>Order by attachment MIME type.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">comment_count</td>
-<td>Order by number of comments.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">rand</td>
-<td>Random order.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">&lt;keyname&gt;, meta_value,<br />meta_value_num</td>
-<td style="vertical-align: top;">Order by custom field value. Note that a <em>'meta_key=keyname'</em> must also be present in the query. For example, to sort by a custom field called "Publication Date" and display the most recent items first, code <code>[mla_gallery meta_key="Publication Date" orderby=meta_value order=DESC]</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post__in</td>
-<td>Preserve order given in the <em>ids, include</em> or <em>post__in</em> array.</td>
-</tr>
-</table>
-<p>
-You can sort on more than one value, e.g., <code>orderby="author, date DESC"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query. </p>
-<p>
-The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="author, date DESC, mime_type" order=ASC</code> is the same as <code>orderby="author ASC, date DESC, mime_type ASC"</code>.
-<a name="size"></a>
-</p>
-<h4>Size</h4>
-<p>
-The Size parameter specifies the image size to use for the thumbnail display; "thumbnail" is the default value. You can also substitute an appropriate icon for some or all items or replace the thumbnail image with the item title.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large,&nbsp;full</td>
-<td valign="top">For image types, the size of the image you want to display. If the specific size is not available for an image an existing size will be substituted. For non-image types the title of the item will be displayed.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
-<td>For image types, any additional image size that was registered with add_image_size(). If the specified size is not available or if the attachment is not an image the title of the item will be displayed.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">icon</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files. If, however, a non-image item has a "Featured Image" it will replace the icon.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">icon_feature</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image. If, however, an item has a "Featured Image" it will replace the icon.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">icon_only</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>Suppress thumbnail display and substitute the title of the item.</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="link"></a>
-</p>
-<h4>Link</h4>
-<p>
-The Link parameter specifies the target and type of link from the gallery item to the attachment or other destination. You can also specify a non-hyperlink treatment for the item.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">permalink, post</td>
-<td>Link to the attachment's "media page". This is the default value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">original</td>
-<td>Link directly to the original, full-size, image file for scaled images or to the attachment file for unscaled images.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">file, full</td>
-<td>Link directly to the attachment file. See also the "Transfer by Item Name" section just below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">download</td>
-<td>Forces a file download instead of opening the file in the browser.  See also the "Transfer by Item Name" section just below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large</td>
-<td>For image attachments, the size of the image file you want to link to.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
-<td>For image attachments, any additional image size that was registered with add_image_size(). If the specified size is not available or if the attachment is not an image, the link will go directly to the attachment file.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">span</td>
-<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>Eliminates the hyperlink tag surrounding the thumbnail image or text. You can use the "mla_link_text" parameter to customize the contents.</td>
-</tr>
-</table>
-<p>
-Note that the handling of `link=file` and `link=download` values can be altered by specifying <code>mla_named_transfer=true</code> as described in the next section.
-<a name="named_transfer"></a>
-</p>
+<p><a name="named_transfer"></a></p>
 <h4>Transfer by Item Name</h4>
 <p>
 The "mla_named_transfer" parameter activates a different approach to handling the <code>link=file</code> and <code>link=download</code> values. If you code <code>mla_named_transfer=true</code> each item will be identified by its <code>post_name</code>, <code>ID</code> and <code>post_date</code> values instead of its directory and file name. When the gallery item link is clicked the post_name will be used to locate the file and send it to the browser. When used with <code>link=download</code> a file download is performed; for <code>link=file</code> the file will be opened in the browser. Both of these options are processed by an AJAX handler within MLA.
@@ -769,34 +604,234 @@ For security purposes, the identification parameters are encrypted in the file a
 </p>
 <p>
 This alternate approach also obscures the directory structure used to locate the file and makes it possible to generate SEO-friendly "pretty links" and use the <a href="https://codex.wordpress.org/Rewrite_API" title="Codex article: Rewrite API" target="_blank">WordPress Rewrite API</a> to translate the pretty links to the Transfer by Item Name syntax. The <a title="Find the Pretty Links Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Item+Transfer+Pretty+Links%22" class="mla-doc-bold-link">MLA Item Transfer Pretty Links</a> example plugin shows how this can be done.
-<a name="mla_minimum"></a>
 </p>
-<h4>Minimum Gallery Size</h4>
+<p><a name="gallery_grid"></a></p>
+<h4>Grid Parameters</h4>
 <p>
-You can add <code>mla_minimum=(count)</code> to display an empty gallery if the number of items available for display is less than the number specified. For example, to display an empty gallery when just one item is available, code <code>mla_minimum=2</code>.
-<a name="include_exclude"></a>
+Four <code>[mla_gallery]</code> parameters provide control over the placement, size and spacing of gallery items without requiring the use of custom Style templates.
 </p>
-<h4>Include, Exclude</h4>
 <table>
 <tr>
-<td class="mla-doc-table-label">include</td>
-<td>comma separated attachment IDs to show only the information from these attachments.</td>
+<td class="mla-doc-table-label">columns</td>
+<td>specifies the number of columns. The gallery will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">exclude</td>
-<td>comma separated attachment IDs excludes the information from these attachments. Please note that include and exclude cannot be used together.</td>
+<td class="mla-doc-table-label">mla_float</td>
+<td>specifies the CSS float attribute of the ".gallery-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_margin</td>
+<td>specifies the CSS margin property of the ".gallery-item" style. The default value is "1.5%", a percent of the total gallery width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_itemwidth</td>
+<td>specifies the CSS width attribute of the ".gallery-item" style. You can specify a percent of the total gallery width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the width property from the styles template altogether.
+<br />&nbsp;<br />
+Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
+<br />&nbsp;<br />
+For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
 </tr>
 </table>
 <p>
-You can add <code>post_parent=all</code> to include or exclude attachments regardless of which post or page they are attached to. You can add <code>post_mime_type=all</code> to include or exclude attachments of all MIME types, not just images.
-<a name="post_id_ids_post_parent"></a>
-</p>
-<h4>Post ID, "ids", Post Parent</h4>
-<p>
-The "id" parameter lets you specify a post ID for your query. The gallery will display images which are attached to that post. If the "id" parameter is not specified, the <code>[mla_gallery]</code> behavior differs from the <code>[gallery]</code> behavior. If your query uses taxonomy or custom field parameters, "author", "author_name" or "s" (search term), then the query will NOT be restricted to items attached to the current post. This lets you build a gallery with any combination of Media Library items that match the parameters.
+These parameters are only important if the gallery thumbnails are too large to fit within the width of the page on which they appear. For example, if you code <code>[mla_gallery size=full]</code>, the browser will automatically scale down large images to fit within the width attribute (in percent) of the ".gallery-item" style. The default 1.5% margin will ensure that the images do not overlap; you can increase it to add more space between the gallery items. You can also reduce the itemwidth parameter to increase the left and right space between the items.
 </p>
 <p>
-The "ids" parameter lets you specify a list of item/attachment IDs. The attachment(s) matching the "ids" values will be displayed in the order specified by the list.
+The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the gallery. You can also code <code>mla_style=theme</code>, if your theme supports it, to use the theme's stylesheet to control the format of the gallery.
+</p>
+<p><a name="gallery_special_items"></a></p>
+<h4>Special Items</h4>
+<p>
+One parameter controls the text displayed when there are no items in the gallery, i.e., an empty gallery. You can use any of the Gallery-specific substitution parameters, "request:" parameters or "query:" parameters. You can also use a Content Template to compose a more complex value.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_nolink_text</td>
+<td>replaces the empty string displayed when there are no gallery items or no pagination link.</td>
+</tr>
+</table>
+<p><a name="gallery_display_tags"></a></p>
+<h4>Display Tags</h4>
+<p>
+Three parameters provide control over the XHTML tags used to enclose each part of the gallery items.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>the name of the XHTML tag used to enclose each item in the gallery. The default is "dl"; if your theme supports HTML5, the default is "figure".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icontag</td>
+<td>the name of the XHTML tag used to enclose each thumbnail icon in the gallery. The default is "dt"; if your theme supports HTML5, the default is "div".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>the name of the XHTML tag used to enclose each caption. The default is "dd"; if your theme supports HTML5, the default is "figcaption".</td>
+</tr>
+</table>
+<p>
+These parameters work together to change the gallery markup. For example, to change the gallery markup to use div, span and p tags: 
+</p>
+<p>
+<code>[gallery itemtag="div" icontag="span" captiontag="p"]</code>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<p><a name="gallery_hyperlinks"></a></p>
+<h4>Hyperlink Parameters</h4>
+<p>
+Eleven <code>[mla_gallery]</code> parameters provide an easy way to control the contents of gallery items without requiring the use of custom Markup templates.  
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_link_attributes</td>
+<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter. Also, the "href", "src" and "srcset" attributes are not allowed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_target</td>
+<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_class</td>
+<td>adds an HTML "class" attribute to the hyperlink for each gallery item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rollover_text</td>
+<td>adds the HTML "title" attribute in the hyperlink for each gallery item. This is the attachment title text displayed when the mouse rolls or hovers over the gallery thumbnail. Note that as of WordPress 3.7 there is no default "title" attribute; for older WordPress versions this parameter will replace the default "title".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_href</td>
+<td>replaces the HTML "href" attribute in the hyperlink for each gallery item; see below.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_text</td>
+<td>replaces the thumbnail image or attachment title text displayed for each gallery item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_caption</td>
+<td>replaces the attachment caption text displayed beneath the thumbnail of each gallery item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_image_attributes</td>
+<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_image_class</td>
+<td><strong>adds</strong> one or more values to the HTML "class" attribute in the "img" tag of the thumbnail image or icon displayed for each gallery item. Existing class values are retained, not replaced.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_image_alt</td>
+<td>replaces the HTML "alt" attribute in the "img" tag of the thumbnail image or icon displayed for each gallery item.</td>
+</tr>
+</table>
+<p>
+All but the "mla_target" parameter support the <a href="#mla_markup_parameters">Markup</a>, <a href="#mla_attachment_parameters">Attachment-specific</a>, <a href="#mla_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code <code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p>
+The "mla_link_href" parameter is a great way to change the destination your gallery item links to or add arguments to the link for later processing. For example, to make a gallery item link back to the page/post it is attached to, you can code: <code>mla_link_href='{+site_url+}/?page_id={+parent+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+link_url+}?myarg1=myvalue1&amp;amp;myarg2=myvalue2'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameter modified by this parameter is "link". Other markup parameters such as "pagelink", "filelink" and "link_url" are not modified.
+</p>
+<p>
+The "mla_link_attributes" and "mla_image_attributes" parameters accept any value and adds it to the "&lt;a&gt;" or "&lt;img&gt;" tags for the gallery item. For example, you can create a Shadowbox JS (plugin) album by adding <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code> to your shortcode query (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets (as this example does). In this case, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
+</p>
+<p>
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p>
+The "mla_caption" parameter can be used, for example, to replace the default caption to a hyperlink containing the item's Title You can code something like this:<br />
+&nbsp;<br /> 
+<code>[mla_gallery size=icon post_mime_type=application/pdf post_parent=all link=file]<br />
+mla_caption='&lt;a href="{+file_url+}" target="_blank"&gt;{+title+}&lt;/a&gt;'<br />
+[/mla_gallery]</code><br />
+&nbsp;<br />
+Note the use of the alternative "enclosing shortcode" syntax in this example, which avoids the WordPress issues with including HTML markup in shortcode parameters.
+</p>
+<p><a name="gallery_other"></a></p>
+<h4>Other Parameters</h4>
+<p><a name="debugging_output"></a></p>
+<h4>Debugging Output</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true".</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve gallery items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the gallery. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
+</p>
+ <p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
+</p>
+<p><a name="cache_parameters"></a></p>
+<h4>Caching Parameters</h4>
+<p>
+For applications that have very large numbers of attachments and taxonomy terms, there are three caching parameters that may improve the performance of your <code>[mla_gallery]</code> shortcodes. All of them default to "true", but you can set them to "false" to avoid some database access.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">cache_results</td>
+<td>Post information cache.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">update_post_meta_cache</td>
+<td>Post meta information cache.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">update_post_term_cache</td>
+<td>Post term information cache.</td>
+</tr>
+</table>
+<p>
+In general you won't need these, since adding to the cache is the right thing to do, but they may be useful in specific circumstances. An example of such circumstances might be when using an <code>[mla_gallery]</code> to retrieve a simple list of thumbnails and links, but in which no other information about the items will be used and the taxonomy and meta data won't be needed. By not loading this information, you can save some time from the extra unnecessary SQL queries. 
+</p>
+<p><a name="fields_parameter"></a></p>
+<h4>Fields Parameter</h4>
+<p>
+If your application uses PHP code to access Media Library items you can use the <code>MLAShortcodes::mla_get_shortcode_attachments()</code> function to perform the data selection portion of the <code>[mla_gallery]</code> processing and return an array of Media Library items. In this case, you can add a <code>fields</code> parameter to simplify the query and return just the ID values for the selected items instead of complete objects. There are two possible values for this parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">fields=ids</td>
+<td>Return an array of ID values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">fields='id=>parent'</td>
+<td>Return an array of stdClass objects with ID and post_parent properties.</td>
+</tr>
+</table>
+<p><a name="gallery_data_selection"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Gallery Data Selection Parameters</h4>
+<p>
+The next several sections (" "ids", Include, Exclude " through "Pagination Parameters") allow you to filter the Media Library items that will be displayed in the gallery.
+</p>
+<p><a name="ids_include_exclude"></a></p>
+<h4>"ids", Include, Exclude</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">ids</td>
+<td>comma separated attachment IDs to show only the information from these attachments, regardless of which post or page they are attached to. Attachments will be displayed in the the order specified by the list unless an <code>orderby</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">include</td>
+<td>comma separated attachment IDs to show only the information from these attachments, regardless of which post or page they are attached to. Attachments will be displayed in ascending ID order unless an <code>orderby</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">exclude</td>
+<td>comma separated attachment IDs to exclude the information from these attachments. Only affects attachments that are attached to the current post/page unless other data selection parameters, e.g., <code>post_parent=all</code>, remove that restriction.</td>
+</tr>
+</table>
+<p>
+You can add other data selection parameters, such as <code>post_mime_type=all</code> to further refine the gallery display.
+</p>
+<p><a name="post_id_post_parent"></a></p>
+<h4>Post ID, Post Parent</h4>
+<p>
+The "id" parameter lets you specify a post ID for your query. The gallery will display images which are attached to that post. If the "id" parameter is not specified, the <code>[mla_gallery]</code> behavior differs from the <code>[gallery]</code> behavior. If your query uses taxonomy, custom field or date parameters, "author", "author_name" or "s" (search term), then the query will NOT be restricted to items attached to the current post. This lets you build a gallery with any combination of Media Library items that match the parameters.
 </p>
 <p>
 You can use the "post_parent" to override the default behavior. If you set "post_parent" to a specific post ID, only the items attached to that post are displayed. You can also specify multiple values separated by commas, e.g., <code>post_parent=1,2,3</code>. There are four additional values available:
@@ -821,58 +856,13 @@ You can use the "post_parent" to override the default behavior. If you set "post
 </table>
 <p>
 For example, <code>[mla_gallery tag="artisan"]</code> will display all images having the specified tag value, regardless of which post (if any) they are attached to. If you use <code>[mla_gallery tag="artisan" post_parent="current"]</code> it will display images having the specified tag value only if they are attached to the current post.
-<a name="author_author_name"></a>
 </p>
-<h4>Author, Author Name</h4>
+<p><a name="post_mime_type_parameter"></a></p>
+<h4>Post MIME Type</h4>
 <p>
-You can query by author's id or &quot;Username&quot;, the value used to log in to the site. In the database this is the "user_nicename" column (not the "display_name" column). For example, if you log in as &quot;john&quot; and your id is 2 you can code:
+For compatibility with the WordPress <code>[gallery]</code> shortcode, this parameter defaults to <code>post_mime_type=image</code>. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all MIME types (<code>post_mime_type=all</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).
 </p>
-<ul class="mla_settings">
-<li><code>[mla_gallery author=2]</code></li>
-<li><code>[mla_gallery author_name='john']</code></li>
-</ul>
-<p>Multiple author ID values are allowed, but only one author name value can be entered.
-<a name="category_parameters"></a>
-</p>
-<h4>Category Parameters</h4>
-<p>
-The Category parameters search in the WordPress core &quot;Categories&quot; taxonomy. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post. Category parameters supported by WP_Query are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">cat (int)</td>
-<td>use category id.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">category,<br />category_name&nbsp;(string)</td>
-<td>use category slug (NOT name). As a convenience, MLA allows "category" as a synonym for "category_name".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">category__and (array)</td>
-<td>use category id.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">category__in (array)</td>
-<td>use category id.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">category__not_in (array)</td>
-<td>use category id.</td>
-</tr>
-</table>
-<p>
-More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#category-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
-<a name="tag_parameters"></a>
-</p>
-<h4>Tag Parameters</h4>
-<p>
-The Tag parameters search in the WordPress core &quot;Tags&quot; taxonomy. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
-</p>
-<p>
-More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#tag-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
-Note that the "tag_id" parameter requires exactly one tag ID; multiple IDs are not allowed. You can use the "tag__in" parameter to query for multiple values.
-<a name="simple_taxonomy_parameters"></a>
-</p>
+<p><a name="simple_taxonomy_parameters"></a></p>
 <h4>Simple Taxonomy Parameters</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode supports the simple "{taxonomy}=(term(s))" values (deprecated as of WordPress version 3.1) as well as the more powerful "<a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">tax_query</a>" value. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter any simple taxonomy parameters will be ignored.</strong> Use these queries for your custom taxonomies (and for the MLA attachment_category and attachment_tag taxonomies); use the above Category and Tag parameters for the WordPress-provided taxonomies. If you do use a simple taxonomy parameter for Categories and Tags, the slug values are "category" and "post_tag". 
@@ -939,11 +929,11 @@ If you code two or more simple taxonomy queries, the items selected must contain
 </ul>
 <p>
 Note that the default tax_include_children value is true, matching the default WordPress setting. If your tax_operator is "AND", you will almost certainly want to change this setting.
-<a name="taxonomy_parameters_tax_input"></a>
 </p>
+<p><a name="taxonomy_parameters_tax_input"></a></p>
 <h4>Compound Taxonomy Queries, "tax_input"</h4>
 <p>
-You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <a href="#term_list_display_content"><strong>MLA Term List Display Content (Dropdown and Checklist)</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, <code>tax_input="animal.34,vegetable.carrot,vegetable.radish"</code>. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter the <code>tax_input</code> parameter will be ignored.</strong> 
+You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <a href="#term_list_display_content"><strong>Display Style and Content</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, <code>tax_input="animal.34,vegetable.carrot,vegetable.radish"</code>. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter the <code>tax_input</code> parameter will be ignored.</strong> 
 </p>
 <p>
 This example has a simple form to pick a term from two taxonomies and display a gallery with the items assigned to the selected term:
@@ -959,7 +949,10 @@ This example has a simple form to pick a term from two taxonomies and display a 
 </p>
 <p>
 In the example, <code>animal.invalid-slug</code> is a taxonomy.term combination that does not exist. It causes the gallery display to be suppressed until a selection is made in the dropdown control.
-<a name="taxonomy_queries"></a>
+</p>
+<p><a name="taxonomy_queries"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
 </p>
 <h4>Taxonomy Queries, the "tax_query"</h4>
 <p>
@@ -1012,8 +1005,8 @@ When you code <code>'terms' =&gt; 'ignore.terms.assigned'</code> the tax_query e
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
-<a name="taxonomy_keyword_search"></a>
 </p>
+<p><a name="taxonomy_keyword_search"></a></p>
 <h4>Taxonomy term keyword(s) search</h4>
 <p>
 Searching for keywords within the names of taxonomy terms is a completely different way to find items based on taxonomy information. Instead of matching on a slug or term-id value you can match on all or part of the term Title. The shortcode parameters in this section give you all the power of the "Terms Search" feature on the Media/Assistant submenu table, as described in the "<a href="#terms_search">Terms Search - filtering on taxonomy term names</a>" Documentation section. Here are the shortcode parameters that correspond to the controls on the "Search Terms" popup window:
@@ -1060,109 +1053,154 @@ Searching for keywords within the names of taxonomy terms is a completely differ
 <td>Add <code>exact=true</code> to require that each phrase must match the entire text of a term name.</td>
 </tr>
 </table>
+<p><a name="category_parameters"></a></p>
+<h4>Category Parameters</h4>
 <p>
-<a name="post_mime_type_parameter"></a>
-</p>
-<h4>Post MIME Type</h4>
-<p>
-For compatibility with the WordPress <code>[gallery]</code> shortcode, this parameter defaults to <code>post_mime_type=image</code>. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all MIME types (<code>post_mime_type=all</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).
-<a name="post_type_post_status"></a>
-</p>
-<h4>Post Type, Post Status</h4>
-<p>
-For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display items in the trash (<code>post_status=trash</code>). You can specify more than one value in a comma-separated list, e.g., <code>post_type="post,page"</code>.
-</p>
-<p>
-You can change the <code>post_type</code> parameter to compose a "gallery" of WordPress objects such as posts, pages and custom post types. For example, to display a gallery of the published posts in a particular category you can code something like:
-</p>
-<p>
-<code>[mla_gallery category=some-term post_type=post post_status=publish post_mime_type=all post_parent=all]</code>
-</p>
-<p>
-Note that you must also change the <code>post_status</code> <code>post_mime_type</code> and <code>post_parent</code> because the default values for those parameters are set for Media Library image items.
-</p>
-<p>
-For posts, pages and custom post types some of the other data values are used in slightly different ways:
+The Category parameters search in the WordPress core &quot;Categories&quot; taxonomy. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post. If you use two or more of these parameters, they will be connected by "AND", i.e., all of the parameters must be satisfied. Category parameters supported by WP_Query are:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">Title</td>
-<td>Taken from the Title of the item.</td>
+<td class="mla-doc-table-label">category,<br />category_name&nbsp;(string)</td>
+<td>use category slug (NOT name). As a convenience, MLA allows "category" as a "simple taxonomy query" alternative" for "category_name".</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">Caption</td>
-<td>Taken from the Excerpt of the item.</td>
+<td class="mla-doc-table-label">cat (int)</td>
+<td>use category term ID.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">ALT Text</td>
-<td>Not used.</td>
+<td class="mla-doc-table-label">category__and (array)</td>
+<td>use category term IDs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">Description</td>
-<td>Taken from the Content of the item.</td>
+<td class="mla-doc-table-label" style="font-style:italic">category__in (array)</td>
+<td>use category term IDs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">Thumbnail</td>
-<td>Taken from the Featured Image of the item, if set. You can use the <code>size</code> parameter to display any of the available image sizes. If no Featured Image is set, the Title will be used instead.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Page Link (link=page)</td>
-<td valign="top">Taken from the "guid", or "short form" of the link to the item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">File Link (link=file)</td>
-<td valign="top">Taken from the permalink to the item.</td>
+<td class="mla-doc-table-label">category__not_in (array)</td>
+<td>use category term IDs. Note double underscores.</td>
 </tr>
 </table>
 <p>
-You can find all the parameter values and more examples in the WP_Query class reference <a href="https://codex.wordpress.org/Class_Reference/WP_Query#Type_Parameters" title="WordPress Codex link" target="_blank">Type Parameters</a> and <a href="https://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters" title="WordPress Codex link" target="_blank">Status Parameters</a> sections.
-<a name="pagination_parameters"></a>
+More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#category-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
+Note that the "cat" parameter requires exactly one category ID; multiple IDs are not allowed. You can use the "category__in" parameter to query for multiple values.
 </p>
-<h4>Pagination Parameters</h4>
+<p><a name="tag_parameters"></a></p>
+<h4>Tag Parameters</h4>
 <p>
-Pagination parameters let you divide your <code>[mla_gallery]</code> display into two or more pages when the display includes a large number of items. These parameters work with MLA's <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> to make it easy to construct multi-page galleries without resorting to PHP templates and code in your theme.
+The Tag parameters search in the WordPress core &quot;Tags&quot; taxonomy. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post. If you use two or more of these parameters, they will be connected by "AND", i.e., all of the parameters must be satisfied. Tag parameters supported by WP_Query are:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">nopaging</td>
-<td>The <code>[mla_gallery]</code> shortcode supplies <code>nopaging=true</code> as a default parameter. If you are working with a template that supports pagination you can replace this with specific values for "numberposts", "posts_per_page", "posts_per_archive_page", "paged" and/or "offset" . You can also pass "paged=current" to suppress the "nopaging" default; "current" will be replaced by the appropriate value (<code>get_query_var('paged')</code> or <code>get_query_var('page')</code>).</td>
+<td class="mla-doc-table-label">tag (string)</td>
+<td>use tag slug (NOT name).</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">numberposts,<br />posts_per_page</td>
-<td>the number of items to display on each gallery page.</td>
+<td class="mla-doc-table-label">tag_id (int)</td>
+<td>use tag term ID</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">posts_per_archive_page</td>
-<td>number of items to show per page - on archive pages only. Over-rides posts_per_page on posts/pages where <code>is_archive()</code> or <code>is_search()</code> is true for the post/page in which the shortcode occurs. Note that search results will not display gallery images.</td>
+<td class="mla-doc-table-label">tag__and (array)</td>
+<td>use tag term IDs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">paged</td>
-<td>number of page. Show the items that would normally show up just on page X. The "paged=current" parameter is useful for "paginated single posts" (i.e. posts that include the <code>&lt;!--nextpage--&gt;</code> Quicktag one or more times). Simply make two or more copies of your <code>[mla_gallery]</code> shortcode separated by the Quicktag and include the "paged=current' in each copy. For true pagination it is better to use the "mla_paginate_current" parameter.</td>
+<td class="mla-doc-table-label" style="font-style:italic">tag__in (array)</td>
+<td>use tag term IDs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">offset</td>
-<td>the number of terms to skip over before starting the current gallery page. This parameter is usually derived automatically from the more useful "mla_paginate_current" parameter.</td>
+<td class="mla-doc-table-label">tag__not_in (array)</td>
+<td>use tag term IDs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_paginate_current</td>
-<td>the "current" gallery page; defaults to one (1) if not specified. MLA will usually manage this for you, looking for this parameter in the HTML $_REQUEST array if it is not coded in the gallery shortcode.</td>
+<td class="mla-doc-table-label">tag_slug__and (array)</td>
+<td>use tag slugs. Note double underscores.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_paginate_current". You can change the name if you need multiple paginated galleries on one post/page. If you use this parameter, make sure you add it to the gallery shortcode and all pagination shortcodes for that gallery, and use the same unique value in all shortcodes for the specific gallery.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_total</td>
-<td>the highest page number you want to display; defaults to (total items / posts_per_page) if not specified, which is usually what you want. </td>
+<td class="mla-doc-table-label" style="font-style:italic">tag_slug__in (array)</td>
+<td>use tag slugs. Note double underscores.</td>
 </tr>
 </table>
 <p>
-The task of dividing a large <code>[mla_gallery]</code> into two or more pages is supported by MLA's <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a>. For more information and examples, go to that section of the Documentation. 
-<a name="date_parameters"></a>
+More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#tag-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
+Note that the "tag_id" parameter requires exactly one tag ID; multiple IDs are not allowed. You can use the "tag__in" parameter to query for multiple values.
 </p>
+<p><a name="custom_field_parameters"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Simple Custom Field Parameters</h4>
+<p>
+The <code>[mla_gallery]</code> shortcode supports the simple custom field parameters:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">meta_key&nbsp;(string)</td>
+<td>Custom field key.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_value&nbsp;(string)</td>
+<td>Custom field value(s); string-based comparison.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_value_num&nbsp;(number)</td>
+<td>Custom field value(s); numeric comparison.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_value_delimiter&nbsp;(single&nbsp;character)</td>
+<td>Delimiter between two or more Custom field values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_compare&nbsp;(string)</td>
+<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
+</tr>
+</table>
+<p>
+<strong>IMPORTANT:</strong> Beginning with version 4.0, WordPress changed the way it handles shortcode parameters. Using angle brackets, e.g., the <code>>=</code> characters in a shortcode will often return "Invalid mla_gallery tax_query" errors. To prevent this: 1) add "&lt;code&gt;&lt;/code&gt;" tags around your shortcode, 2) use an escape sequence like "&amp;gt;" in your query or 3) use the enclosing shortcode syntax.
+You can find more information in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section.
+</p>
+<p>
+For simple queries, enter the custom field name and the value(s) that must be matched, e.g.:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery meta_key=camera meta_value='SP510UZ,NIKON D300E' meta_compare=IN]</code></li>
+</ul>
+<p>
+Note that, by default, multiple custom field values are separated by commas and can contain spaces. Multiple values are only allowed with the 'IN', 'NOT IN', 'BETWEEN' and 'NOT BETWEEN' compare operators. If your values contain a comma you can specify a different delimiter, e.g.:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery meta_key=camera meta_value='SP510UZ^NIKON D300E' meta_value_delimiter='^' meta_compare=IN]</code></li>
+</ul>
+<p>
+Three special values let you find all items, items that have no valuess in the custom field or any (one or more) values in the field. For example, to find all items, items that have no values or any values you can code:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery meta_key=camera meta_value=ignore.values.assigned]</code></li>
+<li><code>[mla_gallery meta_key=camera meta_value=no.values.assigned]</code></li>
+<li><code>[mla_gallery meta_key=camera meta_value=any.values.assigned]</code></li>
+</ul>
+<p>
+These special values are particularly useful when forms containing a cloud, list, dropdown or checklist control are used to select values, e.g., when the "<a href="#mla_cf_list">MLA Custom Field List Shortcode</a>" is used to present values for selection.
+</p>
+<p>
+Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+</p>
+<p><a name="custom_field_queries"></a></p>
+<h4>Custom Field Queries, the "meta_query"</h4>
+<p>
+The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
+</p>
+<p>
+When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+</p>
+<p>
+Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+</p>
+<p><a name="date_parameters"></a></p>
 <h4>Simple Date Parameters</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode supports six parameters for filtering the gallery display by year, month, week and day. For more complex date and time filters, see the "date query" feature in the next section below.
+</p>
+You can enter two or more of these parameters; they will be joined by "AND". For example, <code>[mla_gallery year=2026 monthnum=6 day=15]</code>.
+<p>
 </p>
 <table>
 <tr>
@@ -1217,9 +1255,9 @@ You can use the timestamp and date field-level option/format values to convert m
 You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items uploaded in the current year. Code something like <code>year="{+current_timestamp,timestamp( Y )+}"</code>.
 </p>
 <p>
-The <code>[mla_gallery]</code> also directly supports a more flexible alternative provided by one of the <code>[mla_archive_list]</code> parameters. You can use the <code>mla_archive_parameter</code> to activate the support ane name the parameter (default <code>mla_archive_current</code>) containing the date value. More information can be found in the "Archive List and MLA Gallery combinations" and "Filtering the MLA Gallery directly" subsections of the <a href="#archive_list_examples">Archive List Examples</a> section.
-<a name="date_queries"></a>
+The <code>[mla_gallery]</code> also directly supports a more flexible alternative provided by one of the <code>[mla_archive_list]</code> parameters. You can use the <code>mla_archive_parameter</code> to activate the support ane name the parameter (default <code>mla_archive_current</code>) containing the date value. More information can be found in the "Archive List and MLA Gallery combinations" and "Filtering the MLA Gallery directly" subsections of the <a href="#archive_list_examples">MLA Archive List Examples</a> section.
 </p>
+<p><a name="date_queries"></a></p>
 <h4>Date and Time Queries, the "date query"</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date' (default), 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
@@ -1249,75 +1287,10 @@ You can use the <code>current_timestamp</code>, <code>current_datetime</code> an
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
-<a name="custom_field_parameters"></a>
 </p>
-<h4>Simple Custom Field Parameters</h4>
+<p><a name="search_keywords"></a></p>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the simple custom field parameters:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">meta_key&nbsp;(string)</td>
-<td>Custom field key.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_value&nbsp;(string)</td>
-<td>Custom field value; string-based comparison.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_value_num&nbsp;(number)</td>
-<td>Custom field value; numeric comparison.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_value_delimiter&nbsp;(single&nbsp;character)</td>
-<td>Delimiter between two or more Custom field values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_compare&nbsp;(string)</td>
-<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
-</tr>
-</table>
-<p>
-<strong>IMPORTANT:</strong> Beginning with version 4.0, WordPress changed the way it handles shortcode parameters. Using angle brackets, e.g., the <code>>=</code> characters in a shortcode will often return "Invalid mla_gallery tax_query" errors. To prevent this: 1) add "&lt;code&gt;&lt;/code&gt;" tags around your shortcode, 2) use an escape sequence like "&amp;gt;" in your query or 3) use the enclosing shortcode syntax.
-You can find more information in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section.
-</p>
-<p>
-For simple queries, enter the custom field name and the value(s) that must be matched, e.g.:
-</p>
-<ul class="mla_settings">
-<li><code>[mla_gallery meta_key=camera meta_value='SP510UZ,NIKON D300E' meta_compare=IN]</code></li>
-</ul>
-<p>
-Note that, by default, multiple custom field values are separated by commas and can contain spaces. Multiple values are only allowed with the 'IN', 'NOT IN', 'BETWEEN' and 'NOT BETWEEN' compare operators. If your values contain a comma you can specify a different delimiter, e.g.:
-</p>
-<ul class="mla_settings">
-<li><code>[mla_gallery meta_key=camera meta_value='SP510UZ^NIKON D300E' meta_value_delimiter='^' meta_compare=IN]</code></li>
-</ul>
-<p>
-Three special values let you find all items, items that have no valuess in the custom field or any (one or more) values in the field. For example, to find all items, items that have no values or any values you can code:
-</p>
-<ul class="mla_settings">
-<li><code>[mla_gallery meta_key=camera meta_value=ignore.values.assigned]</code></li>
-<li><code>[mla_gallery meta_key=camera meta_value=no.values.assigned]</code></li>
-<li><code>[mla_gallery meta_key=camera meta_value=any.values.assigned]</code></li>
-</ul>
-<p>
-These special values are particularly useful when forms containing a cloud, list, dropdown or checklist copntrol are used to select values, e.g., when the "<a href="#mla_cf_list">MLA Custom Field List Shortcode</a>" is used to present values for selection.
-</p>
-<p>
-Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
-<a name="custom_field_queries"></a>
-</p>
-<h4>Custom Field Queries, the "meta_query"</h4>
-<p>
-The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
-</p>
-<p>
-When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
-</p>
-<p>
-Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
-<a name="search_keywords"></a>
+<a href="#backtotop">Go to Top</a>
 </p>
 <h4>Keyword(s) Search</h4>
 <p>
@@ -1368,4667 +1341,183 @@ You can use the <code>mla_search_connector</code> and <code>mla_search_fields</c
 </table>
 <p>
 The <code>mla_search_fields=terms</code> feature is a simple way to extend the search to the terms assigned to Media Library items. If searching on taxonomy terms is your primary goal, consider the more powerful "<a href="#taxonomy_keyword_search">Taxonomy term keyword(s) search</a>" parameters discussed in an earlier Documentation section.
-<a name="cache_parameters"></a>
 </p>
-<h4>Caching Parameters</h4>
+<p><a name="author_author_name"></a></p>
+<h4>Author, Author Name</h4>
 <p>
-For applications that have very large numbers of attachments and taxonomy terms, there are three caching parameters that may improve the performance of your <code>[mla_gallery]</code> shortcodes. All of them default to "true", but you can set them to "false" to avoid some database access.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">cache_results</td>
-<td>Post information cache.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">update_post_meta_cache</td>
-<td>Post meta information cache.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">update_post_term_cache</td>
-<td>Post term information cache.</td>
-</tr>
-</table>
-<p>
-In general you won't need these, since adding to the cache is the right thing to do, but they may be useful in specific circumstances. An example of such circumstances might be when using an <code>[mla_gallery]</code> to retrieve a simple list of thumbnails and links, but in which no other information about the items will be used and the taxonomy and meta data won't be needed. By not loading this information, you can save some time from the extra unnecessary SQL queries. 
-<a name="fields_parameter"></a>
-</p>
-<h4>Fields Parameter</h4>
-<p>
-If your application uses PHP code to access Media Library items you can use the <code>MLAShortcodes::mla_get_shortcode_attachments()</code> function to perform the data selection portion of the <code>[mla_gallery]</code> processing and return an array of Media Library items. In this case, you can add a <code>fields</code> parameter to simplify the query and return just the ID values for the selected items instead of complete objects. There are two possible values for this parameter:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">fields=ids</td>
-<td>Return an array of ID values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">fields='id=>parent'</td>
-<td>Return an array of stdClass objects with ID and post_parent properties.</td>
-</tr>
-</table>
-<p>
-<a name="debugging_output"></a>
-</p>
-<h4>Debugging Output</h4>
-<p>
-The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve gallery items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the gallery. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
-</p>
- <p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
-<a name="mla_gallery_hooks"></a>
-</p>
-<h4>MLA Gallery Filters and Actions (Hooks)</h4>
-<p>
-The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. All of the hooks and their parameters are documented in a simple, stand-alone plugin that can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link" target="_blank">MLA Gallery Hooks Example</a>. You can use the rollover actions to view the code or download a copy or, to run the example:
-</p>
-<ol>
-<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
-<li>Hover over "MLA Gallery Hooks Example" in the Name column, then click the "Install" rollover action.</li>
-<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Gallery Hooks Example" plugin.</li>
-<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Create a new <code>[mla_gallery]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="all custom"</code> parameter to activate the example output.</li>
-<li>View the post or page on which the modified shortcode appears to see a list of each item's custom fields appended to the gallery captions.</li>
-</ol>
-<p>
-The example code documents each hook with comments in the filter/action function that intercepts each hook. Generally, each part of the gallery supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that gallery part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a gallery part. The current hooks are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-hook-label">mla_raw_gallery_attributes</td>
-<td class="mla-doc-hook-definition">called at the beginning of the gallery, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_attributes,<br />mla_gallery_arguments</td>
-<td class="mla-doc-hook-definition">called at the beginning of the gallery. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_initial_content</td>
-<td class="mla-doc-hook-definition">called just after the <code>mla_gallery_attributes</code> filter, so you can inspect/modify any content enclosed by the <code>[mla_gallery]content[\mla_gallery]</code> "enclosing" shortcode format.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_query_attributes,<br />mla_gallery_query_arguments</td>
-<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_wp_query_object</td>
-<td class="mla-doc-hook-definition">called just after the <code>WP_Query->query()</code> call, so you can inspect/record the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_the_attachments</td>
-<td class="mla-doc-hook-definition">called after the <code>WP_Query->query()</code> is performed, so you can inspect/record the results or return a modified array of items satisfying the query.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_blacklist</td>
-<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the list of parameters to be removed from those passed to the alternative gallery shortcode.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_attributes</td>
-<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the parameters passed to the alternative gallery shortcode.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_ids</td>
-<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the ID values or the entire <code>mla_alt_shortcode_ids</code> parameter passed to the alternative gallery shortcode.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_final_content</td>
-<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify any content enclosed by the <code>[mla_gallery]content[\mla_gallery]</code> "enclosing" shortcode format before it is passed to the alternative gallery shortcode.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_end_alt_shortcode</td>
-<td class="mla-doc-hook-definition">called after the alternative gallery shortcode has been processed, so you can perform cleanup or other final actions.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">use_mla_gallery_style</td>
-<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the gallery output.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_style</td>
-<td class="mla-doc-hook-definition">an old filter retained for compatibility with earlier MLA versions.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_style_values,<br /> mla_gallery_style_template,<br />mla_gallery_style_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_pagination_values</td>
-<td class="mla-doc-hook-definition">for manipulating the markup values used in pagination controls.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_open_values,<br />mla_gallery_open_template,<br />mla_gallery_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_row_open_values,<br />mla_gallery_row_open_template,<br />mla_gallery_row_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_initial_item_values,<br />mla_gallery_item_values,<br />mla_gallery_item_template,<br />mla_gallery_item_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_row_close_values,<br />mla_gallery_row_close_template,<br />mla_gallery_row_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_gallery_close_values,<br />mla_gallery_close_template,<br />mla_gallery_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template.</td>
-</tr>
-</table>
-<a name="mla_archive_list"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>The MLA Archive List shortcode</h3>
-<p>
-The <code>[mla_archive_list]</code> shortcode function displays date-oriented values in a variety of formats, including a "cloud", where the size of each list item is determined by how many Media Library items (attachments) have the corresponding date value. The archive list works with year, month, week and day values. MLA Archive List enhancements for lists and controls include:
-</p>
-<ul class="mla-doc-toc-list">
-<li>Several display formats; flat or cloud text, link lists, dropdown controls and "pagination"-like links.  The list formats are "ulist" and "olist".</li>
-<li>Complete support for paginated lists; display hundreds or thousands of values in manageable groups.</li>
-<li>Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each value.
-<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" and "dropdown" formats to suit any need.</li>
-<li>Integration with the <code>[mla_gallery]</code> shortcode making it easy to filter a gallery display.</li>
-<li>Support for custom fields as the source of archive values.</li>
-<li>Access to a wide range of content using the item-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given value.</li>
-<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.</li>
-</ul>
-<p>
-Most applications can be implemented by a simple shortcode with a few parameters. The <code>[mla_archive_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
-</p>
-<p>
-The next Documentation sections are a complete reference for the shortcode. Don't be put off by the volume of material; you won't need most of the parameters for typical applications. You may want to start by reviewing the <a href="#archive_list_examples">Archive List shortcode Examples</a> to see how easy using the shortcode can be.
-</p>
-<p>
-Many of the <code>[mla_archive_list]</code> concepts and shortcode parameters are modeled after the other MLA shortcodes, so the learning curve is shorter. Differences and parameters unique to the shortcode are given in the sections below.
-</p>
-<a name="archive_type"></a>
-</p>
-<h4>Archive Type</h4>
-<p>
-List values have a prefix denoting the level of detail they contain followed by a numeric value. The <strong>"archive_type"</strong> parameter determines the level of detail for the list values:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">daily</td>
-<td>four-digit year, two-digit month and two-digit day, e.g. <strong>"D20210615"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">weekly</td>
-<td>four-digit year and two-digit week, e.g. <strong>"W202123"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">monthly</td>
-<td>four-digit year and two-digit month, e.g. <strong>"M202106"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">yearly</td>
-<td>four-digit year, e.g. <strong>"Y2021"</strong>. <strong>"yearly" is the default archive type value.</strong></td>
-</tr>
-</table>
-<p>
-When used with the <code>[mla_gallery]</code> shortcode, these values are automatically translated to the appropriate "Simple Date Parameters" values for that shortcode.
-<a name="archive_source"></a>
-</p>
-<h4>Archive Source</h4>
-<p>
-The data source for an archive must be a text database field that contains a valid date format. The <strong>"archive_source"</strong> parameter determines the source for the list values:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">post_date</td>
-<td>the post_date value in the wp_posts table. <strong>"post_date" is the default archive source value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_date_gmt</td>
-<td>the post_date_gmt value in the wp_posts table.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_modified</td>
-<td>the post_modified value in the wp_posts table.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_modified_gmt</td>
-<td>the post_modified_gmt value in the wp_posts table.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">custom</td>
-<td style="padding-bottom: 2em;">a custom field value. The custom field must contain a text value with a date format recognized by the database SQL date query functions.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">archive_key</td>
-<td>for the "custom" archive source, this separate parameter gives the name of the custom field to be used for the query. For example, you can code something like <code>archive_source=custom archive_key="Date Taken"</code> where &ldquo;Date Taken&rdquo; is the name of a custom field you have created.</td>
-</tr>
-</table>
-<p>
-The four values from the wp_posts table are in a valid date format. For custom fields, a variety of common formats are acceptable. For example, you can use a mapping rule to source the custom field from:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">exif:DateTimeOriginal</td>
-<td>YYYY:MM:DD HH:MM:SS</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">iptc:DateCreated</td>
-<td>YYYYMMDD</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">xmp:CreateDate</td>
-<td>YYYY-MM-DD HH:MM:SS  two digit month and day, 24-hour clock</td>
-</tr>
-</table>
-<p>
-You can use the timestamp and date field-level option/format values to convert many other formats to one of the valid formats illustrated above.
-<a name="archive_list_output_formats"></a>
-</p>
-<h4>Archive List Output Formats</h4>
-<p>
-The default archive list output is a dropdown control with options for each archive value. The output markup and display format are determined by the <strong>"mla_output"</strong> parameter:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">dropdown</td>
-<td>Returns an HTML "select" control with a sequence of HTML "option" tags. <strong>"dropdown" is the default output format value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without further HTML markup. The tags can be of varying size depending on how many items share the value (a "cloud"). The "separator" parameter content (default, one newline character) is inserted between each hyperlink.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">flat,div</td>
-<td>Adding the ",div" qualifier to the flat output format will wrap the hyperlink tags in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. The default style template for this format changes the color of the current item. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ulist</td>
-<td>Returns hyperlinks enclosed by unordered HTML list tags; <strong>&lt;ul&gt;&lt;/ul&gt;</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ulist,div</td>
-<td>Adding the ",div" qualifier to the ulist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. The default style template for this format displays the list in a scrollable window. It also changes the color of the current item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">olist</td>
-<td>Returns hyperlinks enclosed by ordered HTML list tags; <strong>&lt;ol&gt;&lt;/ol&gt;</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">olist,div</td>
-<td>Adding the ",div" qualifier to the olist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. The default style template for this format displays the list in a scrollable window. It also changes the color of the current item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">array</td>
-<td>Returns a PHP array of list hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code.</td>
-</tr>
-</table>
-<p>
-The <code>[mla_archive_list]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "paginate_values", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode. You can find details for pagination format parameters in the <a href="#archive_list_pagination">Archive List Pagination Parameters</a> section below.
-</p>
-<p><a name="archive_list_display_templates"></a>
-</p>
-<h4>Archive List Display Style and Markup (all output formats except "flat")</h4>
-<p>
-Two parameters provide a way to apply custom style and markup templates to your <code>[mla_archive_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "flat,div", "ulist", "olist" and "dropdown" formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>replaces the default style template for an <code>[mla_archive_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>replaces the default markup template for an <code>[mla_archive_list]</code> shortcode</td>
-</tr>
-</table>
-<p>
-<a name="archive_list_display_content"></a>
-</p>
-<h4>Archive List Display Style and Content</h4>
-<p>
-For the "dropdown" archive_output type, the list comprises a select tag (&lt;select&gt;&lt;/select&gt;) enclosing a list of option (&lt;option&gt;&lt;/option&gt;) tags. For the "list" archive_output type, the list comprises an unordered list tag (&lt;ul&gt;&lt;/ul&gt;) enclosing a list of item (&lt;li&gt;&lt;/li&gt;) tags. The following parameters customize the overall type and content of the control/list:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_archive_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "mla_archive_current"</strong>. You can change the name if you need multiple controls/lists on one post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_archive_current</td>
-<td>Identifies the current/selected value in the list. It will be ignored if it does not match an item in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">archive_order</td>
-<td>Selects the order in which values are displayed. Use <strong>"DESC" (the default value)</strong> to display the newest value first, or "ASC" to display the oldest value first.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">archive_limit</td>
-<td>Sets the maximum number of values to be displayed. Use <strong>"0" (zero, the default value)</strong> to display all of the values. Use a positive number to limit the values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">archive_label</td>
-<td>Selects the length of the text displayed for each value. Use "short" for short labels, e.g., "Sep 2021". Use "long" for more complete labels, e.g., "September 2021". <strong>The default value for the "paginate_values" archive_output is "short". All other output types default to "long".</strong>  </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">show_count</td>
-<td>Selects the option to display the number of items assigned to each archive value.Use <strong>"true" (the default value)</strong> to display the count. Use "false" to omit the count.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">hide_if_empty</td>
-<td>If <strong>false (default)</strong>, display a control with "option_none_label" text &amp;  "option_none_value" value. If true, display  "option_none_label" as plain text or nothing.</td>
-</tr>
-</table>
-<p>
-The following parameters customize overall control/list content and markup for the "dropdown" and "list" archive_output types:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">listtag</td>
-<td>The HTML tag that encloses the list of archive values. For the <strong>"dropdown" archive_output type, the default is "select"</strong>. For the <strong>"list" archive_output type, the default is "ul"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">listtag_name</td>
-<td>For the "dropdown" archive_output type, the "name" attribute of HTML tag that begins the list of archive values. <strong>The default is "mla_archive_current"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">listtag_id</td>
-<td>The "id" attribute of the HTML tag that begins the list of archive values; <strong>default "mla_archive_list-{$instance}"</strong>, where "{$instance}" is a number starting at "1" making the value unique.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">listtag_class</td>
-<td>The "class" attribute of the HTML tag that begins the list of archive values; <strong>default "mla-archive-list"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">listtag_attributes</td>
-<td>Additional attribute(s) the HTML tag that begins the list of archive values; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>The HTML tag that encloses each value in the archive list. For the <strong>"dropdown" archive_output type, the default is "option"</strong>. For the <strong>"list" archive_output type, the default is "li"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_archive_class</td>
-<td>The class attribute for the current item in the archive list as determined by the "mla_archive_current" parameter (if specified); <strong>default "mla_archive_current"</strong>.</td>
-</tr>
-</table>
-<p>
-The following parameters customize the content of two special control/list item values:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">option_none_label</td>
-<td>Text to display when there are no archive values in the list. If the "hide_if_empty=true" parameter is present this is displayed as plain text; <strong>default is empty, no value</strong>. If not, the option_none_label and option_none_value are used to generate an "empty" control or list; <strong>default "No archives"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_none_value</td>
-<td>Control value to use when there are no archive values in the list; <strong>default "no-archives"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_label</td>
-<td>Text to display for showing an "all values" option. Default will not show an option to select "all values". When this option is selected all items, regardless of their archive value, are included in the `[mla_gallery]` results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for "all values" option. <strong>Default empty, no value</strong>. When this option is selected all items, regardless of their archive value, are included in the `[mla_gallery]` results. To display an empty gallery enter an invalid date value in the appropriate format.</td>
-</tr>
-</table>
-<p>
-The following parameters customize content and markup for each control/list item:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag_id</td>
-<td>The id attribute for each item in the list; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_class</td>
-<td>The class attribute(s) for each item in the list; <strong>default "archive-list-item"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_attributes</td>
-<td>Additional attribute for each item in the list; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_value</td>
-<td>A custom format or content template for the item value; <strong>default is the value of the list item</strong>, e.g. "Y2021" for a yearly archive..</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_label</td>
-<td>A custom format or content template for the item name/label; <strong>default determined by the "archive_label" parameter.</strong>.</td>
-</tr>
-</table>
-<p>
-For all archive_output types except "dropdown", each item in the list or pagination control(s) comprises an archive value and a hyperlink surrounding the value. The following parameters customize link content and markup:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between items. <strong>Default "\n"</strong> (newline whitespace)</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>Chooses the destination of the item hyperlink; details in the next section below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_id</td>
-<td>The id attribute for each link in the list; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td>The class attribute for each link in the list; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>The text for the "title" attribute (Rollover Text); <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>Additional attribute(s) for each link in the list; <strong>default empty, no value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>The href attribute of the hyperlink tags; <strong>default empty, no value</strong>. When present, this value replaces the <code>link=</code> values (current, view, span or none)</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>The text surrounded by the hyperlink tags (&lt;a ... &gt;&lt;/a&gt;). The default text is an appropriate display format for each value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">append_current_item</td>
-<td>If true (the default), adds the <code>mla_archive_current</code> as a query argument to the hyperlink tags. If set to false (unusual), you must use the <code>mla_link_href</code> parameter and explicitly add the current item value to the hyperlink tags.</td>
-</tr>
-</table>
-<p>
-The item and link parameters are an easy way to customize the content and markup for each list item or pagination control. They support the Archive List Substitution Parameters and Content Template substitution parameters. For example, if you code "<code>mla_rollover_text='{+current_label+} ({+items+})'</code>, the rollover text will contain the item value's label followed by the number of items having that value in parentheses. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
-</p>
-<p>
-The "mla_link_href" parameter is a great way to change the destination your list item or pagination links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink" and "viewlink" are not modified.
-</p>
-<p>
-The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add an HTML "target" attribute to the hyperlink. If you code <code>mla_link_attributes='target="_blank"'</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame. Note the use of single quotes around the parameter value and the double quotes within the parameter. <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
-<a name="archive_list_link"></a>
-</p>
-<h4>Archive List Item Link Values (Array, Flat and List)</h4>
-<p>
-The Link parameter specifies the target and type of link from the list item back to the current post/page, the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item. These values only apply to the hyperlinks generated for the "array", "flat" and "list" output formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current</td>
-<td>Link back to the current post/page with a query argument, <code>mla_archive_current</code>, set to the archive_type value of the selected item. <strong>"current" is the default item link value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">view</td>
-<td>Link to the term's "archive page". Support for archive pages, or "date archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
-<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the example later in this section for more details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">span</td>
-<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the  "mla_link_id", "mla_link_class" and "mla_link_attributes" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
-</tr>
-</table>
-<p>
-Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the archive list to select a value and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode.
-<a name="archive_list_cloud"></a>
-</p>
-<h4>Archive List Cloud Values (Flat and List)</h4>
-<p>
-The default display of the flat and list formats is a sequence of links, all of the same size. You can change this to a "cloud", where the size of each link is determined by how many Media Library items (attachments) share the link's value. Four parameters control the size of the links:</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>The text size <strong>(defaults to default_size)</strong> of the item with the smallest count value (units given by unit parameter). Consider something like 8 or 10 for a cloud display.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>The text size <strong>(defaults to default_size)</strong> of the item with the highest count value (units given by the unit parameter). Consider something like 18 or 22 for a cloud display.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">default_size</td>
-<td>The text size <strong>(default 12)</strong> of the special links (all items, no items) (units given by the unit parameter). This value is also used for the smallest and largest values unless overriden by an explicit parameter value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. <strong>pt (the default)</strong>, px, em, %.</td>
-</tr>
-</table>
-<p>
-<a name="archive_list_other"></a>
-</p>
-<h4>Archive List Other Parameters</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_debug</td>
-<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true". See below for details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
-</tr>
-</table>
-<p>
-The "mla_debug" parameter controls the display of information about parameter processing and control/list output generation. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the MLA Debug Tab to view and download the information in the error log. Use this only for development/debugging to avoid filling the log file with unneeded data.
-<p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_archive_list]" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_archive_list]" delimiter to an earlier shortcode.
-<a name="archive_list_data_selection"></a>
-</p>
-<h4>Archive List Data Selection Parameters</h4>
-<p>
-The Archive List shortcode displays only those date values to which one or more Media Library items are assigned. The Data Selection parameters provide a way to filter the list, e.g., specifying a taxonomy term or a particular MIME type.
-</p>
-<p>
-The Archive List shortcode uses the same database query functions employed by the <code>[mla_gallery]</code> shortcode. All of the <code>[mla_gallery]</code> data selection parameters are available, including:
-</p>
-<ul class="mla-doc-toc-list">
-<li>Include, Exclude</li>
-<li>Post ID, "ids", Post Parent</li>
-<li>Author, Author Name</li>
-<li>Category Parameters</li>
-<li>Tag Parameters</li>
-<li>Simple Taxonomy Parameters</li>
-<li>Compound Taxonomy Parameters, "tax_input"</li>
-<li>Taxonomy Queries, the "tax_query"</li>
-<li>Taxonomy term keyword(s) search</li>
-<li>Post MIME Type</li>
-<li>Post Type, Post Status</li>
-<li>Simple Date Parameters</li>
-<li>Date and Time Queries, the "date query"</li>
-<li>Simple Custom Field Parameters</li>
-<li>Custom Field Queries, the "meta_query"</li>
-<li>Keyword(s) Search</li>
-</ul>
-<p>
-If you do not code any data selection parameters, <code>post_parent=all</code> will be added so the default data selection parameters are:
-</p>
-<ul class="mla-doc-toc-list">
-<li><code>post_parent=all</code></li>
-<li><code>post_type=attachment</code></li>
-<li><code>post_status=inherit</code></li>
-<li><code>post_mime_type=image</code></li>
-</ul>
-<p>
-The default parameters will select all of the image items in your Media Library, extract the date value you have chosen from each item and use the values to build the archive list. For example, if you simply code <code>[mla_archive_list]</code> with no parameters you will get a dropdown control with one option for each year in which one or more items was added to the Media Library.
-<a name="archive_list_substitution"></a>
-</p>
-<h4>Archive List Substitution Parameters</h4>
-<p>
-Substitution parameters are a powerful way to add general and attachment-specific values to the list display. For example, if you code "<code>mla_link_href="{+page_url+}?mla_archive_current={+mla_archive_current+}&amp;current_name={+current_label,url+}"</code>, the hyperlinks behind each list term will contain the page URL, the current archive value and the value's label encoded in url format. There are many parameter names like `page_url` and `current_label` divided in several categories:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">Shortcode-specific</td>
-<td>All of the shortcode arguments defined above are available as substitution parameters, as well as additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" prefixes can be used in the list. A Content Template lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">List-specific</td>
-<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Item-specific</td>
-<td  style="vertical-align: top">values that change for each term/item in the list, such as Name and Description</td>
-</tr>
-</table>
-<p>
-The following paragraphs go into more detail about each category and the parameter names within them.
-</p>
-<p>
-To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
-</p>
-<p>
-<strong>Shortcode-level substitution parameters</strong> are available throughout the generation of the control/list In particular, they are known before the database query that determines the list items is performed. These parameters include:</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">shortcode arguments</td>
-<td>All of the shortcode arguments defined above are available. If an argument has been set by a shortcode parameter its value will reflect that. If the shortcode parameter contains substitution parameters or a content template the argument will reflect the results of processing those elements. All arguments that do not appear as shortcode parameters will be set to their default values.  Note that the <code>mla_output</code> parameter appears as two separate values: <code>mla_output</code> holds everything before the optional somma, e.g., "flat"; <code>mla_output_qualifier</code> holds the optional value after the comma, e.g., "div".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">request: prefix</td>
-<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">query: prefix</td>
-<td>The parameters defined in the <code>[mla_archive_list]</code> shortcode. For example, if your shortcode is <code>[mla_archive_list taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. If the shortcode parameter contains substitution parameters or a content template the query: value will NOT reflect the results of processing those elements. You can define your own parameters, e.g., "div-class"; they will be accessible as shortcode-level data but will otherwise be ignored.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">template: prefix</td>
-<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the "Content Templates" section of the Settings/Media Library Assistant Documentation tab for details. Note that the formatting option is not supported for content templates.</td>
-</tr>
-</table>
-<p>
-Shortcode-level substitution parameters also include several "page-level" values, which are determined by the page/post in which the shortcode occurs. They can be used, for example, in any of the data selection parameters to change the items selected for the list based on information about the post/page on which the list appears. The page-level substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">instance</td>
-<td>starts at "1"', incremented for each additional shortcode in the post/page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">selector</td>
-<td>"mla_archive_list-{$instance}", e.g., mla_archive_list-1</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">site_url</td>
-<td>absolute URL to the site directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_url</td>
-<td>absolute URL to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_dir</td>
-<td>absolute (full) path to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_ID,<br />id</td>
-<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_author</td>
-<td>the <code>post_author</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_date</td>
-<td>the <code>post_date</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_content</td>
-<td>the <code>post_content</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_title</td>
-<td>the <code>post_title</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_excerpt</td>
-<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_status</td>
-<td>the <code>post_status</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_name</td>
-<td>the <code>post_name</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_modified</td>
-<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_guid</td>
-<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_type</td>
-<td>the <code>post_type</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_url</td>
-<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
-</tr>
-</table>
-<p>
-<strong>List-specific substitution parameters</strong> are known after the database query has determined the list items, at the beginning of shortcode processing; they do not change during processing. The list-specific substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">found_rows</td>
-<td>the number of values prepared for the list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_count</td>
-<td>the smallest number of attachments associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_count</td>
-<td>the largest number of attachments associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_scaled_count</td>
-<td>the smallest scaled count associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_scaled_count</td>
-<td>the largest scaled count associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">spread</td>
-<td>max_scaled_count - min_scaled_count</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>the text size of the tag with the smallest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>the text size of the tag with the largest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_spread</td>
-<td>largest - smallest</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_step</td>
-<td>font_spread / spread</td>
-</tr>
-</table>
-<p>
-<strong>Item-specific substitution parameters</strong> are, well, specific to each item in the archive list. The list-specific substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current_value</td>
-<td>the value of the item, e.g., "post_date,M(202011)" or "custom:CreateDate,M(202011)". When passed to <code>[mla_gallery[</code> this will be translated to the appropriate date query parameter(s).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_label_short</td>
-<td>the short version of the item's label, e.g., "Nov 2020".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_label_long</td>
-<td>the long version of the item's label, e.g., "November 2020".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_label</td>
-<td>the selected version of the item's label, based on the archive_label parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">items</td>
-<td>the number of items that will be selected by this value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">year</td>
-<td>the four-digit year portion of the value, if present, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">month</td>
-<td>the two-digit month portion of the value, if present, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week</td>
-<td>the two-digit week portion of the value, if present, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">day</td>
-<td>the two-digit day portion of the value, if present, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">m</td>
-<td>the six-digit year and month portion of the value, if present, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">yyyymmdd</td>
-<td>for weekly archives, a random date within the week, formatted as "yyyy-mm-dd". Used to determine the start and end dates of the week.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">month_long</td>
-<td>the long version of the value's month, e.g., "November".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">month_short</td>
-<td>the short version of the value's month, e.g., "Nov".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_start_raw</td>
-<td>the timestamp version of the week's first day, e.g., "1605484800".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_start_short</td>
-<td>the short version of the week's first day, e.g., "2020-11-16".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_start</td>
-<td>the long version of the week's first day, e.g., "November 16, 2020".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_end_raw</td>
-<td>the timestamp version of the week's last day, e.g., "1606089599"</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_end_short</td>
-<td>the short version of the week's last day, e.g., "2020-11-22".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">week_end</td>
-<td>the long version of the week's last day, e.g., "November 22, 2020".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_id</td>
-<td>the id attribute of the item, taken from the itemtag_id, if present, or defaulted to the listtag_id, a dash, then the mla_archive_current.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_class</td>
-<td>the class attribute of the item, taken from the itemtag_class, if present, or defaulted to "archive-list-item". If this is the current archive item, the "current_archive_class" value is added.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_attributes</td>
-<td>all of the item's attributes; the "item_id", "item_class" and any additional attributes from the "itemtag_attributes" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_selected</td>
-<td>set to "selected=selected" for the current item, else empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_label</td>
-<td>the text label of the item, taken from the itemtag_label, if present, or defaulted to the current_label.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">scaled_count</td>
-<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_size</td>
-<td>the numeric portion of the CSS "font-size" attribute</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_link_id</td>
-<td>the id attribute of the item's link, taken from the mla_link_id, if present, or defaulted to empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_link_class</td>
-<td>the class attribute of the item's link, taken from the mla_link_class, if present, or defaulted to empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_link_rollover</td>
-<td>the title attribute of the item's link, taken from the mla_rollover_text, if present, or defaulted to empty.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_link_style</td>
-<td>the CSS "style" attribute, drawn from the font_size and unit parameters or the mla_link_style parameter</td>
-</tr>
-<tr>
-<tr>
-<td class="mla-doc-table-label">item_link_attributes</td>
-<td>all of the link's attributes; the "item_link_id", "item_link_class" and any additional attributes from the "link_attributes" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">item_link_text</td>
-<td>the text value of the link, taken from the link_text, if present, or defaulted to the current_label.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thelink</td>
-<td>the item's full link value, selected by the link parameter (current, view, span, none).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink</td>
-<td>the link back to the current page with the value of the current item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">viewlink</td>
-<td>the link to the item's archive page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_url</td>
-<td>the URL portion of thelink, if any. Empty for the span and none settings.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink_url</td>
-<td>the URL portion of currentlink.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">viewlink_url</td>
-<td>the URL portion of viewlink.</td>
-</tr>
-</table>
-<p>
-<a name="archive_list_pagination"></a>
-</p>
-<h4>Archive List Pagination Parameters</h4>
-<p>
-If you are using an archive list to filter an <code>[mla_gallery]</code> display you may want to add navigation controls that simplify moving among the values in the list, e.g., displaying the items filtered by the next or previous elements of the list. The "next_link", "current_link", "previous_link" and "paginate_values" options are used to pick a new list value to filter the gallery display.
-</p>
-<p>
-If you have a large number of values for your archive list you may want to paginate the list display, i.e., divide the list into two or more pages of a reasonable size. You can then add controls to, for example, move to the next or previous list pages. The "next_page", "previous_page" and "paginate_links" options are used to control which portion of list values is displayed.
-</p>
-<p>Pagination support for <code>[mla_archive_list]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section.
-</p>
-<p>
-The "mla_output" parameter determines the type of output the shortcode will return. For navigation and pagination output, you can choose from seven values:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">next_link</td>
-<td>Returns a link to the next archive value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the last value. If you omit the qualifier, an empty string is returned for the "next_link" from the last value. If you code the ",wrap" or ",always_wrap" qualifier, the "next_link" from the last value will be to the first value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_link</td>
-<td>Returns a link to the current archive value. This gives you an easy way to provide a visual indication of where you are within the list. The "span" and "none" link formats are often used with this archive_output type.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_link</td>
-<td>Returns a link to the previous archive value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the first value. If you omit the qualifier, an empty string is returned for the "previous_link" from the first value. If you code the ",wrap" or ",always_wrap" qualifier, "previous_link" from the first value will be to the last value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">paginate_values</td>
-<td>Returns a link to values at the start and end of the list and to pages around the current value ( e.g.: « Previous 2021 ... 2001 2002 2003 ... 1995 Next » ). The optional ",show_all" qualifier will show all of the values instead of a short list around the current value. The optional ",prev_next" qualifier will include the "« Previous" and "Next »" portions of the link list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">next_page</td>
-<td>Returns a link to the next "page" of list items, based on the "mla_custom_list_current" parameter value. The optional ",wrap" or ",last" qualifiers determine what happens at the end of the taxonomy. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the taxonomy. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_page</td>
-<td>Returns a link to the previous "page" of list items, based on the "mla_custom_list_current" parameter value. The optional ",wrap" or ",first" qualifiers determine what happens at the beginning of the taxonomy. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">paginate_links</td>
-<td>Returns a link to the first and last "pages" of the list and to pages around the current "list page" ( e.g.: « Previous 1 ... 3 4 5 6 7 ... 9 Next » ), based on the "mla_custom_list_current" parameter value. The optional ",show_all" qualifier will show all of the list pages instead of a short list around the current page. The optional ",prev_next" qualifier will include the "« Previous" and "Next »" portions of the link list.</td>
-</tr>
-</table>
-<p>
-The "next_link", "current_link" and "previous_link" formats return an empty string if there is no current value, i.e., if no <code>mla_archive_current</code> value is set in the shortcode parameters or in the URL query attributes. If you code the "option_none_label" parameter its value will be displayed when there is no current value. If you add the ",always_wrap" qualifier the "next_link" and "previous_link" will <strong>always</strong> return the last/first value in the archive list if there is one.
-</p>
-<p>
-The "paginate_values" format returns an empty string if the archive list is empty, i.e., contains no values. If you code the "option_none_label" parameter its value will be displayed the archive list is empty. If there is no current value, i.e., if no <code>mla_archive_current</code> value is set in the shortcode parameters or in the URL query attributes, links to the first and last list items are displayed.
-</p>
-<p>
-Eight parameters are supplied for pagination control:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">limit</td>
-<td>the maximum number of terms to display in one list "page". Think of this as a "values per page" value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">offset</td>
-<td>the number of terms to skip over before starting the current list page. This parameter is usually derived automatically from the more useful "mla_custom_list_current" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_archive_list_current</td>
-<td>the current list page number. The name of this parameter can be changed to support multiple paginated lists on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_total</td>
-<td>the highest page number you want to display; defaults to (total items / limit) if not specified, which is usually what you want. </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_rows</td>
-<td>If you have some other way of computing the total number of values you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a list that you know has fifty values you can code <code>[mla_custom_list mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or list display content parameters you need.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>Identifies the current/selected item in the list. It contains a text value. It will be ignored if it does not match an item in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
-</tr>
-</table>
-<p>
-The <code>[mla_archive_list]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a list or among list "pages". For example, if you have many values in your archive source you can build a value-specific <code>[mla_gallery]</code> page with links to the previous/next value in the archive (a complete pagination example is included below). You can also build a page that shows a large number of archive values in groups, or "list pages", of ten values with links to the previous/next ten values or links to all of the list pages of values for the archive.
-</p>
-<h4>Next and previous list items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
-<p>
-If you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific archive value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-value "pages" for the gallery.
-</p>
-<p>
-The next or previous link returned is drawn from the item-specific "link" substitution parameter for the next or previous list item. This means you can use all of the <a href="#archive_list_display_content">Archive List Display Style and Markup</a> parameters to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to customize the text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
-</p>
-<h4>Next and previous list pages; the <code>next_page</code> and <code>previous_page</code> output types</h4> 
-<p>
-If your archive has a large number of distinct values you might want to divide your <code>[mla_archive_list]</code> into "list pages" with a manageable number of values on each page. For these applications you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the list in groups of, say, ten values per "list page".
-</p>
-<p>
-MLA has its own "mla_archive_list_current" parameter to indicate the current set of values within the list (the current list page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
-</p>
-<p>For most applications, "limit" is the only pagination parameter you need to specify. Make sure this parameter is the same for your main list shortcode and for the pagination shortcodes that go with it. Also, make sure you use exactly the same item selection and sorting parameters in all shortcodes.
-</p>
-<h4>Display Content parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-The next or previous link returned can use the following Display Content parameters to control each element of the link:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to those already defined for the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML &quot;href&quot; attribute in the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the link text </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_prev_text</td>
-<td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_next_text</td>
-<td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there is no link and link text, e.g., no previous or next page link </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML &quot;title&quot; attribute in the hyperlink. This is the text displayed when the mouse rolls or hovers over the link text </td>
-</tr>
-</table>
-<h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
-<p>
-WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
-</p>
-<p>
-The <strong>Display Content Parameters</strong> defined above also apply to the "paginate_links" output type. There are five additional parameters unique to this output type.
-</p>
-<h4>Specific parameters for the <code>paginate_values</code> and <code>paginate_links</code> output types</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_end_size</td>
-<td>How many numbers (default 1) appear on either the start and the end list edges</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_mid_size</td>
-<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_prev_text</td>
-<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_next_text</td>
-<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_type</td>
-<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
-</tr>
-</table>
-<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
-</p>
-<p>
-<a name="archive_list_examples"></a>
-</p>
-<h4>Archive List Examples</h4>
-<p>
-The MLA Archive List shortcode is very flexible and has many parameters and features. However, you can accomplish many application goals with simple shortcodes and just a few parameters. For example, here is a shortcode that will generate a dropdown control with an option to select Media Library items uploaded in a given year:
-<br />&nbsp;<br />
-<code>[mla_archive_list]</code>
-<br />&nbsp;<br />
-Pretty simple. Adding a couple of parameters gives you an archive with year and month values and a default option for the initial display:
-<br />&nbsp;<br />
-<code>[mla_archive_list archive_type=monthly option_all_label="Select a Year and Month"]</code>
-<br />&nbsp;<br />
-The default source date for archive values is the "Uploaded on" date (post_date); you can easily change this to a custom field. For example, if you have created a "CreateDate" custom field by mapping the <code>exif:DateTimeOriginal</code>, <code>iptc:DateCreated</code> and/or <code>xmp:CreateDate</code> values you can build the archive from it:
-<br />&nbsp;<br />
-<code>[mla_archive_list archive_type=monthly archive_source=custom archive_key=CreateDate option_all_label="Select a Year and Month"]</code>
-<br />&nbsp;<br />
-The default output is a dropdown control you can add to an HTML "search form". You can change this to an unordered list where each list item is a hyperlink to the corresponding value:
-<br />&nbsp;<br />
-<code>[mla_archive_list archive_type=monthly mla_output=ulist archive_limit=10 show_count=true]</code>
-<br />&nbsp;<br />
-You can change this to an ordered list where each list item is a numbered hyperlink to the corresponding value:
-<br />&nbsp;<br />
-<code>[mla_archive_list archive_type=monthly mla_output=olist archive_limit=10 show_count=true]</code>
-<br />&nbsp;<br />
-The above examples also limit the display to the ten most recent values and adds a count of the number of items selected by each value to the display.
-</p>
-<h4>Archive List and MLA Gallery combinations</h4>
-<p>
-The mla Archive List shortcode is designed to work with the <code>[mla_gallery]</code> shortcode to display galleries filtered by a date value. To link the archive list to the gallery simply add <code>mla_archive_parameter=mla_archive_current </code> to your <code>[mla_gallery]</code> shortcode. If you want to display an empty gallery until a value is present, add the ",empty" suffix. Here is a simple example combining an archive search form with a gallery display:
-<br />&nbsp;<br />
-<code>
-&lt;h3&gt;Archive Search Form&lt;/h3&gt;<br />
-&lt;form id="archive-search-form" action="." method="post"&gt;<br />
-[mla_archive_list archive_type=monthly option_all_label="Select Uploaded on date"]<br />
-&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;<br />
-&lt;/form&gt;<br />
-&lt;h3&gt;Gallery&lt;/h3&gt;<br />
-[mla_gallery post_parent=all <strong>mla_archive_parameter=mla_archive_current,empty</strong> ]
-</code>
-<br />&nbsp;<br />
-The above example displays an empty gallery when the page is first loaded or when the "Select Uploaded on date" option is selected. If you want to start with all of the image items in the Media Library, remove the ",empty" suffix from the mla_archive_parameter value.
-
-</p>
-<h4>Filtering the MLA Gallery directly</h4>
-<p>You can use the <code>[mla_gallery]</code> parameters by themselves to filter a gallery display by date values. This is particularly useful when you want to filter based on a date held in a custom field, which the core WordPress date parameters and date query do not support. For example, if you have a custom field named "Publication Date" and want to display what was published in 2020 you can code something like:
-<br />&nbsp;<br />
-<code>[mla_gallery post_parent=all mla_archive_parameter=mla_archive_current mla_archive_current="custom:Publication Date,Y(2020)"]
-</code>
-<br />&nbsp;<br />
-Note the use of <code>post_parent=all</code>  to overide the default display of items attached to the current post/page. You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items published in the current month. Code something like:
-<br />&nbsp;<br />
-<code>[mla_gallery post_parent=all mla_archive_parameter=mla_archive_current mla_archive_current="custom:Publication Date,M({+current_datetime,date( 'Ym' )+})"]
-</code>
-<br />&nbsp;<br />
-By adjusting the format code you can specify any of the four archive types: daily 'Ymd', weekly 'YW', monthly 'Ym', yearly 'Y'.
-</p>
-<h4>Filtered Archive List and MLA Gallery combinations</h4>
-<p>
-As described in the "Archive List Data Selection Parameters" section above you can filter the archive list to show the dates present in a subset of your Media Library items. For example, here is a taxonomy term-specific variation on the archive search form:
-<br />&nbsp;<br />
-<code>
-&lt;h3&gt;Archive Search Form for Att. Category ABC&lt;/h3&gt;<br />
-&lt;form id="archive-search-form" action="." method="post"&gt;<br />
-[mla_archive_list <strong>attachment_category=abc</strong> archive_type=monthly option_all_label="Select Uploaded on date"]<br />
-&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;<br />
-&lt;/form&gt;<br />
-&lt;h3&gt;Gallery for Att. Category ABC&lt;/h3&gt;<br />
-[mla_gallery <strong>attachment_category=abc</strong> mla_archive_parameter=mla_archive_current]
-</code>
-<br />&nbsp;<br />
-This example will initially show all items assigned to <code>attachment_category=abc</code> and the dropdown control will show only those dates that have one or more items assigned to the term. Selecting an archive value will combine the term filter and the date filter for the gallery display.
-</p>
-<h4>Combining an Archive List with other criteria</h4>
-<p>
-Finally, here is an example that shows how you can combine <code>[mla_archive_list]</code> with the other mla elements to create a powerful multi-criteria search application.  The example uses several shortcodes and features provided by the <a title="Find the UI Elements Example" target="_blank" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+UI+Elements+Example%22" class="mla-doc-bold-link">MLA UI Elements Example</a> plugin.
-</p>
-<p>
-In this example the <code>attachment_category={+template:({+request:tax_input.attachment_category,array+})+}</code> parameter added to the <code>[mla_archive_list]</code> shortcode filters the archive list by whatever taxonomy term is selected in the <code>[mla_term_list]</code> shortcode:
-<br />&nbsp;<br />
-<code>
-&lt;form id="mla-text-form" action="." method="post" class="row"&gt;<br />
-&lt;strong&gt;Att. Categories&lt;/strong&gt;<br />
-[mla_term_list taxonomy=attachment_category post_mime_type=image number=15 mla_output=dropdown mla_option_value="{+slug+}" use_filters=true show_count=true pad_counts=false option_all_text="Select Att. Category"]<br />
-<br />
-&lt;strong&gt;Archive Search&lt;/strong&gt;<br />
-[mla_archive_list mla_archive_parameter=multi attachment_category={+template:({+request:tax_input.attachment_category,array+})+} archive_type=weekly archive_source=custom archive_key=CreateDate option_all_label="Select Create Date"]<br />
-<br />
-&lt;strong&gt;Keyword Search&lt;/strong&gt;<br />
-[muie_keyword_search mla_search_connector='OR']<br />
-<br />
-Items per page: [muie_per_page numberposts=3]<br />
-<br />
-&lt;/p&gt;<br />
-&lt;input id="text-form-submit" name="text_form_submit" type="submit" value="Filter"&gt;<br />
-&lt;/p&gt;<br />
-&lt;/form&gt;<br />
-<br />
-&lt;h3&gt;Gallery&lt;/h3&gt;<br />
-[mla_gallery post_parent=all orderby=date posts_per_page={+template:{+request:muie_per_page+}|3+} add_filters_to=any tax_include_children=false mla_archive_parameter=multi mla_output="paginate_links,prev_next"]<br />
-<br />
-[mla_gallery post_parent=all orderby=date posts_per_page={+template:{+request:muie_per_page+}|3+} add_filters_to=any tax_include_children=false mla_archive_parameter=multi mla_nolink_text="Enter a term above to see a gallery of items that match."]
-</code>
-<br />&nbsp;<br />
-In the above example the <code>mla_archive_parameter=multi</code> parameter gives a unique name for the current item value, for applications with multiple archive displays on one post/page. The <code>tax_include_children=false</code> parameter makes the gallery display with the counts shown in the taxonomy term list. The example can be adapted to a variety of application scenarios. 
-<a name="archive_list_hooks"></a>
-</p>
-<h4>MLA Archive List Filters (Hooks)</h4>
-<p>
-The <code>[mla_archive_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Archive List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Archive+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Archive List Hooks Example</a>. To run the example:
-</p>
-<ol>
-<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
-<li>Hover over "MLA Archive List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
-<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Archive List Hooks Example" plugin.</li>
-<li>Create a new <code>[mla_archive_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output. Make sure the shortcode uses the "flat" output format.</li>
-<li>View the post or page on which the modified shortcode appears to see a list with a range of colors applied to the values.</li>
-</ol>
-<p>
-The example code documents each hook with comments in the filter/action function that intercepts the hook. There are hooks for the shortcode attributes and arguments, and for the database query used to compile list items. For style and markup templates, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_raw_attributes</td>
-<td class="mla-doc-hook-definition">called at the beginning of the list, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_attributes,<br />mla_archive_list_arguments</td>
-<td class="mla-doc-hook-definition">called at the beginning of the list generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_archive_values_query_arguments</td>
-<td class="mla-doc-hook-definition">called just before building the SQL query for the <code>$wpdb->get_results()</code> call that selects list values, with query parameters before or after they are combined with defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_archive_values_query</td>
-<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_archive_values_query_results</td>
-<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results()</code> call, so you can inspect/record or modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_scale</td>
-<td class="mla-doc-hook-definition">called as the scaled_count (size) of each item is calculated, so you can modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">use_mla_archive_list_style</td>
-<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the list output.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_style_values,<br /> mla_archive_list_style_template,<br />mla_archive_list_style_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_open_values,<br />mla_archive_list_open_template,<br />mla_archive_list_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "flat,div", "ulist", "olist" or "dropdown" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_item_values,<br />mla_archive_list_item_template,<br />mla_archive_list_item_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "ulist", "olist" or "dropdown" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_archive_list_close_values,<br />mla_archive_list_close_template,<br />mla_archive_list_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "flat,div", "ulist", "olist" or "dropdown" list.</td>
-</tr>
-</table>
-<p>
-<a name="mla_tag_cloud"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>MLA Tag Cloud Shortcode</h3>
-<p>
-The <code>[mla_tag_cloud]</code> shortcode function displays a list of taxonomy terms in what is called a 'tag cloud', where the size of each term is determined by how many times that particular term has been assigned to Media Library items (attachments). The cloud works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories) MLA Tag Cloud provides many enhancements to the basic "cloud" display. These include:
+You can query by author's id or &quot;Username&quot;, the value used to log in to the site. In the database this is the "user_nicename" column (not the "display_name" column). For example, if you log in as &quot;john&quot; and your id is 2 you can code:
 </p>
 <ul class="mla_settings">
-<li>Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.</li>
-<li>Several display formats, including "flat", "list" and "grid" (modeled after the <code>[mla_gallery]</code> display).</li>
-<li>Complete support for paginated clouds; display hundreds or thousands of terms in manageable groups.</li>
-<li>Control over the styles, markup and content of each cloud using Style and Markup Templates. You can customize the "list" and "grid" formats to suit any need.</li>
-<li>Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
-<li>Display Style and Display Content parameters for easy customization of the cloud display and the destination of the links behind each term.
-</li>
-<li>A comprehensive set of filters gives you access to each step of the cloud generation process from PHP code in your theme or other plugins.
-</li>
+<li><code>[mla_gallery author=2]</code></li>
+<li><code>[mla_gallery author_name='john']</code></li>
 </ul>
+<p>Multiple author ID values are allowed, but only one author name value can be entered. If you set both parameters they are joined by "AND", which is not very useful; choose one or the other.
+</p>
+<p><a name="post_type_post_status"></a></p>
+<h4>Post Type, Post Status</h4>
 <p>
-The <code>[mla_tag_cloud]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display items in the trash (<code>post_status=trash</code>). You can specify more than one value in a comma-separated list, e.g., <code>post_type="post,page"</code>.
 </p>
 <p>
-Many of the <code>[mla_tag_cloud]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> shortcode, so the learning curve is short. Differences and parameters unique to the cloud are given in the sections below.
-<a name="tag_cloud_output"></a>
+You can change the <code>post_type</code> parameter to compose a "gallery" of WordPress objects such as posts, pages and custom post types. For example, to display a gallery of the published posts in a particular category you can code something like:
 </p>
-<h4>Tag Cloud Output Formats</h4>
 <p>
-The traditional tag cloud output is a "heat map" of term names where larger names are associated with more attachments than smaller names. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
+<code>[mla_gallery category=some-term post_type=post post_status=publish post_mime_type=all post_parent=all]</code>
+</p>
+<p>
+Note that you must also change the <code>post_status</code> <code>post_mime_type</code> and <code>post_parent</code> because the default values for those parameters are set for Media Library image items.
+</p>
+<p>
+For posts, pages and custom post types some of the other data values are used in slightly different ways:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink. <strong>"flat" is the default output format value.</strong></td>
+<td class="mla-doc-table-label">Title</td>
+<td>Taken from the Title of the item.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">list</td>
-<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
+<td class="mla-doc-table-label">Caption</td>
+<td>Taken from the Excerpt of the item.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">ulist</td>
-<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+<td class="mla-doc-table-label">ALT Text</td>
+<td>Not used.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">olist</td>
-<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+<td class="mla-doc-table-label">Description</td>
+<td>Taken from the Content of the item.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">dlist</td>
-<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
+<td class="mla-doc-table-label">Thumbnail</td>
+<td>Taken from the Featured Image of the item, if set. You can use the <code>size</code> parameter to display any of the available image sizes. If no Featured Image is set, the Title will be used instead.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">grid</td>
-<td>Modeled on the galleries produced by <code>[mla_gallery]</code>; a rectangular display with rows and columns. The tag parameters listed above, the "columns" parameter and the Display Style parameters customize the display.</td>
+<td class="mla-doc-table-label">Page Link (link=page)</td>
+<td valign="top">Taken from the "guid", or "short form" of the link to the item.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">array</td>
-<td>Returns a PHP array of cloud hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_tag_cloud()</code> function is called directly from your theme or plugin PHP code.</td>
+<td class="mla-doc-table-label">File Link (link=file)</td>
+<td valign="top">Taken from the permalink to the item.</td>
 </tr>
 </table>
 <p>
-A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_tag_cloud()</code> function is called directly from your theme or plugin PHP code.
+You can find all the parameter values and more examples in the WP_Query class reference <a href="https://codex.wordpress.org/Class_Reference/WP_Query#Type_Parameters" title="WordPress Codex link" target="_blank">Type Parameters</a> and <a href="https://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters" title="WordPress Codex link" target="_blank">Status Parameters</a> sections.
 </p>
+<p><a name="order_orderby"></a></p>
+<h4>Order, Orderby</h4>
 <p>
-The list and grid formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. The <code>[mla_tag_cloud]</code> shortcode also supports pagination with "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links" formats. These are essentially the same as those for the <code>[mla_gallery]</code> shortcode.
-<a name="tag_cloud_items"></a>
-</p>
-<h4>Tag Cloud Item Parameters</h4>
-<p>
-Each item in the tag cloud comprises a term name of varying size, a hyperlink surrounding the term name and a "title" attribute (Rollover Text) displayed when the cursor hovers over the term name hyperlink. The following parameters customize item content and markup:
+Two parameters are provided to specify the order in which gallery items are displayed.
 </p>
 <table>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>The text size (default 8) of the tag with the smallest count value (units given by unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>The text size (default 22) of the tag with the highest count value (units given by the unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">default_size</td>
-<td>The text size (default 12) of the special links (all tags, no tags, any tags) (units given by the unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. pt (the default), px, em, %.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between tags. Default '\n' (whitespace)</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is one. The default is "%d item". If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one. The default is "%d items". If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>Chooses the destination of the item hyperlink; details in the next section below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>Identifies the current/selected item in the cloud. An integer value will be interpreted as a term id and anything else as a term slug. It will be ignored if it does not match an item in the cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>The class attribute for the current item in the cloud as determined by the "current_item" parameter (if specified); default "mla_current_item".</td>
-</tr>
-</table>
-<p>
-The Item parameters are an easy way to customize the content and markup for each cloud item. For the list and grid formats you can also use the <a href="#tag_cloud_display_content">Tag Cloud Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility.
-</p>
-<p>
-The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each cloud element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the cloud element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
-<a name="tag_cloud_link"></a>
-</p>
-<h4>Tag Cloud Item Link</h4>
-<p>
-The Link parameter (<code>link=</code>) specifies the target and type of link from the tag cloud term/item to the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current</td>
-<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the term_id of the selected term.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">view</td>
-<td>Link to the term's "archive page"; <strong>this is the default value</strong>. Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">edit</td>
-<td>Link to the term's "edit tag/category" admin screen. This is only useful if the user is logged in and has the appropriate role or capabilities for accessing the edit screen.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
-<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the pagination example later in this section for more details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">span</td>
-<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
-</tr>
-</table>
-<p>
-Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the tag cloud to select a term and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The pagination example later in this section uses this technique. 
-<a name="tag_cloud_display_style"></a>
-</p>
-<h4>Tag Cloud Display Style (list and grid)</h4>
-<p>
-Two parameters provide a way to apply custom style and markup templates to your <code>[mla_tag_cloud]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "list" and "grid" cloud formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>replaces the default style template for an <code>[mla_tag_cloud]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>replaces the default markup template for an <code>[mla_tag_cloud]</code> shortcode</td>
-</tr>
-</table>
-<p>
-Four parameters provide control over the placement, size and spacing of terms in the "grid" format without requiring the use of custom Style templates.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">columns</td>
-<td>specifies the number of columns. The grid will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_float</td>
-<td>specifies the CSS float attribute of the ".tag-cloud-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".tag-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".tag-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
-<br />&nbsp;<br />
-Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
-<br />&nbsp;<br />
-For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
-</tr>
-</table>
-<p>
-The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can also code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the grid.
-</p>
-<p>
-Three parameters provide control over the XHTML tags used to enclose each part of the tag cloud items. These parameters are only used in the "list" and "grid" output formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>for "list" format, the name of the XHTML tag used to begin the list; the default is "ul". When an explicit "captiontag" parameter is added to "list" format, the default is "dl". For "grid" format, the name of the XHTML tag used to enclose each item in the cloud; the default is "dl".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">termtag</td>
-<td>the name of the XHTML tag used to enclose each term in the cloud. For "list" format, the default is "li"; for "grid" format or when an explicit "captiontag" parameter is added to "list" format, the default is "dt".</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>the name of the XHTML tag used to enclose each caption. For "grid" format, the default is "dd". To add a caption in "list" format you must enter an explicit "captiontag=dd" parameter to the shortcode.</td>
-</tr>
-</table>
-<p>
-These parameters give you some control over the markup used for the cloud and its elements. For more complex applications you can use style and markup templates to gain complete control over the cloud display.
-<a name="tag_cloud_display_content"></a>
-</p>
-<h4>Tag Cloud Display Content</h4>
-<p>
-Nine parameters provide an easy way to control the contents of tag cloud items without requiring the use of custom Markup templates.  
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_style</td>
-<td>replaces the CSS styles for the hyperlink. The default style is <code>font-size: [+font_size+][+unit+]</code>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the term name text displayed for each item</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there are no cloud items or no pagination link</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the term name</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_caption</td>
-<td>replaces the caption text displayed beneath each item. The caption appears for "grid" items and for "list" items when the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_value</td>
-<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_text</td>
-<td>Text to display for showing an 'all terms' link. Default will not show a link to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_no_terms_text</td>
-<td>Text to display for showing an 'no terms assigned' link. Default will not show a link to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_no_terms_value</td>
-<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_terms_text</td>
-<td>Text to display for showing an 'any terms assigned' link. Default will not show a link to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_terms_value</td>
-<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
-</tr>
-</table>
-<p>
-The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
-</p>
-<p>
-All but the "mla_target" parameter support the <a href="#tag_cloud_markup_parameters">Markup</a>, <a href="#tag_cloud_item_parameters">Item-specific</a>, <a href="#tag_cloud_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
-</p>
-<p>
-The "mla_link_href" parameter is a great way to change the destination your cloud item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
-</p>
-<p>
-The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
-</p>
-<p>
-The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
-</p>
-<p>
-The six "option_..." parameters provide an easy way to add special links to the cloud generated by the shortcode. You can add links for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these links are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
-<a name="tag_cloud_data_selection"></a>
-</p>
-<h4>Tag Cloud Data Selection Parameters</h4>
-<p>
-The data selection parameters specify which taxonomy (or taxonomies) the terms are taken from, which terms are returned for the cloud and the order in which the terms are returned:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>The taxonomy or taxonomies to retrieve terms from; default "post_tag". Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_tag_cloud()</code> function directly from your theme or plugin PHP code) as an array.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_mime_type</td>
-<td>The MIME type(s) of the items to include in the term-specific counts. The default is "all", which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_type</td>
-<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in the term-specific counts. The default is "attachment". You can override the default if you want to count other types for which the taxonomy is registered, e.g., "post" to count Posts in the "category" and "post_tag" taxonomies. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_status</td>
-<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in the term-specific counts. The default is "inherit", which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts in the "category" and "post_tag" taxonomies. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ids</td>
-<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific cloud. Only those terms assigned to the attachment(s) in the list will be included. You can have one or more IDs and you can include assigned terms from one or more taxonomies. Do not use the "include" parameter if you use the "ids" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">no_count</td>
-<td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
-&nbsp;<br />
-You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
-&nbsp;<br />
-You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the cloud by post-specific values.<br />
-&nbsp;</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">include</td>
-<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to include. Only the terms in this list that are used in the taxonomies you specified will be retrieved.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">exclude</td>
-<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to exclude from the returned values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">parent</td>
-<td>Get direct children of this term id (only terms whose explicit parent is this value). If 0 is passed, only top-level terms are returned.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">minimum</td>
-<td>The minimum number of attachments that must be associated with the term for the term to be included. For example, "minimum=1" will omit "empty" terms.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">number</td>
-<td>The maximum number of "most popular" terms to return. The default, zero, returns them all. Terms are sorted by "count DESC, id ASC" to apply this constraint.</td>
-</tr>
 <tr>
 <td class="mla-doc-table-label">orderby</td>
-<td>The final sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular terms for the cloud).<br />
-&nbsp;<br />
-If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
-&nbsp;<br />
-Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
-&nbsp;</td>
+<td>specifies which database field(s) are used to sort the gallery. The default value is "ID", or "post__in" when the <em>ids</em> or <em>include</em> parameter is present.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">order</td>
-<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">no_orderby</td>
-<td>The default, "false", applies the orderby and order parameters to the final term list. If you have a large number of terms and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular terms) and the final sorting process. If you do that, the sort order of the cloud will be indeterminite.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">preserve_case</td>
-<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">pad_counts</td>
-<td>True to include the count of all children in their parents' count. The default, "false", does not include children in their parents' count.<br />
-&nbsp;<br />
-The "pad_counts" parameter is only applied to the first (or only) taxonomy you specify, and that taxonomy must be hierarchical to see any difference in the counts.<br />
-&nbsp;</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">limit</td>
-<td>The number of terms to return. This parameter is used for pagination; it is applied <strong>after</strong> and separate from the "number" parameter above.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">offset</td>
-<td>The number of terms to skip before returning the results. This parameter is used for pagination.</td>
+<td>gives an default for any orderby value that doesn't have a specific choice. Can be "ASC" (ascending, the default) or "DESC" (descending).</td>
 </tr>
 </table>
 <p>
-You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
-</p>
-<p>
-The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
-<a name="tag_cloud_debugging_output"></a>
-</p>
-<h4>Debugging Output</h4>
-<p>
-The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve tag cloud items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the cloud. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
-</p>
- <p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
-<a name="tag_cloud_substitution"></a>
-</p>
-<h4>Tag Cloud Substitution Parameters</h4>
-<p>
-Substitution parameters are a powerful way to add general and attachment-specific values to the gallery display. For example, if you code "<code>mla_link_href="{+page_url+}?current_id={+term_id+}&amp;mla_cloud_current={+request:mla_cloud_current+}"</code>, the hyperlinks behind each cloud term will contain the page URL and the taxonomy term ID. There are many parameter names like `page_url` and `term_id` divided in several categories:
+The Orderby parameter specifies which database field(s) are used to sort the gallery. You can sort the gallery by one or more of these values (there is additional information on some of these values in the <a href="https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>):
 </p>
 <table>
-<tr>
-<td class="mla-doc-table-label">Cloud-specific</td>
-<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Style</td>
-<td>values that are known when the cloud-specific CSS inline styles are composed just before cloud output begins</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Markup</td>
-<td>values that are known at the beginning of cloud output processing and remain the same for the entire cloud</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#tag_cloud_item_parameters">Item-specific</a></td>
-<td  style="vertical-align: top">values that change for each term/item in the cloud, such as Name and Description</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
-<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the cloud. The other prefixes are attachment-specific and have no meaning in a cloud</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
-<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
-</tr>
-</table>
-<p>
-The following paragraphs go into more detail about each category and the parameter names within them.
-</p>
-<p>
-To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
-</p>
-<p>
-<strong>Cloud-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the cloud based on information about the post/page on which the cloud appears. The cloud-specific substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">site_url</td>
-<td>absolute URL to the site directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_url</td>
-<td>absolute URL to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_dir</td>
-<td>absolute (full) path to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">instance</td>
-<td>starts at '1', incremented for each additional shortcode in the post/page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">selector</td>
-<td>"mla_tag_cloud-{$instance}", e.g., mla_tag_cloud-1</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_ID,<br />id</td>
-<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_author</td>
-<td>the <code>post_author</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_date</td>
-<td>the <code>post_date</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_content</td>
-<td>the <code>post_content</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_title</td>
-<td>the <code>post_title</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_excerpt</td>
-<td>the <code>post_excerpt</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_status</td>
-<td>the <code>post_status</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_name</td>
-<td>the <code>post_name</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_modified</td>
-<td>the <code>post_modified</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_guid</td>
-<td>the <code>post_guid</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_type</td>
-<td>the <code>post_type</code> value of the post/page in which the cloud appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_url</td>
-<td>absolute URL to the page or post on which the cloud appears, if any, with trailing slash</td>
-</tr>
-</table>
-<p>
-If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
-</p>
-<p>
-Style and Markup templates give you great flexibility for the content and format of each [mla_tag_cloud] when you use the "list" and "grid" output formats. You can define as many templates as you need. 
-</p>
-<p>
-Style templates provide cloud-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the cloud, 2) the beginning of each row ("grid" format), 3) each cloud item, 4) the end of each row ("grid" format) and 5) the end of the cloud. The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
-</p>
-<p>
-For the "grid" output format, all of the Markup template sections are used. For the "list" output format, only the "Open", "Item" and "Close" sections are used. There are two default templates for the "list" format; "tag-cloud-ul" and "tag-cloud-dl". As the names imply, the "tag-cloud-dl" default is used when the "captiontag" parameter is present in the shortcode. If you name a custom Markup template in your shortcode, it will be used whether the "captiontag" is present or not.
-<a name="tag_cloud_variable_parameters"></a>
-</p>
-<p>
-The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">request</td>
-<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">query</td>
-<td>The parameters defined in the <code>[mla_tag_cloud]</code> shortcode. For example, if your shortcode is <code>[mla_tag_cloud taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">template</td>
-<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
-</tr>
-</table>
-<p>
-Tag cloud substitution parameters for the <strong>Style template</strong> are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_output</td>
-<td>shortcode parameter, default = 'flat'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>shortcode parameter, default = 'tag-cloud'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>shortcode parameter, default = 'tag-cloud-ul', or 'tag-cloud-dl' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>the slug of the taxonomy on which the cloud is based. Multiple taxonomy slugs are joined with a dash to form a single value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>the current/selected item in the cloud, as entered in the shortcode parameters.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>shortcode parameter, default = 'ul', or 'dl' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">termtag</td>
-<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">columns</td>
-<td>shortcode parameter, default = '3'; only meaningful for the "grid" output format.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemwidth</td>
-<td>shortcode parameter, default is calculated by dividing 100% by the number of columns and subtracting twice the margin value, e.g., 30.3% for three columns and a margin value of 1.5%. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">margin</td>
-<td>shortcode parameter, default = '1.5%'. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">float</td>
-<td>'right' if current locale is RTL, 'left' if not</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">found_rows</td>
-<td>the number of terms retrieved for the cloud</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_count</td>
-<td>the smallest number of attachments associated with any term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_count</td>
-<td>the largest number of attachments associated with any term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_scaled_count</td>
-<td>the smallest scaled count associated with any term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_scaled_count</td>
-<td>the largest scaled count associated with any term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">spread</td>
-<td>max_scaled_count - min_scaled_count</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>the text size of the tag with the smallest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>the text size of the tag with the largest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_spread</td>
-<td>largest - smallest</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_step</td>
-<td>font_spread / spread</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between tags</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>Rollover Text when the count value is one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td> Rollover Text when the count value is zero or more than one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>the destination name of the item hyperlink, default 'view'</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="tag_cloud_markup_parameters"></a>
-</p>
-<p>
-Tag cloud substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>cloud-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates. There are no additional substitution parameters defined at the start of markup processing, but there are <a href="#mla_tag_cloud_hooks">MLA Tag Cloud Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
-<a name="tag_cloud_item_parameters"></a>
-</p>
-<p>
-Tag cloud <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" section of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">index</td>
-<td>starts at '1', incremented for each item in the cloud</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">last_in_row</td>
-<td>for the "grid" output format, set to "last_in_row" for the last item in each full cloud row, and to an empty string for all other items in the row. If the cloud ends with a partial row, the last_in_row parameter is not set.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">key</td>
-<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_terms_query_results()</code> filter has altered the array keys.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_id</td>
-<td>the term id</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">name</td>
-<td>the term display name</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">slug</td>
-<td>the term slug</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_group</td>
-<td>the term group</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_taxonomy_id</td>
-<td>the term-taxonomy id</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>the primary taxonomy for this term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">description</td>
-<td>the term description, if any</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">parent</td>
-<td>the direct parent of the term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">count</td>
-<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_count</td>
-<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">scaled_count</td>
-<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_size</td>
-<td>the numeric portion of the CSS "font-size" attribute</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_url</td>
-<td>the URL portion of "thelink" (below). Derived from editlink_url, termlink_url or mla_link_href.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink_url</td>
-<td>URL of the current post/page plus a "current_item=term_id" query argument</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">editlink_url</td>
-<td>URL of the term's "edit category/tag" page</td></tr>
-<tr>
-<td class="mla-doc-table-label">termlink_url</td>
-<td>URL of the term's archive page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">caption</td>
-<td>if captiontag is not empty, contains term description or the mla_caption value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_attributes</td>
-<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>set to "mla_current_item" for the current item in the cloud as determined by the "current_item" parameter, and to an empty string for all other items in the cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">rollover_text</td>
-<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_style</td>
-<td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_text</td>
-<td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thevalue</td>
-<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thelink</td>
-<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink</td>
-<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">editlink</td>
-<td>full hyperlink to the term's "edit category/tag" page, including all the Display Content parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">termlink</td>
-<td>full hyperlink to the term's archive page, including all the Display Content parameters</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="tag_cloud_pagination"></a>
-</p>
-<h4>Tag Cloud Pagination Parameters</h4>
-<p>
-If you have a large number of terms in your cloud taxonomy you may want to paginate the cloud display, i.e., divide the cloud into two or more pages of a reasonable size. Pagination support for <code>[mla_tag_cloud]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section. Five parameters are supplied for this purpose:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">limit</td>
-<td>the maximum number of terms to display in one cloud "page". Think of this as a "terms per page" value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">offset</td>
-<td>the number of terms to skip over before starting the current cloud page. This parameter is usually derived automatically from the more useful "mla_cloud_current" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_cloud_current". You can change the name if you need multiple paginated clouds on one post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_cloud_current</td>
-<td>the current cloud page number. The name of this parameter can be changed to support multiple paginated clouds on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_id</td>
-<td>the id of the current term within the cloud. This parameter is used with the "previous_link", "current_link" and "next_link" output types. You <strong>must</strong> supply a term_id value when using these output types.</td>
-</tr>
-</table>
-<p>
-The <code>[mla_tag_cloud]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a cloud or among cloud "pages". For example, if you have many terms in your Att. Category or Att. Tag taxonomies you can build a term-specific <code>[mla_gallery]</code> page with links to the previous/next term in the taxonomy (a complete pagination example is included below). You can also build a page that shows a large taxonomy in groups, or "cloud pages", of ten terms with links to the previous/next ten terms or links to all of the cloud pages of terms in the taxonomy.
-</p>
-<p>
-The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For pagination output, you can choose from six values: 
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">next_link</td>
-<td>returns a link to the next cloud item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the cloud. If you omit the qualifier, an empty string is returned for the "next_link" from the last item. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_link</td>
-<td>returns a link to the current cloud item, based on the "term_id" parameter value. This gives you an easy way to provide a visual indication of where you are within the taxonomy. The "span" and  "none" link formats are often used with this mla_output type.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_link</td>
-<td>returns a link to the previous cloud item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the beginning of the cloud. If you omit the qualifier, an empty string is returned for the "previous_link" from the first item. If you code the ",wrap" qualifier, "previous_link" from the gallery item will be to the last item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">next_page</td>
-<td>returns a link to the next "page" of cloud items, based on the "mla_cloud_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,last</strong>" qualifiers determine what happens at the end of the taxonomy. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the taxonomy. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_page</td>
-<td>returns a link to the previous "page" of cloud items, based on the "mla_cloud_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,first</strong>" qualifiers determine what happens at the beginning of the taxonomy. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">paginate_links</td>
-<td>returns a link to cloud items at the start and end of the list and to pages around the current "cloud page" ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ), based on the "mla_cloud_current" parameter value. The optional "<strong>,show_all</strong>" qualifier will show all of the cloud pages instead of a short list around the current page. The optional "<strong>,prev_next</strong>" qualifier will include the "&laquo; Previous" and "Next &raquo;" portions of the link list.</td>
-</tr>
-</table>
-<p>
-The best way to understand cloud pagination is by example, as in the next section below.
-<a name="tag_cloud_pagination_example"></a>
-</p>
-<h4>Tag Cloud Pagination Example</h4>
-<p>
-This section takes you through several of the <code>[mla_tag_cloud]</code> features, step by step. Let's start with a very simple cloud showing all of the terms in the "Att. Category" taxonomy:
-</p>
-<p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0]</code>
-</p>
-<p>
-The "number=0" parameter overrides the default maximum of 45 terms, showing all of the terms in the taxonomy. Let's paginate the cloud and limit the terms display to ten terms per "page":
-</p>
-<p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10]<br />
-[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]</code>
-</p>
-<p>
-The "limit=10" parameter (on <strong>both</strong> shortcodes) limits the term display to ten terms. The second <code>[mla_tag_cloud]</code> shortcode, adding the 'mla_output="paginate_links,prev_next"' parameter, displays a line of pagination links below the cloud page. Coordination between the two shortcodes is automatic, using the "mla_cloud_current" parameter added to the URLs by the shortcode.
-</p>
-<p>Now we'll make the cloud a convenient way to control a term-specific <code>[mla_gallery]</code>. The next step uses the "mla_link_href" parameter to change the link destination of each cloud term, returning to the current page with the term id of the selected term. We also add the "mla_cloud_current" parameter to each of these new links, so the tag cloud page is retained when a term is selected:
-</p>
-<p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
-[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]</code>
-</p>
-<p>
-The "&amp;amp;" before the "mla_cloud_current" parameter is required to get by the WordPress Visual Editor. The "{+request:mla_cloud_current+}" value copies the current page number from the URL ($_REQUEST array) and adds it to each term's link. If the current page number is absent (e.g., on the initial page load) the default value is 1. Now, let's use the "current_id={+term_id+}" information in the link to compose a term-specific <code>[mla_gallery]</code>: 
-</p>
-<p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
-[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
-<br />&nbsp;<br />
-[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 size=icon link=file]</code>
-</p>
-<p>
-The most complicated part of the new shortcode is the "tax_query" parameter, which we're using to ensure that the gallery items displayed match the count displayed for each term in the tag cloud. The tag cloud count does not contain items associated with any "child terms", or sub-categories, of the cloud item. To match this count we must use the "include_children=false" and "field=id" parameters of the "tax_query".
-</p>
-<p>
-We can easily paginate the term-specific gallery by adding a second <code>[mla_gallery]</code> shortcode and a "posts_per_page" parameter to both shortcodes:
-</p>
-<p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
-[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
-<br />&nbsp;<br />
-[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 posts_per_page=5 size=icon link=file]
-<br />&nbsp;<br />
-[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" columns=5 posts_per_page=5 mla_output="paginate_links,prev_next"]</code>
-</p>
-<p>
-The pagination controls for the tag cloud and the gallery operate independently because by default they use different names for their respective "_current" page parameters. Our page now has a lot of functionality without requiring any WordPress templates or PHP code.
-</p>
-<p>
-For extra credit, let's add some more navigation options to the page. We'll build previous, current and next term links at the bottom of the page. These are enclosed in an HTML table so they all appear on one line of the page. Here is just the additional content; the table of three link navigation controls:
-</p>
-<p>
-<code>
-&lt;table width=99%&gt;&lt;tr&gt;<br />
-&lt;td width=33% style="text-align: left"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output="previous_link" smallest=12 largest=12 mla_link_href="{+page_url+}?current_id={+term_id+}" mla_link_text="Previous: {+name+}"]&lt;/td&gt;<br />&nbsp;<br />
-&lt;td width=33% style="text-align: center; font-weight: bold:"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output=current_link smallest=12 largest=12 mla_link_text="Current: {+name+}" link=span]&lt;/td&gt;<br />&nbsp;<br />
-&lt;td width=33% style="text-align: right"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output="next_link" smallest=12 largest=12 mla_link_href="{+page_url+}?current_id={+term_id+}" mla_link_text="Next: {+name+}"]&lt;/td&gt;<br />
-&lt;/tr&gt;&lt;/table&gt;
-</code>
-</p>
-<p>
-The "smallest=12" and "largest=12" parameters make "font-size" the same for all of the term names regardless of how many items are associated with the term. The "mla_link_text" parameters add labels to each of the three navigation links. Finally, the "link=span" parameter in the middle ("mla_output=current_link") shortcode removes the hyperlink behind the term name, since it would just take you back to the page you're already on.
-<a name="mla_tag_cloud_hooks"></a>
-</p>
-<h4>MLA Tag Cloud Filters (Hooks)</h4>
-<p>
-The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Tag Cloud Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Tag+Cloud+Hooks+Example%22" class="mla-doc-bold-link">MLA Tag Cloud Hooks Example</a>. To run the example:
-</p>
-<ol>
-<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
-<li>Hover over "MLA Tag Cloud Hooks Example" in the Name column, then click the "Install" rollover action.</li>
-<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Tag Cloud Hooks Example" plugin.</li>
-<li>Create a new <code>[mla_tag_cloud]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color cloud"</code> parameter to activate the example output.</li>
-<li>View the post or page on which the modified shortcode appears to see a tag cloud with a range of colors applied to the terms.</li>
-</ol>
-<p>
-The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the cloud supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that cloud part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a cloud part. The current hooks are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-hook-label">mla_tag_cloud_raw_attributes</td>
-<td class="mla-doc-hook-definition">called at the beginning of the cloud, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_attributes,<br />mla_tag_cloud_arguments</td>
-<td class="mla-doc-hook-definition">called at the beginning of the cloud generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_query_attributes,<br />mla_get_terms_query_arguments</td>
-<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_clauses</td>
-<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_query_results</td>
-<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results</code> call, so you can inspect/record or modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_scale</td>
-<td class="mla-doc-hook-definition">called as the scaled_count (size) of each term is calculated, so you can modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">use_mla_tag_cloud_style</td>
-<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the tag cloud output.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_style_values,<br /> mla_tag_cloud_style_template,<br />mla_tag_cloud_style_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_open_values,<br />mla_tag_cloud_open_template,<br />mla_tag_cloud_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list" or "grid" cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_row_open_values,<br />mla_tag_cloud_row_open_template,<br />mla_tag_cloud_row_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template used in a "grid" cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_item_values,<br />mla_tag_cloud_item_template,<br />mla_tag_cloud_item_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list" or "grid" cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_row_close_values,<br />mla_tag_cloud_row_close_template,<br />mla_tag_cloud_row_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template used in a "grid" cloud.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_tag_cloud_close_values,<br />mla_tag_cloud_close_template,<br />mla_tag_cloud_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list" or "grid" cloud.</td>
-</tr>
-</table>
-<a name="mla_term_list"></a>
-&nbsp;
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>MLA Term List Shortcode</h3>
-<p>
-The <code>[mla_term_list]</code> shortcode function displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories). MLA Term List enhancements for lists and controls include:
-</p>
-<ul class="mla_settings">
-<li>Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.</li>
-<li>Several display formats, including "flat", "list", "dropdown" and "checklist".</li>
-<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" formats to suit any need.</li>
-<li>Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
-<li>Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each term.
-</li>
-<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.
-</li>
-</ul>
-<p>
-The <code>[mla_term_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
-</p>
-<p>
-Many of the <code>[mla_term_list]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> shortcodes, so the learning curve is shorter. Differences and parameters unique to the list are given in the sections below.
-<a name="term_list_output_formats"></a>
-</p>
-<h4>Term List Output Formats</h4>
-<p>
-The default term list output is an unordered list of term names surrounded by hyperlinks. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">list</td>
-<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ulist</td>
-<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup. <strong>"ulist" is the default output format value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">olist</td>
-<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">dlist</td>
-<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">dropdown</td>
-<td>Returns an HTML "select" control with a sequence of HTML "option" tags.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">checklist</td>
-<td>Returns HTML "input", "type=checkbox" elements enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">checklist,div</td>
-<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">array</td>
-<td>Returns a PHP array of list hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.</td>
-</tr>
-</table>
-<p>
-The list, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own. 
-</p>
-<p>
-A separate parameter, <code>echo=true</code>, allows you to echo list output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.
-</p>
-<p>
-<a name="term_list_output_structure"></a>
-</p>
-<h4>Term List Output Structure</h4>
-<p>
-The <strong>"hierarchical"</strong> parameter determines the overall structure of the list:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">hierarchical=false</td>
-<td>display terms without regard to parent/child relationships.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">hierarchical=true</td>
-<td>display terms in a nested/indented structure where child terms are placed immediately after their parent. <strong>This is the default value.</strong> If you code multiple taxonomies in the same shortcode, each taxonomy will generate its own separate list or control.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">hierarchical=combine</td>
-<td>display terms from multiple taxnomies in a single nested/indented structure.</td>
-</tr>
-</table>
-<p>
-The hierarchical display is enhanced by a number of data selection parameters that let you select and display portions of the hierarchy, e.g., a single root/parent term and all of its children.
-<a name="term_list_items"></a>
-</p>
-<h4>Term List Item Parameters</h4>
-<p>
-Each item in the list comprises a term name, a hyperlink surrounding the term name and a "title" attribute (Rollover Text) displayed when the cursor hovers over the term name hyperlink. The following parameters customize item content and markup:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">show_count</td>
-<td>Show how many items are assigned to the term. Values "true" or <strong>"false" (default)</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>Identifies the current/selected item(s) in the list. An integer value will be interpreted as a term id and anything else as a term slug. It will be ignored if it does not match an item in the list. Multiple values are allowed, separated by commas.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">active_item_class</td>
-<td>The class attribute for the "active" item(s) in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_active_item"</strong>. An item is "active" if it or any of its child items are the current item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>The class attribute for the current item in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_current_item"</strong>.</td>
-</tr>
-</table>
-<p>
-The Item parameters are an easy way to customize the content and markup for each list item. For the array, flat and list formats you can also use the additional list item parameters in the next section.
-<a name="term_list_items_afl"></a>
-</p>
-<h4>Term List Item Parameters (Array, Flat and List)</h4>
-<p>
-The following parameters customize item content and markup:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between terms. <strong>Default '\n'</strong> (whitespace)</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is one; <strong>default "%d item"</strong>. If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one; <strong>default "%d items"</strong>. If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>Chooses the destination of the item hyperlink; details in the next section below.</td>
-</tr>
-</table>
-<p>
-The Item parameters are an easy way to customize the content and markup for each list item. For the list formats you can also use the <a href="#term_list_display_content_afl">Term List Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility. The dropdown and checklist formats have corresponding Display Content parameters.
-<a name="term_list_link"></a>
-</p>
-<h4>Term List Item Link Values (Array, Flat and List)</h4>
-<p>
-The Link parameter specifies the target and type of link from the list term/item to the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item. These values only apply to the hyperlinks generated for the "array", "flat" and "list" output formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current</td>
-<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the term_id of the selected term. <strong>"current" is the default item link value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">view</td>
-<td>Link to the term's "archive page". Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">edit</td>
-<td>Link to the term's "edit tag/category" admin screen. This is only useful if the user is logged in and has the appropriate role or capabilities for accessing the edit screen.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
-<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the example later in this section for more details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">span</td>
-<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
-</tr>
 <tr>
 <td class="mla-doc-table-label">none</td>
-<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
-</tr>
-</table>
-<p>
-Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the term list to select a term and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The example later in this section uses this technique. 
-<a name="term_list_display_style_ldc"></a>
-</p>
-<h4>Term List Display Style (List, Dropdown and Checklist)</h4>
-<p>
-Two parameters provide a way to apply custom style and markup templates to your <code>[mla_term_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "list", "dropdown" and "checklist" list formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>replaces the default style template for an <code>[mla_term_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
+<td>No order.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>replaces the default markup template for an <code>[mla_term_list]</code> shortcode</td>
-</tr>
-</table>
-<a name="term_list_display_style"></a>
-&nbsp;
-<h4>Term List Display Style (List and Checklist)</h4>
-<p>
-Three parameters provide control over the XHTML tags used to enclose each part of the list items. These parameters are used in the "list" output formats as follows:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>the name of the XHTML tag used to begin the list; the default depends on the output format (list/ulist, olist, dlist). When an explicit "captiontag" parameter is added to "list" format, the default is "dl".</td>
+<td class="mla-doc-table-label">ID</td>
+<td>Order by post id. Note capitalization.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">termtag</td>
-<td>the name of the XHTML tag used to enclose each term in the list; the default is "li". When an explicit "captiontag" parameter is added, the default is "dt".</td>
+<td class="mla-doc-table-label">author</td>
+<td>Order by author (id, not display name).</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>the name of the XHTML tag used to enclose each caption. For "dlist" format, the default is "dd". To add a caption in "list" format you must enter an explicit "captiontag=dd" parameter to the shortcode.</td>
-</tr>
-</table>
-<a name="term_list_display_style_d"></a>
-&nbsp;
-<h4>Term List Display Style (Dropdown)</h4>
-<p>
-Three parameters provide control over the XHTML tags used to enclose each part of the dropdown control items. 
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>the name of the XHTML tag used to name the control; the default is "select".</td>
+<td class="mla-doc-table-label">date</td>
+<td>Order by date uploaded.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">termtag</td>
-<td>the name of the XHTML tag used to name each term in the control; the default is "item".</td>
+<td class="mla-doc-table-label">description, content</td>
+<td>Order by attachment description.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_multi_select</td>
-<td>The default, "false", specifies that only one value can be selected. If set to "true", it specifies that multiple options can be selected at once.</td>
-</tr>
-</table>
-<p>
-These parameters give you some control over the markup used for the list and its elements. For more complex applications you can use style and markup templates to gain complete control over the list display.
-<a name="term_list_display_content_all"></a>
-</p>
-<h4>Term List Display Content (all Output Formats)</h4>
-<p>
-Six parameters provide an easy way to add special entries to the links or input controls generated by the shortcode.  You can add entries for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these entries are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">option_all_text</td>
-<td>Text to display for showing an 'all terms' option. Default will not show an option to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+<td class="mla-doc-table-label">title</td>
+<td>Order by attachment title.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+<td class="mla-doc-table-label">caption, excerpt</td>
+<td>Order by attachment caption. </td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">option_no_terms_text</td>
-<td>Text to display for showing an 'no terms assigned' option. Default will not show an option to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
+<td class="mla-doc-table-label">slug, name</td>
+<td>Order by attachment name.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">option_no_terms_value</td>
-<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_terms_text</td>
-<td>Text to display for showing an 'any terms assigned' option. Default will not show an option to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_terms_value</td>
-<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
-</tr>
-</table>
-<p>
-The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
-</p>
-<p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
-<a name="term_list_display_content_afl"></a>
-</p>
-<h4>Term List Display Content (Array, Flat and List)</h4>
-<p>
-Nine parameters provide an easy way to control the contents of list items without requiring the use of custom Markup templates.  
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the term name text displayed for each item</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there are no list items</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the term name</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_caption</td>
-<td>replaces the caption text displayed beneath each item. The caption appears for "dlist" items and for "list" items when the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_value</td>
-<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
-</tr>
-</table>
-<p>
-The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
-</p>
-<p>
-All but the "mla_target" parameter support the <a href="#term_list_markup_parameters">Markup</a>, <a href="#term_list_item_parameters">Item-specific</a>, <a href="#term_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
-</p>
-<p>
-The "mla_link_href" parameter is a great way to change the destination your list item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink", "viewlink" and "editlink" are not modified.
-</p>
-<p>
-The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
-</p>
-<p>
-The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
-<a name="term_list_display_content"></a>
-</p>
-<h4>Term List Display Content (Dropdown and Checklist)</h4>
-<p>
-Dropdown and Checklist formats do not generate hyperlinks; they generate HTML input controls that return the content of <code>value</code> attributes. Eight parameters provide an easy way to control the contents of items without requiring the use of custom Markup templates. 
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_control_name</td>
-<td>replaces the <strong><code>tax_input[[+taxonomy+]][]</code> (default)</strong> name attribute in the input tag for the control(s). Useful for adding multiple dropdown controls for the same taxonomy to a post/page and for dropdown controls containing terms from multiple taxonomies.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_option_text</td>
-<td>replaces the <strong>term name (default)</strong> text displayed for each option</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_option_value</td>
-<td>replaces the <strong>term_id (default)</strong> value returned for each option. For <strong>dropdown</strong> controls containing terms from multiple taxonomies, the default is <strong><code>[+taxonomy+].[+term_id+]</code></strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">hide_if_empty</td>
-<td>If <strong>false (default)</strong>, display a control with "option_none" text &amp; value. If true, display mla_nolink_text or nothing.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the entire control with text/markup; <strong>default empty</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_none_text</td>
-<td>Text to display for showing a 'no terms' option, displayed when there are no terms defined in the taxonomy. Default will not show an option to select 'no terms'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_none_value</td>
-<td>Control value for 'no terms' option, displayed when there are no terms defined in the taxonomy. <strong>Default -1</strong>. Numeric values are used for the term_id; text values for the slug.</td>
-</tr>
-</table>
-<p>
-The <code>mla_option_value</code> parameter is the most commonly-used. For example, to return the term slug instead of the term id you would code <code>mla_option_value="{+slug+}"</code>.
-</p>
-<p>
-Dropdown controls containing terms from multiple taxonomies (flat or hierarchical) require special handling because the <code>name=</code> attribute appears once for the entire control, not once for each term within the control. To associate each term with its taxonomy both values are encoded in the <code>value=</code> attribute in the term's option tag. Here is an example for two "flat" taxonomies:</p>
-<p>
-<code>
-[mla_term_list taxonomy="animal,vegetable" mla_output=dropdown]
-</code>
-</p>
-<p>
-The above shortcode generates the HTML below (some class attributes removed for clarity).
-</p>
-<p>
-<code>
-&lt;select name="tax_input[animal-vegetable][]" class="term-list-taxonomy-animal-vegetable" id="mla_term_list-1"&gt;<br />
-&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="animal.12"&gt;Dog&lt;/option&gt;<br />
-&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="animal.13"&gt;Cat&lt;/option&gt;<br />
-&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="vegetable.33"&gt;Carrot&lt;/option&gt;<br />
-&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="vegetable.35"&gt;Apple&lt;/option&gt;<br />
-&lt;/select&gt;
-</code>
-</p>
-<p>
-In the above example, to return the term slug instead of the term id you would add <code>mla_option_value="{+taxonomy+}.{+slug+}"</code> to the shortcode.
-</p>
-<p>
-If you use the default control name, the <code>[mla_gallery]</code> shortcode&rsquo;s <code>tax_input</code> parameter can convert the compound value(s) returned in the <code>tax_input</code> array to the appropriate taxonomy-specific entries. For example, the <code>animal.12</code> value can be handled as if it was <code>animal=12</code>. For the above example, the corresponding <code>[mla_gallery]</code> shortcode parameter would be <code>tax_input="{+request:tax_input.animal-vegetable+}"</code>. See the <a href="#taxonomy_parameters_tax_input"><strong>Compound Taxonomy Queries, "tax_input"</strong></a> section for more information.
-</p>
-<p>
-You could use the <code>mla_control_name</code> shortcode parameter to move the selected term out of the default <code>tax_input</code> array to a separate query argument and then process the returned value in your own PHP code.
-<a name="term_list_other"></a>
-</p>
-<h4>Term List Other Parameters</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_debug</td>
-<td>controls debug log output; <strong>default false</strong>. See below for details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
-</tr>
-</table>
-<p>
-The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
-</p>
-<p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_term_list" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_term_list]" delimiter to an earlier shortcode.
-<a name="term_list_data_selection"></a>
-</p>
-<h4>Term List Data Selection Parameters</h4>
-<p>
-The data selection parameters specify which taxonomy (or taxonomies) the terms are taken from, which terms are returned for the list and the order in which the terms are returned:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>The taxonomy or taxonomies to retrieve terms from; <strong>default 'post_tag'</strong>. Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_term_list()</code> function directly from your theme or plugin PHP code) as an array.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_mime_type</td>
-<td>The MIME type(s) of the items to include in the term-specific counts. The default is "all", which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_type</td>
-<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in the term-specific counts. The default is "attachment". You can override the default if you want to count other types for which the taxonomy is registered, e.g., "post" to count Posts in the "category" and "post_tag" taxonomies. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_status</td>
-<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in the term-specific counts. The default is "inherit", which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts in the "category" and "post_tag" taxonomies. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ids</td>
-<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific list. Only those terms assigned to the attachment(s) in the list will be included. You can have one or more IDs and you can include assigned terms from one or more taxonomies. Do not use the "include" parameter if you use the "ids" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">no_count</td>
-<td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
-&nbsp;<br />
-You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
-&nbsp;<br />
-You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the list by post-specific values.<br />
-&nbsp;</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">include</td>
-<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to include. Only the terms in this list that are used in the taxonomies you specified will be retrieved.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">exclude</td>
-<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to exclude from the returned values.</td>
+<td class="mla-doc-table-label">modified</td>
+<td>Order by last modified date.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">parent</td>
-<td>Get direct children of this term id (only terms whose explicit parent is this value). If 0 is passed, only top-level terms are returned.</td>
+<td>Order by post/page parent id.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">minimum</td>
-<td>The minimum number of attachments that must be associated with the term for the term to be included. For example, "minimum=1" will omit "empty" terms.</td>
+<td class="mla-doc-table-label">menu_order</td>
+<td>Order by page order.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">number</td>
-<td>The maximum number of "most popular" terms to return. The default, zero, returns them all. Terms are sorted by "count DESC, id ASC" to apply this constraint.</td>
+<td class="mla-doc-table-label">mime_type</td>
+<td>Order by attachment MIME type.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">orderby</td>
-<td>The sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug".<br />
-&nbsp;<br />
-If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
-&nbsp;<br />
-Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
-&nbsp;</td>
+<td class="mla-doc-table-label">comment_count</td>
+<td>Order by number of comments.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">order</td>
-<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
+<td class="mla-doc-table-label">rand</td>
+<td>Random order.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">preserve_case</td>
-<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
+<td class="mla-doc-table-label">&lt;keyname&gt;, meta_value,<br />meta_value_num</td>
+<td style="vertical-align: top;">Order by custom field value. Note that a <em>'meta_key=keyname'</em> must also be present in the query. For example, to sort by a custom field called "Publication Date" and display the most recent items first, code <code>[mla_gallery meta_key="Publication Date" orderby=meta_value order=DESC]</code></td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">pad_counts</td>
-<td>True to include the count of all children in their parents' count. The default, "false", does not include children in their parents' count.<br />
-&nbsp;<br />
-The "pad_counts" parameter is only applied to the first (or only) taxonomy you specify, and that taxonomy must be hierarchical to see any difference in the counts.<br />
-&nbsp;</td>
+<td class="mla-doc-table-label">&lt;post__in&gt;</td>
+<td>Preserve order given in the <em>ids, include</em> or <em>post__in</em> array. Used internally; cannot be specified directly.</td>
 </tr>
 </table>
 <p>
-You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
-</p>
+You can sort on more than one value, e.g., <code>orderby="author, date DESC"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query. </p>
 <p>
-The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
-<a name="term_list_data_selection_h"></a>
+The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="author, date DESC, mime_type" order=ASC</code> is the same as <code>orderby="author ASC, date DESC, mime_type ASC"</code>.
 </p>
-<h4>Term List Data Selection Parameters (Hierarchical Output)</h4>
-<p>
-When the list is organized by the term hierarchy (hierarchical=true) four parameters can be used to trim the tree and display a subset of the terms:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">child_of</td>
-<td>Display all terms that are descendants (i.e. children &amp; grandchildren) of the term identified by its term_id; <strong>default empty</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">exclude_tree</td>
-<td>Comma/space-separated string of term_id values to exclude along with all of their descendant terms. If <code>include</code> is non-empty, <code>exclude_tree</code> is ignored. <strong>Default empty.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">include_tree</td>
-<td>Comma/space-separated string of term_id values to include along with all of their descendant terms. <strong>Default empty.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">depth</td>
-<td>The maximum depth of parent/child relationships; <strong>default 0/False</strong> to display all levels</td>
-</tr>
-</table>
-<p>
-You can use these parameters with multiple <code>[mla_term_list]</code> shortcodes to navigate large hierarchical taxonomies. For example, define a control that shows only root terms ( <code>parent=0</code> ) with a control that shows the children of a specific root term ( <code>child_of={+current_item+}</code> ).
-<a name="term_list_substitution"></a>
-</p>
-<h4>Term List Substitution Parameters</h4>
-<p>
-Substitution parameters are a powerful way to add general and attachment-specific values to the list display. For example, if you code "<code>mla_link_href="{+page_url+}?current_slug={+slug+}&amp;current_name={+name,url+}"</code>, the hyperlinks behind each list term will contain the page URL, the current term slug and the term name encoded in url format. There are many parameter names like `page_url` and `slug` divided in several categories:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">List-specific</td>
-<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Style</td>
-<td>values that are known when the list-specific CSS inline styles are composed just before list output begins</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Markup</td>
-<td>values that are known at the beginning of list output processing and remain the same for the entire list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#term_list_item_parameters">Item-specific</a></td>
-<td  style="vertical-align: top">values that change for each term/item in the list, such as Name and Description</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
-<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the list. The other prefixes are attachment-specific and have no meaning in a list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
-<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
-</tr>
-</table>
-<p>
-The following paragraphs go into more detail about each category and the parameter names within them.
-</p>
-<p>
-To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
-</p>
-<p>
-<strong>list-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the list based on information about the post/page on which the list appears. The list-specific substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">site_url</td>
-<td>absolute URL to the site directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_url</td>
-<td>absolute URL to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_dir</td>
-<td>absolute (full) path to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">instance</td>
-<td>starts at '1', incremented for each additional shortcode in the post/page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">selector</td>
-<td>"mla_term_list-{$instance}", e.g., mla_term_list-1</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_ID,<br />id</td>
-<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_author</td>
-<td>the <code>post_author</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_date</td>
-<td>the <code>post_date</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_content</td>
-<td>the <code>post_content</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_title</td>
-<td>the <code>post_title</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_excerpt</td>
-<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_status</td>
-<td>the <code>post_status</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_name</td>
-<td>the <code>post_name</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_modified</td>
-<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_guid</td>
-<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_type</td>
-<td>the <code>post_type</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_url</td>
-<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
-</tr>
-</table>
-<p>
-If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
-</p>
-<p>
-Style and Markup templates give you great flexibility for the content and format of each <code>[mla_term_list]</code> when you use the "list", "dropdown" and "checklist" output formats. You can define as many templates as you need. 
-</p>
-<p>
-Style templates provide list-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for the beginning of the list, each list item and the end of the list. Additional "Child" template parts provide optional markup for the opening, each item and the close of sublists for child terms.
-</p>
-<p>
-The Shortcodes tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
-</p>
-<p>
-There are two default templates for the "list" format; "term-list-ul" and "term-list-dl". As the names imply, the "term-list-dl" default is used for the "dlist" output format or when the "captiontag" parameter is present in the shortcode. If you name a custom Markup template in your shortcode, it will be used whether the "captiontag" is present or not.
-<a name="term_list_variable_parameters"></a>
-</p>
-<p>
-The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">request</td>
-<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">query</td>
-<td>The parameters defined in the <code>[mla_term_list]</code> shortcode. For example, if your shortcode is <code>[mla_term_list taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">template</td>
-<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
-</tr>
-</table>
-<p>
-Term list substitution parameters for the <strong>Style template</strong> are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_output</td>
-<td>shortcode parameter, default = 'ulist'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>shortcode parameter, default = 'term-list'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>shortcode parameter, default = 'term-list-ul', '-dl', '-dropdown' or '-checklist' depending on the list output format</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>the slug of the taxonomy on which the list is based. Multiple taxonomy slugs are joined with a dash to form a single value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>the current/selected item in the list, as entered in the shortcode parameters.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>shortcode parameter, default = 'ul', 'ol', or 'dl' if the "captiontag" parameter is present.</td>
-</tr>
-<td class="mla-doc-table-label">itemtag_attributes</td>
-<td>HTML attribute value(s) added to the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_class</td>
-<td>HTML class names(s) added to the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_id</td>
-<td>HTML "id" attribute value for the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">termtag</td>
-<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple</td>
-<td>'multiple' if the <code>mla_multi_select</code> parameter is true, empty if not.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">all_found_rows</td>
-<td>the number of terms retrieved for the list before "pruning" by the Hierarchical Output Data Selection parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">found_rows</td>
-<td>the number of terms retrieved for the list, after any "pruning"</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between tags</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>Rollover Text when the count value is one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td> Rollover Text when the count value is zero or more than one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>the destination name of the item hyperlink, default 'view'</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="term_list_markup_parameters"></a>
-</p>
-<p>
-Term list substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>list-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates. Three substitution parameters are added or modified for the markup template:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current_level</td>
-<td>the parent/child relationship "depth", starting at zero for root terms</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_class</td>
-<td>the 'children' class is added for all but the root level</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_id</td>
-<td>the term's parent id is added for all but the root level</td>
-</tr>
-</table>
-<p>
-There are also <a href="#mla_term_list_hooks">MLA Term List Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
-<a name="term_list_item_parameters"></a>
-</p>
-<p>
-Term list <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" and "Child Item" sections of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">key</td>
-<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_terms_query_results()</code> filter has altered the array keys.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_id</td>
-<td>the term id</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">name</td>
-<td>the term display name</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">slug</td>
-<td>the term slug</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_group</td>
-<td>the term group</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_taxonomy_id</td>
-<td>the term-taxonomy id</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">taxonomy</td>
-<td>the primary taxonomy for this term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">description</td>
-<td>the term description, if any</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">parent</td>
-<td>the direct parent of the term</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">count</td>
-<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">term_count</td>
-<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_url</td>
-<td>the URL portion of "thelink" (below). Derived from editlink_url, termlink_url or mla_link_href.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink_url</td>
-<td>URL of the current post/page plus a "current_item=term_id" query argument</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">editlink_url</td>
-<td>URL of the term's "edit category/tag" page</td></tr>
-<tr>
-<td class="mla-doc-table-label">termlink_url</td>
-<td>URL of the term's archive page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">children</td>
-<td>HTML markup for the current term's children, if any</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">caption</td>
-<td>if captiontag is not empty, contains term description or the mla_caption value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_attributes</td>
-<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">active_item_class</td>
-<td>set to the value of the <code>active_item_class</code> parameter (default "mla_active_item") for the active item(s) in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list. An item is "active" if it or any of its child items are the current item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>set to the value of the <code>current_item_class</code> parameter (default "mla_current_item") for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">rollover_text</td>
-<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_style</td>
-<td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_text</td>
-<td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thevalue</td>
-<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thelink</td>
-<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink</td>
-<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">editlink</td>
-<td>full hyperlink to the term's "edit category/tag" page, including all the Display Content parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">termlink</td>
-<td>full hyperlink to the term's archive page, including all the Display Content parameters</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="mla_term_list_examples"></a>
-</p>
-<h4>MLA Term List Examples</h4>
-<p>
-Here is a simple example of a dropdown control for the Att. Categories taxonomy:
-</p>
-<p>
-<code>
-&lt;form id="mla-text-form" action="." method="post" class="row"&gt;<br />
-&lt;strong&gt;Att. Categories&lt;/strong&gt;<br />
-[mla_term_list post_mime_type=image taxonomy=attachment_category mla_output=dropdown mla_option_value="{+slug+}" show_count=true pad_counts=false ]<br />
-&nbsp;<br />
-&lt;input id="text-form-submit" name="text_form_submit" type="submit" value="Search" /&gt;<br />
-&lt;/form&gt;<br />
-&nbsp;<br />
-&lt;h3&gt;Gallery&lt;/h3&gt;<br />
-[mla_gallery]<br />
-attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}"<br />
-posts_per_page=3 mla_output="paginate_links,prev_next"<br />
-mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&amp;tax_input[attachment_category]={+query:attachment_category,url+}'<br />
-[/mla_gallery]<br />
-&nbsp;<br />
-[mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}" posts_per_page=3 mla_caption="{+title+} : {+description+}" mla_nolink_text="&lt;br&gt;Select a term to display the gallery.&lt;br&gt;"]
-</code>
-</p>
-<p>
-As you can see, the key is passing the selected term from the form to the gallery shortcodes. By default, the <code>[mla_term_list]</code> shortcode collects all of its results in the <code>tax_input</code> array, keyed by taxonomy slug. The example combines this with an invalid term slug so the gallery will be empty until a term is selected in the dropdown. Note that the pagination shortcode uses the &ldquo;enclosing shortcode&rdquo; format so HTML characters in the mla_link_href parameter are not corrupted by the WordPress shortcode parsing process.
-</p>
-<p>
-You can experiment with a category checklist format by simply changing <code>mla_output=dropdown</code> to <code>mla_output=checklist</code> in the <code>[mla_term_list]</code> shortcode.
-You will also see that the term you select doesn&rsquo;t &ldquo;stick&rdquo; in the dropdown control when the page is refreshed with the gallery display. That is one motivation for the <a title="Find the UI Elements Example" target="_blank" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+UI+Elements+Example%22" class="mla-doc-bold-link">MLA UI Elements Example</a> plugin. You can use that example plugin to improve the user experience after you have got the basic application going.
-</p>
-<p>
-&nbsp;
-<a name="mla_term_list_hooks"></a>
-</p>
-<h4>MLA Term List Filters (Hooks)</h4>
-<p>
-The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Term List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Term+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Term List Hooks Example</a>. To run the example:
-</p>
-<ol>
-<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
-<li>Hover over "MLA Term List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
-<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Term List Hooks Example" plugin.</li>
-<li>Create a new <code>[mla_term_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output.</li>
-<li>View the post or page on which the modified shortcode appears to see a term list with a range of colors applied to the terms.</li>
-</ol>
-<p>
-The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-hook-label">mla_term_list_raw_attributes</td>
-<td class="mla-doc-hook-definition">called at the beginning of the cloud, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_term_list_attributes,<br />mla_term_list_arguments</td>
-<td class="mla-doc-hook-definition">called at the beginning of the cloud generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_query_attributes,<br />mla_get_terms_query_arguments</td>
-<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_clauses</td>
-<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_get_terms_query_results</td>
-<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results</code> call, so you can inspect/record or modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">use_mla_term_list_style</td>
-<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the tag cloud output.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_term_list_style_values,<br /> mla_term_list_style_template,<br />mla_term_list_style_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_term_list_open_values,<br />mla_term_list_open_template,<br />mla_term_list_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_term_list_item_values,<br />mla_term_list_item_template,<br />mla_term_list_item_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_term_list_close_values,<br />mla_term_list_close_template,<br />mla_term_list_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
-</tr>
-</table>
-<div id="mla-doc-cf-list-div" style="display:inline"><a name="mla_cf_list"></a>
-<p>
-<a name="mla_cf_list"></a>
-</p>
+<p><a name="gallery_pagination"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>MLA Custom Field List Shortcode</h3>
-<p>
-The <code>[mla_custom_list]</code> shortcode function displays a list of WordPress custom field values in a variety of formats, including a "cloud", where the size of each list item is determined by how many times that particular value has been added to Media Library items (attachments). MLA Custom Field List provides many enhancements to the basic flat/cloud display. These include:
-</p>
-<ul class="mla_settings">
-<li>Several display formats, including "flat" (cloud), list, "grid" (modeled after the <code>[mla_gallery]</code> display), "dropdown" and "checklist". The list formats are "ulist", "olist" and "dlist".</li>
-<li>Complete support for paginated lists; display hundreds or thousands of values in manageable groups.</li>
-<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list", "grid" and "checklist" formats to suit any need.</li>
-<li>Access to a wide range of content using the value-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
-<li>Display Style and Display Content parameters for easy customization of the list display and the destination of the links behind each value.</li>
-<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.</li>
-</ul>
-<p>
-Most applications can be implemented by a simple shortcode with a few parameters. The <code>[mla_custom_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
-</p>
-<p>
-The next Documentation sections are a complete reference for the shortcode. Don't be put off by the volume of material; you won't need most of the parameters for typical applications. You may want to start by reviewing the <a href="#cf_list_pagination_example">Custom Field List Pagination Example</a> to see how easy using the shortcode can be.
-</p>
-<p>
-Many of the <code>[mla_custom_list]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> shortcode, so the learning curve is short. Differences and parameters unique to the list are given in the sections below.
-</p>
-<p>
-<a name="cf_list_output"></a>
-</p>
-<h4>Custom Field List Output Formats</h4>
-<p>
-The values' display format is determined by the <strong>"mla_output"</strong> parameter:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without enclosing HTML markup. The tags are of varying size depending on how many items share the value (a "cloud"). The "separator" parameter content (default, one newline character) is inserted between each hyperlink. <strong>"flat" is the default output format value.</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">flat,div</td>
-<td>Adding the ",div" qualifier to the flat output format will wrap the hyperlink tags in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ulist</td>
-<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">olist</td>
-<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">dlist</td>
-<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each value to have a "caption". The "itemtag", "valuetag" and "captiontag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">grid</td>
-<td>Modeled on the galleries produced by <code>[mla_gallery]</code>; a rectangular display with rows and columns. The tag parameters listed above, the "columns" parameter and the Display Style parameters customize the display.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">dropdown</td>
-<td>Returns an HTML "select" control with a sequence of HTML "option" tags.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">checklist</td>
-<td>Returns HTML "input", "type=checkbox" elements enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">checklist,div</td>
-<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list. For this format, the "Row Open" and "Row Close" markup template sections are not used.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">array</td>
-<td>Returns a PHP array of hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code.</td>
-</tr>
-</table>
-<p>
-The flat,div, list, grid, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own.
-</p>
-<p>
-The <code>[mla_custom_list]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode. You can find details for pagination format parameters in the <a href="#cf_list_pagination">Custom Field List Pagination Parameters</a> section below.
-</p>
-<p>
-<a name="cf_list_items"></a>
-</p>
-<h4>Custom Field List Item Parameters</h4>
-<p>
-The following parameters customize item content and markup for all of the output fomats:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">show_count</td>
-<td>Show how many items are assigned to the value. Values "true" or <strong>"false" (default)</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>Identifies the current/selected item in the list. It contains a text value. It will be ignored if it does not match an item in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
-</tr>
-</table>
-<p>
-The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each cloud element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the cloud element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
-</p>
-<p>
-<a name="cf_list_items_flat"></a>
-</p>
-<h4>Custom Field List Item Parameters ("cloud" formats: flat, list and grid)</h4>
-<p>
-Each item in "cloud" formats comprises a field value of varying size, a hyperlink surrounding the value and a "title" attribute (Rollover Text) displayed when the cursor hovers over the value hyperlink. The following parameters customize "cloud" item content and markup:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>The text size <strong>(default 8 for flat format otherwise defaults to default_size)</strong> of the item with the smallest count value (units given by unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>The text size <strong>(default 22 for flat format otherwise defaults to default_size)</strong> of the item with the highest count value (units given by the unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">default_size</td>
-<td>The text size <strong>(default 12)</strong> of the special links (all items, no items, any items) (units given by the unit parameter).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. <strong>pt (the default)</strong>, px, em, %.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between items. <strong>Default '\n'</strong> (whitespace). Only used in the flat format</td>
-</tr>
-</table>
-<p>
-For the flat format you can set the three size parameters to the same value to display links of uniform size. For the list and grid formats all links are displayed in the "default_size", which you can change by adding it as a shortcode parameter.  You can recreate the "cloud" display for the list and grid formats by adding explicit size parameters to the shortcode, e.g., <code>smallest=8 largest=22</code>.</p>
-<p>
-<a name="cf_list_items_flga"></a>
-</p>
-<h4>Custom Field List Item Parameters (except dropdown and checklist formats)</h4>
-<p>
-The dropdown and checklist formats do not generate hyperlinks, so the parameters here do not apply to them. The following parameters customize item hyperlink content and markup:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is one. The default is "%d item". If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one. The default is "%d items". If you change the default, don't forget to include the "%d" placeholder.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>Chooses the destination of the item hyperlink; details in the next section below.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>The class attribute for the current item in the cloud as determined by the "current_item" parameter (if specified); default "mla_current_item".</td>
-</tr>
-</table>
-<p>
-The above parameters are an easy way to customize the content and markup for each list item. For the list and grid formats you can also use the <a href="#cf_list_display_content">Custom Field List Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility.
-</p>
-<p>
-<a name="cf_list_link"></a>
-</p>
-<h4>Custom Field List Item Link</h4>
-<p>
-The Link parameter specifies the target and type of link from the cloud value/item to the item's destination. You can also specify a non-hyperlink treatment for each item.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current</td>
-<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the value of the selected item. <strong>"current" is the default link value</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
-<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the pagination example later in this section for more details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">span</td>
-<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">none</td>
-<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
-</tr>
-</table>
-<p>
-Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the list to select a value and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The pagination example later in this section uses this technique. 
-</p>
-<p><a name="cf_list_display_templates"></a>
-</p>
-<h4>Custom Field List Display Style and Markup (all output formats except "flat")</h4>
-<p>
-Two parameters provide a way to apply custom style and markup templates to your <code>[mla_custom_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "flat,div", list, "grid", "dropdown", "checklist" and "checklist,div" formats.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>replaces the default style template for an <code>[mla_custom_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>replaces the default markup template for an <code>[mla_custom_list]</code> shortcode</td>
-</tr>
-</table>
-<p><a name="cf_list_display_grid"></a></p>
-<h4>Custom Field List Display Style (grid)</h4>
-<p>
-Four parameters provide control over the placement, size and spacing of values in the "grid" format without requiring the use of custom Style templates.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">columns</td>
-<td>specifies the number of columns. The grid will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_float</td>
-<td>specifies the CSS float attribute of the ".cf-cloud-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".cf-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".cf-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
-<br />&nbsp;<br />
-Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
-<br />&nbsp;<br />
-For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
-</tr>
-</table>
-<p>
-The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can also code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the grid.
-</p>
-<p><a name="cf_list_display_style"></a></p>
-<h4>Custom Field List Display Style (list, grid and checklist)</h4>
-<p>
-Three parameters provide control over the XHTML tags used to enclose each part of the list items.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>for list formats, the name of the XHTML tag used to begin the list; the <strong>defaults are "ul" for "ulist", "ol" for "olist" and "dl" fot "dlist"</strong>. For "grid" format, the name of the XHTML tag used to enclose each item in the cloud; the <strong>default is "dl"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">valuetag</td>
-<td>the name of the XHTML tag used to enclose each value in the cloud. For list formats, the <strong>default is "li"</strong>; for "grid" format  the <strong>default is "dt"</strong>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>the name of the XHTML tag used to enclose each caption. For "grid" and "dlist" formats, the <strong>default is "dd"</strong>.</td>
-</tr>
-</table>
-<p>
-These parameters give you some control over the markup used for the list and its elements. For more complex applications you can use style and markup templates to gain complete control over the cloud display.
-</p>
-<p><a name="cf_list_display_content"></a></p>
-<h4>Custom Field List Display Content</h4>
-<p>
-Ten parameters provide an easy way to control the contents of tag cloud items without requiring the use of custom Markup templates.  
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_style</td>
-<td>replaces the CSS styles for the hyperlink. The default style is <code>font-size: [+font_size+][+unit+]</code>.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the value text displayed for each item</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there are no cloud items or no pagination link</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_caption</td>
-<td>replaces the caption text displayed beneath each item. The caption appears for "grid" items and for "list" items when the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_value</td>
-<td>replaces the custom field value of the <code>current_item</code> hyperlink query argument.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
-</tr>
-</table>
-<p>
-Six parameters provide an easy way to add and control the contents of special list items for selecting special groups of values. You can add links for selecting all items, items that have no values for the custom field and/or items that have one or more values for the custom field. The default values for these links are compatible with the simple custom field parameters and meta_query parameters of the <code>[mla_gallery]</code> shortcode.
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">option_all_text</td>
-<td>Text to display for showing an 'all values' link. <strong>Default will not show a link to select 'all values'</strong>. When this option is selected all items, including items with no values at all, are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for 'all values' option. <strong>Default 'ignore.values.assigned'</strong>. When this option is selected all items, including items with no values at all, are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_no_values_text</td>
-<td>Text to display for showing an 'no values' link. <strong>Default will not show a link to select 'no values'</strong>. When this option is selected only those items with no values at all are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_no_values_value</td>
-<td>Control value for 'no values' option. <strong>Default 'no.values.assigned'</strong>. When this option is selected only those items with no values at all are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_values_text</td>
-<td>Text to display for showing an 'any values' link. <strong>Default will not show a link to select 'any values'</strong>. When this option is selected only those items with one or more values are included in the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_any_values_value</td>
-<td>Control value for 'any values' option. <strong>Default 'any.values.assigned'</strong>. When this option is selected only those items with one or more values are included in the results.</td>
-</tr>
-</table>
-<p>
-All but the "mla_target" parameter support the <a href="#cf_list_markup_parameters">Markup</a>, <a href="#cf_list_item_parameters">Item-specific</a>, <a href="#cf_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+meta_key+} : {+rollover_text+}'</code>, the rollover text will contain the custom field name, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
-</p>
-<p>
-The "mla_link_href" parameter is a great way to change the destination your cloud item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
-</p>
-<p>
-The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
-</p>
-<p>
-The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
-</p>
-<p><a name="cf_list_display_content_html"></a></p>
-<h4>Custom Field List Display Content (dropdown and checklist)</h4>
-<p>
-Dropdown and Checklist formats do not generate hyperlinks; they generate HTML input controls that return the content of <code>value</code> attributes. Eight parameters provide an easy way to control the contents of items without requiring the use of custom Markup templates. 
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_control_name</td>
-<td>replaces the <strong><code>current_item</code> or <code>current_items[]</code> (default)</strong> name attribute in the input tag for the control(s). The <code>current_items[]</code> default is used for checklists and for dropdowns when <code>mla_multi_select=true</code>. Useful for adding multiple controls to a post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_multi_select</td>
-<td>The <strong>default, "false"</strong>, specifies that only one dropdown control option can be selected. If set to "true", it specifies that multiple dropdown control options can be selected at once. Not used for checklist controls.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_option_text</td>
-<td>replaces the <strong>custom field value (default)</strong> <strong>displayed</strong> for each option, i.e., the text enclosed by the option/input tag.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_option_value</td>
-<td>replaces the <strong>custom field value (default)</strong> <strong>returned</strong> for each option, i.e., the <code>value</code> attribute of the option/input tag.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">hide_if_empty</td>
-<td>If <strong>false (default)</strong>, display a control with "option_none_" text &amp; value. If true, display mla_nolink_text or nothing.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the entire control with text/markup; <strong>default empty</strong></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_none_text</td>
-<td>Text to display for showing a 'no values' option, displayed when there are no values defined for the custom field. Default will not show an option to select 'no values'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_none_value</td>
-<td>Control value for a 'no values' option, returned when there are no values defined for the custom field. <strong>Defaults to the option_none_text</strong>.</td>
-</tr>
-</table>
-<p>
-<a name="cf_list_other"></a>
-</p>
-<h4>Custom Field List Other Parameters</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_debug</td>
-<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true". See below for details.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
-</tr>
-</table>
-<p>
-The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
-</p>
-<p>
-If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log. Use this only for development/debugging to avoid filling the log file with unneeded data.
-</p>
-<p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_custom_list]" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_custom_list]" delimiter to an earlier shortcode.
-</p>
-<p><a name="cf_list_data_selection"></a></p>
-<h4>Custom Field List Data Selection Parameters</h4>
-<p>
-The data selection parameters specify which custom field(s) the values are taken from, which values are returned for the cloud and the order in which the values are returned:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">meta_key</td>
-<td>The custom field to retrieve values from. The field name is required.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_mime_type</td>
-<td>The MIME type(s) of the items to include in value selection and value-specific counts. <strong>The default is "all"</strong>, which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, include only PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_type</td>
-<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in value selection and value-specific counts. <strong>The default is "attachment"</strong>. You can override the default if you want to select other types for which the custom field is used, e.g., "post" to select Posts. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">post_status</td>
-<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in value selection and value-specific counts. <strong>The default is "inherit"</strong>, which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">ids</td>
-<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific cloud. Only those custom field values used in the attachment(s) in the list will be included. You can have one or more IDs and you can include values from one or more custom fields. Do not use the "include" parameter if you use the "ids" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">no_count</td>
-<td><strong>The default, "false"</strong>, computes a value-specific count of the number of attachments using that value. If you have a large number of values and/or attachments, this can take a long time.<br />
-&nbsp;<br />
-You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
-&nbsp;</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">include</td>
-<td>A comma-separated list of field values to include. Only the values in this list that are used in the field(s) you specified will be retrieved.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">exclude</td>
-<td>A comma-separated list of field values to exclude from the returned values.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">minimum</td>
-<td>The minimum number of attachments that must be associated with a value for that value to be included. <strong>The "default" is one (1)</strong>, because a custom field value must occur in at least one item to exist at all.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">number</td>
-<td>The maximum number of "most popular" values to return. <strong>The default, zero (0)</strong>, returns them all. values are sorted by "count DESC, meta_value ASC" to apply this constraint.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">orderby</td>
-<td>The final sort order of the retrieved values. Can be one or more of "count", "meta_value" (the default), "none", or "random". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular values for the list).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">order</td>
-<td>Can be <strong>"ASC" (ascending, the default)</strong> or "DESC" (descending).</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">no_orderby</td>
-<td><strong>The default, "false"</strong>, applies the orderby and order parameters to the final value list. If you have a large number of valuess and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular values) and the final sorting process. If you do that, the sort order of the list will be indeterminite.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">preserve_case</td>
-<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">limit</td>
-<td>The number of values to return. This parameter is used for <a href="#cf_list_pagination">pagination</a>; it is applied <strong>after</strong> and separate from the "number" parameter above.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">offset</td>
-<td>The number of values to skip before returning the results. This parameter is used for <a href="#cf_list_pagination">pagination</a>.</td>
-</tr>
-</table>
-<p>
-You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
-</p>
-<p>
-The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
-<a name="cf_list_substitution"></a>
-</p>
-<h4>Custom Field List Substitution Parameters</h4>
-<p>
-Substitution parameters are a powerful way to add general and attachment-specific values to the list or pass them on to an <code>[mla_gallery]</code> display. For example, if you code "<code>mla_link_href="{+page_url+}?field_name={+meta_key+}&amp;current_item={+request:current_item+}"</code>, the hyperlinks behind each cloud term will contain the page URL, the custom field name and the custom field value in <code>current_item</code>. There are many substitution parameter names like <code>page_url</code> and <code>meta_key</code> divided in several categories:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">List-specific</td>
-<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Style</td>
-<td>values that are known when the list-specific CSS inline styles are composed just before list output begins</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">Markup</td>
-<td>values that are known at the beginning of list output processing and remain the same for the entire list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#cf_list_item_parameters">Item-specific</a></td>
-<td  style="vertical-align: top">values that change for each value/item in the list, such as Name and Count</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
-<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the list. The other prefixes are attachment-specific and have no meaning in a custom field list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
-<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
-</tr>
-</table>
-<p>
-To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
-</p>
-<p>
-<strong>List-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the cloud based on information about the post/page on which the cloud appears. The cloud-specific substitution parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">site_url</td>
-<td>absolute URL to the site directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_url</td>
-<td>absolute URL to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">base_dir</td>
-<td>absolute (full) path to the upload directory, without trailing slash</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">instance</td>
-<td>starts at '1', incremented for each additional shortcode in the post/page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">selector</td>
-<td>"mla_custom_list-{$instance}", e.g., mla_custom_list-1</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_ID,<br />id</td>
-<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_author</td>
-<td>the <code>post_author</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_date</td>
-<td>the <code>post_date</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_content</td>
-<td>the <code>post_content</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_title</td>
-<td>the <code>post_title</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_excerpt</td>
-<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_status</td>
-<td>the <code>post_status</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_name</td>
-<td>the <code>post_name</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_modified</td>
-<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_guid</td>
-<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_type</td>
-<td>the <code>post_type</code> value of the post/page in which the list appears</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">page_url</td>
-<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
-</tr>
-</table>
-<p>
-If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
-</p>
-<p>
-Style and Markup templates give you great flexibility for the content and format of each [mla_custom_list] when you use the "list" and "grid" output formats. You can define as many templates as you need. 
-</p>
-<p>
-Style templates provide list-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the list, 2) the beginning of each row ("grid" format), 3) each list item, 4) the end of each row ("grid" format) and 5) the end of the list. The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
-</p>
-<p>
-For the "grid" output format, all of the Markup template sections are used. For the list output formats, only the "Open", "Item" and "Close" sections are used. There are two default templates for the list formats; "custom-list-ul" (for "ulist", "olist" and "checklist") and "custom-list-dl" (for "dlist").
-<a name="cf_list_variable_parameters"></a>
-</p>
-<p>
-The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">request</td>
-<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">query</td>
-<td>The parameters defined in the <code>[mla_custom_list]</code> shortcode. For example, if your shortcode is <code>[mla_tag_cloud meta_key="My Custom Field" div-class=some_class]</code> you can access the parameters as <code>[+query:meta_key+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">template</td>
-<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
-</tr>
-</table>
-<p>
-Custom List substitution parameters for the <strong>Style template</strong> are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_output</td>
-<td>the primary value of the shortcode parameter; default = 'flat'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_output_qualifier</td>
-<td>the qualifier value, if any, of the shortcode parameter; default empty. Qualifiers include 'wrap', 'last', 'first', 'show_all' and 'prev_next'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_style</td>
-<td>shortcode parameter. For flat and pagination formats, default = 'none'. For other formats, default = 'custom-list'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_markup</td>
-<td>shortcode parameter. Defaults depend on the output format: 'custom-list-ul', 'custom-list-dl', 'custom-list-grid''custom-list-dropdown' or 'custom-list-checklist'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_key</td>
-<td>the name of the custom field on which the list is based.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>the value of current/selected item in the list, as entered in the shortcode parameters.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag</td>
-<td>shortcode parameter, default = 'ul', or 'dl' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_attributes</td>
-<td>HTML attribute value(s) added to the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_class</td>
-<td>HTML class names(s) added to the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemtag_id</td>
-<td>HTML "id" attribute value for the item tag</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">valuetag</td>
-<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">captiontag</td>
-<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple</td>
-<td>'multiple' if the <code>mla_multi_select</code> parameter is true, empty if not.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">columns</td>
-<td>shortcode parameter, default = '3'; only meaningful for the "grid" output format.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">itemwidth</td>
-<td>shortcode parameter, default is calculated by dividing 100% by the number of columns and subtracting twice the margin value, e.g., 30.3% for three columns and a margin value of 1.5%. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">margin</td>
-<td>shortcode parameter, default = '1.5%'. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">float</td>
-<td>'right' if current locale is RTL, 'left' if not</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">database_rows</td>
-<td>the number of actual values retrieved for the list, not including the "all", "no values" and/or "any values" elements</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">found_rows</td>
-<td>the number of values prepared for the list, including the "all", "no values" and/or "any values" elements</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_count</td>
-<td>the smallest number of attachments associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_count</td>
-<td>the largest number of attachments associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">min_scaled_count</td>
-<td>the smallest scaled count associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">max_scaled_count</td>
-<td>the largest scaled count associated with any value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">spread</td>
-<td>max_scaled_count - min_scaled_count</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">smallest</td>
-<td>the text size of the tag with the smallest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">largest</td>
-<td>the text size of the tag with the largest count value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">unit</td>
-<td>Unit of measure as pertains to the smallest and largest values</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_spread</td>
-<td>largest - smallest</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_step</td>
-<td>font_spread / spread</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">separator</td>
-<td>The text/space between values</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">single_text</td>
-<td>Rollover Text when the count value is one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">multiple_text</td>
-<td> Rollover Text when the count value is zero or more than one</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">echo</td>
-<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link</td>
-<td>the destination name of the item hyperlink, default 'current'</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="cf_list_markup_parameters"></a>
-</p>
-<p>
-Custom list substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>list-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates.
-</p>
-<p>
-There is just one additional substitution parameter defined at the start of markup processing:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">thename</td>
-<td>the name of the substitution parameter that contains the current item in the list; default 'current_item'.</td>
-</tr>
-</table>
-<p>
-There are <a href="#mla_cf_list_hooks">MLA Custom Field List Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
-<a name="cf_list_item_parameters"></a>
-</p>
-<p>
-Custom list <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" section of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">index</td>
-<td>starts at '1', incremented for each item in the list</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">key</td>
-<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_custom_values_query_results()</code> filter has altered the array keys.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">last_in_row</td>
-<td>for the "grid" output format, set to "last_in_row" for the last item in each full grid row, and to an empty string for all other items in the row. If the list ends with a partial row, the last_in_row parameter is not set.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_value</td>
-<td>the value of the  item, escaped to be a valid HTML attribute value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">meta_text</td>
-<td>the item display name</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">count</td>
-<td>the number of attachments associated with the item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">scaled_count</td>
-<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">font_size</td>
-<td>the numeric portion of the CSS "font-size" attribute</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_url</td>
-<td>the URL portion of "thelink" (below). Derived from currentlink_url or mla_link_href.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink_url</td>
-<td>URL of the current post/page plus current item and optional current page query arguments</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">caption</td>
-<td>if captiontag is not empty, contains the mla_caption value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_attributes</td>
-<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item_class</td>
-<td>set to "mla_current_item" for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">rollover_text</td>
-<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_style</td>
-<td>the CSS "style" attribute, drawn from the font_size and unit parameters or the mla_link_style parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">link_text</td>
-<td>the text enclosed by the hyperlink, drawn from the item taxt or mla_link_text parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thevalue</td>
-<td>item value (default) or other value as determined by the "mla_item_value" parameter</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">thelink</td>
-<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">currentlink</td>
-<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
-</tr>
-</table>
-<p>
-&nbsp;
-<a name="cf_list_pagination"></a>
-</p>
-<h4>Custom Field List Pagination Parameters</h4>
-<p>
-If you have a large number of values for your custom field you may want to paginate the list display, i.e., divide the list into two or more pages of a reasonable size. Pagination support for <code>[mla_custom_list]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section.
-</p>
-<p>
-The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For pagination output, you can choose from six values: 
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">next_link</td>
-<td>returns a link to the next list item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the list. If you omit the qualifier, an empty string is returned for the "next_link" from the last item. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_link</td>
-<td>returns a link to the current list item, based on the "term_id" parameter value. This gives you an easy way to provide a visual indication of where you are within the taxonomy. The "span" and  "none" link formats are often used with this mla_output type.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_link</td>
-<td>returns a link to the previous list item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the beginning of the list. If you omit the qualifier, an empty string is returned for the "previous_link" from the first item. If you code the ",wrap" qualifier, "previous_link" from the gallery item will be to the last item.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">next_page</td>
-<td>returns a link to the next "page" of list items, based on the "mla_custom_list_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,last</strong>" qualifiers determine what happens at the end of the taxonomy. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the taxonomy. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">previous_page</td>
-<td>returns a link to the previous "page" of list items, based on the "mla_custom_list_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,first</strong>" qualifiers determine what happens at the beginning of the taxonomy. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">paginate_links</td>
-<td>returns a link to list items at the start and end of the list and to pages around the current "list page" ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ), based on the "mla_custom_list_current" parameter value. The optional "<strong>,show_all</strong>" qualifier will show all of the list pages instead of a short list around the current page. The optional "<strong>,prev_next</strong>" qualifier will include the "&laquo; Previous" and "Next &raquo;" portions of the link list.</td>
-</tr>
-</table>
-<p>
-Eight parameters are supplied for pagination control:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">limit</td>
-<td>the maximum number of terms to display in one list "page". Think of this as a "values per page" value.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">offset</td>
-<td>the number of terms to skip over before starting the current list page. This parameter is usually derived automatically from the more useful "mla_custom_list_current" parameter.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_custom_list_current</td>
-<td>the current list page number. The name of this parameter can be changed to support multiple paginated lists on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_total</td>
-<td>the highest page number you want to display; defaults to (total items / limit) if not specified, which is usually what you want. </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_rows</td>
-<td>If you have some other way of computing the total number of values you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a list that you know has fifty values you can code <code>[mla_custom_list mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or list display content parameters you need.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_item</td>
-<td>Identifies the current/selected item in the list. It contains a text value. It will be ignored if it does not match an item in the list.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
-</tr>
-</table>
-<p>
-The <code>[mla_custom_list]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a list or among list "pages". For example, if you have many values in your custom field you can build a value-specific <code>[mla_gallery]</code> page with links to the previous/next value in the custom field (a complete pagination example is included below). You can also build a page that shows a large number of custom field values in groups, or "list pages", of ten values with links to the previous/next ten values or links to all of the list pages of values for the custom field.
-</p>
-<h4>Next and previous list items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
-<p>
-If you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific custom field value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-value "pages" for the gallery.
-</p>
-<p>
-The next or previous link returned is drawn from the item-specific "link" substitution parameter for the next or previous list item. This means you can use all of the <a href="#cf_list_display_content">Custom Field List Display Content</a> parameters to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to customize the text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
-</p>
-<h4>Next and previous list pages; the <code>next_page</code> and <code>previous_page</code> output types</h4> 
-<p>
-If your custom field has a large number of distinct values you might want to divide your <code>[mla_custom_list]</code> into "list pages" with a manageable number of values on each page. For these applications you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the list in groups of, say, ten values per "list page".
-</p>
-<p>
-MLA has its own "mla_custom_list_current" parameter to indicate the current set of values within the list (the current list page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
-</p>
-<p>For most applications, "limit" is the only pagination parameter you need to specify. Make sure this parameter is the same for your main list shortcode and for the pagination shortcodes that go with it. Also, make sure you use exactly the same item selection and sorting parameters in all shortcodes.
-</p>
-<h4>Gallery Display Content parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-The next or previous link returned can use the following Gallery Display Content parameters to control each element of the link:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to those already defined for the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML &quot;href&quot; attribute in the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the link text </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_prev_text</td>
-<td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_next_text</td>
-<td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there is no link and link text, e.g., no previous or next page link </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML &quot;title&quot; attribute in the hyperlink. This is the text displayed when the mouse rolls or hovers over the link text </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML &quot;target&quot; attribute to the hyperlink </td>
-</tr>
-</table>
-<h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
-<p>
-WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
-</p>
-<p>
-The <strong>Page Selection Parameters</strong> and <strong>Gallery Display Content Parameters</strong> defined above also apply to the "paginate_links" output type. There are five additional parameters unique to this output type.
-</p>
-<h4>Specific parameters for the <code>paginate_links</code> output type</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_end_size</td>
-<td>How many numbers (default 1) appear on either the start and the end list edges</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_mid_size</td>
-<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_prev_text</td>
-<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_next_text</td>
-<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_type</td>
-<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
-</tr>
-</table>
-<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
-</p>
-<h4>Markup Substitution Parameters for <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types</h4>
-<p>You can use any of the <a href="#mla_markup_parameters"><strong>Substitution parameters for markup templates</strong></a> in your next/previous page links (since the links are at the "gallery page" level, <strong>the attachment-specific substitution parameters are not available</strong>). The following additional substitution parameters are available for the <code>next_page</code> and <code>previous_page</code> output types:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">current_page</td>
-<td>the number of the current page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">new_page</td>
-<td>the number of the new (previous or next) page; zero for paginate_links</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">last_page</td>
-<td>the number of the last/highest/maximum page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">posts_per_page</td>
-<td>the number of items on each gallery page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">found_rows</td>
-<td>the number of items in the gallery</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_offset</td>
-<td>the number of items skipped before the current page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">new_offset</td>
-<td>the number of items skipped before the new page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">current_page_text</td>
-<td>'mla_custom_list_current="[+current_page+]"'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">new_page_text</td>
-<td>'mla_custom_list_current="[+new_page+]"'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">last_page_text</td>
-<td>'mla_paginate_total="[+last_page+]"'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">posts_per_page_text</td>
-<td>'posts_per_page="[+posts_per_page+]"'</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">scheme</td>
-<td>the HTTP protocol used to access the page; usually "http://" but might be "https://"</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">http_host</td>
-<td>contents of the <em>Host:</em> header of the current request; usually a domain name such as "mysite.com" or an IP address</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">query_string</td>
-<td>the query arguments portion of the new URL, including the questions mark that precedes them.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">request_uri</td>
-<td>the URI given to access the page, e.g., "wordpress/2013/06/sample-post" or "wordpress/tag-gallery-page?attachment_tag=sample". MLA manages pagination by adding the "mla_custom_list_current" query parameter to the URI value</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">new_url</td>
-<td>concatenation of scheme + http_host + request_uri</td>
-</tr>
-</table>
-<p>
-<a name="cf_list_pagination_example"></a>
-</p>
-<h4>Custom Field List Pagination Example</h4>
-<p>
-This section takes you through several of the <code>[mla_custom_list]</code> features, step by step. For these examples, a custom field named "camera" was created from the <code>meta:image_meta.camera</code> values WordPress generates. Let's start with a very simple list showing all of the values for the "camera" custom field in the default flat output format (a cloud):
-</p>
-<p>
-<code>[mla_custom_list meta_key=camera]</code>
-</p>
-<p>
-The "meta_key=camera" parameter names the custom field on which the list is based. Let's paginate the list and limit the terms display to ten terms per "page":
-</p>
-<p>
-<code>[mla_custom_list meta_key=camera limit=10]<br />
-[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]</code>
-</p>
-<p>
-The "limit=10" parameter (on <strong>both</strong> shortcodes) limits the list display to ten values. The second <code>[mla_custom_list]</code> shortcode, adding the 'mla_output="paginate_links,prev_next"' parameter, displays a line of pagination links below the list page. Coordination between the two shortcodes is automatic, using the "mla_custom_list_current" parameter added to the URLs by the shortcode.
-</p>
-<p>Now we'll make the list a convenient way to control a value-specific <code>[mla_gallery]</code>. We use the current item value managed by the list shortcode to filter the gallery display:_
-</p>
-<p>
-<code>[mla_custom_list meta_key=camera limit=10]<br />
-[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]
-<br />&nbsp;<br />
-[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" mla_caption="{+title+}" link=file]</code>
-</p>
-<p>
-The "meta_value" parameter value is a Content Template that returns the "current_item" value, if present, or the string "a-bad-value" to display an empty gallery if no list value has been selected.
-</p>
-<p>
-We can easily paginate the term-specific gallery by adding a second <code>[mla_gallery]</code> shortcode and a "posts_per_page" parameter to both shortcodes:
-</p>
-<p>
-<code>[mla_custom_list meta_key=camera limit=10]<br />
-[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]
-<br />&nbsp;<br />
-[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" posts_per_page=5 mla_caption="{+title+}" link=file]
-<br />&nbsp;<br />
-[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" posts_per_page=5 mla_output="paginate_links,prev_next"]</code>
-</p>
-<p>
-The pagination controls for the custom field list and the gallery operate independently because by default they use different names for their respective "_current" page parameters. Our page now has a lot of functionality without requiring any WordPress templates or PHP code.
-</p>
-<p>
-For extra credit, let's add some more navigation options to the page. We'll build previous, current and next term links at the bottom of the page. These are enclosed in an HTML table so they all appear on one line of the page. Here is just the additional content; the table of three link navigation controls:
-</p>
-<p>
-<code>
-&lt;table width=99%&gt;&lt;tr&gt;<br />
-&lt;td width=33% style="text-align: left"&gt;[mla_custom_list meta_key=camera mla_output="previous_link" mla_link_text="Previous: {+meta_text+}"]&lt;/td&gt;<br />&nbsp;<br />
-&lt;td width=33% style="text-align: center; font-weight: bold:"&gt;[mla_custom_list meta_key=camera mla_output=current_link mla_link_text="Current: {+meta_text+}" link=span]&lt;/td&gt;<br />&nbsp;<br />
-&lt;td width=33% style="text-align: right"&gt;[mla_custom_list meta_key=camera mla_output="next_link" mla_link_text="Next: {+meta_text+}"]&lt;/td&gt;<br />
-&lt;/tr&gt;&lt;/table&gt;
-</code>
-</p>
-<p>
-The "mla_link_text" parameters add labels to each of the three navigation links. Finally, the "link=span" parameter in the middle ("mla_output=current_link") shortcode removes the hyperlink behind the term name, since it would just take you back to the page you're already on.
-<a name="mla_cf_list_hooks"></a>
-</p>
-<h4>MLA Custom Field List Filters (Hooks)</h4>
-<p>
-The <code>[mla_custom_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Custom Field List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Custom+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Custom Field List Hooks Example</a>. To run the example:
-</p>
-<ol>
-<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
-<li>Hover over "MLA Custom Field List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
-<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Custom Field List Hooks Example" plugin.</li>
-<li>Create a new <code>[mla_custom_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output. Make sure the shortcode uses the "flat" output format.</li>
-<li>View the post or page on which the modified shortcode appears to see a list with a range of colors applied to the values.</li>
-</ol>
-<p>
-The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
-</p>
-<table>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_raw_attributes</td>
-<td class="mla-doc-hook-definition">called at the beginning of the list, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_attributes,<br />mla_custom_list_arguments</td>
-<td class="mla-doc-hook-definition">called at the beginning of the list generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_custom_values_query_attributes,<br />mla_get_custom_values_query_arguments</td>
-<td class="mla-doc-hook-definition">called just before building the SQL query for the <code>$wpdb->get_results()</code> call that selects list values, with query parameters before or after they are combined with defaults.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_custom_values_clauses</td>
-<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_get_custom_values_query_results</td>
-<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results()</code> call, so you can inspect/record or modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_scale</td>
-<td class="mla-doc-hook-definition">called as the scaled_count (size) of each term is calculated, so you can modify the results.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">use_mla_custom_list_style</td>
-<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the list output.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_style_values,<br /> mla_custom_list_style_template,<br />mla_custom_list_style_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_open_values,<br />mla_custom_list_open_template,<br />mla_custom_list_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_row_open_values,<br />mla_custom_list_row_open_template,<br />mla_custom_list_row_open_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template used in a "grid" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_item_values,<br />mla_custom_list_item_template,<br />mla_custom_list_item_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_row_close_values,<br />mla_custom_list_row_close_template,<br />mla_custom_list_row_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template used in a "grid" list.</td>
-</tr>
-<tr>
-<td class="mla-doc-hook-label">mla_custom_list_close_values,<br />mla_custom_list_close_template,<br />mla_custom_list_close_parse</td>
-<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
-</tr>
-</table>
-</div>
-<a name="shortcode_api"></a>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Calling shortcode functions from PHP code; the MLA shortcode API</h3>
-<p>
-You can always use the WordPress <code>do_shortcode()</code> function to execute MLA shortcodes, but you can also call several of the MLA shortcode support functions directly from your PHP code. You can find the available API functions and parameter documentation in the <code>/media-library-assistant/includes/class-mla-shortcode.php</code> file.
-<a name="gallery_examples"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>MLA Gallery Examples</h3>
-<p>
-As you can tell from the number of parameters available, the <code>[mla_gallery]</code> shortcode is powerful, but it can be complex. The examples in this section show several of the more popular applications, taken from topics in the MLA Support Forum.
-<a name="simple_examples"></a>
-</p>
-<h4>Simple Examples</h4>
-<ul class="mla_settings">
-<li><code>[mla_gallery]</code> - will display all the images "attached" to the current post/page.</li>
-<li><code>[mla_gallery ids="1,3,2,4"]</code> - will display specific images on any post/page. The numbers are the ID values of the images. You can use the "Add Media..." popup window and "Create Gallery" to get the list, then change the shortcode name to "mla_gallery" if you want to add other <code>[mla_gallery]</code> specific parameters.</li>
-<li><code>[mla_gallery post_parent=all]</code> - will display all the images in your Media Library.</li>
-<li><code>[mla_gallery post_parent=all post_mime_type=application/pdf]</code> - will display all the PDF documents in your Media Library. Since PDF documents are not images, the title of the document will display in place of the thumbnail image.</li>
-<li><code>[mla_gallery post_parent=all post_mime_type="audio,video"]</code> - will display all the audio and video documents in your Media Library.</li>
-<li><code>[mla_gallery post_parent=all post_mime_type=application/pdf size=icon link=file]</code> - will display all the PDF documents in your Media Library. The "PDF icon" will display in place of the thumbnail. When the icon is clicked, the document itself will be displayed in the browser.</li>
-</ul>
-<p>
-Perhaps the most popular Media Library Assistant feature is the ability to assign category and tag values to Media Library Items and use the values to filter a gallery display. "Categories" and "Tags" are built-in WordPress "taxonomies" and have been used for a long time to organize posts and pages. WordPress does not have built-in support for using them with attachments and that was one of the original motivations for MLA.
-</p>
-<p>
-With MLA you can extend Categories and Tags support to attachments. MLA also provides two additional taxonomies for your convenience, Att. Categories and Att. Tags. Because of the way WordPress works, using Categories and Tags for attachments as well as posts and pages can be complicated, so many people find that using the separate Att. Categories and Att. Tags is more convenient.
-</p>
-<p>
-To use a taxonomy you must create one or more "terms" within it. For example, you could create terms in the Category taxonomy like "Big Dog" and "Little Dog". For each term, WordPress automatically creates a "slug", e.g., "big-dog" and "little-dog" for the previous examples. Removing capital letters, spaces and punctuation makes it easier to organize and search the database. It's the slug you can use in [mla_gallery] shortcodes. To "<em>display the attachments that have been assigned to a single category/tag</em>", use the term's slug; for the four taxonomies we've discussed:
-</p>
-<ul class="mla_settings">
-<li>Categories: <code>[mla_gallery category_name=big-dog]</code></li>
-<li>Tags: <code>[mla_gallery tag=big-dog]</code></li>
-<li>Att. Categories: <code>[mla_gallery attachment_category=big-dog]</code></li>
-<li>Att. Tags: <code>[mla_gallery attachment_tag=big-dog]</code></li>
-</ul>
-<p>
-The category_name example does not follow the general rule of "taxonomy-slug = term-slug" because it was created long ago, when Categories and Tags were the only taxonomies allowed. The tag example does not follow the rule, either, since the actual taxonomy-slug is "post_tag", not "tag".
-<a name="paginated_gallery"></a>
-</p>
-<h4>A Paginated Gallery</h4>
-<p>
-If your gallery display includes a large number of items it may be useful to divide the display into "pages" with a fixed upper limit of items per page. The <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section explains several ways to do that; here is one example. Put <strong>both of these shortcodes</strong> on a post or page to display a paginated gallery:
-</p>
-<blockquote>
-<code>[mla_gallery attachment_category=big-dog posts_per_page=12]</code><br />
-&nbsp;<br />
-<code>[mla_gallery attachment_category=big-dog posts_per_page=12 mla_output="paginate_links,prev_next"]</code>
-</blockquote>
-<p>
-Note that <strong>two shortcodes are required</strong>; one for the gallery display and a second one for the pagination controls. The first <code>[mla_gallery]</code> displays the images assigned to <code>attachment_category=big-dog</code> and displays a maximum of 12 images at once. The second <code>[mla_gallery]</code> has <strong>exactly the same</strong> data selection parameter and posts per page parameter; that's essential to match up with the first shortcode. It adds one more parameter, <code>mla_output</code>. This parameter changes the display from a set of images to a set of pagination controls.
-</p>
-<p>
-MLA will add and manage a "current page" parameter of its own so the two shortcodes stay in synch as you navigate from page to page. That's all there is to it.
-<a name="cloud_and_gallery"></a>
-</p>
-<h4>Tag Cloud and Gallery</h4>
-<p>
-Adding the "taxonomy=term" parameter to your shortcode is all well and good, but letting the viewer choose a term when they view the post/page is often better. One easy way to do this is to add the <code>[mla_tag_cloud]</code> shortcode. Here is a simple combination of a cloud and a gallery display:
-</p>
-<blockquote>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
-&nbsp;<br />
-<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" mla_nolink_text="Click a term to display the gallery."]</code>
-</blockquote>
-<p>
-The <code>[mla_tag_cloud]</code> displays Att. Categories terms in the familiar cloud format. The <code>number=0</code> parameter ensures that all of the terms are displayed. The <code>mla_link_href</code> parameter links each term back to the current page (<code>{+page_url}</code>) and passes a variable back with the term selection (<code>?term_slug={+slug+}</code>). If you put the <code>[mla_tag_cloud]</code> shortcode on another page or in a widget you will have to hard-code the URL portion of the link.
-</p>
-<p>
-The <code>[mla_gallery]</code> displays the images assigned to the selected attachment_category term. The <code>mla_nolink_text</code> parameter gives the text to display when the gallery is empty, e.g., before you click on a term. In this shortcode:
-</p>
-<ul class="mla_settings">
-<li>The <code>template:</code> prefix says that this is a Content Template</li>
-<li>The parentheses "()" around the two elements are used to group them into a list of alternatives</li>
-<li>The vertical bar "|" between the two elements means "stop when you get a non-empty alternative"</li>
-<li><code>{+request:term_slug+}</code> will be empty unless there is a term_slug in the URL</li>
-<li><code>a-bad-term</code> is a literal value (and thus never empty) which does not match any term in the attachment_category taxonomy, so the gallery will be empty if this alternative is used</li>
-</ul>
-<p>
-You can read more about templates in the <a href="#mla_template_parameters">Content Templates</a> section. You can paginate your gallery by adding a third shortcode to the post/page. Put the new shortcode between the cloud and gallery so the pagination controls will appear above the gallery display:
-</p>
-<blockquote>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
-&nbsp;<br />
-<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" posts_per_page=12" mla_output="paginate_links,prev_next" mla_link_href="{+page_url+}?term_slug={+request:term_slug+}"]</code><br />
-&nbsp;<br />
-<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" posts_per_page=12 mla_nolink_text="Click a term to display the gallery."]</code>
-</blockquote>
-<p>
-The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?term_slug={+request:term_slug+}"</code> parameter is added so the pagination controls pass the <code>term_slug</code> from page to page.
-<a name="search_form_and_gallery"></a>
-</p>
-<h4>Search Form and Gallery</h4>
-<p>
-A common alternative to the taxonomy filtering in the previous examples is a keyword-based search. This example shows a simple HTML form with a text box and a button to run the search. The user can enter one or more words to search for in the Title or Description of Media Library items, then click "Search" to display a gallery of matching images:
-</p>
-<blockquote>
-<code>&lt;form id="mla-search-form" action="." method="post"><br />
-&lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
-&lt;/form></code><br />
-&nbsp;<br />
-<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery."]</code>
-</blockquote>
-<p>
-In this example the <code>name="search-string"</code> parameter is passed from the form to the <code>s="{+request:search-string+}</code>... parameter in the shortcode. As in the Cloud and Gallery example a Content Template is used to supply <code>a-bad-term</code> before the form is completed, which displays an empty gallery because it doesn't match anything. You can find more information on the <code>s=</code> parameter and other search parameters in the <a href="#search_keywords">Keyword(s) Search</a> section.
-</p>
-<p>
-As in the Cloud and Gallery example, paginating your gallery display requires a slight modification of the <code>[mla_gallery]</code> shortcode (at the bottom of the next example) and adding a second <code>[mla_gallery]</code> shortcode (in the middle of the next example) to display the pagination controls:
-</p>
-<blockquote>
-<code>&lt;form id="mla-search-form" action="." method="post"><br />
-&lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
-&lt;/form></code><br />
-&nbsp;<br />
-<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" posts_per_page=12 mla_output="paginate_links,prev_next" mla_link_href="{+page_url+}?search-string={+request:search-string+}"]</code><br />
-&nbsp;<br />
-<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery." posts_per_page=12]</code>
-</blockquote>
-<p>
-The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter (<code>s="{+request:search-string+}</code>...) and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?search-string={+request:search-string+}"</code> parameter is added so the pagination controls pass the <code>search-string</code> from page to page.
-<a name="mla_output_parameter"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Support for Alternative Gallery Output, e.g., Pagination</h3>
+<h4>Pagination Parameters</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a gallery or among gallery "pages". For example, if you have many items with a specific Att. Category or Att. Tag value you can build a single-image page with links to the previous/next item having that value. You can also build a page that shows a large gallery in groups, or "gallery pages", of ten items with links to the previous/next ten items or links to all of the gallery pages of items having that value. Finally, you can get a set of links to all pages in the gallery or links around the current page ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ).
 </p>
 <p>
 <strong>IMPORTANT:</strong> Pagination controls are an alternative output, not an additional output. One shortcode can generate either a gallery display or pagination controls. <strong>You will need two or more shortcodes to get both the gallery and the controls</strong>.
 </p>
-<h4>The <code>mla_output</code> parameter</h4>
 <p>
-The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. Explanation and examples of each output type are given later in this section. You can choose from seven values:
+The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. Explanation and examples of each output type are given later in this section. For pagination output, you can choose from six values:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">gallery</td>
-<td>The default value; returns the traditional gallery of image thumbnails, captions, etc.</td>
-</tr>
-<tr>
 <td class="mla-doc-table-label">next_link</td>
-<td>returns a link to the next gallery item. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the gallery. If you omit the qualifier, an empty string is returned for the "next_link" from the last item in the gallery. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first gallery item.</td>
+<td>returns a link to the next gallery item, denoted by the "id" shortcode parameter. The optional "<strong>,wrap</strong>" or "<strong>,always_wrap</strong>" qualifier determines what happens at the end of the gallery. If you omit the qualifier, an empty string is returned for the "next_link" from the last item in the gallery. If you code the ",wrap" or ",always_wrap" qualifier, the "next_link" from the last item will be to the first gallery item. When there is no current item, ",wrap" returns an empty string and ",always_wrap" returns a link to the first gallery item.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">current_link</td>
-<td>returns a link to the current gallery item. This gives you an easy way to provide a visual indication of where you are within the overall gallery. The "span" and  "none" link formats are often used with this mla_output type.</td>
+<td>returns a link to the current gallery item, denoted by the "id" shortcode parameter. This gives you an easy way to provide a visual indication of where you are within the overall gallery. The "span" and  "none" link formats are often used with this mla_output type.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">previous_link</td>
-<td>returns a link to the previous gallery item. The optional "<strong>,wrap</strong>" qualifier determines what happens at the beginning of the gallery. If you omit the qualifier, an empty string is returned for the "previous_link" from the first gallery item. If you code the ",wrap" qualifier, "previous_link" from the first gallery item will be to the last gallery item.</td>
+<td>returns a link to the previous gallery item, denoted by the "id" shortcode parameter. The optional "<strong>,wrap</strong>" or "<strong>,always_wrap</strong>" qualifier determines what happens at beginning of the gallery. If you omit the qualifier, an empty string is returned for the "previous_link" from the first item in the gallery. If you code the ",wrap" or ",always_wrap" qualifier, the "previous_link" from the first item will be to the last gallery item. When there is no current item, ",wrap" returns an empty string and ",always_wrap" returns a link to the last gallery item.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">next_page</td>
@@ -6043,81 +1532,19 @@ The <strong>"mla_output"</strong> parameter determines the type of output the sh
 <td>returns a link to gallery items at the start and end of the list and to pages around the current "gallery page" ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ). The optional "<strong>,show_all</strong>" qualifier will show all of the gallery pages instead of a short list around the current page. The optional "<strong>,prev_next</strong>" qualifier will include the "&laquo; Previous" and "Next &raquo;" portions of the link list.</td>
 </tr>
 </table>
-<h4>Next and previous gallery items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
 <p>
-WordPress provides functions that generate links to the "<em>next/previous image attached to the current post</em>." These are not useful when your Media Library items are not images or are not attached to a specific post or page.  If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-item pages for the gallery. You will need one more parameter to specify the "current item" in the gallery:
+A more complete discussion of each pagination output type follows the description of pagination parameters and substitution values.
+</p>
+<p><a name="gallery_page_selection"></a></p>
+<h4>Page selection parameters</h4>
+<p>
+ The <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types divide the gallery into pages. Use the following parameters to specify the size of each gallery page and the current gallery page:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">id</td>
-<td>(optional) the ID of the "current" gallery item. If you omit this parameter, the default value is the ID of the current "post". The default value is only useful if you are enhancing the PHP code of the "image.php" template for the "Attachment Page" associated with a Media Library item.</td>
+<td class="mla-doc-table-label">nopaging</td>
+<td>The <code>[mla_gallery]</code> shortcode supplies <code>nopaging=true</code> as a default parameter. If you are working with a template that supports pagination you can replace this with specific values for "numberposts", "posts_per_page", "posts_per_archive_page", "paged" and/or "offset" . You can also pass "paged=current" to suppress the "nopaging" default; "current" will be replaced by the appropriate value (<code>get_query_var('paged')</code> or <code>get_query_var('page')</code>).</td>
 </tr>
-</table>
-<p>
-The next or previous link returned is drawn from the attachment-specific "link" substitution parameter for the next or previous gallery item. This means you can use all of the <a href="#gallery_display_content">Gallery Display Content</a> parameters to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to replace the thumbnail image with a generic text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
-</p>
-<p>
-Here is a more complete example of two standard WordPress pages, "Sample Gallery" and "Single Sample", that work together. The "Sample Gallery" page displays a gallery of all items assigned to the Att.Tags "sample" term. The "Single Sample" page displays the full-size image for a "sample" item and has links to move back and forth through all the items assigned to the term. The Sample Gallery page contains:
-</p>
-<code>
-[mla_gallery attachment_tag="sample" mla_caption="{+title+}" mla_link_href="/single-sample/?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]
-</code>
-<p>
-In this example <code>/single-sample/</code>, the URL portion of the link, is the "Permalink" WordPress generates from the page title. If your Permalink structure is different you will have to adjust this element. Note the use of <code>attachment_tag={+query:attachment_tag+}</code> in the href to pass the tag value from the gallery page to the Single Sample page. <strong>The Single Sample page has three <code>[mla_gallery]</code> shortcodes; one to display the image and two for the "Previous Sample" and "Next Sample" links</strong>:
-</p>
-<code>
-[mla_gallery columns=1 ids="{+request:current_id+}" size=medium]
-<br />&nbsp;<br />
-&lt;div style="clear: both; float: left"&gt;<br />
-[mla_gallery mla_output="previous_link,wrap" mla_link_text='&amp;larr; Previous Sample' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
-&lt;/div&gt;<br />
-&lt;div style="float: right"&gt;<br />
-[mla_gallery mla_output="next_link,wrap" mla_link_text='Next Sample &amp;rarr;' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
-&lt;/div&gt;
-</code>
-<p>
-Consider the following points:
-</p>
-<ol>
-<li>The "ids" parameter in the first <code>[mla_gallery]</code> takes the "current_id" value (for the single image to be displayed) from the link's query arguments (in the PHP $_REQUEST array). This is passed from the Sample Gallery page and updated in the previous/next link.
-</li>
-<li>The "id" parameters in the second and third <code>[mla_gallery]</code> take the "current_id" value from the $_REQUEST array. In these "galleries" the "current_id" is the item from which "previous" and "next" are calculated.
-</li>
-<li>The "attachment_tag" parameters in the second and third <code>[mla_gallery]</code> take the their value from the $_REQUEST array as well. The Att. Tag value is used to reconstruct the original gallery for the previous/next calculation, keeping the navigation within the bounds of the selected term.
-</li>
-</ol>
-<p>
-This example shows the power of the substitution parameters and in particular the "query" and "request" prefixes that can be used to pass information into an <code>[mla_gallery]</code> and from one page to the next. All of this without modifying PHP templates or requiring other code modifications!
-</p>
-<h4>Next and previous gallery pages; the <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-WordPress provides functions that generate links to the "<em>next/previous set of posts within the current query</em>." These are not useful because the "current query" is for posts/pages, <strong>not</strong> Media Library items. What's needed is a way to paginate an <code>[mla_gallery]</code> shortcode on a single post or page. If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the gallery in groups of, say, ten items per "gallery page".
-</p>
-<p>
-WordPress uses the "paged" parameter to indicate the current "<em>set of posts within the current query</em>." To avoid built-in WordPress logic that uses this parameter, MLA has its own "mla_paginate_current" parameter to indicate the current set of items within the gallery (the current gallery page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
-</p>
-<h4>An example of the <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are <strong>two additional shortcodes</strong> for the previous/next page links:
-</p>
-<code>
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
-<br />&nbsp;<br />
-&lt;div style="clear: both; float: left"&gt;<br />
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br />
-&lt;/div&gt;<br />
-&lt;div style="float: right"&gt;<br />
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br />
-&lt;/div&gt;
-</code>
-<p>
-This example is simpler that the earlier single-item paging example because the "current page" handling is done by MLA, and the "sample" tag value is hard-coded. You could also develop a generic "Att. Tag" gallery page and pass the tag value in the URI for that page (as in the single-item pagination example earlier in this section).
-</p>
-<h4>Page selection parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-Use the following parameters to specify the size of each gallery page and the current gallery page:
-</p>
-<table>
 <tr>
 <td class="mla-doc-table-label">posts_per_page</td>
 <td>sets the number of gallery items on each gallery "page" </td>
@@ -6127,12 +1554,16 @@ Use the following parameters to specify the size of each gallery page and the cu
 <td>synonym for "posts_per_page" </td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_paginate_current</td>
-<td>the "current" gallery page; defaults to one (1) if not specified. MLA will usually manage this for you, adding it to the hyperlinks for the previous and next gallery pages. MLA will look for this parameter in the HTML $_REQUEST array if it is not coded in the gallery shortcode.</td>
+<td class="mla-doc-table-label">posts_per_archive_page</td>
+<td>number of items to show per page - on archive pages only. Over-rides posts_per_page on posts/pages where <code>is_archive()</code> or <code>is_search()</code> is true for the post/page in which the shortcode occurs. Note that search results will not display gallery images.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_page_parameter</td>
 <td>the name of the parameter containing the current page number; default "mla_paginate_current". You can change the name if you need multiple paginated galleries on one post/page. If you use this parameter, make sure you add it to the gallery shortcode and all pagination shortcodes for that gallery, and use the same unique value in all shortcodes for the specific gallery.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_current</td>
+<td>the "current" gallery page; defaults to one (1) if not specified. MLA will usually manage this for you, adding it to the hyperlinks for the previous and next gallery pages. MLA will look for this parameter in the HTML $_REQUEST array if it is not coded in the gallery shortcode.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_paginate_total</td>
@@ -6140,36 +1571,24 @@ Use the following parameters to specify the size of each gallery page and the cu
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_paginate_rows</td>
-<td>If you have some other way of computing the total number of items you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a gallery that you know has fifty items you can code <code>[mla_gallery mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or gallery display content parameters you need.</td>
+<td>If you have some other way of computing the total number of items you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a gallery that you know has fifty items you can code <code>[mla_gallery mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or display content parameters you need.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">offset, paged</td>
-<td><strong>DO NOT USE THESE PARAMETERS; THEY WILL BREAK MLA PAGINATION</strong></td>
+<td class="mla-doc-table-label">paged</td>
+<td>number of page. Show the items that would normally show up just on page X. The "paged=current" parameter is useful for "paginated single posts" (i.e. posts that include the <code>&lt;!--nextpage--&gt;</code> Quicktag one or more times). Simply make two or more copies of your <code>[mla_gallery]</code> shortcode separated by the Quicktag and include the "paged=current' in each copy. For true pagination it is better to use the "mla_paginate_current" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>the number of terms to skip over before starting the current gallery page. This parameter is usually derived automatically from the more useful "mla_paginate_current" parameter.</td>
 </tr>
 </table>
 <p>For most applications, "posts_per_page" is the only pagination parameter you need to specify. Make sure this parameter is the same for your main gallery shortcode and for the pagination shortcodes that go with it. Also, make sure you use exactly the same item selection and sorting parameters in both shortcodes.
 </p>
-<h4>Gallery Display Content parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
+<h4>Display Content parameters for paged output types</h4>
 <p>
-The next or previous link returned can use the following Gallery Display Content parameters to control each element of the link:
+The link(s) generated for prev_page, next_page and paginate_links controls can use the following Display Content parameters to control each link element:
 </p>
 <table>
-<tr>
-<td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_class</td>
-<td><strong>adds</strong> one or more classes to those already defined for the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_href</td>
-<td>replaces the HTML &quot;href&quot; attribute in the hyperlink </td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_link_text</td>
-<td>replaces the link text </td>
-</tr>
 <tr>
 <td class="mla-doc-table-label">mla_prev_text</td>
 <td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
@@ -6178,20 +1597,36 @@ The next or previous link returned can use the following Gallery Display Content
 <td class="mla-doc-table-label">mla_next_text</td>
 <td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
 </tr>
+</table>
+<h4>Display Content parameters for the <code>paginate_links</code> output type</h4>
+<p>
+The "paginate_links" output type generates a list of hyperlinks to each page in the gallery display. There are three additional parameters unique to this output type.
+</p>
+<table>
 <tr>
-<td class="mla-doc-table-label">mla_nolink_text</td>
-<td>replaces the empty string displayed when there is no link and link text, e.g., no previous or next page link </td>
+<td class="mla-doc-table-label">mla_end_size</td>
+<td>How many numbers (default 1) appear on either the start and the end list edges</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_rollover_text</td>
-<td>replaces the HTML &quot;title&quot; attribute in the hyperlink. This is the text displayed when the mouse rolls or hovers over the link text </td>
+<td class="mla-doc-table-label">mla_mid_size</td>
+<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_target</td>
-<td>adds an HTML &quot;target&quot; attribute to the hyperlink </td>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_type</td>
+<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
 </tr>
 </table>
-<h4>Markup Substitution Parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
+<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
+</p>
+<h4>Markup Substitution Parameters for paged output types</h4>
 <p>You can use any of the <a href="#mla_markup_parameters"><strong>Substitution parameters for markup templates</strong></a> in your next/previous page links (since the links are at the "gallery page" level, the attachment-specific substitution parameters are not available). The following additional substitution parameters are available for the <code>next_page</code> and <code>previous_page</code> output types:
 </p>
 <table>
@@ -6256,37 +1691,84 @@ The next or previous link returned can use the following Gallery Display Content
 <td>concatenation of scheme + http_host + request_uri</td>
 </tr>
 </table>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Next and previous gallery items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
+<p>
+WordPress provides functions that generate links to the "<em>next/previous image attached to the current post</em>." These are not useful when your Media Library items are not images or are not attached to a specific post or page.  If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-item pages for the gallery. You will need one more parameter to specify the "current item" in the gallery:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">id</td>
+<td>(optional) the ID of the "current" gallery item. If you omit this parameter, the default value is the ID of the current "post". The default value is only useful if you are enhancing the PHP code of the "image.php" template for the "Attachment Page" associated with a Media Library item.</td>
+</tr>
+</table>
+<p>
+The next or previous link returned is drawn from the attachment-specific "link" substitution parameter for the next or previous gallery item. This means you can use all of the <a href="#gallery_hyperlinks">Hyperlink Parameters</a> parameters to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to replace the thumbnail image with a generic text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
+</p>
+<p>
+Here is a more complete example of two standard WordPress pages, "Sample Gallery" and "Single Sample", that work together. The "Sample Gallery" page displays a gallery of all items assigned to the Att.Tags "sample" term. The "Single Sample" page displays the full-size image for a "sample" item and has links to move back and forth through all the items assigned to the term. The Sample Gallery page contains:
+</p>
+<code>
+[mla_gallery attachment_tag="sample" mla_caption="{+title+}" mla_link_href="/single-sample/?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]
+</code>
+<p>
+In this example <code>/single-sample/</code>, the URL portion of the link, is the "Permalink" WordPress generates from the page title. If your Permalink structure is different you will have to adjust this element. Note the use of <code>attachment_tag={+query:attachment_tag+}</code> in the href to pass the tag value from the gallery page to the Single Sample page. <strong>The Single Sample page has three <code>[mla_gallery]</code> shortcodes; one to display the image and two for the "Previous Sample" and "Next Sample" links</strong>:
+</p>
+<code>
+[mla_gallery columns=1 ids="{+request:current_id+}" size=medium]
+<br />&nbsp;<br />
+&lt;div style="clear: both; float: left"&gt;<br />
+[mla_gallery mla_output="previous_link,always_wrap" mla_link_text='&amp;larr; Previous Sample' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
+&lt;/div&gt;<br />
+&lt;div style="float: right"&gt;<br />
+[mla_gallery mla_output="next_link,always_wrap" mla_link_text='Next Sample &amp;rarr;' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
+&lt;/div&gt;
+</code>
+<p>
+Consider the following points:
+</p>
+<ol>
+<li>The "ids" parameter in the first <code>[mla_gallery]</code> takes the "current_id" value (for the single image to be displayed) from the link's query arguments (in the PHP $_REQUEST array). This is passed from the Sample Gallery page and updated in the previous/next link.
+</li>
+<li>The "id" parameters in the second and third <code>[mla_gallery]</code> take the "current_id" value from the $_REQUEST array. In these "galleries" the "current_id" is the item from which "previous" and "next" are calculated.
+</li>
+<li>The "attachment_tag" parameters in the second and third <code>[mla_gallery]</code> take the their value from the $_REQUEST array as well. The Att. Tag value is used to reconstruct the original gallery for the previous/next calculation, keeping the navigation within the bounds of the selected term.
+</li>
+<li>The ",always_wrap" qualifier will display the previous and next links even if the current gallery item is missing, e.g., the "id" parameter is empty.
+</li>
+</ol>
+<p>
+This example shows the power of the substitution parameters and in particular the "query" and "request" prefixes that can be used to pass information into an <code>[mla_gallery]</code> and from one page to the next. All of this without modifying PHP templates or requiring other code modifications!
+</p>
+<h4>Next and previous gallery pages; the <code>next_page</code> and <code>previous_page</code> output types</h4>
+<p>
+WordPress provides functions that generate links to the "<em>next/previous set of posts within the current query</em>." These are not useful because the "current query" is for posts/pages, <strong>not</strong> Media Library items. What's needed is a way to paginate an <code>[mla_gallery]</code> shortcode on a single post or page. If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the gallery in groups of, say, ten items per "gallery page".
+</p>
+<p>
+WordPress uses the "paged" parameter to indicate the current "<em>set of posts within the current query</em>." To avoid built-in WordPress logic that uses this parameter, MLA has its own "mla_paginate_current" parameter to indicate the current set of items within the gallery (the current gallery page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
+</p>
+<h4>An example of the <code>next_page</code> and <code>previous_page</code> output types</h4>
+<p>
+Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are <strong>two additional shortcodes</strong> for the previous/next page links:
+</p>
+<code>
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
+<br />&nbsp;<br />
+&lt;div style="clear: both; float: left"&gt;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br />
+&lt;/div&gt;<br />
+&lt;div style="float: right"&gt;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br />
+&lt;/div&gt;
+</code>
+<p>
+This example is simpler that the earlier single-item paging example because the "current page" handling is done by MLA, and the "sample" tag value is hard-coded. You could also develop a generic "Att. Tag" gallery page and pass the tag value in the URI for that page (as in the single-item pagination example earlier in this section).
+</p>
 <h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
 <p>
 WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
-</p>
-<p>
-The <strong>Page Selection Parameters</strong>, <strong>Gallery Display Content Parameters</strong> and <strong>Markup Substitution Parameters</strong> defined above also apply to the "paginate_links" output type. There are five additional parameters unique to this output type.
-</p>
-<h4>Specific parameters for the <code>paginate_links</code> output type</h4>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_end_size</td>
-<td>How many numbers (default 1) appear on either the start and the end list edges</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_mid_size</td>
-<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_prev_text</td>
-<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_next_text</td>
-<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_paginate_type</td>
-<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
-</tr>
-</table>
-<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
 </p>
 <h4>An example of the <code>paginate_links</code> output type</h4>
 <p>
@@ -6299,204 +1781,47 @@ Expanding the "attachment tag gallery" example, you can select images using the 
 </code>
 <p>
 This example is even simpler that the two earlier examples because there's just one additional <code>[mla_gallery]</code> shortcode for pagination links.
-<a name="alt_shortcode"></a>
 </p>
+<p>
+<p><a name="gallery_substitution"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>Support for Other Gallery-generating Shortcodes</h3>
+<h4>Substitution Parameters</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode can be used in combination with other gallery-generating shortcodes to give you the data selection power of <code>[mla_gallery]</code> and the formatting/display power of popular alternatives such as the WordPress.com Jetpack Carousel and Tiled Galleries modules. Any shortcode that accepts "ids=" or a similar parameter listing the attachment ID values for the gallery can be used. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to the alternate shortcode to format the results. Note that MLA does not play any role in formatting the gallery display, so MLA-specific parameters such as <code>mla_caption</code> and <code>mla_link_href</code> are not processed. Five parameters implement this feature:
+Substitution parameters are a powerful way to add general and attachment-specific values to the list or pass them on to an <code>[mla_gallery]</code> display. For example, if you code "<code>mla_link_href="{+page_url+}?field_name={+meta_key+}&amp;current_item={+request:current_item+}"</code>, the hyperlinks behind each cloud term will contain the page URL, the custom field name and the custom field value in <code>current_item</code>. There are many substitution parameter names like <code>page_url</code> and <code>meta_key</code> divided in several categories:
 </p>
 <table>
 <tr>
-<td class="mla-doc-table-label">mla_alt_shortcode</td>
-<td>the name of the shortcode to be called for gallery format and display. You can code "no" (recommended) or "mla_gallery" (used by the Justified Image Grid plugin) to disable the alternate shortcode processing. To use <code>[mla_gallery]</code> as the alternate shortcode code "yes".</td>
+<td class="mla-doc-table-label"><a href="#gallery_specific">Gallery&#8209;specific</a></td>
+<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_alt_parameters</td>
-<td>(optional, default empty) parameters that would normally be processed by <code>[mla_gallery]</code> and not passed through to the alternate shortcode. For example, if the alternate shortcode is "mla_tag_cloud", "mla_term_list" or "mla_gallery" you might use this parameter to, for example, pass <code>post_mime_type=</code> or <code>mla_debug=</code> on to the alternate shortcode.</td>
+<td class="mla-doc-table-label"><a href="#mla_style_parameters">Style</a></td>
+<td>values that are known when the gallery-specific CSS inline styles are composed just before gallery output begins</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_alt_ids_name</td>
-<td>(optional, default "ids") the name of the parameter used to pass a list of attachment ID values to the alternate shortcode</td>
+<td class="mla-doc-table-label"><a href="#mla_markup_parameters">Markup</a></td>
+<td>values that are known at the beginning of gallery output processing and remain the same for the entire gallery</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_alt_ids_template</td>
-<td>(optional) a Content Template for the entire parameter value passed to the alternate shortcode. When processing the template, the list of ID values is available as the <code>{+alt_ids+}</code> substitution parameter. See the example below.</td>
+<td class="mla-doc-table-label"><a href="#mla_attachment_parameters">Attachment&#8209;specific</a></td>
+<td  style="vertical-align: top">values that change for each item in the gallery, such as Title and Caption</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">mla_alt_ids_value</td>
-<td>(optional) an item-specific substitution parameter, Content Template or other alternative for the attachment ID value(s) passed to the alternate shortcode. It is applied once for each item selected for the gallery, and all the item-specific substitution parameters are available to be used.</td>
+<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field&#8209;level</a></td>
+<td>values from sources like shortcode parameters, query arguments, custom fields, taxonomy terms and attachment metadata. There are many, many values to choose from as well as options to reformat values and select array elements. You are encouraged to explore them.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content Template</a></td>
+<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
 </tr>
 </table>
-<p>
-For example, if you want to select images using the MLA Att. Category taxonomy but want to display a "Tiled Mosaic" gallery, you can code:
-</p>
-<code>
-[mla_gallery attachment_category=vegetable tax_operator="NOT IN" mla_alt_shortcode=gallery type="rectangular" mla_alt_ids_name=include]
-</code>
-<p>
-This example selects all the images that are "NOT IN" the Att. Category "vegetable". The selected images are passed to the <code>[gallery]</code> shortcode in an "include" parameter, along with the "type=rectangular" parameter. The result is as if you had coded:
-</p>
-<code>
-[gallery include="1,2,3" type="rectangular"]
-</code>
-<p>
-In the above example, the <code>mla_alt_ids_name=include</code> parameter isn't really necessary, since the <code>[gallery]</code> shortcode accepts the "ids" parameter. It was included in the example just to show how the "mla_alt_ids_name" might be used for some other shortcode that requires a different name for the parameter.
-</p>
-<p>
-You can pass any parameters you need through the <code>[mla_gallery]</code> shortcode and on to the alternate shortcode you're using. Here's another example, using the Photonic Gallery plugin:
-</p>
-<code>
-[mla_gallery attachment_tag=fauna orderby=rand mla_alt_shortcode=gallery type=default style=strip-below slideshow_height=320 slide_size=medium]
-</code>
-<p>
-Here, <code>[mla_gallery]</code> selects the images with an Att. Tag of "fauna" and sorts them in a random order. It then calls on the <code>[gallery]</code> shortcode (which Photonic also uses), as if you had coded:
-</p>
-<code>
-[gallery ids="3,1,4,2,7" type=default style=strip-below slideshow_height=320 slide_size=medium]
-</code>
-<p>
-Photonic recognizes the <code>type=default</code> parameter and takes over, using the other three parameters to format its results. This example is a less convenient but more flexible alternative to the native Photonic support built-in to <code>[mla_gallery]</code> (see next section).
-</p>
-<p>
-The next example selects one PDF document at random and uses the <a href="https://wordpress.org/plugins/pdf-embedder/" title="PDF Embedder plugin" target="_blank">PDF Embedder</a> plugin to display the document content. The <code>mla_alt_ids_name</code> and <code>mla_alt_ids_value</code> parameters change the "ids" and attachment ID defaults to the "url" and file URL values expected by the <code>[pdf-embedder]</code> shortcode.
-</p>
-<code>
-[mla_gallery post_mime_type="application/pdf" orderby=rand numberposts=1 mla_alt_shortcode=pdf-embedder mla_alt_ids_name=url mla_alt_ids_value="{+filelink_url+}"]
-</code>
-<p>
-The next example selects items assigned to a taxonomy term and uses the <a href="https://wordpress.org/plugins/shortcodes-ultimate/" title="Shortcodes Ultimate plugin" target="_blank">Shortcodes Ultimate</a> plugin's <a href="https://getshortcodes.com/shortcodes/custom_gallery/" title="Custom Gallery shortcode" target="_blank">Custom gallery</a> shortcode to display the gallery with a lightbox enhancement. The <code>mla_alt_ids_name</code> and <code>mla_alt_ids_template</code> parameters change the "ids" and attachment ID defaults to the "source" and "media:" values expected by the <code>[su_custom_gallery]</code> shortcode.
-</p>
-<code>
-[mla_gallery attachment_category=accipitridae link="lightbox" mla_alt_shortcode="su_custom_gallery" mla_alt_ids_name="source" mla_alt_ids_template="media: {+alt_ids+}"]
-</code>
-<p>
-You can also use the "enclosing shortcode" form if the alternate shortcode, such as Fullscreen Galleria's "fsg_link", requires it. You would code this form as:
-</p>
-<code>
-[mla_gallery ids="1,2,3" mla_alt_shortcode=fsg_link mla_alt_ids_name=include class=button]View the gallery[/mla_gallery]
-</code>
-<p>If you mix the self-closing and enclosing versions of <code>[mla_gallery]</code> on one post/page you must use the "xhtml-style closing shortcodes like [mla_gallery /]" for the self-closing shortcodes.
-</p>
-<p>
-<strong>NOTE:</strong> When you use "mla_alt_shortcode" to pass format/display responsibility off to another shortcode you will lose the <code>[mla_gallery]</code> Gallery Display Style (e.g. "mla_float") and Gallery Display Content (e.g. "mla_caption") parameters. There is no reliable way for <code>[mla_gallery]</code> to pass this information on to the other shortcode you've specified.
-<a name="photonic_gallery"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Support for the &#8220;Photonic Gallery for Flickr, Picasa, SmugMug, 500px and Instagram&#8221; Plugin</h3>
-<p>
-The <a href="http://wordpress.org/extend/plugins/photonic/" title="Photonic Gallery plugin directory page" target="_blank">Photonic Gallery for Flickr, Picasa, SmugMug, 500px and Instagram</a> plugin adds several new parameters to the <code>[mla_gallery]</code> shortcode to enhance your galleries. All you have to do is install the plugin, then add a "style=" parameter to your <code>[mla_gallery]</code> shortcode to use the Photonic styling and markup in place of the native <code>[mla_gallery]</code> style and markup templates.
-</p>
-<p>
-You can use the "Photonic" screen of the Insert Media dialog to build the display portion of your shortcode parameters. After you click "Insert into post", change the shortcode name from "gallery" to "mla_gallery" and add the query parameters you need to select the attachments for the gallery. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to Photonic to format the results. Note that MLA does not play any role in formatting the gallery display, so MLA-specific parameters such as <code>mla_caption</code> and <code>mla_link_href</code> are not processed.
-<a name="justified_image_grid"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Support for the &#8220;Justified Image Grid&#8221; Plugin</h3>
-<p>
-<a href="https://justifiedgrid.com/" title="Justified Image Grid site" target="_blank">Justified Image Grid</a> (JIG) is an inexpensive premium plugin that renders a spectacular horizontal masonry grid for a simple to browse and easy to use gallery. It includes several lightboxes for highlighting individual images. 
-</p>
-<p>
-This section should really be titled "JIG's support for MLA" because JIG includes explicit support for filtering a gallery by selecting terms from MLA's Att. Categories and Att. Tags taxonomies. Look for the <code>image_categories</code>, <code>image_tags</code> and <code>filterby</code> parameters of the <code>[justified_image_grid]</code> shortcode.
-</p>
-<p>
-You can also set a JIG option to "Use JIG as MLA display (automatically take over)". Activate that option if you wish to automatically use Justified Image Grid in place of your current Media Library Assistant galleries (<code>[mla_gallery]</code>). Useful for already established galleries. You can use or disable JIG display individually by adding just <code>mla_alt_shortcode=justified_image_grid</code> or <code>mla_alt_shortcode=no</code> to any MLA shortcode, respectively. 
-</p>
-<p>
-Of course, you can always use MLA's <code>[mla_tag_cloud}</code>, <code>[mla_term_list}</code> and <code>[mla_gallery}</code>, shortcodes for more complex item selection applications such as custom field or date queries, or multi-taxonomy queries. Adding <code>mla_alt_shortcode=justified_image_grid</code> to the <code>[mla_gallery}</code> shortcode will pass a list of the selected items to JIG for formatting and displaying the resulting gallery. You can add any JIG-specific parameters to the shortcode and they will be passed along as well.
-</p>
-<p>
-<a name="real_media_library"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Support for the &#8220;Real Media Library&#8221; Plugin</h3>
-<p>
-The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real Media Library plugin directory page" target="_blank">WordPress Real Media Library: Media Library Folder & File Manager</a> plugin helps you with media management. Organize thousands of uploaded files into folders, collections and galleries. You can add parameters to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific RML folder, collection or gallery ID. There are three <code>[mla_gallery]</code> shortcode parameters for this purpose:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_rml_folder</td>
-<td>the ID of the RML folder, collection or gallery from which to source items for the gallery display. You can find the ID of a folder easily in your media library. Simply select a folder, afterwards click the three-dots icon in the folder toolbar. A dialog opens and in the bottom right corner you can find a number which represents the folder ID.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_rml_include_children</td>
-<td>"false" (the default) to restrict the potential items to the specific folder or gallery named in the <code>mla_rml_folder</code> parameter. Set it to "true" to include items in folders contained in the specific folder or collection named in the shortcode.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_allow_rml</td>
-<td>(optional) "false" (the default) to remove the RML parameters from <code>[mla_gallery]</code> database queries. "true" to preserve the parameters. This parameter is only useful for performance testing purposes. It is automatically set to "true" if the <code>mla_rml_folder</code> parameter is present. You can safely ignore it.</td>
-</tr>
 </table>
 <p>
-You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in an RML gallery.
-<a name="catfolders"></a>
+To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
 </p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Support for the &#8220;CatFolders – WP Media Folders&#8221; Plugin</h3>
-<p>
-The <a href="https://wordpress.org/plugins/catfolders/" title="CatFolders – WP Media Folders plugin directory page" target="_blank">CatFolders – WP Media Folders</a> free/lite and pro plugins help you categorize media files better and faster. You can add a parameter to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific folder ID. There is one <code>[mla_gallery]</code> shortcode parameter for this purpose:
-</p>
-<table>
-<tr>
-<td class="mla-doc-table-label">mla_catf_folder</td>
-<td>the name of the folder from which to source items for the gallery display. To find the ID of a folder, right-click on the folder name to display the context menu, then click "Properties". In the Image Folder display you will see the folder ID. For the <code>mla_catf_folder</code> value do not include the pound sign ('#'), just the folder number.</td>
-</tr>
-</table>
-<p>
-You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in the folder.
-<a name="mla_gallery_templates"></a>
-</p>
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h3>Style and Markup Templates</h3>
-<p>
-The Style and Markup templates give you great flexibility for the content and format of each <code>[mla_gallery]</code> or <code>[mla_tag_cloud]</code> (list and grid formats). You can define as many templates as you need.
-</p>
-<p>
-Style templates provide gallery-specific (or cloud-specific) CSS inline styles (you can code <code>mla_style=none</code> to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the gallery, 2) the beginning of each row, 3) each gallery item, 4) the end of each row and 5) the end of the gallery. The attachment-specific markup parameters let you choose among most of the attachment fields, not just the caption.
-</p>
-<p>
-The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. You can find a custom template example with step-by-step instructions in <a href="#mla_table_example"><strong>A Table-based Style and Markup Template Example</strong></a> below.
-</p>
-<p>
-In a template, substitution parameters are surrounded by opening ('[+') and closing ('+]') delimiters to separate them from the template text; see the default templates for many examples.
-<a name="argument_parameters"></a>
-</p>
-<h4>Argument Substitution Parameters</h4>
-<p>
-A markup template can include default values for any of the shortcode parameters and values you define for your own use, e.g., you can add <code>columns=1</code> to the arguments section to change the MLA default value whenever the template is used. The argument substitution parameter(s) you define in the markup template are treated as if you had added them to the shortcode that uses the template, but parameters you actually use in the shortcode will overide the default values you code in the arguments section. For example, if the arguments section of your "blue-table" markup template looks like:
-</p>
-<code>columns=1 div-class=blue div-id=id3</code>
-<p>
-and your shortcode is
-</p>
-<p>
-<code>[mla_gallery mla_markup=blue-table div-id=ID5]</code>
-</p>
-<p>
-the end result will be as if you had coded
-</p>
-<p>
-<code>[mla_gallery mla_markup=blue-table div-id=ID5 columns=1 div-class=blue]</code>
-</p>
-<p>
-The custom parameters you code in the arguments section become part of the shortcode parameters. To access them in your template or in other shortcode parameters you must use the 'query:' prefix, e.g., <code>[+query:div-class+]</code> in the template or <code>{+query:div-id+}</code> in another shortcode parameter.
-</p>
-<p>
-In the arguments section you can separate the parameters with one or more spaces or you can code them on separate lines. If your parameter value includes spaces you must enclose it in single or double quotes.
-<a name="gallery_specific"></a>
-</p>
+<p><a name="gallery_specific"></a></p>
 <h4>Gallery-specific Substitution Parameters</h4>
 <p>
 Gallery-specific substitution parameters are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the gallery based on information about the post/page on which the gallery appears. The gallery-specific substitution parameters are:
@@ -6611,7 +1936,7 @@ If the shortcode is executed when there is no current post, an artificial "empty
 <td>"author"</td>
 </tr>
 </table>
-<a name="mla_style_parameters"></a>&nbsp;
+<p><a name="mla_style_parameters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6671,16 +1996,15 @@ All of the <a href="#gallery_specific">gallery-specific substitution parameters<
 <td>the number of pages in the gallery</td>
 </tr>
 </table>
-<a name="mla_markup_parameters"></a>
-&nbsp;
+<p><a name="mla_markup_parameters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h4>Substitution parameters for markup templates</h4>
 <p>
 All of the <a href="#gallery_specific">gallery-specific substitution parameters</a> and the  <a href="#mla_style_parameters">Substitution parameters for style templates</a> are available for use in markup templates. There are no additional substitution parameters defined at the start of markup processing, but there are <a href="#mla_gallery_hooks">MLA Gallery Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
-<a name="mla_attachment_parameters"></a>
 </p>
+<p><a name="mla_attachment_parameters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6891,8 +2215,5022 @@ The item-level substitution parameter names are:
 <h4>Field-level substitution parameters for the markup template Item part</h4>
 <p>
 You can use the <a href="#mla_variable_parameters"><strong>field-level substitution parameters</strong></a> in the item part to draw data from a wide variety of sources and format it as required. See that section of the Documentation for more information.
-<a name="mla_table_example"></a>
 </p>
+<p><a name="gallery_examples"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Gallery Examples</h4>
+<p>
+As you can tell from the number of parameters available, the <code>[mla_gallery]</code> shortcode is powerful, but it can be complex. The examples in this section show several of the more popular applications, taken from topics in the MLA Support Forum.
+</p>
+<p><a name="simple_examples"></a></p>
+<h4>Simple Examples</h4>
+<ul class="mla_settings">
+<li><code>[mla_gallery]</code> - will display all the images "attached" to the current post/page.</li>
+<li><code>[mla_gallery ids="1,3,2,4"]</code> - will display specific images on any post/page. The numbers are the ID values of the images. You can use the "Add Media..." popup window and "Create Gallery" to get the list, then change the shortcode name to "mla_gallery" if you want to add other <code>[mla_gallery]</code> specific parameters.</li>
+<li><code>[mla_gallery post_parent=all]</code> - will display all the images in your Media Library.</li>
+<li><code>[mla_gallery post_parent=all post_mime_type=application/pdf]</code> - will display all the PDF documents in your Media Library. Since PDF documents are not images, the title of the document will display in place of the thumbnail image.</li>
+<li><code>[mla_gallery post_parent=all post_mime_type="audio,video"]</code> - will display all the audio and video documents in your Media Library.</li>
+<li><code>[mla_gallery post_parent=all post_mime_type=application/pdf size=icon link=file]</code> - will display all the PDF documents in your Media Library. The "PDF icon" will display in place of the thumbnail. When the icon is clicked, the document itself will be displayed in the browser.</li>
+</ul>
+<p>
+Perhaps the most popular Media Library Assistant feature is the ability to assign category and tag values to Media Library Items and use the values to filter a gallery display. "Categories" and "Tags" are built-in WordPress "taxonomies" and have been used for a long time to organize posts and pages. WordPress does not have built-in support for using them with attachments and that was one of the original motivations for MLA.
+</p>
+<p>
+With MLA you can extend Categories and Tags support to attachments. MLA also provides two additional taxonomies for your convenience, Att. Categories and Att. Tags. Because of the way WordPress works, using Categories and Tags for attachments as well as posts and pages can be complicated, so many people find that using the separate Att. Categories and Att. Tags is more convenient.
+</p>
+<p>
+To use a taxonomy you must create one or more "terms" within it. For example, you could create terms in the Category taxonomy like "Big Dog" and "Little Dog". For each term, WordPress automatically creates a "slug", e.g., "big-dog" and "little-dog" for the previous examples. Removing capital letters, spaces and punctuation makes it easier to organize and search the database. It's the slug you can use in [mla_gallery] shortcodes. To "<em>display the attachments that have been assigned to a single category/tag</em>", use the term's slug; for the four taxonomies we've discussed:
+</p>
+<ul class="mla_settings">
+<li>Categories: <code>[mla_gallery category_name=big-dog]</code></li>
+<li>Tags: <code>[mla_gallery tag=big-dog]</code></li>
+<li>Att. Categories: <code>[mla_gallery attachment_category=big-dog]</code></li>
+<li>Att. Tags: <code>[mla_gallery attachment_tag=big-dog]</code></li>
+</ul>
+<p>
+The category_name example does not follow the general rule of "taxonomy-slug = term-slug" because it was created long ago, when Categories and Tags were the only taxonomies allowed. The tag example does not follow the rule, either, since the actual taxonomy-slug is "post_tag", not "tag".
+</p>
+<p><a name="paginated_gallery"></a></p>
+<h4>A Paginated Gallery</h4>
+<p>
+If your gallery display includes a large number of items it may be useful to divide the display into "pages" with a fixed upper limit of items per page. The <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section explains several ways to do that; here is one example. Put <strong>both of these shortcodes</strong> on a post or page to display a paginated gallery:
+</p>
+<blockquote>
+<code>[mla_gallery attachment_category=big-dog posts_per_page=12]</code><br />
+&nbsp;<br />
+<code>[mla_gallery attachment_category=big-dog posts_per_page=12 mla_output="paginate_links,prev_next"]</code>
+</blockquote>
+<p>
+Note that <strong>two shortcodes are required</strong>; one for the gallery display and a second one for the pagination controls. The first <code>[mla_gallery]</code> displays the images assigned to <code>attachment_category=big-dog</code> and displays a maximum of 12 images at once. The second <code>[mla_gallery]</code> has <strong>exactly the same</strong> data selection parameter and posts per page parameter; that's essential to match up with the first shortcode. It adds one more parameter, <code>mla_output</code>. This parameter changes the display from a set of images to a set of pagination controls.
+</p>
+<p>
+MLA will add and manage a "current page" parameter of its own so the two shortcodes stay in synch as you navigate from page to page. That's all there is to it.
+</p>
+<p><a name="cloud_and_gallery"></a></p>
+<h4>Tag Cloud and Gallery</h4>
+<p>
+Adding the "taxonomy=term" parameter to your shortcode is all well and good, but letting the viewer choose a term when they view the post/page is often better. One easy way to do this is to add the <code>[mla_tag_cloud]</code> shortcode. Here is a simple combination of a cloud and a gallery display:
+</p>
+<blockquote>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
+&nbsp;<br />
+<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" mla_nolink_text="Click a term to display the gallery."]</code>
+</blockquote>
+<p>
+The <code>[mla_tag_cloud]</code> displays Att. Categories terms in the familiar cloud format. The <code>number=0</code> parameter ensures that all of the terms are displayed. The <code>mla_link_href</code> parameter links each term back to the current page (<code>{+page_url}</code>) and passes a variable back with the term selection (<code>?term_slug={+slug+}</code>). If you put the <code>[mla_tag_cloud]</code> shortcode on another page or in a widget you will have to hard-code the URL portion of the link.
+</p>
+<p>
+The <code>[mla_gallery]</code> displays the images assigned to the selected attachment_category term. The <code>mla_nolink_text</code> parameter gives the text to display when the gallery is empty, e.g., before you click on a term. In this shortcode:
+</p>
+<ul class="mla_settings">
+<li>The <code>template:</code> prefix says that this is a Content Template</li>
+<li>The parentheses "()" around the two elements are used to group them into a list of alternatives</li>
+<li>The vertical bar "|" between the two elements means "stop when you get a non-empty alternative"</li>
+<li><code>{+request:term_slug+}</code> will be empty unless there is a term_slug in the URL</li>
+<li><code>a-bad-term</code> is a literal value (and thus never empty) which does not match any term in the attachment_category taxonomy, so the gallery will be empty if this alternative is used</li>
+</ul>
+<p>
+You can read more about templates in the <a href="#mla_template_parameters">Content Templates</a> section. You can paginate your gallery by adding a third shortcode to the post/page. Put the new shortcode between the cloud and gallery so the pagination controls will appear above the gallery display:
+</p>
+<blockquote>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
+&nbsp;<br />
+<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" posts_per_page=12" mla_output="paginate_links,prev_next" mla_link_href="{+page_url+}?term_slug={+request:term_slug+}"]</code><br />
+&nbsp;<br />
+<code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" posts_per_page=12 mla_nolink_text="Click a term to display the gallery."]</code>
+</blockquote>
+<p>
+The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?term_slug={+request:term_slug+}"</code> parameter is added so the pagination controls pass the <code>term_slug</code> from page to page.
+<p><a name="search_form_and_gallery"></a></p>
+</p>
+<h4>Search Form and Gallery</h4>
+<p>
+A common alternative to the taxonomy filtering in the previous examples is a keyword-based search. This example shows a simple HTML form with a text box and a button to run the search. The user can enter one or more words to search for in the Title or Description of Media Library items, then click "Search" to display a gallery of matching images:
+</p>
+<blockquote>
+<code>&lt;form id="mla-search-form" action="." method="post"><br />
+&lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
+&lt;/form></code><br />
+&nbsp;<br />
+<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery."]</code>
+</blockquote>
+<p>
+In this example the <code>name="search-string"</code> parameter is passed from the form to the <code>s="{+request:search-string+}</code>... parameter in the shortcode. As in the Cloud and Gallery example a Content Template is used to supply <code>a-bad-term</code> before the form is completed, which displays an empty gallery because it doesn't match anything. You can find more information on the <code>s=</code> parameter and other search parameters in the <a href="#search_keywords">Keyword(s) Search</a> section.
+</p>
+<p>
+As in the Cloud and Gallery example, paginating your gallery display requires a slight modification of the <code>[mla_gallery]</code> shortcode (at the bottom of the next example) and adding a second <code>[mla_gallery]</code> shortcode (in the middle of the next example) to display the pagination controls:
+</p>
+<blockquote>
+<code>&lt;form id="mla-search-form" action="." method="post"><br />
+&lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
+&lt;/form></code><br />
+&nbsp;<br />
+<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" posts_per_page=12 mla_output="paginate_links,prev_next" mla_link_href="{+page_url+}?search-string={+request:search-string+}"]</code><br />
+&nbsp;<br />
+<code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery." posts_per_page=12]</code>
+</blockquote>
+<p>
+The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter (<code>s="{+request:search-string+}</code>...) and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?search-string={+request:search-string+}"</code> parameter is added so the pagination controls pass the <code>search-string</code> from page to page.
+</p>
+<p><a name="mla_gallery_hooks"></a></p>
+<h4>MLA Gallery Filters and Actions (Hooks)</h4>
+<p>
+The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. All of the hooks and their parameters are documented in a simple, stand-alone plugin that can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link" target="_blank">MLA Gallery Hooks Example</a>. You can use the rollover actions to view the code or download a copy or, to run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Gallery Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Gallery Hooks Example" plugin.</li>
+<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
+<li>Create a new <code>[mla_gallery]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="all custom"</code> parameter to activate the example output.</li>
+<li>View the post or page on which the modified shortcode appears to see a list of each item's custom fields appended to the gallery captions.</li>
+</ol>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts each hook. Generally, each part of the gallery supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that gallery part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a gallery part. The current hooks are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_raw_gallery_attributes</td>
+<td class="mla-doc-hook-definition">called at the beginning of the gallery, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_attributes,<br />mla_gallery_arguments</td>
+<td class="mla-doc-hook-definition">called at the beginning of the gallery. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_initial_content</td>
+<td class="mla-doc-hook-definition">called just after the <code>mla_gallery_attributes</code> filter, so you can inspect/modify any content enclosed by the <code>[mla_gallery]content[\mla_gallery]</code> "enclosing" shortcode format.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_query_attributes,<br />mla_gallery_query_arguments</td>
+<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_wp_query_object</td>
+<td class="mla-doc-hook-definition">called just after the <code>WP_Query->query()</code> call, so you can inspect/record the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_the_attachments</td>
+<td class="mla-doc-hook-definition">called after the <code>WP_Query->query()</code> is performed, so you can inspect/record the results or return a modified array of items satisfying the query.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_blacklist</td>
+<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the list of parameters to be removed from those passed to the alternative gallery shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_attributes</td>
+<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the parameters passed to the alternative gallery shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_alt_shortcode_ids</td>
+<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify the ID values or the entire <code>mla_alt_shortcode_ids</code> parameter passed to the alternative gallery shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_final_content</td>
+<td class="mla-doc-hook-definition">called after the <code>mla_gallery_wp_query_object</code> filter, so you can inspect/modify any content enclosed by the <code>[mla_gallery]content[\mla_gallery]</code> "enclosing" shortcode format before it is passed to the alternative gallery shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_end_alt_shortcode</td>
+<td class="mla-doc-hook-definition">called after the alternative gallery shortcode has been processed, so you can perform cleanup or other final actions.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">use_mla_gallery_style</td>
+<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the gallery output.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_style</td>
+<td class="mla-doc-hook-definition">an old filter retained for compatibility with earlier MLA versions.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_style_values,<br /> mla_gallery_style_template,<br />mla_gallery_style_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_pagination_values</td>
+<td class="mla-doc-hook-definition">for manipulating the markup values used in pagination controls.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_open_values,<br />mla_gallery_open_template,<br />mla_gallery_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_row_open_values,<br />mla_gallery_row_open_template,<br />mla_gallery_row_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_initial_item_values,<br />mla_gallery_item_values,<br />mla_gallery_item_template,<br />mla_gallery_item_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_row_close_values,<br />mla_gallery_row_close_template,<br />mla_gallery_row_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_gallery_close_values,<br />mla_gallery_close_template,<br />mla_gallery_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template.</td>
+</tr>
+</table>
+<p><a name="mla_archive_list"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>The MLA Archive List shortcode</h3>
+<p>
+The <code>[mla_archive_list]</code> shortcode displays date-oriented values in a variety of formats, including a "cloud", where the size of each list item is determined by how many Media Library items (attachments) have the corresponding date value. The archive list works with year, month, week and day values. MLA Archive List enhancements for lists and controls include:
+</p>
+<ul class="mla-doc-toc-list">
+<li>Several display formats; flat or cloud text, link lists, dropdown controls and "pagination"-like links.  The list formats are "ulist" and "olist".</li>
+<li>Complete support for paginated lists; display hundreds or thousands of values in manageable groups.</li>
+<li>Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each value.
+<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" and "dropdown" formats to suit any need.</li>
+<li>Integration with the <code>[mla_gallery]</code> shortcode making it easy to filter a gallery display.</li>
+<li>Support for custom fields as the source of archive values.</li>
+<li>Access to a wide range of content using the item-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given value.</li>
+<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.</li>
+</ul>
+<p>
+Most applications can be implemented by a simple shortcode with a few parameters. The <code>[mla_archive_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+</p>
+<p>
+The next Documentation sections are a complete reference for the shortcode. Don't be put off by the volume of material; you won't need most of the parameters for typical applications. You may want to start by reviewing the <a href="#archive_list_examples">MLA Archive List Examples</a> to see how easy using the shortcode can be.
+</p>
+<p>
+Many of the <code>[mla_archive_list]</code> concepts and shortcode parameters are modeled after the other MLA shortcodes, so the learning curve is shorter. Differences and parameters unique to the shortcode are given in the sections below.
+</p>
+<p><a name="archive_type"></a></p>
+<h4>Archive Type</h4>
+<p>
+List values have a prefix denoting the level of detail they contain followed by a numeric value. The <strong>"archive_type"</strong> parameter determines the level of detail for the list values:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">yearly</td>
+<td>four-digit year, e.g. <strong>"Y2021"</strong>. <strong>"yearly" is the default archive type value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">monthly</td>
+<td>four-digit year and two-digit month, e.g. <strong>"M202106"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">weekly</td>
+<td>four-digit year and two-digit week, e.g. <strong>"W202123"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">daily</td>
+<td>four-digit year, two-digit month and two-digit day, e.g. <strong>"D20210615"</strong>.</td>
+</tr>
+</table>
+<p>
+When used with the <code>[mla_gallery]</code> shortcode, these values are automatically translated to the appropriate "Simple Date Parameters" values for that shortcode.
+</p>
+<p><a name="archive_source"></a></p>
+<h4>Archive Source</h4>
+<p>
+The data source for an archive must be a text database field that contains a valid date format. The <strong>"archive_source"</strong> parameter determines the source for the list values:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">post_date</td>
+<td>the post_date value in the wp_posts table. <strong>"post_date" is the default archive source value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_date_gmt</td>
+<td>the post_date_gmt value in the wp_posts table.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_modified</td>
+<td>the post_modified value in the wp_posts table.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_modified_gmt</td>
+<td>the post_modified_gmt value in the wp_posts table.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">custom</td>
+<td style="padding-bottom: 2em;">a custom field value. The custom field must contain a text value with a date format recognized by the database SQL date query functions.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">archive_key</td>
+<td>for the "custom" archive source, this separate parameter gives the name of the custom field to be used for the query. For example, you can code something like <code>archive_source=custom archive_key="Date Taken"</code> where &ldquo;Date Taken&rdquo; is the name of a custom field you have created.</td>
+</tr>
+</table>
+<p>
+The four values from the wp_posts table are in a valid date format. For custom fields, a variety of common formats are acceptable. For example, you can use a mapping rule to source the custom field from:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">exif:DateTimeOriginal</td>
+<td>YYYY:MM:DD HH:MM:SS</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">iptc:DateCreated</td>
+<td>YYYYMMDD</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">xmp:CreateDate</td>
+<td>YYYY-MM-DD HH:MM:SS  two digit month and day, 24-hour clock</td>
+</tr>
+</table>
+<p>
+You can use the timestamp and date field-level option/format values to convert many other formats to one of the valid formats illustrated above.
+</p>
+<p><a name="archive_list_output"></a></p>
+<h4>Output Formats</h4>
+<p>
+The default archive list output is a dropdown control with options for each archive value. The output markup and display format are determined by the <strong>"mla_output"</strong> parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">dropdown</td>
+<td>Returns an HTML "select" control with a sequence of HTML "option" tags. <strong>"dropdown" is the default output format value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">flat<br />flat,div</td>
+<td valign=top>Returns a sequence of hyperlink tags without further HTML markup. The tags can be of varying size depending on how many items share the value (a "cloud"). The "separator" parameter content (default, one newline character) is inserted between each hyperlink.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist<br />ulist,div</td>
+<td valign=top>Returns hyperlinks enclosed by unordered HTML list tags; <strong>&lt;ul&gt;&lt;/ul&gt;</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">olist<br />olist,div</td>
+<td valign=top>Returns hyperlinks enclosed by ordered HTML list tags; <strong>&lt;ol&gt;&lt;/ol&gt;</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">array</td>
+<td>Returns a PHP array of list hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code.</td>
+</tr>
+</table>
+<p>
+Adding the "<strong>,div</strong>" qualifier to the flat, ulist or olist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. The default style template for this format displays the list in a scrollable window. It also changes the color of the current item.
+</p>
+<p>
+The "flat,div" and list formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own.
+</p>
+<p>
+The <code>[mla_archive_list]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "paginate_values", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode. You can find details for pagination format parameters in the <a href="#archive_list_pagination">Pagination Parameters</a> section below.
+</p>
+<p>
+A separate parameter, <code>echo=true</code>, allows you to echo archive output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code.
+</p>
+<p><a name="archive_list_link"></a></p>
+<h4>Item Link</h4>
+<p>
+For the array, flat and list formats the Link parameter, e.g., <code>link=current</code> (the default), specifies the target and type of link from the list item back to the current post/page, the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item. These values only apply to the hyperlinks generated for the "array", "flat" and "list" output formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current</td>
+<td>Link back to the current post/page with a query argument, <code>mla_archive_current</code>, set to the archive_type value of the selected item. <strong>"current" is the default item link value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">view</td>
+<td>Link to the term's "archive page". Support for archive pages, or "date archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
+<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the example later in this section for more details.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">span</td>
+<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the  "mla_link_id", "mla_link_class" and "mla_link_attributes" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
+</tr>
+</table>
+<p>
+Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the archive list to select a value and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode.
+</p>
+<p><a name="archive_list_display_templates"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Display Style and Markup Templates</h4>
+<p>
+Two parameters provide a way to apply custom style and markup templates to your <code>[mla_archive_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "flat,div", "ulist", "olist" and "dropdown" formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>replaces the default style template for an <code>[mla_archive_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>replaces the default markup template for an <code>[mla_archive_list]</code> shortcode</td>
+</tr>
+</table>
+<p><a name="archive_list_display_content"></a></p>
+<h4>Display Style and Content</h4>
+<p>
+For the "dropdown" archive_output type, the list comprises a select tag (&lt;select&gt;&lt;/select&gt;) enclosing a list of option (&lt;option&gt;&lt;/option&gt;) tags. For the "list" archive_output type, the list comprises an unordered list tag (&lt;ul&gt;&lt;/ul&gt;) enclosing a list of item (&lt;li&gt;&lt;/li&gt;) tags. The following parameters customize the overall type and content of the control/list:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">show_count</td>
+<td>Selects the option to display the number of items assigned to each archive value.Use <strong>"true" (the default value)</strong> to display the count. Use "false" to omit the count.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">hide_if_empty</td>
+<td>If <strong>false (default)</strong>, display a control with "option_none_label" text &amp;  "option_none_value" value. If true, display  "option_none_label" as plain text or nothing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_archive_parameter</td>
+<td>The name of the parameter containing the current item value; <strong>default "mla_archive_current"</strong>. You can change the name if you need multiple controls/lists on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_archive_current</td>
+<td>Identifies the current/selected value in the list. It will be ignored if it does not match an item in the list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_archive_class</td>
+<td>The class attribute for the current item in the archive list as determined by the "mla_archive_current" parameter (if specified); <strong>default "mla_archive_current"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">archive_order</td>
+<td>Selects the order in which values are displayed. Use <strong>"DESC" (the default value)</strong> to display the newest value first, or "ASC" to display the oldest value first.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">archive_limit</td>
+<td>Sets the maximum number of values to be displayed. Use <strong>"0" (zero, the default value)</strong> to display all of the values. Use a positive number to limit the values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">archive_label</td>
+<td>Selects the length of the text displayed for each value. Use "short" for short labels, e.g., "Sep 2021". Use "long" for more complete labels, e.g., "September 2021". <strong>The default value for the "paginate_values" archive_output is "short". All other output types default to "long".</strong>  </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>For the flat format, the text/space between items. <strong>Default "\n"</strong> (newline whitespace)</td>
+</tr>
+</table>
+<p><a name="archive_list_cloud"></a></p>
+<h4>Cloud Parameters</h4>
+<p>
+The default display of the flat and list formats is a sequence of links, all of the same size. You can change this to a "cloud", where the size of each link is determined by how many Media Library items (attachments) share the link's value. Four parameters control the size of the links:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>The text size <strong>(defaults to default_size)</strong> of the item with the smallest count value (units given by unit parameter). Consider something like 8 or 10 for a cloud display.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>The text size <strong>(defaults to default_size)</strong> of the item with the highest count value (units given by the unit parameter). Consider something like 18 or 22 for a cloud display.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">default_size</td>
+<td>The text size <strong>(default 12)</strong> of the special links (all items, no items) (units given by the unit parameter). This value is also used for the smallest and largest values unless overriden by an explicit parameter value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. <strong>pt (the default)</strong>, px, em, %.</td>
+</tr>
+</table>
+<p><a name="archive_list_special_items"></a></p>
+<h4>Special Items</h4>
+<p>
+Eight parameters provide an easy way to add and control the contents of special list items for selecting special groups of values. You can add links for selecting all items, items that have no values for a custom field and/or items that have one or more values for a custom field. The default values for these links are compatible with the <code>mla_archive_parameter</code> values of the <code>[mla_gallery]</code> shortcode. See the <a href="#archive_list_gallery_examples">Archive List and MLA Gallery combinations</a> section for more details.
+</p>
+<p>
+The "no_values" and "any_values" parameters are only useful for archives based on custom field values. The WordPress values, e.g., "post_date" are always present for every Media Library Item.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">option_all_label</td>
+<td>Text to display for showing an "all values" option. Default will not show an option to select "all values". When this option is selected all items, regardless of their archive value, are included in the `[mla_gallery]` results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for "all values" option. <strong>Default 'ignore.values.assigned'</strong>. When this option is selected all items, regardless of their archive value, are included in the `[mla_gallery]` results. To display an empty gallery enter an invalid date value in the appropriate format, e.g., "custom:Camera,Y(9999)".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_values_label</td>
+<td>Text to display for showing an 'no values' link. <strong>Default will not show a link to select 'no values'</strong>. When this option is selected only those (custom field) items with no values at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_values_value</td>
+<td>Control value for 'no values' option. <strong>Default 'no.values.assigned'</strong>. When this option is selected only those (custom field) items with no values at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_values_label</td>
+<td>Text to display for showing an 'any values' link. <strong>Default will not show a link to select 'any values'</strong>. When this option is selected only those (custom field) items with one or more values are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_values_label</td>
+<td>Control value for 'any values' option. <strong>Default 'any.values.assigned'</strong>. When this option is selected only those (custom field) items with one or more values are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_label</td>
+<td>Text to display when there are no archive values in the list/control, i.e., an empty archive. If the "hide_if_empty=true" parameter is present this is displayed as plain text; <strong>default is empty, no value</strong>. If "hide_if_empty=false", the option_none_label and option_none_value are used to generate an "empty" control or list; <strong>default "No archives"</strong>. This parameter replaces the <code>mla_nolink_text</code> parameter used in the other MLA shortcodes.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_value</td>
+<td>Dropdown control value to use when there are no archive values in the list/control; <strong>default "no-archives"</strong>.</td>
+</tr>
+</table>
+<p><a name="archive_list_display_tags"></a></p>
+<h4>Display Tags</h4>
+<p>
+For the list and dropdown formats, the following parameters customize overall control/list content and markup:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">listtag</td>
+<td>The HTML tag that encloses the list of archive values. For the <strong>"dropdown" archive_output type, the default is "select"</strong>. For the <strong>"list" archive_output type, the default is "ul"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">listtag_name</td>
+<td>For the "dropdown" archive_output type, the "name" attribute of HTML tag that begins the list of archive values. <strong>The default is "mla_archive_current"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">listtag_id</td>
+<td>The "id" attribute of the HTML tag that begins the list of archive values; <strong>default "mla_archive_list-{$instance}"</strong>, where "{$instance}" is a number starting at "1" making the value unique.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">listtag_class</td>
+<td>The "class" attribute of the HTML tag that begins the list of archive values; <strong>default "mla-archive-list"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">listtag_attributes</td>
+<td>Additional attribute(s) the HTML tag that begins the list of archive values; <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>The HTML tag that encloses each value in the archive list. For the <strong>"dropdown" archive_output type, the default is "option"</strong>. For the <strong>"list" archive_output type, the default is "li"</strong>.</td>
+</tr>
+</table>
+<p>
+The following parameters customize content and markup for each control/list item:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">itemtag_id</td>
+<td>The id attribute for each item in the list; <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_class</td>
+<td>The class attribute(s) for each item in the list; <strong>default "archive-list-item"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_attributes</td>
+<td>Additional attribute for each item in the list; <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_value</td>
+<td>A custom format or content template for the item value; <strong>default is the value of the list item</strong>, e.g. "Y2021" for a yearly archive..</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_label</td>
+<td>A custom format or content template for the item name/label; <strong>default determined by the "archive_label" parameter.</strong>.</td>
+</tr>
+</table>
+<p>
+The item and link parameters are an easy way to customize the content and markup for each list item or pagination control. They support the Archive List Substitution Parameters and Content Template substitution parameters. For example, if you code "<code>mla_rollover_text='{+current_label+} ({+items+})'</code>, the rollover text will contain the item value's label followed by the number of items having that value in parentheses. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p><a name="archive_list_hyperlinks"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Hyperlink Parameters</h4>
+<p>
+For all archive_output types except "dropdown", each item in the list or pagination control(s) comprises an archive value and a hyperlink surrounding the value. The following parameters customize link content and markup:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_link_attributes</td>
+<td>Additional attribute(s) for each link in the list; <strong>default empty, no value</strong>. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter. Also, the "href", "src" and "srcset" attributes are not allowed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_id</td>
+<td>The id attribute for each link in the list; <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_target</td>
+<td>adds an HTML "target" attribute to the hyperlink for each archive item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_class</td>
+<td>The class attribute for each link in the list; <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_style</td>
+<td>replaces the CSS styles for the hyperlink. The default style is <code>font-size: [+font_size+][+unit+]</code>. You can access the dfefault style as <code>[+item_link_stlye+]</code> in this parameter. </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rollover_text</td>
+<td>The text for the "title" attribute (Rollover Text); <strong>default empty, no value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_href</td>
+<td>The href attribute of the hyperlink tags; <strong>default empty, no value</strong>. When present, this value replaces the <code>link=</code> values (current, view, span or none)</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_text</td>
+<td>The text surrounded by the hyperlink tags (&lt;a ... &gt;&lt;/a&gt;). The default text is an appropriate display format for each value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">append_current_item</td>
+<td>If true (the default), adds the <code>mla_archive_current</code> as a query argument to the hyperlink tags. If set to false (unusual), you must use the <code>mla_link_href</code> parameter and explicitly add the current item value to the hyperlink tags.</td>
+</tr>
+</table>
+<p>
+All but the "mla_target" parameter support the <a href="#archive_list_substitution_shortcode">Shortcode</a>, <a href="#archive_list_substitution_list">List-specific</a>, <a href="#archive_list_substitution_item">Item-specific</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+current_label_long+}'</code>, the rollover text will contain the long text label for the current item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p>
+The "mla_link_href" parameter is a great way to change the destination your item links to and/or add arguments to the link for later processing. For example, to make a list item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
+</p>
+<p>
+The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
+</p>
+<p>
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p><a name="archive_list_other"></a></p>
+<h4>Other Parameters</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about parameter processing and control/list output generation. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the MLA Debug Tab to view and download the information in the error log. Use this only for development/debugging to avoid filling the log file with unneeded data.
+<p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_archive_list]" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_archive_list]" delimiter to an earlier shortcode.
+</p>
+<p><a name="archive_list_data_selection"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Data Selection Parameters</h4>
+<p>
+The Archive List shortcode displays only those date values to which one or more Media Library items are assigned. The Data Selection parameters provide a way to filter the list, e.g., specifying a taxonomy term or a particular MIME type.
+</p>
+<p>
+The Archive List shortcode uses the same database query functions employed by the <code>[mla_gallery]</code> shortcode. All of the <a href="#gallery_data_selection"><code>[mla_gallery]</code> data selection parameters</a> are available, but the most useful parameters are:
+</p>
+<ul class="mla-doc-toc-list">
+<li>"ids", Include, Exclude</li>
+<li>Post ID, Post Parent</li>
+<li>Post MIME Type</li>
+<li>Simple Taxonomy Parameters</li>
+<li>Compound Taxonomy Parameters, "tax_input"</li>
+<li>Taxonomy Queries, the "tax_query"</li>
+<li>Taxonomy term keyword(s) search</li>
+<li>Category Parameters</li>
+<li>Tag Parameters</li>
+<li>Simple Custom Field Parameters</li>
+<li>Custom Field Queries, the "meta_query"</li>
+<li>Simple Date Parameters</li>
+<li>Date and Time Queries, the "date query"</li>
+<li>Keyword(s) Search</li>
+<li>Author, Author Name</li>
+<li>Post Type, Post Status</li>
+</ul>
+<p>
+If you do not code any data selection parameters, <code>post_parent=all</code> will be added so the default data selection parameters are:
+</p>
+<ul class="mla-doc-toc-list">
+<li><code>post_parent=all</code></li>
+<li><code>post_type=attachment</code></li>
+<li><code>post_status=inherit</code></li>
+<li><code>post_mime_type=image</code></li>
+</ul>
+<p>
+The default parameters will select all of the image items in your Media Library, extract the date value you have chosen from each item and use the values to build the archive list. For example, if you simply code <code>[mla_archive_list]</code> with no parameters you will get a dropdown control with one option for each year in which one or more items was added to the Media Library.
+</p>
+<p><a name="archive_list_pagination"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Pagination Parameters</h4>
+<p>
+If you are using an archive list to filter an <code>[mla_gallery]</code> display you may want to add navigation controls that simplify moving among the values in the list, e.g., displaying the items filtered by the next or previous elements of the list. The "next_link", "current_link", "previous_link" and "paginate_values" options are used to pick a new list value to filter the gallery display.
+</p>
+<p>
+If you have a large number of values for your archive list you may want to paginate the list display, i.e., divide the list into two or more pages of a reasonable size. You can then add controls to, for example, move to the next or previous list pages. The "next_page", "previous_page" and "paginate_links" options are used to control which portion of list values is displayed.
+</p>
+<p>
+<strong>IMPORTANT:</strong> Pagination controls are an alternative output, not an additional output. One shortcode can generate either a list display or pagination controls. <strong>You will need two or more shortcodes to get both the list and the controls</strong>.
+</p>
+<p>
+Pagination support for <code>[mla_archive_list]</code> is modeled on similar functions for <code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <code>[mla_gallery]</code> <a href="#gallery_pagination"><strong>Pagination Parameters</strong></a> section.
+</p>
+<p>
+The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For navigation and pagination output, you can choose from seven values:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">next_link</td>
+<td>Returns a link to the next archive value, based on the "mla_archive_current" parameter value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the last value. If you omit the qualifier, an empty string is returned for the "next_link" from the last value. If you code the ",wrap" or ",always_wrap" qualifier, the "next_link" from the last value will be to the first value. When there is no current value, ",wrap" returns an empty string and ",always_wrap" returns a link to the first value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_link</td>
+<td>Returns a link to the current archive value, based on the "mla_archive_current" parameter value. This gives you an easy way to provide a visual indication of where you are within the list. When there is no current value, returns an empty string. The "span" and "none" link formats are often used with this archive_output type.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_link</td>
+<td>Returns a link to the previous archive value, based on the "mla_archive_current" parameter value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the first value. If you omit the qualifier, an empty string is returned for the "previous_link" from the first value. If you code the ",wrap" or ",always_wrap" qualifier, "previous_link" from the first value will be to the last value. When there is no current value, ",wrap" returns an empty string and ",always_wrap" returns a link to the last value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">paginate_values</td>
+<td>Returns a link to values at the start and end of the list and to pages around the current value ( e.g.: « Previous 2021 ... 2001 2002 2003 ... 1995 Next » ). The optional ",show_all" qualifier will show all of the values instead of a short list around the current value. The optional ",prev_next" qualifier will include the "« Previous" and "Next »" portions of the link list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">next_page</td>
+<td>Returns a link to the next "page" of list items, based on the "mla_custom_list_current" parameter value. The optional ",wrap" or ",last" qualifiers determine what happens at the end of the list. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the list. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_page</td>
+<td>Returns a link to the previous "page" of list items, based on the "mla_custom_list_current" parameter value. The optional ",wrap" or ",first" qualifiers determine what happens at the beginning of the list. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">paginate_links</td>
+<td>Returns a link to the first and last "pages" of the list and to pages around the current "list page" ( e.g.: « Previous 1 ... 3 4 5 6 7 ... 9 Next » ), based on the "mla_custom_list_current" parameter value. The optional ",show_all" qualifier will show all of the list pages instead of a short list around the current page. The optional ",prev_next" qualifier will include the "« Previous" and "Next »" portions of the link list.</td>
+</tr>
+</table>
+<p>
+The "next_link", "current_link" and "previous_link" formats return an empty string if there is no current value, i.e., if no <code>mla_archive_current</code> value is set in the shortcode parameters or in the URL query attributes. If you code the "option_none_label" parameter its value will be displayed when there is no current value. If you add the ",always_wrap" qualifier the "next_link" and "previous_link" will <strong>always</strong> return the last/first value in the archive list if there is one.
+</p>
+<p>
+The "paginate_values" format returns an empty string if the archive list is empty, i.e., contains no values. If you code the "option_none_label" parameter its value will be displayed the archive list is empty. If there is no current value, i.e., if no <code>mla_archive_current</code> value is set in the shortcode parameters or in the URL query attributes, links to the first and last list items are displayed.
+</p>
+<p><a name="archive_list_page_selection"></a></p>
+<h4>Page selection parameters</h4>
+<p>
+ The <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types divide the list into pages. Use the following parameters to specify the size of each list page and the current list page:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">limit</td>
+<td>the maximum number of values to display in one list "page"; a "values per page" value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>the number of terms to skip over before starting the current list page. This parameter is usually derived automatically from the more useful "mla_custom_list_current" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_archive_list_current</td>
+<td>the current list page number. The name of this parameter can be changed to support multiple paginated lists on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_page_parameter</td>
+<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_total</td>
+<td>the highest page number you want to display; defaults to (total items / limit) if not specified, which is usually what you want. </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_rows</td>
+<td>If you have some other way of computing the total number of values you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a list that you know has fifty values you can code <code>[mla_custom_list mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or list display content parameters you need.</td>
+</tr>
+</table>
+<p>
+The <code>[mla_archive_list]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a list or among list "pages". For example, if you have many values in your archive source you can build a value-specific <code>[mla_gallery]</code> page with links to the previous/next value in the archive (a complete pagination example is included below). You can also build a page that shows a large number of archive values in groups, or "list pages", of ten values with links to the previous/next ten values or links to all of the list pages of values for the archive.
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Next and previous list items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
+<p>
+If you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific archive value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-value "pages" for the gallery.
+</p>
+<p>
+The next or previous link returned is drawn from the item-specific "link" substitution parameter for the next or previous list item. This means you can use all of the <a href="#archive_list_hyperlinks">Hyperlink Parameters</a> to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to customize the text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
+</p>
+<h4>Next and previous list pages; the <code>next_page</code> and <code>previous_page</code> output types</h4> 
+<p>
+If your archive has a large number of distinct values you might want to divide your <code>[mla_archive_list]</code> into "list pages" with a manageable number of values on each page. For these applications you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the list in groups of, say, ten values per "list page".
+</p>
+<p>
+MLA has its own "mla_archive_list_current" parameter to indicate the current set of values within the list (the current list page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
+</p>
+<p>For most applications, "limit" is the only pagination parameter you need to specify. Make sure this parameter is the same for your main list shortcode and for the pagination shortcodes that go with it. Also, make sure you use exactly the same item selection and sorting parameters in all shortcodes.
+</p>
+<p>
+The link(s) generated for prev_page, next_page and paginate_links controls can use the following Display Content parameters to control each link element:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
+</tr>
+</table>
+<h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
+<p>
+WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
+</p>
+<p>
+The <strong>Display Content Parameters</strong> defined above also apply to the "paginate_links" output type. There are five additional parameters unique to this output type.
+</p>
+<h4>Specific parameters for the <code>paginate_values</code> and <code>paginate_links</code> output types</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_end_size</td>
+<td>How many numbers (default 1) appear on either the start and the end list edges</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_mid_size</td>
+<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_type</td>
+<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
+</tr>
+</table>
+<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
+</p>
+<h4>Markup Substitution Parameters for <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types</h4>
+<p>
+You can use any of the List-specific substitution parameters in your next/previous page links (since the links are at the "list page" level, <strong>the attachment-specific substitution parameters are not available</strong>). The following additional substitution parameters are available for the <code>next_page</code> and <code>previous_page</code> output types:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current_page</td>
+<td>the number of the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page</td>
+<td>the number of the new (previous or next) page; zero for paginate_links</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page</td>
+<td>the number of the last/highest/maximum page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page</td>
+<td>the number of items on each gallery page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of items in the gallery</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_offset</td>
+<td>the number of items skipped before the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_offset</td>
+<td>the number of items skipped before the new page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_page_text</td>
+<td>'mla_custom_list_current="[+current_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page_text</td>
+<td>'mla_custom_list_current="[+new_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page_text</td>
+<td>'mla_paginate_total="[+last_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page_text</td>
+<td>'posts_per_page="[+posts_per_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scheme</td>
+<td>the HTTP protocol used to access the page; usually "http://" but might be "https://"</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">http_host</td>
+<td>contents of the <em>Host:</em> header of the current request; usually a domain name such as "mysite.com" or an IP address</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query_string</td>
+<td>the query arguments portion of the new URL, including the questions mark that precedes them.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">request_uri</td>
+<td>the URI given to access the page, e.g., "wordpress/2013/06/sample-post" or "wordpress/tag-gallery-page?attachment_tag=sample". MLA manages pagination by adding the "mla_custom_list_current" query parameter to the URI value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_url</td>
+<td>concatenation of scheme + http_host + request_uri</td>
+</tr>
+</table>
+<p><a name="archive_list_substitution"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Substitution Parameters</h4>
+<p>
+Substitution parameters are a powerful way to add general and attachment-specific values to the list display. For example, if you code "<code>mla_link_href="{+page_url+}?mla_archive_current={+mla_archive_current+}&amp;current_name={+current_label,url+}"</code>, the hyperlinks behind each list term will contain the page URL, the current archive value and the value's label encoded in url format. There are many parameter names like `page_url` and `current_label` divided in several categories:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">Shortcode-specific</td>
+<td>All of the shortcode arguments defined above are available as substitution parameters, as well as additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" prefixes can be used in the list. A Content Template lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">List-specific</td>
+<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Item-specific</td>
+<td  style="vertical-align: top">values that change for each term/item in the list, such as Name and Description</td>
+</tr>
+</table>
+<p>
+The following paragraphs go into more detail about each category and the parameter names within them.
+</p>
+<p>
+To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
+</p>
+<p><a name="archive_list_substitution_shortcode"></a></p>
+<p>
+<strong>Shortcode-level substitution parameters</strong> are available throughout the generation of the control/list In particular, they are known before the database query that determines the list items is performed. These parameters include:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">shortcode arguments</td>
+<td>All of the shortcode arguments defined above are available. If an argument has been set by a shortcode parameter its value will reflect that. If the shortcode parameter contains substitution parameters or a content template the argument will reflect the results of processing those elements. All arguments that do not appear as shortcode parameters will be set to their default values.  Note that the <code>mla_output</code> parameter appears as two separate values: <code>mla_output</code> holds everything before the optional somma, e.g., "flat"; <code>mla_output_qualifier</code> holds the optional value after the comma, e.g., "div".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">request: prefix</td>
+<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query: prefix</td>
+<td>The parameters defined in the <code>[mla_archive_list]</code> shortcode. For example, if your shortcode is <code>[mla_archive_list taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. If the shortcode parameter contains substitution parameters or a content template the query: value will NOT reflect the results of processing those elements. You can define your own parameters, e.g., "div-class"; they will be accessible as shortcode-level data but will otherwise be ignored.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">template: prefix</td>
+<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the "Content Templates" section of the Settings/Media Library Assistant Documentation tab for details. Note that the formatting option is not supported for content templates.</td>
+</tr>
+</table>
+<p>
+Shortcode-level substitution parameters also include several "page-level" values, which are determined by the page/post in which the shortcode occurs. They can be used, for example, in any of the data selection parameters to change the items selected for the list based on information about the post/page on which the list appears. The page-level substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">site_url</td>
+<td>absolute URL to the site directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_url</td>
+<td>absolute URL to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_dir</td>
+<td>absolute (full) path to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">instance</td>
+<td>starts at "1"', incremented for each additional shortcode in the post/page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">selector</td>
+<td>"mla_archive_list-{$instance}", e.g., mla_archive_list-1</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_ID,<br />id</td>
+<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_author</td>
+<td>the <code>post_author</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_date</td>
+<td>the <code>post_date</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_content</td>
+<td>the <code>post_content</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_title</td>
+<td>the <code>post_title</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_excerpt</td>
+<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_status</td>
+<td>the <code>post_status</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_name</td>
+<td>the <code>post_name</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_modified</td>
+<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_guid</td>
+<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_type</td>
+<td>the <code>post_type</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_url</td>
+<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
+</tr>
+</table>
+<p><a name="archive_list_substitution_list"></a></p>
+<p>
+<strong>List-specific substitution parameters</strong> are known after the database query has determined the list items, at the beginning of shortcode processing; they do not change during processing. The list-specific substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of values prepared for the list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_count</td>
+<td>the smallest number of attachments associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_count</td>
+<td>the largest number of attachments associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_scaled_count</td>
+<td>the smallest scaled count associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_scaled_count</td>
+<td>the largest scaled count associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">spread</td>
+<td>max_scaled_count - min_scaled_count</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>the text size of the tag with the smallest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>the text size of the tag with the largest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_spread</td>
+<td>largest - smallest</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_step</td>
+<td>font_spread / spread</td>
+</tr>
+</table>
+<p><a name="archive_list_substitution_item"></a></p>
+<p>
+<strong>Item-specific substitution parameters</strong> are, well, specific to each item in the archive list. The list-specific substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current_value</td>
+<td>the value of the item, e.g., "post_date,M(202011)" or "custom:CreateDate,M(202011)". When passed to <code>[mla_gallery[</code> this will be translated to the appropriate date query parameter(s).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_label_short</td>
+<td>the short version of the item's label, e.g., "Nov 2020".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_label_long</td>
+<td>the long version of the item's label, e.g., "November 2020".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_label</td>
+<td>the selected version of the item's label, based on the archive_label parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">items</td>
+<td>the number of items that will be selected by this value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">year</td>
+<td>the four-digit year portion of the value, if present, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">month</td>
+<td>the two-digit month portion of the value, if present, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week</td>
+<td>the two-digit week portion of the value, if present, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">day</td>
+<td>the two-digit day portion of the value, if present, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">m</td>
+<td>the six-digit year and month portion of the value, if present, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">yyyymmdd</td>
+<td>for weekly archives, a random date within the week, formatted as "yyyy-mm-dd". Used to determine the start and end dates of the week.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">month_long</td>
+<td>the long version of the value's month, e.g., "November".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">month_short</td>
+<td>the short version of the value's month, e.g., "Nov".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_start_raw</td>
+<td>the timestamp version of the week's first day, e.g., "1605484800".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_start_short</td>
+<td>the short version of the week's first day, e.g., "2020-11-16".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_start</td>
+<td>the long version of the week's first day, e.g., "November 16, 2020".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_end_raw</td>
+<td>the timestamp version of the week's last day, e.g., "1606089599"</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_end_short</td>
+<td>the short version of the week's last day, e.g., "2020-11-22".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">week_end</td>
+<td>the long version of the week's last day, e.g., "November 22, 2020".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_id</td>
+<td>the id attribute of the item, taken from the itemtag_id, if present, or defaulted to the listtag_id, a dash, then the mla_archive_current.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_class</td>
+<td>the class attribute of the item, taken from the itemtag_class, if present, or defaulted to "archive-list-item". If this is the current archive item, the "current_archive_class" value is added.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_attributes</td>
+<td>all of the item's attributes; the "item_id", "item_class" and any additional attributes from the "itemtag_attributes" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_selected</td>
+<td>set to "selected=selected" for the current item, else empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_label</td>
+<td>the text label of the item, taken from the itemtag_label, if present, or defaulted to the current_label.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scaled_count</td>
+<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_size</td>
+<td>the numeric portion of the CSS "font-size" attribute</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_id</td>
+<td>the id attribute of the item's link, taken from the mla_link_id, if present, or defaulted to empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_target</td>
+<td>the target attribute of the item's link, taken from the mla_target, if present, or defaulted to empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_class</td>
+<td>the class attribute of the item's link, taken from the mla_link_class, if present, or defaulted to empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_rollover</td>
+<td>the title attribute of the item's link, taken from the mla_rollover_text, if present, or defaulted to empty.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_style</td>
+<td>the CSS "style" attribute, drawn from the font_size and unit parameters or the mla_link_style parameter</td>
+</tr>
+<tr>
+<tr>
+<td class="mla-doc-table-label">item_link_attributes</td>
+<td>all of the link's attributes; the "item_link_id", "item_link_class" and any additional attributes from the "link_attributes" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">item_link_text</td>
+<td>the text value of the link, taken from the link_text, if present, or defaulted to the current_label.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thelink</td>
+<td>the item's full link value, selected by the link parameter (current, view, span, none).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink</td>
+<td>the link back to the current page with the value of the current item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">viewlink</td>
+<td>the link to the item's archive page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_url</td>
+<td>the URL portion of thelink, if any. Empty for the span and none settings.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink_url</td>
+<td>the URL portion of currentlink.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">viewlink_url</td>
+<td>the URL portion of viewlink.</td>
+</tr>
+</table>
+<p><a name="archive_list_examples"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Archive List Examples</h4>
+<p>
+The MLA Archive List shortcode is very flexible and has many parameters and features. However, you can accomplish many application goals with simple shortcodes and just a few parameters. For example, here is a shortcode that will generate a dropdown control with an option to select Media Library items uploaded in a given year:
+<br />&nbsp;<br />
+<code>[mla_archive_list]</code>
+<br />&nbsp;<br />
+Pretty simple. Adding a couple of parameters gives you an archive with year and month values and a default option for the initial display:
+<br />&nbsp;<br />
+<code>[mla_archive_list archive_type=monthly option_all_label="Select a Year and Month"]</code>
+<br />&nbsp;<br />
+The default source date for archive values is the "Uploaded on" date (post_date); you can easily change this to a custom field. For example, if you have created a "CreateDate" custom field by mapping the <code>exif:DateTimeOriginal</code>, <code>iptc:DateCreated</code> and/or <code>xmp:CreateDate</code> values you can build the archive from it:
+<br />&nbsp;<br />
+<code>[mla_archive_list archive_type=monthly archive_source=custom archive_key=CreateDate option_all_label="Select a Year and Month"]</code>
+<br />&nbsp;<br />
+The default output is a dropdown control you can add to an HTML "search form". You can change this to an unordered list where each list item is a hyperlink to the corresponding value:
+<br />&nbsp;<br />
+<code>[mla_archive_list archive_type=monthly mla_output=ulist archive_limit=10 show_count=true]</code>
+<br />&nbsp;<br />
+You can change this to an ordered list where each list item is a numbered hyperlink to the corresponding value:
+<br />&nbsp;<br />
+<code>[mla_archive_list archive_type=monthly mla_output=olist archive_limit=10 show_count=true]</code>
+<br />&nbsp;<br />
+The above examples also limit the display to the ten most recent values and adds a count of the number of items selected by each value to the display.
+</p>
+<p><a name="archive_list_gallery_examples"></a></p>
+<h4>Archive List and MLA Gallery combinations</h4>
+<p>
+The mla Archive List shortcode is designed to work with the <code>[mla_gallery]</code> shortcode to display galleries filtered by a date value. To link the archive list to the gallery simply add <code>mla_archive_parameter=mla_archive_current </code> to your <code>[mla_gallery]</code> shortcode. If you want to display an empty gallery until a value is present, add the ",empty" suffix. Here is a simple example combining an archive search form with a gallery display:
+<br />&nbsp;<br />
+<code>
+&lt;h3&gt;Archive Search Form&lt;/h3&gt;<br />
+&lt;form id="archive-search-form" action="." method="post"&gt;<br />
+[mla_archive_list archive_type=monthly option_all_label="Select Uploaded on date"]<br />
+&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;<br />
+&lt;/form&gt;<br />
+&lt;h3&gt;Gallery&lt;/h3&gt;<br />
+[mla_gallery post_parent=all <strong>mla_archive_parameter=mla_archive_current,empty</strong> ]
+</code>
+<br />&nbsp;<br />
+The above example displays an empty gallery when the page is first loaded or when the "Select Uploaded on date" option is selected. If you want to start with all of the image items in the Media Library, remove the ",empty" suffix from the mla_archive_parameter value.
+
+</p>
+<h4>Filtering the MLA Gallery directly</h4>
+<p>You can use the <code>[mla_gallery]</code> parameters by themselves to filter a gallery display by date values. This is particularly useful when you want to filter based on a date held in a custom field, which the core WordPress date parameters and date query do not support. For example, if you have a custom field named "Publication Date" and want to display what was published in 2020 you can code something like:
+<br />&nbsp;<br />
+<code>[mla_gallery post_parent=all mla_archive_parameter=mla_archive_current mla_archive_current="custom:Publication Date,Y(2020)"]
+</code>
+<br />&nbsp;<br />
+Note the use of <code>post_parent=all</code>  to overide the default display of items attached to the current post/page. You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items published in the current month. Code something like:
+<br />&nbsp;<br />
+<code>[mla_gallery post_parent=all mla_archive_parameter=mla_archive_current mla_archive_current="custom:Publication Date,M({+current_datetime,date( 'Ym' )+})"]
+</code>
+<br />&nbsp;<br />
+By adjusting the format code you can specify any of the four archive types: daily 'Ymd', weekly 'YW', monthly 'Ym', yearly 'Y'.
+</p>
+<h4>Filtered Archive List and MLA Gallery combinations</h4>
+<p>
+As described in the "Archive List Data Selection Parameters" section above you can filter the archive list to show the dates present in a subset of your Media Library items. For example, here is a taxonomy term-specific variation on the archive search form:
+<br />&nbsp;<br />
+<code>
+&lt;h3&gt;Archive Search Form for Att. Category ABC&lt;/h3&gt;<br />
+&lt;form id="archive-search-form" action="." method="post"&gt;<br />
+[mla_archive_list <strong>attachment_category=abc</strong> archive_type=monthly option_all_label="Select Uploaded on date"]<br />
+&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;<br />
+&lt;/form&gt;<br />
+&lt;h3&gt;Gallery for Att. Category ABC&lt;/h3&gt;<br />
+[mla_gallery <strong>attachment_category=abc</strong> mla_archive_parameter=mla_archive_current]
+</code>
+<br />&nbsp;<br />
+This example will initially show all items assigned to <code>attachment_category=abc</code> and the dropdown control will show only those dates that have one or more items assigned to the term. Selecting an archive value will combine the term filter and the date filter for the gallery display.
+</p>
+<h4>Combining an Archive List with other criteria</h4>
+<p>
+Finally, here is an example that shows how you can combine <code>[mla_archive_list]</code> with the other mla elements to create a powerful multi-criteria search application.  The example uses several shortcodes and features provided by the <a title="Find the UI Elements Example" target="_blank" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+UI+Elements+Example%22" class="mla-doc-bold-link">MLA UI Elements Example</a> plugin.
+</p>
+<p>
+In this example the <code>attachment_category={+template:({+request:tax_input.attachment_category,array+})+}</code> parameter added to the <code>[mla_archive_list]</code> shortcode filters the archive list by whatever taxonomy term is selected in the <code>[mla_term_list]</code> shortcode:
+<br />&nbsp;<br />
+<code>
+&lt;form id="mla-text-form" action="." method="post" class="row"&gt;<br />
+&lt;strong&gt;Att. Categories&lt;/strong&gt;<br />
+[mla_term_list taxonomy=attachment_category post_mime_type=image number=15 mla_output=dropdown mla_option_value="{+slug+}" use_filters=true show_count=true pad_counts=false option_all_text="Select Att. Category"]<br />
+<br />
+&lt;strong&gt;Archive Search&lt;/strong&gt;<br />
+[mla_archive_list mla_archive_parameter=multi attachment_category={+template:({+request:tax_input.attachment_category,array+})+} archive_type=weekly archive_source=custom archive_key=CreateDate option_all_label="Select Create Date"]<br />
+<br />
+&lt;strong&gt;Keyword Search&lt;/strong&gt;<br />
+[muie_keyword_search mla_search_connector='OR']<br />
+<br />
+Items per page: [muie_per_page numberposts=3]<br />
+<br />
+&lt;/p&gt;<br />
+&lt;input id="text-form-submit" name="text_form_submit" type="submit" value="Filter"&gt;<br />
+&lt;/p&gt;<br />
+&lt;/form&gt;<br />
+<br />
+&lt;h3&gt;Gallery&lt;/h3&gt;<br />
+[mla_gallery post_parent=all orderby=date posts_per_page={+template:{+request:muie_per_page+}|3+} add_filters_to=any tax_include_children=false mla_archive_parameter=multi mla_output="paginate_links,prev_next"]<br />
+<br />
+[mla_gallery post_parent=all orderby=date posts_per_page={+template:{+request:muie_per_page+}|3+} add_filters_to=any tax_include_children=false mla_archive_parameter=multi mla_nolink_text="Enter a term above to see a gallery of items that match."]
+</code>
+<br />&nbsp;<br />
+In the above example the <code>mla_archive_parameter=multi</code> parameter gives a unique name for the current item value, for applications with multiple archive displays on one post/page. The <code>tax_include_children=false</code> parameter makes the gallery display with the counts shown in the taxonomy term list. The example can be adapted to a variety of application scenarios. 
+</p>
+<p><a name="archive_list_hooks"></a></p>
+<h4>MLA Archive List Filters (Hooks)</h4>
+<p>
+The <code>[mla_archive_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Archive List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Archive+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Archive List Hooks Example</a>. To run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Archive List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Archive List Hooks Example" plugin.</li>
+<li>Create a new <code>[mla_archive_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output. Make sure the shortcode uses the "flat" output format.</li>
+<li>View the post or page on which the modified shortcode appears to see a list with a range of colors applied to the values.</li>
+</ol>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts the hook. There are hooks for the shortcode attributes and arguments, and for the database query used to compile list items. For style and markup templates, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_raw_attributes</td>
+<td class="mla-doc-hook-definition">called at the beginning of the list, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_attributes,<br />mla_archive_list_arguments</td>
+<td class="mla-doc-hook-definition">called at the beginning of the list generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_archive_values_query_arguments</td>
+<td class="mla-doc-hook-definition">called just before building the SQL query for the <code>$wpdb->get_results()</code> call that selects list values, with query parameters before or after they are combined with defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_archive_values_query</td>
+<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_archive_values_query_results</td>
+<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results()</code> call, so you can inspect/record or modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_scale</td>
+<td class="mla-doc-hook-definition">called as the scaled_count (size) of each item is calculated, so you can modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">use_mla_archive_list_style</td>
+<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the list output.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_style_values,<br /> mla_archive_list_style_template,<br />mla_archive_list_style_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_open_values,<br />mla_archive_list_open_template,<br />mla_archive_list_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "flat,div", "ulist", "olist" or "dropdown" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_item_values,<br />mla_archive_list_item_template,<br />mla_archive_list_item_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "ulist", "olist" or "dropdown" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_archive_list_close_values,<br />mla_archive_list_close_template,<br />mla_archive_list_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "flat,div", "ulist", "olist" or "dropdown" list.</td>
+</tr>
+</table>
+<p><a name="mla_tag_cloud"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>MLA Tag Cloud Shortcode</h3>
+<p>
+The <code>[mla_tag_cloud]</code> shortcode displays a list of taxonomy terms in what is called a 'tag cloud', where the size of each term is determined by how many times that particular term has been assigned to Media Library items (attachments). The cloud works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories) MLA Tag Cloud provides many enhancements to the basic "cloud" display. These include:
+</p>
+<ul class="mla_settings">
+<li>Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.</li>
+<li>Several display formats, including "flat", "list" and "grid" (modeled after the <code>[mla_gallery]</code> display).</li>
+<li>Complete support for paginated clouds; display hundreds or thousands of terms in manageable groups.</li>
+<li>Control over the styles, markup and content of each cloud using Style and Markup Templates. You can customize the "list" and "grid" formats to suit any need.</li>
+<li>Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
+<li>Display Style and Display Content parameters for easy customization of the cloud display and the destination of the links behind each term.
+</li>
+<li>A comprehensive set of filters gives you access to each step of the cloud generation process from PHP code in your theme or other plugins.
+</li>
+</ul>
+<p>
+The <code>[mla_tag_cloud]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+</p>
+<p>
+One mandatory data selection parameter specifies which taxonomy or taxonomies the terms are taken from:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>The taxonomy or taxonomies to retrieve terms from; default "post_tag", which you will probably want to change.</td>
+</tr>
+</table>
+<p>
+Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_tag_cloud()</code> function directly from your theme or plugin PHP code) as an array.
+</p>
+<p>
+Many of the <code>[mla_tag_cloud]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> shortcode, so the learning curve is short. Differences and parameters unique to the cloud are given in the sections below.
+</p>
+<p><a name="tag_cloud_output"></a></p>
+<h4>Output Formats</h4>
+<p>
+The traditional tag cloud output is a "heat map" of term names where larger names are associated with more attachments than smaller names. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">flat<br />flat,div</td>
+<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink. <strong>"flat" is the default output format value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">list<br />list,div</td>
+<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist<br />ulist,div</td>
+<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">olist<br />olist,div</td>
+<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dlist<br />dlist,div</td>
+<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">grid</td>
+<td>Modeled on the galleries produced by <code>[mla_gallery]</code>; a rectangular display with rows and columns. The tag parameters listed above, the "columns" parameter and the Display Style parameters customize the display.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">array</td>
+<td>Returns a PHP array of cloud hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_tag_cloud()</code> function is called directly from your theme or plugin PHP code.</td>
+</tr>
+</table>
+<p>
+Adding the "<strong>,div</strong>" qualifier to the flat, ulist or olist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. The default style template for this format displays the list in a scrollable window. It also changes the color of the current item.
+</p>
+<p>
+The "flat,div", list and grid formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. The <code>[mla_tag_cloud]</code> shortcode also supports pagination with "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links" formats. These are essentially the same as those for the <code>[mla_gallery]</code> shortcode.
+</p>
+<p>
+The <code>[mla_tag_cloud]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode. You can find details for pagination format parameters in the <a href="#tag_cloud_pagination">Pagination Parameters</a> section below.
+</p>
+<p>
+A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_tag_cloud()</code> function is called directly from your theme or plugin PHP code.
+</p>
+<p><a name="tag_cloud_link"></a></p>
+<h4>Item Link</h4>
+<p>
+The Link parameter (<code>link=</code>) specifies the target and type of link from the tag cloud term/item to the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current</td>
+<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the term_id of the selected term.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">view</td>
+<td>Link to the term's "archive page"; <strong>this is the default value</strong>. Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">edit</td>
+<td>Link to the term's "edit tag/category" admin screen. This is only useful if the user is logged in and has the appropriate role or capabilities for accessing the edit screen.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
+<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the pagination example later in this section for more details.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">span</td>
+<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
+</tr>
+</table>
+<p>
+Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the tag cloud to select a term and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The pagination example later in this section uses this technique. 
+</p>
+<p><a name="tag_cloud_display_templates"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Display Style and Markup Templates</h4>
+<p>
+Two parameters provide a way to apply custom style and markup templates to your <code>[mla_tag_cloud]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "flat,div", list and grid cloud formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>replaces the default style template for an <code>[mla_tag_cloud]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>replaces the default markup template for an <code>[mla_tag_cloud]</code> shortcode</td>
+</tr>
+</table>
+<p><a name="tag_cloud_display_content"></a></p>
+<h4>Display Style and Content</h4>
+<p>
+Each item in the tag cloud comprises a term name of varying size, a hyperlink surrounding the term name and a "title" attribute (Rollover Text) displayed when the cursor hovers over the term name hyperlink. The following parameters customize item content and markup:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">show_count</td>
+<td>Show how many items are assigned to the item. Values "true" or <strong>"false" (default)</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>Identifies the current/selected item in the cloud. An integer value will be interpreted as a term id and anything else as a term slug. It will be ignored if it does not match an item in the cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_parameter</td>
+<td>The name of the parameter containing the current item in the cloud; <strong>default "current_item"</strong>. You can change the name if you need multiple clouds on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>The class attribute for the current item in the cloud as determined by the "current_item" parameter (if specified); default "mla_current_item".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is one. The default is "%d item". If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one. The default is "%d items". If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>For the flat format, the text/space between tags. Default '\n' (whitespace)</td>
+</tr>
+</table>
+<p>
+The Item parameters are an easy way to customize the content and markup for each cloud item. For the list and grid formats you can also use the <a href="#tag_cloud_display_content">Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility.
+</p>
+<p>
+The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each cloud element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the cloud element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
+</p>
+<p><a name="tag_cloud_cloud"></a></p>
+<h4>Cloud Parameters</h4>
+<p>
+Each item in the tag cloud comprises a term name of varying size, a hyperlink surrounding the term name and a "title" attribute (Rollover Text) displayed when the cursor hovers over the term name hyperlink. The following parameters customize the size of each term name:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>The text size (default 8) of the tag with the smallest count value (units given by unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>The text size (default 22) of the tag with the highest count value (units given by the unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">default_size</td>
+<td>The text size (default 12) of the special links (all tags, no tags, any tags) (units given by the unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. pt (the default), px, em, %.</td>
+</tr>
+</table>
+<p><a name="tag_cloud_grid"></a></p>
+<h4>Grid Parameters</h4>
+<p>
+Four parameters provide control over the placement, size and spacing of terms in the "grid" format without requiring the use of custom Style templates.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">columns</td>
+<td>specifies the number of columns. The grid will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_float</td>
+<td>specifies the CSS float attribute of the ".tag-cloud-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_margin</td>
+<td>specifies the CSS margin property of the ".tag-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_itemwidth</td>
+<td>specifies the CSS width attribute of the ".tag-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
+<br />&nbsp;<br />
+Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
+<br />&nbsp;<br />
+For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
+</tr>
+</table>
+<p>
+The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can also code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the grid.
+</p>
+<p><a name="tag_cloud_special_items"></a></p>
+<h4>Special Items</h4>
+<p>
+Six parameters provide an easy way to add and control the contents of special list items for selecting special groups of values. You can add links for selecting all items, items that have no values for the custom field and/or items that have one or more values for the custom field. The default values for these links are compatible with the simple taxonomy parameters and tax_query parameters of the [mla_gallery] shortcode.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">option_all_text</td>
+<td>Text to display for showing an 'all terms' link. Default will not show a link to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_text</td>
+<td>Text to display for showing an 'no terms assigned' link. Default will not show a link to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_value</td>
+<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_text</td>
+<td>Text to display for showing an 'any terms assigned' link. Default will not show a link to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_value</td>
+<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_nolink_text</td>
+<td>replaces the empty string displayed when there are no list items or no pagination link. You can use any of the Cloud-specific substitution parameters (except the flst format), "request:" parameters or "query:" parameters. You can also use a Content Template to compose a more complex value.</td>
+</tr>
+</table>
+<p>
+The six "option_..." parameters provide an easy way to add special links to the cloud generated by the shortcode. You can add links for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these links are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
+</p>
+<p><a name="tag_cloud_display_tags"></a></p>
+<h4>Display Tags</h4>
+<p>
+Three parameters provide control over the XHTML tags used to enclose each part of the tag cloud items. These parameters are only used in the "list" and "grid" output formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>for "list" format, the name of the XHTML tag used to begin the list; the default is "ul". When an explicit "captiontag" parameter is added to "list" format, the default is "dl". For "grid" format, the name of the XHTML tag used to enclose each item in the cloud; the default is "dl".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termtag</td>
+<td>the name of the XHTML tag used to enclose each term in the cloud. For "list" format, the default is "li"; for "grid" format or when an explicit "captiontag" parameter is added to "list" format, the default is "dt".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>the name of the XHTML tag used to enclose each caption. For "grid" format, the default is "dd". To add a caption in "list" format you must enter an explicit "captiontag=dd" parameter to the shortcode.</td>
+</tr>
+</table>
+<p>
+These parameters give you some control over the markup used for the cloud and its elements. For more complex applications you can use style and markup templates to gain complete control over the cloud display.
+</p>
+<p><a name="tag_cloud_hyperlinks"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Hyperlink Parameters</h4>
+<p>
+Ten parameters provide an easy way to control the contents of tag cloud items without requiring the use of custom Markup templates.  
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_link_attributes</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter. Also, the "href", "src" and "srcset" attributes are not allowed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_target</td>
+<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_class</td>
+<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_style</td>
+<td>replaces the CSS styles for the hyperlink. The default style is <code>font-size: [+font_size+][+unit+]</code>. You can access the dfefault style as <code>[+link_stlye+]</code> in this parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rollover_text</td>
+<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the term name</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_href</td>
+<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_text</td>
+<td>replaces the term name text displayed for each item</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_caption</td>
+<td>replaces the caption text displayed beneath each item. The caption appears for "grid" items and for "list" items when the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_value</td>
+<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
+</tr>
+</table>
+<p>
+All but the "mla_target" parameter support the <a href="#tag_cloud_markup_parameters">Markup</a>, <a href="#tag_cloud_item_parameters">Item-specific</a>, <a href="#tag_cloud_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p>
+The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
+</p>
+<p>
+The "mla_link_href" parameter is a great way to change the destination your cloud item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
+</p>
+<p>
+The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
+</p>
+<p>
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p><a name="tag_cloud_other"></a></p>
+<h4>Other Parameters</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_archive_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve tag cloud items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the cloud. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
+</p>
+ <p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_tag_cloud" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_tag_cloud]" delimiter to an earlier shortcode.
+</p>
+<p><a name="tag_cloud_data_selection"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Data Selection Parameters</h4>
+<p>
+The data selection parameters specify which taxonomy (or taxonomies) the terms are taken from, which terms are returned for the cloud and the order in which the terms are returned:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>The taxonomy or taxonomies to retrieve terms from; default "post_tag", which you will probably want to change.<br />
+&nbsp;<br />
+Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_tag_cloud()</code> function directly from your theme or plugin PHP code) as an array.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_mime_type</td>
+<td>The MIME type(s) of the items to include in the term-specific counts. The default is "all", which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ids</td>
+<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific cloud. Only those terms assigned to the attachment(s) in the list will be included. You can have one or more IDs and you can include assigned terms from one or more taxonomies. Do not use the "include" parameter if you use the "ids" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">include</td>
+<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to include. Only the terms in this list that are used in the taxonomies you specified will be retrieved.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">exclude</td>
+<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to exclude from the returned values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">parent</td>
+<td>Get direct children of this term id (only terms whose explicit parent is this value). If 0 is passed, only top-level terms are returned.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_type</td>
+<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in the term-specific counts. The default is "attachment". You can override the default if you want to count other types for which the taxonomy is registered, e.g., "post" to count Posts in the "category" and "post_tag" taxonomies. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_status</td>
+<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in the term-specific counts. The default is "inherit", which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts in the "category" and "post_tag" taxonomies. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">minimum</td>
+<td>The minimum number of attachments that must be associated with the term for the term to be included. For example, "minimum=1" will omit "empty" terms.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">number</td>
+<td>The maximum number of "most popular" terms to return. The default, zero, returns them all. Terms are sorted by "count DESC, id ASC" to apply this constraint.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_count</td>
+<td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
+&nbsp;<br />
+You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
+&nbsp;<br />
+You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the cloud by post-specific values.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">pad_counts</td>
+<td>True to include the count of all children in their parents' count. The default, "false", does not include children in their parents' count.<br />
+&nbsp;<br />
+The "pad_counts" parameter is only applied to the first (or only) taxonomy you specify, and that taxonomy must be hierarchical to see any difference in the counts.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">orderby</td>
+<td>The final sort order of the retrieved terms. Can be one or more of "name" (the default), "id" (term_id), "slug", "count", "random", or "none". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular terms for the cloud).<br />
+&nbsp;<br />
+If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;<br />
+Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">order</td>
+<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_orderby</td>
+<td>The default, "false", applies the orderby and order parameters to the final list/cloud. If you have a large number of terms and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular terms) and the final sorting process. If you do that, the sort order of the cloud will be indeterminite.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">preserve_case</td>
+<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">limit</td>
+<td>The number of terms to return. This parameter is used for pagination; it is applied <strong>after</strong> and separate from the "number" parameter above.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>The number of terms to skip before returning the results. This parameter is used for pagination.</td>
+</tr>
+</table>
+<p>
+You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
+</p>
+<p>
+The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
+</p>
+<p><a name="tag_cloud_pagination"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Pagination Parameters</h4>
+<p>
+If you have a large number of terms in your cloud taxonomy you may want to paginate the cloud display, i.e., divide the cloud into two or more pages of a reasonable size. Pagination support for <code>[mla_tag_cloud]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section.
+</p>
+<p>
+The <code>[mla_tag_cloud]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a cloud or among cloud "pages". For example, if you have many terms in your Att. Category or Att. Tag taxonomies you can build a term-specific <code>[mla_gallery]</code> page with links to the previous/next term in the taxonomy (a complete pagination example is included below). You can also build a page that shows a large taxonomy in groups, or "cloud pages", of ten terms with links to the previous/next ten terms or links to all of the cloud pages of terms in the taxonomy.
+</p>
+<p>
+<strong>IMPORTANT:</strong> Pagination controls are an alternative output, not an additional output. One shortcode can generate either a cloud display or pagination controls. <strong>You will need two or more shortcodes to get both the cloud and the controls</strong>.
+</p>
+<p>
+The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For pagination output, you can choose from six values: 
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">next_link</td>
+<td>returns a link to the next cloud item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the cloud. If you omit the qualifier, an empty string is returned for the "next_link" from the last item. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_link</td>
+<td>returns a link to the current cloud item, based on the "term_id" parameter value. This gives you an easy way to provide a visual indication of where you are within the taxonomy. The "span" and  "none" link formats are often used with this mla_output type.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_link</td>
+<td>returns a link to the previous cloud item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the beginning of the cloud. If you omit the qualifier, an empty string is returned for the "previous_link" from the first item. If you code the ",wrap" qualifier, "previous_link" from the gallery item will be to the last item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">next_page</td>
+<td>returns a link to the next "page" of cloud items, based on the "mla_cloud_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,last</strong>" qualifiers determine what happens at the end of the taxonomy. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the taxonomy. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_page</td>
+<td>returns a link to the previous "page" of cloud items, based on the "mla_cloud_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,first</strong>" qualifiers determine what happens at the beginning of the taxonomy. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">paginate_links</td>
+<td>returns a link to cloud items at the start and end of the list and to pages around the current "cloud page" ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ), based on the "mla_cloud_current" parameter value. The optional "<strong>,show_all</strong>" qualifier will show all of the cloud pages instead of a short list around the current page. The optional "<strong>,prev_next</strong>" qualifier will include the "&laquo; Previous" and "Next &raquo;" portions of the link list.</td>
+</tr>
+</table>
+<p><a name="tag_cloud_page_selection"></a></p>
+<h4>Page selection parameters</h4>
+<p>
+ The <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types divide the cloud into pages. Use the following parameters to specify the size of each cloud page and the current cloud page:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">limit</td>
+<td>the maximum number of terms to display in one cloud "page". Think of this as a "terms per page" value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>the number of terms to skip over before starting the current cloud page. This parameter is usually derived automatically from the more useful "mla_cloud_current" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_page_parameter</td>
+<td>the name of the parameter containing the current page number; default "mla_cloud_current". You can change the name if you need multiple paginated clouds on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_cloud_current</td>
+<td>the current cloud page number. The name of this parameter can be changed to support multiple paginated clouds on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_id</td>
+<td>the id of the current term within the cloud. This parameter is used with the "previous_link", "current_link" and "next_link" output types. You <strong>must</strong> supply a term_id value when using these output types.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_total</td>
+<td>the highest page number you want to display; defaults to (total items / posts_per_page) if not specified, which is usually what you want. </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_rows</td>
+<td>If you have some other way of computing the total number of items you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a gallery that you know has fifty items you can code <code>[mla_gallery mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or display content parameters you need.</td>
+</tr>
+</table>
+<h4>Display Content parameters for paged output types</h4>
+<p>
+The link(s) generated for prev_page, next_page and paginate_links controls can use the following Display Content parameters to control each link element:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
+</tr>
+</table>
+<h4>Display Content parameters for the <code>paginate_links</code> output type</h4>
+<p>
+The "paginate_links" output type generates a list of hyperlinks to each page in the gallery display. There are three additional parameters unique to this output type.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_end_size</td>
+<td>How many numbers (default 1) appear on either the start and the end list edges</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_mid_size</td>
+<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_type</td>
+<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
+</tr>
+</table>
+<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
+</p>
+<h4>Markup Substitution Parameters for <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types</h4>
+<p>
+You can use any of the Cloud-specific substitution parameters in your next/previous page links (since the links are at the "cloud page" level, <strong>the attachment-specific substitution parameters are not available</strong>). The following additional substitution parameters are available for the <code>next_page</code> and <code>previous_page</code> output types:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current_page</td>
+<td>the number of the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page</td>
+<td>the number of the new (previous or next) page; zero for paginate_links</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page</td>
+<td>the number of the last/highest/maximum page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page</td>
+<td>the number of items on each gallery page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of items in the gallery</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_offset</td>
+<td>the number of items skipped before the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_offset</td>
+<td>the number of items skipped before the new page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_page_text</td>
+<td>'mla_custom_list_current="[+current_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page_text</td>
+<td>'mla_custom_list_current="[+new_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page_text</td>
+<td>'mla_paginate_total="[+last_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page_text</td>
+<td>'posts_per_page="[+posts_per_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scheme</td>
+<td>the HTTP protocol used to access the page; usually "http://" but might be "https://"</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">http_host</td>
+<td>contents of the <em>Host:</em> header of the current request; usually a domain name such as "mysite.com" or an IP address</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query_string</td>
+<td>the query arguments portion of the new URL, including the questions mark that precedes them.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">request_uri</td>
+<td>the URI given to access the page, e.g., "wordpress/2013/06/sample-post" or "wordpress/tag-gallery-page?attachment_tag=sample". MLA manages pagination by adding the "mla_custom_list_current" query parameter to the URI value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_url</td>
+<td>concatenation of scheme + http_host + request_uri</td>
+</tr>
+</table>
+<p><a name="tag_cloud_substitution"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Substitution Parameters</h4>
+<p>
+Substitution parameters are a powerful way to add general and attachment-specific values to the gallery display. For example, if you code "<code>mla_link_href="{+page_url+}?current_id={+term_id+}&amp;mla_cloud_current={+request:mla_cloud_current+}"</code>, the hyperlinks behind each cloud term will contain the page URL and the taxonomy term ID. There are many parameter names like `page_url` and `term_id` divided in several categories:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">Cloud-specific</td>
+<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Style</td>
+<td>values that are known when the cloud-specific CSS inline styles are composed just before cloud output begins</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Markup</td>
+<td>values that are known at the beginning of cloud output processing and remain the same for the entire cloud</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#tag_cloud_item_parameters">Item-specific</a></td>
+<td  style="vertical-align: top">values that change for each term/item in the cloud, such as Name and Description</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
+<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the cloud. The other prefixes are attachment-specific and have no meaning in a cloud</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
+<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
+</tr>
+</table>
+<p>
+The following paragraphs go into more detail about each category and the parameter names within them.
+</p>
+<p>
+To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
+</p>
+<p>
+<strong>Cloud-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the cloud based on information about the post/page on which the cloud appears. The cloud-specific substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">site_url</td>
+<td>absolute URL to the site directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_url</td>
+<td>absolute URL to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_dir</td>
+<td>absolute (full) path to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">instance</td>
+<td>starts at '1', incremented for each additional shortcode in the post/page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">selector</td>
+<td>"mla_tag_cloud-{$instance}", e.g., mla_tag_cloud-1</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_ID,<br />id</td>
+<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_author</td>
+<td>the <code>post_author</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_date</td>
+<td>the <code>post_date</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_content</td>
+<td>the <code>post_content</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_title</td>
+<td>the <code>post_title</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_excerpt</td>
+<td>the <code>post_excerpt</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_status</td>
+<td>the <code>post_status</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_name</td>
+<td>the <code>post_name</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_modified</td>
+<td>the <code>post_modified</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_guid</td>
+<td>the <code>post_guid</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_type</td>
+<td>the <code>post_type</code> value of the post/page in which the cloud appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_url</td>
+<td>absolute URL to the page or post on which the cloud appears, if any, with trailing slash</td>
+</tr>
+</table>
+<p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
+</p>
+<p>
+Style and Markup templates give you great flexibility for the content and format of each [mla_tag_cloud] when you use the "list" and "grid" output formats. You can define as many templates as you need. 
+</p>
+<p>
+Style templates provide cloud-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the cloud, 2) the beginning of each row ("grid" format), 3) each cloud item, 4) the end of each row ("grid" format) and 5) the end of the cloud. The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
+</p>
+<p>
+For the "grid" output format, all of the Markup template sections are used. For the "list" output format, only the "Open", "Item" and "Close" sections are used. There are two default templates for the "list" format; "tag-cloud-ul" and "tag-cloud-dl". As the names imply, the "tag-cloud-dl" default is used when the "captiontag" parameter is present in the shortcode. If you name a custom Markup template in your shortcode, it will be used whether the "captiontag" is present or not.
+</p>
+<p><a name="tag_cloud_variable_parameters"></a></p>
+<p>
+The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">request</td>
+<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query</td>
+<td>The parameters defined in the <code>[mla_tag_cloud]</code> shortcode. For example, if your shortcode is <code>[mla_tag_cloud taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">template</td>
+<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
+</tr>
+</table>
+<p>
+Tag cloud substitution parameters for the <strong>Style template</strong> are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_output</td>
+<td>shortcode parameter, default = 'flat'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>shortcode parameter, default = 'tag-cloud'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>shortcode parameter, default = 'tag-cloud-ul', or 'tag-cloud-dl' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>the slug of the taxonomy on which the cloud is based. Multiple taxonomy slugs are joined with a dash to form a single value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>the current/selected item in the cloud, as entered in the shortcode parameters.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>The class attribute for the current item in the cloud as determined by the "current_item" parameter (if specified); default "mla_current_item".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>shortcode parameter, default = 'ul', or 'dl' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termtag</td>
+<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">columns</td>
+<td>shortcode parameter, default = '3'; only meaningful for the "grid" output format.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemwidth</td>
+<td>shortcode parameter, default is calculated by dividing 100% by the number of columns and subtracting twice the margin value, e.g., 30.3% for three columns and a margin value of 1.5%. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">margin</td>
+<td>shortcode parameter, default = '1.5%'. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">float</td>
+<td>'right' if current locale is RTL, 'left' if not</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of terms retrieved for the cloud</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_count</td>
+<td>the smallest number of attachments associated with any term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_count</td>
+<td>the largest number of attachments associated with any term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_scaled_count</td>
+<td>the smallest scaled count associated with any term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_scaled_count</td>
+<td>the largest scaled count associated with any term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">spread</td>
+<td>max_scaled_count - min_scaled_count</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>the text size of the tag with the smallest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>the text size of the tag with the largest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_spread</td>
+<td>largest - smallest</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_step</td>
+<td>font_spread / spread</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>The text/space between tags</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>Rollover Text when the count value is one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td> Rollover Text when the count value is zero or more than one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link</td>
+<td>the destination name of the item hyperlink, default 'view'</td>
+</tr>
+</table>
+<p><a name="tag_cloud_markup_parameters"></a></p>
+<p>
+Tag cloud substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>cloud-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates. There are no additional substitution parameters defined at the start of markup processing, but there are <a href="#mla_tag_cloud_hooks">MLA Tag Cloud Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
+</p>
+<p><a name="tag_cloud_item_parameters"></a></p>
+<p>
+Tag cloud <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" section of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">index</td>
+<td>starts at '1', incremented for each item in the cloud</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_in_row</td>
+<td>for the "grid" output format, set to "last_in_row" for the last item in each full cloud row, and to an empty string for all other items in the row. If the cloud ends with a partial row, the last_in_row parameter is not set.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">key</td>
+<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_terms_query_results()</code> filter has altered the array keys.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_id</td>
+<td>the term id</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">name</td>
+<td>the term display name</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">slug</td>
+<td>the term slug</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_group</td>
+<td>the term group</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_taxonomy_id</td>
+<td>the term-taxonomy id</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>the primary taxonomy for this term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">description</td>
+<td>the term description, if any</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">parent</td>
+<td>the direct parent of the term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">count</td>
+<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_count</td>
+<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scaled_count</td>
+<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_size</td>
+<td>the numeric portion of the CSS "font-size" attribute</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_url</td>
+<td>the URL portion of "thelink" (below). Derived from editlink_url, termlink_url or mla_link_href.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink_url</td>
+<td>URL of the current post/page plus a "current_item=term_id" query argument</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">editlink_url</td>
+<td>URL of the term's "edit category/tag" page</td></tr>
+<tr>
+<td class="mla-doc-table-label">termlink_url</td>
+<td>URL of the term's archive page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">caption</td>
+<td>if captiontag is not empty, contains term description or the mla_caption value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_attributes</td>
+<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>set to "mla_current_item" for the current item in the cloud as determined by the "current_item" parameter, and to an empty string for all other items in the cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">rollover_text</td>
+<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_style</td>
+<td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_text</td>
+<td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thevalue</td>
+<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thelink</td>
+<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink</td>
+<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">editlink</td>
+<td>full hyperlink to the term's "edit category/tag" page, including all the Display Content parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termlink</td>
+<td>full hyperlink to the term's archive page, including all the Display Content parameters</td>
+</tr>
+</table>
+<p><a name="tag_cloud_examples"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Tag Cloud Examples</h4>
+<p>
+This section takes you through several of the <code>[mla_tag_cloud]</code> features, step by step. Let's start with a very simple cloud showing all of the terms in the "Att. Category" taxonomy:
+</p>
+<p>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0]</code>
+</p>
+<p>
+The "number=0" parameter overrides the default maximum of 45 terms, showing all of the terms in the taxonomy. Let's paginate the cloud and limit the terms display to ten terms per "page":
+</p>
+<p>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10]<br />
+[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]</code>
+</p>
+<p>
+The "limit=10" parameter (on <strong>both</strong> shortcodes) limits the term display to ten terms. The second <code>[mla_tag_cloud]</code> shortcode, adding the 'mla_output="paginate_links,prev_next"' parameter, displays a line of pagination links below the cloud page. Coordination between the two shortcodes is automatic, using the "mla_cloud_current" parameter added to the URLs by the shortcode.
+</p>
+<p>Now we'll make the cloud a convenient way to control a term-specific <code>[mla_gallery]</code>. The next step uses the "mla_link_href" parameter to change the link destination of each cloud term, returning to the current page with the term id of the selected term. We also add the "mla_cloud_current" parameter to each of these new links, so the tag cloud page is retained when a term is selected:
+</p>
+<p>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
+[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]</code>
+</p>
+<p>
+The "&amp;amp;" before the "mla_cloud_current" parameter is required to get by the WordPress Visual Editor. The "{+request:mla_cloud_current+}" value copies the current page number from the URL ($_REQUEST array) and adds it to each term's link. If the current page number is absent (e.g., on the initial page load) the default value is 1. Now, let's use the "current_id={+term_id+}" information in the link to compose a term-specific <code>[mla_gallery]</code>: 
+</p>
+<p>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
+[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
+<br />&nbsp;<br />
+[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 size=icon link=file]</code>
+</p>
+<p>
+The most complicated part of the new shortcode is the "tax_query" parameter, which we're using to ensure that the gallery items displayed match the count displayed for each term in the tag cloud. The tag cloud count does not contain items associated with any "child terms", or sub-categories, of the cloud item. To match this count we must use the "include_children=false" and "field=id" parameters of the "tax_query".
+</p>
+<p>
+We can easily paginate the term-specific gallery by adding a second <code>[mla_gallery]</code> shortcode and a "posts_per_page" parameter to both shortcodes:
+</p>
+<p>
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
+[mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
+<br />&nbsp;<br />
+[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 posts_per_page=5 size=icon link=file]
+<br />&nbsp;<br />
+[mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" columns=5 posts_per_page=5 mla_output="paginate_links,prev_next"]</code>
+</p>
+<p>
+The pagination controls for the tag cloud and the gallery operate independently because by default they use different names for their respective "_current" page parameters. Our page now has a lot of functionality without requiring any WordPress templates or PHP code.
+</p>
+<p>
+For extra credit, let's add some more navigation options to the page. We'll build previous, current and next term links at the bottom of the page. These are enclosed in an HTML table so they all appear on one line of the page. Here is just the additional content; the table of three link navigation controls:
+</p>
+<p>
+<code>
+&lt;table width=99%&gt;&lt;tr&gt;<br />
+&lt;td width=33% style="text-align: left"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output="previous_link" smallest=12 largest=12 mla_link_href="{+page_url+}?current_id={+term_id+}" mla_link_text="Previous: {+name+}"]&lt;/td&gt;<br />&nbsp;<br />
+&lt;td width=33% style="text-align: center; font-weight: bold:"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output=current_link smallest=12 largest=12 mla_link_text="Current: {+name+}" link=span]&lt;/td&gt;<br />&nbsp;<br />
+&lt;td width=33% style="text-align: right"&gt;[mla_tag_cloud taxonomy=attachment_category number=0 term_id="{+request:current_id+}" mla_output="next_link" smallest=12 largest=12 mla_link_href="{+page_url+}?current_id={+term_id+}" mla_link_text="Next: {+name+}"]&lt;/td&gt;<br />
+&lt;/tr&gt;&lt;/table&gt;
+</code>
+</p>
+<p>
+The "smallest=12" and "largest=12" parameters make "font-size" the same for all of the term names regardless of how many items are associated with the term. The "mla_link_text" parameters add labels to each of the three navigation links. Finally, the "link=span" parameter in the middle ("mla_output=current_link") shortcode removes the hyperlink behind the term name, since it would just take you back to the page you're already on.
+</p>
+<p><a name="mla_tag_cloud_hooks"></a></p>
+<h4>MLA Tag Cloud Filters (Hooks)</h4>
+<p>
+The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Tag Cloud Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Tag+Cloud+Hooks+Example%22" class="mla-doc-bold-link">MLA Tag Cloud Hooks Example</a>. To run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Tag Cloud Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Tag Cloud Hooks Example" plugin.</li>
+<li>Create a new <code>[mla_tag_cloud]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color cloud"</code> parameter to activate the example output.</li>
+<li>View the post or page on which the modified shortcode appears to see a tag cloud with a range of colors applied to the terms.</li>
+</ol>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the cloud supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that cloud part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a cloud part. The current hooks are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_tag_cloud_raw_attributes</td>
+<td class="mla-doc-hook-definition">called at the beginning of the cloud, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_attributes,<br />mla_tag_cloud_arguments</td>
+<td class="mla-doc-hook-definition">called at the beginning of the cloud generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_query_attributes,<br />mla_get_terms_query_arguments</td>
+<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_clauses</td>
+<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_query_results</td>
+<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results</code> call, so you can inspect/record or modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_scale</td>
+<td class="mla-doc-hook-definition">called as the scaled_count (size) of each term is calculated, so you can modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">use_mla_tag_cloud_style</td>
+<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the tag cloud output.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_style_values,<br /> mla_tag_cloud_style_template,<br />mla_tag_cloud_style_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_open_values,<br />mla_tag_cloud_open_template,<br />mla_tag_cloud_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list" or "grid" cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_row_open_values,<br />mla_tag_cloud_row_open_template,<br />mla_tag_cloud_row_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template used in a "grid" cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_item_values,<br />mla_tag_cloud_item_template,<br />mla_tag_cloud_item_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list" or "grid" cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_row_close_values,<br />mla_tag_cloud_row_close_template,<br />mla_tag_cloud_row_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template used in a "grid" cloud.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_tag_cloud_close_values,<br />mla_tag_cloud_close_template,<br />mla_tag_cloud_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list" or "grid" cloud.</td>
+</tr>
+</table>
+</p>
+<p><a name="mla_term_list"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>MLA Term List Shortcode</h3>
+<p>
+The <code>[mla_term_list]</code> shortcode displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories). MLA Term List enhancements for lists and controls include:
+</p>
+<ul class="mla_settings">
+<li>Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.</li>
+<li>Several display formats, including "flat", "list", "dropdown" and "checklist".</li>
+<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" formats to suit any need.</li>
+<li>Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
+<li>Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each term.
+</li>
+<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.
+</li>
+</ul>
+<p>
+The <code>[mla_term_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+</p>
+<p>
+One mandatory data selection parameter specifies which taxonomy or taxonomies the terms are taken from:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>The taxonomy or taxonomies to retrieve terms from; default "post_tag", which you will probably want to change.</td>
+</tr>
+</table>
+<p>
+Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_term_list()</code> function directly from your theme or plugin PHP code) as an array.
+</p>
+<p>
+Many of the <code>[mla_term_list]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> shortcodes, so the learning curve is shorter. Differences and parameters unique to the list are given in the sections below.
+</p>
+<p><a name="term_list_output"></a></p>
+<h4>Output Formats</h4>
+<p>
+The default term list output is an unordered list of term names surrounded by hyperlinks. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">flat</td>
+<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">list</td>
+<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist</td>
+<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup. <strong>"ulist" is the default output format value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">olist</td>
+<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dlist</td>
+<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dropdown</td>
+<td>Returns an HTML "select" control with a sequence of HTML "option" tags.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">checklist</td>
+<td>Returns HTML "input", "type=checkbox" elements enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">checklist,div</td>
+<td>Adding the ",div" qualifier to the checklist output format will wrap the list in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item or limit the size of the display area and add scroll bars to a long list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">array</td>
+<td>Returns a PHP array of list hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.</td>
+</tr>
+</table>
+<p>
+The list, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own. 
+</p>
+<p>
+A separate parameter, <code>echo=true</code>, allows you to echo list output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code.
+</p>
+<p><a name="term_list_output_structure"></a></p>
+<h4>Output Structure</h4>
+<p>
+The <strong>"hierarchical"</strong> parameter determines the overall structure of the list:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">hierarchical=false</td>
+<td>display terms without regard to parent/child relationships.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">hierarchical=true</td>
+<td>display terms in a nested/indented structure where child terms are placed immediately after their parent. <strong>This is the default value.</strong> If you code multiple taxonomies in the same shortcode, each taxonomy will generate its own separate list or control.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">hierarchical=combine</td>
+<td>display terms from multiple taxnomies in a single nested/indented structure.</td>
+</tr>
+</table>
+<p>
+The hierarchical display is enhanced by a number of data selection parameters that let you select and display portions of the hierarchy, e.g., a single root/parent term and all of its children.
+</p>
+<p><a name="term_list_link"></a></p>
+<h4>Item Link</h4>
+<p>
+For the array, flat and list formats the Link parameter specifies the target and type of link from the list term/item to the item's archive page, edit page or other destination. You can also specify a non-hyperlink treatment for each item. These values only apply to the hyperlinks generated for the "array", "flat" and "list" output formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current</td>
+<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the term_id of the selected term. <strong>"current" is the default item link value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">view</td>
+<td>Link to the term's "archive page". Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">edit</td>
+<td>Link to the term's "edit tag/category" admin screen. This is only useful if the user is logged in and has the appropriate role or capabilities for accessing the edit screen.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
+<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the example later in this section for more details.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">span</td>
+<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
+</tr>
+</table>
+<p>
+Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the term list to select a term and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The example later in this section uses this technique. 
+</p>
+<p><a name="term_list_display_templates"></a></p>
+<h4>Display Style and Markup Templates</h4>
+<p>
+Two parameters provide a way to apply custom style and markup templates to your <code>[mla_term_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the list, dropdown, and checklist formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>replaces the default style template for an <code>[mla_term_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>replaces the default markup template for an <code>[mla_term_list]</code> shortcode</td>
+</tr>
+</table>
+<p><a name="term_list_display_content"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Display Style and Content</h4>
+<p>
+For the array, flat and list formats, each item in the list comprises a term name, a hyperlink surrounding the term name and a "title" attribute (Rollover Text) displayed when the cursor hovers over the term name hyperlink. For the dropdown and checklist formats, each item comprises a term name and a corresponding control value. The following parameters customize overall item content and markup:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">show_count</td>
+<td>Show how many items are assigned to the term. Values "true" or <strong>"false" (default)</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_parameter</td>
+<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>Identifies the current/selected item(s) in the list. An integer value will be interpreted as a term id and anything else as a term slug. It will be ignored if it does not match an item in the list. Multiple values are allowed, separated by commas.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">active_item_class</td>
+<td>The class attribute for the "active" item(s) in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_active_item"</strong>. An item is "active" if it or any of its child items are the current item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>The class attribute for the current item in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_current_item"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is one; <strong>default "%d item"</strong>. If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one; <strong>default "%d items"</strong>. If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>For the flat format, the text/space between terms. <strong>Default '\n'</strong> (whitespace)</td>
+</tr>
+</table>
+<p>
+The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each list element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the list element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
+</p>
+<p>
+The Item parameters are an easy way to customize the content and markup for each list item. For the array, flat and list formats you can also use the <a href="#term_list_hyperlinks">Hyperlink Parameters</a> for even greater flexibility.
+</p>
+<p>
+The dropdown and checklist formats do not generate hyperlinks; they generate HTML input controls that return the content of <code>value</code> attributes. Eight parameters provide an easy way to control the contents of items without requiring the use of custom Markup templates. 
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_control_name</td>
+<td>replaces the <strong><code>tax_input[[+taxonomy+]][]</code> (default)</strong> name attribute in the input tag for the control(s). Useful for adding multiple dropdown controls for the same taxonomy to a post/page and for dropdown controls containing terms from multiple taxonomies.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_option_text</td>
+<td>replaces the <strong>term name (default)</strong> text displayed for each option</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_option_value</td>
+<td>replaces the <strong>term_id (default)</strong> value returned for each option. For <strong>dropdown</strong> controls containing terms from multiple taxonomies, the default is <strong><code>[+taxonomy+].[+term_id+]</code></strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">hide_if_empty</td>
+<td>If <strong>false (default)</strong>, display a control with "option_none" text &amp; value. If true, display mla_nolink_text or nothing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_multi_select</td>
+<td>For the dropdown format, the default, "false", specifies that only one value can be selected. If set to "true", it specifies that multiple options can be selected at once.</td>
+</tr>
+</table>
+<p>
+The <code>mla_option_value</code> parameter is the most commonly-used. For example, to return the term slug instead of the term id you would code <code>mla_option_value="{+slug+}"</code>.
+</p>
+<p>
+Dropdown controls containing terms from multiple taxonomies (flat or hierarchical) require special handling because the <code>name=</code> attribute appears once for the entire control, not once for each term within the control. To associate each term with its taxonomy both values are encoded in the <code>value=</code> attribute in the term's option tag. Here is an example for two "flat" taxonomies:</p>
+<p>
+<code>
+[mla_term_list taxonomy="animal,vegetable" mla_output=dropdown]
+</code>
+</p>
+<p>
+The above shortcode generates the HTML below (some class attributes removed for clarity).
+</p>
+<p>
+<code>
+&lt;select name="tax_input[animal-vegetable][]" class="term-list-taxonomy-animal-vegetable" id="mla_term_list-1"&gt;<br />
+&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="animal.12"&gt;Dog&lt;/option&gt;<br />
+&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="animal.13"&gt;Cat&lt;/option&gt;<br />
+&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="vegetable.33"&gt;Carrot&lt;/option&gt;<br />
+&nbsp;&nbsp;&lt;option class="term-list-dropdown-term level-0" value="vegetable.35"&gt;Apple&lt;/option&gt;<br />
+&lt;/select&gt;
+</code>
+</p>
+<p>
+In the above example, to return the term slug instead of the term id you would add <code>mla_option_value="{+taxonomy+}.{+slug+}"</code> to the shortcode.
+</p>
+<p>
+If you use the default control name, the <code>[mla_gallery]</code> shortcode&rsquo;s <code>tax_input</code> parameter can convert the compound value(s) returned in the <code>tax_input</code> array to the appropriate taxonomy-specific entries. For example, the <code>animal.12</code> value can be handled as if it was <code>animal=12</code>. For the above example, the corresponding <code>[mla_gallery]</code> shortcode parameter would be <code>tax_input="{+request:tax_input.animal-vegetable+}"</code>. See the <a href="#taxonomy_parameters_tax_input"><strong>Compound Taxonomy Queries, "tax_input"</strong></a> section for more information.
+</p>
+<p>
+You could use the <code>mla_control_name</code> shortcode parameter to move the selected term out of the default <code>tax_input</code> array to a separate query argument and then process the returned value in your own PHP code.
+</p>
+<p><a name="term_list_special_items"></a></p>
+<h4>Special Items</h4>
+<p>
+Six parameters provide an easy way to add special entries to the links or input controls generated by the shortcode.  You can add entries for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these entries are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">option_all_text</td>
+<td>Text to display for showing an 'all terms' option. Default will not show an option to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_text</td>
+<td>Text to display for showing an 'no terms assigned' option. Default will not show an option to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_value</td>
+<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_text</td>
+<td>Text to display for showing an 'any terms assigned' option. Default will not show an option to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_value</td>
+<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_nolink_text</td>
+<td>replaces the empty string displayed when there are no list items or no pagination link. You can use any of the List-specific substitution parameters, "request:" parameters or "query:" parameters. You can also use a Content Template to compose a more complex value. For dropdown and checklist formats, this value is used when "hide_if_empty=true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_text</td>
+<td>For dropdown and checklist formats, text to display when there are no values to display, i.e., an empty list. <strong>Default "no-terms"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_value</td>
+<td>dropdown/checklist value for an empty list, returned when there are no values defined for the custom field. <strong>Defaults to the option_none_text</strong>.</td>
+</tr>
+</table>
+<p><a name="term_list_display_tags"></a></p>
+<h4>Display Tags</h4>
+<p>
+Three parameters provide control over the XHTML tags used to enclose each part of the list/dropdown/checklist items. These parameters are used as follows:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>the name of the XHTML tag used to begin the list; the default depends on the output format (list/ulist, olist, dlist). When an explicit "captiontag" parameter is added to "list" format, the default is "dl". For the dropdown format, the name of the XHTML tag used to name the control; the default is "select".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termtag</td>
+<td>the name of the XHTML tag used to enclose each term in the list or checklist; the default is "li". When an explicit "captiontag" parameter is added, the default is "dt". For the dropdown format, the name of the XHTML tag used to name each term in the control; the default is "item".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>the name of the XHTML tag used to enclose each caption. For "dlist" format, the default is "dd". To add a caption in "list" format you must enter an explicit "captiontag=dd" parameter to the shortcode.</td>
+</tr>
+</table>
+<p>
+These parameters give you some control over the markup used for the list and its elements. For more complex applications you can use style and markup templates to gain complete control over the list display.
+</p>
+<p><a name="term_list_hyperlinks"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Hyperlink Parameters</h4>
+<p>
+Nine parameters provide an easy way to control the contents of list items without requiring the use of custom Markup templates.  
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_link_attributes</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter. Also, the "href", "src" and "srcset" attributes are not allowed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_target</td>
+<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_class</td>
+<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rollover_text</td>
+<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the term name</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_href</td>
+<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_text</td>
+<td>replaces the term name text displayed for each item</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_caption</td>
+<td>replaces the caption text displayed beneath each item. The caption appears for "dlist" items and for "list" items when the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_value</td>
+<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
+</tr>
+</table>
+<p>
+The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
+</p>
+<p>
+All but the "mla_target" parameter support the <a href="#term_list_markup_parameters">Markup</a>, <a href="#term_list_item_parameters">Item-specific</a>, <a href="#term_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p>
+The "mla_link_href" parameter is a great way to change the destination your list item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink", "viewlink" and "editlink" are not modified.
+</p>
+<p>
+The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
+</p>
+<p>
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p><a name="term_list_other"></a></p>
+<h4>Other Parameters</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_term_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
+</p>
+<p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_term_list" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_term_list]" delimiter to an earlier shortcode.
+</p>
+<p><a name="term_list_data_selection"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Data Selection Parameters</h4>
+<p>
+The data selection parameters specify which taxonomy (or taxonomies) the terms are taken from, which terms are returned for the list and the order in which the terms are returned:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>The taxonomy or taxonomies to retrieve terms from; <strong>default 'post_tag'</strong>, which you will probably want to change.<br />
+&nbsp;<br />
+Use the name/slug of each taxonomy, not the display name, e.g., 'post_tag', 'category', 'attachment_tag', or 'attachment_category'. You can specify multiple taxonomies as a comma-separated string or (if you are calling <code>MLAShortcodes::mla_term_list()</code> function directly from your theme or plugin PHP code) as an array.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_mime_type</td>
+<td>The MIME type(s) of the items to include in the term-specific counts. The default is "all", which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, display PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ids</td>
+<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific list. Only those terms assigned to the attachment(s) in the list will be included. You can have one or more IDs and you can include assigned terms from one or more taxonomies. Do not use the "include" parameter if you use the "ids" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">include</td>
+<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to include. Only the terms in this list that are used in the taxonomies you specified will be retrieved.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">exclude</td>
+<td>A comma-separated list of term ids (<strong>not</strong> names or slugs) to exclude from the returned values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">parent</td>
+<td>Get direct children of this term id (only terms whose explicit parent is this value). If 0 is passed, only top-level terms are returned.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_type</td>
+<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in the term-specific counts. The default is "attachment". You can override the default if you want to count other types for which the taxonomy is registered, e.g., "post" to count Posts in the "category" and "post_tag" taxonomies. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_status</td>
+<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in the term-specific counts. The default is "inherit", which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts in the "category" and "post_tag" taxonomies. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">minimum</td>
+<td>The minimum number of attachments that must be associated with the term for the term to be included. For example, "minimum=1" will omit "empty" terms.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">number</td>
+<td>The maximum number of "most popular" terms to return. The default, zero, returns them all. Terms are sorted by "count DESC, id ASC" to apply this constraint.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_count</td>
+<td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
+&nbsp;<br />
+You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
+&nbsp;<br />
+You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the list by post-specific values.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">pad_counts</td>
+<td>True to include the count of all children in their parents' count. The default, "false", does not include children in their parents' count.<br />
+&nbsp;<br />
+The "pad_counts" parameter is only applied to the first (or only) taxonomy you specify, and that taxonomy must be hierarchical to see any difference in the counts.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">orderby</td>
+<td>The sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug".<br />
+&nbsp;<br />
+If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;<br />
+Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">order</td>
+<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_orderby</td>
+<td>The default, "false", applies the orderby and order parameters to the final term list. If you have a large number of terms and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular terms) and the final sorting process. If you do that, the sort order of the cloud will be indeterminite.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">preserve_case</td>
+<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
+</tr>
+</table>
+<p>
+You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
+</p>
+<p>
+The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
+</p>
+<p><a name="term_list_data_selection_h"></a></p>
+<h4>Data Selection Parameters (Hierarchical Output)</h4>
+<p>
+When the list is organized by the term hierarchy (hierarchical=true) four parameters can be used to trim the tree and display a subset of the terms:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">child_of</td>
+<td>Display all terms that are descendants (i.e. children &amp; grandchildren) of one term identified by its term_id; <strong>default empty</strong>. Only one term id is allowed. If you set this parameter the <code>include_tree</code> is ignored.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">exclude_tree</td>
+<td>Comma/space-separated string of term_id values to exclude along with all of their descendant terms. <strong>Default empty.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">include_tree</td>
+<td>Comma/space-separated string of term_id values to include along with all of their descendant terms. <strong>Default empty.</strong> If you </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">depth</td>
+<td>The maximum depth of parent/child relationships; <strong>default 0/False</strong> to display all levels</td>
+</tr>
+</table>
+<p>
+If you use <code>include_tree</code> to filter the list you can use <code>exclude</code> or <code>exclude_tree</code> to remove terms and their child terms from the filtered list. If you use <code>include</code>, only the terms in the include list will be used for the <code>include_tree</code> processing.
+</p>
+You can use these parameters with multiple <code>[mla_term_list]</code> shortcodes to navigate large hierarchical taxonomies. For example, define a control that shows only root terms ( <code>parent=0</code> ) with a control that shows the children of a specific root term ( <code>child_of={+current_item+}</code> ).
+</p>
+<p><a name="term_list_substitution"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Substitution Parameters</h4>
+<p>
+Substitution parameters are a powerful way to add general and attachment-specific values to the list display. For example, if you code "<code>mla_link_href="{+page_url+}?current_slug={+slug+}&amp;current_name={+name,url+}"</code>, the hyperlinks behind each list term will contain the page URL, the current term slug and the term name encoded in url format. There are many parameter names like `page_url` and `slug` divided in several categories:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">List-specific</td>
+<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Style</td>
+<td>values that are known when the list-specific CSS inline styles are composed just before list output begins</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Markup</td>
+<td>values that are known at the beginning of list output processing and remain the same for the entire list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#term_list_item_parameters">Item-specific</a></td>
+<td  style="vertical-align: top">values that change for each term/item in the list, such as Name and Description</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
+<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the list. The other prefixes are attachment-specific and have no meaning in a list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
+<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
+</tr>
+</table>
+<p>
+The following paragraphs go into more detail about each category and the parameter names within them.
+</p>
+<p>
+To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
+</p>
+<p>
+<strong>list-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the list based on information about the post/page on which the list appears. The list-specific substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">site_url</td>
+<td>absolute URL to the site directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_url</td>
+<td>absolute URL to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_dir</td>
+<td>absolute (full) path to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">instance</td>
+<td>starts at '1', incremented for each additional shortcode in the post/page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">selector</td>
+<td>"mla_term_list-{$instance}", e.g., mla_term_list-1</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_ID,<br />id</td>
+<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_author</td>
+<td>the <code>post_author</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_date</td>
+<td>the <code>post_date</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_content</td>
+<td>the <code>post_content</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_title</td>
+<td>the <code>post_title</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_excerpt</td>
+<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_status</td>
+<td>the <code>post_status</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_name</td>
+<td>the <code>post_name</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_modified</td>
+<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_guid</td>
+<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_type</td>
+<td>the <code>post_type</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_url</td>
+<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
+</tr>
+</table>
+<p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
+</p>
+<p>
+Style and Markup templates give you great flexibility for the content and format of each <code>[mla_term_list]</code> when you use the "list", "dropdown" and "checklist" output formats. You can define as many templates as you need. 
+</p>
+<p>
+Style templates provide list-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for the beginning of the list, each list item and the end of the list. Additional "Child" template parts provide optional markup for the opening, each item and the close of sublists for child terms.
+</p>
+<p>
+The Shortcodes tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
+</p>
+<p>
+There are two default templates for the "list" format; "term-list-ul" and "term-list-dl". As the names imply, the "term-list-dl" default is used for the "dlist" output format or when the "captiontag" parameter is present in the shortcode. If you name a custom Markup template in your shortcode, it will be used whether the "captiontag" is present or not.
+</p>
+<p><a name="term_list_variable_parameters"></a></p>
+<p>
+The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">request</td>
+<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query</td>
+<td>The parameters defined in the <code>[mla_term_list]</code> shortcode. For example, if your shortcode is <code>[mla_term_list taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">template</td>
+<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
+</tr>
+</table>
+<p>
+Term list substitution parameters for the <strong>Style template</strong> are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_output</td>
+<td>shortcode parameter, default = 'ulist'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>shortcode parameter, default = 'term-list'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>shortcode parameter, default = 'term-list-ul', '-dl', '-dropdown' or '-checklist' depending on the list output format</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>the slug of the taxonomy on which the list is based. Multiple taxonomy slugs are joined with a dash to form a single value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>the current/selected item in the list, as entered in the shortcode parameters.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>shortcode parameter, default = 'ul', 'ol', or 'dl' if the "captiontag" parameter is present.</td>
+</tr>
+<td class="mla-doc-table-label">itemtag_attributes</td>
+<td>HTML attribute value(s) added to the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_class</td>
+<td>HTML class names(s) added to the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_id</td>
+<td>HTML "id" attribute value for the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termtag</td>
+<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple</td>
+<td>'multiple' if the <code>mla_multi_select</code> parameter is true, empty if not.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">all_found_rows</td>
+<td>the number of terms retrieved for the list before "pruning" by the Hierarchical Output Data Selection parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of terms retrieved for the list, after any "pruning"</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>The text/space between tags</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>Rollover Text when the count value is one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td> Rollover Text when the count value is zero or more than one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link</td>
+<td>the destination name of the item hyperlink, default 'view'</td>
+</tr>
+</table>
+<p><a name="term_list_markup_parameters"></a></p>
+<p>
+Term list substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>list-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates. Three substitution parameters are added or modified for the markup template:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current_level</td>
+<td>the parent/child relationship "depth", starting at zero for root terms</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_class</td>
+<td>the 'children' class is added for all but the root level</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_id</td>
+<td>the term's parent id is added for all but the root level</td>
+</tr>
+</table>
+<p>
+There are also <a href="#mla_term_list_hooks">MLA Term List Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
+</p>
+<p><a name="term_list_item_parameters"></a></p>
+<p>
+Term list <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" and "Child Item" sections of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">key</td>
+<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_terms_query_results()</code> filter has altered the array keys.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_id</td>
+<td>the term id</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">name</td>
+<td>the term display name</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">slug</td>
+<td>the term slug</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_group</td>
+<td>the term group</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_taxonomy_id</td>
+<td>the term-taxonomy id</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">taxonomy</td>
+<td>the primary taxonomy for this term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">description</td>
+<td>the term description, if any</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">parent</td>
+<td>the direct parent of the term</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">count</td>
+<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_count</td>
+<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_url</td>
+<td>the URL portion of "thelink" (below). Derived from editlink_url, termlink_url or mla_link_href.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink_url</td>
+<td>URL of the current post/page plus a "current_item=term_id" query argument</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">editlink_url</td>
+<td>URL of the term's "edit category/tag" page</td></tr>
+<tr>
+<td class="mla-doc-table-label">termlink_url</td>
+<td>URL of the term's archive page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">children</td>
+<td>HTML markup for the current term's children, if any</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">caption</td>
+<td>if captiontag is not empty, contains term description or the mla_caption value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_attributes</td>
+<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">active_item_class</td>
+<td>set to the value of the <code>active_item_class</code> parameter (default "mla_active_item") for the active item(s) in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list. An item is "active" if it or any of its child items are the current item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>set to the value of the <code>current_item_class</code> parameter (default "mla_current_item") for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">rollover_text</td>
+<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_style</td>
+<td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_text</td>
+<td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thevalue</td>
+<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thelink</td>
+<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink</td>
+<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">editlink</td>
+<td>full hyperlink to the term's "edit category/tag" page, including all the Display Content parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">termlink</td>
+<td>full hyperlink to the term's archive page, including all the Display Content parameters</td>
+</tr>
+</table>
+<p><a name="mla_term_list_examples"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Term List Examples</h4>
+<p>
+Here is a simple example of a dropdown control for the Att. Categories taxonomy:
+</p>
+<p>
+<code>
+&lt;form id="mla-text-form" action="." method="post" class="row"&gt;<br />
+&lt;strong&gt;Att. Categories&lt;/strong&gt;<br />
+[mla_term_list post_mime_type=image taxonomy=attachment_category mla_output=dropdown mla_option_value="{+slug+}" show_count=true pad_counts=false ]<br />
+&nbsp;<br />
+&lt;input id="text-form-submit" name="text_form_submit" type="submit" value="Search" /&gt;<br />
+&lt;/form&gt;<br />
+&nbsp;<br />
+&lt;h3&gt;Gallery&lt;/h3&gt;<br />
+[mla_gallery]<br />
+attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}"<br />
+posts_per_page=3 mla_output="paginate_links,prev_next"<br />
+mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&amp;tax_input[attachment_category]={+query:attachment_category,url+}'<br />
+[/mla_gallery]<br />
+&nbsp;<br />
+[mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}" posts_per_page=3 mla_caption="{+title+} : {+description+}" mla_nolink_text="&lt;br&gt;Select a term to display the gallery.&lt;br&gt;"]
+</code>
+</p>
+<p>
+As you can see, the key is passing the selected term from the form to the gallery shortcodes. By default, the <code>[mla_term_list]</code> shortcode collects all of its results in the <code>tax_input</code> array, keyed by taxonomy slug. The example combines this with an invalid term slug so the gallery will be empty until a term is selected in the dropdown. Note that the pagination shortcode uses the &ldquo;enclosing shortcode&rdquo; format so HTML characters in the mla_link_href parameter are not corrupted by the WordPress shortcode parsing process.
+</p>
+<p>
+You can experiment with a category checklist format by simply changing <code>mla_output=dropdown</code> to <code>mla_output=checklist</code> in the <code>[mla_term_list]</code> shortcode.
+You will also see that the term you select doesn&rsquo;t &ldquo;stick&rdquo; in the dropdown control when the page is refreshed with the gallery display. That is one motivation for the <a title="Find the UI Elements Example" target="_blank" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+UI+Elements+Example%22" class="mla-doc-bold-link">MLA UI Elements Example</a> plugin. You can use that example plugin to improve the user experience after you have got the basic application going.
+</p>
+<p><a name="mla_term_list_hooks"></a></p>
+<h4>MLA Term List Filters (Hooks)</h4>
+<p>
+The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Term List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Term+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Term List Hooks Example</a>. To run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Term List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Term List Hooks Example" plugin.</li>
+<li>Create a new <code>[mla_term_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output.</li>
+<li>View the post or page on which the modified shortcode appears to see a term list with a range of colors applied to the terms.</li>
+</ol>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_term_list_raw_attributes</td>
+<td class="mla-doc-hook-definition">called at the beginning of the cloud, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_list_attributes,<br />mla_term_list_arguments</td>
+<td class="mla-doc-hook-definition">called at the beginning of the cloud generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_query_attributes,<br />mla_get_terms_query_arguments</td>
+<td class="mla-doc-hook-definition">called just before the <code>WP_Query->query()</code> call that selects gallery items, with query parameters before or after they are combined with defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_clauses</td>
+<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_get_terms_query_results</td>
+<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results</code> call, so you can inspect/record or modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">use_mla_term_list_style</td>
+<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the tag cloud output.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_list_style_values,<br /> mla_term_list_style_template,<br />mla_term_list_style_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_list_open_values,<br />mla_term_list_open_template,<br />mla_term_list_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_list_item_values,<br />mla_term_list_item_template,<br />mla_term_list_item_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_list_close_values,<br />mla_term_list_close_template,<br />mla_term_list_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list", "dropdown" or "checklist" term list.</td>
+</tr>
+</table>
+<p><a name="mla_cf_list"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>MLA Custom Field List Shortcode</h3>
+<p>
+The <code>[mla_custom_list]</code> shortcode takes the name of a WordPress custom field and displays a list of the custom field values that have been added to Media Library items (attachments). For example, a custom field named "camera" might contain the name of the camera with which an image item was taken.
+</p>
+<p>
+One mandatory data selection parameter specifies which custom field the values are taken from:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">meta_key</td>
+<td>The custom field name from which to retrieve values. The field name is required.</td>
+</tr>
+</table>
+<p>
+The shortcode has a number of optional parameters that shape the display in a variety of formats, including a "cloud", where the size of each list item is determined by how many times that particular value has been added to Media Library items (attachments). MLA Custom Field List provides many enhancements to the basic flat/cloud display. These include:
+</p>
+<ul class="mla_settings">
+<li>Several display formats, including "flat" (cloud), list, "grid" (modeled after the <code>[mla_gallery]</code> display), "dropdown" and "checklist". The list formats are "ulist", "olist" and "dlist".</li>
+<li>Complete support for paginated lists; display hundreds or thousands of values in manageable groups.</li>
+<li>Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list", "grid" and "checklist" formats to suit any need.</li>
+<li>Access to a wide range of content using the value-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.</li>
+<li>Display Style and Display Content parameters for easy customization of the list display and the destination of the links behind each value.</li>
+<li>A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins.</li>
+</ul>
+<p>
+Most applications can be implemented by a simple shortcode with a few parameters. For example, <code>[mla_custom_list meta_key=camera]</code> will produce a useful result. The shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+</p>
+<p>
+The next Documentation sections are a complete reference for the shortcode. Don't be put off by the volume of material; you won't need most of the parameters for typical applications. You may want to start by reviewing the <a href="#cf_list_examples">MLA Custom Field List Examples</a> to see how easy using the shortcode can be.
+</p>
+<p>
+Many of the <code>[mla_custom_list]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> shortcode, so the learning curve is short. Differences and parameters unique to the list are given in the sections below.
+</p>
+<p><a name="cf_list_output"></a></p>
+<h4>Output Formats</h4>
+<p>
+The values' display format is determined by the <strong>"mla_output"</strong> parameter:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">flat<br />flat,div</td>
+<td valign=top>Returns a sequence of hyperlink tags without enclosing HTML markup. The tags are of varying size depending on how many items share the value (a "cloud"). The "separator" parameter content (default, one newline character) is inserted between each hyperlink. <strong>"flat" is the default output format value.</strong></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist<br />ulist,div</td>
+<td valign=top>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">olist<br />olist,div</td>
+<td valign=top>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dlist<br />dlist,div</td>
+<td valign=top>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each value to have a "caption". The "itemtag", "valuetag" and "captiontag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">grid</td>
+<td>Modeled on the galleries produced by <code>[mla_gallery]</code>; a rectangular display with rows and columns. The tag parameters listed above, the "columns" parameter and the Display Style parameters customize the display.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dropdown</td>
+<td>Returns an HTML "select" control with a sequence of HTML "option" tags.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">checklist<br />checklist,div</td>
+<td valign=top>Returns HTML "input", "type=checkbox" elements enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "valuetag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">array</td>
+<td>Returns a PHP array of hyperlinks. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code.</td>
+</tr>
+</table>
+<p>
+Adding the "<strong>,div</strong>" qualifier to the flat, ulist, olist, dlist or checklist output formats will wrap the hyperlink tags or checklist items in an HTML "div" tag so, for example, you can add CSS styles to highlight the current list item. For this format, only the "Description", "Arguments", "Open" and "Close" markup template sections are used.
+</p>
+<p>
+The "flat,div", list, grid, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. Default templates are provided, and you can specify custom templates of your own.
+</p>
+<p>
+The <code>[mla_custom_list]</code> shortcode also supports pagination control formats: "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links". These are essentially the same as those for the <code>[mla_gallery]</code> shortcode. You can find details for pagination format parameters in the <a href="#cf_list_pagination">Pagination Parameters</a> section below.
+</p>
+<p>
+A separate parameter, <code>echo=true</code>, allows you to echo cloud output directly to the browser instead of returning it to post/page content. This output format is not available through the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code.
+</p>
+<p><a name="cf_list_link"></a></p>
+<h4>Item Link</h4>
+<p>
+The Link parameter specifies the target and type of link from the list value/item to the item's destination. You can also specify a non-hyperlink treatment for each item.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current</td>
+<td>Link back to the current post/page with a query argument, <code>current_item</code>, set to the value of the selected item. <strong>"current" is the default link value</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(mla_link_href)</td>
+<td>Link to a custom destination, typically another post/page. If the "mla_link_href" parameter is present the value of the "link" parameter is ignored. See the pagination example later in this section for more details.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">span</td>
+<td>Substitutes a <code>&lt;span&gt;&lt;/span&gt;</code> tag for the hyperlink tag. You can use the "mla_link_attributes" and "mla_link_class" parameters to add attributes to the <code>&lt;span&gt;</code> tag. You can use the "mla_link_text" parameter to customize the text within the span.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Eliminates the hyperlink tag surrounding the item text. You can use the "mla_link_text" parameter to customize the contents.</td>
+</tr>
+</table>
+<p>
+Using the "mla_link_href" parameter to completely replace the link destination URL is a common and useful choice. With this parameter you can use the list to select a value and then go to another post/page that uses that selection as part of an <code>[mla_gallery]</code> shortcode. The pagination example later in this section uses this technique. 
+</p>
+<p><a name="cf_list_display_templates"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Display Style and Markup Templates</h4>
+<p>
+Two parameters provide a way to apply custom style and markup templates to your <code>[mla_custom_list]</code> display. These parameters replace the default style and/or markup templates with templates you define on the "Shortcodes" tab of the Settings page. Templates are supported for the "flat,div", list, grid, dropdown, and checklist" formats.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>replaces the default style template for an <code>[mla_custom_list]</code> shortcode. You can code "none" to suppress the addition of CSS inline styles entirely.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>replaces the default markup template for an <code>[mla_custom_list]</code> shortcode</td>
+</tr>
+</table>
+<p><a name="cf_list_display_content"></a></p>
+<h4>Display Style and Content</h4>
+<p>
+The following parameters customize item content and markup for all of the output fomats:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">show_count</td>
+<td>Show how many items are assigned to the value. Values "true" or <strong>"false" (default)</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_parameter</td>
+<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>Identifies the current/selected item in the list. It contains a text value. It will be ignored if it does not match an item in the list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>The class attribute for the current item in the list as determined by the "current_item" parameter (if specified); default "mla_current_item".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is one. The default is "%d item". If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td>The text for the "title" attribute (Rollover Text) when the count value is zero or more than one. The default is "%d items". If you change the default, don't forget to include the "%d" placeholder.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>For the flat format, the text/space between items. <strong>Default '\n'</strong> (whitespace). Only used in the flat format</td>
+</tr>
+</table>
+<p>
+The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each list element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the list element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
+</p>
+<p>
+The above parameters are an easy way to customize the content and markup for each list item. For the list and grid formats you can also use the <a href="#cf_list_hyperlinks">Hyperlink Parameters</a> for even greater flexibility.
+</p>
+<p>
+The dropdown and checklist formats do not generate hyperlinks; they generate HTML input controls that return the content of <code>value</code> attributes. Eight parameters provide an easy way to control the contents of items without requiring the use of custom Markup templates. 
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_control_name</td>
+<td>replaces the <strong><code>current_item</code> or <code>current_items[]</code> (default)</strong> name attribute in the input tag for the control(s). The <code>current_items[]</code> default is used for checklists and for dropdowns when <code>mla_multi_select=true</code>. Useful for adding multiple controls to a post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_option_text</td>
+<td>replaces the <strong>custom field value (default)</strong> <strong>displayed</strong> for each option, i.e., the text enclosed by the option/input tag.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_option_value</td>
+<td>replaces the <strong>custom field value (default)</strong> <strong>returned</strong> for each option, i.e., the <code>value</code> attribute of the option/input tag.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">hide_if_empty</td>
+<td>If <strong>false (default)</strong>, display a control with "option_none_" text &amp; value. If true, display mla_nolink_text or nothing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_multi_select</td>
+<td>For the dropdown format, the <strong>default, "false"</strong>, specifies that only one dropdown control option can be selected. If set to "true", it specifies that multiple dropdown control options can be selected at once. Not used for checklist controls.</td>
+</tr>
+</table>
+<p><a name="cf_list_cloud"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Cloud Parameters</h4>
+<p>
+Each item in "cloud" formats (flat, list and grid) comprises a field value of varying size, a hyperlink surrounding the value and a "title" attribute (Rollover Text) displayed when the cursor hovers over the value hyperlink. The following parameters customize "cloud" item content and markup:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>The text size <strong>(default 8 for flat format otherwise defaults to default_size)</strong> of the item with the smallest count value (units given by unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>The text size <strong>(default 22 for flat format otherwise defaults to default_size)</strong> of the item with the highest count value (units given by the unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">default_size</td>
+<td>The text size <strong>(default 12)</strong> of the special links (all items, no items, any items) (units given by the unit parameter).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. <strong>pt (the default)</strong>, px, em, %.</td>
+</tr>
+</table>
+<p>
+For the flat format you can set the three size parameters to the same value to display links of uniform size. For the list and grid formats all links are displayed in the "default_size", which you can change by adding it as a shortcode parameter.  You can recreate the "cloud" display for the list and grid formats by adding explicit size parameters to the shortcode, e.g., <code>smallest=8 largest=22</code>.</p>
+<p><a name="cf_list_grid"></a></p>
+<h4>Grid Parameters</h4>
+<p>
+Four parameters provide control over the placement, size and spacing of values in the "grid" format without requiring the use of custom Style templates.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">columns</td>
+<td>specifies the number of columns. The grid will include a break tag at the end of each row and calculate the column width as appropriate. The default value is 3. If columns is set to 0, no row breaks will be included.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_float</td>
+<td>specifies the CSS float attribute of the ".cf-cloud-item" style. Acceptable values are "left", "none", "right"; the default value is "right" if current locale is RTL, "left" on LTR (left-to-right inline flow, e.g., English).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_margin</td>
+<td>specifies the CSS margin property of the ".cf-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_itemwidth</td>
+<td>specifies the CSS width attribute of the ".cf-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
+<br />&nbsp;<br />
+Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
+<br />&nbsp;<br />
+For the "exact" value, the calculation is the same but the margin is ignored, so the width value would be 33.3%.</td>
+</tr>
+</table>
+<p>
+The default margin and width calculations try to make the total width of each row as close to 100% as possible, but never exceed 100% due to rounding errors. If you have more advanced style and format needs, you can define custom style and/or markup templates. You can also code <code>mla_style=none</code> to suppress inline styles entirely and use a separate stylesheet to control the format of the grid.
+</p>
+<p><a name="cf_list_special_items"></a></p>
+<h4>Special Items</h4>
+<p>
+Nine parameters provide an easy way to add and control the contents of special list items for selecting special groups of values and handling empty lists. You can add links for selecting all items, items that have no values for the custom field and/or items that have one or more values for the custom field. The default values for these links are compatible with the simple custom field parameters and meta_query parameters of the <code>[mla_gallery]</code> shortcode.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">option_all_text</td>
+<td>Text to display for showing an 'all values' link. <strong>Default will not show a link to select 'all values'</strong>. When this option is selected all items, including items with no values at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for 'all values' option. <strong>Default 'ignore.values.assigned'</strong>. When this option is selected all items, including items with no values at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_values_text</td>
+<td>Text to display for showing an 'no values' link. <strong>Default will not show a link to select 'no values'</strong>. When this option is selected only those items with no values at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_values_value</td>
+<td>Control value for 'no values' option. <strong>Default 'no.values.assigned'</strong>. When this option is selected only those items with no values at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_values_text</td>
+<td>Text to display for showing an 'any values' link. <strong>Default will not show a link to select 'any values'</strong>. When this option is selected only those items with one or more values are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_values_value</td>
+<td>Control value for 'any values' option. <strong>Default 'any.values.assigned'</strong>. When this option is selected only those items with one or more values are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_nolink_text</td>
+<td>replaces the empty string displayed when there are no list items or no pagination link. You can use any of the Gallery-specific substitution parameters, "request:" parameters or "query:" parameters. You can also use a Content Template to compose a more complex value. For dropdown and checklist formats, this value is used when "hide_if_empty=true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_text</td>
+<td>For dropdown and checklist formats, text to display when there are no values to display, i.e., an empty list. <strong>Default "no-values"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_none_value</td>
+<td>dropdown/checklist value for an empty list, returned when there are no values defined for the custom field. <strong>Defaults to the option_none_text</strong>.</td>
+</tr>
+</table>
+<p><a name="cf_list_display_tags"></a></p>
+<h4>Display Tags</h4>
+<p>
+For the list, grid and checklist formats, three parameters provide control over the XHTML tags used to enclose each part of the list items.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>for list formats, the name of the XHTML tag used to begin the list; the <strong>defaults are "ul" for "ulist", "ol" for "olist" and "dl" fot "dlist"</strong>. For "grid" format, the name of the XHTML tag used to enclose each item in the list; the <strong>default is "dl"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">valuetag</td>
+<td>the name of the XHTML tag used to enclose each value in the list. For list formats, the <strong>default is "li"</strong>; for "grid" format  the <strong>default is "dt"</strong>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>the name of the XHTML tag used to enclose each caption. For "grid" and "dlist" formats, the <strong>default is "dd"</strong>.</td>
+</tr>
+</table>
+<p>
+These parameters give you some control over the markup used for the list and its elements. For more complex applications you can use style and markup templates to gain complete control over the list display.
+</p>
+<p><a name="cf_list_hyperlinks"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Hyperlink Parameters</h4>
+<p>
+The flat, list and grid formats generate hyperlinks for each item in the list. Ten parameters provide an easy way to control the contents of list items without requiring the use of custom Markup templates.  
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_link_attributes</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML event Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter. Also, the "href", "src" and "srcset" attributes are not allowed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_target</td>
+<td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_class</td>
+<td><strong>adds</strong> one or more classes to any already defined for the hyperlink</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_style</td>
+<td>replaces the CSS styles for the hyperlink. The default style is <code>font-size: [+font_size+][+unit+]</code>. You can access the dfefault style as <code>[+link_stlye+]</code> in this parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rollover_text</td>
+<td>replaces the HTML "title" attribute in the hyperlink for each item. This is the attachment title text displayed when the mouse rolls or hovers over the value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_href</td>
+<td>replaces the HTML "href" attribute in the hyperlink for each item; see below</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_link_text</td>
+<td>replaces the value text displayed for each item</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_caption</td>
+<td>replaces the caption text displayed beneath each item. The caption appears for "grid" items and for "list" items when the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item_value</td>
+<td>replaces the custom field value of the <code>current_item</code> hyperlink query argument.</td>
+</tr>
+</table>
+<p>
+All but the "mla_target" parameter support the <a href="#cf_list_markup_parameters">Markup</a>, <a href="#cf_list_item_parameters">Item-specific</a>, <a href="#cf_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+meta_key+} : {+rollover_text+}'</code>, the rollover text will contain the custom field name, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+</p>
+<p>
+The "mla_link_href" parameter is a great way to change the destination your item links to and/or add arguments to the link for later processing. For example, to make a list item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
+</p>
+<p>
+The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
+</p>
+<p>
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p><a name="cf_list_other"></a></p>
+<h4>Other Parameters</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>controls debug log output; "false" (<strong>the default</strong>), "log" or "true".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>This does not apply to the shortcode; it is allowed when the <code>MLAShortcodes::mla_custom_list()</code> function is called directly from your theme or plugin PHP code. If <code>echo=false</code> content generated by the function is returned to the caller; <strong>false is the default value</strong>. If <code>echo=true</code> content is echoed to the browser and nothing is returned.</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log. Use this only for development/debugging to avoid filling the log file with unneeded data.
+</p>
+<p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_custom_list]" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_custom_list]" delimiter to an earlier shortcode.
+</p>
+<p><a name="cf_list_data_selection"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Data Selection Parameters</h4>
+<p>
+The data selection parameters specify which custom field values are returned for the list and the order in which the values are returned:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">meta_key</td>
+<td>The custom field name from which to retrieve values. This parameter is mandatory and the field name is required.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_mime_type</td>
+<td>The MIME type(s) of the items to include in value selection and value-specific counts. <strong>The default is "all"</strong>, which avoids the additional database effort required to filter by MIME type. You can override the default to, for example, include only PDF documents (<code>post_mime_type=application/pdf</code>) or all image MIME types (<code>post_mime_type=image</code>). You can select several MIME types with a comma-separated list, e.g., <code>post_mime_type='audio,video'</code>. Wildcard specifications are also supported. For example, <code>post_mime_type='*/mpeg'</code> to select audio and video mpeg formats or <code>post_mime_type='application/*ms*'</code> to select all Microsoft application formats (Word, Excel, etc.).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_type</td>
+<td>The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">post type(s)</a> of the items to include in value selection and value-specific counts. <strong>The default is "attachment"</strong>. You can override the default if you want to select other types for which the custom field is used, e.g., "post" to select Posts. The <a href="http://codex.wordpress.org/Post_Types" title="WordPress Codex &quot;Post Types&quot; page" target="_blank">Codex Page</a> documents other post type values. Make sure your "post_status" and "post_type" values are consistent, e.g., use <code>post_type="attachment,post" post_status="inherit,publish"</code> together.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">post_status</td>
+<td>The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">post status value(s)</a> of the items to include in value selection and value-specific counts. <strong>The default is "inherit"</strong>, which counts attachments (Media Library Items). You can override the default if you want to count other values, e.g., "publish" to count published Posts. If you code "private" and the user is not logged in, "private" will be removed. The <a href="http://codex.wordpress.org/Post_Status" title="WordPress Codex &quot;Post Status&quot; page" target="_blank">Codex page</a> documents other post status values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ids</td>
+<td>A comma-separated list of <strong>attachment ID</strong> values for an item-specific cloud. Only those custom field values used in the attachment(s) in the list will be included. You can have one or more IDs and you can include values from one or more custom fields. Do not use the "include" parameter if you use the "ids" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">include</td>
+<td>A comma-separated list of field values to include. Only the values in this list that are used in the field(s) you specified will be retrieved.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">exclude</td>
+<td>A comma-separated list of field values to exclude from the returned values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">minimum</td>
+<td>The minimum number of attachments that must be associated with a value for that value to be included. <strong>The "default" is one (1)</strong>, because a custom field value must occur in at least one item to exist at all.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">number</td>
+<td>The maximum number of "most popular" values to return. <strong>The default, zero (0)</strong>, returns them all. values are sorted by "count DESC, meta_value ASC" to apply this constraint.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_count</td>
+<td><strong>The default, "false"</strong>, computes a value-specific count of the number of attachments using that value. If you have a large number of values and/or attachments, this can take a long time.<br />
+&nbsp;<br />
+You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
+&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">orderby</td>
+<td>The final sort order of the retrieved values. Can be one or more of "count", "meta_value" (the default), "none", or "random". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular values for the list).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">order</td>
+<td>Can be <strong>"ASC" (ascending, the default)</strong> or "DESC" (descending).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">no_orderby</td>
+<td><strong>The default, "false"</strong>, applies the orderby and order parameters to the final value list. If you have a large number of valuess and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular values) and the final sorting process. If you do that, the sort order of the list will be indeterminite.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">preserve_case</td>
+<td>Preserve upper- and lower-case distinctions when sorting by name. The default, "false", specifies a case-insensitive sort order.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">limit</td>
+<td>The number of values to return. This parameter is used for <a href="#cf_list_pagination">pagination</a>; it is applied <strong>after</strong> and separate from the "number" parameter above.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>The number of values to skip before returning the results. This parameter is used for <a href="#cf_list_pagination">pagination</a>.</td>
+</tr>
+</table>
+<p>
+You can sort on more than one value, e.g., <code>orderby="count DESC, name"</code> and you can specify ASC/DESC on a value by value basis. <strong>NOTE: multiple orderby values are separated by commas, not spaces.</strong> This is a change from WP_Query.
+</p>
+<p>
+The order parameter (default ASC) can give an ASC/DESC default for any value that doesn't have a specific choice. For example, <code>orderby="count DESC, name" order=ASC</code> is the same as <code>orderby="count DESC, name ASC"</code>.
+</p>
+<p><a name="cf_list_pagination"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Pagination Parameters</h4>
+<p>
+If you have a large number of values for your custom field you may want to paginate the list display, i.e., divide the list into two or more pages of a reasonable size. Pagination support for <code>[mla_custom_list]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <code>[mla_gallery]</code> <a href="#gallery_pagination"><strong>Pagination Parameters</strong></a> section.
+</p>
+<p>
+<strong>IMPORTANT:</strong> Pagination controls are an alternative output, not an additional output. One shortcode can generate either a list display or pagination controls. <strong>You will need two or more shortcodes to get both the list and the controls</strong>.
+</p>
+<p>
+The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For pagination output, you can choose from six values: 
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">next_link</td>
+<td>Returns a link to the next list item, based on the "current_item" parameter value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the last item. If you omit the qualifier, an empty string is returned for the "next_link" from the last item. If you code the ",wrap" or ",always_wrap" qualifier, the "next_link" from the last item will be to the first item. When there is no current item, ",wrap" returns an empty string and ",always_wrap" returns a link to the first item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_link</td>
+<td>Returns a link to the current list item (the "current_item" parameter value). This gives you an easy way to provide a visual indication of where you are within the list. When there is no current item, returns an empty string. The "span" and "none" link formats are often used with this output type.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_link</td>
+<td>Returns a link to the previous list item, based on the "current_item" parameter value. The optional ",wrap" or ",always_wrap" qualifier determines what happens at the first item. If you omit the qualifier, an empty string is returned for the "previous_link" from the first item. If you code the ",wrap" or ",always_wrap" qualifier, "previous_link" from the first item will be to the last item. When there is no current item, ",wrap" returns an empty string and ",always_wrap" returns a link to the last item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">next_page</td>
+<td>returns a link to the next "page" of list items, based on the "mla_custom_list_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,last</strong>" qualifiers determine what happens at the end of the taxonomy. If you omit the qualifier, an empty string is returned for the "next_page" if there are no more items in the taxonomy. If you code the ",wrap" qualifier, the "next_page" from the last page of items will be to the first page. If you code the ",last" qualifier, the "next_page" link will return to/remain on the last page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">previous_page</td>
+<td>returns a link to the previous "page" of list items, based on the "mla_custom_list_current" parameter value. The optional "<strong>,wrap</strong>" or "<strong>,first</strong>" qualifiers determine what happens at the beginning of the taxonomy. If you omit the qualifier, an empty string is returned for the "previous_link" from the first page. If you code the ",wrap" qualifier, "previous_page" from the first page will be to the last page. If you code the ",first" qualifier, the "previous_link" link will return to/remain on the first page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">paginate_links</td>
+<td>returns a link to list items at the start and end of the list and to pages around the current "list page" ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ), based on the "mla_custom_list_current" parameter value. The optional "<strong>,show_all</strong>" qualifier will show all of the list pages instead of a short list around the current page. The optional "<strong>,prev_next</strong>" qualifier will include the "&laquo; Previous" and "Next &raquo;" portions of the link list.</td>
+</tr>
+</table>
+<p><a name="cf_list_page_selection"></a></p>
+<h4>Page selection parameters</h4>
+<p>
+ The <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types divide the list into pages. Use the following parameters to specify the size of each list page and the current list page:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">limit</td>
+<td>the maximum number of terms to display in one list "page". Think of this as a "values per page" value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">offset</td>
+<td>the number of terms to skip over before starting the current list page. This parameter is usually derived automatically from the more useful "mla_custom_list_current" parameter.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_custom_list_current</td>
+<td>the current list page number. The name of this parameter can be changed to support multiple paginated lists on one post/page. This parameter will automatically be added to the URLs generated by pagination output types and managed for you.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_page_parameter</td>
+<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_total</td>
+<td>the highest page number you want to display; defaults to (total items / limit) if not specified, which is usually what you want. </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_rows</td>
+<td>If you have some other way of computing the total number of values you want to paginate you can use <code>mla_paginate_rows</code> to simplify your shortcode parameters and avoid redundant database access. If, for example, you want pagination controls for a list that you know has fifty values you can code <code>[mla_custom_list mla_output=paginate_links mla_paginate_rows=50]</code> and then add any other page selection or list display content parameters you need.</td>
+</tr>
+</table>
+<p>
+The <code>[mla_custom_list]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a list or among list "pages". For example, if you have many values in your custom field you can build a value-specific <code>[mla_gallery]</code> page with links to the previous/next value in the custom field (a complete pagination example is included below). You can also build a page that shows a large number of custom field values in groups, or "list pages", of ten values with links to the previous/next ten values or links to all of the list pages of values for the custom field.
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Next and previous list items; the <code>next_link</code> and <code>previous_link</code> output types</h4>
+<p>
+If you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific custom field value you can use the <code>next_link</code> and <code>previous_link</code> output types to move through single-value "pages" for the gallery.
+</p>
+<p>
+The next or previous link returned is drawn from the item-specific "link" substitution parameter for the next or previous list item. This means you can use all of the <a href="#cf_list_hyperlinks">Hyperlink Parameters</a> to control each element of the link. For example, you can code <code>mla_rollover_text='&amp;larr; Previous'</code> to customize the text link to the "previous_link" item. You can also add HTML arguments to the link to pass values along from one page to the next.
+</p>
+<h4>Next and previous list pages; the <code>next_page</code> and <code>previous_page</code> output types</h4> 
+<p>
+If your custom field has a large number of distinct values you might want to divide your <code>[mla_custom_list]</code> into "list pages" with a manageable number of values on each page. For these applications you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the list in groups of, say, ten values per "list page".
+</p>
+<p>
+MLA has its own "mla_custom_list_current" parameter to indicate the current set of values within the list (the current list page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
+</p>
+<p>For most applications, "limit" is the only pagination parameter you need to specify. Make sure this parameter is the same for your main list shortcode and for the pagination shortcodes that go with it. Also, make sure you use exactly the same item selection and sorting parameters in all shortcodes.
+</p>
+<p>
+The link(s) generated for prev_page, next_page and paginate_links controls can use the following Display Content parameters to control each link element:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous"); an alternative to "mla_link_text" for <code>mla_output=previous_page</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") an alternative to "mla_link_text" for <code>mla_output=next_page</code></td>
+</tr>
+</table>
+<h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
+<p>
+WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
+</p>
+<p>
+The <strong>Page selection parameters</strong> and <strong>Display Content parameters</strong> defined above also apply to the "paginate_links" output type. There are five additional parameters unique to this output type.
+</p>
+<h4>Specific parameters for the <code>paginate_links</code> output type</h4>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_end_size</td>
+<td>How many numbers (default 1) appear on either the start and the end list edges</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_mid_size</td>
+<td>How many numbers (default 2) appear to either side of current page, but not including current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_prev_text</td>
+<td>the "previous page" text (default "&laquo; Previous") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_next_text</td>
+<td>the "next page" text (default "Next &raquo;") , which appears when the ",prev_next" qualifier is added to the output_type</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_paginate_type</td>
+<td>the format of the return value. "<strong>plain</strong>" (the default) returns a string with links separated by the newline character. "<strong>list</strong>" returns an unordered (ul) HTML list.</td>
+</tr>
+</table>
+<p>If you code the "<strong>,show_all</strong>" qualifier, most of the above parameters have no effect; the "mla_paginate_type" parameter is the exception.
+</p>
+<h4>Markup Substitution Parameters for <code>next_page</code>, <code>previous_page</code> and <code>paginate_links</code> output types</h4>
+<p>
+You can use any of the List-specific substitution parameters in your next/previous page links (since the links are at the "list page" level, <strong>the attachment-specific substitution parameters are not available</strong>). The following additional substitution parameters are available for the <code>next_page</code> and <code>previous_page</code> output types:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">current_page</td>
+<td>the number of the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page</td>
+<td>the number of the new (previous or next) page; zero for paginate_links</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page</td>
+<td>the number of the last/highest/maximum page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page</td>
+<td>the number of items on each gallery page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of items in the gallery</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_offset</td>
+<td>the number of items skipped before the current page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_offset</td>
+<td>the number of items skipped before the new page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_page_text</td>
+<td>'mla_custom_list_current="[+current_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_page_text</td>
+<td>'mla_custom_list_current="[+new_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_page_text</td>
+<td>'mla_paginate_total="[+last_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">posts_per_page_text</td>
+<td>'posts_per_page="[+posts_per_page+]"'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scheme</td>
+<td>the HTTP protocol used to access the page; usually "http://" but might be "https://"</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">http_host</td>
+<td>contents of the <em>Host:</em> header of the current request; usually a domain name such as "mysite.com" or an IP address</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query_string</td>
+<td>the query arguments portion of the new URL, including the questions mark that precedes them.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">request_uri</td>
+<td>the URI given to access the page, e.g., "wordpress/2013/06/sample-post" or "wordpress/tag-gallery-page?attachment_tag=sample". MLA manages pagination by adding the "mla_custom_list_current" query parameter to the URI value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">new_url</td>
+<td>concatenation of scheme + http_host + request_uri</td>
+</tr>
+</table>
+<p><a name="cf_list_substitution"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>Substitution Parameters</h4>
+<p>
+Substitution parameters are a powerful way to add general and attachment-specific values to the list or pass them on to an <code>[mla_gallery]</code> display. For example, if you code "<code>mla_link_href="{+page_url+}?field_name={+meta_key+}&amp;current_item={+request:current_item+}"</code>, the hyperlinks behind each cloud term will contain the page URL, the custom field name and the custom field value in <code>current_item</code>. There are many substitution parameter names like <code>page_url</code> and <code>meta_key</code> divided in several categories:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">List-specific</td>
+<td>values that are known at the beginning of shortcode processing and remain the same for the entire shortcode, such as the ID and URL of the post/page in which the shortcode appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Style</td>
+<td>values that are known when the list-specific CSS inline styles are composed just before list output begins</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">Markup</td>
+<td>values that are known at the beginning of list output processing and remain the same for the entire list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#cf_list_item_parameters">Item-specific</a></td>
+<td  style="vertical-align: top">values that change for each value/item in the list, such as Name and Count</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_variable_parameters">Field-level</a></td>
+<td>additional values from sources like query arguments and shortcode parameters. The "request:" and "query:" field-level prefixes can be used in the list. The other prefixes are attachment-specific and have no meaning in a custom field list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label"><a href="#mla_template_parameters">Content&nbsp;Template</a></td>
+<td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
+</tr>
+</table>
+<p>
+To use a substitution parameter in your shortcode, simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in Style and Markup templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use. Also, because square brackets are reserved, <strong>you must substitute curly braces for square brackets</strong> if your parameter values require them. For example, if your shortcode parameter is <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code>, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in a parameter value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}".
+</p>
+<p>
+<strong>List-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the cloud based on information about the post/page on which the cloud appears. The cloud-specific substitution parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">site_url</td>
+<td>absolute URL to the site directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_url</td>
+<td>absolute URL to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_dir</td>
+<td>absolute (full) path to the upload directory, without trailing slash</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">instance</td>
+<td>starts at '1', incremented for each additional shortcode in the post/page</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">selector</td>
+<td>"mla_custom_list-{$instance}", e.g., mla_custom_list-1</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_ID,<br />id</td>
+<td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_author</td>
+<td>the <code>post_author</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_date</td>
+<td>the <code>post_date</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_content</td>
+<td>the <code>post_content</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_title</td>
+<td>the <code>post_title</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_excerpt</td>
+<td>the <code>post_excerpt</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_status</td>
+<td>the <code>post_status</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_name</td>
+<td>the <code>post_name</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_modified</td>
+<td>the <code>post_modified</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_guid</td>
+<td>the <code>post_guid</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_type</td>
+<td>the <code>post_type</code> value of the post/page in which the list appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_url</td>
+<td>absolute URL to the page or post on which the list appears, if any, with trailing slash</td>
+</tr>
+</table>
+<p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
+</p>
+<p>
+Style and Markup templates give you great flexibility for the content and format of each [mla_custom_list] when you use the "list" and "grid" output formats. You can define as many templates as you need. 
+</p>
+<p>
+Style templates provide list-specific CSS inline styles (you can code mla_style=none to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the list, 2) the beginning of each row ("grid" format), 3) each list item, 4) the end of each row ("grid" format) and 5) the end of the list. The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. 
+</p>
+<p>
+For the "grid" output format, all of the Markup template sections are used. For the list output formats, only the "Open", "Item" and "Close" sections are used. There are two default templates for the list formats; "custom-list-ul" (for "ulist", "olist" and "checklist") and "custom-list-dl" (for "dlist").
+</p>
+<p><a name="cf_list_variable_parameters"></a></p>
+<p>
+The following <strong>field-level substitution parameters</strong> are available in the Style template and any of the Markup template sections:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">request</td>
+<td>The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser. The PHP $_REQUEST variable is a superglobal Array that contains the contents of both $_GET, $_POST and $_COOKIE arrays.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">query</td>
+<td>The parameters defined in the <code>[mla_custom_list]</code> shortcode. For example, if your shortcode is <code>[mla_tag_cloud meta_key="My Custom Field" div-class=some_class]</code> you can access the parameters as <code>[+query:meta_key+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">template</td>
+<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
+</tr>
+</table>
+<p>
+Custom List substitution parameters for the <strong>Style template</strong> are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_output</td>
+<td>the primary value of the shortcode parameter; default = 'flat'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_output_qualifier</td>
+<td>the qualifier value, if any, of the shortcode parameter; default empty. Qualifiers include 'wrap', 'last', 'first', 'show_all' and 'prev_next'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_style</td>
+<td>shortcode parameter. For flat and pagination formats, default = 'none'. For other formats, default = 'custom-list'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_markup</td>
+<td>shortcode parameter. Defaults depend on the output format: 'custom-list-ul', 'custom-list-dl', 'custom-list-grid''custom-list-dropdown' or 'custom-list-checklist'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_key</td>
+<td>the name of the custom field on which the list is based.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item</td>
+<td>the value of current/selected item in the list, as entered in the shortcode parameters.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_item_class</td>
+<td>set to "mla_current_item" for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag</td>
+<td>shortcode parameter, default = 'ul', or 'dl' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_attributes</td>
+<td>HTML attribute value(s) added to the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_class</td>
+<td>HTML class names(s) added to the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemtag_id</td>
+<td>HTML "id" attribute value for the item tag</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">valuetag</td>
+<td>shortcode parameter, default = 'li', or 'dd' if the "captiontag" parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">captiontag</td>
+<td>shortcode parameter, default = '', i.e., no caption tag value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple</td>
+<td>'multiple' if the <code>mla_multi_select</code> parameter is true, empty if not.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">columns</td>
+<td>shortcode parameter, default = '3'; only meaningful for the "grid" output format.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">itemwidth</td>
+<td>shortcode parameter, default is calculated by dividing 100% by the number of columns and subtracting twice the margin value, e.g., 30.3% for three columns and a margin value of 1.5%. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">margin</td>
+<td>shortcode parameter, default = '1.5%'. Can also contain other dimensional values such as '10px' or CSS-specific values like 'auto' or 'inherit'.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">float</td>
+<td>'right' if current locale is RTL, 'left' if not</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">database_rows</td>
+<td>the number of actual values retrieved for the list, not including the "all", "no values" and/or "any values" elements</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the number of values prepared for the list, including the "all", "no values" and/or "any values" elements</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_count</td>
+<td>the smallest number of attachments associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_count</td>
+<td>the largest number of attachments associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">min_scaled_count</td>
+<td>the smallest scaled count associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_scaled_count</td>
+<td>the largest scaled count associated with any value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">spread</td>
+<td>max_scaled_count - min_scaled_count</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">smallest</td>
+<td>the text size of the tag with the smallest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">largest</td>
+<td>the text size of the tag with the largest count value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">unit</td>
+<td>Unit of measure as pertains to the smallest and largest values</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_spread</td>
+<td>largest - smallest</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_step</td>
+<td>font_spread / spread</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">separator</td>
+<td>The text/space between values</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">single_text</td>
+<td>Rollover Text when the count value is one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">multiple_text</td>
+<td> Rollover Text when the count value is zero or more than one</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">echo</td>
+<td>whether the output is echoed directly to the browser (true) or returned to the caller (false). For a shortcode, always false.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link</td>
+<td>the destination name of the item hyperlink, default 'current'</td>
+</tr>
+</table>
+<p><a name="cf_list_markup_parameters"></a></p>
+<p>
+Custom list substitution parameters for the <strong>Markup template</strong> are available in all of the template sections. All of the <strong>list-specific substitution parameters</strong> and the <strong>substitution parameters for Style templates</strong> are available for use in markup templates.
+</p>
+<p>
+There is just one additional substitution parameter defined at the start of markup processing:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">thename</td>
+<td>the name of the substitution parameter that contains the current item in the list; default 'current_item'.</td>
+</tr>
+</table>
+<p>
+There are <a href="#mla_cf_list_hooks">MLA Custom Field List Filters (Hooks)</a> that could add, modify or delete parameters available for markup processing, if your application uses them.
+</p>
+<p><a name="cf_list_item_parameters"></a></p>
+<p>
+Custom list <strong>item-specific substitution parameters</strong> for the Markup template are available in the "Item" section of the template. They include all of the parameters defined above (for the Style and Markup templates) Additional item-specific parameters are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">index</td>
+<td>starts at '1', incremented for each item in the list</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">key</td>
+<td>set to the "tags" array key/index value. Only useful if the <code>mla_get_custom_values_query_results()</code> filter has altered the array keys.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">last_in_row</td>
+<td>for the "grid" output format, set to "last_in_row" for the last item in each full grid row, and to an empty string for all other items in the row. If the list ends with a partial row, the last_in_row parameter is not set.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_value</td>
+<td>the value of the  item, escaped to be a valid HTML attribute value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">meta_text</td>
+<td>the item display name</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">count</td>
+<td>the number of attachments associated with the item.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">scaled_count</td>
+<td>scaled count value, for determining font size. The default formula for scaling the count is <code>round(log10($tag->count + 1) * 100)</code></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">font_size</td>
+<td>the numeric portion of the CSS "font-size" attribute</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_url</td>
+<td>the URL portion of "thelink" (below). Derived from currentlink_url or mla_link_href.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink_url</td>
+<td>URL of the current post/page plus current item and optional current page query arguments</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">caption</td>
+<td>if captiontag is not empty, contains the mla_caption value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_attributes</td>
+<td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">rollover_text</td>
+<td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_style</td>
+<td>the CSS "style" attribute, drawn from the font_size and unit parameters or the mla_link_style parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">link_text</td>
+<td>the text enclosed by the hyperlink, drawn from the item taxt or mla_link_text parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thevalue</td>
+<td>item value (default) or other value as determined by the "mla_item_value" parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thelink</td>
+<td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">currentlink</td>
+<td>full hyperlink to the current page with a term-specific query argument, including all the Display Content parameters</td>
+</tr>
+</table>
+<p><a name="cf_list_examples"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>MLA Custom Field List Examples</h4>
+<p>
+This section takes you through several of the <code>[mla_custom_list]</code> features, step by step. For these examples, a custom field named "camera" was created from the <code>meta:image_meta.camera</code> values WordPress generates. Let's start with a very simple list showing all of the values for the "camera" custom field in the default flat output format (a cloud):
+</p>
+<p>
+<code>[mla_custom_list meta_key=camera]</code>
+</p>
+<p>
+The "meta_key=camera" parameter names the custom field on which the list is based. Let's paginate the list and limit the terms display to ten terms per "page":
+</p>
+<p>
+<code>[mla_custom_list meta_key=camera limit=10]<br />
+[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]</code>
+</p>
+<p>
+The "limit=10" parameter (on <strong>both</strong> shortcodes) limits the list display to ten values. The second <code>[mla_custom_list]</code> shortcode, adding the 'mla_output="paginate_links,prev_next"' parameter, displays a line of pagination links below the list page. Coordination between the two shortcodes is automatic, using the "mla_custom_list_current" parameter added to the URLs by the shortcode.
+</p>
+<p>Now we'll make the list a convenient way to control a value-specific <code>[mla_gallery]</code>. We use the current item value managed by the list shortcode to filter the gallery display:_
+</p>
+<p>
+<code>[mla_custom_list meta_key=camera limit=10]<br />
+[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]
+<br />&nbsp;<br />
+[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" mla_caption="{+title+}" link=file]</code>
+</p>
+<p>
+The "meta_value" parameter value is a Content Template that returns the "current_item" value, if present, or the string "a-bad-value" to display an empty gallery if no list value has been selected.
+</p>
+<p>
+We can easily paginate the term-specific gallery by adding a second <code>[mla_gallery]</code> shortcode and a "posts_per_page" parameter to both shortcodes:
+</p>
+<p>
+<code>[mla_custom_list meta_key=camera limit=10]<br />
+[mla_custom_list meta_key=camera limit=10  mla_output="paginate_links,prev_next"]
+<br />&nbsp;<br />
+[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" posts_per_page=5 mla_caption="{+title+}" link=file]
+<br />&nbsp;<br />
+[mla_gallery meta_key=camera meta_value="{+template:{+request:current_item+}|a-bad-value+}" posts_per_page=5 mla_output="paginate_links,prev_next"]</code>
+</p>
+<p>
+The pagination controls for the custom field list and the gallery operate independently because by default they use different names for their respective "_current" page parameters. Our page now has a lot of functionality without requiring any WordPress templates or PHP code.
+</p>
+<p>
+For extra credit, let's add some more navigation options to the page. We'll build previous, current and next term links at the bottom of the page. These are enclosed in an HTML table so they all appear on one line of the page. Here is just the additional content; the table of three link navigation controls:
+</p>
+<p>
+<code>
+&lt;table width=99%&gt;&lt;tr&gt;<br />
+&lt;td width=33% style="text-align: left"&gt;[mla_custom_list meta_key=camera mla_output="previous_link" mla_link_text="Previous: {+meta_text+}"]&lt;/td&gt;<br />&nbsp;<br />
+&lt;td width=33% style="text-align: center; font-weight: bold:"&gt;[mla_custom_list meta_key=camera mla_output=current_link mla_link_text="Current: {+meta_text+}" link=span]&lt;/td&gt;<br />&nbsp;<br />
+&lt;td width=33% style="text-align: right"&gt;[mla_custom_list meta_key=camera mla_output="next_link" mla_link_text="Next: {+meta_text+}"]&lt;/td&gt;<br />
+&lt;/tr&gt;&lt;/table&gt;
+</code>
+</p>
+<p>
+The "mla_link_text" parameters add labels to each of the three navigation links. Finally, the "link=span" parameter in the middle ("mla_output=current_link") shortcode removes the hyperlink behind the term name, since it would just take you back to the page you're already on.
+</p>
+<p><a name="mla_cf_list_hooks"></a></p>
+<h4>MLA Custom Field List Filters (Hooks)</h4>
+<p>
+The <code>[mla_custom_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Custom Field List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Custom+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Custom Field List Hooks Example</a>. To run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Custom Field List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Custom Field List Hooks Example" plugin.</li>
+<li>Create a new <code>[mla_custom_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output. Make sure the shortcode uses the "flat" output format.</li>
+<li>View the post or page on which the modified shortcode appears to see a list with a range of colors applied to the values.</li>
+</ol>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_raw_attributes</td>
+<td class="mla-doc-hook-definition">called at the beginning of the list, before the attributes pass through the logic that handles the 'mla_page_parameter' and "request:" prefix processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_attributes,<br />mla_custom_list_arguments</td>
+<td class="mla-doc-hook-definition">called at the beginning of the list generation. You can record/modify shortcode parameter values before (attributes) or after (arguments) they are combined with all the defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_custom_values_query_attributes,<br />mla_get_custom_values_query_arguments</td>
+<td class="mla-doc-hook-definition">called just before building the SQL query for the <code>$wpdb->get_results()</code> call that selects list values, with query parameters before or after they are combined with defaults.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_custom_values_clauses</td>
+<td class="mla-doc-hook-definition">gives you a final opportunity to inspect or modify the SQL clauses for the data selection process.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_get_custom_values_query_results</td>
+<td class="mla-doc-hook-definition">called just after the <code>$wpdb->get_results()</code> call, so you can inspect/record or modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_scale</td>
+<td class="mla-doc-hook-definition">called as the scaled_count (size) of each term is calculated, so you can modify the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">use_mla_custom_list_style</td>
+<td class="mla-doc-hook-definition">allow or suppress the inclusion of CSS styles in the list output.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_style_values,<br /> mla_custom_list_style_template,<br />mla_custom_list_style_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the Style template.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_open_values,<br />mla_custom_list_open_template,<br />mla_custom_list_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_row_open_values,<br />mla_custom_list_row_open_template,<br />mla_custom_list_row_open_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template used in a "grid" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_item_values,<br />mla_custom_list_item_template,<br />mla_custom_list_item_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_row_close_values,<br />mla_custom_list_row_close_template,<br />mla_custom_list_row_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Row Close" part of the Markup template used in a "grid" list.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_custom_list_close_values,<br />mla_custom_list_close_template,<br />mla_custom_list_close_parse</td>
+<td class="mla-doc-hook-definition">for manipulating the "Close" part of the Markup template used in a "list", "grid", "dropdown" or "checklist" list.</td>
+</tr>
+</table>
+<p><a name="shortcode_api"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Calling shortcode functions from PHP code; the MLA shortcode API</h3>
+<p>
+You can always use the WordPress <code>do_shortcode()</code> function to execute MLA shortcodes, but you can also call several of the MLA shortcode support functions directly from your PHP code. You can find the available API functions and parameter documentation in the <code>/media-library-assistant/includes/class-mla-shortcode.php</code> file.
+</p>
+<p><a name="alt_shortcode"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for Other Gallery-generating Shortcodes</h3>
+<p>
+The <code>[mla_gallery]</code> shortcode can be used in combination with other gallery-generating shortcodes to give you the data selection power of <code>[mla_gallery]</code> and the formatting/display power of popular alternatives such as the WordPress.com Jetpack Carousel and Tiled Galleries modules. Any shortcode that accepts "ids=" or a similar parameter listing the attachment ID values for the gallery can be used. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to the alternate shortcode to format the results. Note that MLA does not play any role in formatting the gallery display, so MLA-specific parameters such as <code>mla_caption</code> and <code>mla_link_href</code> are not processed. Five parameters implement this feature:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_alt_shortcode</td>
+<td>the name of the shortcode to be called for gallery format and display. You can code "no" (recommended) or "mla_gallery" (used by the Justified Image Grid plugin) to disable the alternate shortcode processing. To use <code>[mla_gallery]</code> as the alternate shortcode code "yes".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_alt_parameters</td>
+<td>(optional, default empty) parameters that would normally be processed by <code>[mla_gallery]</code> and not passed through to the alternate shortcode. For example, if the alternate shortcode is "mla_tag_cloud", "mla_term_list" or "mla_gallery" you might use this parameter to, for example, pass <code>post_mime_type=</code> or <code>mla_debug=</code> on to the alternate shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_alt_ids_name</td>
+<td>(optional, default "ids") the name of the parameter used to pass a list of attachment ID values to the alternate shortcode</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_alt_ids_template</td>
+<td>(optional) a Content Template for the entire parameter value passed to the alternate shortcode. When processing the template, the list of ID values is available as the <code>{+alt_ids+}</code> substitution parameter. See the example below.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_alt_ids_value</td>
+<td>(optional) an item-specific substitution parameter, Content Template or other alternative for the attachment ID value(s) passed to the alternate shortcode. It is applied once for each item selected for the gallery, and all the item-specific substitution parameters are available to be used.</td>
+</tr>
+</table>
+<p>
+For example, if you want to select images using the MLA Att. Category taxonomy but want to display a "Tiled Mosaic" gallery, you can code:
+</p>
+<code>
+[mla_gallery attachment_category=vegetable tax_operator="NOT IN" mla_alt_shortcode=gallery type="rectangular" mla_alt_ids_name=include]
+</code>
+<p>
+This example selects all the images that are "NOT IN" the Att. Category "vegetable". The selected images are passed to the <code>[gallery]</code> shortcode in an "include" parameter, along with the "type=rectangular" parameter. The result is as if you had coded:
+</p>
+<code>
+[gallery include="1,2,3" type="rectangular"]
+</code>
+<p>
+In the above example, the <code>mla_alt_ids_name=include</code> parameter isn't really necessary, since the <code>[gallery]</code> shortcode accepts the "ids" parameter. It was included in the example just to show how the "mla_alt_ids_name" might be used for some other shortcode that requires a different name for the parameter.
+</p>
+<p>
+You can pass any parameters you need through the <code>[mla_gallery]</code> shortcode and on to the alternate shortcode you're using. Here's another example, using the Photonic Gallery plugin:
+</p>
+<code>
+[mla_gallery attachment_tag=fauna orderby=rand mla_alt_shortcode=gallery type=default style=strip-below slideshow_height=320 slide_size=medium]
+</code>
+<p>
+Here, <code>[mla_gallery]</code> selects the images with an Att. Tag of "fauna" and sorts them in a random order. It then calls on the <code>[gallery]</code> shortcode (which Photonic also uses), as if you had coded:
+</p>
+<code>
+[gallery ids="3,1,4,2,7" type=default style=strip-below slideshow_height=320 slide_size=medium]
+</code>
+<p>
+Photonic recognizes the <code>type=default</code> parameter and takes over, using the other three parameters to format its results. This example is a less convenient but more flexible alternative to the native Photonic support built-in to <code>[mla_gallery]</code> (see next section).
+</p>
+<p>
+The next example selects one PDF document at random and uses the <a href="https://wordpress.org/plugins/pdf-embedder/" title="PDF Embedder plugin" target="_blank">PDF Embedder</a> plugin to display the document content. The <code>mla_alt_ids_name</code> and <code>mla_alt_ids_value</code> parameters change the "ids" and attachment ID defaults to the "url" and file URL values expected by the <code>[pdf-embedder]</code> shortcode.
+</p>
+<code>
+[mla_gallery post_mime_type="application/pdf" orderby=rand numberposts=1 mla_alt_shortcode=pdf-embedder mla_alt_ids_name=url mla_alt_ids_value="{+filelink_url+}"]
+</code>
+<p>
+The next example selects items assigned to a taxonomy term and uses the <a href="https://wordpress.org/plugins/shortcodes-ultimate/" title="Shortcodes Ultimate plugin" target="_blank">Shortcodes Ultimate</a> plugin's <a href="https://getshortcodes.com/shortcodes/custom_gallery/" title="Custom Gallery shortcode" target="_blank">Custom gallery</a> shortcode to display the gallery with a lightbox enhancement. The <code>mla_alt_ids_name</code> and <code>mla_alt_ids_template</code> parameters change the "ids" and attachment ID defaults to the "source" and "media:" values expected by the <code>[su_custom_gallery]</code> shortcode.
+</p>
+<code>
+[mla_gallery attachment_category=accipitridae link="lightbox" mla_alt_shortcode="su_custom_gallery" mla_alt_ids_name="source" mla_alt_ids_template="media: {+alt_ids+}"]
+</code>
+<p>
+You can also use the "enclosing shortcode" form if the alternate shortcode, such as Fullscreen Galleria's "fsg_link", requires it. You would code this form as:
+</p>
+<code>
+[mla_gallery ids="1,2,3" mla_alt_shortcode=fsg_link mla_alt_ids_name=include class=button]View the gallery[/mla_gallery]
+</code>
+<p>If you mix the self-closing and enclosing versions of <code>[mla_gallery]</code> on one post/page you must use the "xhtml-style closing shortcodes like [mla_gallery /]" for the self-closing shortcodes.
+</p>
+<p>
+<strong>NOTE:</strong> When you use "mla_alt_shortcode" to pass format/display responsibility off to another shortcode you will lose the <code>[mla_gallery]</code> Gallery Display Style (e.g. "mla_float") and Gallery Display Content (e.g. "mla_caption") parameters. There is no reliable way for <code>[mla_gallery]</code> to pass this information on to the other shortcode you've specified.
+</p>
+<p><a name="photonic_gallery"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;Photonic Gallery for Flickr, Picasa, SmugMug, 500px and Instagram&#8221; Plugin</h3>
+<p>
+The <a href="http://wordpress.org/extend/plugins/photonic/" title="Photonic Gallery plugin directory page" target="_blank">Photonic Gallery for Flickr, Picasa, SmugMug, 500px and Instagram</a> plugin adds several new parameters to the <code>[mla_gallery]</code> shortcode to enhance your galleries. All you have to do is install the plugin, then add a "style=" parameter to your <code>[mla_gallery]</code> shortcode to use the Photonic styling and markup in place of the native <code>[mla_gallery]</code> style and markup templates.
+</p>
+<p>
+You can use the "Photonic" screen of the Insert Media dialog to build the display portion of your shortcode parameters. After you click "Insert into post", change the shortcode name from "gallery" to "mla_gallery" and add the query parameters you need to select the attachments for the gallery. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to Photonic to format the results. Note that MLA does not play any role in formatting the gallery display, so MLA-specific parameters such as <code>mla_caption</code> and <code>mla_link_href</code> are not processed.
+</p>
+<p><a name="justified_image_grid"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;Justified Image Grid&#8221; Plugin</h3>
+<p>
+<a href="https://justifiedgrid.com/" title="Justified Image Grid site" target="_blank">Justified Image Grid</a> (JIG) is an inexpensive premium plugin that renders a spectacular horizontal masonry grid for a simple to browse and easy to use gallery. It includes several lightboxes for highlighting individual images. 
+</p>
+<p>
+This section should really be titled "JIG's support for MLA" because JIG includes explicit support for filtering a gallery by selecting terms from MLA's Att. Categories and Att. Tags taxonomies. Look for the <code>image_categories</code>, <code>image_tags</code> and <code>filterby</code> parameters of the <code>[justified_image_grid]</code> shortcode.
+</p>
+<p>
+You can also set a JIG option to "Use JIG as MLA display (automatically take over)". Activate that option if you wish to automatically use Justified Image Grid in place of your current Media Library Assistant galleries (<code>[mla_gallery]</code>). Useful for already established galleries. You can use or disable JIG display individually by adding just <code>mla_alt_shortcode=justified_image_grid</code> or <code>mla_alt_shortcode=no</code> to any MLA shortcode, respectively. 
+</p>
+<p>
+Of course, you can always use MLA's <code>[mla_tag_cloud}</code>, <code>[mla_term_list}</code> and <code>[mla_gallery}</code>, shortcodes for more complex item selection applications such as custom field or date queries, or multi-taxonomy queries. Adding <code>mla_alt_shortcode=justified_image_grid</code> to the <code>[mla_gallery}</code> shortcode will pass a list of the selected items to JIG for formatting and displaying the resulting gallery. You can add any JIG-specific parameters to the shortcode and they will be passed along as well.
+</p>
+<p><a name="real_media_library"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;Real Media Library&#8221; Plugin</h3>
+<p>
+The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real Media Library plugin directory page" target="_blank">WordPress Real Media Library: Media Library Folder & File Manager</a> plugin helps you with media management. Organize thousands of uploaded files into folders, collections and galleries. You can add parameters to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific RML folder, collection or gallery ID. There are three <code>[mla_gallery]</code> shortcode parameters for this purpose:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_rml_folder</td>
+<td>the ID of the RML folder, collection or gallery from which to source items for the gallery display. You can find the ID of a folder easily in your media library. Simply select a folder, afterwards click the three-dots icon in the folder toolbar. A dialog opens and in the bottom right corner you can find a number which represents the folder ID.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rml_include_children</td>
+<td>"false" (the default) to restrict the potential items to the specific folder or gallery named in the <code>mla_rml_folder</code> parameter. Set it to "true" to include items in folders contained in the specific folder or collection named in the shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_allow_rml</td>
+<td>(optional) "false" (the default) to remove the RML parameters from <code>[mla_gallery]</code> database queries. "true" to preserve the parameters. This parameter is only useful for performance testing purposes. It is automatically set to "true" if the <code>mla_rml_folder</code> parameter is present. You can safely ignore it.</td>
+</tr>
+</table>
+<p>
+You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in an RML gallery.
+</p>
+<p><a name="catfolders"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;CatFolders – WP Media Folders&#8221; Plugin</h3>
+<p>
+The <a href="https://wordpress.org/plugins/catfolders/" title="CatFolders – WP Media Folders plugin directory page" target="_blank">CatFolders – WP Media Folders</a> free/lite and pro plugins help you categorize media files better and faster. You can add a parameter to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific folder ID. There is one <code>[mla_gallery]</code> shortcode parameter for this purpose:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_catf_folder</td>
+<td>the name of the folder from which to source items for the gallery display. To find the ID of a folder, right-click on the folder name to display the context menu, then click "Properties". In the Image Folder display you will see the folder ID. For the <code>mla_catf_folder</code> value do not include the pound sign ('#'), just the folder number.</td>
+</tr>
+</table>
+<p>
+You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in the folder.
+</p>
+<p><a name="mla_gallery_templates"></a></p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Style and Markup Templates</h3>
+<p>
+The Style and Markup templates give you great flexibility for the content and format of each <code>[mla_gallery]</code> or <code>[mla_tag_cloud]</code> (list and grid formats). You can define as many templates as you need.
+</p>
+<p>
+Style templates provide gallery-specific (or cloud-specific) CSS inline styles (you can code <code>mla_style=none</code> to suppress the addition of CSS inline styles entirely). Markup templates provide the HTML markup for 1) the beginning of the gallery, 2) the beginning of each row, 3) each gallery item, 4) the end of each row and 5) the end of the gallery. The attachment-specific markup parameters let you choose among most of the attachment fields, not just the caption.
+</p>
+<p>
+The MLA Gallery tab on the Settings page lets you add, change and delete custom templates. The default templates are also displayed on this tab for easy reference. You can find a custom template example with step-by-step instructions in <a href="#mla_table_example"><strong>A Table-based Style and Markup Template Example</strong></a> below.
+</p>
+<p>
+In a template, substitution parameters are surrounded by opening ('[+') and closing ('+]') delimiters to separate them from the template text; see the default templates for many examples.
+</p>
+<p><a name="argument_parameters"></a></p>
+<h4>Argument Substitution Parameters</h4>
+<p>
+A markup template can include default values for any of the shortcode parameters and values you define for your own use, e.g., you can add <code>columns=1</code> to the arguments section to change the MLA default value whenever the template is used. The argument substitution parameter(s) you define in the markup template are treated as if you had added them to the shortcode that uses the template, but parameters you actually use in the shortcode will overide the default values you code in the arguments section. For example, if the arguments section of your "blue-table" markup template looks like:
+</p>
+<code>columns=1 div-class=blue div-id=id3</code>
+<p>
+and your shortcode is
+</p>
+<p>
+<code>[mla_gallery mla_markup=blue-table div-id=ID5]</code>
+</p>
+<p>
+the end result will be as if you had coded
+</p>
+<p>
+<code>[mla_gallery mla_markup=blue-table div-id=ID5 columns=1 div-class=blue]</code>
+</p>
+<p>
+The custom parameters you code in the arguments section become part of the shortcode parameters. To access them in your template or in other shortcode parameters you must use the 'query:' prefix, e.g., <code>[+query:div-class+]</code> in the template or <code>{+query:div-id+}</code> in another shortcode parameter.
+</p>
+<p>
+In the arguments section you can separate the parameters with one or more spaces or you can code them on separate lines. If your parameter value includes spaces you must enclose it in single or double quotes.
+</p>
+<p><a name="mla_table_example"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6996,8 +7334,8 @@ Once you have defined and saved your custom templates you can change your shortc
 <code>[mla_gallery ... mla_style=table-style mla_markup=table-markup]</code><br />
 &nbsp;<br />
 It's a bit of work, but you only have to do it once.
-<a name="mla_variable_parameters"></a>
 </p>
+<p><a name="mla_variable_parameters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -7026,8 +7364,8 @@ Field-level substitution parameters let you access query arguments, custom field
 </table>
 <p>
 The next sections define each of the prefix and option/format values. 
-<a name="field_level_prefixes"></a>
 </p>
+<p><a name="field_level_prefixes"></a></p>
 <h4>Prefix values</h4>
 <p>
 There are twenty prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
@@ -7225,10 +7563,7 @@ MLA adds two fields of its own to the MS Office metadata information:
 <p>
 You can view an item's metadata values (pdf, iptc, exif, xmp, png, msp, and id3) in the "Attachment File Metadata" meta box on the Media/Edit Media screen for the item.
 </p>
-<p>
-<a name="field_level_formats"></a>
-&nbsp;<br />
-</p>
+<p><a name="field_level_formats"></a></p>
 <h4>Field-level option/format values</h4>
 <p>
 You can use a field-level option or format value to specify the treatment of fields with multiple values or to change the format of a field for display/mapping purposes. If no option/format value is present, fields with multiple values are formatted as a comma-delimited text list. The option/format value, if present, immediately follows the field name using a comma (,) separator and ends with the closing delimiter ('+]' or '+}'). There can be no spaces in this part of the parameter.
@@ -7318,7 +7653,7 @@ Three values let you use powerful regular expressions to apply patterns to any d
 		</td>
 	</tr>
 </table>
-<a name="field_level_data_sources"></a>&nbsp;
+<p><a name="field_level_data_sources"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -7669,8 +8004,7 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td>for image types, the value stored in WordPress "image_meta" array</td>
 </tr>
 </table>
-<a name="mla_iptc_identifiers"></a>
-&nbsp;
+<p><a name="mla_iptc_identifiers"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -7766,7 +8100,7 @@ The IPTC specification defines all of the allowed fields and organizes them into
 <tr><td colspan="3" style="font-weight:bold">&nbsp;<br />Post ObjectData Descriptor Record</td></tr>
 <tr><td class="mla-doc-table-label">confirmed-objectdata-size</td><td class="mla-doc-table-sublabel">9#010</td><td class="mla-doc-table-sublabel">4 octet binary total objectdata size</td></tr>
 </table>
-<a name="mla_camera_values"></a>&nbsp;
+<p><a name="mla_camera_values"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -7875,7 +8209,7 @@ The MLA enhanced values for "Other Tags" are:</p>
 <td class="mla-doc-table-sublabel">the serial number of the interchangeable lens as an ASCII string.</td>
 </tr>
 </table>
-<a name="mla_gps_values"></a>&nbsp;
+<p><a name="mla_gps_values"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8078,7 +8412,7 @@ The native format of this data is somewhat complicated, so MLA converts the most
 <td class="mla-doc-table-sublabel">The geodetic survey data used by the GPS receiver</td>
 </tr>
 </table>
-<a name="pdf_metadata"></a>&nbsp;
+<p><a name="pdf_metadata"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8166,7 +8500,7 @@ MLA adds five fields of its own to the metadata information:
 		<td>a special "pseudo value" that returns a string representation of all the metadata. You can use this pseudo-value to examine the metadata in a document, find field names and see what values are present.</td>
 	</tr>
 </table>
-<a name="substitution_parameter_filters"></a>&nbsp;
+<p><a name="substitution_parameter_filters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8217,8 +8551,8 @@ The following hook is defined in <code>/wp-admin/includes/class-mla-data-source.
 </table>
 <p>
 Note the distinction between <code>mla_expand_custom_data_source</code> and <code>mla_evaluate_custom_data_source</code>; they are called in different contexts with slightly different parameters.
-<a name="mla_template_parameters"></a>
 </p>
+<p><a name="mla_template_parameters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8265,8 +8599,8 @@ The conditional and choice elements require delimiters, "(", ")" and "|". If you
 </p>
 <p>
 <strong>In a shortcode parameter:</strong> If your template is coded in a shortcode parameter, preface the template delimiters with two backslash characters, e.g., "\\(". If you need a backslash in your template, code it as four backslash characters, i.e., "\\\\". The doubling of backslash characters is required because of the way WordPress processes shortcode parameters.
-<a name="mla_regular_expressions"></a>
 </p>
+<p><a name="mla_regular_expressions"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8281,8 +8615,8 @@ Regular Expressions is a formal name for a powerful pattern-matching tool you ca
 </ul>
 <p>
 The MLA regular expression features are simply a way to access a few of PHP's PCRE functions, so the last link above is particularly useful. The <a href="http://php.net/manual/en/pcre.examples.php" title="PCRE Examples" target="_blank">Examples</a> and <a href="http://php.net/manual/en/reference.pcre.pattern.syntax.php" title="Pattern Syntax" target="_blank">PCRE regex syntax</a> sections give you the details you need to build your expressions. The rest of this section describes how the PCRE functions are made available within MLA shortcodes, custom markup templates, mapping rules and the Bulk Edit area. Of course, they can be used within Content Templates in any of these areas as well.
-<a name="mla_regular_expressions_patterns"></a>
 </p>
+<p><a name="mla_regular_expressions_patterns"></a></p>
 <h4>Patterns and subpatterns</h4>
 <p>
 Each regular expression defines a "pattern" that is applied to the subject, or data source. If the pattern is matched, that part of the data source is returned from the option/format value. Subpatterns allow you to take a portion of the overall pattern and return it separately. For example, you might construct a pattern that matches a date and include within the pattern subpatterns that return the year, month and day portions of the date. The pattern and subpattern matches are stored by MLA and become data sources you can access with the <code>matches:</code> field-level prefix. By default, the pattern match and any subpattern match(es) are assigned index numbers. The pattern is number zero and the subpatterns are numbered from one to the total number of subpatterns.
@@ -8306,18 +8640,18 @@ The last example is particularly useful, because named subpatterns let you give 
 </p>
 <p>
 The patterns above contain backslash ('\') characters. When entering backslashes in an argument of the three option/format values below <strong>you must code two backslashes</strong> because the backslash is used in function arguments to escape special characters such as quotes (" ' "). The examples below show how this is done.
-<a name="mla_regular_expressions_match"></a>
 </p>
+<p><a name="mla_regular_expressions_match"></a></p>
 <h4>The <code>,match(p)</code> option/format value</h4>
 <p>
 The <code>,match(p)</code> option/format value can be applied to any data source, including those specified by any of the field-level prefix values. The "p" argument is a regular expression pattern that is applied to the data source. If a match is found the portion of the data source that matches the pattern is returned. If no match is found and empty value is returned. Any pattern and subpattern matches are stored and made available as data sources accessed with the <code>matches:</code> field-level prefix.
-<a name="mla_regular_expressions_extract"></a>
 </p>
+<p><a name="mla_regular_expressions_extract"></a></p>
 <h4>The <code>,extract(p,v)</code> option/format value</h4>
 <p>
 The <code>,extract(p)</code> option/format value can be applied to any data source, including those specified by any of the field-level prefix values. The "p" argument is a regular expression pattern that is applied to the data source. By default, the <code>,extract(p)</code> option/format value <strong>returns an empty value</strong>; it's purpose is to collect pattern/subpattern matches for later use as data sources accessed with the <code>matches:</code> field-level prefix. You can change the returned value by adding the optional second "v" argument to specify any of the matched pattern or subpattern keys. For example, add zero ("0") to return the entire pattern, the index number of a subpattern or the name of a named subpattern.
-<a name="mla_regular_expressions_replace"></a>
 </p>
+<p><a name="mla_regular_expressions_replace"></a></p>
 <h4>The <code>,replace(p,r,v)</code> option/format value</h4>
 <p>
 The <code>,replace(p,r)</code> option/format value matches a pattern (like <code>,match(p)</code>) but returns a modified version of the original data source value. The "p" argument is a regular expression pattern that is applied to the data source. The "r" argument is a replacement pattern. If a match is found the data source modified by the replacement pattern is returned. If the match is not found, the original data source value is returned unaltered. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3' )+]</code> would return "year: 2013, month: 10, day: 03 02:47:13". Note the double backslashes in the pattern argument! To specify an array argument enclose the argument in braces ( "{" and "}" ) and separate elements with <strong>spaces</strong>. For a simple example, <code>,replace( {'/,/' '/-/'}, {' ' '_'} )</code> will change commas to spaces and dashes to underscores, while <code>,replace( {'/,/' '/-/'}, ' ' )</code> will change both commas <strong>and</strong> dashes to spaces.
@@ -8330,13 +8664,13 @@ You can alter the value returned by adding the optional third "v" parameter set 
 </p>
 <p>
 Note that, unlike match and extract, the replace format/option value does not store its pattern or subpattern(s) for later use with the matches: prefix.
-<a name="mla_regular_expressions_matches"></a>
 </p>
+<p><a name="mla_regular_expressions_matches"></a></p>
 <h4>The <code>matches:</code> field-level prefix</h4>
 <p>
 The <code>matches:</code> field-level prefix lets you access the patterns and subpatterns matched by all of the match and extract format/option values that precede it in a shortcode, template or rule. For example, if you code <code>[+post_date,extract( '/(?&lt;year&gt;\\d{4})-(?&lt;month&gt;\\d{2})-(?&lt;day&gt;\\d{2})/' )+]</code> you can then code <code>[+matches:year+]</code> or <code>[+matches:1+]</code> (index 1) to access the year subpattern from the extract format/option.
-<a name="mla_regular_expressions_examples"></a>
 </p>
+<p><a name="mla_regular_expressions_examples"></a></p>
 <h4>Application Examples</h4>
 <p>
 Imagine that you have a photo archive where all the files are named with the date on which the image was taken, for example "2010.06.14 Death Valley Landscape.jpg". You would like to extract the date from the file name and use it to update the post_date (Uploaded on) date in the database. You'd also like to preserve the time portion of the current post_date so the items will sort in the order they were uploaded. You can define an IPTC/EXIF/WP mapping rule to do this or use the Media/Assistant Bulk Edit area. In either place you can compose a Content Template to do the job:
@@ -8373,8 +8707,8 @@ In this version the first part matches the date at the beginning of the file nam
 </p>
 <p>
 As you can see, regular expressions require close attention to detail and they reward careful study of the documentation and examples in the PHP documentation and elsewhere. They are a power tool with sharp edges.
-<a name="mla_text_widget"></a>
 </p>
+<p><a name="mla_text_widget"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8402,8 +8736,8 @@ To open and edit the MLA Text Widget:
 </ol>
 <p>
 To add an <code>[mla_gallery]</code> or <code>[mla_tag_cloud]</code> shortcode to your widget, simply enter the shortcode name and parameters just as you would in the body of a post or page. Aside from the usually more limited area devoted to displaying the widget content, there are no differences in the way shortcodes are processed in the MLA Widget. Also, there is nothing special about the two MLA shortcodes; <strong>any</strong> shortcode can be added to the MLA Widget.
-<a name="where_used_reporting"></a>
 </p>
+<p><a name="where_used_reporting"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8553,17 +8887,16 @@ You can sort on this column to bring the items that have one or more issues to t
 <li>Wait for the mapping process to complete.</li>
 </ol>
 <p>When you go back to the Media/Assistant screen you will see the new column. You can sort on it to bring the items with issues to the top of the list. You can click on a column value to limit the display to just the files sharing that name. Creating a custom view is similar to the earlier example. When you're done with the column you can disable or delete the example plugin, purge the custom field values and disable or delete the rule as in the earlier example.</p>
-<p>
-<a name="terms_search"></a>
-</p>
+<p><a name="terms_search"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>Terms Search - filtering on taxonomy term names</h3>
 <p>
-The "Terms Search" features let you filter the Media/Assistant submenu table and the Media Manager Modal Window by matching one or more phrases in the Name field of taxonomy terms. There are two ways to access this feature:
+The "Terms Search" features let you filter the <code>[mla_gallery]</code> shortcode, Media/Assistant submenu table and the Media Manager Modal Window by matching one or more phrases in the Name field of taxonomy terms. There are three ways to access this feature:
 </p>
 <ol>
+<li>Add the <a href="#taxonomy_keyword_search">Taxonomy term keyword(s) search</a> parameters to an <code>[mla_gallery]</code> shortcode.</li>
 <li>Check the "Terms" box under the "Search Media" button on the Media/Assistant submenu table or the Media Manager toolbar. The phrase(s) you enter in the search box will match taxonomy term names as well as any other search fields you have checked.</li>
 <li>Click the "Terms Search" button beside the terms filter dropdown. This will bring up the "Search Terms" popup window with several additional controls to refine your search. They are described below.</li>
 </ol>
@@ -8658,8 +8991,8 @@ If you are having problems with search results or are simply curious you can act
 </p>
 <p>
 If you add <code>{|}</code> all of the information will be written to the error log, a more practical choice. You can use the MLA Debug Tab to view and download the information in the error log.
-<a name="select_parent"></a>
 </p>
+<p><a name="select_parent"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8689,8 +9022,8 @@ Once you have chosen a new parent, click the "Update" button at the lower right 
 </p>
 <p>
 If you change your mind you can close the window without making a change by clicking the "X" in the upper-right corner of the window or the "Cancel" button in the lower-left corner of the window.
-<a name="thumbnail_generation"></a>&nbsp;
 </p>
+<p><a name="thumbnail_generation"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8785,9 +9118,7 @@ You can use the Type and Existing... controls to perform a variety of thumbnail 
 <li>To remove existing WordPress-style thumbnails, set the Type to "None", Existing Features to "Ignore" and Existing Thumbnails to "Delete".</li>
 <li>To generate new or modify existing WordPress-style thumbnails, set the Type to "WP", Existing Features to "Ignore" and Existing Thumbnails to "Delete". For example, you can change the maximum size, resolution or quality parameters. Reducing the maxinum size can eliminate some of the larger thumbnail files generated by the WordPress default processing.</li>
 </ul>
-<p>
-<a name="admin_columns"></a>&nbsp;
-</p>
+<p><a name="admin_columns"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8811,8 +9142,8 @@ You can find detailed configuration instructions at the <a href="http://admincol
 </p>
 <p>
 When you have completed your configuration changes, click "Update Media Library Assistant" in the Store Settings metabox at the top-right of the screen. You can also click "Restore Media Library Assistant columns" to remove your changes and go back to the MLA default settings. Click the "View" button at the right of the Media Library Assistant heading to return to the Media/Assistant submenu screen and see your changes.
-<a name="mla_taxonomy_hooks"></a>
 </p>
+<p><a name="mla_taxonomy_hooks"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -8850,7 +9181,7 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-objects.ph
 <td class="mla-doc-hook-definition">Modify the array of arguments with which the taxonomy is registered. For example, you can change the URL rewrite slug from the default <code>attachment_category/attachment_tag</code> values for SEO purposes. <strong>Note</strong>: You may need to flush the rewrite rules after changing the slug. You can do it manually by going to the Permalink Settings page and re-saving the rules -- you don't need to change them.</td>
 </tr>
 </table>
-<a name="mla_list_table_hooks"></a>&nbsp;
+<p><a name="mla_list_table_hooks"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9175,7 +9506,7 @@ mla_upload_bulk_edit_form_preset_template
 <td class="mla-doc-hook-definition">Give you a chance to modify and extend the template for the Bulk Edit form.</td>
 </tr>
 </table>
-<a name="mla_media_modal_filters"></a>&nbsp;
+<p><a name="mla_media_modal_filters"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9273,7 +9604,7 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-data-query
 <td class="mla-doc-hook-definition">Substitute the results of the Media Manager Modal Window "Query Attachments" query with alternative results of your own</td>
 </tr>
 </table>
-<a name="mla_edit_meta_boxes"></a>&nbsp;
+<p><a name="mla_edit_meta_boxes"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9336,7 +9667,7 @@ The example code documents each hook with comments in the filter function that i
 <td class="mla-doc-hook-definition">modify the rows, columns and content of the "MLA Gallery in" meta box.</td>
 </tr>
 </table>
-<a name="mla_views"></a>&nbsp;
+<p><a name="mla_views"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9419,8 +9750,8 @@ For convenience, you can add one or more MIME filters to a shortcode query. For 
 </p>
 <p>
 The Specification text box contains a simple one-line string value. For specifications with several parameters or complex queries this can be hard to enter and maintain. If you need more room for your parameters you can define a custom markup template and use the Arguments section to hold the parameters (if you only use the template for the view specification you can leave the other sections empty). Once you have the template, the specification can be something like <code>shortcode:mla_markup=abc-pdfs</code> where <code>abc-pdfs</code> is the markup template name.
-<a name="mla_uploads"></a>
 </p>
+<p><a name="mla_uploads"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9488,8 +9819,8 @@ The Icon Type information is used primarily in a function that matches a file ex
 </ul>
 <p>
 The icon images can be returned in a <code>[gallery]</code> or an <code>[mla_gallery]</code> shortcode when <code>size=icon</code> is specified. The icons also appear on the Media/Library and Media/Assistant submenu tables.
-<a name="mla_optional_uploads"></a>
 </p>
+<p><a name="mla_optional_uploads"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9514,8 +9845,8 @@ For your own research, I suggest starting with these resources:
 </ul>
 <p>
 Put on your boots and have a paddle handy - it's a swamp! Good luck.
-<a name="mla_custom_field_mapping"></a>
 </p>
+<p><a name="mla_custom_field_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9580,8 +9911,8 @@ The above example adds the "action" values for two popular file upload plugins, 
 </p>
 <p>
 If you cannot identify the proper "action" value or if your uploader uses another method to do its work you can try adding <code>define( 'MLA_AJAX_EXCEPTIONS', 'always' );</code> to your <code>wp-config.php</code> file. This value will unconditionally load full MLA support for AJAX operations and may give you better results. You can also use the <a href="#mla_debug_tab">Debug tab</a> and <code>define( 'MLA_DEBUG_LEVEL', 3 );</code> to log more information about file upload requests; that may help identify the appropriate "action" value. 
-<a name="custom_field_mapping_example"></a>
 </p>
+<p><a name="custom_field_mapping_example"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9616,8 +9947,8 @@ The three parameters in the above example will select all of the images in your 
 </p>
 <p>
 Note the format of the <code>value</code> and <code>compare</code> parameters within the <code>meta_query</code>. Because the File Size custom field uses the "Commas" format, the values are stored as 15-character strings with leading spaces; this makes the values display and sort sensibly. You must use <code>'compare' => 'BETWEEN'</code> and give the lowest and highest values as an array in the <code>'value' => array( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;82,168' )</code> parameter, padding each value out to exactly 15 characters wide.
-<a name="custom_field_rule_elements"></a>&nbsp;
 </p>
+<p><a name="custom_field_rule_elements"></a>&nbsp;</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9769,7 +10100,7 @@ If you use the "Multi" option you will almost certainly want to use the "Delete 
 The "Status" dropdown lets you turn rules on or off for most mapping purposes. If you select "Active" the rule will always be applied during a mapping operation. If you select "Inactive" the rule will NOT be applied except when explicitly included in a Bulk Action "Execute" or "Execute" rollover action.
 </dd>
 </dl>
-<a name="attachment_metadata_mapping"></a>&nbsp;
+<p><a name="attachment_metadata_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9817,7 +10148,7 @@ In the "EXIF/Template" text box, enter "template:([+exif:GPS.LatitudeSDD+])". Th
 Set the other parts of the rule as needed. You can select "EXIF" unless you also select an IPTC value and want it to have priority. You can select "Keep" if some of your items already have this information or "Replace" to update all items.
 </li>
 </ol>
-<a name="custom_field_mapping_with_templates"></a>&nbsp;
+<p><a name="custom_field_mapping_with_templates"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9839,8 +10170,8 @@ Using a template with the Option Dropdown "Text" or "Single" values will yield a
 </p>
 <p>
 <strong>CAUTION:</strong> If you use the <code>[+custom:ALL_CUSTOM+]</code> pseudo value in a mapping rule, and you apply the rule more than once, you will see copies of the field you are mapping to in the result. To "clear out" a field you are mapping ALL_CUSTOM into, clear out the text box containing the template, select "Replace" and check the "Delete NULL values" box. Then, click "Map All Attachments"; that will delete the old values and give you a clean start. You'll also see that the template you deleted will be restored after the mapping is complete.
-<a name="mla_iptc_exif_mapping"></a>
 </p>
+<p><a name="mla_iptc_exif_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9903,8 +10234,8 @@ The above example adds the "action" values for two popular file upload plugins, 
 </p>
 <p>
 If you cannot identify the proper "action" value or if your uploader uses another method to do its work you can try adding <code>define( 'MLA_AJAX_EXCEPTIONS', 'always' );</code> to your <code>wp-config.php</code> file. This value will unconditionally load full MLA support for AJAX operations and may give you better results. You can also use the <a href="#mla_debug_tab">Debug tab</a> and <code>define( 'MLA_DEBUG_LEVEL', 3 );</code> to log more information about file upload requests; that may help identify the appropriate "action" value. 
-<a name="iptc_exif_mapping_example"></a>
 </p>
+<p><a name="iptc_exif_mapping_example"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -9958,8 +10289,8 @@ You can use the meta_key, orderby and order parameters to sort an <code>[mla_gal
 The three parameters in the above example will select all of the images in your media library and sort your gallery so the newest/most recent images appear first. You can replace <code>post_parent=all</code> with any other data selection parameters to get the images you want. For example, you can use a "meta_query" to select only those images created after 2012-01-01 (and display the date in the gallery item caption):<br />
 &nbsp;<br />
 <code>[mla_gallery meta_query="array( array( 'key' => 'Date Time Created', 'value' => '2012-01-01', 'compare' => '&lt;' ) )" meta_key="Date Time Created" orderby="meta_value DESC" mla_caption="{+custom:Date Time Created+}" ]</code>
-<a name="iptc_exif_mapping_tables"></a>
 </p>
+<p><a name="iptc_exif_mapping_tables"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10030,7 +10361,7 @@ The Format element has a "commas" value that can improve the results of sorting 
 <dd>The "Delete NULL values" checkbox lets you control what happens if the data source you've selected does not have a value for every attachment.
 </dd>
 </dl>
-<a name="iptc_exif_mapping_with_templates"></a>&nbsp;
+<p><a name="iptc_exif_mapping_with_templates"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10063,8 +10394,8 @@ In the "Standard field mapping" table a special <code>template:[+empty+]</code> 
 </p>
 <p>
 Note that the <strong>,array</strong> formatting option is <strong>not</strong> required to get an array result for the field in a Taxonomy term mapping template; it is assumed. If you want a <strong>text</strong>, <strong>single</strong> or <strong>export</strong> result you can add one of those formatting options to your field specification.
-<a name="date_iptc_exif_mapping"></a>
 </p>
+<p><a name="date_iptc_exif_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10087,8 +10418,8 @@ template: today [+post_date,date( 'H:i:s' )+]
 </code></p>
 <p>
 The first example above sets the date to a fixed value. The second example uses "today", one of the <a href="http://php.net/manual/en/datetime.formats.relative.php" title="PHP Supported Relative Date/Time Formats" target="_blank">Relative Formats</a> PHP supports to replace the date portion with the current date. Both examples access the original <code>post_date</code> data value and then use the "date" format/option function to extract just the time portion.
-<a name="pdf_iptc_exif_mapping"></a>
 </p>
+<p><a name="pdf_iptc_exif_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10199,8 +10530,8 @@ The three rules have similar changes:
 </ul>
 <p>
 In fact, WordPress contains its own rules for composing a Title from IPTC/Exif metadata (see <a href="#wordpress_default_mapping">WordPress default title, slug and description mapping</a>), so you may not need or want to extend the Title rule. WordPress also fills the Description field, but does not fill the Caption. You may want to copy the Description into the Caption; if you do, replace <code>[+exif:ImageDescription+]</code> with <code>[+post_content+]</code> in the Caption rule.
-<a name="wordpress_default_mapping"></a>
 </p>
+<p><a name="wordpress_default_mapping"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10231,7 +10562,7 @@ The priority order for mapping the post_content value from non-blank IPTC/EXIF/W
 <li>EXIF "ImageDescription" (if different from post_title)</li>
 <li>IPTC 2#120 "caption-or-abstract" (if different from post_title)</li>
 </ol>
-<a name="mla_mapping_hooks"></a>&nbsp;
+<p><a name="mla_mapping_hooks"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10362,7 +10693,7 @@ The current Settings/Media Library Assistant tab list hook is:
 <td>gives you an opportunity to remove one or more tabs from the list that appears on the Settings/Media Library Assistant screen.</td>
 </tr>
 </table>
-<a name="mla_debug_tab"></a>&nbsp;
+<p><a name="mla_debug_tab"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10482,8 +10813,8 @@ Below the Debug Settings section is a text area with the current content of the 
 </ul>
 <p>
 If you are having an MLA problem that includes error messages in the log, copying the messages and adding them to your Support Forum topic can be most helpful; thanks!
-<a name="mla_language_tab"></a>
 </p>
+<p><a name="mla_language_tab"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -10639,8 +10970,8 @@ When rules are defined in the IPTC/EXIF/WP "Taxonomy term mapping section" they 
 </ul>
 <p>
 If you use Replication to automatically create terms in non-current languages they will be created with the same text value as the source term in the current language. You can always go to the taxonomy edit page and change the source text to an appropriate value for the other language(s). If you do not use Replication you can always go to the taxonomy edit page and add translations with an appropriate value for the other language(s).
-<a name="mla_example_plugins"></a>
 </p>
+<p><a name="mla_example_plugins"></a></p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>

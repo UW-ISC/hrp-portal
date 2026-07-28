@@ -10,7 +10,7 @@
 <table>
 <tr>
 <td class="mla-doc-table-label">Width</td>
-<td>the maximum width in pixels (default "0" for WP 4.7+, "150" for earlier versions) of the thumbnail image. The height (unless also specified) will be adjusted to maintain the page proportions.</td>
+<td>the maximum width in pixels (default "0" for "WP" thumbnails, "150" for other types) of the thumbnail image. The height (unless also specified) will be adjusted to maintain the page proportions.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Height</td>
@@ -18,7 +18,7 @@
 </tr>
 <tr>
 <td class="mla-doc-table-label">Best Fit</td>
-<td>retain page proportions when both height and width are explicitly stated. If unchecked, the image will be stretched as required to exactly fit the height and width. If checked, the image will be reduced in size to fit within the bounds, but proportions will be preserved.</td>
+<td>retain page proportions when both height and width are explicitly stated. If unchecked, the image will be stretched as required to exactly fit the height and width. If checked, the image will be reduced in size to fit within the bounds, but proportions will be preserved. If checked, geometry-based rotation will also be performed for "JPG" and "PNG" thumbnails.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Page</td>
@@ -26,7 +26,7 @@
 </tr>
 <tr>
 <td class="mla-doc-table-label">Resolution</td>
-<td>the pixels/inch resolution (default "128" for WP 4.7+, "72" for earlier versions) of the page before reduction.</td>
+<td>the pixels/inch resolution (default "128" for "WP" thumbnails, "72" for other types) of the page before reduction.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Quality</td>

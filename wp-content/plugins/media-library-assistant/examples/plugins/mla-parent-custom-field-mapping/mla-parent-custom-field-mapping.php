@@ -13,7 +13,7 @@
  * https://wordpress.org/support/topic/iptc-exif-mapping-on-picture-upload-to-parent-posts-custom-fields/
  *
  * @package MLA Parent Custom Field Mapping
- * @version 1.07
+ * @version 1.08
  */
 
 /*
@@ -21,7 +21,7 @@ Plugin Name: MLA Parent Custom Field Mapping
 Plugin URI: http://davidlingren.com/
 Description: Uses a Custom Field mapping rule to map data sources for an "attached" item to custom fields of the parent page/post
 Author: David Lingren
-Version: 1.07
+Version: 1.08
 Author URI: http://davidlingren.com/
 
 Copyright 2020 David Lingren
@@ -54,7 +54,7 @@ class MLAParentCustomFieldMapping {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.07';
+	const PLUGIN_VERSION = '1.08';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -1140,8 +1140,8 @@ class MLAParentCustomFieldMapping {
 			
 			$meta_value = $new_value['value'];
 			$multi_key = 'multi' === $new_value['option'];
-			$keep_existing = (boolean) $new_value['keep_existing'];
-			$no_null = (boolean) $new_value['no_null'];
+			$keep_existing = (bool) $new_value['keep_existing'];
+			$no_null = (bool) $new_value['no_null'];
 
 			if ( isset( $post_data[ $meta_key ] ) ) {
 				$old_meta_value = $post_data[ $meta_key ];

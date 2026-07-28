@@ -10,9 +10,15 @@
 // and enter your custom CSS into the Custom Styling area. Use the same (or more
 // specific) selectors to ensure your custom CSS overrides the default CSS.
 
-@include resets;
-
 #{$wrap} {
+    all: revert;
+    box-sizing: border-box;
+    position: relative;
+
+    @if $menu_font_family != 'inherit' {
+        font-family: unquote($menu_font_family);
+    }
+
     @include desktop {
         @include background($container_background_from, $container_background_to);
     }
@@ -21,6 +27,10 @@
     @include keyboard;
 
     #{$menu} {
+        all: revert;
+        box-sizing: border-box;
+        list-style: none;
+        margin: 0;
         display: flex;
         column-gap: $menu_item_spacing;
         flex-wrap: wrap;
@@ -31,20 +41,32 @@
             align-items: center;
         }
 
+        ul.mega-sub-menu {
+            all: revert;
+            box-sizing: border-box;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
         li.mega-menu-item {
+            all: revert;
+            box-sizing: border-box;
+            position: relative;
+
             a.mega-menu-link {
+                all: revert;
                 display: flex;
                 align-items: center;
                 gap: 6px;
+                box-sizing: border-box;
 
                 @if $transitions == 'on' {
                     transition: background 200ms linear, color 200ms linear, border 200ms linear;
                 }
+            }
 
-                &:before {
-                    display: flex;
-                }
-
+            .mega-menu-link {
                 .mega-description-group {
                     display: flex;
                     flex-direction: column;
@@ -62,7 +84,7 @@
                     }
                 }
             }
-
+            
             &.mega-icon-top > a.mega-menu-link {
                 display: grid;
                 align-content: center;
@@ -110,7 +132,7 @@
                         display: flex;
                     }
                     > a.mega-menu-link > span.mega-indicator:after {
-                        content: $arrow_up;
+                        @include arrow-icon-state($arrow_up, $arrow_font);
                     }
                 }
             }
@@ -216,35 +238,23 @@
             flex-direction: column;
         }
 
-        @for $cols from 1 through 6 {
-            li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-#{$cols}-columns > ul.mega-sub-menu {
-                display: grid;
-                grid-template-columns: repeat($cols, minmax(0, 1fr));
-            }
+        li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-sub-columns > ul.mega-sub-menu {
+            display: grid;
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
         }
 
         li.mega-menu-item a[class^='dashicons']:before {
             font-family: dashicons;
         }
 
-        li.mega-align-bottom-left {
-            > ul.mega-sub-menu {
-
-            }
-
-            &.mega-toggle-on > a.mega-menu-link {
-                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0px, 0px);
-            }
+        li.mega-menu-item a.mega-material-symbol:before {
+            content: attr(data-ms-icon);
+            font-family: var(--wp--preset--font-family--material-symbols);
+            -webkit-font-smoothing: antialiased;
         }
 
-        li.mega-align-bottom-right {
-            > ul.mega-sub-menu {
-                right: 0;
-            }
-
-            &.mega-toggle-on > a.mega-menu-link {
-                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0px, 0px);
-            }
+        li.mega-align-bottom-right > ul.mega-sub-menu {
+            right: 0;
         }
 
         @if unit($panel_width) == '%' or unit($panel_width) == 'vw' {
@@ -347,7 +357,7 @@
                 @include background($menu_item_background_from, $menu_item_background_to);
                 @include border($menu_item_border_top, $menu_item_border_left, $menu_item_border_right, $menu_item_border_bottom, $menu_item_border_color);
                 @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, $menu_item_link_border_radius_bottom_right, $menu_item_link_border_radius_bottom_left);
-                font-family: unquote($menu_item_link_font);
+                @if $menu_item_link_font != 'inherit' { font-family: unquote($menu_item_link_font); }
                 font-size: $menu_item_link_font_size;
                 font-weight: $menu_item_link_weight;
             }
@@ -368,13 +378,8 @@
         }
 
         > li.mega-menu-grid > ul.mega-sub-menu > li.mega-menu-row > ul.mega-sub-menu {
-            @if unit($panel_inner_width) == 'px' {
-                max-width: $panel_inner_width; /** Panel Width (Inner) **/
-                margin: 0 auto;
-            }
-
-            @if unit($panel_inner_width) == 'vw' {
-                max-width: $panel_inner_width; /** Panel Width (Inner) **/
+            @if unit($panel_inner_width) == 'px' or unit($panel_inner_width) == 'vw' {
+                max-width: $panel_inner_width;
                 margin: 0 auto;
             }
         }
@@ -385,9 +390,11 @@
             align-content: flex-start;
 
             > li.mega-menu-row {
+                all: revert;
                 width: 100%;
 
                 > ul.mega-sub-menu > li.mega-menu-column {
+                    all: revert;
                     grid-column: span var(--span);
                 }
 
@@ -419,7 +426,9 @@
         li.mega-menu-megamenu > ul.mega-sub-menu {
             flex-wrap: wrap;
             z-index: $z_index;
-            max-width: none;
+            color: $panel_font_color;
+            font-size: $panel_font_size;
+            line-height: $line_height;
             @include border-radius($panel_border_radius_top_left, $panel_border_radius_top_right, $panel_border_radius_bottom_right, $panel_border_radius_bottom_left);
             @include background($panel_background_from, $panel_background_to);
             @include border($panel_border_top, $panel_border_left, $panel_border_right, $panel_border_bottom, $panel_border_color);
@@ -451,10 +460,6 @@
                 @include box-shadow($shadow_horizontal $shadow_vertical $shadow_blur $shadow_spread $shadow_color);
             }
 
-            .mega-description-group .mega-menu-description {
-                margin: 5px 0;
-            }
-
             li.mega-menu-column > ul.mega-sub-menu ul.mega-sub-menu ul.mega-sub-menu {
                 margin-left: 10px;
             }
@@ -463,14 +468,14 @@
         li.mega-menu-column-standard,
         li.mega-menu-column > ul.mega-sub-menu > li.mega-menu-item {
             color: $panel_font_color;
-            font-family: unquote($panel_font_family);
+            @if $panel_font_family != 'inherit' { font-family: unquote($panel_font_family); }
             font-size: $panel_font_size;
             @include padding($panel_widget_padding_top, $panel_widget_padding_right, $panel_widget_padding_bottom, $panel_widget_padding_left);
 
             // Widget titles
             h4.mega-block-title {
                 color: $panel_header_color;
-                font-family: unquote($panel_header_font);
+                @if $panel_header_font != 'inherit' { font-family: unquote($panel_header_font); }
                 font-size: $panel_header_font_size;
                 text-transform: $panel_header_text_transform;
                 text-decoration: $panel_header_text_decoration;
@@ -488,7 +493,7 @@
             // Second level menu items
             > a.mega-menu-link {
                 color: $panel_second_level_font_color;
-                font-family: unquote($panel_second_level_font);
+                @if $panel_second_level_font != 'inherit' { font-family: unquote($panel_second_level_font); }
                 font-size: $panel_second_level_font_size;
                 text-transform: $panel_second_level_text_transform;
                 text-decoration: $panel_second_level_text_decoration;
@@ -515,7 +520,7 @@
             // third level menu items
             li.mega-menu-item > a.mega-menu-link {
                 color: $panel_third_level_font_color;
-                font-family: unquote($panel_third_level_font);
+                @if $panel_third_level_font != 'inherit' { font-family: unquote($panel_third_level_font); }
                 font-size: $panel_third_level_font_size;
                 text-transform: $panel_third_level_text_transform;
                 text-decoration: $panel_third_level_text_decoration;
@@ -573,7 +578,7 @@
                 a.mega-menu-link {
                     @include background($flyout_background_from, $flyout_background_to);
                     color: $flyout_link_color;
-                    font-family: unquote($flyout_link_family);
+                    @if $flyout_link_family != 'inherit' { font-family: unquote($flyout_link_family); }
                     font-size: $flyout_link_size;
                     font-weight: $flyout_link_weight;
                     @include padding($flyout_link_padding_top, $flyout_link_padding_right, $flyout_link_padding_bottom, $flyout_link_padding_left);
@@ -583,10 +588,6 @@
                 }
 
                 @include desktop {
-                    &:first-child > a.mega-menu-link {
-                        border-top-left-radius: $flyout_border_radius_top_left;
-                        border-top-right-radius: $flyout_border_radius_top_right;
-                    }
                     &:first-child > a.mega-menu-link {
                         border-top-left-radius: $flyout_border_radius_top_left;
                         border-top-right-radius: $flyout_border_radius_top_right;
@@ -623,16 +624,17 @@
         // Arrows
         li.mega-menu-item-has-children {
             > a.mega-menu-link > span.mega-indicator {
+                all: revert;
                 display: flex;
                 align-items: center;
                 height: 100%;
 
                 &:after {
-                    content: $arrow_down;
-                    font-family: $arrow_font;
-                    font-weight: $arrow_font_weight;
-                    height: 100%;
                     align-content: center;
+                    @include arrow-icon($arrow_down, $arrow_font, $arrow_font_weight);
+                    @if $arrow_rotate == 'on' {
+                        transition: transform 0.3s ease;
+                    }
                 }
             }
 
@@ -648,7 +650,19 @@
                 }
 
                 &.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
-                    content: $arrow_up;
+                    @include arrow-icon-state($arrow_up, $arrow_font);
+                }
+            }
+        }
+
+        @if $arrow_rotate == 'on' {
+            > li.mega-menu-item-has-children.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+                transform: rotate(180deg);
+            }
+
+            @include mobile {
+                > li.mega-menu-item-has-children.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+                    @include arrow-icon-state($arrow_down, $arrow_font);
                 }
             }
         }
@@ -664,7 +678,7 @@
             li.mega-menu-flyout {
                 li.mega-menu-item a.mega-menu-link > span.mega-indicator {
                     &:after {
-                        content: $arrow_right;
+                        @include arrow-icon-state($arrow_right, $arrow_font);
                     }
                 }
 
@@ -677,7 +691,7 @@
                             margin-right: auto;
 
                             &:after {
-                                content: $arrow_left;
+                                @include arrow-icon-state($arrow_left, $arrow_font);
                             }
                         }
                     }
@@ -689,18 +703,6 @@
                     }
                 }
             }
-        }
-
-        // PolyLang Language Switcher
-        li[class^='mega-lang-item'] > a.mega-menu-link > img {
-            display: inline;
-        }
-
-        // WPML Flags
-        a.mega-menu-link > img.wpml-ls-flag,
-        a.mega-menu-link > img.iclflag {
-            display: inline;
-            margin-right: 8px;
         }
 
         @include mobile {

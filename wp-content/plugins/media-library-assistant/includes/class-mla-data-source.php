@@ -385,7 +385,7 @@ class MLAData_Source {
 	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
 	 * @param	string	data source name ( post_date or post_parent )
 	 *
-	 * @return	mixed	(string)/'' or (integer)/0 depending on $data_source type
+	 * @return	mixed	(string)/'' or  (int) /0 depending on $data_source type
 	 */
 	private static function _evaluate_post_information( $post_id, $category, $data_source ) {
 		global $wpdb;

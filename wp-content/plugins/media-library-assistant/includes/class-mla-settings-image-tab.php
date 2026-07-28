@@ -191,14 +191,14 @@ class MLASettings_Image {
 		$item['width'] = isset( $_REQUEST['mla_image_item']['width'] ) ? absint( $_REQUEST['mla_image_item']['width'] ) : 0;
 		$item['height'] = isset( $_REQUEST['mla_image_item']['height'] ) ? absint( $_REQUEST['mla_image_item']['height'] ) : 0;
 		$item['crop'] = isset( $_REQUEST['mla_image_item']['crop'] );
-		$item['horizontal'] = isset( $_REQUEST['mla_image_item']['horizontal'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['horizontal'] ) ) : '';
-		$item['vertical'] = isset( $_REQUEST['mla_image_item']['vertical'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['vertical'] ) ) : '';
+		$item['horizontal'] = isset( $_REQUEST['mla_image_item']['horizontal'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['horizontal'] ) ) : 'center';
+		$item['vertical'] = isset( $_REQUEST['mla_image_item']['vertical'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_image_item']['vertical'] ) ) : 'center';
 
-		if ( ! in_array( $item['mla_image_item']['horizontal'], array( 'left', 'right' ) ) ) {
+		if ( ! in_array( $item['horizontal'], array( 'left', 'right' ) ) ) {
 			$item['horizontal'] = 'center';
 		}
 
-		if ( ! in_array( $item['mla_image_item']['vertical'], array( 'top', 'bottom' ) ) ) {
+		if ( ! in_array( $item['vertical'], array( 'top', 'bottom' ) ) ) {
 			$item['vertical'] = 'center';
 		}
 
@@ -320,6 +320,8 @@ class MLASettings_Image {
 		// Process bulk actions that affect an array of items
 		$bulk_action = MLASettings::mla_current_bulk_action();
 		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
+			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
 				// Convert post-ID to slug; separate loop required because delete changes post_IDs
 				$slugs = array();
@@ -334,19 +336,39 @@ class MLASettings_Image {
 							$item_content = MLAImage_Size::mla_delete_image_size( $slug );
 							break;
 						case 'edit':
-							$request = array( 'slug' => $slug );
+							$current_item = MLAImage_Size::mla_get_image_size( $slug );
+							$request = array(
+								'name' => $current_item['name'],
+								'width' => $current_item['width'],
+								'height' => $current_item['height'],
+								'description' => $current_item['description'],
+								'slug' => $slug
+							);
+
 							if ( isset( $_REQUEST['crop'] ) && '-1' !== $_REQUEST['crop'] ) {
 								$request['crop'] = '1' === $_REQUEST['crop'];
+							} else {
+								$request['crop'] = $current_item['crop'];
 							}
+
 							if ( isset( $_REQUEST['horizontal'] ) && '-1' !== $_REQUEST['horizontal'] ) {
 								$request['horizontal'] = sanitize_title( wp_unslash( $_REQUEST['horizontal'] ) );
+							} else {
+								$request['horizontal'] = $current_item['horizontal'];
 							}
+
 							if ( isset( $_REQUEST['vertical'] ) && '-1' !== $_REQUEST['vertical'] ) {
 								$request['vertical'] = sanitize_title( wp_unslash( $_REQUEST['vertical'] ) );
+							} else {
+								$request['vertical'] = $current_item['vertical'];
 							}
+
 							if ( isset( $_REQUEST['disabled'] ) && '-1' !== $_REQUEST['disabled'] ) {
 								$request['disabled'] = '1' === $_REQUEST['disabled'];
+							} else {
+								$request['disabled'] = $current_item['disabled'];
 							}
+
 							$item_content = MLAImage_Size::mla_update_image_size( $request );
 							break;
 						default:

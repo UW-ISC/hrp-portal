@@ -7,7 +7,7 @@
  * available in the [mla_tag_cloud] shortcode.
  *
  * @package MLA Tag Cloud Hooks Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -15,7 +15,7 @@ Plugin Name: MLA Tag Cloud Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_tag_cloud] shortcode
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
 Copyright 2013-2016 David Lingren
@@ -565,11 +565,11 @@ class MLATagCloudHooksExample {
 			$green = 255;
 			$red = $blue = 0;
 			if ( $half_spread ) {
-				$green = (integer) 255.0 - ( 255.0 * ( absint( $scaled_count - $mid_point ) / $half_spread ) );
+				$green = (int) 255.0 - ( 255.0 * ( absint( $scaled_count - $mid_point ) / $half_spread ) );
 				if ( $scaled_count < $mid_point ) {
-					$red = (integer) 255.0 * ( ( $mid_point - $scaled_count ) / $half_spread );
+					$red = (int) 255.0 * ( ( $mid_point - $scaled_count ) / $half_spread );
 				} elseif ( $scaled_count > $mid_point ) {
-					$blue = (integer) 255.0 * ( ( $scaled_count - $mid_point ) / $half_spread );
+					$blue = (int) 255.0 * ( ( $scaled_count - $mid_point ) / $half_spread );
 				}
 			}
 			 

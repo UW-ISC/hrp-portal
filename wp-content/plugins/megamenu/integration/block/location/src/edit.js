@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import { createInterpolateElement } from '@wordpress/element';
+import { createInterpolateElement, useEffect } from '@wordpress/element';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -12,8 +12,8 @@ import { createInterpolateElement } from '@wordpress/element';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
-import { SelectControl, Placeholder, Disabled } from '@wordpress/components';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { SelectControl, Placeholder, Disabled, PanelBody } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -22,7 +22,7 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import metadata from './block';
+import metadata from './block.json';
 const { name } = metadata;
 
 /**
@@ -33,7 +33,20 @@ const { name } = metadata;
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( { setAttributes, attributes, isSelected } ) {
+export default function Edit( { setAttributes, attributes } ) {
+
+    const enabledLocations = window.max_mega_menu_enabled_locations || [];
+
+    useEffect( () => {
+        if ( ! attributes.location ) {
+            const firstEnabled = enabledLocations.find(
+                ( slug ) => slug in window.max_mega_menu_locations
+            );
+            if ( firstEnabled ) {
+                setAttributes( { location: firstEnabled } );
+            }
+        }
+    }, [] );
 
     if ( window.max_mega_menu_locations.length === 0 ) {
         return (
@@ -43,13 +56,10 @@ export default function Edit( { setAttributes, attributes, isSelected } ) {
         );
     }
 
-    const options = Object.keys(
-        window.max_mega_menu_locations
-    ).map( ( location ) => {
-        return {
-            value: location,
-            label: window.max_mega_menu_locations[location],
-        };
+    const options = Object.keys( window.max_mega_menu_locations ).map( ( location ) => {
+        const label = window.max_mega_menu_locations[ location ];
+        const badge = location === '' ? '' : ( enabledLocations.includes( location ) ? '🟢 ' : '⚪ ' );
+        return { value: location, label: badge + label };
     } );
 
     if ( options.length === 1 ) {
@@ -75,23 +85,29 @@ export default function Edit( { setAttributes, attributes, isSelected } ) {
     };
 
     return (
-        <div {...useBlockProps()}>
-            {isSelected || !attributes.location || attributes.location === '' ? (
-                    <Placeholder
-                        label={__('Max Mega Menu', 'megamenu')}
-                    >
-                        <SelectControl
-                            label={__('Select a location', 'megamenu')}
-                            options={options}
-                            value={attributes.location}
-                            onChange={onSaveMenu}
-                        />
+        <>
+            <InspectorControls>
+                <PanelBody title={__('Menu Location', 'megamenu')}>
+                    <SelectControl
+                        __next40pxDefaultSize
+                        label={__('Select a location', 'megamenu')}
+                        options={options}
+                        value={attributes.location}
+                        onChange={onSaveMenu}
+                    />
+                </PanelBody>
+            </InspectorControls>
+            <div {...useBlockProps()}>
+                {attributes.location && attributes.location !== '' ? (
+                    <Disabled>
+                        <ServerSideRender block={name} attributes={attributes} />
+                    </Disabled>
+                ) : (
+                    <Placeholder label={__('Max Mega Menu', 'megamenu')}>
+                        <p>{ __( 'Select a location in the block settings panel.', 'megamenu' ) }</p>
                     </Placeholder>
-            ) : (
-                <Disabled>
-                    <ServerSideRender block={name} attributes={attributes} />
-                </Disabled>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 }

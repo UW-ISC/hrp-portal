@@ -11,7 +11,7 @@
  * https://wordpress.org/support/topic/archive-templates-and-dynamic-galleries/
  * 
  * @package MLA Taxonomy Archive Redirect
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -19,7 +19,7 @@ Plugin Name: MLA Taxonomy Archive Redirect
 Plugin URI: http://davidlingren.com/
 Description: Detect a "Taxonomy Archive Page" URL and redirect to a specified page with [mla_gallery] parameters
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
 Copyright 2025 David Lingren
@@ -52,7 +52,7 @@ class MLATaxonomyArchiveRedirect {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.02';
+	const PLUGIN_VERSION = '1.03';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -181,8 +181,8 @@ class MLATaxonomyArchiveRedirect {
 		MLACore::mla_debug_add( __LINE__ . " MLATaxonomyArchiveRedirect::initialize( {$uri} ) \$_REQUEST = " . var_export( $_REQUEST, true ), self::MLA_DEBUG_CATEGORY );
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -225,7 +225,7 @@ class MLATaxonomyArchiveRedirect {
 		MLACore::mla_debug_add( __LINE__ . " MLATaxonomyArchiveRedirect::initialize current_values = " . var_export( $current_values, true ), self::MLA_DEBUG_CATEGORY );
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 
 		add_action( 'parse_query', 'MLATaxonomyArchiveRedirect::mla_parse_query_action' );		
 

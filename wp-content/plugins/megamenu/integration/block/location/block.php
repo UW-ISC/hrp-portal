@@ -26,6 +26,15 @@ function maxmegamenu_location_block_init() {
 
 	wp_localize_script( 'maxmegamenu-location-editor-script', 'max_mega_menu_locations', $locations );
 
+	$enabled_locations = [];
+	foreach ( array_keys( get_registered_nav_menus() ) as $location_slug ) {
+		$loc = Mega_Menu_Location::find( $location_slug );
+		if ( $loc && $loc->is_enabled() && has_nav_menu( $location_slug ) ) {
+			$enabled_locations[] = $location_slug;
+		}
+	}
+	wp_localize_script( 'maxmegamenu-location-editor-script', 'max_mega_menu_enabled_locations', $enabled_locations );
+
 	wp_localize_script(
 		'maxmegamenu-location-editor-script',
 		'max_mega_menu_block_admin',
@@ -38,16 +47,24 @@ add_action( 'init', 'maxmegamenu_location_block_init' );
 
 
 /**
- * Enqueue the menu stylesheet on block-enabled (Gutenberg editor) pages.
+ * Enqueue the menu stylesheet for the block editor (including iframe content).
  *
- * @since  3.0
- * @return void
+ * Front-end pages already load this via {@see Mega_Menu_Style_Manager::enqueue_styles()}
+ * on `wp_enqueue_scripts`; this hook only targets admin/editor contexts where
+ * `enqueue_block_assets` is required for the iframe canvas (WP 6.9+).
+ *
+ * @since 3.0
+ * @see https://developer.wordpress.org/block-editor/how-to-guides/enqueueing-assets-in-the-editor/
  */
 function maxmegamenu_block_assets() {
-	$style_manager = new Mega_Menu_Style_Manager;
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$style_manager = new Mega_Menu_Style_Manager();
 	$style_manager->enqueue_fs_style();
 }
-add_action( 'enqueue_block_editor_assets', 'maxmegamenu_block_assets' );
+add_action( 'enqueue_block_assets', 'maxmegamenu_block_assets' );
 
 /**
  * Render callback for the Max Mega Menu location block.
@@ -59,7 +76,9 @@ add_action( 'enqueue_block_editor_assets', 'maxmegamenu_block_assets' );
  * @return string   The rendered menu HTML, or a placeholder message.
  */
 function maxmegamenu_render_callback( $attributes, $content, $block ) {
-	if ( isset( $attributes['location'] ) && strlen( $attributes['location'] ) && function_exists("max_mega_menu_is_enabled") && max_mega_menu_is_enabled( $attributes['location'] ) ) {
+	$loc = isset( $attributes['location'] ) && strlen( $attributes['location'] ) ? Mega_Menu_Location::find( $attributes['location'] ) : false;
+
+	if ( $loc && $loc->is_active() ) {
 		$menu = wp_nav_menu( [ 'theme_location' => $attributes['location'], 'echo' => false ] );
 	} else {
 		if ( maxmegamenu_is_editing_block_on_backend() ) {

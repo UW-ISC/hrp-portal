@@ -252,7 +252,7 @@ class MLA_Polylang {
 			}
 		} // add new translation
 
-		return (integer) $new_id;
+		return (int) $new_id;
 	} // _get_translation
 
 	/**
@@ -271,7 +271,7 @@ class MLA_Polylang {
 			echo esc_html__( 'ERROR: No post ID found', 'media-library-assistant' );
 			die();
 		} else {
-			$post_id = (integer) $_REQUEST['post_ID'];
+			$post_id = (int) $_REQUEST['post_ID'];
 		}
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {

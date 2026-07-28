@@ -50,6 +50,8 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 			add_action( 'megamenu_page_theme_editor', [ $this, 'theme_editor_page' ] );
 
 			add_filter( 'wp_code_editor_settings', [ $this, 'codemirror_disable_lint' ], 99 );
+			add_filter( 'megamenu_theme_font_select_structure', [ $this, 'add_local_fonts_to_structure' ], 10, 2 );
+			add_filter( 'megamenu_theme_font_select_structure', [ $this, 'restrict_menu_font_family_structure' ], 99, 2 );
 		}
 
 		/**
@@ -201,6 +203,38 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		public function get_prepared_theme_for_saving() {
 
 			$submitted_settings = $_POST['settings'];
+
+			if ( isset( $submitted_settings['arrow_style'] ) ) {
+				$style_key = $submitted_settings['arrow_style'];
+				$styles = apply_filters( 'megamenu_theme_arrow_icons', [] );
+
+				$found = null;
+				foreach ( $styles as $group ) {
+					if ( isset( $group['icons'][ $style_key ] ) ) {
+						$found = $group['icons'][ $style_key ];
+						break;
+					}
+				}
+
+				if ( $found ) {
+					$dirs = $found['icons'];
+					$submitted_settings['arrow_up']    = $dirs['up']['value'];
+					$submitted_settings['arrow_down']  = $dirs['down']['value'];
+					$submitted_settings['arrow_left']  = $dirs['left']['value'];
+					$submitted_settings['arrow_right'] = $dirs['right']['value'];
+				} elseif ( $style_key === 'disabled' ) {
+					$submitted_settings['arrow_up'] = 'disabled';
+					$submitted_settings['arrow_down'] = 'disabled';
+					$submitted_settings['arrow_left'] = 'disabled';
+					$submitted_settings['arrow_right'] = 'disabled';
+				} else {
+					$submitted_settings['arrow_up'] = $style_key;
+					$submitted_settings['arrow_down'] = $style_key;
+					$submitted_settings['arrow_left'] = $style_key;
+					$submitted_settings['arrow_right'] = $style_key;
+				}
+				unset( $submitted_settings['arrow_style'] );
+			}
 
 			if ( isset( $_POST['checkboxes'] ) ) {
 				foreach ( $_POST['checkboxes'] as $checkbox => $value ) {
@@ -485,10 +519,11 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			if ( count( $locations ) ) {
 				foreach ( $locations as $location => $menu_id ) {
-					if ( has_nav_menu( $location ) && max_mega_menu_is_enabled( $location ) && isset( $settings[ $location ]['theme'] ) && $settings[ $location ]['theme'] == $theme ) {
+					$loc = Mega_Menu_Location::find( $location );
+					if ( $loc && $loc->is_active() && isset( $settings[ $location ]['theme'] ) && $settings[ $location ]['theme'] == $theme ) {
 						$out[] = [
 							'location' => $location,
-							'label'    => isset( $menus[ $location ] ) ? $menus[ $location ] : $location,
+							'label'    => apply_filters( 'megamenu_location_card_description', isset( $menus[ $location ] ) ? $menus[ $location ] : $location, $location ),
 						];
 					}
 				}
@@ -522,6 +557,48 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 
 		/**
+		 * Allowed HTML for admin notices that contain a single inline link.
+		 *
+		 * @return array<string, array<string, bool>>
+		 */
+		private function inline_anchor_kses() {
+			return array(
+				'a' => array(
+					'href' => true,
+				),
+			);
+		}
+
+
+		/**
+		 * HTML anchor to Mega Menu → Menu Locations.
+		 *
+		 * @return string
+		 */
+		private function get_menu_locations_link_html() {
+			$processor = new WP_HTML_Tag_Processor( '<a>' . esc_html__( 'Menu Locations', 'megamenu' ) . '</a>' );
+			if ( $processor->next_tag( 'a' ) ) {
+				$processor->set_attribute( 'href', esc_url( admin_url( 'admin.php?page=maxmegamenu' ) ) );
+			}
+			return $processor->get_updated_html();
+		}
+
+
+		/**
+		 * HTML anchor to Mega Menu → General Settings.
+		 *
+		 * @return string
+		 */
+		private function get_general_settings_link_html() {
+			$processor = new WP_HTML_Tag_Processor( '<a>' . esc_html__( 'General Settings', 'megamenu' ) . '</a>' );
+			if ( $processor->next_tag( 'a' ) ) {
+				$processor->set_attribute( 'href', esc_url( admin_url( 'admin.php?page=maxmegamenu_general_settings' ) ) );
+			}
+			return $processor->get_updated_html();
+		}
+
+
+		/**
 		 * Display messages to the user
 		 *
 		 * @since 1.0
@@ -533,49 +610,90 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 			$test = Mega_Menu_Theme::from_settings( $this->active_theme )->test_compilation();
 
 			if ( is_wp_error( $test ) ) {
+				$compile_fail_allowed = array_merge(
+					wp_kses_allowed_html( 'post' ),
+					[
+						'textarea' => [
+							'id'       => true,
+							'name'     => true,
+							'readonly' => true,
+							'rows'     => true,
+							'cols'     => true,
+							'class'    => true,
+							'style'    => true,
+							'wrap'     => true,
+						],
+						'label'    => [
+							'for' => true,
+						],
+					]
+				);
 				?>
-				<div class="notice notice-error is-dismissible"> 
-					<p><?php echo $test->get_error_message(); ?></p>
+				<div class="notice notice-error is-dismissible">
+					<?php echo wp_kses( $test->get_error_message(), $compile_fail_allowed ); ?>
 				</div>
 				<?php
 			}
 
-			if ( isset( $_GET['deleted'] ) && $_GET['deleted'] == 'false' ) {
+			if ( isset( $_GET['debug'] ) && 'true' === sanitize_text_field( wp_unslash( $_GET['debug'] ) ) ) {
+				$scss = Mega_Menu_Theme::from_settings( $this->active_theme )->get_scss();
 				?>
-				<div class="notice notice-error is-dismissible"> 
-					<p><?php _e( 'Failed to delete theme. The theme is in use by a menu.', 'megamenu' ) ?></p>
+				<div class="notice notice-info">
+					<p><label for="megamenu-debug-scss"><strong><?php esc_html_e( 'Debug: Full SCSS source', 'megamenu' ); ?></strong></label></p>
+					<textarea id="megamenu-debug-scss" readonly="readonly" rows="18" class="large-text code" style="width:100%;box-sizing:border-box;"><?php echo esc_textarea( $scss ); ?></textarea>
 				</div>
 				<?php
 			}
 
-			if ( isset( $_GET['deleted'] ) && $_GET['deleted'] == 'true' ) {
+			if ( isset( $_GET['deleted'] ) && 'false' === sanitize_text_field( wp_unslash( $_GET['deleted'] ) ) ) {
 				?>
-				<div class="notice notice-success is-dismissible"> 
-					<p><?php _e( 'Theme Deleted', 'megamenu' ) ?></p>
+				<div class="notice notice-error is-dismissible">
+					<p><?php esc_html_e( 'Failed to delete theme. The theme is in use by a menu.', 'megamenu' ); ?></p>
+				</div>
+				<?php
+			}
+
+			if ( isset( $_GET['deleted'] ) && 'true' === sanitize_text_field( wp_unslash( $_GET['deleted'] ) ) ) {
+				?>
+				<div class="notice notice-success is-dismissible">
+					<p><?php esc_html_e( 'Theme deleted.', 'megamenu' ); ?></p>
 				</div>
 				<?php
 			}
 
 			if ( isset( $_GET['duplicated'] ) ) {
 				?>
-				<div class="notice notice-success is-dismissible"> 
-					<p><?php _e( 'Theme Duplicated', 'megamenu' ) ?></p>
+				<div class="notice notice-success is-dismissible">
+					<p><?php esc_html_e( 'Theme duplicated.', 'megamenu' ); ?></p>
 				</div>
 				<?php
 			}
 
 			if ( isset( $_GET['reverted'] ) ) {
 				?>
-				<div class="notice notice-success is-dismissible"> 
-					<p><?php _e( 'Theme Reverted', 'megamenu' ) ?></p>
+				<div class="notice notice-success is-dismissible">
+					<p><?php esc_html_e( 'Theme reverted.', 'megamenu' ); ?></p>
 				</div>
 				<?php
 			}
 
 			if ( isset( $_GET['created'] ) ) {
+				$a    = $this->inline_anchor_kses();
+				$link = wp_kses( $this->get_menu_locations_link_html(), $a );
 				?>
-				<div class="notice notice-success is-dismissible"> 
-					<p><?php _e( "New Theme Created. To apply this theme to a menu location, go to <i>Mega Menu > Menu Locations</i> and select this theme from the 'Theme' dropdown.", 'megamenu' ) ?></p>
+				<div class="notice notice-success is-dismissible">
+					<p>
+						<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: %s: link to the Menu Locations admin page. */
+								__( 'New theme created. To apply it to a menu location, go to %s and choose this theme from the Theme dropdown.', 'megamenu' ),
+								$link
+							),
+							$a
+						);
+						?>
+					</p>
 				</div>
 				<?php
 			}
@@ -865,9 +983,9 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 			<?php $this->print_messages(); ?>
 
 		<div class='menu_settings menu_settings_menu_themes'>
+			<?php $theme_active_locations = $this->get_theme_active_locations( $this->id ); ?>
 
 			<div class='theme_selector'>
-				<?php $theme_active_locations = $this->get_theme_active_locations( $this->id ); ?>
 				<div class='theme-selector-field'>
 					<label for='theme_selector' class='mega-short-desc'><?php esc_html_e( 'Select theme to edit', 'megamenu' ); ?></label>
 					<?php echo $this->theme_selector(); ?>
@@ -884,59 +1002,29 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 					$theme_action_label_delete   = __( 'Delete theme', 'megamenu' );
 					$theme_action_label_revert   = __( 'Revert theme', 'megamenu' );
 					?>
-					<a href="<?php echo esc_url( $create_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--create" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_create ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_create ); ?>">
+					<a href="<?php echo esc_url( $create_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--create" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_create ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_create ); ?>">
 						<span class="dashicons dashicons-welcome-add-page" aria-hidden="true"></span>
 					</a>
-					<a href="<?php echo esc_url( $duplicate_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--duplicate" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_duplicate ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_duplicate ); ?>">
+					<a href="<?php echo esc_url( $duplicate_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--duplicate" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_duplicate ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_duplicate ); ?>">
 						<span class="dashicons dashicons-images-alt2" aria-hidden="true"></span>
 					</a>
-					<a href="<?php echo esc_url( $export_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--export" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_export ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_export ); ?>">
+					<a href="<?php echo esc_url( $export_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--export" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_export ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_export ); ?>">
 						<span class="dashicons dashicons-upload" aria-hidden="true"></span>
 					</a>
-					<a href="<?php echo esc_url( $import_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--import" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_import ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_import ); ?>">
+					<a href="<?php echo esc_url( $import_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--import" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_import ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_import ); ?>">
 						<span class="dashicons dashicons-download" aria-hidden="true"></span>
 					</a>
 					<?php if ( $this->string_contains( $this->id, [ 'custom' ] ) ) : ?>
-						<a href="<?php echo esc_url( $delete_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--delete delete megamenu-destructive-confirm" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_delete ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_delete ); ?>">
+						<a href="<?php echo esc_url( $delete_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--delete delete megamenu-destructive-confirm" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_delete ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_delete ); ?>">
 							<span class="dashicons dashicons-trash" aria-hidden="true"></span>
 						</a>
 					<?php else : ?>
-						<a href="<?php echo esc_url( $revert_url ); ?>" class="mega-theme-editor-action mega-theme-editor-action--revert megamenu-destructive-confirm" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_revert ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_revert ); ?>">
+						<a href="<?php echo esc_url( $revert_url ); ?>" class="button button-secondary button-compact mega-theme-editor-action mega-theme-editor-action--revert megamenu-destructive-confirm" data-mega-tooltip="<?php echo esc_attr( $theme_action_label_revert ); ?>" aria-label="<?php echo esc_attr( $theme_action_label_revert ); ?>">
 							<span class="dashicons dashicons-update-alt" aria-hidden="true"></span>
 						</a>
 					<?php endif; ?>
 					</div>
 				</div>
-
-				<?php if ( ! empty( $theme_active_locations ) ) : ?>
-				<div class='theme-editor-preview-group'>
-					<p class='mega-short-desc' id='mega-theme-editor-preview-heading'><?php esc_html_e( 'Preview', 'megamenu' ); ?></p>
-					<div class='mega-theme-editor-actions' role='toolbar' aria-labelledby='mega-theme-editor-preview-heading'>
-					<?php
-					foreach ( $theme_active_locations as $loc_row ) {
-						$loc_slug  = $loc_row['location'];
-						$loc_label = isset( $loc_row['label'] ) ? (string) $loc_row['label'] : $loc_slug;
-						$safe_name = wp_strip_all_tags( $loc_label );
-						$preview_tooltip = sprintf(
-							/* translators: %s: menu location name (e.g. Primary Menu). */
-							__( 'Save theme and Preview location: %s', 'megamenu' ),
-							$safe_name
-						);
-						echo Mega_Menu_Preview::render_preview_link(
-							$loc_slug,
-							$loc_label,
-							[
-								'inactive'                   => ! Mega_Menu_Preview::is_previewable( $loc_slug ),
-								'icon_only'                  => true,
-								'tooltip'                    => $preview_tooltip,
-								'save_theme_before_preview'  => true,
-							]
-						); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup from Mega_Menu_Preview::render_preview_link().
-					}
-					?>
-					</div>
-				</div>
-				<?php endif; ?>
 
 			</div>
 
@@ -944,10 +1032,23 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			$saved_settings = get_option( 'megamenu_settings' );
 
-			if ( isset( $saved_settings['css'] ) && $saved_settings['css'] == 'disabled' ) {
+			if ( isset( $saved_settings['css'] ) && 'disabled' === $saved_settings['css'] ) {
+				$a_settings = $this->inline_anchor_kses();
+				$gs_link      = wp_kses( $this->get_general_settings_link_html(), $a_settings );
 				?>
 					<div class="notice notice-error is-dismissible">
-						<p><?php esc_html_e( 'CSS Output (under Mega Menu > General Settings) has been disabled. Therefore, changes made within the theme editor will not be applied to your menu.', 'megamenu' ); ?></p>
+						<p>
+							<?php
+							echo wp_kses(
+								sprintf(
+									/* translators: %s: link to General Settings. */
+									__( 'CSS output is disabled in %s. Changes you make here will not affect your menu until CSS output is turned back on.', 'megamenu' ),
+									$gs_link
+								),
+								$a_settings
+							);
+							?>
+						</p>
 					</div>
 				<?php
 			}
@@ -955,15 +1056,22 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 			$locations = $this->theme_is_being_used_by_location( $this->id );
 
 			if ( ! $locations && ! isset( $_GET['created'] ) ) {
+				$a    = $this->inline_anchor_kses();
+				$ml   = wp_kses( $this->get_menu_locations_link_html(), $a );
 				?>
 					<div class="notice notice-warning is-dismissible">
+						<p><?php esc_html_e( 'This theme is not currently active as it has not been assigned to a menu location.', 'megamenu' ); ?></p>
 						<p>
-						<?php
-						echo wp_kses(
-							__( "This menu theme is not currently active as it has not been applied to any menu locations. You may wish to check you are editing the correct menu theme - you can choose a different theme to edit using the 'Select theme to edit' selector above. Alternatively, to apply this theme to a menu go to <i>Appearance > Menus > Max Mega Menu Settings</i> and select this theme from the 'Theme' dropdown.", 'megamenu' ),
-							array( 'i' => array() )
-						);
-						?>
+							<?php
+							echo wp_kses(
+								sprintf(
+									/* translators: %s: link to the Menu Locations admin page. */
+									__( 'To use it on your site, go to %s, open a location, and set the theme on the Theme tab.', 'megamenu' ),
+									$ml
+								),
+								$a
+							);
+							?>
 						</p>
 					</div>
 				<?php
@@ -1000,28 +1108,30 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									'arrow'       => [
 										'priority'    => 20,
 										'title'       => __( 'Arrows', 'megamenu' ),
-										'description' => __( 'Select the arrow icons used within the menu.', 'megamenu' ),
+										'description' => __( 'Select the arrow style used within the menu.', 'megamenu' ),
 										'settings'    => [
 											[
-												'title' => __( 'Up', 'megamenu' ),
+												'title' => __( 'Icon Set', 'megamenu' ),
 												'type'  => 'arrow',
-												'key'   => 'arrow_up',
+												'key'   => 'arrow_style',
 											],
 											[
-												'title' => __( 'Down', 'megamenu' ),
-												'type'  => 'arrow',
-												'key'   => 'arrow_down',
+												'title' => __( 'Rotate', 'megamenu' ),
+												'type'  => 'checkbox',
+												'key'   => 'arrow_rotate',
 											],
+										],
+									],
+									'menu_font_family' => [
+										'priority'    => 25,
+										'title'       => __( 'Menu Font Family', 'megamenu' ),
+										'description' => __( 'Set the font family for the entire menu.', 'megamenu' ),
+										'settings'    => [
 											[
-												'title' => __( 'Left', 'megamenu' ),
-												'type'  => 'arrow',
-												'key'   => 'arrow_left',
+												'title' => '',
+												'type'  => 'menu_font',
+												'key'   => 'menu_font_family',
 											],
-											[
-												'title' => __( 'Right', 'megamenu' ),
-												'type'  => 'arrow',
-												'key'   => 'arrow_right',
-											]
 										],
 									],
 									'line_height' => [
@@ -1141,7 +1251,11 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									'use_flex_css'      => [
 										'priority'    => 80,
 										'title'       => __( 'Use Flex CSS', 'megamenu' ),
-										'description' => __( 'Experimental: Use flexbox to style the menu. Testing purposes only. Default: Disabled.', 'megamenu' ),
+										'description' => [
+							__( '<strong>Status:</strong> Disabled by default (Testing only).', 'megamenu' ),
+							__( '<strong>Note:</strong> Uses <code>all: revert;</code> for a clean style reset.', 'megamenu' ),
+							__( '<strong>Customization:</strong> Ensure all custom CSS directly targets the menu inside the Custom Styling tab.', 'megamenu' ),
+						],
 										'settings'    => [
 											[
 												'title' => __( 'Enabled', 'megamenu' ),
@@ -2705,35 +2819,6 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 										'title'       => __( 'Mobile Sub Menu', 'megamenu' ),
 										'description' => '',
 									],
-									'mobile_menu_overlay' => [
-										'priority'    => 34,
-										'title'       => __( 'Overlay Content', 'megamenu' ),
-										'description' => __( 'If enabled, the mobile sub menu will overlay the page content (instead of pushing the page content down). This will only work if the menu/header is not sticky.', 'megamenu' ),
-										'settings'    => [
-											[
-												'title' => '',
-												'type'  => 'checkbox',
-												'key'   => 'mobile_menu_overlay',
-											],
-										],
-									],
-									'mobile_menu_force_width' => [
-										'priority'    => 35,
-										'title'       => __( 'Force Full Width', 'megamenu' ),
-										'description' => __( "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'. This setting does not apply to Off Canvas menus (see below).", 'megamenu' ),
-										'settings'    => [
-											[
-												'title' => __( 'Enabled', 'megamenu' ),
-												'type'  => 'checkbox',
-												'key'   => 'mobile_menu_force_width',
-											],
-											[
-												'title' => __( 'Selector', 'megamenu' ),
-												'type'  => 'freetext',
-												'key'   => 'mobile_menu_force_width_selector',
-											],
-										],
-									],
 									'mobile_menu_item_height' => [
 										'priority'    => 38,
 										'title'       => __( 'Menu Item Height', 'megamenu' ),
@@ -2856,10 +2941,44 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 											],
 										],
 									],
+									'mobile_submenu_position_intro' => [
+										'priority'    => 56,
+										'title'       => __( 'Mobile Sub Menu Position', 'megamenu' ),
+										'description' => __( 'These options only apply if the Mobile Menu Type is set to "Show/Hide" or "Slide Down".', 'megamenu' ),
+									],
+									'mobile_menu_overlay' => [
+										'priority'    => 57,
+										'title'       => __( 'Overlay Content', 'megamenu' ),
+										'description' => __( 'If enabled, the mobile sub menu will be absolutely positioned to overlay page content, preventing layout shifts. This will only work if the menu/header is not sticky.', 'megamenu' ),
+										'settings'    => [
+											[
+												'title' => '',
+												'type'  => 'checkbox',
+												'key'   => 'mobile_menu_overlay',
+											],
+										],
+									],
+									'mobile_menu_force_width' => [
+										'priority'    => 58,
+										'title'       => __( 'Force Full Width', 'megamenu' ),
+										'description' => __( "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'.", 'megamenu' ),
+										'settings'    => [
+											[
+												'title' => __( 'Enabled', 'megamenu' ),
+												'type'  => 'checkbox',
+												'key'   => 'mobile_menu_force_width',
+											],
+											[
+												'title' => __( 'Selector', 'megamenu' ),
+												'type'  => 'freetext',
+												'key'   => 'mobile_menu_force_width_selector',
+											],
+										],
+									],
 									'off_canvas_header' => [
 										'priority'    => 60,
 										'title'       => __( 'Off Canvas Settings', 'megamenu' ),
-										'description' => '',
+										'description' => __( 'These options only apply if the Mobile Menu Type is set to "Off Canvas".', 'megamenu' ),
 									],
 									'mobile_menu_off_canvas_width' => [
 										'priority'    => 65,
@@ -3004,16 +3123,23 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 						if ( isset( $group['settings'] ) ) {
 
-							echo "<td class='mega-name'><div class='mega-name-title'>" . $group['title'] . "</div><div class='mega-description'>" . $group['description'] . '</div></td>';
+							$description = $group['description'] ?? '';
+						if ( is_array( $description ) ) {
+							$description = '<ul>' . implode( '', array_map( fn( $item ) => '<li>' . $item . '</li>', $description ) ) . '</ul>';
+						}
+						echo "<td class='mega-name'><div class='mega-name-title'>" . $group['title'] . "</div><div class='mega-description'>" . $description . '</div></td>';
 							echo "<td class='mega-value'>";
 
 							foreach ( $group['settings'] as $setting_id => $setting ) {
 
 								$is_textarea        = ( 'textarea' === $setting['type'] );
+								$use_div            = ( 'toggle_blocks' === $setting['type'] );
 								$textarea_dom_id    = $is_textarea ? 'megamenu-theme-textarea-' . sanitize_key( (string) $setting['key'] ) : '';
 								$textarea_for_attr  = $is_textarea ? ' for="' . esc_attr( $textarea_dom_id ) . '"' : '';
 
-								if ( isset( $setting['validation'] ) ) {
+								if ( $use_div ) {
+									echo "<div class='mega-{$setting['key']}'>";
+								} elseif ( isset( $setting['validation'] ) ) {
 									echo "<label class='mega-{$setting['key']}' data-validation='{$setting['validation']}'{$textarea_for_attr}>";
 								} else {
 									echo "<label class='mega-{$setting['key']}'{$textarea_for_attr}>";
@@ -3050,6 +3176,9 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 									case 'weight':
 										$this->print_theme_weight_option( $setting['key'] );
 										break;
+									case 'menu_font':
+										$this->print_theme_menu_font_option( $setting['key'] );
+										break;
 									case 'font':
 										$this->print_theme_font_option( $setting['key'] );
 										break;
@@ -3070,7 +3199,9 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 										break;
 								}
 
-								if ( ! $is_textarea ) {
+								if ( $use_div ) {
+									echo '</div>';
+								} elseif ( ! $is_textarea ) {
 									echo '</label>';
 								}
 
@@ -3111,7 +3242,12 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 							echo '</td>';
 						} else {
-							echo "<td colspan='2'><h5>{$group['title']}</h5></td>";
+							echo '<td colspan="2" class="mega-heading-cell">';
+							echo '<h3>' . esc_html( $group['title'] ) . '</h3>';
+							if ( ! empty( $group['description'] ) ) {
+								echo '<p class="mega-description">' . esc_html( $group['description'] ) . '</p>';
+							}
+							echo '</td>';
 						}
 
 						echo '</tr>';
@@ -3127,8 +3263,68 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 				<div class='megamenu_submit'>
 					<p class="submit">
-						<button type="submit" name="submit" id="submit" class="button button-primary button-compact"><?php echo esc_html__( 'Save Changes', 'default' ); ?></button>
+						<button type="submit" name="submit" id="submit" class="button button-primary button-compact"><?php echo esc_html__( 'Save', 'megamenu' ); ?></button>
 					</p>
+					<?php if ( ! empty( $theme_active_locations ) ) : ?>
+						<?php
+						$theme_preview_meta = [];
+						foreach ( $theme_active_locations as $loc_row ) {
+							$loc_slug           = $loc_row['location'];
+							$loc_label          = isset( $loc_row['label'] ) ? (string) $loc_row['label'] : $loc_slug;
+							$location_heading   = wp_strip_all_tags( $loc_label );
+							$theme_preview_meta[] = [
+								'location'               => $loc_slug,
+								'location_label'         => $location_heading,
+								'preview_url'            => Mega_Menu_Location_Preview::get_preview_url_raw( $loc_slug ),
+								'preview_title'          => Mega_Menu_Location_Preview::get_preview_title( $loc_slug, $location_heading ),
+								'assigned_menu'          => Mega_Menu_Location_Preview::get_assigned_menu_name_for_location( $loc_slug ),
+								'assigned_menu_id'       => Mega_Menu_Location_Preview::get_assigned_menu_id_for_location( $loc_slug ),
+								'responsive_breakpoint'  => Mega_Menu_Location_Preview::get_responsive_breakpoint_px_for_location( $loc_slug ),
+								'previewable'            => Mega_Menu_Location_Preview::is_previewable( $loc_slug ),
+							];
+						}
+						$theme_preview_meta_json = wp_json_encode(
+							$theme_preview_meta,
+							JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+						);
+						?>
+					<div
+						class="megamenu-theme-editor-submit__preview-after"
+						role="group"
+						aria-label="<?php esc_attr_e( 'After saving the theme', 'megamenu' ); ?>"
+					>
+						<div class="megamenu-preview-after__row">
+							<label class="megamenu-preview-after__toggle-label" for="megamenu-theme-save-then-preview">
+								<span class="components-form-toggle">
+									<input
+										type="checkbox"
+										id="megamenu-theme-save-then-preview"
+										class="components-form-toggle__input"
+										role="switch"
+										autocomplete="off"
+									/>
+									<span class="components-form-toggle__track" aria-hidden="true"></span>
+									<span class="components-form-toggle__thumb" aria-hidden="true"></span>
+								</span>
+								<span class="megamenu-preview-after__label-text"><?php esc_html_e( 'Open preview after saving', 'megamenu' ); ?></span>
+							</label>
+						<?php if ( count( $theme_active_locations ) > 1 ) : ?>
+							<label class="screen-reader-text" for="megamenu-theme-save-preview-location"><?php esc_html_e( 'Menu location to preview', 'megamenu' ); ?></label>
+							<select id="megamenu-theme-save-preview-location" class="megamenu-preview-after__location-select" autocomplete="off">
+								<?php
+								foreach ( $theme_preview_meta as $row ) {
+									$opt_disabled = $row['previewable'] ? '' : ' disabled="disabled"';
+									echo '<option value="' . esc_attr( $row['location'] ) . '"' . $opt_disabled . '>' . esc_html( $row['location_label'] ) . '</option>';
+								}
+								?>
+							</select>
+						<?php else : ?>
+							<input type="hidden" id="megamenu-theme-save-preview-location" value="<?php echo esc_attr( $theme_preview_meta[0]['location'] ); ?>" />
+						<?php endif; ?>
+						</div>
+					</div>
+					<script type="application/json" id="megamenu-theme-editor-preview-meta"><?php echo $theme_preview_meta_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON_HEX_* encoded. ?></script>
+					<?php endif; ?>
 				</div>
 
 				<?php $this->show_cache_warning(); ?>
@@ -3153,19 +3349,21 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 				<button type="button" class="megamenu-admin-modal__backdrop" aria-label="<?php esc_attr_e( 'Close', 'megamenu' ); ?>"></button>
 				<div class="megamenu-admin-modal__panel" role="dialog" aria-modal="true" aria-labelledby="megamenu-scss-variables-dialog-title" tabindex="-1">
 					<div class="megamenu-admin-modal__header">
-						<div class="megamenu-admin-modal__title-group">
-							<h2 id="megamenu-scss-variables-dialog-title" class="megamenu-admin-modal__title">
-								<span class="megamenu-admin-modal__title-text"><?php esc_html_e( 'SCSS variables for this theme', 'megamenu' ); ?></span>
-							</h2>
-						</div>
-						<div class="megamenu-admin-modal__header-actions">
-							<button type="button" class="megamenu-admin-modal__expand-btn" aria-expanded="false" aria-label="<?php echo esc_attr__( 'Expand to fill workspace', 'megamenu' ); ?>">
-								<span class="dashicons dashicons-fullscreen-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--expand" aria-hidden="true"></span>
-								<span class="dashicons dashicons-fullscreen-exit-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--contract" aria-hidden="true"></span>
-							</button>
-							<button type="button" class="megamenu-modal-close" aria-label="<?php esc_attr_e( 'Close', 'megamenu' ); ?>">
-								<span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
-							</button>
+						<div class="megamenu-admin-modal__header-top">
+							<div class="megamenu-admin-modal__title-group">
+								<h2 id="megamenu-scss-variables-dialog-title" class="megamenu-admin-modal__title">
+									<span class="megamenu-admin-modal__title-text"><?php esc_html_e( 'SCSS variables for this theme', 'megamenu' ); ?></span>
+								</h2>
+								<div class="megamenu-admin-modal__header-actions">
+									<button type="button" class="button button-secondary button-compact megamenu-admin-modal-icon-btn megamenu-admin-modal__expand-btn" aria-expanded="false" aria-label="<?php echo esc_attr__( 'Expand to fill workspace', 'megamenu' ); ?>">
+										<span class="dashicons dashicons-fullscreen-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--expand" aria-hidden="true"></span>
+										<span class="dashicons dashicons-fullscreen-exit-alt megamenu-admin-modal__expand-icon megamenu-admin-modal__expand-icon--contract" aria-hidden="true"></span>
+									</button>
+									<button type="button" class="button button-secondary button-compact megamenu-admin-modal-icon-btn megamenu-modal-close" aria-label="<?php esc_attr_e( 'Close', 'megamenu' ); ?>">
+										<span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="megamenu-admin-modal__body megamenu-admin-modal__loading-host">
@@ -3384,22 +3582,49 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		 */
 		public function print_theme_arrow_option( $key ) {
 
-			$value = $this->active_theme[ $key ];
+			$styles = apply_filters( 'megamenu_theme_arrow_icons', [] );
 
-			$arrow_icons = $this->arrow_icons();
+			$current_down = isset( $this->active_theme['arrow_down'] ) ? $this->active_theme['arrow_down'] : 'disabled';
+			$value = 'disabled';
+
+			foreach ( $styles as $group ) {
+				foreach ( $group['icons'] as $style_key => $style ) {
+					if ( isset( $style['icons']['down']['value'] ) && $style['icons']['down']['value'] === $current_down ) {
+						$value = $style_key;
+						break 2;
+					}
+				}
+			}
+			if ( $value === 'disabled' && $current_down !== 'disabled' ) {
+				$value = $current_down;
+			}
 
 			?>
-			<select class='icon_dropdown' name='settings[<?php echo $key; ?>]'>
+			<select class='icon_dropdown' data-no-search='1' name='settings[<?php echo esc_attr( $key ); ?>]'>
 				<?php
+					echo "<option value='disabled' " . selected( $value, 'disabled', false ) . ">" . __( 'Disabled', 'megamenu' ) . '</option>';
 
-					echo "<option value='disabled'>" . __( 'Disabled', 'megamenu' ) . '</option>';
+					foreach ( $styles as $group ) {
+						echo '<optgroup label="' . esc_attr( $group['label'] ) . '">';
+						foreach ( $group['icons'] as $style_key => $style ) {
+							$data_attrs = '';
+							if ( isset( $style['class'] ) ) {
+								$data_attrs .= " data-class='" . esc_attr( $style['class'] ) . "'";
+							}
+							foreach ( [ 'up', 'down', 'left', 'right' ] as $dir ) {
+								$dir_data = $style['icons'][ $dir ] ?? [];
+								if ( isset( $dir_data['svg'] ) ) {
+									$data_attrs .= " data-svg-{$dir}='" . esc_attr( $dir_data['svg'] ) . "'";
+								}
+								if ( isset( $dir_data['icon'] ) ) {
+									$data_attrs .= " data-icon-{$dir}='" . esc_attr( $dir_data['icon'] ) . "'";
+								}
+							}
 
-				foreach ( $arrow_icons as $code => $class ) {
-					$name = str_replace( 'dashicons-', '', $class );
-					$name = ucwords( str_replace( [ '-', 'arrow' ], ' ', $name ) );
-					echo "<option data-class='{$class}' value='{$code}' " . selected( $value, $code, false ) . '>' . esc_html( $name ) . '</option>';
-				}
-
+							echo "<option value='" . esc_attr( $style_key ) . "'{$data_attrs} " . selected( $value, $style_key, false ) . ">" . esc_html( $style['label'] ) . "</option>";
+						}
+						echo '</optgroup>';
+					}
 				?>
 			</select>
 
@@ -3408,30 +3633,40 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 
 		/**
-		 * Print an arrow dropdown selection box
+		 * Print the close icon dropdown selection box.
 		 *
 		 * @since 1.0
 		 * @param string $key
-		 * @param string $value
 		 */
 		public function print_theme_close_option( $key ) {
 
-			$value = $this->active_theme[ $key ];
-
-			$arrow_icons = $this->close_icons();
+			$styles = apply_filters( 'megamenu_theme_close_icons', [] );
+			$value  = isset( $this->active_theme[ $key ] ) ? $this->active_theme[ $key ] : 'disabled';
 
 			?>
-			<select class='icon_dropdown' name='settings[<?php echo $key; ?>]'>
+			<select class='icon_dropdown' name='settings[<?php echo esc_attr( $key ); ?>]'>
 				<?php
+					echo "<option value='disabled' " . selected( $value, 'disabled', false ) . '>' . esc_html__( 'Disabled', 'megamenu' ) . '</option>';
 
-					echo "<option value='disabled'>" . __( 'Disabled', 'megamenu' ) . '</option>';
-
-				foreach ( $arrow_icons as $code => $class ) {
-					$name = str_replace( 'dashicons-', '', $class );
-					$name = ucwords( str_replace( [ '-', 'arrow' ], ' ', $name ) );
-					echo "<option data-class='{$class}' value='{$code}' " . selected( $value, $code, false ) . '>' . esc_html( $name ) . '</option>';
-				}
-
+					foreach ( $styles as $group ) {
+						echo '<optgroup label="' . esc_attr( $group['label'] ) . '">';
+						foreach ( $group['icons'] as $style_key => $style ) {
+							$data_attrs = '';
+							if ( isset( $style['class'] ) ) {
+								$data_attrs .= " data-class='" . esc_attr( $style['class'] ) . "'";
+							}
+							if ( isset( $style['svg'] ) ) {
+								$data_attrs .= " data-svg='" . esc_attr( $style['svg'] ) . "'";
+							}
+							if ( ! empty( $style['attrs'] ) ) {
+								foreach ( $style['attrs'] as $attr_name => $attr_value ) {
+									$data_attrs .= ' ' . esc_attr( $attr_name ) . "='" . esc_attr( $attr_value ) . "'";
+								}
+							}
+							echo "<option value='" . esc_attr( $style_key ) . "'{$data_attrs} " . selected( $value, $style_key, false ) . '>' . esc_html( $style['label'] ) . '</option>';
+						}
+						echo '</optgroup>';
+					}
 				?>
 			</select>
 
@@ -3602,29 +3837,424 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 
 		/**
-		 * Print a font selector
+		 * Menu font `<select>` options using theme.json / global styles preset variables.
+		 *
+		 * Merges:
+		 * - Font Library `wp_font_family` posts whose faces were installed to uploads
+		 *   (`_wp_font_face_file`), via {@see WP_Font_Library::get_instance()}.
+		 * - Families from {@see wp_get_global_settings()} (theme presets, user “custom”
+		 *   fonts like Core-listed Cormorant, etc.) that define `slug`, `fontFamily`, and
+		 *   `fontFace`, so `var(--wp--preset--font-family--{slug})` exists on the front.
+		 *
+		 * Labels use the Font Library post title (`wp_font_family.post_title`) and the
+		 * preset `name` from merged theme.json / global styles.
+		 *
+		 * @return array<int, array{value: string, label: string}>
+		 */
+		private function get_font_library_menu_family_select_options() {
+			$by_slug = [];
+
+			$activated_slugs = [];
+			if ( function_exists( 'wp_get_global_settings' ) ) {
+				$font_families = wp_get_global_settings( [ 'typography', 'fontFamilies' ] );
+				if ( ! empty( $font_families ) && is_array( $font_families ) ) {
+					foreach ( $font_families as $group ) {
+						if ( ! is_array( $group ) ) {
+							continue;
+						}
+						foreach ( $group as $family ) {
+							if ( ! empty( $family['slug'] ) ) {
+								$activated_slugs[ strtolower( trim( $family['slug'] ) ) ] = true;
+							}
+						}
+					}
+				}
+			}
+
+			if ( class_exists( 'WP_Font_Library' ) && post_type_exists( 'wp_font_family' ) && post_type_exists( 'wp_font_face' ) ) {
+				WP_Font_Library::get_instance();
+
+				$font_faces = get_posts(
+					[
+						'post_type'      => 'wp_font_face',
+						'posts_per_page' => -1,
+						'post_status'    => 'publish',
+					]
+				);
+
+				$families_with_downloaded_faces = [];
+				foreach ( $font_faces as $face ) {
+					if ( get_post_meta( $face->ID, '_wp_font_face_file', true ) ) {
+						$families_with_downloaded_faces[ (int) $face->post_parent ] = true;
+					}
+				}
+
+				if ( ! empty( $families_with_downloaded_faces ) ) {
+					$font_posts = get_posts(
+						[
+							'post_type'      => 'wp_font_family',
+							'posts_per_page' => -1,
+							'orderby'        => 'title',
+							'order'          => 'ASC',
+							'post_status'    => 'publish',
+						]
+					);
+
+					foreach ( $font_posts as $font_post ) {
+						if ( ! isset( $families_with_downloaded_faces[ $font_post->ID ] ) ) {
+							continue;
+						}
+						$label = trim( (string) $font_post->post_title );
+						$slug  = $font_post->post_name;
+						if ( '' === $label || '' === $slug ) {
+							continue;
+						}
+						if ( ! isset( $activated_slugs[ strtolower( $slug ) ] ) ) {
+							continue;
+						}
+						$by_slug[ $slug ] = [
+							'value' => 'var(--wp--preset--font-family--' . $slug . ')',
+							'label' => $label,
+						];
+					}
+				}
+			}
+
+			if ( function_exists( 'wp_get_global_settings' ) ) {
+				$settings = wp_get_global_settings();
+				if ( ! empty( $settings['typography']['fontFamilies'] ) && is_array( $settings['typography']['fontFamilies'] ) ) {
+					foreach ( $settings['typography']['fontFamilies'] as $group ) {
+						if ( ! is_array( $group ) ) {
+							continue;
+						}
+						foreach ( $group as $def ) {
+							if ( empty( $def['slug'] ) || empty( $def['fontFamily'] ) || empty( $def['name'] ) ) {
+								continue;
+							}
+							if ( empty( $def['fontFace'] ) || ! is_array( $def['fontFace'] ) ) {
+								continue;
+							}
+							$slug  = $def['slug'];
+							$label = trim( (string) $def['name'] );
+							if ( '' === $slug || '' === $label ) {
+								continue;
+							}
+							$by_slug[ $slug ] = [
+								'value' => 'var(--wp--preset--font-family--' . $slug . ')',
+								'label' => $label,
+							];
+						}
+					}
+				}
+			}
+
+			$library_fonts = array_values( $by_slug );
+			usort(
+				$library_fonts,
+				static function ( $a, $b ) {
+					return strnatcasecmp( $a['label'], $b['label'] );
+				}
+			);
+
+			/**
+			 * Filter Font Library entries offered for "Menu Font Family" in the theme editor.
+			 *
+			 * @param array<int, array{value: string, label: string}> $library_fonts
+			 */
+			return apply_filters( 'megamenu_font_library_menu_family_select_options', $library_fonts );
+		}
+
+
+		/**
+		 * Print the Menu Font Family selector.
+		 *
+		 * Uses the same optgroup structure and `megamenu_theme_font_select_structure` filter
+		 * as {@see print_theme_font_option}, so Pro can inject Google / custom font groups here too.
 		 *
 		 * @since 1.0
 		 * @param string $key
-		 * @param string $value
 		 */
-		public function print_theme_font_option( $key ) {
+		public function print_theme_menu_font_option( $key ) {
 
-			$value = $this->active_theme[ $key ];
+			$value         = $this->active_theme[ $key ];
+			$decoded_value = htmlspecialchars_decode( (string) $value, ENT_QUOTES );
 
-			echo "<select name='settings[$key]'>";
-
-			echo "<option value='inherit'>" . __( 'Theme Default', 'megamenu' ) . '</option>';
-
-			foreach ( $this->fonts() as $font ) {
-				$orig_font = $font;
-				$font      = esc_attr( stripslashes( $font ) );
-				$parts     = explode( ',', $font );
-				$font_name = trim( $parts[0] );
-				echo "<option value=\"{$font}\" " . selected( $orig_font, htmlspecialchars_decode( $value ) ) . '>' . esc_html( $font_name ) . '</option>';
+			if ( version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) ) {
+				$font_library_url = esc_url( admin_url( 'font-library.php' ) );
+				echo "<select name='settings[" . esc_attr( $key ) . "]' data-font-library-url='{$font_library_url}'>";
+			} else {
+				echo "<select name='settings[" . esc_attr( $key ) . "]'>";
 			}
 
+			$this->render_theme_font_select_structure(
+				$this->get_theme_font_select_structure( $key, $decoded_value ),
+				$decoded_value
+			);
+
 			echo '</select>';
+		}
+
+
+		public function print_theme_font_option( $key ) {
+
+			$value = isset( $this->active_theme[ $key ] ) ? $this->active_theme[ $key ] : 'inherit';
+			if ( '' === $value || false === $value ) {
+				$value = 'inherit';
+			}
+			$decoded_value = htmlspecialchars_decode( (string) $value, ENT_QUOTES );
+
+			$collapsed_class = ( 'inherit' === $decoded_value || '' === $decoded_value ) ? ' mega-theme-font-option--collapsed' : '';
+
+			$btn_label = esc_attr__( 'Add font family', 'megamenu' );
+
+			echo '<div class="mega-theme-font-option' . esc_attr( $collapsed_class ) . '">';
+			$aria_expanded = ( '' === $collapsed_class ) ? 'true' : 'false';
+			echo '<button type="button" class="mega-theme-font-option__reveal" aria-label="' . $btn_label . '" title="' . $btn_label . '" aria-expanded="' . esc_attr( $aria_expanded ) . '">';
+			echo '<span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span>';
+			echo '</button>';
+
+			echo '<select class="mega-theme-font-option__select" name="settings[' . esc_attr( $key ) . ']">';
+
+			$this->render_theme_font_select_structure(
+				$this->get_theme_font_select_structure( $key, $decoded_value ),
+				$decoded_value
+			);
+
+			echo '</select>';
+			echo '</div>';
+		}
+
+
+		/**
+		 * Theme Editor font `<select>` as ordered blocks, filtered, then any remaining `megamenu_fonts` values appended.
+		 *
+		 * Each block:
+		 * - `array( 'type' => 'options', 'items' => array<int, array{value: string, label: string}> )` — bare `<option>`s
+		 * - `array( 'type' => 'optgroup', 'label' => string, 'items' => ... )` — grouped options
+		 *
+		 * Optional `id` (string) on a block is for extensions that splice after a known section (e.g. `local`).
+		 *
+		 * @since 3.9.4
+		 * @param string $key Theme setting key.
+		 * @param string $decoded_value Current setting (decoded), for filters that need context.
+		 * @return array<int, array<string, mixed>>
+		 */
+		private function get_theme_font_select_structure( $key, $decoded_value ) {
+
+			$structure = array();
+
+			$structure[] = array(
+				'id'    => 'inherit',
+				'type'  => 'options',
+				'items' => array(
+					array(
+						'value' => 'inherit',
+						'label' => ( 'menu_font_family' === $key )
+							? __( 'Theme Default', 'megamenu' )
+							: __( 'Menu Font Family', 'megamenu' ),
+					),
+				),
+			);
+
+			$show_font_library = version_compare( get_bloginfo( 'version' ), '7.0', '>=' );
+			if ( $show_font_library ) {
+				$items = array();
+				foreach ( $this->get_font_library_menu_family_select_options() as $font ) {
+					if ( ! isset( $font['value'], $font['label'] ) ) {
+						continue;
+					}
+					$items[] = array(
+						'value' => $font['value'],
+						'label' => $font['label'],
+					);
+				}
+				$items[] = array(
+					'value' => '__megamenu_font_library__',
+					'label' => __( '→ Go to Font Library', 'megamenu' ),
+				);
+				$structure[] = array(
+					'id'    => 'font-library',
+					'type'  => 'optgroup',
+					'label' => __( 'Font Library', 'megamenu' ),
+					'items' => $items,
+				);
+			}
+
+			/**
+			 * Theme Editor font-family `<select>` content as ordered blocks.
+			 *
+			 * @since 3.9.4
+			 * @param array<int, array<string, mixed>> $structure Block list (see `get_theme_font_select_structure()`).
+			 * @param string                             $key       Theme setting key.
+			 * @param string                             $decoded_value Current setting (decoded).
+			 */
+			$structure = apply_filters( 'megamenu_theme_font_select_structure', $structure, $key, $decoded_value );
+
+			$present_values = $this->theme_font_select_structure_collect_values( $structure );
+
+			$extra_fonts = array_values( array_diff( $this->fonts(), $present_values ) );
+
+			if ( count( $extra_fonts ) && 'menu_font_family' !== $key ) {
+				$items = array();
+				foreach ( $extra_fonts as $font ) {
+					$parts   = explode( ',', $font );
+					$items[] = array(
+						'value' => stripslashes( $font ),
+						'label' => trim( $parts[0] ),
+					);
+				}
+				$structure[] = array(
+					'id'    => 'megamenu_fonts_extras',
+					'type'  => 'options',
+					'items' => $items,
+				);
+			}
+
+			return $structure;
+		}
+
+
+		/**
+		 * Returns fonts added via the megamenu_fonts filter.
+		 *
+		 * @since 1.0
+		 */
+		public function fonts() {
+			return apply_filters( 'megamenu_fonts', [] );
+		}
+
+
+		/**
+		 * Inject the built-in local web font stacks as a "Local" optgroup into the font select structure.
+		 *
+		 * @param array $structure
+		 * @return array
+		 */
+		public function add_local_fonts_to_structure( $structure, $key = '' ) {
+			if ( 'menu_font_family' === $key ) {
+				return $structure;
+			}
+			$stacks = [
+				'Georgia, serif',
+				'Palatino Linotype, Book Antiqua, Palatino, serif',
+				'Times New Roman, Times, serif',
+				'Arial, Helvetica, sans-serif',
+				'Arial Black, Gadget, sans-serif',
+				'Comic Sans MS, cursive, sans-serif',
+				'Impact, Charcoal, sans-serif',
+				'Lucida Sans Unicode, Lucida Grande, sans-serif',
+				'Tahoma, Geneva, sans-serif',
+				'Trebuchet MS, Helvetica, sans-serif',
+				'Verdana, Geneva, sans-serif',
+				'Courier New, Courier, monospace',
+				'Lucida Console, Monaco, monospace',
+			];
+
+			$items = [];
+			foreach ( $stacks as $font ) {
+				$parts   = explode( ',', $font );
+				$items[] = [
+					'value' => $font,
+					'label' => trim( $parts[0] ),
+				];
+			}
+
+			$structure[] = [
+				'id'    => 'local',
+				'type'  => 'optgroup',
+				'label' => __( 'Local', 'megamenu' ),
+				'items' => $items,
+			];
+
+			return $structure;
+		}
+
+
+		/**
+		 * For the Menu Font Family select, keep only the inherit and Font Library blocks.
+		 * Runs at priority 99 so it strips Local and any Pro-added groups (e.g. Google Fonts).
+		 *
+		 * @param array  $structure
+		 * @param string $key
+		 * @return array
+		 */
+		public function restrict_menu_font_family_structure( $structure, $key ) {
+			if ( 'menu_font_family' !== $key ) {
+				return $structure;
+			}
+
+			$allowed = [ 'inherit', 'font-library' ];
+
+			return array_values( array_filter( $structure, function( $block ) use ( $allowed ) {
+				return isset( $block['id'] ) && in_array( $block['id'], $allowed, true );
+			} ) );
+		}
+
+
+		/**
+		 * All option `value` strings currently represented in a font select structure.
+		 *
+		 * @since 3.9.4
+		 * @param array<int, array<string, mixed>> $structure
+		 * @return array<int, string>
+		 */
+		private function theme_font_select_structure_collect_values( $structure ) {
+
+			$values = array();
+
+			foreach ( (array) $structure as $block ) {
+				if ( ! is_array( $block ) || empty( $block['items'] ) || ! is_array( $block['items'] ) ) {
+					continue;
+				}
+				foreach ( $block['items'] as $item ) {
+					if ( is_array( $item ) && isset( $item['value'] ) && is_string( $item['value'] ) ) {
+						$values[] = $item['value'];
+					}
+				}
+			}
+
+			return $values;
+		}
+
+
+		/**
+		 * Echo `<option>` / `<optgroup>` markup from a font select structure.
+		 *
+		 * @since 3.9.4
+		 * @param array<int, array<string, mixed>> $structure
+		 * @param string                             $decoded_value
+		 */
+		private function render_theme_font_select_structure( $structure, $decoded_value ) {
+
+			foreach ( (array) $structure as $block ) {
+				if ( ! is_array( $block ) || empty( $block['type'] ) || empty( $block['items'] ) || ! is_array( $block['items'] ) ) {
+					continue;
+				}
+
+				if ( 'options' !== $block['type'] && 'optgroup' !== $block['type'] ) {
+					continue;
+				}
+
+				if ( 'optgroup' === $block['type'] ) {
+					if ( empty( $block['label'] ) ) {
+						continue;
+					}
+					echo '<optgroup label="' . esc_attr( (string) $block['label'] ) . '">';
+				}
+
+				foreach ( $block['items'] as $item ) {
+					if ( ! is_array( $item ) || ! isset( $item['value'], $item['label'] ) ) {
+						continue;
+					}
+					$val   = $item['value'];
+					$label = $item['label'];
+					echo '<option value="' . esc_attr( $val ) . '" ' . selected( $val, $decoded_value, false ) . '>' . esc_html( $label ) . '</option>';
+				}
+
+				if ( 'optgroup' === $block['type'] ) {
+					echo '</optgroup>';
+				}
+			}
 		}
 
 
@@ -3643,99 +4273,6 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 		}
 
-
-		/**
-		 * Returns a list of available fonts.
-		 *
-		 * @since 1.0
-		 */
-		public function fonts() {
-
-			$fonts = [
-				'Georgia, serif',
-				'Palatino Linotype, Book Antiqua, Palatino, serif',
-				'Times New Roman, Times, serif',
-				'Arial, Helvetica, sans-serif',
-				'Arial Black, Gadget, sans-serif',
-				'Comic Sans MS, cursive, sans-serif',
-				'Impact, Charcoal, sans-serif',
-				'Lucida Sans Unicode, Lucida Grande, sans-serif',
-				'Tahoma, Geneva, sans-serif',
-				'Trebuchet MS, Helvetica, sans-serif',
-				'Verdana, Geneva, sans-serif',
-				'Courier New, Courier, monospace',
-				'Lucida Console, Monaco, monospace',
-			];
-
-			$fonts = apply_filters( 'megamenu_fonts', $fonts );
-
-			return $fonts;
-
-		}
-
-
-		/**
-		 * List of all available arrow DashIcon classes.
-		 *
-		 * @since 1.0
-		 * @return array - Sorted list of icon classes
-		 */
-		private function arrow_icons() {
-
-			$icons = [
-				'dash-f142' => 'dashicons-arrow-up',
-				'dash-f140' => 'dashicons-arrow-down',
-				'dash-f141' => 'dashicons-arrow-left',
-				'dash-f139' => 'dashicons-arrow-right',
-				'dash-f342' => 'dashicons-arrow-up-alt',
-				'dash-f346' => 'dashicons-arrow-down-alt',
-				'dash-f340' => 'dashicons-arrow-left-alt',
-				'dash-f344' => 'dashicons-arrow-right-alt',
-				'dash-f343' => 'dashicons-arrow-up-alt2',
-				'dash-f347' => 'dashicons-arrow-down-alt2',
-				'dash-f341' => 'dashicons-arrow-left-alt2',
-				'dash-f345' => 'dashicons-arrow-right-alt2',
-				'dash-f132' => 'dashicons-plus',
-				'dash-f460' => 'dashicons-minus',
-				'dash-f158' => 'dashicons-no',
-				'dash-f335' => 'dashicons-no-alt',
-
-			];
-
-			$icons = apply_filters( 'megamenu_arrow_icons', $icons );
-
-			return $icons;
-
-		}
-
-		/**
-		 * List of all available arrow DashIcon classes.
-		 *
-		 * @since 1.0
-		 * @return array - Sorted list of icon classes
-		 */
-		private function close_icons() {
-
-			$icons = [
-				'dash-f171' => 'dashicons-undo',
-				'dash-f518' => 'dashicons-controls-back',
-				'dash-f14f' => 'dashicons-remove',
-				'dash-f340' => 'dashicons-arrow-left-alt',
-				'dash-f341' => 'dashicons-arrow-left-alt2',
-				'dash-f460' => 'dashicons-minus',
-				'dash-f158' => 'dashicons-no',
-				'dash-f335' => 'dashicons-no-alt',
-				'dash-f148' => 'dashicons-admin-collapse',
-				'dash-f158' => 'dashicons-no',
-				'dash-f335' => 'dashicons-no-alt',
-
-			];
-
-			$icons = apply_filters( 'megamenu_close_icons', $icons );
-
-			return $icons;
-
-		}
 
 	}
 

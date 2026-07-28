@@ -34,7 +34,7 @@
  * https://wordpress.org/support/topic/index-images-in-yoast-seo-sitemap/
  *
  * @package MLA Yoast SEO Example
- * @version 2.01
+ * @version 2.02
  */
 
 /*
@@ -42,7 +42,7 @@ Plugin Name: MLA Yoast SEO Example
 Plugin URI: http://davidlingren.com/
 Description: Supports WordPress SEO by Yoast Page Schema and XMP Sitemap generation
 Author: David Lingren
-Version: 2.01
+Version: 2.02
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -75,7 +75,7 @@ class MLAYoastSEOExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '2.01';
+	const PLUGIN_VERSION = '2.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -185,8 +185,8 @@ class MLAYoastSEOExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -194,7 +194,7 @@ class MLAYoastSEOExample {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
 
 		/*
 		 * Filter: 'wpseo_sitemap_urlimages' - Allows updates to the list of images in the page/post
@@ -358,11 +358,11 @@ class MLAYoastSEOExample {
 		if ( 0 === strpos( $item_values['mime_type'], 'image' ) ) {
 			self::$_item_values[ $item_values['attachment_ID'] ] = array(
 				'mime_type' => $item_values['mime_type'],
-				'width' => (integer) $item_values['width'],
+				'width' => (int) $item_values['width'],
 				'image_alt' => $item_values['image_alt'],
 				'file_url' => $item_values['file_url'],
 				'caption' => $item_values['caption'],
-				'thumbnail_width' => (integer) $item_values['thumbnail_width'],
+				'thumbnail_width' => (int) $item_values['thumbnail_width'],
 				'thumbnail_url' => $item_values['thumbnail_url'],
 			);
 		}
@@ -381,7 +381,7 @@ class MLAYoastSEOExample {
 	public static function wpseo_sitemap_urlimages( $url, $post_id ) {
 		self::_build_attachment_array( $post_id );
 
-		$maximum_limit = (integer) self::$plugin_settings->get_plugin_option('maximum_sitemap_image_limit');
+		$maximum_limit = (int) self::$plugin_settings->get_plugin_option('maximum_sitemap_image_limit');
 		$test_maximum = ( $maximum_limit > 0 );
 
 		if ( $test_maximum ) {
@@ -479,8 +479,8 @@ class MLAYoastSEOExample {
 
 		$schema_id     = $data['isPartOf']['@id'] . '#schema/image/';
 		$piece_type = self::$plugin_settings->get_plugin_option('image_piece_type');
-		$minimum_width = (integer) self::$plugin_settings->get_plugin_option('minimum_image_width');
-		$maximum_limit = (integer) self::$plugin_settings->get_plugin_option('maximum_image_limit');
+		$minimum_width = (int) self::$plugin_settings->get_plugin_option('minimum_image_width');
+		$maximum_limit = (int) self::$plugin_settings->get_plugin_option('maximum_image_limit');
 		$test_maximum = ( $maximum_limit > 0 );
 		
 		foreach ( self::$_item_values as $ID => $values ) {
@@ -557,8 +557,8 @@ class MLAYoastSEOExample {
 
 		$schema_id     = $data['isPartOf']['@id'] . '#schema/image/';
 		$piece_type = self::$plugin_settings->get_plugin_option('image_piece_type');
-		$minimum_width = (integer) self::$plugin_settings->get_plugin_option('minimum_image_width');
-		$maximum_limit = (integer) self::$plugin_settings->get_plugin_option('maximum_image_limit');
+		$minimum_width = (int) self::$plugin_settings->get_plugin_option('minimum_image_width');
+		$maximum_limit = (int) self::$plugin_settings->get_plugin_option('maximum_image_limit');
 		$test_maximum = ( $maximum_limit > 0 );
 
 //error_log( __LINE__ . " wpseo_schema_webpage( {$post->ID} ) self::\$_item_values = " . var_export( self::$_item_values, true ), 0 );

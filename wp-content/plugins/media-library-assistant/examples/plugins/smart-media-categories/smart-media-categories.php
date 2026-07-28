@@ -14,7 +14,7 @@
  * Plugin Name: Smart Media Categories
  * Plugin URI:  http://davidlingren.com/
  * Description: Assigns taxonomy terms to Media Library items based on the terms of their parent post/page.
- * Version:     1.1.8
+ * Version:     1.1.9
  * Author:      David Lingren
  * Author URI:  http://davidlingren.com/
  * Text Domain: smart-media-categories

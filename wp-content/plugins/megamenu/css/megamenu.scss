@@ -13,6 +13,10 @@
 @include resets;
 
 #{$wrap} {
+    @if $menu_font_family != 'inherit' {
+        font-family: unquote($menu_font_family);
+    }
+
     @include desktop {
         @include background($container_background_from, $container_background_to);
     }
@@ -24,32 +28,32 @@
         text-align: $menu_item_align;
         @include padding($container_padding_top, $container_padding_right, $container_padding_bottom, $container_padding_left);
 
+        .mega-description-group {
+            vertical-align: middle;
+            display: inline-block;
+            transition: none;
+
+            .mega-menu-title,
+            .mega-menu-description {
+                transition: none;
+                line-height: 1.5;
+                display: block;
+            }
+
+            .mega-menu-description {
+                font-style: italic;
+                font-size: 0.8em;
+                text-transform: none;
+                font-weight: normal;
+            }
+        }
+            
         a.mega-menu-link {
             cursor: pointer;
             display: inline;
 
             @if $transitions == 'on' {
                 transition: background 200ms linear, color 200ms linear, border 200ms linear;
-            }
-
-            .mega-description-group {
-                vertical-align: middle;
-                display: inline-block;
-                transition: none;
-
-                .mega-menu-title,
-                .mega-menu-description {
-                    transition: none;
-                    line-height: 1.5;
-                    display: block;
-                }
-
-                .mega-menu-description {
-                    font-style: italic;
-                    font-size: 0.8em;
-                    text-transform: none;
-                    font-weight: normal;
-                }
             }
         }
 
@@ -249,6 +253,11 @@
             height: auto;
             width: auto;
             top: auto;
+        }
+
+        li.mega-menu-item a.mega-material-symbol:before {
+            content: attr(data-ms-icon);
+            font-family: var(--wp--preset--font-family--material-symbols);
         }
 
         li.mega-menu-item.mega-hide-text a.mega-menu-link:before {
@@ -823,7 +832,6 @@
 
                 & #{$arrow_combinator} span.mega-indicator {
                     color: $menu_item_link_color;
-                    line-height: $menu_item_link_height;
                     height: $menu_item_link_height;
                 }
             }
@@ -831,50 +839,27 @@
 
         // Arrows
         li.mega-menu-item-has-children {
-            > a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
+            > a.mega-menu-link > span.mega-indicator {
                 display: inline-block;
-                width: auto;
-                background: transparent;
-                position: relative;
-                pointer-events: auto;
-                left: auto;
-                min-width: auto;
+                height: 100%;
                 font-size: inherit;
-                padding: 0;
-
-                @if $arrow_combinator == '>' {
-                    margin: 0 0 0 6px;
-                    height: auto;
-                    line-height: inherit;
-                    color: inherit;
-                } @else {
-                    cursor: pointer;
-                    margin-right: -14px;
-                    right: 19px;
-                    top: 0;
-
-                    @include mobile {
-                        position: absolute;
-                    }
-                }
+                line-height: inherit;
+                margin: 0 0 0 6px;
+                color: inherit;
 
                 &:after {
-                    content: $arrow_down;
-                    font-family: $arrow_font;
-                    font-weight: $arrow_font_weight;
                     display: inline-block;
-                    margin: 0;
-                    vertical-align: top;
+                    
+                    @if $arrow_font != svg {
+                        vertical-align: top;
+                    }
+                    
                     -webkit-font-smoothing: antialiased;
                     -moz-osx-font-smoothing: grayscale;
-                    transform: rotate(0);
-                    color: inherit;
-                    position: relative;
-                    background: transparent;
-                    height: auto;
-                    width: auto;
-                    right: auto;
-                    line-height: inherit;
+                    @include arrow-icon($arrow_down, $arrow_font, $arrow_font_weight);
+                    @if $arrow_rotate == 'on' {
+                        transition: transform 0.3s ease;
+                    }
                 }
             }
 
@@ -896,7 +881,7 @@
             }
 
             &.mega-collapse-children.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
-                content: $arrow_up;
+                @include arrow-icon-state($arrow_up, $arrow_font);
             }
 
             @include mobile {
@@ -905,11 +890,23 @@
                 }
 
                 &.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
-                    content: $arrow_up;
+                    @include arrow-icon-state($arrow_up, $arrow_font);
                 }
 
                 &.mega-hide-sub-menu-on-mobile > a.mega-menu-link #{$arrow_combinator} span.mega-indicator  {
                     display: none;
+                }
+            }
+        }
+
+        @if $arrow_rotate == 'on' {
+            > li.mega-menu-item-has-children.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
+                transform: rotate(180deg);
+            }
+
+            @include mobile {
+                > li.mega-menu-item-has-children.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
+                    @include arrow-icon-state($arrow_down, $arrow_font);
                 }
             }
         }
@@ -925,7 +922,7 @@
             li.mega-menu-flyout {
                 li.mega-menu-item a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
                     &:after {
-                        content: $arrow_right;
+                        @include arrow-icon-state($arrow_right, $arrow_font);
                     }
                 }
 
@@ -937,7 +934,7 @@
                             float: left;
 
                             &:after {
-                                content: $arrow_left;
+                                @include arrow-icon-state($arrow_left, $arrow_font);
                                 margin: 0 6px 0 0;
                             }
                         }
@@ -955,18 +952,6 @@
                     }
                 }
             }
-        }
-
-        // PolyLang Language Switcher
-        li[class^='mega-lang-item'] > a.mega-menu-link > img {
-            display: inline;
-        }
-
-        // WPML Flags
-        a.mega-menu-link > img.wpml-ls-flag,
-        a.mega-menu-link > img.iclflag {
-            display: inline;
-            margin-right: 8px;
         }
 
         @include mobile {

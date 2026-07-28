@@ -1,0 +1,107 @@
+/**
+ * Bricks-related Max Mega Menu admin styles (Menu Locations notice, location modal tweaks, etc.).
+ */
+.mmm-mega-notice-bricks {
+	/* Light tint of the active WP admin theme color; solid fallback for older browsers. */
+	background-color: rgba(34, 113, 177, 0.1);
+	background-color: color-mix(in srgb, var(--wp-admin-theme-color, #2271b1) 10%, #fff);
+	margin: 20px;
+}
+
+.mmm-mega-notice-bricks .mmm-mega-notice-bricks__row {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding-right: 4px;
+}
+
+.mmm-mega-notice-bricks .mmm-mega-notice-bricks__logo {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	margin-top: 2px;
+}
+
+.mmm-mega-notice-bricks .mmm-mega-notice-bricks__logo::before {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: inherit;
+	font-style: normal;
+	font-weight: 700;
+	content: "b";
+	font-size: 32px;
+	line-height: 1;
+	width: 60px;
+	height: 60px;
+	text-align: center;
+	color: var(--wp-admin-theme-color-darker-20, #1d2327);
+}
+
+.mmm-mega-notice-bricks .mmm-mega-notice-bricks__main {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.mmm-mega-notice-bricks .mmm-mega-notice-bricks__actions {
+	margin: 8px 0 0;
+	padding-top: 4px;
+}
+
+/**
+ * Location settings → Display Options: theme-registered notice is misleading when using Bricks templates + Max Mega Menu element.
+ */
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .mega-tab-content-output_options > .notice.notice-warning.inline {
+	display: none;
+}
+
+@keyframes mmm-bricks-element-shimmer {
+	0% {
+		background-position: 200% 0, 0 0;
+	}
+	100% {
+		background-position: -200% 0, 0 0;
+	}
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_bricks_element {
+	position: relative;
+	overflow: hidden;
+	border-radius: 8px;
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_bricks_element::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background:
+		linear-gradient(
+			100deg,
+			rgba(255, 175, 100, 0) 32%,
+			rgba(255, 195, 120, 0.72) 50%,
+			rgba(255, 175, 100, 0) 68%
+		) 200% 0 / 220% 100% no-repeat,
+		rgba(224, 100, 30, 0.1);
+	animation: mmm-bricks-element-shimmer 5s ease-in-out infinite;
+	will-change: background-position;
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_bricks_element > * {
+	position: relative;
+	z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_bricks_element::after {
+		animation: none;
+		will-change: auto;
+		background: rgba(224, 100, 30, 0.1);
+	}
+}

@@ -128,10 +128,11 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 
 			if ( ! is_plugin_active( 'megamenu-pro/megamenu-pro.php' ) ) {
 				$header_links['pro'] = [
-					'url'    => 'https://www.megamenu.com/upgrade/?utm_source=free&amp;utm_medium=settings&amp;utm_campaign=pro',
-					'target' => '_mmmpro',
-					'text'   => __( 'Upgrade to Pro', 'megamenu' ),
-					'class'  => 'mega-highlight',
+					'url'                => 'https://www.megamenu.com/upgrade/?utm_source=free&amp;utm_medium=settings&amp;utm_campaign=pro',
+					'target'             => '_mmmpro',
+					'text'               => __( 'Upgrade to Pro', 'megamenu' ),
+					'class'              => 'button button-primary button-compact',
+					'show_external_icon' => true,
 				];
 			}
 
@@ -189,14 +190,20 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 					<ul>
 					<?php
 					foreach ( $header_links as $id => $data ) {
-						$header_link_processor = new WP_HTML_Tag_Processor( '<a>' . esc_html( $data['text'] ) . '</a>' );
+						$inner = esc_html( $data['text'] );
+						if ( ! empty( $data['show_external_icon'] ) ) {
+							$inner .= ' <span class="dashicons dashicons-external" aria-hidden="true"></span>';
+						}
+						$header_link_processor = new WP_HTML_Tag_Processor( '<a>' . $inner . '</a>' );
 						if ( $header_link_processor->next_tag( 'a' ) ) {
 							$header_link_processor->set_attribute( 'href', $data['url'] );
 							$header_link_processor->set_attribute( 'target', $data['target'] );
+							if ( isset( $data['class'] ) && '' !== $data['class'] ) {
+								$header_link_processor->set_attribute( 'class', $data['class'] );
+							}
 						}
 						printf(
-							'<li class="%s">%s</li>',
-							esc_attr( $data['class'] ),
+							'<li>%s</li>',
 							$header_link_processor->get_updated_html()
 						);
 					}
@@ -319,11 +326,17 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 		 */
 		public function enqueue_scripts( $hook ) {
 
+			if ( class_exists( 'Mega_Menu_Locations' ) ) {
+				Mega_Menu_Locations::register_and_localize_location_settings_dialog();
+			}
+
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
-			
+
 			wp_enqueue_style( 'select2', MEGAMENU_BASE_URL . 'js/select2/select2.css', false, MEGAMENU_VERSION );
 			wp_enqueue_script( 'mega-menu-select2', MEGAMENU_BASE_URL . 'js/select2/select2.js', [], MEGAMENU_VERSION );
+
+			wp_enqueue_script( 'mega-menu-icon-selector', MEGAMENU_BASE_URL . 'js/admin/icon-selector.js', [ 'jquery' ], MEGAMENU_VERSION, true );
 
 			wp_enqueue_style( 'mega-menu-settings', MEGAMENU_BASE_URL . 'css/admin/admin.css', array( 'wp-components' ), MEGAMENU_VERSION );
 
@@ -338,7 +351,6 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 			);
 
 			wp_enqueue_script( 'dialog-modal-expand', MEGAMENU_BASE_URL . 'js/admin/dialog-modal-expand.js', [ 'jquery' ], MEGAMENU_VERSION, true );
-			wp_enqueue_script( 'dialog-preview', MEGAMENU_BASE_URL . 'js/admin/dialog-preview.js', [ 'jquery', 'dialog-modal-expand' ], MEGAMENU_VERSION, true );
 			wp_enqueue_script(
 				'mega-menu-theme-editor',
 				MEGAMENU_BASE_URL . 'js/admin/theme-editor.js',
@@ -346,9 +358,10 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 					'jquery',
 					'jquery-ui-sortable',
 					'mega-menu-select2',
+					'mega-menu-icon-selector',
 					'mega-colorpicker',
 					'code-editor',
-					'dialog-preview',
+					'dialog-location-settings',
 				],
 				MEGAMENU_VERSION
 			);
@@ -359,6 +372,7 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 				[
 					'edit_nonce'                        => wp_create_nonce( 'megamenu_edit' ),
 					'saving'                            => __( 'Saving', 'megamenu' ),
+					'saved'                             => __( 'Saved', 'megamenu' ),
 					'confirm_destructive_action'        => __( 'Are you sure?', 'megamenu' ),
 					'confirm'                           => __( 'Are you sure?', 'megamenu' ),
 					'theme_save_error'                  => __( 'Error saving theme.', 'megamenu' ),

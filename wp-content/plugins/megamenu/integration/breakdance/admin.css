@@ -1,0 +1,106 @@
+/**
+ * Breakdance-related Max Mega Menu admin styles (Menu Locations notice, location modal tweaks, etc.).
+ */
+.mmm-mega-notice-breakdance {
+	background-color: rgba(72, 78, 214, 0.1);
+	background-color: color-mix(in srgb, var(--wp-admin-theme-color, #484ed6) 10%, #fff);
+	margin: 20px;
+}
+
+.mmm-mega-notice-breakdance .mmm-mega-notice-breakdance__row {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding-right: 4px;
+}
+
+.mmm-mega-notice-breakdance .mmm-mega-notice-breakdance__logo {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	margin-top: 2px;
+}
+
+.mmm-mega-notice-breakdance .mmm-mega-notice-breakdance__logo::before {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: inherit;
+	font-style: normal;
+	font-weight: 700;
+	content: "BD";
+	font-size: 20px;
+	line-height: 1;
+	width: 60px;
+	height: 60px;
+	text-align: center;
+	color: #484ed6;
+}
+
+.mmm-mega-notice-breakdance .mmm-mega-notice-breakdance__main {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.mmm-mega-notice-breakdance .mmm-mega-notice-breakdance__actions {
+	margin: 8px 0 0;
+	padding-top: 4px;
+}
+
+/**
+ * Location settings → Display Options: hide misleading theme-registered notice.
+ */
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .mega-tab-content-output_options > .notice.notice-warning.inline {
+	display: none;
+}
+
+@keyframes mmm-breakdance-element-shimmer {
+	0% {
+		background-position: 200% 0, 0 0;
+	}
+	100% {
+		background-position: -200% 0, 0 0;
+	}
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_breakdance_element {
+	position: relative;
+	overflow: hidden;
+	border-radius: 8px;
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_breakdance_element::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background:
+		linear-gradient(
+			100deg,
+			rgba(100, 110, 255, 0) 32%,
+			rgba(120, 130, 255, 0.6) 50%,
+			rgba(100, 110, 255, 0) 68%
+		) 200% 0 / 220% 100% no-repeat,
+		rgba(72, 78, 214, 0.08);
+	animation: mmm-breakdance-element-shimmer 5s ease-in-out infinite;
+	will-change: background-position;
+}
+
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_breakdance_element > * {
+	position: relative;
+	z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mmm-location-output-options__row.mega-megamenu_breakdance_element::after {
+		animation: none;
+		will-change: auto;
+		background: rgba(72, 78, 214, 0.08);
+	}
+}

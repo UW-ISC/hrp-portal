@@ -18,17 +18,13 @@ if ( ! function_exists( 'mmm_get_theme_id_for_location' ) ) {
 			return false;
 		}
 
-		if ( ! has_nav_menu( $location ) ) {
+		$loc = Mega_Menu_Location::find( $location );
+
+		if ( ! $loc || ! $loc->is_active() ) {
 			return false;
 		}
 
-		$loc = Mega_Menu_Location::find( $location );
-
-		if ( $loc && $loc->is_enabled() ) {
-			return $loc->get_theme_id();
-		}
-
-		return false;
+		return $loc->get_theme_id();
 	}
 }
 
@@ -46,13 +42,13 @@ if ( ! function_exists( 'mmm_get_theme_for_location' ) ) {
 			return false;
 		}
 
-		if ( ! has_nav_menu( $location ) ) {
+		$loc = Mega_Menu_Location::find( $location );
+
+		if ( ! $loc || ! $loc->get_valid_menu_id() ) {
 			return false;
 		}
 
-		$loc = Mega_Menu_Location::find( $location );
-
-		if ( $loc && $loc->is_enabled() ) {
+		if ( $loc->is_enabled() ) {
 			return Mega_Menu_Theme::find( $loc->get_theme_id() )->settings;
 		}
 
@@ -63,7 +59,8 @@ if ( ! function_exists( 'mmm_get_theme_for_location' ) ) {
 
 if ( ! function_exists( 'max_mega_menu_is_enabled' ) ) {
 	/**
-	 * Determines if Max Mega Menu has been enabled for a given menu location.
+	 * Determines if Max Mega Menu is active for a theme location (toggle on and a valid menu assigned).
+	 * Delegates to {@see Mega_Menu_Location::is_active()}.
 	 *
 	 * Usage:
 	 *
@@ -83,13 +80,9 @@ if ( ! function_exists( 'max_mega_menu_is_enabled' ) ) {
 			return true; // the plugin is enabled.
 		}
 
-		if ( ! has_nav_menu( $location ) ) {
-			return false;
-		}
-
 		$loc = Mega_Menu_Location::find( $location );
 
-		return $loc ? $loc->is_enabled() : false;
+		return (bool) ( $loc && $loc->is_active() );
 	}
 }
 

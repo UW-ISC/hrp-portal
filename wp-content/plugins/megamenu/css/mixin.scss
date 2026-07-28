@@ -1,3 +1,28 @@
+@mixin arrow-icon($val, $font, $weight) {
+    @if $font == 'svg' {
+        content: '';
+        mask-image: url("#{$val}");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
+        background-color: currentColor;
+        width: 1em;
+        height: 1em;
+    } @else {
+        content: $val;
+        font-family: $font;
+        font-weight: $weight;
+    }
+}
+
+@mixin arrow-icon-state($val, $font) {
+    @if $font == 'svg' {
+        mask-image: url("#{$val}");
+    } @else {
+        content: $val;
+    }
+}
+
 @mixin padding($top: 0, $right: 0, $bottom: 0, $left: 0) {
     @if $top == $right and $right == $bottom and $bottom == $left and $left == $top {
         padding: $top;
@@ -9,10 +34,12 @@
 }
 
 @mixin border-radius($topleft: 0, $topright: 0, $bottomright: 0, $bottomleft: 0) {
-    @if $topleft == $topright and $topright == $bottomright and $bottomright == $bottomleft and $bottomleft == $topleft {
-        border-radius: $topleft;
-    } @else {
-        border-radius: $topleft $topright $bottomright $bottomleft;
+    @if not ($topleft == 0 and $topright == 0 and $bottomright == 0 and $bottomleft == 0) {
+        @if $topleft == $topright and $topright == $bottomright and $bottomright == $bottomleft {
+            border-radius: $topleft;
+        } @else {
+            border-radius: $topleft $topright $bottomright $bottomleft;
+        }
     }
 }
 
@@ -59,6 +86,7 @@
     #{$wrap} #{$menu} li.mega-menu-row,
     #{$wrap} #{$menu} li.mega-menu-column,
     #{$wrap} #{$menu} a.mega-menu-link,
+    #{$wrap} #{$menu} span.mega-indicator,
     #{$wrap} #{$menu} span.mega-menu-badge,
     #{$wrap} button.mega-close,
     #{$wrap} button.mega-toggle-standard {
@@ -109,6 +137,58 @@
             display: none;
         }
     }
+
+    @if $resets == 'on' {
+        #{$wrap} #{$menu} {
+            ul, li, p, img:not(.mega-menu-logo), div, a, button {
+                color: $panel_font_color;
+                font-family: unquote($panel_font_family);
+                font-size: $panel_font_size;
+                background: none;
+                border: 0;
+                @include border-radius(0, 0, 0, 0);
+                margin: 0;
+                opacity: 1;
+                padding: 0;
+                position: relative;
+                right: auto;
+                top: auto;
+                bottom: auto;
+                left: auto;
+                text-align: left;
+                text-transform: none;
+                vertical-align: baseline;
+                @include box-shadow(none);
+                list-style-type: none;
+                line-height: $line_height;
+                box-sizing: border-box;
+                float: none;
+                overflow: visible;
+                display: block;
+                min-height: 0;
+                transition: none;
+                text-decoration: none;
+                width: auto;
+                clip: auto;
+                height: auto;
+                outline: none;
+                visibility: inherit;
+                pointer-events: auto;
+
+                &:before,
+                &:after {
+                    display: none;
+                }
+            }
+
+            table, td, tr, th {
+                border: 0;
+                margin: 0;
+                padding: 0;
+                background: none;
+            }
+        }
+    }
 }
 
 @mixin mobilemenu {
@@ -117,28 +197,11 @@
         display: none;
 
         ~ button.mega-close {
-            visibility: hidden;
-            opacity: 0;
-            transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out, visibility $effect_speed_mobile ease-in-out, opacity $effect_speed_mobile ease-out;
-        }
-
-        @if $effect_mobile == slide_left {
-            & ~ button.mega-close {
-                right: 0;
-                left: auto;
-            }
-        }
-
-        @if $effect_mobile == slide_right {
-            & ~ button.mega-close {
-                right: auto;
-                left: 0;
-            }
+            display: none;
         }
 
         @include mobile {
             z-index: 1;
-            cursor: pointer;
             @include background($toggle_background_from, $toggle_background_to);
             @include border-radius($toggle_bar_border_radius_top_left, $toggle_bar_border_radius_top_right, $toggle_bar_border_radius_bottom_right, $toggle_bar_border_radius_bottom_left);
             line-height: $toggle_bar_height;
@@ -163,7 +226,8 @@
             .mega-toggle-blocks-center,
             .mega-toggle-blocks-right {
                 display: flex;
-                flex-basis: 33.33%;
+                flex: 1;
+                gap: 6px;
             }
 
             .mega-toggle-block {
@@ -173,40 +237,19 @@
                 align-self: center;
                 flex-shrink: 0;
             }
-            
+
             .mega-toggle-blocks-left {
-                flex: 1;
                 justify-content: flex-start;
-
-                .mega-toggle-block {
-                    margin-left: 6px;
-
-                    &:only-child {
-                        margin-right: 6px;
-                    }
-                }
+                padding-left: 6px;
             }
 
             .mega-toggle-blocks-center {
                 justify-content: center;
-
-                .mega-toggle-block {
-                    margin-left: 3px;
-                    margin-right: 3px;
-                }
             }
 
             .mega-toggle-blocks-right {
-                flex: 1;
                 justify-content: flex-end;
-
-                .mega-toggle-block {
-                    margin-right: 6px;
-
-                    &:only-child {
-                        margin-left: 6px;
-                    }
-                }
+                padding-right: 6px;
             }
 
             + #{$menu} {
@@ -242,13 +285,29 @@
                     overscroll-behavior: contain;
                     visibility: hidden;
                     display: flex;
+
+                    @if $effect_mobile == slide_right {
+                        left: -$mobile_menu_off_canvas_width;
+                    }
+
+                    @if $effect_mobile == slide_left {
+                        right: -$mobile_menu_off_canvas_width;
+                    }
                 }
             }
 
-            &.mega-menu-open { 
+            &.mega-menu-open {
                 & + #{$menu} {
                     display: flex;
                     visibility: visible;
+
+                    @if $effect_mobile == slide_right {
+                        left: 0;
+                    }
+
+                    @if $effect_mobile == slide_left {
+                        right: 0;
+                    }
                 }
             }
 
@@ -256,72 +315,80 @@
                 position: relative;
 
                 & ~ button.mega-close {
+                    @if $css_type == flex {
+                        all: revert;
+                        appearance: none;
+                        background: none;
+                        border: 0;
+                        padding: 0;
+                        margin: 0;
+                    }
                     display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 40px;
+                    height: 40px;
                     position: fixed;
                     top: 0;
                     z-index: 99999999999;
                     cursor: pointer;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out, visibility $effect_speed_mobile ease-in-out, opacity $effect_speed_mobile ease-out;
 
-                    &:before {
-                        display: flex;
-                        content: $close_icon;
-                        font-family: $close_icon_font;
-                        font-weight: $close_icon_font_weight;
-                        color: $close_icon_color;
-                        align-items: center;
-                        justify-content: center;
-                        width: 40px;
-                        height: 40px;
-                        font-size: $close_icon_font_size;
-                    }
-                }
-
-                @if ($effect_mobile == slide_right ) {
-                    + #{$menu} {
-                        left: -$mobile_menu_off_canvas_width;
+                    @if $effect_mobile == slide_left {
+                        right: 0;
+                        left: auto;
                     }
 
-                    &.mega-menu-open {
-                        & ~ button.mega-close {
-                            visibility: visible;
-                            opacity: 1;
-                            
-                            @if $mobile_menu_off_canvas_width == '100%' {
-                                left: auto;
-                                right: 0;
-                            } @else {
-                                left: calc(min(100vw - 40px, #{$mobile_menu_off_canvas_width}));
-                                right: auto;
-                            }
+                    @if $effect_mobile == slide_right {
+                        right: auto;
+                        left: 0;
+                    }
+
+                    @if $close_icon_font == svg {
+                        svg {
+                            display: flex;
+                            width: $close_icon_font_size;
+                            height: $close_icon_font_size;
+                            color: $close_icon_color;
+                            stroke: currentColor;
+                            stroke-width: 2;
+                            fill: none;
                         }
-
-                        & + #{$menu} {
-                            left: 0;
+                    } @else {
+                        &:before {
+                            display: flex;
+                            content: $close_icon;
+                            font-family: $close_icon_font;
+                            font-weight: $close_icon_font_weight;
+                            color: $close_icon_color;
+                            font-size: $close_icon_font_size;
                         }
                     }
                 }
 
-                @if ($effect_mobile == slide_left ) {
-                    + #{$menu} {
-                        right: -$mobile_menu_off_canvas_width;
-                    }
-                    
-                    &.mega-menu-open {
-                        & ~ button.mega-close {
-                            visibility: visible;
-                            opacity: 1;
+                &.mega-menu-open ~ button.mega-close {
+                    visibility: visible;
+                    opacity: 1;
 
-                            @if $mobile_menu_off_canvas_width == '100%' {
-                                right: auto;
-                                left: 0;
-                            } @else {
-                                right: calc(min(100vw - 40px, #{$mobile_menu_off_canvas_width}));
-                                left: auto;
-                            }
-                        }
-
-                        & + #{$menu} {
+                    @if $effect_mobile == slide_right {
+                        @if $mobile_menu_off_canvas_width == '100%' {
+                            left: auto;
                             right: 0;
+                        } @else {
+                            left: calc(min(100vw - 40px, #{$mobile_menu_off_canvas_width}));
+                            right: auto;
+                        }
+                    }
+
+                    @if $effect_mobile == slide_left {
+                        @if $mobile_menu_off_canvas_width == '100%' {
+                            right: auto;
+                            left: 0;
+                        } @else {
+                            right: calc(min(100vw - 40px, #{$mobile_menu_off_canvas_width}));
+                            left: auto;
                         }
                     }
                 }
@@ -355,9 +422,10 @@
         #{$menu} a:focus,
         #{$menu} span:focus,
         #{$menu} input:focus,
-        #{$menu} li.mega-menu-item a.mega-menu-link:focus,
+        #{$menu} li.mega-menu-item .mega-menu-link:focus,
         #{$menu} form.mega-search-open:has(input[type=text]:focus),
-        #{$menu} + button.mega-close:focus {
+        #{$menu} + button.mega-close:focus,
+        #{$menu} .mega-mobile-back > button:focus {
             outline-style: solid;
             outline-width: $keyboard_highlight_width;
             outline-color: $keyboard_highlight_color;

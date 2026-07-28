@@ -41,23 +41,17 @@ class MLA_Thumbnail {
 			return;
 		}
 
-		/*
-		 * Defined in /wp-admin/admin-header.php
-		 */
+		// Defined in /wp-admin/admin-header.php
  		add_action( 'admin_enqueue_scripts', 'MLA_Thumbnail::admin_enqueue_scripts', 10, 1 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-main.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-main.php
 		add_filter( 'mla_list_table_help_template', 'MLA_Thumbnail::mla_list_table_help_template', 10, 3 );
 		add_filter( 'mla_list_table_begin_bulk_action', 'MLA_Thumbnail::mla_list_table_begin_bulk_action', 10, 2 );
 		add_filter( 'mla_list_table_custom_bulk_action', 'MLA_Thumbnail::mla_list_table_custom_bulk_action', 10, 3 );
 		add_filter( 'mla_list_table_end_bulk_action', 'MLA_Thumbnail::mla_list_table_end_bulk_action', 10, 2 );
 		add_filter( 'mla_list_table_inline_parse', 'MLA_Thumbnail::mla_list_table_inline_parse', 10, 3 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-list-table.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_get_bulk_actions', 'MLA_Thumbnail::mla_list_table_get_bulk_actions', 10, 1 );
 		add_filter( 'mla_list_table_submenu_arguments', 'MLA_Thumbnail::mla_list_table_submenu_arguments', 10, 2 );
 	}
@@ -338,30 +332,17 @@ class MLA_Thumbnail {
 		// Filters the image sizes generated for non-image mime types.
 		$fallback_sizes = apply_filters( 'fallback_intermediate_image_sizes', $fallback_sizes, $item_data );
 
-		$sizes = array();
-		$_wp_additional_image_sizes = wp_get_additional_image_sizes();
+		$registered_sizes = wp_get_registered_image_subsizes();
+		$sizes     = array_intersect_key( $registered_sizes, array_flip( $fallback_sizes ) );
 
-		foreach ( $fallback_sizes as $s ) {
-			if ( isset( $_wp_additional_image_sizes[ $s ]['width'] ) ) {
-				$sizes[ $s ]['width'] = (int) $_wp_additional_image_sizes[ $s ]['width'];
-			} else {
-				$sizes[ $s ]['width'] = get_option( "{$s}_size_w" );
-			}
+		// If there are no sizes, we're done
+		if ( empty( $sizes ) ) {
+			return true;
+		}
 
-			if ( isset( $_wp_additional_image_sizes[ $s ]['height'] ) ) {
-				$sizes[ $s ]['height'] = (int) $_wp_additional_image_sizes[ $s ]['height'];
-			} else {
-				$sizes[ $s ]['height'] = get_option( "{$s}_size_h" );
-			}
-
-			if ( isset( $_wp_additional_image_sizes[ $s ]['crop'] ) ) {
-				$sizes[ $s ]['crop'] = $_wp_additional_image_sizes[ $s ]['crop'];
-			} else {
-				// Force thumbnails to be soft crops.
-				if ( ! 'thumbnail' === $s ) {
-					$sizes[ $s ]['crop'] = get_option( "{$s}_crop" );
-				}
-			}
+		// Force thumbnails to be soft crops.
+		if ( isset( $sizes['thumbnail'] ) && is_array( $sizes['thumbnail'] ) ) {
+			$sizes['thumbnail']['crop'] = false;
 		}
 
 		// Adjust the file name for the new item
@@ -390,10 +371,18 @@ class MLA_Thumbnail {
 			'width' => $args['width'],
 			'height' => $args['height'],
 			'mime-type' => $args['type'],
+			'filesize' => $args['size'],
 		);		
 
 		// Update the metadata for the original (PDF) attachment.
 		$item_data['sizes'] = $results;
+
+		// Capture PDF file size
+		$item_data['filesize'] = wp_filesize( $file );
+		if ( 0 === $item_data['filesize'] ) {
+			unset( $item_data['filesize'] );
+		}
+
 		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		wp_update_attachment_metadata( $post_id, $item_data );
 
@@ -415,7 +404,7 @@ class MLA_Thumbnail {
 	 *					( 'message' => error or status message(s), 'body' => '' )
 	 */
 	public static function mla_list_table_custom_bulk_action( $item_content, $bulk_action, $post_id ) {
-		if ( self::MLA_GFI_ACTION != $bulk_action ) {
+		if ( self::MLA_GFI_ACTION !== $bulk_action ) {
 			return $item_content;
 		}
 
@@ -442,17 +431,17 @@ class MLA_Thumbnail {
 					break;
 				case 'remove':
 					delete_post_thumbnail( $post_id );
-					$feature_id = false;
+					$feature_id = 0;
 					break;
 				case 'trash':
 					delete_post_thumbnail( $post_id ); 
 					wp_delete_post( absint( $feature_id ), false );
-					$feature_id = false;
+					$feature_id = 0;
 					break;
 				case 'delete':
 					delete_post_thumbnail( $post_id ); 
 					wp_delete_post( absint( $feature_id ), true );
-					$feature_id = false;
+					$feature_id = 0;
 					break;
 				case 'keep':
 				default:
@@ -552,7 +541,7 @@ class MLA_Thumbnail {
 		wp_update_attachment_metadata( $item_id, $item_data );
 
 		// Assign the new item as the source item's Featured Image
-		if ( false === $feature_id ) {
+		if ( 0 === $feature_id ) {
 			set_post_thumbnail( $post_id, $item_id );
 		}
 

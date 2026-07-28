@@ -1,0 +1,112 @@
+<?php
+/**
+ * Breakdance admin notice (Menu Locations) and related hooks.
+ *
+ * @package megamenu
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! defined( 'MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE' ) ) {
+	define( 'MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE', 'breakdance_menu_locations_header_element' );
+}
+
+if ( ! defined( 'MEGAMENU_BREAKDANCE_TUTORIAL_URL' ) ) {
+	define( 'MEGAMENU_BREAKDANCE_TUTORIAL_URL', 'https://megamenu.com/breakdance/' );
+}
+
+/**
+ * @return bool
+ */
+function megamenu_breakdance_is_max_mega_menu_menu_locations_screen() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+	return $screen && 'toplevel_page_maxmegamenu' === $screen->id;
+}
+
+/**
+ * @param string[] $keys
+ * @return string[]
+ */
+function megamenu_breakdance_register_dismissible_notice_key( $keys ) {
+	if ( ! is_array( $keys ) ) {
+		return [ MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE ];
+	}
+
+	$keys[] = MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE;
+
+	return array_values( array_unique( array_map( 'sanitize_key', $keys ) ) );
+}
+
+/**
+ * @param string $hook
+ * @return void
+ */
+function megamenu_breakdance_enqueue_notice_assets( $hook ) {
+	$load = (
+		'toplevel_page_maxmegamenu' === $hook
+		|| 'nav-menus.php' === $hook
+		|| ( is_string( $hook ) && strpos( $hook, 'maxmegamenu' ) !== false )
+	);
+
+	if ( ! $load ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'megamenu-breakdance-admin',
+		MEGAMENU_BASE_URL . 'integration/breakdance/admin.css',
+		[],
+		MEGAMENU_VERSION
+	);
+}
+
+/**
+ * @param Mega_Menu_Admin_Notices $_admin_notices
+ * @return void
+ */
+function megamenu_breakdance_render_menu_locations_admin_notice( $_admin_notices ) {
+	if ( ! megamenu_breakdance_is_max_mega_menu_menu_locations_screen() ) {
+		return;
+	}
+
+	$cap = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+	if ( ! current_user_can( $cap ) ) {
+		return;
+	}
+
+	if ( Mega_Menu_Admin_Notices::is_dismissed( MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE ) ) {
+		return;
+	}
+
+	$before = '<div class="mmm-mega-notice-breakdance__row"><span class="mmm-mega-notice-breakdance__logo" aria-hidden="true"></span><div class="mmm-mega-notice-breakdance__main">';
+	$after  = '<p class="mmm-mega-notice-breakdance__actions"><a href="' . esc_url( MEGAMENU_BREAKDANCE_TUTORIAL_URL ) . '" class="button button-secondary" target="_blank" rel="noopener noreferrer">' . esc_html__( 'View tutorial', 'megamenu' ) . '</a></p></div></div>';
+
+	Mega_Menu_Admin_Notices::output_persistent_dismissible_notice(
+		'info',
+		esc_html__(
+			'Hi Breakdance user! To show Max Mega Menu in your header, open the Breakdance template editor and add a Max Mega Menu element to your header template.',
+			'megamenu'
+		),
+		MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE,
+		[
+			'before_content'        => $before,
+			'after_paragraph'       => $after,
+			'wrapper_extra_classes' => 'mmm-mega-notice-breakdance',
+		]
+	);
+}
+
+/**
+ * @return void
+ */
+function megamenu_breakdance_reset_notice_on_deactivation() {
+	Mega_Menu_Admin_Notices::clear_dismissed_notice( MEGAMENU_BREAKDANCE_MENU_LOCATIONS_NOTICE );
+}
+
+add_filter( 'megamenu_dismissible_admin_notice_keys', 'megamenu_breakdance_register_dismissible_notice_key' );
+add_action( 'admin_enqueue_scripts', 'megamenu_breakdance_enqueue_notice_assets', 20 );
+add_action( 'megamenu_admin_notices', 'megamenu_breakdance_render_menu_locations_admin_notice', 10, 1 );
+add_action( 'megamenu_plugin_deactivation', 'megamenu_breakdance_reset_notice_on_deactivation' );

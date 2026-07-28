@@ -107,7 +107,7 @@
  * opened on 12/03/2024 by "vgo0":
  *
  * @package WooCommerce Fixit
- * @version 2.12
+ * @version 2.13
  */
 
 /*
@@ -115,7 +115,7 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.12
+Version: 2.13
 Author URI: http://davidlingren.com/
 
 Copyright 2014-2021 David Lingren
@@ -148,7 +148,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.12';
+	const CURRENT_VERSION = '2.13';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -1475,13 +1475,13 @@ class Woo_Fixit {
 		global $wpdb;
 
 		if ( ! empty( self::$first_product ) ) {
-			$lower_bound = (integer) self::$first_product;
+			$lower_bound = (int) self::$first_product;
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( self::$last_product ) ) {
-			$upper_bound = (integer) self::$last_product;
+			$upper_bound = (int) self::$last_product;
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {
@@ -1495,11 +1495,11 @@ class Woo_Fixit {
 		$results = $wpdb->get_results( $query );
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() $results = ' . var_export( $results, true ), 0 );
 		foreach ( $results as $result ) {
-			$key = (integer) $result->meta_value;
+			$key = (int) $result->meta_value;
 			if ( isset( self::$attachment_products[ $key ] ) ) {
-				self::$attachment_products[ $key ]['category_thumbnail'][ (integer) $result->term_id ] = $result->name;
+				self::$attachment_products[ $key ]['category_thumbnail'][ (int) $result->term_id ] = $result->name;
 			} else {
-				self::$attachment_products[ $key ]['category_thumbnail'] = array( (integer) $result->term_id => $result->name );
+				self::$attachment_products[ $key ]['category_thumbnail'] = array( (int) $result->term_id => $result->name );
 			}
 		}
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() self::$attachment_products = ' . var_export( self::$attachment_products, true ), 0 );
@@ -1517,20 +1517,20 @@ class Woo_Fixit {
 			}
 
 			if ( '_thumbnail_id' == $result->meta_key ) {
-				$key = (integer) $result->meta_value;
+				$key = (int) $result->meta_value;
 
 				if ( isset( self::$attachment_products[ $key ] ) ) {
-					self::$attachment_products[ $key ]['_thumbnail_id'][] = (integer) $result->post_id;
+					self::$attachment_products[ $key ]['_thumbnail_id'][] = (int) $result->post_id;
 				} else {
-					self::$attachment_products[ $key ]['_thumbnail_id'] = array( (integer) $result->post_id );
+					self::$attachment_products[ $key ]['_thumbnail_id'] = array( (int) $result->post_id );
 				}
 			} else {
 				foreach( explode( ',', $result->meta_value ) as $key ) {
-					$key = (integer) trim( $key );
+					$key = (int) trim( $key );
 					if ( isset( self::$attachment_products[ $key ] ) ) {
-						self::$attachment_products[ $key ]['_product_image_gallery'][] = (integer) $result->post_id;
+						self::$attachment_products[ $key ]['_product_image_gallery'][] = (int) $result->post_id;
 					} else {
-						self::$attachment_products[ $key ]['_product_image_gallery'] = array( (integer) $result->post_id );
+						self::$attachment_products[ $key ]['_product_image_gallery'] = array( (int) $result->post_id );
 					}
 				}
 			}
@@ -1548,8 +1548,8 @@ class Woo_Fixit {
 
 			foreach ( $results as $result ) {
 				if ( 0 === strpos( $result->post_mime_type, 'image' ) ) {
-					$key = (integer) trim( $result->post_parent );
-					$ID = (integer) $result->ID;
+					$key = (int) trim( $result->post_parent );
+					$ID = (int) $result->ID;
 					if ( isset( self::$product_attachments[ $key ] ) ) {
 						self::$product_attachments[ $key ]['children'][ $ID ] = $ID;
 					} else {
@@ -1779,11 +1779,11 @@ class Woo_Fixit {
 					// The first top-level term wins
 					if ( 0 == $product_terms[ $term->object_id ]['parent'] ) {
 						continue;
-					} elseif ( ( (integer) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
-						$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (integer) $term->parent );
+					} elseif ( ( (int) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
+						$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (int) $term->parent );
 					}
 				} else {
-					$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (integer) $term->parent );
+					$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (int) $term->parent );
 				}
 			}
 
@@ -1816,7 +1816,7 @@ class Woo_Fixit {
 					$empty_values[] = $existing_value->post_id;
 					continue;
 				}
-				unset( $attachment_values[ (integer) $existing_value->post_id ] );
+				unset( $attachment_values[ (int) $existing_value->post_id ] );
 			}
 
 			// Delete empty ALT Text values
@@ -1866,11 +1866,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					// The first top-level term wins
 					if ( 0 == $product_terms[ $term->object_id ]['parent'] ) {
 						continue;
-					} elseif ( ( (integer) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
-						$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (integer) $term->parent );
+					} elseif ( ( (int) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
+						$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (int) $term->parent );
 					}
 				} else {
-					$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (integer) $term->parent );
+					$product_terms[ $term->object_id ] = array( 'name' => $term->name, 'parent' => (int) $term->parent );
 				}
 			}
 
@@ -1946,7 +1946,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					$empty_values[] = $existing_value->post_id;
 					continue;
 				}
-				unset( $attachment_values[ (integer) $existing_value->post_id ] );
+				unset( $attachment_values[ (int) $existing_value->post_id ] );
 			}
 
 			// Delete empty ALT Text values
@@ -2052,7 +2052,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			foreach( $wpdb->get_results( $select_query ) as $existing_value ) {
 				$trim =  trim( $existing_value->post_title );
 				if ( ! empty( $trim ) ) {
-					unset( $attachment_values[ (integer) $existing_value->ID ] );
+					unset( $attachment_values[ (int) $existing_value->ID ] );
 				}
 			}
 
@@ -2202,7 +2202,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 						$delete_values[] = $existing_value->post_id;
 						continue;
 					}
-					unset( $replace_values[ (integer) $existing_value->post_id ] );
+					unset( $replace_values[ (int) $existing_value->post_id ] );
 				}
 			} else {
 				// Delete all of the existing values
@@ -2288,13 +2288,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				continue;
 			}
 
-			$feature = (integer) $result['_thumbnail_id'];
+			$feature = (int) $result['_thumbnail_id'];
 			$gallery = array();
 			$feature_found = false;
 
 			if ( ! empty( $result['_product_image_gallery'] ) ) {
 				foreach ( explode( ',', $result['_product_image_gallery'] ) as $item ) {
-					if ( $feature == (integer) $item ) {
+					if ( $feature == (int) $item ) {
 						$feature_found = true;
 					} else {
 						$gallery[] = $item;
@@ -2352,12 +2352,12 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				continue;
 			}
 
-			$feature = (integer) $result['_thumbnail_id'];
+			$feature = (int) $result['_thumbnail_id'];
 			$gallery = array();
 			$feature_found = false;
 			if ( ! empty( $result['_product_image_gallery'] ) ) {
 				foreach ( explode( ',', $result['_product_image_gallery'] ) as $item ) {
-					if ( $feature == (integer) $item ) {
+					if ( $feature == (int) $item ) {
 						$feature_found = true;
 					} else {
 						$gallery[] = $item;
@@ -2527,7 +2527,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$gallery_inserts = array();
 
 		foreach ( self::$product_attachments as $ID => $images ) {
-			$thumbnail = isset( $images['_thumbnail_id'] ) ? (integer) $images['_thumbnail_id'] : 0;
+			$thumbnail = isset( $images['_thumbnail_id'] ) ? (int) $images['_thumbnail_id'] : 0;
 			$gallery = isset( $images['_product_image_gallery'] ) ? array_map( 'absint', explode( ',', $images['_product_image_gallery'] ) ) : array();
 			$children = isset( $images['children'] ) ? $images['children'] : array();
 			$updated = false;
@@ -2621,7 +2621,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$gallery_inserts = array();
 
 		foreach ( self::$product_attachments as $ID => $images ) {
-			$thumbnail = isset( $images['_thumbnail_id'] ) ? (integer) $images['_thumbnail_id'] : 0;
+			$thumbnail = isset( $images['_thumbnail_id'] ) ? (int) $images['_thumbnail_id'] : 0;
 			$gallery = isset( $images['_product_image_gallery'] ) ? array_map( 'absint', explode( ',', $images['_product_image_gallery'] ) ) : array();
 			$children = isset( $images['children'] ) ? $images['children'] : array();
 			$updated = false;
@@ -3480,13 +3480,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		global $wpdb;
 
 		if ( ! empty( self::$first_product ) ) {
-			$lower_bound = (integer) self::$first_product;
+			$lower_bound = (int) self::$first_product;
 		} else {
 			$lower_bound = 0;
 		}
 
 		if ( ! empty( self::$last_product ) ) {
-			$upper_bound = (integer) self::$last_product;
+			$upper_bound = (int) self::$last_product;
 		} elseif ( $lower_bound ) {
 			$upper_bound = $lower_bound;
 		} else {

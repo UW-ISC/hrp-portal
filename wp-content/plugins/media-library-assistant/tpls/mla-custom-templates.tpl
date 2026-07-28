@@ -62,7 +62,51 @@ mla_shortcode_slug="gallery"
 		margin-left: 0;
 		vertical-align: top;
 	}
+	#[+selector+] [+termtag+] a.[+current_item_class+],
+	#[+selector+] [+termtag+] a.[+current_item_class+]:visited {
+		color:#FF0000;
+		font-weight:bold
 </style>
+
+<!-- template="tag-cloud-flat-div-style" -->
+<!-- mla_shortcode_slug="tag-cloud" -->
+<!-- mla_description="CSS Styles for the 'flat,div' output format" -->
+<style type='text/css'>
+	#[+selector+] a.[+current_item_class+],
+	#[+selector+] a.[+current_item_class+]:visited {
+		color:#FF0000;
+		font-weight:bold
+	}
+</style>
+
+<!-- template="tag-cloud-ul-div-style" -->
+<!-- mla_shortcode_slug="tag-cloud" -->
+<!-- mla_description="CSS Styles for the u/o/d list ',div' output formats" -->
+<style type='text/css'>
+	#[+selector+] {
+		height: 14em;
+		border: 1px solid #ddd;
+		overflow-y: scroll;
+		list-style: none
+		margin: auto;
+		width: 100%;
+	}
+	#[+selector+] .tag-cloud-item {
+		float: [+float+];
+		margin: [+margin+];
+		text-align: center;
+		width: [+itemwidth+];
+	}
+	#[+selector+] .tag-cloud-caption {
+		margin-left: 0;
+		vertical-align: top;
+	}
+	#[+selector+] [+termtag+] a.[+current_item_class+],
+	#[+selector+] [+termtag+] a.[+current_item_class+]:visited {
+		color:#FF0000;
+		font-weight:bold
+	}
+	</style>
 
 <!-- template="tag-cloud-description-markup" -->
 For the "grid" output format, this template wraps each item in a "dl,dd,dt" list, divides them in rows and encloses them in a 'div'element.
@@ -90,6 +134,16 @@ mla_shortcode_slug="tag-cloud"
 <!-- template="tag-cloud-close-markup" -->
 </div>
 
+<!-- template="tag-cloud-flat-div-description-markup" -->
+For the "flat,div" output format, this template wraps the list/cloud in a DIV tag to enable CSS styling.
+<!-- template="tag-cloud-flat-div-arguments-markup" -->
+mla_shortcode_slug="tag-cloud"
+<!-- template="tag-cloud-flat-div-open-markup" -->
+<div id='[+selector+]' class='tag-cloud tag-cloud-taxonomy-[+taxonomy+]'>
+
+<!-- template="tag-cloud-flat-div-close-markup" -->
+</div>
+
 <!-- template="tag-cloud-ul-description-markup" -->
 For the "ulist" and "olist" output formats, this template generates the "ul/ol" and "li" elements.
 <!-- template="tag-cloud-ul-arguments-markup" -->
@@ -102,6 +156,21 @@ mla_shortcode_slug="tag-cloud"
 
 <!-- template="tag-cloud-ul-close-markup" -->
 </[+itemtag+]>
+
+<!-- template="tag-cloud-ul-div-description-markup" -->
+For the "ulist,div" and "olist,div" output formats, this template wraps the list in a DIV tag to enable CSS styling.
+<!-- template="tag-cloud-ul-div-arguments-markup" -->
+mla_shortcode_slug="tag-cloud"
+<!-- template="tag-cloud-ul-div-open-markup" -->
+<div id="[+selector+]-div" class="tag-cloud tag-cloud-taxonomy-[+taxonomy+]">
+<[+itemtag+] id='[+selector+]' class='tag-cloud tag-cloud-taxonomy-[+taxonomy+]'>
+
+<!-- template="tag-cloud-ul-div-item-markup" -->
+	<[+termtag+] class='tag-cloud-term'>[+thelink+]</[+termtag+]>
+
+<!-- template="tag-cloud-ul-div-close-markup" -->
+</[+itemtag+]>
+</div>
 
 <!-- template="tag-cloud-dl-description-markup" -->
 For the "dlist" output format, this template wraps "dt" and "dd" elements in a "dl" list.
@@ -116,6 +185,22 @@ mla_shortcode_slug="tag-cloud"
 
 <!-- template="tag-cloud-dl-close-markup" -->
 </[+itemtag+]>
+
+<!-- template="tag-cloud-dl-div-description-markup" -->
+For the "dlist,div" output format, this template wraps the list in a DIV tag to enable CSS styling.
+<!-- template="tag-cloud-dl-div-arguments-markup" -->
+mla_shortcode_slug="tag-cloud"
+<!-- template="tag-cloud-dl-div-open-markup" -->
+<div id="[+itemtag_id+]" class="[+itemtag_class+]" [+itemtag_attributes+]>
+<[+itemtag+] id='[+selector+]' class='tag-cloud tag-cloud-taxonomy-[+taxonomy+]'>
+
+<!-- template="tag-cloud-dl-div-item-markup" -->
+	<[+termtag+] class='tag-cloud-term'>[+thelink+]</[+termtag+]>
+	<[+captiontag+] class='wp-caption-text tag-cloud-caption'>[+caption+]</[+captiontag+]>
+
+<!-- template="tag-cloud-dl-div-close-markup" -->
+</[+itemtag+]>
+</div>
 
 <!-- template="term-list-style" -->
 <!-- mla_shortcode_slug="term-list" -->
@@ -196,7 +281,7 @@ For the "dropdown" output format, this template generates the "select" and "opti
 <!-- template="term-list-dropdown-arguments-markup" -->
 mla_shortcode_slug="term-list"
 <!-- template="term-list-dropdown-open-markup" -->
-<[+itemtag+] [+multiple+] name='[+thename+]' class='term-list term-list-dropdown term-list-taxonomy-[+taxonomy+]' id='[+selector+]'>
+<[+itemtag+] [+multiple+] name='[+thename+]' id='[+selector+]' class='term-list term-list-dropdown term-list-taxonomy-[+taxonomy+]'>
 
 <!-- template="term-list-dropdown-item-markup" -->
 	<[+termtag+] class='term-list-term term-list-dropdown-term level-[+current_level+]' value='[+thevalue+]' [+selected+]>[+thelabel+]</[+termtag+]>
@@ -241,6 +326,7 @@ mla_shortcode_slug="term-list"
 
 <!-- template="custom-list-style" -->
 <!-- mla_shortcode_slug="custom-list" -->
+<!-- mla_description="CSS Styles for the u/o/d list output formats" -->
 <style type='text/css'>
 	#[+selector+] {
 		margin: auto;
@@ -256,18 +342,50 @@ mla_shortcode_slug="term-list"
 		margin-left: 0;
 		vertical-align: top;
 	}
+	#[+selector+].custom-list-checklist {
+		list-style: none;
+	}
+
 </style>
 
 <!-- template="custom-list-flat-div-style" -->
 <!-- mla_shortcode_slug="custom-list" -->
 <!-- mla_description="CSS Styles for the 'flat,div' output format" -->
 <style type='text/css'>
-	#[+selector+] a.mla_current_item,
-	#[+selector+] a.mla_current_item:visited {
+	#[+selector+] a.[+current_item_class+],
+	#[+selector+] a.[+current_item_class+]:visited {
 		color:#FF0000;
 		font-weight:bold
 	}
 </style>
+
+<!-- template="custom-list-ul-div-style" -->
+<!-- mla_shortcode_slug="custom-list" -->
+<!-- mla_description="CSS Styles for the u/o/d list ',div' output formats" -->
+<style type='text/css'>
+	#[+selector+] {
+		height: 14em;
+		border: 1px solid #ddd;
+		overflow-y: scroll;
+		list-style: none
+		margin: auto;
+		width: 100%;
+	}
+	#[+selector+] .custom-list-item {
+		float: [+float+];
+		margin: [+margin+];
+		text-align: center;
+		width: [+itemwidth+];
+	}
+	#[+selector+] .custom-list-caption {
+		margin-left: 0;
+		vertical-align: top;
+	}
+	#[+selector+] [+valuetag+] a.[+current_item_class+],
+	#[+selector+] [+valuetag+] a.[+current_item_class+]:visited {
+		color:#FF0000;
+		font-weight:bold
+	}</style>
 
 <!-- template="custom-list-checklist-div-style" -->
 <!-- mla_description="CSS Styles for the 'checklist,div' output format" -->
@@ -294,7 +412,8 @@ mla_shortcode_slug="term-list"
 </style>
 
 <!-- template="custom-list-flat-div-description-markup" -->
-For the "flat,div" output format, this template wraps the list/cloud in a DIV tag to enable CSS styling.<!-- template="custom-list-flat-div-arguments-markup" -->
+For the "flat,div" output format, this template wraps the list/cloud in a DIV tag to enable CSS styling.
+<!-- template="custom-list-flat-div-arguments-markup" -->
 mla_shortcode_slug="custom-list"
 <!-- template="custom-list-flat-div-open-markup" -->
 <div id='[+selector+]' class='custom-list custom-list-key-[+meta_key+]'>
@@ -341,6 +460,21 @@ mla_shortcode_slug="custom-list"
 <!-- template="custom-list-ul-close-markup" -->
 </[+itemtag+]>
 
+<!-- template="custom-list-ul-div-description-markup" -->
+For the "ulist,div" and "olist,div" output formats, this template generates the "ul/ol" and "li" elements.
+<!-- template="custom-list-ul-div-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-ul-div-open-markup" -->
+<div id="[+itemtag_id+]" class="[+itemtag_class+]" [+itemtag_attributes+]>
+<[+itemtag+] [+itemtag_attributes+] class="[+itemtag_class+]" id="[+itemtag_id+]-[+itemtag+]">
+
+<!-- template="custom-list-ul-div-item-markup" -->
+	<[+valuetag+] class='custom-list-value'>[+thelink+]</[+valuetag+]>
+
+<!-- template="custom-list-ul-div-close-markup" -->
+</[+itemtag+]>
+</div>
+
 <!-- template="custom-list-dl-description-markup" -->
 For the "dlist" output format, this template wraps "dt" and "dd" elements in a "dl" list.
 <!-- template="custom-list-dl-arguments-markup" -->
@@ -355,12 +489,28 @@ mla_shortcode_slug="custom-list"
 <!-- template="custom-list-dl-close-markup" -->
 </[+itemtag+]>
 
+<!-- template="custom-list-dl-div-description-markup" -->
+For the "dlist,div" output format, this template wraps "dt" and "dd" elements in a "dl" list.
+<!-- template="custom-list-dl-div-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-dl-div-open-markup" -->
+<div id="[+itemtag_id+]" class="[+itemtag_class+]" [+itemtag_attributes+]>
+<[+itemtag+] [+itemtag_attributes+] class="[+itemtag_class+]" id="[+itemtag_id+]-[+itemtag+]">
+
+<!-- template="custom-list-dl-div-item-markup" -->
+	<[+valuetag+] class='custom-list-value'>[+thelink+]</[+valuetag+]>
+	<[+captiontag+] class='wp-caption-text custom-list-caption'>[+caption+]</[+captiontag+]>
+
+<!-- template="custom-list-dl-div-close-markup" -->
+</[+itemtag+]>
+</div>
+
 <!-- template="custom-list-dropdown-description-markup" -->
 For the "dropdown" output format, this template generates the "select" and "option" elements.
 <!-- template="custom-list-dropdown-arguments-markup" -->
 mla_shortcode_slug="custom-list"
 <!-- template="custom-list-dropdown-open-markup" -->
-<[+itemtag+] [+multiple+] name='[+thename+]' class='custom-list custom-list-dropdown custom-list-key-[+meta_key+]' id='[+selector+]'>
+<[+itemtag+] [+multiple+] name='[+thename+]' id='[+selector+]' class='custom-list custom-list-dropdown custom-list-key-[+meta_key+]'>
 
 <!-- template="custom-list-dropdown-item-markup" -->
 	<[+valuetag+] class='custom-list-value custom-list-dropdown-value' value='[+thevalue+]' [+selected+]>[+thelabel+]</[+valuetag+]>
@@ -407,7 +557,8 @@ mla_shortcode_slug="custom-list"
 	#[+selector+] .archive-list-item {
 		text-align: left;
 	}
-	#[+selector+] li.[+current_archive_class+] a {
+	#[+selector+] li.[+current_archive_class+] a,
+	#[+selector+] li.[+current_archive_class+] a:visited {
 		font-weight: bold;
 		font-size: larger;
 	}
@@ -430,8 +581,8 @@ mla_shortcode_slug="archive-list"
 <!-- mla_shortcode_slug="archive-list" -->
 <!-- mla_description="CSS Styles for the 'flat,div' output format" -->
 <style type='text/css'>
-	#[+selector+] a.mla_archive_current,
-	#[+selector+] a.mla_archive_current:visited {
+	#[+selector+] a.[+current_archive_class+],
+	#[+selector+] a.[+current_archive_class+]:visited {
 		color:#FF0000;
 		font-weight:bold
 	}
@@ -471,8 +622,8 @@ mla_shortcode_slug="archive-list"
 		margin: auto;
 		width: 100%;
 	}
-	#[+selector+] li.mla_archive_current a,
-	#[+selector+] li.mla_archive_current:visited a {
+	#[+selector+] li.[+current_archive_class+] a,
+	#[+selector+] li.[+current_archive_class+]:visited a {
 		color:#FF0000;
 		font-weight:bold
 	}
