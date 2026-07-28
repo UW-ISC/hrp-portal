@@ -1,59 +1,57 @@
 <?php
 
+namespace Redirection\ImportExport\Importer;
+
 /**
- * @phpstan-import-type ImporterInfo from Red_Plugin_Importer
+ * @phpstan-import-type ImporterInfo from Plugin
  */
-class Red_SeoRedirection_Importer extends Red_Plugin_Importer {
+class SeoRedirection extends Plugin {
 	/**
-	 * Import redirects from SEO Redirection.
-	 *
-	 * @param int $group_id Target group ID.
-	 * @return int Number of imported redirects.
+	 * @return bool
 	 */
-	public function import_plugin( $group_id ) {
+	public function supports_preview() {
+		return true;
+	}
+
+	/**
+	 * @return array<int, array<string, mixed>|false>
+	 */
+	protected function get_redirect_items() {
 		global $wpdb;
 
 		if ( defined( 'REDIRECTION_TESTS' ) && REDIRECTION_TESTS ) {
-			return 0;
+			return [];
 		}
 
-		$count = 0;
 		$redirects = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}WP_SEO_Redirection" );
+		$items = array();
 
 		foreach ( $redirects as $redirect ) {
-			$item = $this->create_for_item( $group_id, $redirect );
-
-			if ( $item instanceof Red_Item ) {
-				$count++;
-			}
+			$items[] = $this->get_item_for_seo( $redirect );
 		}
 
-		return $count;
+		return $items;
 	}
 
 	/**
 	 * Create a Redirection item for an SEO Redirection row.
 	 *
-	 * @param int      $group_id Target group ID.
-	 * @param stdClass $seo      Row from WP_SEO_Redirection.
-	 * @return Red_Item|WP_Error|false Created redirect, error, or false if disabled.
+	 * @param \stdClass $seo Row from WP_SEO_Redirection.
+	 * @return array<string, mixed>|false
 	 */
-	private function create_for_item( $group_id, $seo ) {
+	private function get_item_for_seo( $seo ) {
 		if ( intval( $seo->enabled, 10 ) === 0 ) {
 			return false;
 		}
 
-		$data = array(
-			'url'         => $seo->regex ? $seo->regex : $seo->redirect_from,
+		return array(
+			'url' => $seo->regex ? $seo->regex : $seo->redirect_from,
 			'action_data' => array( 'url' => $seo->redirect_to ),
-			'regex'       => $seo->regex ? true : false,
-			'group_id'    => $group_id,
-			'match_type'  => 'url',
+			'regex' => $seo->regex ? true : false,
+			'match_type' => 'url',
 			'action_type' => 'url',
 			'action_code' => intval( $seo->redirect_type, 10 ),
 		);
-
-		return Red_Item::create( $data );
 	}
 
 	/**
@@ -80,6 +78,8 @@ class Red_SeoRedirection_Importer extends Red_Plugin_Importer {
 			return array(
 				'id' => 'seo-redirection',
 				'name' => 'SEO Redirection',
+				'description' => __( 'Redirects created by SEO Redirection.', 'redirection' ),
+				'source' => __( 'Database tables', 'redirection' ),
 				'total' => $total,
 			);
 		}

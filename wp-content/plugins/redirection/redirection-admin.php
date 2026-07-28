@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/models/monitor.php';
-require_once __DIR__ . '/models/file-io.php';
 require_once __DIR__ . '/database/database.php';
 require_once __DIR__ . '/redirection-capabilities.php';
 
@@ -148,7 +147,7 @@ class Redirection_Admin {
 
 		// Known HTML and so isn't escaped
 		// phpcs:ignore
-		echo '<div class="update-nag notice notice-warning" style="width: 95%">' . $message . '</div>';
+		echo '<div class="update-nag notice notice-warning redirection-notice" style="width: 95%">' . $message . '</div>';
 	}
 
 	/**
@@ -158,7 +157,7 @@ class Redirection_Admin {
 	 */
 	public function show_incomplete_installation_notice() {
 		?>
-		<div class="notice notice-error">
+		<div class="notice notice-error redirection-notice">
 			<p>
 				<strong><?php esc_html_e( 'Redirection Error: Incomplete Installation Detected', 'redirection' ); ?></strong>
 			</p>
@@ -323,7 +322,9 @@ class Redirection_Admin {
 	 * @return string|null
 	 */
 	private function get_query( $name ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading current admin query parameters to decide which view to render.
 		if ( isset( $_GET[ $name ] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading current admin query parameters to decide which view to render.
 			return sanitize_text_field( $_GET[ $name ] );
 		}
 
@@ -335,6 +336,8 @@ class Redirection_Admin {
 	 */
 	public function redirection_head() {
 		global $wp_version;
+
+		nocache_headers();
 
 		// Does user have access to this page?
 		if ( $this->get_current_page() === false ) {
@@ -353,7 +356,7 @@ class Redirection_Admin {
 			}
 		}
 
-		$build = REDIRECTION_VERSION . '-' . REDIRECTION_BUILD;
+		$build = REDIRECTION_VERSION;
 		$preload = $this->get_preload_data();
 		$options = Red_Options::get();
 		$versions = array(
@@ -382,7 +385,7 @@ class Redirection_Admin {
 
 		$assets = include plugin_dir_path( REDIRECTION_FILE ) . 'build/redirection.asset.php';
 		$dependencies = $assets['dependencies'];
-		$version = $assets['version'];
+		$version = REDIRECTION_VERSION;
 
 		wp_enqueue_script( 'redirection', plugin_dir_url( REDIRECTION_FILE ) . 'build/redirection.js', $dependencies, $version, true );
 		wp_enqueue_style( 'redirection', plugin_dir_url( REDIRECTION_FILE ) . 'build/redirection.css', [], $version );
@@ -426,6 +429,7 @@ class Redirection_Admin {
 				'preload' => $preload,
 				'versions' => implode( "\n", $versions ),
 				'version' => REDIRECTION_VERSION,
+				'build' => REDIRECTION_BUILD,
 				'database' => $status->get_json(),
 				'caps' => [
 					'pages' => Redirection_Capabilities::get_available_pages(),
@@ -503,19 +507,9 @@ class Redirection_Admin {
 	}
 
 	/**
-	 * @return array{importers: list<array{id: string, name: string, total: int}>}|array{pluginStatus: array<string, mixed>}|array{}
+	 * @return array{pluginStatus: array<string, mixed>}|array{}
 	 */
 	private function get_preload_data(): array {
-		$status = new Red_Database_Status();
-
-		if ( $status->needs_installing() ) {
-			include_once __DIR__ . '/models/importer.php';
-
-			return [
-				'importers' => Red_Plugin_Importer::get_plugins(),
-			];
-		}
-
 		if ( $this->get_current_page() === 'support' ) {
 			require_once dirname( REDIRECTION_FILE ) . '/models/fixer.php';
 
@@ -633,7 +627,7 @@ class Redirection_Admin {
 			return;
 		}
 		?>
-		<div class="notice notice-error">
+		<div class="notice notice-error redirection-notice">
 			<h1><?php echo esc_html( $this->fixit_failed->get_error_message() ); ?></h1>
 			<p><?php echo esc_html( $this->fixit_failed->get_error_data() ); ?></p>
 		</div>
@@ -806,8 +800,6 @@ class Redirection_Admin {
 		$current_page = $this->get_current_page();
 
 		if ( $page !== null && $current_page !== 'redirect' && $page === 'redirection.php' ) {
-			$this->try_export_logs();
-			$this->try_export_redirects();
 			$this->try_export_rss();
 		}
 	}
@@ -827,53 +819,13 @@ class Redirection_Admin {
 
 				$items = Red_Item::get_all_for_module( intval( $module, 10 ) );
 
-				$exporter = Red_FileIO::create( 'rss' );
+				$exporter = ( new \Redirection\ImportExport\FormatFactory() )->create( 'rss' );
 				if ( $exporter !== false ) {
 					$exporter->force_download();
 
 					echo $exporter->get_data( $items, array() );
 					die();
 				}
-			}
-		}
-	}
-
-	/**
-	 * @return void
-	 */
-	private function try_export_logs() {
-		if ( Redirection_Capabilities::has_access( Redirection_Capabilities::CAP_IO_MANAGE ) && isset( $_POST['export-csv'] ) && check_admin_referer( 'wp_rest' ) !== false ) {
-			if ( $this->get_current_page() === 'log' ) {
-				Red_Redirect_Log::export_to_csv();
-			} elseif ( $this->get_current_page() === '404s' ) {
-				Red_404_Log::export_to_csv();
-			}
-
-			die();
-		}
-	}
-
-	/**
-	 * @return void
-	 */
-	private function try_export_redirects() {
-		$sub = $this->get_query( 'sub' );
-		if ( $sub !== 'io' ) {
-			return;
-		}
-
-		$export = $this->get_query( 'export' );
-		$exporter = $this->get_query( 'exporter' );
-
-		if ( Redirection_Capabilities::has_access( Redirection_Capabilities::CAP_IO_MANAGE ) && $export !== null && $exporter !== null && check_admin_referer( 'wp_rest' ) !== false ) {
-			$export = Red_FileIO::export( $export, $exporter );
-
-			if ( $export !== false ) {
-				$export['exporter']->force_download();
-
-				// This data is not displayed and will be downloaded to a file
-				echo str_replace( '&amp;', '&', wp_kses( $export['data'], 'strip' ) );
-				die();
 			}
 		}
 	}
