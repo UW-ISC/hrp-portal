@@ -7,7 +7,7 @@ namespace WPDT;
  * Adds rel="nofollow" to all outbound links.  This transform is
  * only attached if Attr.Nofollow is TRUE.
  */
-class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_Nofollow extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type HTMLPurifier_URIParser
@@ -15,7 +15,7 @@ class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform
     private $parser;
     public function __construct()
     {
-        $this->parser = new HTMLPurifier_URIParser();
+        $this->parser = new \WPDT\HTMLPurifier_URIParser();
     }
     /**
      * @param array $attr

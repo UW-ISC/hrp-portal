@@ -23,7 +23,7 @@ class HTMLPurifier_AttrValidator
         // initialize IDAccumulator if necessary
         $ok =& $context->get('IDAccumulator', \true);
         if (!$ok) {
-            $id_accumulator = HTMLPurifier_IDAccumulator::build($config, $context);
+            $id_accumulator = \WPDT\HTMLPurifier_IDAccumulator::build($config, $context);
             $context->register('IDAccumulator', $id_accumulator);
         }
         // initialize CurrentToken if necessary
@@ -31,7 +31,7 @@ class HTMLPurifier_AttrValidator
         if (!$current_token) {
             $context->register('CurrentToken', $token);
         }
-        if (!$token instanceof HTMLPurifier_Token_Start && !$token instanceof HTMLPurifier_Token_Empty) {
+        if (!$token instanceof \WPDT\HTMLPurifier_Token_Start && !$token instanceof \WPDT\HTMLPurifier_Token_Empty) {
             return;
         }
         // create alias to global definition array, see also $defs

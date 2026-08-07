@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_HTMLModule_Tidy_XHTML extends HTMLPurifier_HTMLModule_Tidy
+class HTMLPurifier_HTMLModule_Tidy_XHTML extends \WPDT\HTMLPurifier_HTMLModule_Tidy
 {
     /**
      * @type string
@@ -18,7 +18,7 @@ class HTMLPurifier_HTMLModule_Tidy_XHTML extends HTMLPurifier_HTMLModule_Tidy
     public function makeFixes()
     {
         $r = array();
-        $r['@lang'] = new HTMLPurifier_AttrTransform_Lang();
+        $r['@lang'] = new \WPDT\HTMLPurifier_AttrTransform_Lang();
         return $r;
     }
 }

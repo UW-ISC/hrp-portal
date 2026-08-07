@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * @todo Rewrite to use Interchange objects
  */
-class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_ConfigForm extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * Printers for specific fields.
@@ -45,8 +45,8 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
         $this->name = $name;
         $this->compress = $compress;
         // initialize sub-printers
-        $this->fields[0] = new HTMLPurifier_Printer_ConfigForm_default();
-        $this->fields[HTMLPurifier_VarParser::C_BOOL] = new HTMLPurifier_Printer_ConfigForm_bool();
+        $this->fields[0] = new \WPDT\HTMLPurifier_Printer_ConfigForm_default();
+        $this->fields[\WPDT\HTMLPurifier_VarParser::C_BOOL] = new \WPDT\HTMLPurifier_Printer_ConfigForm_bool();
     }
     /**
      * Sets default column and row size for textareas in sub-printers
@@ -95,7 +95,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
         $this->config = $config;
         $this->genConfig = $gen_config;
         $this->prepareGenerator($gen_config);
-        $allowed = HTMLPurifier_Config::getAllowedDirectivesForForm($allowed, $config->def);
+        $allowed = \WPDT\HTMLPurifier_Config::getAllowedDirectivesForForm($allowed, $config->def);
         $all = array();
         foreach ($allowed as $key) {
             list($ns, $directive) = $key;
@@ -180,7 +180,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
             // default
             $type_obj = $this->fields[$type];
             if ($allow_null) {
-                $type_obj = new HTMLPurifier_Printer_ConfigForm_NullDecorator($type_obj);
+                $type_obj = new \WPDT\HTMLPurifier_Printer_ConfigForm_NullDecorator($type_obj);
             }
             $ret .= $type_obj->render($ns, $directive, $value, $this->name, array($this->genConfig, $this->config));
             $ret .= $this->end('td');
@@ -193,7 +193,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
 /**
  * Printer decorator for directives that accept null
  */
-class HTMLPurifier_Printer_ConfigForm_NullDecorator extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_ConfigForm_NullDecorator extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * Printer being decorated
@@ -231,7 +231,7 @@ class HTMLPurifier_Printer_ConfigForm_NullDecorator extends HTMLPurifier_Printer
         $ret .= $this->text(' Null/Disabled');
         $ret .= $this->end('label');
         $attr = array('type' => 'checkbox', 'value' => '1', 'class' => 'null-toggle', 'name' => "{$name}" . "[Null_{$ns}.{$directive}]", 'id' => "{$name}:Null_{$ns}.{$directive}", 'onclick' => "toggleWriteability('{$name}:{$ns}.{$directive}',checked)");
-        if ($this->obj instanceof HTMLPurifier_Printer_ConfigForm_bool) {
+        if ($this->obj instanceof \WPDT\HTMLPurifier_Printer_ConfigForm_bool) {
             // modify inline javascript slightly
             $attr['onclick'] = "toggleWriteability('{$name}:Yes_{$ns}.{$directive}',checked);" . "toggleWriteability('{$name}:No_{$ns}.{$directive}',checked)";
         }
@@ -248,7 +248,7 @@ class HTMLPurifier_Printer_ConfigForm_NullDecorator extends HTMLPurifier_Printer
 /**
  * Swiss-army knife configuration form field printer
  */
-class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_ConfigForm_default extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * @type int
@@ -285,17 +285,17 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
         }
         if (\is_array($value)) {
             switch ($type) {
-                case HTMLPurifier_VarParser::LOOKUP:
+                case \WPDT\HTMLPurifier_VarParser::LOOKUP:
                     $array = $value;
                     $value = array();
                     foreach ($array as $val => $b) {
                         $value[] = $val;
                     }
                 //TODO does this need a break?
-                case HTMLPurifier_VarParser::ALIST:
+                case \WPDT\HTMLPurifier_VarParser::ALIST:
                     $value = \implode(\PHP_EOL, $value);
                     break;
-                case HTMLPurifier_VarParser::HASH:
+                case \WPDT\HTMLPurifier_VarParser::HASH:
                     $nvalue = '';
                     foreach ($value as $i => $v) {
                         if (\is_array($v)) {
@@ -310,7 +310,7 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
                     $value = '';
             }
         }
-        if ($type === HTMLPurifier_VarParser::C_MIXED) {
+        if ($type === \WPDT\HTMLPurifier_VarParser::C_MIXED) {
             return 'Not supported';
             $value = \serialize($value);
         }
@@ -328,7 +328,7 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
                 $ret .= $this->element('option', $val, $attr);
             }
             $ret .= $this->end('select');
-        } elseif ($type === HTMLPurifier_VarParser::TEXT || $type === HTMLPurifier_VarParser::ITEXT || $type === HTMLPurifier_VarParser::ALIST || $type === HTMLPurifier_VarParser::HASH || $type === HTMLPurifier_VarParser::LOOKUP) {
+        } elseif ($type === \WPDT\HTMLPurifier_VarParser::TEXT || $type === \WPDT\HTMLPurifier_VarParser::ITEXT || $type === \WPDT\HTMLPurifier_VarParser::ALIST || $type === \WPDT\HTMLPurifier_VarParser::HASH || $type === \WPDT\HTMLPurifier_VarParser::LOOKUP) {
             $attr['cols'] = $this->cols;
             $attr['rows'] = $this->rows;
             $ret .= $this->start('textarea', $attr);
@@ -345,7 +345,7 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
 /**
  * Bool form field printer
  */
-class HTMLPurifier_Printer_ConfigForm_bool extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_ConfigForm_bool extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * @param string $ns

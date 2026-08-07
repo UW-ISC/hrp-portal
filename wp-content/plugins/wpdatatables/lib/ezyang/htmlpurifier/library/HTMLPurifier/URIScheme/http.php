@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates http (HyperText Transfer Protocol) as defined by RFC 2616
  */
-class HTMLPurifier_URIScheme_http extends HTMLPurifier_URIScheme
+class HTMLPurifier_URIScheme_http extends \WPDT\HTMLPurifier_URIScheme
 {
     /**
      * @type int

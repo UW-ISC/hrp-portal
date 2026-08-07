@@ -25,36 +25,36 @@ class HTMLPurifier_AttrTypes
         // arguments when handling a make dispatch, the IAlign
         // definition wouldn't work.
         // pseudo-types, must be instantiated via shorthand
-        $this->info['Enum'] = new HTMLPurifier_AttrDef_Enum();
-        $this->info['Bool'] = new HTMLPurifier_AttrDef_HTML_Bool();
-        $this->info['CDATA'] = new HTMLPurifier_AttrDef_Text();
-        $this->info['ID'] = new HTMLPurifier_AttrDef_HTML_ID();
-        $this->info['Length'] = new HTMLPurifier_AttrDef_HTML_Length();
-        $this->info['MultiLength'] = new HTMLPurifier_AttrDef_HTML_MultiLength();
-        $this->info['NMTOKENS'] = new HTMLPurifier_AttrDef_HTML_Nmtokens();
-        $this->info['Pixels'] = new HTMLPurifier_AttrDef_HTML_Pixels();
-        $this->info['Text'] = new HTMLPurifier_AttrDef_Text();
-        $this->info['URI'] = new HTMLPurifier_AttrDef_URI();
-        $this->info['LanguageCode'] = new HTMLPurifier_AttrDef_Lang();
-        $this->info['Color'] = new HTMLPurifier_AttrDef_HTML_Color();
+        $this->info['Enum'] = new \WPDT\HTMLPurifier_AttrDef_Enum();
+        $this->info['Bool'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Bool();
+        $this->info['CDATA'] = new \WPDT\HTMLPurifier_AttrDef_Text();
+        $this->info['ID'] = new \WPDT\HTMLPurifier_AttrDef_HTML_ID();
+        $this->info['Length'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Length();
+        $this->info['MultiLength'] = new \WPDT\HTMLPurifier_AttrDef_HTML_MultiLength();
+        $this->info['NMTOKENS'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Nmtokens();
+        $this->info['Pixels'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Pixels();
+        $this->info['Text'] = new \WPDT\HTMLPurifier_AttrDef_Text();
+        $this->info['URI'] = new \WPDT\HTMLPurifier_AttrDef_URI();
+        $this->info['LanguageCode'] = new \WPDT\HTMLPurifier_AttrDef_Lang();
+        $this->info['Color'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Color();
         $this->info['IAlign'] = self::makeEnum('top,middle,bottom,left,right');
         $this->info['LAlign'] = self::makeEnum('top,bottom,left,right');
-        $this->info['FrameTarget'] = new HTMLPurifier_AttrDef_HTML_FrameTarget();
-        $this->info['ContentEditable'] = new HTMLPurifier_AttrDef_HTML_ContentEditable();
+        $this->info['FrameTarget'] = new \WPDT\HTMLPurifier_AttrDef_HTML_FrameTarget();
+        $this->info['ContentEditable'] = new \WPDT\HTMLPurifier_AttrDef_HTML_ContentEditable();
         // unimplemented aliases
-        $this->info['ContentType'] = new HTMLPurifier_AttrDef_Text();
-        $this->info['ContentTypes'] = new HTMLPurifier_AttrDef_Text();
-        $this->info['Charsets'] = new HTMLPurifier_AttrDef_Text();
-        $this->info['Character'] = new HTMLPurifier_AttrDef_Text();
+        $this->info['ContentType'] = new \WPDT\HTMLPurifier_AttrDef_Text();
+        $this->info['ContentTypes'] = new \WPDT\HTMLPurifier_AttrDef_Text();
+        $this->info['Charsets'] = new \WPDT\HTMLPurifier_AttrDef_Text();
+        $this->info['Character'] = new \WPDT\HTMLPurifier_AttrDef_Text();
         // "proprietary" types
-        $this->info['Class'] = new HTMLPurifier_AttrDef_HTML_Class();
+        $this->info['Class'] = new \WPDT\HTMLPurifier_AttrDef_HTML_Class();
         // number is really a positive integer (one or more digits)
         // FIXME: ^^ not always, see start and value of list items
-        $this->info['Number'] = new HTMLPurifier_AttrDef_Integer(\false, \false, \true);
+        $this->info['Number'] = new \WPDT\HTMLPurifier_AttrDef_Integer(\false, \false, \true);
     }
     private static function makeEnum($in)
     {
-        return new HTMLPurifier_AttrDef_Clone(new HTMLPurifier_AttrDef_Enum(\explode(',', $in)));
+        return new \WPDT\HTMLPurifier_AttrDef_Clone(new \WPDT\HTMLPurifier_AttrDef_Enum(\explode(',', $in)));
     }
     /**
      * Retrieves a type

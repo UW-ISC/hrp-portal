@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_Injector_RemoveEmpty extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_RemoveEmpty extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type HTMLPurifier_Context
@@ -48,14 +48,14 @@ class HTMLPurifier_Injector_RemoveEmpty extends HTMLPurifier_Injector
                 $this->exclude[$key] = \explode(';', $attrs);
             }
         }
-        $this->attrValidator = new HTMLPurifier_AttrValidator();
+        $this->attrValidator = new \WPDT\HTMLPurifier_AttrValidator();
     }
     /**
      * @param HTMLPurifier_Token $token
      */
     public function handleElement(&$token)
     {
-        if (!$token instanceof HTMLPurifier_Token_Start) {
+        if (!$token instanceof \WPDT\HTMLPurifier_Token_Start) {
             return;
         }
         $next = \false;
@@ -63,7 +63,7 @@ class HTMLPurifier_Injector_RemoveEmpty extends HTMLPurifier_Injector
         // the current tag
         for ($i = \count($this->inputZipper->back) - 1; $i >= 0; $i--, $deleted++) {
             $next = $this->inputZipper->back[$i];
-            if ($next instanceof HTMLPurifier_Token_Text) {
+            if ($next instanceof \WPDT\HTMLPurifier_Token_Text) {
                 if ($next->is_whitespace) {
                     continue;
                 }
@@ -77,7 +77,7 @@ class HTMLPurifier_Injector_RemoveEmpty extends HTMLPurifier_Injector
             }
             break;
         }
-        if (!$next || $next instanceof HTMLPurifier_Token_End && $next->name == $token->name) {
+        if (!$next || $next instanceof \WPDT\HTMLPurifier_Token_End && $next->name == $token->name) {
             $this->attrValidator->validateToken($token, $this->config, $this->context);
             $token->armor['ValidateAttributes'] = \true;
             if (isset($this->exclude[$token->name])) {
@@ -97,7 +97,7 @@ class HTMLPurifier_Injector_RemoveEmpty extends HTMLPurifier_Injector
             $token = $deleted + 1;
             for ($b = 0, $c = \count($this->inputZipper->front); $b < $c; $b++) {
                 $prev = $this->inputZipper->front[$b];
-                if ($prev instanceof HTMLPurifier_Token_Text && $prev->is_whitespace) {
+                if ($prev instanceof \WPDT\HTMLPurifier_Token_Text && $prev->is_whitespace) {
                     continue;
                 }
                 break;

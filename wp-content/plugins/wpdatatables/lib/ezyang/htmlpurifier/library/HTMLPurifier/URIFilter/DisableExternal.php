@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_URIFilter_DisableExternal extends HTMLPurifier_URIFilter
+class HTMLPurifier_URIFilter_DisableExternal extends \WPDT\HTMLPurifier_URIFilter
 {
     /**
      * @type string

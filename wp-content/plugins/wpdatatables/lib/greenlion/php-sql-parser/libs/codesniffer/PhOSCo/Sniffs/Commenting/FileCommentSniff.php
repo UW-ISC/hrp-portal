@@ -16,7 +16,7 @@ namespace WPDT;
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 if (\class_exists('WPDT\\PHP_CodeSniffer_CommentParser_ClassCommentParser', \true) === \false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_CommentParser_ClassCommentParser not found');
+    throw new \WPDT\PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_CommentParser_ClassCommentParser not found');
 }
 /**
  * Parses and verifies the doc comments for files.
@@ -42,7 +42,7 @@ if (\class_exists('WPDT\\PHP_CodeSniffer_CommentParser_ClassCommentParser', \tru
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
+class PhOSCo_Sniffs_Commenting_FileCommentSniff implements \WPDT\PHP_CodeSniffer_Sniff
 {
     /**
      * The header comment parser for the current file.
@@ -81,7 +81,7 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $this->currentFile = $phpcsFile;
         // We are only interested if this is the first open tag.
@@ -146,9 +146,9 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
                     $comment = $phpcsFile->getTokensAsString($commentStart, $commentEnd - $commentStart + 1);
                     // Parse the header comment docblock.
                     try {
-                        $this->commentParser = new PHP_CodeSniffer_CommentParser_ClassCommentParser($comment, $phpcsFile);
+                        $this->commentParser = new \WPDT\PHP_CodeSniffer_CommentParser_ClassCommentParser($comment, $phpcsFile);
                         $this->commentParser->parse();
-                    } catch (PHP_CodeSniffer_CommentParser_ParserException $e) {
+                    } catch (\WPDT\PHP_CodeSniffer_CommentParser_ParserException $e) {
                         $line = $e->getLineWithinComment() + $commentStart;
                         $phpcsFile->addError($e->getMessage(), $line, 'FailedParse');
                         return;
@@ -351,12 +351,12 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
      */
     protected function getIndentation($tagName, $tagElement)
     {
-        if ($tagElement instanceof PHP_CodeSniffer_CommentParser_SingleElement) {
+        if ($tagElement instanceof \WPDT\PHP_CodeSniffer_CommentParser_SingleElement) {
             if ($tagElement->getContent() !== '') {
                 return \strlen($tagName) + \substr_count($tagElement->getWhitespaceBeforeContent(), ' ');
             }
         } else {
-            if ($tagElement instanceof PHP_CodeSniffer_CommentParser_PairElement) {
+            if ($tagElement instanceof \WPDT\PHP_CodeSniffer_CommentParser_PairElement) {
                 if ($tagElement->getValue() !== '') {
                     return \strlen($tagName) + \substr_count($tagElement->getWhitespaceBeforeValue(), ' ');
                 }
@@ -378,7 +378,7 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
         if ($category !== null) {
             $content = $category->getContent();
             if ($content !== '') {
-                if (PHP_CodeSniffer::isUnderscoreName($content) !== \true) {
+                if (\WPDT\PHP_CodeSniffer::isUnderscoreName($content) !== \true) {
                     $newContent = \str_replace(' ', '_', $content);
                     $nameBits = \explode('_', $newContent);
                     $firstBit = \array_shift($nameBits);
@@ -417,7 +417,7 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
             $this->currentFile->addError($error, $errorPos, 'EmptyPackage');
             return;
         }
-        if (PHP_CodeSniffer::isUnderscoreName($content) === \true) {
+        if (\WPDT\PHP_CodeSniffer::isUnderscoreName($content) === \true) {
             return;
         }
         $newContent = \str_replace(' ', '_', $content);
@@ -447,7 +447,7 @@ class PhOSCo_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
         if ($package !== null) {
             $content = $package->getContent();
             if ($content !== '') {
-                if (PHP_CodeSniffer::isUnderscoreName($content) !== \true) {
+                if (\WPDT\PHP_CodeSniffer::isUnderscoreName($content) !== \true) {
                     $newContent = \str_replace(' ', '_', $content);
                     $nameBits = \explode('_', $newContent);
                     $firstBit = \array_shift($nameBits);

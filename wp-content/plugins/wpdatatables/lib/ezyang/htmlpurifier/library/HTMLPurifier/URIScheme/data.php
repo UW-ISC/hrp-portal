@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Implements data: URI for base64 encoded images supported by GD.
  */
-class HTMLPurifier_URIScheme_data extends HTMLPurifier_URIScheme
+class HTMLPurifier_URIScheme_data extends \WPDT\HTMLPurifier_URIScheme
 {
     /**
      * @type bool

@@ -14,14 +14,14 @@ class HTMLPurifier_Arborize
     public static function arborize($tokens, $config, $context)
     {
         $definition = $config->getHTMLDefinition();
-        $parent = new HTMLPurifier_Token_Start($definition->info_parent);
+        $parent = new \WPDT\HTMLPurifier_Token_Start($definition->info_parent);
         $stack = array($parent->toNode());
         foreach ($tokens as $token) {
             $token->skip = null;
             // [MUT]
             $token->carryover = null;
             // [MUT]
-            if ($token instanceof HTMLPurifier_Token_End) {
+            if ($token instanceof \WPDT\HTMLPurifier_Token_End) {
                 $token->start = null;
                 // [MUT]
                 $r = \array_pop($stack);
@@ -34,7 +34,7 @@ class HTMLPurifier_Arborize
             }
             $node = $token->toNode();
             $stack[\count($stack) - 1]->children[] = $node;
-            if ($token instanceof HTMLPurifier_Token_Start) {
+            if ($token instanceof \WPDT\HTMLPurifier_Token_Start) {
                 $stack[] = $node;
             }
         }
@@ -44,7 +44,7 @@ class HTMLPurifier_Arborize
     public static function flatten($node, $config, $context)
     {
         $level = 0;
-        $nodes = array($level => new HTMLPurifier_Queue(array($node)));
+        $nodes = array($level => new \WPDT\HTMLPurifier_Queue(array($node)));
         $closingTokens = array();
         $tokens = array();
         do {
@@ -58,9 +58,9 @@ class HTMLPurifier_Arborize
                 if ($end !== NULL) {
                     $closingTokens[$level][] = $end;
                 }
-                if ($node instanceof HTMLPurifier_Node_Element) {
+                if ($node instanceof \WPDT\HTMLPurifier_Node_Element) {
                     $level++;
-                    $nodes[$level] = new HTMLPurifier_Queue();
+                    $nodes[$level] = new \WPDT\HTMLPurifier_Queue();
                     foreach ($node->children as $childNode) {
                         $nodes[$level]->push($childNode);
                     }

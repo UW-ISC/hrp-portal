@@ -23,7 +23,7 @@ function htmlpurifier_filter_extractstyleblocks_muteerrorhandler()
  *      document--something purists would probably prefer. Just directly
  *      call HTMLPurifier_Filter_ExtractStyleBlocks->cleanCSS()
  */
-class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
+class HTMLPurifier_Filter_ExtractStyleBlocks extends \WPDT\HTMLPurifier_Filter
 {
     /**
      * @type string
@@ -55,12 +55,12 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
     private $_universal_attrdef;
     public function __construct()
     {
-        $this->_tidy = new csstidy();
+        $this->_tidy = new \WPDT\csstidy();
         $this->_tidy->set_cfg('lowercase_s', \false);
-        $this->_id_attrdef = new HTMLPurifier_AttrDef_HTML_ID(\true);
-        $this->_class_attrdef = new HTMLPurifier_AttrDef_CSS_Ident();
-        $this->_enum_attrdef = new HTMLPurifier_AttrDef_Enum(array('first-child', 'link', 'visited', 'active', 'hover', 'focus'));
-        $this->_universal_attrdef = new HTMLPurifier_AttrDef_Enum(array('initial', 'inherit', 'unset'));
+        $this->_id_attrdef = new \WPDT\HTMLPurifier_AttrDef_HTML_ID(\true);
+        $this->_class_attrdef = new \WPDT\HTMLPurifier_AttrDef_CSS_Ident();
+        $this->_enum_attrdef = new \WPDT\HTMLPurifier_AttrDef_Enum(array('first-child', 'link', 'visited', 'active', 'hover', 'focus'));
+        $this->_universal_attrdef = new \WPDT\HTMLPurifier_AttrDef_Enum(array('initial', 'inherit', 'unset'));
     }
     /**
      * Save the contents of CSS blocks to style matches
@@ -253,7 +253,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
                                         } elseif ($sdelim === ':') {
                                             $attrdef = $this->_enum_attrdef;
                                         } else {
-                                            throw new HTMLPurifier_Exception('broken invariant sdelim and preg_split');
+                                            throw new \WPDT\HTMLPurifier_Exception('broken invariant sdelim and preg_split');
                                         }
                                         $r = $attrdef->validate($y, $config, $context);
                                         if ($r !== \false) {

@@ -2374,6 +2374,11 @@ wpdt-c button#wdt-add-data-browse-button {
     opacity: .8;
 }
 
+.tooltip .tooltip-inner a {
+    color: #fff;
+    text-decoration: underline;
+}
+
 #adminmenu #toplevel_page_wpdatatables-dashboard a[href="admin.php?page=wpdatatables-upgrade"] {
     font-weight: 600;
     background-color: #4c9b35;

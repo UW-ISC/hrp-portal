@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCache
+class HTMLPurifier_DefinitionCache_Decorator extends \WPDT\HTMLPurifier_DefinitionCache
 {
     /**
      * Cache object we are decorating
@@ -36,7 +36,7 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      */
     public function copy()
     {
-        return new HTMLPurifier_DefinitionCache_Decorator();
+        return new \WPDT\HTMLPurifier_DefinitionCache_Decorator();
     }
     /**
      * @param HTMLPurifier_Definition $def

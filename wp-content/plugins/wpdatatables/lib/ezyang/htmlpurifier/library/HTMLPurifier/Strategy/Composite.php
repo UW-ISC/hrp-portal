@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Composite strategy that runs multiple strategies on tokens.
  */
-abstract class HTMLPurifier_Strategy_Composite extends HTMLPurifier_Strategy
+abstract class HTMLPurifier_Strategy_Composite extends \WPDT\HTMLPurifier_Strategy
 {
     /**
      * List of strategies to run tokens through.

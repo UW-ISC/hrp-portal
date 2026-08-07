@@ -14,7 +14,7 @@ class HTMLPurifier_URIParser
     protected $percentEncoder;
     public function __construct()
     {
-        $this->percentEncoder = new HTMLPurifier_PercentEncoder();
+        $this->percentEncoder = new \WPDT\HTMLPurifier_PercentEncoder();
     }
     /**
      * Parses a URI.
@@ -53,7 +53,7 @@ class HTMLPurifier_URIParser
         } else {
             $port = $host = $userinfo = null;
         }
-        return new HTMLPurifier_URI($scheme, $userinfo, $host, $port, $path, $query, $fragment);
+        return new \WPDT\HTMLPurifier_URI($scheme, $userinfo, $host, $port, $path, $query, $fragment);
     }
 }
 // vim: et sw=4 sts=4

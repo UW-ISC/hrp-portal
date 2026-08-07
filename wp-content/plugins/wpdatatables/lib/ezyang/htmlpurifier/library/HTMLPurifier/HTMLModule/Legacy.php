@@ -17,7 +17,7 @@ namespace WPDT;
  * as well as transform elements that don't have an implementation.
  * See docs/ref-strictness.txt for more details.
  */
-class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Legacy extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -85,11 +85,11 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
         $img->attr['vspace'] = 'Pixels';
         // figure out this integer business
         $li = $this->addBlankElement('li');
-        $li->attr['value'] = new HTMLPurifier_AttrDef_Integer();
+        $li->attr['value'] = new \WPDT\HTMLPurifier_AttrDef_Integer();
         $li->attr['type'] = 'Enum#s:1,i,I,a,A,disc,square,circle';
         $ol = $this->addBlankElement('ol');
         $ol->attr['compact'] = 'Bool#compact';
-        $ol->attr['start'] = new HTMLPurifier_AttrDef_Integer();
+        $ol->attr['start'] = new \WPDT\HTMLPurifier_AttrDef_Integer();
         $ol->attr['type'] = 'Enum#s:1,i,I,a,A';
         $p = $this->addBlankElement('p');
         $p->attr['align'] = $align;

@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 7.5.2.1
+ * @version 7.5.2.3
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 7.5.2.1
+Version: 7.5.2.3
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: Melograno Ventures
@@ -92,6 +92,13 @@ require_once(WDT_ROOT_PATH . 'controllers/wdt_functions.php');
 // Load dependencies
 require_once WDT_ROOT_PATH . 'lib/autoload.php';
 
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Core\UsageTracker;
+
+if (!defined('MELOGRANO_BI_GATE_URL')) {
+    define('MELOGRANO_BI_GATE_URL', 'https://bi.melograno.io');
+}
+
 function wpdatatables_load()
 {
     if (is_admin()) {
@@ -134,6 +141,10 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'integrations/wdt-integrations-loader.php');
 
     add_action('plugins_loaded', 'wdtLoadTextdomain');
+
+    add_action('plugins_loaded', static function () {
+        UsageTracker::init(new WpDataTablesCollector(), __FILE__);
+    });
 
     if (is_admin()) {
         if (get_option('wdtSeparateCon') === false) {

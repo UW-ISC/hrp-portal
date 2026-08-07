@@ -176,24 +176,18 @@ function wdtmcp_is_main_license_active() {
 }
 
 /**
- * Detect the wpDataTables tier from loaded integration constants.
+ * Detect the wpDataTables tier from loaded integration constants
  *
- * The tiers are cumulative — Developer ⊃ Pro ⊃ Standard ⊃ Starter ⊃ Free.
- * Developer has identical features to Pro but with unlimited domain licensing;
- * it is identified by the presence of developer_license.txt in the developer
+ * Ignores licence activation — use this when the installed package/SKU matters
+ * (e.g. usage telemetry). The tiers are cumulative — Developer ⊃ Pro ⊃ Standard
+ * ⊃ Starter ⊃ Free. Developer has identical features to Pro but with unlimited
+ * domain licensing; it is identified by developer_license.txt in the developer
  * integrations directory.
  *
- * Paid tiers require an activated main licence; copied integration files without
- * activation are reported as free.
- *
- * @param array $integrations Feature => boolean map.
+ * @param array $integrations Feature => boolean map from {@see wdtmcp_detect_integrations()}.
  * @return string One of: developer, pro, standard, starter, free.
  */
-function wdtmcp_detect_tier( array $integrations ) {
-    if ( ! wdtmcp_is_main_license_active() ) {
-        return 'free';
-    }
-
+function wdtmcp_detect_tier_from_features( array $integrations ) {
     $has_pro_feature = false;
     $pro_features    = array( 'highstock', 'folders', 'wp_posts_builder', 'woocommerce' );
     foreach ( $pro_features as $f ) {
@@ -223,6 +217,24 @@ function wdtmcp_detect_tier( array $integrations ) {
     }
 
     return 'free';
+}
+
+/**
+ * Detect the wpDataTables tier for MCP / system-info consumers.
+ *
+ * Paid tiers require an activated main licence; copied integration files without
+ * activation are reported as free. For file-only detection (no activation gate),
+ * use {@see wdtmcp_detect_tier_from_features()}.
+ *
+ * @param array $integrations Feature => boolean map.
+ * @return string One of: developer, pro, standard, starter, free.
+ */
+function wdtmcp_detect_tier( array $integrations ) {
+    if ( ! wdtmcp_is_main_license_active() ) {
+        return 'free';
+    }
+
+    return wdtmcp_detect_tier_from_features( $integrations );
 }
 
 /**

@@ -2,6 +2,9 @@
 
 defined('ABSPATH') or die('Access denied.');
 
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Core\UsageTracker;
+
 /**
  * Test the Separate connection settings
  */
@@ -126,6 +129,25 @@ function wdtSavePluginSettings()
     }
 
     $settings = apply_filters('wpdatatables_before_save_settings', $_POST['settings']);
+
+    if (is_array($settings) && array_key_exists('wdtUsageTrackingEnabled', $settings)) {
+        $enabled = (bool) $settings['wdtUsageTrackingEnabled'];
+        $armNotice = false;
+
+        if (
+            !$enabled
+            && get_option('wpdatatables_usage_tracking_settings_optout_notice_handled') !== 'yes'
+        ) {
+            $armNotice = true;
+            update_option('wpdatatables_usage_tracking_settings_optout_notice_handled', 'yes', true);
+        }
+
+        $usageSettings = [
+            'usageTrackingEnabled' => $enabled,
+        ];
+        UsageTracker::updateSettings($usageSettings, new WpDataTablesCollector(), $armNotice);
+        unset($settings['wdtUsageTrackingEnabled']);
+    }
 
     WDTSettingsController::saveSettings($settings);
     exit();
@@ -586,6 +608,7 @@ function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null
                     'fixed_right_columns_number' => 0,
                     'simple_template_id' => $tableTemplateID,
                     'customRowDisplay' => '',
+                    'customStringEmptyFiltering' => '',
                     'index_column' => 0,
                 )
             ),

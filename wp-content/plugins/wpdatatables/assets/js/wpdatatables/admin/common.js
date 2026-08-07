@@ -5,11 +5,13 @@
  * @since 18.10.2016
  */
 
+var wdtInteractiveTooltipHideTimeout;
+
 /**
  * Hide tooltip on button click or on mouseout event
  */
 var wdtHideTooltip = function () {
-    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').on('click', function () {
+    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]:not(.wdt-tooltip-interactive)').on('click', function () {
         jQuery(this).wdtBootstrapTooltip('hide');
     }).on('mouseout', function (event) {
         var e = event.toElement || event.relatedTarget;
@@ -17,6 +19,47 @@ var wdtHideTooltip = function () {
             return;
         }
         jQuery(this).wdtBootstrapTooltip('hide');
+    });
+};
+
+/**
+ * Keep tooltips with links open while hovering over the tooltip itself
+ */
+var wdtInteractiveTooltip = function () {
+    if (typeof jQuery.fn.wdtBootstrapTooltip === 'undefined') {
+        return;
+    }
+
+    var $tooltips = jQuery('.wdt-datatables-admin-wrap .wdt-tooltip-interactive[data-toggle="tooltip"]');
+
+    if (!$tooltips.length) {
+        return;
+    }
+
+    $tooltips.wdtBootstrapTooltip({
+        html: true,
+        trigger: 'manual'
+    });
+
+    $tooltips.on('mouseenter', function () {
+        var $el = jQuery(this);
+        clearTimeout(wdtInteractiveTooltipHideTimeout);
+        $el.wdtBootstrapTooltip('show');
+    }).on('mouseleave', function () {
+        var $el = jQuery(this);
+        wdtInteractiveTooltipHideTimeout = setTimeout(function () {
+            if (!jQuery('.tooltip:hover').length) {
+                $el.wdtBootstrapTooltip('hide');
+            }
+        }, 100);
+    });
+
+    jQuery(document).on('mouseenter', '.tooltip', function () {
+        clearTimeout(wdtInteractiveTooltipHideTimeout);
+    }).on('mouseleave', '.tooltip', function () {
+        wdtInteractiveTooltipHideTimeout = setTimeout(function () {
+            jQuery('.wdt-tooltip-interactive[data-toggle="tooltip"]').wdtBootstrapTooltip('hide');
+        }, 100);
     });
 };
 
@@ -161,8 +204,9 @@ jQuery.fn.extend({
          * Attach tooltips
          */
         if ($('.wdt-datatables-admin-wrap') && typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
-            $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').wdtBootstrapTooltip();
+            $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]:not(.wdt-tooltip-interactive)').wdtBootstrapTooltip();
             wdtHideTooltip();
+            wdtInteractiveTooltip();
         }
 
         /**

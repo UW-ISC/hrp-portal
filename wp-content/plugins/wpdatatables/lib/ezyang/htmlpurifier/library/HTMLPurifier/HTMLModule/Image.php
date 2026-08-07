@@ -7,7 +7,7 @@ namespace WPDT;
  * @note There is specialized code for removing empty images in
  *       HTMLPurifier_Strategy_RemoveForeignElements
  */
-class HTMLPurifier_HTMLModule_Image extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Image extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -26,13 +26,13 @@ class HTMLPurifier_HTMLModule_Image extends HTMLPurifier_HTMLModule
             'height' => 'Pixels#' . $max,
             'width' => 'Pixels#' . $max,
             'longdesc' => 'URI',
-            'src*' => new HTMLPurifier_AttrDef_URI(\true),
+            'src*' => new \WPDT\HTMLPurifier_AttrDef_URI(\true),
         ));
         if ($max === null || $config->get('HTML.Trusted')) {
             $img->attr['height'] = $img->attr['width'] = 'Length';
         }
         // kind of strange, but splitting things up would be inefficient
-        $img->attr_transform_pre[] = $img->attr_transform_post[] = new HTMLPurifier_AttrTransform_ImgRequired();
+        $img->attr_transform_pre[] = $img->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_ImgRequired();
     }
 }
 // vim: et sw=4 sts=4

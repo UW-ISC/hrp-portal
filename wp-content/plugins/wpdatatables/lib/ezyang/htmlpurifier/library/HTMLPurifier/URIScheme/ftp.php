@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates ftp (File Transfer Protocol) URIs as defined by generic RFC 1738.
  */
-class HTMLPurifier_URIScheme_ftp extends HTMLPurifier_URIScheme
+class HTMLPurifier_URIScheme_ftp extends \WPDT\HTMLPurifier_URIScheme
 {
     /**
      * @type int

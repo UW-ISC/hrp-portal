@@ -482,4 +482,26 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-4 wdt-usage-tracking-block">
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e('Improve WPDataTables', 'wpdatatables'); ?>
+                <i class="wpdt-icon-info-circle-thin wdt-tooltip-interactive" data-toggle="tooltip" data-placement="right"
+                   data-html="true"
+                   data-original-title='<?php
+                   printf(
+                       '%s <a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                       esc_html__('Help us improve WPDataTables by sharing anonymous data about your plugin usage. No personal data is collected.', 'wpdatatables'),
+                       esc_url('https://wpdatatables.com/usage-data-privacy/'),
+                       esc_html__('Learn more', 'wpdatatables')
+                   );
+                   ?>'></i>
+            </h4>
+            <div class="toggle-switch" data-ts-color="blue">
+                <input type="checkbox" name="wdt-usage-tracking-enabled" id="wdt-usage-tracking-enabled"/>
+                <label for="wdt-usage-tracking-enabled"
+                       class="ts-label"><?php esc_html_e('Enable data usage', 'wpdatatables'); ?></label>
+            </div>
+        </div>
+    </div>
 </div>

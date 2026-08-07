@@ -43,7 +43,7 @@ function expandTree($dir)
         $directory = $dir . '/' . $file;
         if (\is_dir($directory)) {
             $directories[] = $directory;
-            $directories = \array_merge($directories, expandTree($directory));
+            $directories = \array_merge($directories, \expandTree($directory));
         }
     }
     return $directories;
@@ -58,7 +58,7 @@ function delTree($dir)
 {
     $files = \array_diff(\scandir($dir), ['.', '..']);
     foreach ($files as $file) {
-        \is_dir($dir . '/' . $file) ? delTree($dir . '/' . $file) : \unlink($dir . '/' . $file);
+        \is_dir($dir . '/' . $file) ? \delTree($dir . '/' . $file) : \unlink($dir . '/' . $file);
     }
     return \rmdir($dir);
 }
@@ -72,14 +72,14 @@ function prepareWord($matches)
 {
     return '[' . \strtolower($matches[1]) . \strtoupper($matches[1]) . ']';
 }
-$directories = expandTree(\dirname(__DIR__, 2));
+$directories = \expandTree(\dirname(__DIR__, 2));
 foreach ($directories as $directory) {
     foreach ($patterns as $pattern) {
         $casePattern = \preg_replace_callback('/([a-z])/i', 'prepareWord', $pattern);
         foreach (\glob($directory . '/' . $casePattern, \GLOB_BRACE) as $file) {
             echo 'delete: ' . $file . \PHP_EOL;
             if (\is_dir($file)) {
-                delTree($file);
+                \delTree($file);
             } else {
                 \unlink($file);
             }

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Injector that converts http, https and ftp text URLs to actual links.
  */
-class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_Linkify extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -47,11 +47,11 @@ class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
                 if ($bits[$i] === '') {
                     continue;
                 }
-                $token[] = new HTMLPurifier_Token_Text($bits[$i]);
+                $token[] = new \WPDT\HTMLPurifier_Token_Text($bits[$i]);
             } else {
-                $token[] = new HTMLPurifier_Token_Start('a', array('href' => $bits[$i]));
-                $token[] = new HTMLPurifier_Token_Text($bits[$i]);
-                $token[] = new HTMLPurifier_Token_End('a');
+                $token[] = new \WPDT\HTMLPurifier_Token_Start('a', array('href' => $bits[$i]));
+                $token[] = new \WPDT\HTMLPurifier_Token_Text($bits[$i]);
+                $token[] = new \WPDT\HTMLPurifier_Token_End('a');
             }
         }
     }

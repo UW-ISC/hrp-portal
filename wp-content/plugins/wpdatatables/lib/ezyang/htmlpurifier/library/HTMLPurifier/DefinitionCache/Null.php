@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Null cache object to use when no caching is on.
  */
-class HTMLPurifier_DefinitionCache_Null extends HTMLPurifier_DefinitionCache
+class HTMLPurifier_DefinitionCache_Null extends \WPDT\HTMLPurifier_DefinitionCache
 {
     /**
      * @param HTMLPurifier_Definition $def

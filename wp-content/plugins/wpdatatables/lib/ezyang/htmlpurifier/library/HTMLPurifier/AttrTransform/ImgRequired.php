@@ -9,7 +9,7 @@ namespace WPDT;
  * because of a missing alt tag. This needs to be registered as both
  * a pre and post attribute transform.
  */
-class HTMLPurifier_AttrTransform_ImgRequired extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_ImgRequired extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

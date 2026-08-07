@@ -7,7 +7,7 @@ namespace WPDT;
  * @note Theoretically speaking, this could be a pre-transform, but putting
  *       post is more efficient.
  */
-class HTMLPurifier_AttrTransform_Lang extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_Lang extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

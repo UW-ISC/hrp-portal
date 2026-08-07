@@ -9,7 +9,7 @@ namespace WPDT;
  *       is to overload a returned false with an array.  Thus, it will never
  *       return false.
  */
-class HTMLPurifier_ChildDef_Optional extends HTMLPurifier_ChildDef_Required
+class HTMLPurifier_ChildDef_Optional extends \WPDT\HTMLPurifier_ChildDef_Required
 {
     /**
      * @type bool

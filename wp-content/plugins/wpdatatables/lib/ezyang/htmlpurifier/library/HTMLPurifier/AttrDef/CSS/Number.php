@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a number as defined by the CSS spec.
  */
-class HTMLPurifier_AttrDef_CSS_Number extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Number extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Indicates whether or not only positive values are allowed.

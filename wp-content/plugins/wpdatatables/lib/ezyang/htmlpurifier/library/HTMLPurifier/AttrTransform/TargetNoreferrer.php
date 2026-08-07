@@ -10,7 +10,7 @@ namespace WPDT;
  * to do phishing.
  * This transform is controlled by %HTML.TargetNoreferrer.
  */
-class HTMLPurifier_AttrTransform_TargetNoreferrer extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_TargetNoreferrer extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

@@ -9,7 +9,7 @@ namespace WPDT;
 require_once \dirname(__FILE__) . '/HTMLPurifier.auto.php';
 function kses($string, $allowed_html, $allowed_protocols = null)
 {
-    $config = HTMLPurifier_Config::createDefault();
+    $config = \WPDT\HTMLPurifier_Config::createDefault();
     $allowed_elements = array();
     $allowed_attributes = array();
     foreach ($allowed_html as $element => $attributes) {
@@ -23,7 +23,7 @@ function kses($string, $allowed_html, $allowed_protocols = null)
     if ($allowed_protocols !== null) {
         $config->set('URI.AllowedSchemes', $allowed_protocols);
     }
-    $purifier = new HTMLPurifier($config);
+    $purifier = new \WPDT\HTMLPurifier($config);
     return $purifier->purify($string);
 }
 // vim: et sw=4 sts=4

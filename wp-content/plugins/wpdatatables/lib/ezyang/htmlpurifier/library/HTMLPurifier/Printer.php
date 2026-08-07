@@ -29,8 +29,8 @@ class HTMLPurifier_Printer
     public function prepareGenerator($config)
     {
         $all = $config->getAll();
-        $context = new HTMLPurifier_Context();
-        $this->generator = new HTMLPurifier_Generator($config, $context);
+        $context = new \WPDT\HTMLPurifier_Context();
+        $this->generator = new \WPDT\HTMLPurifier_Generator($config, $context);
     }
     /**
      * Main function that renders object or aspect of that object
@@ -45,7 +45,7 @@ class HTMLPurifier_Printer
      */
     protected function start($tag, $attr = array())
     {
-        return $this->generator->generateFromToken(new HTMLPurifier_Token_Start($tag, $attr ? $attr : array()));
+        return $this->generator->generateFromToken(new \WPDT\HTMLPurifier_Token_Start($tag, $attr ? $attr : array()));
     }
     /**
      * Returns an end tag
@@ -54,7 +54,7 @@ class HTMLPurifier_Printer
      */
     protected function end($tag)
     {
-        return $this->generator->generateFromToken(new HTMLPurifier_Token_End($tag));
+        return $this->generator->generateFromToken(new \WPDT\HTMLPurifier_Token_End($tag));
     }
     /**
      * Prints a complete element with content inside
@@ -75,7 +75,7 @@ class HTMLPurifier_Printer
      */
     protected function elementEmpty($tag, $attr = array())
     {
-        return $this->generator->generateFromToken(new HTMLPurifier_Token_Empty($tag, $attr));
+        return $this->generator->generateFromToken(new \WPDT\HTMLPurifier_Token_Empty($tag, $attr));
     }
     /**
      * @param string $text
@@ -83,7 +83,7 @@ class HTMLPurifier_Printer
      */
     protected function text($text)
     {
-        return $this->generator->generateFromToken(new HTMLPurifier_Token_Text($text));
+        return $this->generator->generateFromToken(new \WPDT\HTMLPurifier_Token_Text($text));
     }
     /**
      * Prints a simple key/value row in a table.
@@ -105,7 +105,7 @@ class HTMLPurifier_Printer
      */
     protected function escape($string)
     {
-        $string = HTMLPurifier_Encoder::cleanUTF8($string);
+        $string = \WPDT\HTMLPurifier_Encoder::cleanUTF8($string);
         $string = \htmlspecialchars($string, \ENT_COMPAT, 'UTF-8');
         return $string;
     }

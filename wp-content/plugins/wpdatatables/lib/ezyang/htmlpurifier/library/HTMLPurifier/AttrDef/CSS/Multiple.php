@@ -13,7 +13,7 @@ namespace WPDT;
  *       can only be used alone: it will never manifest as part of a multi
  *       shorthand declaration.  Thus, this class does not allow inherit.
  */
-class HTMLPurifier_AttrDef_CSS_Multiple extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Multiple extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Instance of component definition to defer validation to.

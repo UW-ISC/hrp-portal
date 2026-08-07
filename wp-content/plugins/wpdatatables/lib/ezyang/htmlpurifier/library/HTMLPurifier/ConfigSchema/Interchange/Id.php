@@ -47,7 +47,7 @@ class HTMLPurifier_ConfigSchema_Interchange_Id
      */
     public static function make($id)
     {
-        return new HTMLPurifier_ConfigSchema_Interchange_Id($id);
+        return new \WPDT\HTMLPurifier_ConfigSchema_Interchange_Id($id);
     }
 }
 // vim: et sw=4 sts=4

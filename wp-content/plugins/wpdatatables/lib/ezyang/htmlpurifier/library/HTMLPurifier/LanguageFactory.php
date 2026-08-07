@@ -57,7 +57,7 @@ class HTMLPurifier_LanguageFactory
         if ($prototype !== null) {
             $instance = $prototype;
         } elseif ($instance === null || $prototype == \true) {
-            $instance = new HTMLPurifier_LanguageFactory();
+            $instance = new \WPDT\HTMLPurifier_LanguageFactory();
             $instance->setup();
         }
         return $instance;
@@ -68,7 +68,7 @@ class HTMLPurifier_LanguageFactory
      */
     public function setup()
     {
-        $this->validator = new HTMLPurifier_AttrDef_Lang();
+        $this->validator = new \WPDT\HTMLPurifier_AttrDef_Lang();
         $this->dir = \HTMLPURIFIER_PREFIX . '/HTMLPurifier';
     }
     /**
@@ -95,7 +95,7 @@ class HTMLPurifier_LanguageFactory
         static $depth = 0;
         // recursion protection
         if ($code == 'en') {
-            $lang = new HTMLPurifier_Language($config, $context);
+            $lang = new \WPDT\HTMLPurifier_Language($config, $context);
         } else {
             $class = 'HTMLPurifier_Language_' . $pcode;
             $file = $this->dir . '/Language/classes/' . $code . '.php';

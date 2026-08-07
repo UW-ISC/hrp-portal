@@ -18,7 +18,7 @@ function HTMLPurifier($html, $config = null)
 {
     static $purifier = \false;
     if (!$purifier) {
-        $purifier = new HTMLPurifier();
+        $purifier = new \WPDT\HTMLPurifier();
     }
     return $purifier->purify($html, $config);
 }

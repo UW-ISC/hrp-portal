@@ -30,7 +30,7 @@ namespace WPDT;
  * @todo Enable nodes to be bubbled out of the structure.  This is
  *       easier with our new algorithm.
  */
-class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
+class HTMLPurifier_Strategy_FixNesting extends \WPDT\HTMLPurifier_Strategy
 {
     /**
      * @param HTMLPurifier_Token[] $tokens
@@ -44,7 +44,7 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
         // Pre-processing
         // O(n) pass to convert to a tree, so that we can efficiently
         // refer to substrings
-        $top_node = HTMLPurifier_Arborize::arborize($tokens, $config, $context);
+        $top_node = \WPDT\HTMLPurifier_Arborize::arborize($tokens, $config, $context);
         // get a copy of the HTML definition
         $definition = $config->getHTMLDefinition();
         $excludes_enabled = !$config->get('Core.DisableExcludes');
@@ -103,7 +103,7 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
             $def = empty($stack) ? $definition->info_parent_def : $definition->info[$node->name];
             while (isset($node->children[$ix])) {
                 $child = $node->children[$ix++];
-                if ($child instanceof HTMLPurifier_Node_Element) {
+                if ($child instanceof \WPDT\HTMLPurifier_Node_Element) {
                     $go = \true;
                     $stack[] = array($node, $is_inline, $excludes, $ix);
                     $stack[] = array(
@@ -169,7 +169,7 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
         $context->destroy('CurrentToken');
         //####################################################################//
         // Return
-        return HTMLPurifier_Arborize::flatten($node, $config, $context);
+        return \WPDT\HTMLPurifier_Arborize::flatten($node, $config, $context);
     }
 }
 // vim: et sw=4 sts=4

@@ -255,6 +255,7 @@ class WDTConfigController
             $table->fixed_header = isset($advancedSettings->fixed_header) ? $advancedSettings->fixed_header : false;
             $table->fixed_header_offset = isset($advancedSettings->fixed_header_offset) ? $advancedSettings->fixed_header_offset : 0;
             $table->customRowDisplay = isset($advancedSettings->customRowDisplay) ? $advancedSettings->customRowDisplay : '';
+            $table->customStringEmptyFiltering = isset($advancedSettings->customStringEmptyFiltering) ? $advancedSettings->customStringEmptyFiltering : '';
             $table->index_column = isset($advancedSettings->index_column) ? $advancedSettings->index_column : 0;
             $table->showCartInformation = isset($advancedSettings->showCartInformation) ? $advancedSettings->showCartInformation : 1;
 
@@ -462,10 +463,11 @@ class WDTConfigController
                     'fixed_header_offset' => $table->fixed_header_offset,
                     'simple_template_id' => $table->simple_template_id,
                     'customRowDisplay' => $table->customRowDisplay,
+                    'customStringEmptyFiltering' => $table->customStringEmptyFiltering,
                     'loader' => $table->loader,
                     'showCartInformation' => $table->showCartInformation,
-                    'index_column'=> $table->index_column,
-                    'advanced_filter_option'=> $table->advanced_filter_option,
+                    'index_column' => $table->index_column,
+                    'advanced_filter_option' => $table->advanced_filter_option,
                 )
             ),
         );
@@ -569,6 +571,7 @@ class WDTConfigController
         $table->fixed_right_columns_number = isset($table->fixed_right_columns_number) ? (int)$table->fixed_right_columns_number : 0;
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
+        $table->customStringEmptyFiltering = sanitize_text_field($table->customStringEmptyFiltering);
         $table->loader = (int)($table->loader);
         $table->showCartInformation = isset($table->showCartInformation) ? (int)($table->showCartInformation) : 0;
         $table->index_column = isset($table->index_column) ? (int)$table->index_column : 0;
@@ -1882,6 +1885,7 @@ class WDTConfigController
         $table->loader = get_option('wdtGlobalTableLoader');
         $table->simple_template_id = 0;
         $table->customRowDisplay = '';
+        $table->customStringEmptyFiltering = '';
         $table->showCartInformation = 1;
         $table->index_column = 0;
         $table->advanced_filter_option = 0;

@@ -27,7 +27,7 @@ namespace WPDT;
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffer_Sniff
+class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements \WPDT\PHP_CodeSniffer_Sniff
 {
     /**
      * The number of spaces code should be indented.
@@ -54,7 +54,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $spaces = 0;
@@ -142,12 +142,12 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function processSingleLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
+    public function processSingleLineDeclaration(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
     {
         if (\class_exists('WPDT\\Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff', \true) === \false) {
-            throw new PHP_CodeSniffer_Exception('Class Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff not found');
+            throw new \WPDT\PHP_CodeSniffer_Exception('Class Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff not found');
         }
-        $sniff = new Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff();
+        $sniff = new \WPDT\Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff();
         $sniff->process($phpcsFile, $stackPtr);
     }
     //end processSingleLineDeclaration()
@@ -162,7 +162,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function processMultiLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
+    public function processMultiLineDeclaration(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
     {
         // We need to work out how far indented the function
         // declaration itself is, so we can work out how far to

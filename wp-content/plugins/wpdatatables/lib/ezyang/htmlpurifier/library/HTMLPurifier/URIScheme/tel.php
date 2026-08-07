@@ -10,7 +10,7 @@ namespace WPDT;
  * numbers so that they only include (possibly) a leading plus,
  * and then any number of digits and x'es.
  */
-class HTMLPurifier_URIScheme_tel extends HTMLPurifier_URIScheme
+class HTMLPurifier_URIScheme_tel extends \WPDT\HTMLPurifier_URIScheme
 {
     /**
      * @type bool

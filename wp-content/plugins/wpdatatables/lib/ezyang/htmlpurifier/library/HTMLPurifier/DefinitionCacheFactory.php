@@ -37,7 +37,7 @@ class HTMLPurifier_DefinitionCacheFactory
         if ($prototype !== null) {
             $instance = $prototype;
         } elseif ($instance === null || $prototype === \true) {
-            $instance = new HTMLPurifier_DefinitionCacheFactory();
+            $instance = new \WPDT\HTMLPurifier_DefinitionCacheFactory();
             $instance->setup();
         }
         return $instance;
@@ -61,7 +61,7 @@ class HTMLPurifier_DefinitionCacheFactory
     {
         $method = $config->get('Cache.DefinitionImpl');
         if ($method === null) {
-            return new HTMLPurifier_DefinitionCache_Null($type);
+            return new \WPDT\HTMLPurifier_DefinitionCache_Null($type);
         }
         if (!empty($this->caches[$method][$type])) {
             return $this->caches[$method][$type];
@@ -72,7 +72,7 @@ class HTMLPurifier_DefinitionCacheFactory
             if ($method != 'Serializer') {
                 \trigger_error("Unrecognized DefinitionCache {$method}, using Serializer instead", \E_USER_WARNING);
             }
-            $cache = new HTMLPurifier_DefinitionCache_Serializer($type);
+            $cache = new \WPDT\HTMLPurifier_DefinitionCache_Serializer($type);
         }
         foreach ($this->decorators as $decorator) {
             $new_cache = $decorator->decorate($cache);

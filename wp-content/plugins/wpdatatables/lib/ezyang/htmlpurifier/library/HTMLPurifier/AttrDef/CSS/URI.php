@@ -11,7 +11,7 @@ namespace WPDT;
  *          the separator, you cannot put a literal semicolon in
  *          in the URI. Try percent encoding it, in that case.
  */
-class HTMLPurifier_AttrDef_CSS_URI extends HTMLPurifier_AttrDef_URI
+class HTMLPurifier_AttrDef_CSS_URI extends \WPDT\HTMLPurifier_AttrDef_URI
 {
     public function __construct()
     {

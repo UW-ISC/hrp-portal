@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Special-case enum attribute definition that lazy loads allowed frame targets
  */
-class HTMLPurifier_AttrDef_HTML_FrameTarget extends HTMLPurifier_AttrDef_Enum
+class HTMLPurifier_AttrDef_HTML_FrameTarget extends \WPDT\HTMLPurifier_AttrDef_Enum
 {
     /**
      * @type array

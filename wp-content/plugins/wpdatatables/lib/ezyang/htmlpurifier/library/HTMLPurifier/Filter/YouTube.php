@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_Filter_YouTube extends HTMLPurifier_Filter
+class HTMLPurifier_Filter_YouTube extends \WPDT\HTMLPurifier_Filter
 {
     /**
      * @type string

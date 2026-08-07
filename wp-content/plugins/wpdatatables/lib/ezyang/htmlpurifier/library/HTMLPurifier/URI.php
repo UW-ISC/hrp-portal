@@ -68,7 +68,7 @@ class HTMLPurifier_URI
      */
     public function getSchemeObj($config, $context)
     {
-        $registry = HTMLPurifier_URISchemeRegistry::instance();
+        $registry = \WPDT\HTMLPurifier_URISchemeRegistry::instance();
         if ($this->scheme !== null) {
             $scheme_obj = $registry->getScheme($this->scheme, $config, $context);
             if (!$scheme_obj) {
@@ -105,7 +105,7 @@ class HTMLPurifier_URI
         $chars_pchar = $chars_sub_delims . ':@';
         // validate host
         if (!\is_null($this->host)) {
-            $host_def = new HTMLPurifier_AttrDef_URI_Host();
+            $host_def = new \WPDT\HTMLPurifier_AttrDef_URI_Host();
             $this->host = $host_def->validate($this->host, $config, $context);
             if ($this->host === \false) {
                 $this->host = null;
@@ -127,7 +127,7 @@ class HTMLPurifier_URI
         }
         // validate username
         if (!\is_null($this->userinfo)) {
-            $encoder = new HTMLPurifier_PercentEncoder($chars_sub_delims . ':');
+            $encoder = new \WPDT\HTMLPurifier_PercentEncoder($chars_sub_delims . ':');
             $this->userinfo = $encoder->encode($this->userinfo);
         }
         // validate port
@@ -137,7 +137,7 @@ class HTMLPurifier_URI
             }
         }
         // validate path
-        $segments_encoder = new HTMLPurifier_PercentEncoder($chars_pchar . '/');
+        $segments_encoder = new \WPDT\HTMLPurifier_PercentEncoder($chars_pchar . '/');
         if (!\is_null($this->host)) {
             // this catches $this->host === ''
             // path-abempty (hier and relative)
@@ -172,7 +172,7 @@ class HTMLPurifier_URI
                 // path-noscheme (relative)
                 // my/path
                 // (once again, not checking nz)
-                $segment_nc_encoder = new HTMLPurifier_PercentEncoder($chars_sub_delims . '@');
+                $segment_nc_encoder = new \WPDT\HTMLPurifier_PercentEncoder($chars_sub_delims . '@');
                 $c = \strpos($this->path, '/');
                 if ($c !== \false) {
                     $this->path = $segment_nc_encoder->encode(\substr($this->path, 0, $c)) . $segments_encoder->encode(\substr($this->path, $c));
@@ -186,7 +186,7 @@ class HTMLPurifier_URI
             // just to be safe
         }
         // qf = query and fragment
-        $qf_encoder = new HTMLPurifier_PercentEncoder($chars_pchar . '/?');
+        $qf_encoder = new \WPDT\HTMLPurifier_PercentEncoder($chars_pchar . '/?');
         if (!\is_null($this->query)) {
             $this->query = $qf_encoder->encode($this->query);
         }

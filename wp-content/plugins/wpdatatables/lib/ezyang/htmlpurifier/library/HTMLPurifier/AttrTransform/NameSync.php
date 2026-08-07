@@ -7,7 +7,7 @@ namespace WPDT;
  * it is present with an equivalent id attribute, it is passed through;
  * otherwise validation is performed.
  */
-class HTMLPurifier_AttrTransform_NameSync extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_NameSync extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type HTMLPurifier_AttrDef_HTML_ID
@@ -15,7 +15,7 @@ class HTMLPurifier_AttrTransform_NameSync extends HTMLPurifier_AttrTransform
     public $idDef;
     public function __construct()
     {
-        $this->idDef = new HTMLPurifier_AttrDef_HTML_ID();
+        $this->idDef = new \WPDT\HTMLPurifier_AttrDef_HTML_ID();
     }
     /**
      * @param array $attr

@@ -8,6 +8,6 @@ namespace WPDT;
  *
  */
 \spl_autoload_register(function ($class) {
-    return HTMLPurifier_Bootstrap::autoload($class);
+    return \WPDT\HTMLPurifier_Bootstrap::autoload($class);
 });
 // vim: et sw=4 sts=4

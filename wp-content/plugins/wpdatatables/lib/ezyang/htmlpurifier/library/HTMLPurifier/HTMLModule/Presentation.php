@@ -12,7 +12,7 @@ namespace WPDT;
  *       We have chosen not to heed this distinction, as content_sets
  *       provides satisfactory disambiguation.
  */
-class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Presentation extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

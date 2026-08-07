@@ -8,7 +8,7 @@ namespace WPDT;
  * @warning Currently this class is an all or nothing proposition, that is,
  *          it will only give a bool return value.
  */
-class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
+class HTMLPurifier_ChildDef_Custom extends \WPDT\HTMLPurifier_ChildDef
 {
     /**
      * @type string

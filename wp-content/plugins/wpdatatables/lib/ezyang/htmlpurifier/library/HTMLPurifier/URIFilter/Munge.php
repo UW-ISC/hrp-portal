@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_URIFilter_Munge extends HTMLPurifier_URIFilter
+class HTMLPurifier_URIFilter_Munge extends \WPDT\HTMLPurifier_URIFilter
 {
     /**
      * @type string
@@ -39,7 +39,7 @@ class HTMLPurifier_URIFilter_Munge extends HTMLPurifier_URIFilter
     public function prepare($config)
     {
         $this->target = $config->get('URI.' . $this->name);
-        $this->parser = new HTMLPurifier_URIParser();
+        $this->parser = new \WPDT\HTMLPurifier_URIParser();
         $this->doEmbed = $config->get('URI.MungeResources');
         $this->secretKey = $config->get('URI.MungeSecretKey');
         if ($this->secretKey && !\function_exists('hash_hmac')) {

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a boolean attribute
  */
-class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_HTML_Bool extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type string
@@ -38,7 +38,7 @@ class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
      */
     public function make($string)
     {
-        return new HTMLPurifier_AttrDef_HTML_Bool($string);
+        return new \WPDT\HTMLPurifier_AttrDef_HTML_Bool($string);
     }
 }
 // vim: et sw=4 sts=4

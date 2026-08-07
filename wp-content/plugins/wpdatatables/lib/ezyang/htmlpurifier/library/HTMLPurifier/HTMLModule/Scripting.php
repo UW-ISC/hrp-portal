@@ -12,7 +12,7 @@ INSIDE HTML PURIFIER DOCUMENTS. USE ONLY WITH TRUSTED USER INPUT!!!
  * for executable scripts.
  * @note This module does not contain inline scripting elements
  */
-class HTMLPurifier_HTMLModule_Scripting extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Scripting extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -44,15 +44,15 @@ class HTMLPurifier_HTMLModule_Scripting extends HTMLPurifier_HTMLModule
         // both content sets working
         // In theory, this could be safe, but I don't see any reason to
         // allow it.
-        $this->info['noscript'] = new HTMLPurifier_ElementDef();
+        $this->info['noscript'] = new \WPDT\HTMLPurifier_ElementDef();
         $this->info['noscript']->attr = array(0 => array('Common'));
         $this->info['noscript']->content_model = 'Heading | List | Block';
         $this->info['noscript']->content_model_type = 'required';
-        $this->info['script'] = new HTMLPurifier_ElementDef();
-        $this->info['script']->attr = array('defer' => new HTMLPurifier_AttrDef_Enum(array('defer')), 'src' => new HTMLPurifier_AttrDef_URI(\true), 'type' => new HTMLPurifier_AttrDef_Enum(array('text/javascript')));
+        $this->info['script'] = new \WPDT\HTMLPurifier_ElementDef();
+        $this->info['script']->attr = array('defer' => new \WPDT\HTMLPurifier_AttrDef_Enum(array('defer')), 'src' => new \WPDT\HTMLPurifier_AttrDef_URI(\true), 'type' => new \WPDT\HTMLPurifier_AttrDef_Enum(array('text/javascript')));
         $this->info['script']->content_model = '#PCDATA';
         $this->info['script']->content_model_type = 'optional';
-        $this->info['script']->attr_transform_pre[] = $this->info['script']->attr_transform_post[] = new HTMLPurifier_AttrTransform_ScriptRequired();
+        $this->info['script']->attr_transform_pre[] = $this->info['script']->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_ScriptRequired();
     }
 }
 // vim: et sw=4 sts=4

@@ -7,7 +7,7 @@ namespace WPDT;
  * @warning Users will commonly use <embed> to cater to legacy browsers: this
  *      module does not allow this sort of behavior
  */
-class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Object extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

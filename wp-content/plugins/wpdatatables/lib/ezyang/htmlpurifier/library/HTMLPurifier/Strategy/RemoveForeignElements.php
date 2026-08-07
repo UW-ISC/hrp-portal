@@ -9,7 +9,7 @@ namespace WPDT;
  * tokens. If a token is not recognized but a TagTransform is defined for
  * that element, the element will be transformed accordingly.
  */
-class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
+class HTMLPurifier_Strategy_RemoveForeignElements extends \WPDT\HTMLPurifier_Strategy
 {
     /**
      * @param HTMLPurifier_Token[] $tokens
@@ -20,7 +20,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
     public function execute($tokens, $config, $context)
     {
         $definition = $config->getHTMLDefinition();
-        $generator = new HTMLPurifier_Generator($config, $context);
+        $generator = new \WPDT\HTMLPurifier_Generator($config, $context);
         $result = array();
         $escape_invalid_tags = $config->get('Core.EscapeInvalidTags');
         $remove_invalid_img = $config->get('Core.RemoveInvalidImg');
@@ -37,7 +37,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
         } elseif ($remove_script_contents === \false && isset($hidden_elements['script'])) {
             unset($hidden_elements['script']);
         }
-        $attr_validator = new HTMLPurifier_AttrValidator();
+        $attr_validator = new \WPDT\HTMLPurifier_AttrValidator();
         // removes tokens until it reaches a closing tag with its value
         $remove_until = \false;
         // converts comments into text tokens when this is equal to a tag name
@@ -69,7 +69,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                 if (isset($definition->info[$token->name])) {
                     // mostly everything's good, but
                     // we need to make sure required attributes are in order
-                    if (($token instanceof HTMLPurifier_Token_Start || $token instanceof HTMLPurifier_Token_Empty) && $definition->info[$token->name]->required_attr && ($token->name != 'img' || $remove_invalid_img)) {
+                    if (($token instanceof \WPDT\HTMLPurifier_Token_Start || $token instanceof \WPDT\HTMLPurifier_Token_Empty) && $definition->info[$token->name]->required_attr && ($token->name != 'img' || $remove_invalid_img)) {
                         $attr_validator->validateToken($token, $config, $context);
                         $ok = \true;
                         foreach ($definition->info[$token->name]->required_attr as $name) {
@@ -86,9 +86,9 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                         }
                         $token->armor['ValidateAttributes'] = \true;
                     }
-                    if (isset($hidden_elements[$token->name]) && $token instanceof HTMLPurifier_Token_Start) {
+                    if (isset($hidden_elements[$token->name]) && $token instanceof \WPDT\HTMLPurifier_Token_Start) {
                         $textify_comments = $token->name;
-                    } elseif ($token->name === $textify_comments && $token instanceof HTMLPurifier_Token_End) {
+                    } elseif ($token->name === $textify_comments && $token instanceof \WPDT\HTMLPurifier_Token_End) {
                         $textify_comments = \false;
                     }
                 } elseif ($escape_invalid_tags) {
@@ -96,14 +96,14 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     if ($e) {
                         $e->send(\E_WARNING, 'Strategy_RemoveForeignElements: Foreign element to text');
                     }
-                    $token = new HTMLPurifier_Token_Text($generator->generateFromToken($token));
+                    $token = new \WPDT\HTMLPurifier_Token_Text($generator->generateFromToken($token));
                 } else {
                     // check if we need to destroy all of the tag's children
                     // CAN BE GENERICIZED
                     if (isset($hidden_elements[$token->name])) {
-                        if ($token instanceof HTMLPurifier_Token_Start) {
+                        if ($token instanceof \WPDT\HTMLPurifier_Token_Start) {
                             $remove_until = $token->name;
-                        } elseif ($token instanceof HTMLPurifier_Token_Empty) {
+                        } elseif ($token instanceof \WPDT\HTMLPurifier_Token_Empty) {
                             // do nothing: we're still looking
                         } else {
                             $remove_until = \false;
@@ -118,11 +118,11 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     }
                     continue;
                 }
-            } elseif ($token instanceof HTMLPurifier_Token_Comment) {
+            } elseif ($token instanceof \WPDT\HTMLPurifier_Token_Comment) {
                 // textify comments in script tags when they are allowed
                 if ($textify_comments !== \false) {
                     $data = $token->data;
-                    $token = new HTMLPurifier_Token_Text($data);
+                    $token = new \WPDT\HTMLPurifier_Token_Text($data);
                 } elseif ($trusted || $check_comments) {
                     // always cleanup comments
                     $trailing_hyphen = \false;
@@ -161,7 +161,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     }
                     continue;
                 }
-            } elseif ($token instanceof HTMLPurifier_Token_Text) {
+            } elseif ($token instanceof \WPDT\HTMLPurifier_Token_Text) {
             } else {
                 continue;
             }

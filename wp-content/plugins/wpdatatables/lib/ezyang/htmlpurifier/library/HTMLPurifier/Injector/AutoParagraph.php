@@ -8,7 +8,7 @@ namespace WPDT;
  * @todo Ensure all states are unit tested, including variations as well.
  * @todo Make a graph of the flow control for this Injector.
  */
-class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_AutoParagraph extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -23,7 +23,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
      */
     private function _pStart()
     {
-        $par = new HTMLPurifier_Token_Start('p');
+        $par = new \WPDT\HTMLPurifier_Token_Start('p');
         $par->armor['MakeWellFormed_TagClosedError'] = \true;
         return $par;
     }
@@ -112,9 +112,9 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                     // (seek backwards until token isn't whitespace)
                     $i = null;
                     $this->backward($i, $prev);
-                    if (!$prev instanceof HTMLPurifier_Token_Start) {
+                    if (!$prev instanceof \WPDT\HTMLPurifier_Token_Start) {
                         // Token wasn't adjacent
-                        if ($prev instanceof HTMLPurifier_Token_Text && \substr($prev->data, -2) === "\n\n") {
+                        if ($prev instanceof \WPDT\HTMLPurifier_Token_Text && \substr($prev->data, -2) === "\n\n") {
                             // State 1.1.4: <div><p>PAR1</p>\n\n<b>
                             //                                  ---
                             // Quite frankly, this should be handled by splitText
@@ -159,7 +159,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                 }
                 $i = null;
                 if ($this->backward($i, $prev)) {
-                    if (!$prev instanceof HTMLPurifier_Token_Text) {
+                    if (!$prev instanceof \WPDT\HTMLPurifier_Token_Text) {
                         // State 3.1.1: ...</p>{p}<b>
                         //                        ---
                         // State 3.2.1: ...</p><div>
@@ -167,7 +167,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                         if (!\is_array($token)) {
                             $token = array($token);
                         }
-                        \array_unshift($token, new HTMLPurifier_Token_Text("\n\n"));
+                        \array_unshift($token, new \WPDT\HTMLPurifier_Token_Text("\n\n"));
                     } else {
                         // State 3.1.2: ...</p>\n\n{p}<b>
                         //                            ---
@@ -204,7 +204,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
         if ($c == 1) {
             // There were no double-newlines, abort quickly. In theory this
             // should never happen.
-            $result[] = new HTMLPurifier_Token_Text($data);
+            $result[] = new \WPDT\HTMLPurifier_Token_Text($data);
             return;
         }
         for ($i = 0; $i < $c; $i++) {
@@ -219,8 +219,8 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                         // injector did not add any start paragraph tokens.
                         // This means that we have been in a paragraph for
                         // a while, and the newline means we should start a new one.
-                        $result[] = new HTMLPurifier_Token_End('p');
-                        $result[] = new HTMLPurifier_Token_Text("\n\n");
+                        $result[] = new \WPDT\HTMLPurifier_Token_End('p');
+                        $result[] = new \WPDT\HTMLPurifier_Token_Text("\n\n");
                         // However, the start token should only be added if
                         // there is more processing to be done (i.e. there are
                         // real paragraphs in here). If there are none, the
@@ -231,7 +231,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                         // We just started a new paragraph!
                         // Reinstate a double-newline for presentation's sake, since
                         // it was in the source code.
-                        \array_unshift($result, new HTMLPurifier_Token_Text("\n\n"));
+                        \array_unshift($result, new \WPDT\HTMLPurifier_Token_Text("\n\n"));
                     }
                 } elseif ($i + 1 == $c) {
                     // Double newline at the end
@@ -251,9 +251,9 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
         }
         // Append the paragraphs onto the result
         foreach ($paragraphs as $par) {
-            $result[] = new HTMLPurifier_Token_Text($par);
-            $result[] = new HTMLPurifier_Token_End('p');
-            $result[] = new HTMLPurifier_Token_Text("\n\n");
+            $result[] = new \WPDT\HTMLPurifier_Token_Text($par);
+            $result[] = new \WPDT\HTMLPurifier_Token_End('p');
+            $result[] = new \WPDT\HTMLPurifier_Token_Text("\n\n");
             $result[] = $this->_pStart();
         }
         // Remove trailing start token; Injector will handle this later if
@@ -286,7 +286,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
      */
     private function _pLookAhead()
     {
-        if ($this->currentToken instanceof HTMLPurifier_Token_Start) {
+        if ($this->currentToken instanceof \WPDT\HTMLPurifier_Token_Start) {
             $nesting = 1;
         } else {
             $nesting = 0;
@@ -310,14 +310,14 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
      */
     private function _checkNeedsP($current)
     {
-        if ($current instanceof HTMLPurifier_Token_Start) {
+        if ($current instanceof \WPDT\HTMLPurifier_Token_Start) {
             if (!$this->_isInline($current)) {
                 // <div>PAR1<div>
                 //      ----
                 // Terminate early, since we hit a block element
                 return \false;
             }
-        } elseif ($current instanceof HTMLPurifier_Token_Text) {
+        } elseif ($current instanceof \WPDT\HTMLPurifier_Token_Text) {
             if (\strpos($current->data, "\n\n") !== \false) {
                 // <div>PAR1<b>PAR1\n\nPAR2
                 //      ----

@@ -6,7 +6,7 @@ namespace WPDT;
  * Definition cache decorator class that cleans up the cache
  * whenever there is a cache miss.
  */
-class HTMLPurifier_DefinitionCache_Decorator_Cleanup extends HTMLPurifier_DefinitionCache_Decorator
+class HTMLPurifier_DefinitionCache_Decorator_Cleanup extends \WPDT\HTMLPurifier_DefinitionCache_Decorator
 {
     /**
      * @type string
@@ -17,7 +17,7 @@ class HTMLPurifier_DefinitionCache_Decorator_Cleanup extends HTMLPurifier_Defini
      */
     public function copy()
     {
-        return new HTMLPurifier_DefinitionCache_Decorator_Cleanup();
+        return new \WPDT\HTMLPurifier_DefinitionCache_Decorator_Cleanup();
     }
     /**
      * @param HTMLPurifier_Definition $def

@@ -3,7 +3,7 @@
 namespace WPDT;
 
 // does not support network paths
-class HTMLPurifier_URIFilter_MakeAbsolute extends HTMLPurifier_URIFilter
+class HTMLPurifier_URIFilter_MakeAbsolute extends \WPDT\HTMLPurifier_URIFilter
 {
     /**
      * @type string

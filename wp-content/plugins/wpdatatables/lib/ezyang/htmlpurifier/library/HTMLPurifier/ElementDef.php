@@ -125,7 +125,7 @@ class HTMLPurifier_ElementDef
      */
     public static function create($content_model, $content_model_type, $attr)
     {
-        $def = new HTMLPurifier_ElementDef();
+        $def = new \WPDT\HTMLPurifier_ElementDef();
         $def->content_model = $content_model;
         $def->content_model_type = $content_model_type;
         $def->attr = $attr;

@@ -13,7 +13,7 @@ namespace WPDT;
  *       but would make these components a lot more viable for a CSS
  *       filtering solution.
  */
-class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param string $css
@@ -26,7 +26,7 @@ class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
         $css = $this->parseCDATA($css);
         $definition = $config->getCSSDefinition();
         $allow_duplicates = $config->get("CSS.AllowDuplicates");
-        $universal_attrdef = new HTMLPurifier_AttrDef_Enum(array('initial', 'inherit', 'unset'));
+        $universal_attrdef = new \WPDT\HTMLPurifier_AttrDef_Enum(array('initial', 'inherit', 'unset'));
         // According to the CSS2.1 spec, the places where a
         // non-delimiting semicolon can appear are in strings
         // escape sequences.   So here is some dumb hack to
