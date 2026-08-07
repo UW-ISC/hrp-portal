@@ -7,7 +7,7 @@ namespace WPDT;
  * @note Currently supports the alpha filter. In the future, this will
  *       probably need an extensible framework
  */
-class HTMLPurifier_AttrDef_CSS_Filter extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Filter extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_AttrDef_Integer
@@ -15,7 +15,7 @@ class HTMLPurifier_AttrDef_CSS_Filter extends HTMLPurifier_AttrDef
     protected $intValidator;
     public function __construct()
     {
-        $this->intValidator = new HTMLPurifier_AttrDef_Integer();
+        $this->intValidator = new \WPDT\HTMLPurifier_AttrDef_Integer();
     }
     /**
      * @param string $value

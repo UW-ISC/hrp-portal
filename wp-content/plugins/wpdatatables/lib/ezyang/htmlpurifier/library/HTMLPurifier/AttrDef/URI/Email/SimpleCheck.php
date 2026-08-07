@@ -6,7 +6,7 @@ namespace WPDT;
  * Primitive email validation class based on the regexp found at
  * http://www.regular-expressions.info/email.html
  */
-class HTMLPurifier_AttrDef_URI_Email_SimpleCheck extends HTMLPurifier_AttrDef_URI_Email
+class HTMLPurifier_AttrDef_URI_Email_SimpleCheck extends \WPDT\HTMLPurifier_AttrDef_URI_Email
 {
     /**
      * @param string $string

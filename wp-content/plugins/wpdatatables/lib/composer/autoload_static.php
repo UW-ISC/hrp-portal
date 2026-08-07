@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516
+class ComposerStaticInitd5b6b783c91418f67131950ec953168a
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -25,6 +25,7 @@ class ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516
             'WPDT\\PhpOffice\\PhpSpreadsheet\\' => 30,
             'WPDT\\PHPSQLParser\\' => 18,
             'WPDT\\MyCLabs\\Enum\\' => 18,
+            'WPDT\\Melograno\\UsageTracker\\' => 28,
             'WPDT\\Matrix\\' => 12,
             'WPDT\\HTMLPurifier\\' => 18,
             'WPDT\\Firebase\\JWT\\' => 18,
@@ -78,6 +79,10 @@ class ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516
         'WPDT\\MyCLabs\\Enum\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
+        'WPDT\\Melograno\\UsageTracker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/melograno/usage-tracker/src',
         ),
         'WPDT\\Matrix\\' => 
         array (
@@ -152,6 +157,21 @@ class ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516
         'WPDT\\Matrix\\Operators\\Multiplication' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Multiplication.php',
         'WPDT\\Matrix\\Operators\\Operator' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Operator.php',
         'WPDT\\Matrix\\Operators\\Subtraction' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Subtraction.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\BaseCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/BaseCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Common\\ActivationCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/ActivationCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Common\\WpEnvironmentCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/WpEnvironmentCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/ConsentNoticeCollectorInterface.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/PluginCollectorInterface.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/AmeliaCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaFeatureTelemetry' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/AmeliaFeatureTelemetry.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/IvyFormsCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/WpDataTablesCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\Anonymizer' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/Anonymizer.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\ConsentManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentManager.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\ConsentNoticeService' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentNoticeService.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\HttpClient' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/HttpClient.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\NoticeManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/NoticeManager.php',
+        'WPDT\\Melograno\\UsageTracker\\Core\\UsageTracker' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/UsageTracker.php',
         'WPDT\\MyCLabs\\Enum\\Enum' => __DIR__ . '/..' . '/myclabs/php-enum/src/Enum.php',
         'WPDT\\MyCLabs\\Enum\\PHPUnit\\Comparator' => __DIR__ . '/..' . '/myclabs/php-enum/src/PHPUnit/Comparator.php',
         'WPDT\\PHPSQLParser\\Options' => __DIR__ . '/..' . '/greenlion/php-sql-parser/src/PHPSQLParser/Options.php',
@@ -1132,9 +1152,9 @@ class ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1fb470b4fcedfc2b513d78e27375c516::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$classMap;
 
         }, null, ClassLoader::class);
     }

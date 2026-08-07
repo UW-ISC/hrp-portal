@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-abstract class HTMLPurifier_AttrDef_URI_Email extends HTMLPurifier_AttrDef
+abstract class HTMLPurifier_AttrDef_URI_Email extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Unpacks a mailbox into its display-name and address

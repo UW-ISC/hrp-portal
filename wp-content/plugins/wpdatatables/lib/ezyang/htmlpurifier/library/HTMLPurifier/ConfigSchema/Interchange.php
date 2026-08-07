@@ -27,7 +27,7 @@ class HTMLPurifier_ConfigSchema_Interchange
     public function addDirective($directive)
     {
         if (isset($this->directives[$i = $directive->id->toString()])) {
-            throw new HTMLPurifier_ConfigSchema_Exception("Cannot redefine directive '{$i}'");
+            throw new \WPDT\HTMLPurifier_ConfigSchema_Exception("Cannot redefine directive '{$i}'");
         }
         $this->directives[$i] = $directive;
     }
@@ -37,7 +37,7 @@ class HTMLPurifier_ConfigSchema_Interchange
      */
     public function validate()
     {
-        $validator = new HTMLPurifier_ConfigSchema_Validator();
+        $validator = new \WPDT\HTMLPurifier_ConfigSchema_Validator();
         return $validator->validate($this);
     }
 }

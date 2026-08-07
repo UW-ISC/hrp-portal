@@ -8,7 +8,7 @@ namespace WPDT;
  * @warning This filter is *critical* for ensuring that %HTML.SafeIframe
  * works safely.
  */
-class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
+class HTMLPurifier_URIFilter_SafeIframe extends \WPDT\HTMLPurifier_URIFilter
 {
     /**
      * @type string

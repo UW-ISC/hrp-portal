@@ -9,7 +9,7 @@ namespace WPDT;
  *       orphans, z-index, counter-increment, counter-reset.  Some of the
  *       HTML attributes, however, find use for a non-negative version of this.
  */
-class HTMLPurifier_AttrDef_Integer extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_Integer extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Whether or not negative values are allowed.

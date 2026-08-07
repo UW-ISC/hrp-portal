@@ -2,6 +2,9 @@
 
 defined('ABSPATH') or die('Access denied.');
 
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Core\UsageTracker;
+
 /**
  * Created by PhpStorm.
  * User: miljkomilosevic
@@ -225,6 +228,9 @@ class WDTSettingsController
             'wdtGoogleApiMaps' => get_option('wdtGoogleApiMaps'),
             'wdtGoogleApiMapsValidated' => get_option('wdtGoogleApiMapsValidated'),
         );
+
+        $usageSettings = UsageTracker::getSettings(new WpDataTablesCollector());
+        $settings['wdtUsageTrackingEnabled'] = !empty($usageSettings['usageTrackingEnabled']) ? 1 : 0;
 
         return $settings;
     }

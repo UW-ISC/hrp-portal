@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Pre-transform that changes deprecated bgcolor attribute to CSS.
  */
-class HTMLPurifier_AttrTransform_BgColor extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_BgColor extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

@@ -14,7 +14,7 @@ namespace WPDT;
  *       sub-modules, but the code is internally structured to reflect
  *       these distinctions.
  */
-class HTMLPurifier_HTMLModule_Text extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Text extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

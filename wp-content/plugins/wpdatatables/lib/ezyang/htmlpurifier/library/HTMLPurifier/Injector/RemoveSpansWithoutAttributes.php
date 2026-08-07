@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Injector that removes spans with no attributes
  */
-class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -38,7 +38,7 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
     }
     public function prepare($config, $context)
     {
-        $this->attrValidator = new HTMLPurifier_AttrValidator();
+        $this->attrValidator = new \WPDT\HTMLPurifier_AttrValidator();
         $this->config = $config;
         $this->context = $context;
         return parent::prepare($config, $context);
@@ -48,7 +48,7 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
      */
     public function handleElement(&$token)
     {
-        if ($token->name !== 'span' || !$token instanceof HTMLPurifier_Token_Start) {
+        if ($token->name !== 'span' || !$token instanceof \WPDT\HTMLPurifier_Token_Start) {
             return;
         }
         // We need to validate the attributes now since this doesn't normally
@@ -62,7 +62,7 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
         $nesting = 0;
         while ($this->forwardUntilEndToken($i, $current, $nesting)) {
         }
-        if ($current instanceof HTMLPurifier_Token_End && $current->name === 'span') {
+        if ($current instanceof \WPDT\HTMLPurifier_Token_End && $current->name === 'span') {
             // Mark closing span tag for deletion
             $this->markForDeletion->attach($current);
             // Delete open span tag

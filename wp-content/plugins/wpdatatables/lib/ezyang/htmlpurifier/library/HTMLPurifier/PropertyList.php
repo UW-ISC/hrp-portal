@@ -43,7 +43,7 @@ class HTMLPurifier_PropertyList
         if ($this->parent) {
             return $this->parent->get($name);
         }
-        throw new HTMLPurifier_Exception("Key '{$name}' not found");
+        throw new \WPDT\HTMLPurifier_Exception("Key '{$name}' not found");
     }
     /**
      * Sets the value of a key, for this plist

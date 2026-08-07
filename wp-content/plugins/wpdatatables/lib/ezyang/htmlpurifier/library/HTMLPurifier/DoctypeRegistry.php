@@ -39,7 +39,7 @@ class HTMLPurifier_DoctypeRegistry
             $aliases = array($aliases);
         }
         if (!\is_object($doctype)) {
-            $doctype = new HTMLPurifier_Doctype($doctype, $xml, $modules, $tidy_modules, $aliases, $dtd_public, $dtd_system);
+            $doctype = new \WPDT\HTMLPurifier_Doctype($doctype, $xml, $modules, $tidy_modules, $aliases, $dtd_public, $dtd_system);
         }
         $this->doctypes[$doctype->name] = $doctype;
         $name = $doctype->name;
@@ -70,7 +70,7 @@ class HTMLPurifier_DoctypeRegistry
         }
         if (!isset($this->doctypes[$doctype])) {
             throw new \Exception('Doctype ' . \htmlspecialchars($doctype) . ' does not exist');
-            $anon = new HTMLPurifier_Doctype($doctype);
+            $anon = new \WPDT\HTMLPurifier_Doctype($doctype);
             return $anon;
         }
         return $this->doctypes[$doctype];

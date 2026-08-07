@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_DefinitionCache_Serializer extends HTMLPurifier_DefinitionCache
+class HTMLPurifier_DefinitionCache_Serializer extends \WPDT\HTMLPurifier_DefinitionCache
 {
     /**
      * @param HTMLPurifier_Definition $def

@@ -808,24 +808,24 @@ class WDTTools
     {
         return array(
             'version'  => get_option('wdtVersion'),
-            'release_date' => '24.07.2026.',
+            'release_date' => '31.07.2026.',
             'features' => [
-                // 0 => [
-                //     'text' => '',
-                //     'link' => ''
-                // ],
-            ],
-            'improvements' => [
-                // 0 => [
-                //     'text' => '',
-                //     'link' => ''
-                // ],
-            ],
-            'bugfixes' => [
                 0 => [
-                    'text' => 'Fixed SQL injection risks in date/time filters, foreign-key IN list construction, and MCP LIKE query handling.',
+                    'text' => 'Added ability to customize the "No matching records found" message per table via the Custom Strings tab in table settings.',
                     'link' => ''
                 ],
+            ],
+            'improvements' => [
+                0 => [
+                    'text' => 'Optimized internal processing for tables and charts.',
+                    'link' => ''
+                ],
+            ],
+            'bugfixes' => [
+                // 0 => [
+                //     'text' => '',
+                //     'link' => ''
+                // ],
             ],
         );
     }

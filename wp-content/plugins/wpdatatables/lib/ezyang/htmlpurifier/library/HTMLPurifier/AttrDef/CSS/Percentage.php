@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a Percentage as defined by the CSS spec.
  */
-class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Percentage extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Instance to defer number validation to.
@@ -17,7 +17,7 @@ class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
      */
     public function __construct($non_negative = \false)
     {
-        $this->number_def = new HTMLPurifier_AttrDef_CSS_Number($non_negative);
+        $this->number_def = new \WPDT\HTMLPurifier_AttrDef_CSS_Number($non_negative);
     }
     /**
      * @param string $string

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Represents a Length as defined by CSS.
  */
-class HTMLPurifier_AttrDef_CSS_Length extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Length extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_Length|string
@@ -21,8 +21,8 @@ class HTMLPurifier_AttrDef_CSS_Length extends HTMLPurifier_AttrDef
      */
     public function __construct($min = null, $max = null)
     {
-        $this->min = $min !== null ? HTMLPurifier_Length::make($min) : null;
-        $this->max = $max !== null ? HTMLPurifier_Length::make($max) : null;
+        $this->min = $min !== null ? \WPDT\HTMLPurifier_Length::make($min) : null;
+        $this->max = $max !== null ? \WPDT\HTMLPurifier_Length::make($max) : null;
     }
     /**
      * @param string $string
@@ -43,7 +43,7 @@ class HTMLPurifier_AttrDef_CSS_Length extends HTMLPurifier_AttrDef
         if (\strlen($string) === 1) {
             return \false;
         }
-        $length = HTMLPurifier_Length::make($string);
+        $length = \WPDT\HTMLPurifier_Length::make($string);
         if (!$length->isValid()) {
             return \false;
         }

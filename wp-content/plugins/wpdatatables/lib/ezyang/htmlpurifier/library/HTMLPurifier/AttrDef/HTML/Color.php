@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a color according to the HTML spec.
  */
-class HTMLPurifier_AttrDef_HTML_Color extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_HTML_Color extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param string $string

@@ -6,7 +6,7 @@ namespace WPDT;
  * XHTML 1.1 Edit Module, defines editing-related elements. Text Extension
  * Module.
  */
-class HTMLPurifier_HTMLModule_StyleAttribute extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_StyleAttribute extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -27,7 +27,7 @@ class HTMLPurifier_HTMLModule_StyleAttribute extends HTMLPurifier_HTMLModule
      */
     public function setup($config)
     {
-        $this->attr_collections['Style']['style'] = new HTMLPurifier_AttrDef_CSS();
+        $this->attr_collections['Style']['style'] = new \WPDT\HTMLPurifier_AttrDef_CSS();
     }
 }
 // vim: et sw=4 sts=4

@@ -164,6 +164,7 @@ class WPDataTable
     private $_fixedHeadersOffset = 0;
     private $_simple_template_id = 0;
     private  $_customRowDisplay = '';
+    private $_customStringEmptyFiltering = '';
     private $_index_column = 0;
     private $_advanced_filter_option = 0;
     private $_previewMode = false;
@@ -260,6 +261,15 @@ class WPDataTable
     public function setCustomDisplayLength($customRowDisplay)
     {
         $this->_customRowDisplay = $customRowDisplay;
+    }
+    public function getCustomStringEmptyFiltering()
+    {
+        return $this->_customStringEmptyFiltering;
+    }
+
+    public function setCustomStringEmptyFiltering($customStringEmptyFiltering)
+    {
+        $this->_customStringEmptyFiltering = $customStringEmptyFiltering;
     }
 
     public function getLeftFixedColumnsNumber()
@@ -4729,6 +4739,7 @@ class WPDataTable
             isset($advancedSettings->fixed_header) ? $this->setFixedHeaders($advancedSettings->fixed_header) : $this->setFixedHeaders(false);
             isset($advancedSettings->fixed_header_offset) ? $this->setFixedHeadersOffset($advancedSettings->fixed_header_offset) : $this->setFixedHeadersOffset(0);
             isset($advancedSettings->customRowDisplay) ? $this->setCustomDisplayLength($advancedSettings->customRowDisplay) : $this->setCustomDisplayLength('');
+            isset($advancedSettings->customStringEmptyFiltering) ? $this->setCustomStringEmptyFiltering($advancedSettings->customStringEmptyFiltering) : $this->setCustomStringEmptyFiltering('');
             isset($advancedSettings->loader) ? $this->setLoader($advancedSettings->loader) : $this->setLoader(get_option('wdtGlobalTableLoader'));
             isset($advancedSettings->showCartInformation) ? $this->setshowCartInformation($advancedSettings->showCartInformation) : $this->setshowCartInformation(1);
             isset($advancedSettings->index_column) ? $this->setIndexColumn($advancedSettings->index_column) : $this->setIndexColumn(0);
@@ -4772,6 +4783,7 @@ class WPDataTable
             $this->setFixedHeaders(false);
             $this->setFixedHeadersOffset(0);
             $this->setCustomDisplayLength('');
+            $this->setCustomStringEmptyFiltering('');
             $this->setLoader(get_option('wdtGlobalTableLoader'));
         }
         if (!empty($columnData['columnOrder'])) {
@@ -5537,6 +5549,9 @@ class WPDataTable
             }
 
             $obj->dataTableParams->oLanguage->sSearchPlaceholder = '';
+        }
+        if( $this->getCustomStringEmptyFiltering() != '') {
+            $obj->dataTableParams->oLanguage->sZeroRecords = $this->getCustomStringEmptyFiltering();
         }
 
         //[<--/ Full version -->]//

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a host according to the IPv4, IPv6 and DNS (future) specifications.
  */
-class HTMLPurifier_AttrDef_URI_Host extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_URI_Host extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * IPv4 sub-validator.
@@ -19,8 +19,8 @@ class HTMLPurifier_AttrDef_URI_Host extends HTMLPurifier_AttrDef
     protected $ipv6;
     public function __construct()
     {
-        $this->ipv4 = new HTMLPurifier_AttrDef_URI_IPv4();
-        $this->ipv6 = new HTMLPurifier_AttrDef_URI_IPv6();
+        $this->ipv4 = new \WPDT\HTMLPurifier_AttrDef_URI_IPv4();
+        $this->ipv6 = new \WPDT\HTMLPurifier_AttrDef_URI_IPv6();
     }
     /**
      * @param string $string
@@ -95,7 +95,7 @@ class HTMLPurifier_AttrDef_URI_Host extends HTMLPurifier_AttrDef
             // punycoding them. (This is the most portable thing to do,
             // since otherwise we have to assume browsers support
         } elseif ($config->get('Core.EnableIDNA') && \class_exists('WPDT\\Net_IDNA2')) {
-            $idna = new Net_IDNA2(array('encoding' => 'utf8', 'overlong' => \false, 'strict' => \true));
+            $idna = new \WPDT\Net_IDNA2(array('encoding' => 'utf8', 'overlong' => \false, 'strict' => \true));
             // we need to encode each period separately
             $parts = \explode('.', $string);
             try {

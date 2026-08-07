@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Sets height/width defaults for <textarea>
  */
-class HTMLPurifier_AttrTransform_Textarea extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_Textarea extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

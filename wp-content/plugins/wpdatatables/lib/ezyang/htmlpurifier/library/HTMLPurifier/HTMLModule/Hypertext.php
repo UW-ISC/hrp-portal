@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * XHTML 1.1 Hypertext Module, defines hypertext links. Core Module.
  */
-class HTMLPurifier_HTMLModule_Hypertext extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Hypertext extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -21,8 +21,8 @@ class HTMLPurifier_HTMLModule_Hypertext extends HTMLPurifier_HTMLModule
             // 'charset' => 'Charset',
             'href' => 'URI',
             // 'hreflang' => 'LanguageCode',
-            'rel' => new HTMLPurifier_AttrDef_HTML_LinkTypes('rel'),
-            'rev' => new HTMLPurifier_AttrDef_HTML_LinkTypes('rev'),
+            'rel' => new \WPDT\HTMLPurifier_AttrDef_HTML_LinkTypes('rel'),
+            'rev' => new \WPDT\HTMLPurifier_AttrDef_HTML_LinkTypes('rev'),
         ));
         $a->formatting = \true;
         $a->excludes = array('a' => \true);

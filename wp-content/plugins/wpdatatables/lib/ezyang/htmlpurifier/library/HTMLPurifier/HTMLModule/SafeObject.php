@@ -8,7 +8,7 @@ namespace WPDT;
  * (maybe other types too, but only Flash is supported as of right now).
  * Highly experimental.
  */
-class HTMLPurifier_HTMLModule_SafeObject extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_SafeObject extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -29,11 +29,11 @@ class HTMLPurifier_HTMLModule_SafeObject extends HTMLPurifier_HTMLModule
             'width' => 'Pixels#' . $max,
             'height' => 'Pixels#' . $max,
             'data' => 'URI#embedded',
-            'codebase' => new HTMLPurifier_AttrDef_Enum(array('http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0')),
+            'codebase' => new \WPDT\HTMLPurifier_AttrDef_Enum(array('http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0')),
         ));
-        $object->attr_transform_post[] = new HTMLPurifier_AttrTransform_SafeObject();
+        $object->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_SafeObject();
         $param = $this->addElement('param', \false, 'Empty', \false, array('id' => 'ID', 'name*' => 'Text', 'value' => 'Text'));
-        $param->attr_transform_post[] = new HTMLPurifier_AttrTransform_SafeParam();
+        $param->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_SafeParam();
         $this->info_injector[] = 'SafeObject';
     }
 }

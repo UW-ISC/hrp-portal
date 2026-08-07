@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Pre-transform that changes converts a boolean attribute to fixed CSS
  */
-class HTMLPurifier_AttrTransform_BoolToCSS extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_BoolToCSS extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * Name of boolean attribute that is trigger.

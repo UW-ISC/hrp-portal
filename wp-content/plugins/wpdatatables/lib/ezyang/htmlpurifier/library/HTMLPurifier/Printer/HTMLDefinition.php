@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_HTMLDefinition extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * @type HTMLPurifier_HTMLDefinition, for easy access
@@ -162,7 +162,7 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
      */
     protected function renderChildren($def)
     {
-        $context = new HTMLPurifier_Context();
+        $context = new \WPDT\HTMLPurifier_Context();
         $ret = '';
         $ret .= $this->start('tr');
         $elements = array();

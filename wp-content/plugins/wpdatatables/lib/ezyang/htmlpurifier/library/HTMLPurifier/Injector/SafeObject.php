@@ -6,7 +6,7 @@ namespace WPDT;
  * Adds important param elements to inside of object in order to make
  * things safe.
  */
-class HTMLPurifier_Injector_SafeObject extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_SafeObject extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -53,7 +53,7 @@ class HTMLPurifier_Injector_SafeObject extends HTMLPurifier_Injector
             $this->paramStack[] = array();
             $new = array($token);
             foreach ($this->addParam as $name => $value) {
-                $new[] = new HTMLPurifier_Token_Empty('param', array('name' => $name, 'value' => $value));
+                $new[] = new \WPDT\HTMLPurifier_Token_Empty('param', array('name' => $name, 'value' => $value));
             }
             $token = $new;
         } elseif ($token->name == 'param') {

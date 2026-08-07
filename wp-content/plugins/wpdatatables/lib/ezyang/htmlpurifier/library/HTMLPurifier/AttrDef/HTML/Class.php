@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Implements special behavior for class attribute (normally NMTOKENS)
  */
-class HTMLPurifier_AttrDef_HTML_Class extends HTMLPurifier_AttrDef_HTML_Nmtokens
+class HTMLPurifier_AttrDef_HTML_Class extends \WPDT\HTMLPurifier_AttrDef_HTML_Nmtokens
 {
     /**
      * @param string $string

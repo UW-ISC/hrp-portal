@@ -13,7 +13,7 @@ namespace WPDT;
  *        Purifier, we may rely on our infrastructure to close it for us
  *        and shouldn't report an error to the user [TagClosedAuto].
  */
-class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
+class HTMLPurifier_Strategy_MakeWellFormed extends \WPDT\HTMLPurifier_Strategy
 {
     /**
      * Array stream of tokens being processed.
@@ -61,14 +61,14 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
     {
         $definition = $config->getHTMLDefinition();
         // local variables
-        $generator = new HTMLPurifier_Generator($config, $context);
+        $generator = new \WPDT\HTMLPurifier_Generator($config, $context);
         $escape_invalid_tags = $config->get('Core.EscapeInvalidTags');
         // used for autoclose early abortion
         $global_parent_allowed_elements = $definition->info_parent_def->child->getAllowedElements($config);
         $e = $context->get('ErrorCollector', \true);
         $i = \false;
         // injector index
-        list($zipper, $token) = HTMLPurifier_Zipper::fromArray($tokens);
+        list($zipper, $token) = \WPDT\HTMLPurifier_Zipper::fromArray($tokens);
         if ($token === NULL) {
             return array();
         }
@@ -155,9 +155,9 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                         // but we need to reprocess it.  See Note [Injector skips]
                         unset($token->skip[$i]);
                         $token->rewind = $i;
-                        if ($token instanceof HTMLPurifier_Token_Start) {
+                        if ($token instanceof \WPDT\HTMLPurifier_Token_Start) {
                             \array_pop($this->stack);
-                        } elseif ($token instanceof HTMLPurifier_Token_End) {
+                        } elseif ($token instanceof \WPDT\HTMLPurifier_Token_End) {
                             $this->stack[] = $token->start;
                         }
                     }
@@ -178,7 +178,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                     $e->send(\E_NOTICE, 'Strategy_MakeWellFormed: Tag closed by document end', $top_nesting);
                 }
                 // append, don't splice, since this is the end
-                $token = new HTMLPurifier_Token_End($top_nesting->name);
+                $token = new \WPDT\HTMLPurifier_Token_End($top_nesting->name);
                 // punt!
                 $reprocess = \true;
                 continue;
@@ -187,7 +187,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
             //flush();
             // quick-check: if it's not a tag, no need to process
             if (empty($token->is_tag)) {
-                if ($token instanceof HTMLPurifier_Token_Text) {
+                if ($token instanceof \WPDT\HTMLPurifier_Token_Text) {
                     foreach ($this->injectors as $i => $injector) {
                         if (isset($token->skip[$i])) {
                             // See Note [Injector skips]
@@ -215,23 +215,23 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
             }
             // quick tag checks: anything that's *not* an end tag
             $ok = \false;
-            if ($type === 'empty' && $token instanceof HTMLPurifier_Token_Start) {
+            if ($type === 'empty' && $token instanceof \WPDT\HTMLPurifier_Token_Start) {
                 // claims to be a start tag but is empty
-                $token = new HTMLPurifier_Token_Empty($token->name, $token->attr, $token->line, $token->col, $token->armor);
+                $token = new \WPDT\HTMLPurifier_Token_Empty($token->name, $token->attr, $token->line, $token->col, $token->armor);
                 $ok = \true;
-            } elseif ($type && $type !== 'empty' && $token instanceof HTMLPurifier_Token_Empty) {
+            } elseif ($type && $type !== 'empty' && $token instanceof \WPDT\HTMLPurifier_Token_Empty) {
                 // claims to be empty but really is a start tag
                 // NB: this assignment is required
                 $old_token = $token;
-                $token = new HTMLPurifier_Token_End($token->name);
-                $token = $this->insertBefore(new HTMLPurifier_Token_Start($old_token->name, $old_token->attr, $old_token->line, $old_token->col, $old_token->armor));
+                $token = new \WPDT\HTMLPurifier_Token_End($token->name);
+                $token = $this->insertBefore(new \WPDT\HTMLPurifier_Token_Start($old_token->name, $old_token->attr, $old_token->line, $old_token->col, $old_token->armor));
                 // punt (since we had to modify the input stream in a non-trivial way)
                 $reprocess = \true;
                 continue;
-            } elseif ($token instanceof HTMLPurifier_Token_Empty) {
+            } elseif ($token instanceof \WPDT\HTMLPurifier_Token_Empty) {
                 // real empty token
                 $ok = \true;
-            } elseif ($token instanceof HTMLPurifier_Token_Start) {
+            } elseif ($token instanceof \WPDT\HTMLPurifier_Token_Start) {
                 // start tag
                 // ...unless they also have to close their parent
                 if (!empty($this->stack)) {
@@ -265,7 +265,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                         $wrapdef = $definition->info[$wrapname];
                         $elements = $wrapdef->child->getAllowedElements($config);
                         if (isset($elements[$token->name]) && isset($parent_elements[$wrapname])) {
-                            $newtoken = new HTMLPurifier_Token_Start($wrapname);
+                            $newtoken = new \WPDT\HTMLPurifier_Token_Start($wrapname);
                             $token = $this->insertBefore($newtoken);
                             $reprocess = \true;
                             continue;
@@ -299,7 +299,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                         }
                         if ($autoclose_ok) {
                             // errors need to be updated
-                            $new_token = new HTMLPurifier_Token_End($parent->name);
+                            $new_token = new \WPDT\HTMLPurifier_Token_End($parent->name);
                             $new_token->start = $parent;
                             // [TagClosedSuppress]
                             if ($e && !isset($parent->armor['MakeWellFormed_TagClosedError'])) {
@@ -344,17 +344,17 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                 }
                 if (!$reprocess) {
                     // ah, nothing interesting happened; do normal processing
-                    if ($token instanceof HTMLPurifier_Token_Start) {
+                    if ($token instanceof \WPDT\HTMLPurifier_Token_Start) {
                         $this->stack[] = $token;
-                    } elseif ($token instanceof HTMLPurifier_Token_End) {
-                        throw new HTMLPurifier_Exception('Improper handling of end tag in start code; possible error in MakeWellFormed');
+                    } elseif ($token instanceof \WPDT\HTMLPurifier_Token_End) {
+                        throw new \WPDT\HTMLPurifier_Exception('Improper handling of end tag in start code; possible error in MakeWellFormed');
                     }
                 }
                 continue;
             }
             // sanity check: we should be dealing with a closing tag
-            if (!$token instanceof HTMLPurifier_Token_End) {
-                throw new HTMLPurifier_Exception('Unaccounted for tag token in input stream, bug in HTML Purifier');
+            if (!$token instanceof \WPDT\HTMLPurifier_Token_End) {
+                throw new \WPDT\HTMLPurifier_Exception('Unaccounted for tag token in input stream, bug in HTML Purifier');
             }
             // make sure that we have something open
             if (empty($this->stack)) {
@@ -362,7 +362,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                     if ($e) {
                         $e->send(\E_WARNING, 'Strategy_MakeWellFormed: Unnecessary end tag to text');
                     }
-                    $token = new HTMLPurifier_Token_Text($generator->generateFromToken($token));
+                    $token = new \WPDT\HTMLPurifier_Token_Text($generator->generateFromToken($token));
                 } else {
                     if ($e) {
                         $e->send(\E_WARNING, 'Strategy_MakeWellFormed: Unnecessary end tag removed');
@@ -416,7 +416,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                     if ($e) {
                         $e->send(\E_WARNING, 'Strategy_MakeWellFormed: Stray end tag to text');
                     }
-                    $token = new HTMLPurifier_Token_Text($generator->generateFromToken($token));
+                    $token = new \WPDT\HTMLPurifier_Token_Text($generator->generateFromToken($token));
                 } else {
                     if ($e) {
                         $e->send(\E_WARNING, 'Strategy_MakeWellFormed: Stray end tag removed');
@@ -441,7 +441,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
             $replace = array($token);
             for ($j = 1; $j < $c; $j++) {
                 // ...as well as from the insertions
-                $new_token = new HTMLPurifier_Token_End($skipped_tags[$j]->name);
+                $new_token = new \WPDT\HTMLPurifier_Token_End($skipped_tags[$j]->name);
                 $new_token->start = $skipped_tags[$j];
                 \array_unshift($replace, $new_token);
                 if (isset($definition->info[$new_token->name]) && $definition->info[$new_token->name]->formatting) {
@@ -500,13 +500,13 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
             $token = array(1);
         }
         if (!\is_array($token)) {
-            throw new HTMLPurifier_Exception('Invalid token type from injector');
+            throw new \WPDT\HTMLPurifier_Exception('Invalid token type from injector');
         }
         if (!\is_int($token[0])) {
             \array_unshift($token, 1);
         }
         if ($token[0] === 0) {
-            throw new HTMLPurifier_Exception('Deleting zero tokens is not valid');
+            throw new \WPDT\HTMLPurifier_Exception('Deleting zero tokens is not valid');
         }
         // $token is now an array with the following form:
         // array(number nodes to delete, new node 1, new node 2, ...)

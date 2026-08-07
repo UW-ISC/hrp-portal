@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates based on {ident} CSS grammar production
  */
-class HTMLPurifier_AttrDef_CSS_Ident extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Ident extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param string $string

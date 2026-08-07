@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Takes the contents of blockquote when in strict and reformats for validation.
  */
-class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Required
+class HTMLPurifier_ChildDef_StrictBlockquote extends \WPDT\HTMLPurifier_ChildDef_Required
 {
     /**
      * @type array
@@ -63,12 +63,12 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
         $ret = array();
         foreach ($result as $node) {
             if ($block_wrap === \false) {
-                if ($node instanceof HTMLPurifier_Node_Text && !$node->is_whitespace || $node instanceof HTMLPurifier_Node_Element && !isset($this->elements[$node->name])) {
-                    $block_wrap = new HTMLPurifier_Node_Element($def->info_block_wrapper);
+                if ($node instanceof \WPDT\HTMLPurifier_Node_Text && !$node->is_whitespace || $node instanceof \WPDT\HTMLPurifier_Node_Element && !isset($this->elements[$node->name])) {
+                    $block_wrap = new \WPDT\HTMLPurifier_Node_Element($def->info_block_wrapper);
                     $ret[] = $block_wrap;
                 }
             } else {
-                if ($node instanceof HTMLPurifier_Node_Element && isset($this->elements[$node->name])) {
+                if ($node instanceof \WPDT\HTMLPurifier_Node_Element && isset($this->elements[$node->name])) {
                     $block_wrap = \false;
                 }
             }

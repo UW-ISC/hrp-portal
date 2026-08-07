@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
+class HTMLPurifier_URIDefinition extends \WPDT\HTMLPurifier_Definition
 {
     public $type = 'URI';
     protected $filters = array();
@@ -22,13 +22,13 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
     public $defaultScheme;
     public function __construct()
     {
-        $this->registerFilter(new HTMLPurifier_URIFilter_DisableExternal());
-        $this->registerFilter(new HTMLPurifier_URIFilter_DisableExternalResources());
-        $this->registerFilter(new HTMLPurifier_URIFilter_DisableResources());
-        $this->registerFilter(new HTMLPurifier_URIFilter_HostBlacklist());
-        $this->registerFilter(new HTMLPurifier_URIFilter_SafeIframe());
-        $this->registerFilter(new HTMLPurifier_URIFilter_MakeAbsolute());
-        $this->registerFilter(new HTMLPurifier_URIFilter_Munge());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_DisableExternal());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_DisableExternalResources());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_DisableResources());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_HostBlacklist());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_SafeIframe());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_MakeAbsolute());
+        $this->registerFilter(new \WPDT\HTMLPurifier_URIFilter_Munge());
     }
     public function registerFilter($filter)
     {
@@ -71,7 +71,7 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
         $this->host = $config->get('URI.Host');
         $base_uri = $config->get('URI.Base');
         if (!\is_null($base_uri)) {
-            $parser = new HTMLPurifier_URIParser();
+            $parser = new \WPDT\HTMLPurifier_URIParser();
             $this->base = $parser->parse($base_uri);
             $this->defaultScheme = $this->base->scheme;
             if (\is_null($this->host)) {
@@ -84,7 +84,7 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
     }
     public function getDefaultScheme($config, $context)
     {
-        return HTMLPurifier_URISchemeRegistry::instance()->getScheme($this->defaultScheme, $config, $context);
+        return \WPDT\HTMLPurifier_URISchemeRegistry::instance()->getScheme($this->defaultScheme, $config, $context);
     }
     public function filter(&$uri, $config, $context)
     {

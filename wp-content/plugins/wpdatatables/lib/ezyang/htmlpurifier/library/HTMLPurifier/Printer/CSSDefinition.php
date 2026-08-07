@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_Printer_CSSDefinition extends HTMLPurifier_Printer
+class HTMLPurifier_Printer_CSSDefinition extends \WPDT\HTMLPurifier_Printer
 {
     /**
      * @type HTMLPurifier_CSSDefinition

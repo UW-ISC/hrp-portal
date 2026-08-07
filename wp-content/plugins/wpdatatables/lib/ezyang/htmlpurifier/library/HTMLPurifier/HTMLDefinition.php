@@ -25,7 +25,7 @@ namespace WPDT;
  * @warning Directives that change this object's structure must be in
  *          the HTML or Attr namespace!
  */
-class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
+class HTMLPurifier_HTMLDefinition extends \WPDT\HTMLPurifier_Definition
 {
     // FULLY-PUBLIC VARIABLES ---------------------------------------------
     /**
@@ -142,7 +142,7 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
     public function getAnonymousModule()
     {
         if (!$this->_anonModule) {
-            $this->_anonModule = new HTMLPurifier_HTMLModule();
+            $this->_anonModule = new \WPDT\HTMLPurifier_HTMLModule();
             $this->_anonModule->name = 'Anonymous';
         }
         return $this->_anonModule;
@@ -162,7 +162,7 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
      */
     public function __construct()
     {
-        $this->manager = new HTMLPurifier_HTMLModuleManager();
+        $this->manager = new \WPDT\HTMLPurifier_HTMLModuleManager();
     }
     /**
      * @param HTMLPurifier_Config $config

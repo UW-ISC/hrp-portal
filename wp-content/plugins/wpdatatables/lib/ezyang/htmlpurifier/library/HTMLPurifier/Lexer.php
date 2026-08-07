@@ -71,7 +71,7 @@ class HTMLPurifier_Lexer
      */
     public static function create($config)
     {
-        if (!$config instanceof HTMLPurifier_Config) {
+        if (!$config instanceof \WPDT\HTMLPurifier_Config) {
             $lexer = $config;
             \trigger_error("Passing a prototype to\n                HTMLPurifier_Lexer::create() is deprecated, please instead\n                use %Core.LexerImpl", \E_USER_WARNING);
         } else {
@@ -104,32 +104,32 @@ class HTMLPurifier_Lexer
             // instantiate recognized string names
             switch ($lexer) {
                 case 'DOMLex':
-                    $inst = new HTMLPurifier_Lexer_DOMLex();
+                    $inst = new \WPDT\HTMLPurifier_Lexer_DOMLex();
                     break;
                 case 'DirectLex':
-                    $inst = new HTMLPurifier_Lexer_DirectLex();
+                    $inst = new \WPDT\HTMLPurifier_Lexer_DirectLex();
                     break;
                 case 'PH5P':
-                    $inst = new HTMLPurifier_Lexer_PH5P();
+                    $inst = new \WPDT\HTMLPurifier_Lexer_PH5P();
                     break;
                 default:
-                    throw new HTMLPurifier_Exception("Cannot instantiate unrecognized Lexer type " . \htmlspecialchars($lexer));
+                    throw new \WPDT\HTMLPurifier_Exception("Cannot instantiate unrecognized Lexer type " . \htmlspecialchars($lexer));
             }
         }
         if (!$inst) {
-            throw new HTMLPurifier_Exception('No lexer was instantiated');
+            throw new \WPDT\HTMLPurifier_Exception('No lexer was instantiated');
         }
         // once PHP DOM implements native line numbers, or we
         // hack out something using XSLT, remove this stipulation
         if ($needs_tracking && !$inst->tracksLineNumbers) {
-            throw new HTMLPurifier_Exception('Cannot use lexer that does not support line numbers with ' . 'Core.MaintainLineNumbers or Core.CollectErrors (use DirectLex instead)');
+            throw new \WPDT\HTMLPurifier_Exception('Cannot use lexer that does not support line numbers with ' . 'Core.MaintainLineNumbers or Core.CollectErrors (use DirectLex instead)');
         }
         return $inst;
     }
     // -- CONVENIENCE MEMBERS ---------------------------------------------
     public function __construct()
     {
-        $this->_entity_parser = new HTMLPurifier_EntityParser();
+        $this->_entity_parser = new \WPDT\HTMLPurifier_EntityParser();
     }
     /**
      * Most common entity to raw value conversion table for special entities.
@@ -268,7 +268,7 @@ class HTMLPurifier_Lexer
         // clean into wellformed UTF-8 string for an SGML context: this has
         // to be done after entity expansion because the entities sometimes
         // represent non-SGML characters (horror, horror!)
-        $html = HTMLPurifier_Encoder::cleanUTF8($html);
+        $html = \WPDT\HTMLPurifier_Encoder::cleanUTF8($html);
         // if processing instructions are to removed, remove them now
         if ($config->get('Core.RemoveProcessingInstructions')) {
             $html = \preg_replace('#<\\?.+?\\?>#s', '', $html);

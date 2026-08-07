@@ -32,7 +32,7 @@ class HTMLPurifier_ConfigSchema_Validator
     protected $parser;
     public function __construct()
     {
-        $this->parser = new HTMLPurifier_VarParser();
+        $this->parser = new \WPDT\HTMLPurifier_VarParser();
     }
     /**
      * Validates a fully-formed interchange object.
@@ -62,7 +62,7 @@ class HTMLPurifier_ConfigSchema_Validator
     {
         $id_string = $id->toString();
         $this->context[] = "id '{$id_string}'";
-        if (!$id instanceof HTMLPurifier_ConfigSchema_Interchange_Id) {
+        if (!$id instanceof \WPDT\HTMLPurifier_ConfigSchema_Interchange_Id) {
             // handled by InterchangeBuilder
             $this->error(\false, 'is not an instance of HTMLPurifier_ConfigSchema_Interchange_Id');
         }
@@ -88,15 +88,15 @@ class HTMLPurifier_ConfigSchema_Validator
         try {
             // This also tests validity of $d->type
             $this->parser->parse($d->default, $d->type, $d->typeAllowsNull);
-        } catch (HTMLPurifier_VarParserException $e) {
+        } catch (\WPDT\HTMLPurifier_VarParserException $e) {
             $this->error('default', 'had error: ' . $e->getMessage());
         }
         // END - handled by InterchangeBuilder
         if (!\is_null($d->allowed) || !empty($d->valueAliases)) {
             // allowed and valueAliases require that we be dealing with
             // strings, so check for that early.
-            $d_int = HTMLPurifier_VarParser::$types[$d->type];
-            if (!isset(HTMLPurifier_VarParser::$stringTypes[$d_int])) {
+            $d_int = \WPDT\HTMLPurifier_VarParser::$types[$d->type];
+            if (!isset(\WPDT\HTMLPurifier_VarParser::$stringTypes[$d_int])) {
                 $this->error('type', 'must be a string type when used with allowed or value aliases');
             }
         }
@@ -197,7 +197,7 @@ class HTMLPurifier_ConfigSchema_Validator
      */
     protected function with($obj, $member)
     {
-        return new HTMLPurifier_ConfigSchema_ValidatorAtom($this->getFormattedContext(), $obj, $member);
+        return new \WPDT\HTMLPurifier_ConfigSchema_ValidatorAtom($this->getFormattedContext(), $obj, $member);
     }
     /**
      * Emits an error, providing helpful context.
@@ -210,7 +210,7 @@ class HTMLPurifier_ConfigSchema_Validator
         } else {
             $prefix = \ucfirst($this->getFormattedContext());
         }
-        throw new HTMLPurifier_ConfigSchema_Exception(\trim($prefix . ' ' . $msg));
+        throw new \WPDT\HTMLPurifier_ConfigSchema_Exception(\trim($prefix . ' ' . $msg));
     }
     /**
      * Returns a formatted context string.

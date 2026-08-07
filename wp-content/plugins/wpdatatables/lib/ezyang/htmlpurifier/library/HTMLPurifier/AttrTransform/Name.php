@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Pre-transform that changes deprecated name attribute to ID if necessary
  */
-class HTMLPurifier_AttrTransform_Name extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_Name extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

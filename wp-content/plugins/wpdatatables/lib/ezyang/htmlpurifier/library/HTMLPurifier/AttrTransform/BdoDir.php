@@ -6,7 +6,7 @@ namespace WPDT;
 /**
  * Post-transform that ensures that bdo tags have the dir attribute set.
  */
-class HTMLPurifier_AttrTransform_BdoDir extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_BdoDir extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @param array $attr

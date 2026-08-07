@@ -1470,6 +1470,11 @@ defined('ABSPATH') or die('Access denied.');
                                    role="tab"
                                    data-toggle="tab"><?php esc_html_e('Loader', 'wpdatatables'); ?></a>
                             </li>
+                            <li class="custom-strings-tab">
+                                <a href="#custom-strings" aria-controls="custom-strings"
+                                   role="tab"
+                                   data-toggle="tab"><?php esc_html_e('Custom Strings', 'wpdatatables'); ?></a>
+                            </li>
                             <?php do_action_deprecated('wdt_add_customize_table_configuration_tab', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tab'); ?>
                             <?php do_action('wpdatatables_add_customize_table_configuration_tab'); ?>
 
@@ -2209,6 +2214,33 @@ defined('ABSPATH') or die('Access denied.');
                                     </div>
                                 </div>
 
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="custom-strings">
+                                <div class="col-sm-4 m-b-16 custom-strings-empty-filtering-block">
+                                    <h4 class="c-title-color m-b-2">
+                                        <?php esc_html_e( 'Custom No Entries Message', 'wpdatatables' ); ?>
+                                        <i class=" wpdt-icon-info-circle-thin" data-popover-content="#custom-strings-empty-filtering-hint"
+                                           data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                                    </h4>
+
+                                    <!-- Hidden popover hint -->
+                                    <div class="hidden" id="custom-strings-empty-filtering-hint">
+                                        <div class="popover-heading">
+                                            <?php esc_html_e( 'Custom No Entries Message', 'wpdatatables' ); ?>
+                                        </div>
+
+                                        <div class="popover-body">
+                                            <?php esc_html_e( 'Define a custom message to be displayed when no matching records are found in the table after filtering. If left blank, the default message \'No matching records found\' will be used. ' , 'wpdatatables' ); ?>
+                                        </div>
+                                    </div>
+                                    <!-- /Hidden popover hint -->
+
+                                    <div class="fg-line form-group m-b-0">
+                                        <input id="wdt-custom-strings-empty-filtering" type="text" class="form-control input-sm"
+                                               placeholder="<?php esc_attr_e( 'No matching records found', 'wpdatatables' ); ?>">
+                                    </div>
+
+                                </div>
                             </div>
                             <!-- /Loader settings -->
                             <?php do_action_deprecated('wdt_add_customize_table_configuration_tabpanel', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_customize_table_configuration_tabpanel'); ?>

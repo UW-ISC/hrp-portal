@@ -6,7 +6,7 @@ namespace WPDT;
  * XHTML 1.1 Bi-directional Text Module, defines elements that
  * declare directionality of content. Text Extension Module.
  */
-class HTMLPurifier_HTMLModule_Bdo extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Bdo extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -22,7 +22,7 @@ class HTMLPurifier_HTMLModule_Bdo extends HTMLPurifier_HTMLModule
     public function setup($config)
     {
         $bdo = $this->addElement('bdo', 'Inline', 'Inline', array('Core', 'Lang'), array('dir' => 'Enum#ltr,rtl'));
-        $bdo->attr_transform_post[] = new HTMLPurifier_AttrTransform_BdoDir();
+        $bdo->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_BdoDir();
         $this->attr_collections['I18N']['dir'] = 'Enum#ltr,rtl';
     }
 }

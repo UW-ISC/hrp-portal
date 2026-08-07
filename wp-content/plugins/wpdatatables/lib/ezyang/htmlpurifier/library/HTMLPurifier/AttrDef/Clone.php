@@ -6,7 +6,7 @@ namespace WPDT;
  * Dummy AttrDef that mimics another AttrDef, BUT it generates clones
  * with make.
  */
-class HTMLPurifier_AttrDef_Clone extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_Clone extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * What we're cloning.

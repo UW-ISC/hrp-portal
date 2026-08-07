@@ -199,6 +199,58 @@ function wdtEncodeFilterOptionValue(value) {
 }
 
 /**
+ * Decode an encodeURI-encoded filter option value for search (mirrors selectboxSearch).
+ *
+ * @param {*} value
+ * @returns {string}
+ */
+function wdtDecodeFilterOptionValue(value) {
+    if (value == null || value === '') {
+        return '';
+    }
+
+    var str = String(value).replace(/%0D%0A|%0A/gi, ' ');
+
+    try {
+        return decodeURIComponent(str);
+    } catch (e) {
+        return str;
+    }
+}
+
+/**
+ * Escape regex metacharacters for client-side DataTables column search.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+function wdtEscapeFilterSearchRegex(value) {
+    if (typeof jQuery !== 'undefined'
+        && jQuery.fn
+        && jQuery.fn.dataTable
+        && jQuery.fn.dataTable.util
+        && typeof jQuery.fn.dataTable.util.escapeRegex === 'function') {
+        return jQuery.fn.dataTable.util.escapeRegex(String(value));
+    }
+
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Encode a raw database/default filter value the same way interactive controls do.
+ *
+ * @param {*} value
+ * @returns {string}
+ */
+function wdtNormalizeRawFilterValueForSearch(value) {
+    if (value != null && typeof value === 'object' && value.value != null) {
+        return wdtEncodeFilterOptionValue(value.value);
+    }
+
+    return wdtEncodeFilterOptionValue(value);
+}
+
+/**
  * Decode common HTML entities for filter value comparison without HTML parsing.
  *
  * @param {*} value
@@ -1371,12 +1423,12 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             for (i = 0; i < aoColumn.defaultValue.length; i++) {
                 if (typeof aoColumn.defaultValue[i] === 'object') {
                     select += buildSafeFilterOptionHtml(aoColumn.defaultValue[i].value, aoColumn.defaultValue[i].text, true);
-                    search += buildSearchStringForMultiFilters(aoColumn.defaultValue[i].value, aoColumn.exactFiltering);
+                    search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.defaultValue[i].value), aoColumn.exactFiltering, !serverSide);
                     oTable.api().column(columnIndex).search(search.substring(0, search.length - 1));
                 } else {
                     if (tableDescription.advanced_filter_option) aoColumn.defaultValue[i] = wdtreplaceHtmlEntitiesForSpecialCharaters(aoColumn.defaultValue[i]);
                     select += buildSafeFilterOptionHtml(aoColumn.defaultValue[i], aoColumn.defaultValue[i], true);
-                    search += buildSearchStringForMultiFilters(aoColumn.defaultValue[i], aoColumn.exactFiltering);
+                    search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.defaultValue[i]), aoColumn.exactFiltering, !serverSide);
                     oTable.api().column(columnIndex).search(search.substring(0, search.length - 1));
                 }
             }
@@ -1402,7 +1454,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             select += buildSafeFilterOptionHtml(aoColumn.values[j].value, aoColumn.values[j].label, !!selected);
             if (selected) {
                 selectedFilterValues.push(wdtEncodeFilterOptionValue(aoColumn.values[j].value));
-                search += buildSearchStringForMultiFilters(aoColumn.values[j].value, aoColumn.exactFiltering);
+                search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.values[j].value), aoColumn.exactFiltering, !serverSide);
                 oTable.api().column(columnIndex).search(search.substring(0, search.length - 1));
             }
         }
@@ -1537,7 +1589,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             var search = '';
             if (aoColumn.andLogic) {
                 for (var i = 0; i < aoColumn.defaultValue.length; i++) {
-                    search += buildAndSearchStringForMultiFilters(aoColumn.defaultValue[i], aoColumn.exactFiltering, i);
+                    search += buildAndSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.defaultValue[i]), aoColumn.exactFiltering, i, !serverSide);
                 }
                 if (aoColumn.exactFiltering) {
                     search = search.slice(0, -2);
@@ -1546,7 +1598,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
                 oTable.fnFilter(search, columnIndex, true, false);
             } else {
                 for (var i = 0; i < aoColumn.defaultValue.length; i++) {
-                    search += buildSearchStringForMultiFilters(aoColumn.defaultValue[i], aoColumn.exactFiltering);
+                    search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.defaultValue[i]), aoColumn.exactFiltering, !serverSide);
                 }
                 oTable.fnFilter(search.substring(0, search.length - 1), columnIndex, true, false);
             }
@@ -1571,7 +1623,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
 
         if (aoColumn.andLogic && !serverSide) {
             jQuery.each(selectedOptions, function (index, value) {
-                search += buildAndSearchStringForMultiFilters(value, aoColumn.exactFiltering, index);
+                search += buildAndSearchStringForMultiFilters(value, aoColumn.exactFiltering, index, true);
             });
             if (aoColumn.exactFiltering) {
                 search = search.slice(0, -2);
@@ -1585,12 +1637,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
                     var endIndex = value.lastIndexOf("%22");
                     value = value.substr(startIndex, endIndex - startIndex)
                 }
-                if (tableDescription.advanced_filter_option) {
-                    if (aoColumn.defaultValue[0] === '') {
-                        value = serverSide ? value : jQuery.fn.dataTable.util.escapeRegex(value);
-                    }
-                }
-                search += buildSearchStringForMultiFilters(value, aoColumn.exactFiltering);
+                search += buildSearchStringForMultiFilters(value, aoColumn.exactFiltering, !serverSide);
             });
             oTable.api().column(columnIndex).search(search.substring(0, search.length - 1), true, false);
         }
@@ -1676,10 +1723,10 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
                 '</div>';
         }
         if (checked && !useAndLogic) {
-            search += buildSearchStringForMultiFilters(encodeURI(value), aoColumn.exactFiltering);
+            search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(value), aoColumn.exactFiltering, !serverSide);
             oTable.api().column(columnIndex).search(search.substring(0, search.length - 1));
         } else if (checked) {
-            search += buildAndSearchStringForMultiFilters(value, aoColumn.exactFiltering, i++);
+            search += buildAndSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(value), aoColumn.exactFiltering, i++, !serverSide);
         }
     }
 
@@ -1702,7 +1749,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
     if (aoColumn.defaultValue[0] && !serverSide && !useAndLogic) {
         var search = '';
         for (var i = 0; i < aoColumn.defaultValue.length; i++) {
-            search += buildSearchStringForMultiFilters(aoColumn.defaultValue[i], aoColumn.exactFiltering);
+            search += buildSearchStringForMultiFilters(wdtNormalizeRawFilterValueForSearch(aoColumn.defaultValue[i]), aoColumn.exactFiltering, true);
         }
         oTable.fnFilter(search.substring(0, search.length - 1), columnIndex, true, false);
         fnOnFiltered();
@@ -1793,7 +1840,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         checkedInputs = jQuery(this).closest('#' + checkboxesDivId).find('input:checkbox:checked');
         useAndLogic = aoColumn.andLogic && !serverSide;
 
-        var checkedValue = jQuery(this).val().replaceAll('%0A', ' ');
+        var checkedValue = jQuery(this).val().replace(/%0D%0A|%0A/gi, ' ');
         if (checkedInputs.length <= 1) orderCheckbox = [];
         if (!jQuery(this).is(':checked')) {
             orderCheckbox = orderCheckbox.filter(function (value) {
@@ -1816,8 +1863,8 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
                 var endIndex = value.lastIndexOf("%22");
                 value = value.substr(startIndex, endIndex - startIndex)
             }
-            search += useAndLogic ? buildAndSearchStringForMultiFilters(value, aoColumn.exactFiltering, i)
-                : buildSearchStringForMultiFilters(value, aoColumn.exactFiltering);
+            search += useAndLogic ? buildAndSearchStringForMultiFilters(value, aoColumn.exactFiltering, i, !serverSide)
+                : buildSearchStringForMultiFilters(value, aoColumn.exactFiltering, !serverSide);
             i++;
         });
 
@@ -1957,17 +2004,21 @@ function getColumnDistinctValues(tableId, columnIndex, applySearch) {
  * @param value
  * @param exactFiltering
  */
-function buildSearchStringForMultiFilters(value, exactFiltering) {
+function buildSearchStringForMultiFilters(value, exactFiltering, escapeForRegex) {
     var search = '', or = '|';
+    var decodedValue = wdtDecodeFilterOptionValue(value);
 
-    var encodedValue = encodeURIComponent(value.toString().replace(/\+/g, '\\+'));
+    if (escapeForRegex) {
+        decodedValue = wdtEscapeFilterSearchRegex(decodedValue);
+    }
 
     if (exactFiltering) {
-        search = '^' + encodedValue + '$' + or;
+        search = '^' + decodedValue + '$' + or;
     } else {
-        search = encodedValue + or;
+        search = decodedValue + or;
     }
-    return decodeURIComponent(search);
+
+    return search;
 }
 
 /**
@@ -1975,19 +2026,26 @@ function buildSearchStringForMultiFilters(value, exactFiltering) {
  * @param value
  * @param exactFiltering
  * @param index
+ * @param escapeForRegex
  */
-function buildAndSearchStringForMultiFilters(value, exactFiltering, index) {
+function buildAndSearchStringForMultiFilters(value, exactFiltering, index, escapeForRegex) {
     var search = '';
+    var decodedValue = wdtDecodeFilterOptionValue(value);
+
+    if (escapeForRegex) {
+        decodedValue = wdtEscapeFilterSearchRegex(decodedValue);
+    }
 
     if (exactFiltering) {
         if (index === 0) {
             search = '^';
         }
-        search += value.toString().replace(/\+/g, '\\+') + ', ';
+        search += decodedValue + ', ';
     } else {
-        search = search + '(?=.*' + value.toString().replace(/\+/g, '\\+') + ')';
+        search = search + '(?=.*' + decodedValue + ')';
     }
-    return decodeURIComponent(search);
+
+    return search;
 }
 /**
  * Function that attach event on clear filters button

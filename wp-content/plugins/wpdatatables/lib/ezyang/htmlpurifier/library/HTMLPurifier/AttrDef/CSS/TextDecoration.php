@@ -7,7 +7,7 @@ namespace WPDT;
  * @note This class could be generalized into a version that acts sort of
  *       like Enum except you can compound the allowed values.
  */
-class HTMLPurifier_AttrDef_CSS_TextDecoration extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_TextDecoration extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param string $string

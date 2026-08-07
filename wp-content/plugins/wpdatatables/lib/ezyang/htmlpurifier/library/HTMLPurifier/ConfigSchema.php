@@ -57,7 +57,7 @@ class HTMLPurifier_ConfigSchema
     protected static $singleton;
     public function __construct()
     {
-        $this->defaultPlist = new HTMLPurifier_PropertyList();
+        $this->defaultPlist = new \WPDT\HTMLPurifier_PropertyList();
     }
     /**
      * Unserializes the default ConfigSchema.
@@ -81,11 +81,11 @@ class HTMLPurifier_ConfigSchema
     public static function instance($prototype = null)
     {
         if ($prototype !== null) {
-            HTMLPurifier_ConfigSchema::$singleton = $prototype;
-        } elseif (HTMLPurifier_ConfigSchema::$singleton === null || $prototype === \true) {
-            HTMLPurifier_ConfigSchema::$singleton = HTMLPurifier_ConfigSchema::makeFromSerial();
+            \WPDT\HTMLPurifier_ConfigSchema::$singleton = $prototype;
+        } elseif (\WPDT\HTMLPurifier_ConfigSchema::$singleton === null || $prototype === \true) {
+            \WPDT\HTMLPurifier_ConfigSchema::$singleton = \WPDT\HTMLPurifier_ConfigSchema::makeFromSerial();
         }
-        return HTMLPurifier_ConfigSchema::$singleton;
+        return \WPDT\HTMLPurifier_ConfigSchema::$singleton;
     }
     /**
      * Defines a directive for configuration
@@ -101,7 +101,7 @@ class HTMLPurifier_ConfigSchema
     public function add($key, $default, $type, $allow_null)
     {
         $obj = new \stdClass();
-        $obj->type = \is_int($type) ? $type : HTMLPurifier_VarParser::$types[$type];
+        $obj->type = \is_int($type) ? $type : \WPDT\HTMLPurifier_VarParser::$types[$type];
         if ($allow_null) {
             $obj->allow_null = \true;
         }

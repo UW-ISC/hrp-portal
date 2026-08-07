@@ -31,7 +31,7 @@ namespace WPDT;
  * mode, and we *must* wrap any stray tr segments with a tbody. But if
  * we don't run into any of them, just have tr tags is OK.
  */
-class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
+class HTMLPurifier_ChildDef_Table extends \WPDT\HTMLPurifier_ChildDef
 {
     /**
      * @type bool
@@ -76,7 +76,7 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
         // <tr>s with a <tbody>.
         $ws_accum =& $initial_ws;
         foreach ($children as $node) {
-            if ($node instanceof HTMLPurifier_Node_Comment) {
+            if ($node instanceof \WPDT\HTMLPurifier_Node_Comment) {
                 $ws_accum[] = $node;
                 continue;
             }
@@ -183,7 +183,7 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                         break;
                     case 'tr':
                         if ($current_tr_tbody === null) {
-                            $current_tr_tbody = new HTMLPurifier_Node_Element('tbody');
+                            $current_tr_tbody = new \WPDT\HTMLPurifier_Node_Element('tbody');
                             $ret[] = $current_tr_tbody;
                         }
                         $current_tr_tbody->children[] = $node;

@@ -6,7 +6,7 @@ namespace WPDT;
  * XHTML 1.1 Edit Module, defines editing-related elements. Text Extension
  * Module.
  */
-class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Edit extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -41,7 +41,7 @@ class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
             return \false;
         }
         $value = \explode('!', $def->content_model);
-        return new HTMLPurifier_ChildDef_Chameleon($value[0], $value[1]);
+        return new \WPDT\HTMLPurifier_ChildDef_Chameleon($value[0], $value[1]);
     }
 }
 // vim: et sw=4 sts=4

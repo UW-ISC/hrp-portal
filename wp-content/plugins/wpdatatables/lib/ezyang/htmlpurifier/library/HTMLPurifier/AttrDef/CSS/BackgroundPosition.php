@@ -40,7 +40,7 @@ namespace WPDT;
 /**
  * Validates the value of background-position.
  */
-class HTMLPurifier_AttrDef_CSS_BackgroundPosition extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_BackgroundPosition extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_AttrDef_CSS_Length
@@ -52,8 +52,8 @@ class HTMLPurifier_AttrDef_CSS_BackgroundPosition extends HTMLPurifier_AttrDef
     protected $percentage;
     public function __construct()
     {
-        $this->length = new HTMLPurifier_AttrDef_CSS_Length();
-        $this->percentage = new HTMLPurifier_AttrDef_CSS_Percentage();
+        $this->length = new \WPDT\HTMLPurifier_AttrDef_CSS_Length();
+        $this->percentage = new \WPDT\HTMLPurifier_AttrDef_CSS_Percentage();
     }
     /**
      * @param string $string

@@ -8,7 +8,7 @@ namespace WPDT;
  * This accepts integer pixels or percentages as lengths for certain
  * HTML attributes.
  */
-class HTMLPurifier_AttrDef_HTML_Length extends HTMLPurifier_AttrDef_HTML_Pixels
+class HTMLPurifier_AttrDef_HTML_Length extends \WPDT\HTMLPurifier_AttrDef_HTML_Pixels
 {
     /**
      * @param string $string

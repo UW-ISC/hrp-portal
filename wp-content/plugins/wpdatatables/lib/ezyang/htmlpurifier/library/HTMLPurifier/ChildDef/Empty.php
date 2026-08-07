@@ -9,7 +9,7 @@ namespace WPDT;
  *          before child definitions are parsed in earnest by
  *          HTMLPurifier_Strategy_FixNesting.
  */
-class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef
+class HTMLPurifier_ChildDef_Empty extends \WPDT\HTMLPurifier_ChildDef
 {
     /**
      * @type bool

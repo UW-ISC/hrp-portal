@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_AttrTransform_SafeEmbed extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_SafeEmbed extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type string

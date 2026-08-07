@@ -6,7 +6,7 @@ namespace WPDT;
  * Performs miscellaneous cross attribute validation and filtering for
  * input elements. This is meant to be a post-transform.
  */
-class HTMLPurifier_AttrTransform_Input extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_Input extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type HTMLPurifier_AttrDef_HTML_Pixels
@@ -14,7 +14,7 @@ class HTMLPurifier_AttrTransform_Input extends HTMLPurifier_AttrTransform
     protected $pixels;
     public function __construct()
     {
-        $this->pixels = new HTMLPurifier_AttrDef_HTML_Pixels();
+        $this->pixels = new \WPDT\HTMLPurifier_AttrDef_HTML_Pixels();
     }
     /**
      * @param array $attr

@@ -9,7 +9,7 @@ namespace WPDT;
  *          built-in strtolower and ctype_lower functions, which may
  *          cause problems with international comparisons
  */
-class HTMLPurifier_AttrDef_Enum extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_Enum extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Lookup table of valid values.
@@ -63,7 +63,7 @@ class HTMLPurifier_AttrDef_Enum extends HTMLPurifier_AttrDef
             $sensitive = \false;
         }
         $values = \explode(',', $string);
-        return new HTMLPurifier_AttrDef_Enum($values, $sensitive);
+        return new \WPDT\HTMLPurifier_AttrDef_Enum($values, $sensitive);
     }
 }
 // vim: et sw=4 sts=4

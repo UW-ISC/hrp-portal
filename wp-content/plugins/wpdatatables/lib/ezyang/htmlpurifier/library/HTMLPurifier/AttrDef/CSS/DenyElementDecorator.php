@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Decorator which enables CSS properties to be disabled for specific elements.
  */
-class HTMLPurifier_AttrDef_CSS_DenyElementDecorator extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_DenyElementDecorator extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_AttrDef

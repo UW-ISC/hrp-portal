@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_HTMLModule_Tidy_Transitional extends HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
+class HTMLPurifier_HTMLModule_Tidy_Transitional extends \WPDT\HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
 {
     /**
      * @type string

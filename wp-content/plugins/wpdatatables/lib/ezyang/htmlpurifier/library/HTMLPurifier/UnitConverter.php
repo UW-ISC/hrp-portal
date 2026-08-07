@@ -76,7 +76,7 @@ class HTMLPurifier_UnitConverter
         $n = $length->getN();
         $unit = $length->getUnit();
         if ($n === '0' || $unit === \false) {
-            return new HTMLPurifier_Length('0', \false);
+            return new \WPDT\HTMLPurifier_Length('0', \false);
         }
         $state = $dest_state = \false;
         foreach (self::$units as $k => $x) {
@@ -152,7 +152,7 @@ class HTMLPurifier_UnitConverter
             $n = \rtrim($n, '0');
         }
         $n = \rtrim($n, '.');
-        return new HTMLPurifier_Length($n, $unit);
+        return new \WPDT\HTMLPurifier_Length($n, $unit);
     }
     /**
      * Returns the number of significant figures in a string number.

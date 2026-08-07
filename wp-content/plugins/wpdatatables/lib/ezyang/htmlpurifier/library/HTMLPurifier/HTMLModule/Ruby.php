@@ -6,7 +6,7 @@ namespace WPDT;
  * XHTML 1.1 Ruby Annotation Module, defines elements that indicate
  * short runs of text alongside base text for annotation or pronunciation.
  */
-class HTMLPurifier_HTMLModule_Ruby extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Ruby extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

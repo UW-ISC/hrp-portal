@@ -36,7 +36,7 @@ class HTMLPurifier_Bootstrap
      */
     public static function autoload($class)
     {
-        $file = HTMLPurifier_Bootstrap::getPath($class);
+        $file = \WPDT\HTMLPurifier_Bootstrap::getPath($class);
         if (!$file) {
             return \false;
         }

@@ -139,7 +139,7 @@ class HTMLPurifier_HTMLModule
             $this->addElementToContentSet($element, $type);
         }
         // create element
-        $this->info[$element] = HTMLPurifier_ElementDef::create($content_model, $content_model_type, $attr);
+        $this->info[$element] = \WPDT\HTMLPurifier_ElementDef::create($content_model, $content_model_type, $attr);
         // literal object $contents means direct child manipulation
         if (!\is_string($contents)) {
             $this->info[$element]->child = $contents;
@@ -156,7 +156,7 @@ class HTMLPurifier_HTMLModule
     {
         if (!isset($this->info[$element])) {
             $this->elements[] = $element;
-            $this->info[$element] = new HTMLPurifier_ElementDef();
+            $this->info[$element] = new \WPDT\HTMLPurifier_ElementDef();
             $this->info[$element]->standalone = \false;
         } else {
             \trigger_error("Definition for {$element} already exists in module, cannot redefine");

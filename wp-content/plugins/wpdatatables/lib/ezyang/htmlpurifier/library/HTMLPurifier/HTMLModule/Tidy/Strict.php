@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_HTMLModule_Tidy_Strict extends HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
+class HTMLPurifier_HTMLModule_Tidy_Strict extends \WPDT\HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
 {
     /**
      * @type string
@@ -34,7 +34,7 @@ class HTMLPurifier_HTMLModule_Tidy_Strict extends HTMLPurifier_HTMLModule_Tidy_X
         if ($def->content_model_type != 'strictblockquote') {
             return parent::getChildDef($def);
         }
-        return new HTMLPurifier_ChildDef_StrictBlockquote($def->content_model);
+        return new \WPDT\HTMLPurifier_ChildDef_StrictBlockquote($def->content_model);
     }
 }
 // vim: et sw=4 sts=4

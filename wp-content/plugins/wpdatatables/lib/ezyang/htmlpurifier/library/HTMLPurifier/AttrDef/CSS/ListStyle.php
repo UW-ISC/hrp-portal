@@ -6,7 +6,7 @@ namespace WPDT;
  * Validates shorthand CSS property list-style.
  * @warning Does not support url tokens that have internal spaces.
  */
-class HTMLPurifier_AttrDef_CSS_ListStyle extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_ListStyle extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Local copy of validators.

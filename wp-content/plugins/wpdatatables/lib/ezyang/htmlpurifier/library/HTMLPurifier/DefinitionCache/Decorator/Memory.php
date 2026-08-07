@@ -7,7 +7,7 @@ namespace WPDT;
  * to PHP's memory; good for unit tests or circumstances where
  * there are lots of configuration objects floating around.
  */
-class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_DefinitionCache_Decorator
+class HTMLPurifier_DefinitionCache_Decorator_Memory extends \WPDT\HTMLPurifier_DefinitionCache_Decorator
 {
     /**
      * @type array
@@ -22,7 +22,7 @@ class HTMLPurifier_DefinitionCache_Decorator_Memory extends HTMLPurifier_Definit
      */
     public function copy()
     {
-        return new HTMLPurifier_DefinitionCache_Decorator_Memory();
+        return new \WPDT\HTMLPurifier_DefinitionCache_Decorator_Memory();
     }
     /**
      * @param HTMLPurifier_Definition $def

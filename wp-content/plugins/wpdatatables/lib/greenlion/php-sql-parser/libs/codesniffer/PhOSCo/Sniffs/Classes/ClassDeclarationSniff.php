@@ -29,7 +29,7 @@ namespace WPDT;
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
+class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements \WPDT\PHP_CodeSniffer_Sniff
 {
     /**
      * The number of spaces code should be indented.
@@ -56,7 +56,7 @@ class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sni
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $errorData = array($tokens[$stackPtr]['content']);

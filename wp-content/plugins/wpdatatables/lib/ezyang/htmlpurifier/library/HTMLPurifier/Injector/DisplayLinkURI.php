@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Injector that displays the URL of an anchor instead of linking to it, in addition to showing the text of the link.
  */
-class HTMLPurifier_Injector_DisplayLinkURI extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_DisplayLinkURI extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -29,7 +29,7 @@ class HTMLPurifier_Injector_DisplayLinkURI extends HTMLPurifier_Injector
         if (isset($token->start->attr['href'])) {
             $url = $token->start->attr['href'];
             unset($token->start->attr['href']);
-            $token = array($token, new HTMLPurifier_Token_Text(" ({$url})"));
+            $token = array($token, new \WPDT\HTMLPurifier_Token_Text(" ({$url})"));
         } else {
             // nothing to display
         }
