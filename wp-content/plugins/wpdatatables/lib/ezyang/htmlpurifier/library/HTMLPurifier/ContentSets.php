@@ -113,13 +113,13 @@ class HTMLPurifier_ContentSets
         }
         switch ($def->content_model_type) {
             case 'required':
-                return new HTMLPurifier_ChildDef_Required($value);
+                return new \WPDT\HTMLPurifier_ChildDef_Required($value);
             case 'optional':
-                return new HTMLPurifier_ChildDef_Optional($value);
+                return new \WPDT\HTMLPurifier_ChildDef_Optional($value);
             case 'empty':
-                return new HTMLPurifier_ChildDef_Empty();
+                return new \WPDT\HTMLPurifier_ChildDef_Empty();
             case 'custom':
-                return new HTMLPurifier_ChildDef_Custom($value);
+                return new \WPDT\HTMLPurifier_ChildDef_Custom($value);
         }
         // defer to its module
         $return = \false;

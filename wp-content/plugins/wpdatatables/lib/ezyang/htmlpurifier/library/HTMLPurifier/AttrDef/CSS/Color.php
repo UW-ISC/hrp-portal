@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates Color as defined by CSS.
  */
-class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Color extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_AttrDef_CSS_AlphaValue
@@ -13,7 +13,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
     protected $alpha;
     public function __construct()
     {
-        $this->alpha = new HTMLPurifier_AttrDef_CSS_AlphaValue();
+        $this->alpha = new \WPDT\HTMLPurifier_AttrDef_CSS_AlphaValue();
     }
     /**
      * @param string $color

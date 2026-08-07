@@ -16,6 +16,7 @@ return array(
     'WPDT\\PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'WPDT\\PHPSQLParser\\' => array($vendorDir . '/greenlion/php-sql-parser/src/PHPSQLParser'),
     'WPDT\\MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
+    'WPDT\\Melograno\\UsageTracker\\' => array($vendorDir . '/melograno/usage-tracker/src'),
     'WPDT\\Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'WPDT\\HTMLPurifier\\' => array($vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier'),
     'WPDT\\Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),

@@ -8,7 +8,7 @@ namespace WPDT;
  * only attached if Attr.TargetBlank is TRUE.  This works regardless
  * of whether or not Attr.AllowedFrameTargets
  */
-class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_TargetBlank extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type HTMLPurifier_URIParser
@@ -16,7 +16,7 @@ class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform
     private $parser;
     public function __construct()
     {
-        $this->parser = new HTMLPurifier_URIParser();
+        $this->parser = new \WPDT\HTMLPurifier_URIParser();
     }
     /**
      * @param array $attr

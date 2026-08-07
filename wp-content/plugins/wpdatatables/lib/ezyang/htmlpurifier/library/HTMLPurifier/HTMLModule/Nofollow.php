@@ -6,7 +6,7 @@ namespace WPDT;
  * Module adds the nofollow attribute transformation to a tags.  It
  * is enabled by HTML.Nofollow
  */
-class HTMLPurifier_HTMLModule_Nofollow extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Nofollow extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -18,7 +18,7 @@ class HTMLPurifier_HTMLModule_Nofollow extends HTMLPurifier_HTMLModule
     public function setup($config)
     {
         $a = $this->addBlankElement('a');
-        $a->attr_transform_post[] = new HTMLPurifier_AttrTransform_Nofollow();
+        $a->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_Nofollow();
     }
 }
 // vim: et sw=4 sts=4

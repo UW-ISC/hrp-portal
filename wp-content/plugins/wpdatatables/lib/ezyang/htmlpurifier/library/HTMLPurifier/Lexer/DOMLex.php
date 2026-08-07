@@ -25,7 +25,7 @@ namespace WPDT;
  *          around, you may want to run Tidy on the resulting output or use
  *          HTMLPurifier_DirectLex
  */
-class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
+class HTMLPurifier_Lexer_DOMLex extends \WPDT\HTMLPurifier_Lexer
 {
     /**
      * @type HTMLPurifier_TokenFactory
@@ -35,7 +35,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
     {
         // setup the factory
         parent::__construct();
-        $this->factory = new HTMLPurifier_TokenFactory();
+        $this->factory = new \WPDT\HTMLPurifier_TokenFactory();
     }
     /**
      * @param string $html
@@ -96,7 +96,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
     protected function tokenizeDOM($node, &$tokens, $config)
     {
         $level = 0;
-        $nodes = array($level => new HTMLPurifier_Queue(array($node)));
+        $nodes = array($level => new \WPDT\HTMLPurifier_Queue(array($node)));
         $closingNodes = array();
         do {
             while (!$nodes[$level]->isEmpty()) {
@@ -109,7 +109,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
                 }
                 if ($node->childNodes && $node->childNodes->length) {
                     $level++;
-                    $nodes[$level] = new HTMLPurifier_Queue();
+                    $nodes[$level] = new \WPDT\HTMLPurifier_Queue();
                     foreach ($node->childNodes as $childNode) {
                         $nodes[$level]->push($childNode);
                     }
@@ -189,7 +189,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
             $last = \end($tokens);
             $data = $node->data;
             // (note $node->tagname is already normalized)
-            if ($last instanceof HTMLPurifier_Token_Start && ($last->name == 'script' || $last->name == 'style')) {
+            if ($last instanceof \WPDT\HTMLPurifier_Token_Start && ($last->name == 'script' || $last->name == 'style')) {
                 $new_data = \trim($data);
                 if (\substr($new_data, 0, 4) === '<!--') {
                     $data = \substr($new_data, 4);

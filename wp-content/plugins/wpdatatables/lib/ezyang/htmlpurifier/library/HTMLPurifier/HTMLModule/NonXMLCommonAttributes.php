@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_HTMLModule_NonXMLCommonAttributes extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_NonXMLCommonAttributes extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

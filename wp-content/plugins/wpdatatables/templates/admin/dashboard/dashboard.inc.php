@@ -267,12 +267,13 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with a security bug fix:
+                            New update with a new feature and an improvement:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed SQL injection risks in date/time filters, foreign-key IN list construction, and MCP LIKE query handling.</li>
+                                <li><strong>Feature:</strong> Added ability to customize the "No matching records found" message per table via the Custom Strings tab in table settings.</li>
+                                <li><strong>Improvement:</strong> Optimized internal processing for tables and charts.</li>
                             </ul>
                         </div>
 
@@ -356,6 +357,20 @@
                                 </span>
                                 <?php
                                 if (extension_loaded('curl')) { ?>
+                                    <i class="wpdt-icon-check-circle-full"></i>
+                                <?php } else { ?>
+                                    <i class="wpdt-icon-times-circle-full"></i>
+                                <?php } ?>
+                            </li>
+                            <li>
+                                <span>
+                                    <?php esc_html_e('Usage tracking', 'wpdatatables'); ?>
+                                </span>
+                                <?php
+                                $wdtUsageTrackingEnabled = \WPDT\Melograno\UsageTracker\Core\UsageTracker::isConsentEnabled(
+                                    new \WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector()
+                                );
+                                if ($wdtUsageTrackingEnabled) { ?>
                                     <i class="wpdt-icon-check-circle-full"></i>
                                 <?php } else { ?>
                                     <i class="wpdt-icon-times-circle-full"></i>

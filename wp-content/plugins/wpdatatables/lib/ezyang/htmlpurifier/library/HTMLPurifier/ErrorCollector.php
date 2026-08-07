@@ -97,8 +97,8 @@ class HTMLPurifier_ErrorCollector
         // Top-level errors are either:
         //  TOKEN type, if $value is set appropriately, or
         //  "syntax" type, if $value is null
-        $new_struct = new HTMLPurifier_ErrorStruct();
-        $new_struct->type = HTMLPurifier_ErrorStruct::TOKEN;
+        $new_struct = new \WPDT\HTMLPurifier_ErrorStruct();
+        $new_struct->type = \WPDT\HTMLPurifier_ErrorStruct::TOKEN;
         if ($token) {
             $new_struct->value = clone $token;
         }
@@ -120,13 +120,13 @@ class HTMLPurifier_ErrorCollector
         \ksort($this->lines, \SORT_NUMERIC);
         // Now, check if we need to operate on a lower structure
         if (!empty($attr)) {
-            $struct = $struct->getChild(HTMLPurifier_ErrorStruct::ATTR, $attr);
+            $struct = $struct->getChild(\WPDT\HTMLPurifier_ErrorStruct::ATTR, $attr);
             if (!$struct->value) {
                 $struct->value = array($attr, 'PUT VALUE HERE');
             }
         }
         if (!empty($cssprop)) {
-            $struct = $struct->getChild(HTMLPurifier_ErrorStruct::CSSPROP, $cssprop);
+            $struct = $struct->getChild(\WPDT\HTMLPurifier_ErrorStruct::CSSPROP, $cssprop);
             if (!$struct->value) {
                 // if we tokenize CSS this might be a little more difficult to do
                 $struct->value = array($cssprop, 'PUT VALUE HERE');
@@ -151,7 +151,7 @@ class HTMLPurifier_ErrorCollector
     public function getHTMLFormatted($config, $errors = null)
     {
         $ret = array();
-        $this->generator = new HTMLPurifier_Generator($config, $this->context);
+        $this->generator = new \WPDT\HTMLPurifier_Generator($config, $this->context);
         if ($errors === null) {
             $errors = $this->errors;
         }

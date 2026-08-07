@@ -7,7 +7,7 @@ namespace WPDT;
  * poorly written HTML.
  * @todo Figure out how to protect some of these methods/properties
  */
-class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Tidy extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * List of supported levels.

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a ratio as defined by the CSS spec.
  */
-class HTMLPurifier_AttrDef_CSS_Ratio extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Ratio extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param   string               $ratio   Ratio to validate

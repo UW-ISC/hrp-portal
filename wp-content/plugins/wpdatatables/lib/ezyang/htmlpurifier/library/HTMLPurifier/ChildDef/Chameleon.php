@@ -11,7 +11,7 @@ namespace WPDT;
  * definitions depending on context.  While this somewhat generalized,
  * it is specifically intended for those two tags.
  */
-class HTMLPurifier_ChildDef_Chameleon extends HTMLPurifier_ChildDef
+class HTMLPurifier_ChildDef_Chameleon extends \WPDT\HTMLPurifier_ChildDef
 {
     /**
      * Instance of the definition object to use when inline. Usually stricter.
@@ -33,8 +33,8 @@ class HTMLPurifier_ChildDef_Chameleon extends HTMLPurifier_ChildDef
      */
     public function __construct($inline, $block)
     {
-        $this->inline = new HTMLPurifier_ChildDef_Optional($inline);
-        $this->block = new HTMLPurifier_ChildDef_Optional($block);
+        $this->inline = new \WPDT\HTMLPurifier_ChildDef_Optional($inline);
+        $this->block = new \WPDT\HTMLPurifier_ChildDef_Optional($block);
         $this->elements = $this->block->elements;
     }
     /**

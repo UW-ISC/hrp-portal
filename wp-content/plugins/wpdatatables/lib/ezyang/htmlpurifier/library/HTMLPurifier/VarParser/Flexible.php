@@ -7,7 +7,7 @@ namespace WPDT;
  * users. This may not be able to represent all possible data inputs,
  * however.
  */
-class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
+class HTMLPurifier_VarParser_Flexible extends \WPDT\HTMLPurifier_VarParser
 {
     /**
      * @param mixed $var
@@ -50,7 +50,7 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
                     } elseif ($var == 'off' || $var == 'false' || $var == '0') {
                         $var = \false;
                     } else {
-                        throw new HTMLPurifier_VarParserException("Unrecognized value '{$var}' for {$type}");
+                        throw new \WPDT\HTMLPurifier_VarParserException("Unrecognized value '{$var}' for {$type}");
                     }
                 }
                 return $var;

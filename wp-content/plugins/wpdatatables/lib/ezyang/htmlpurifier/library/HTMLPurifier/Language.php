@@ -67,7 +67,7 @@ class HTMLPurifier_Language
         if ($this->_loaded) {
             return;
         }
-        $factory = HTMLPurifier_LanguageFactory::instance();
+        $factory = \WPDT\HTMLPurifier_LanguageFactory::instance();
         $factory->loadLanguage($this->code);
         foreach ($factory->keys as $key) {
             $this->{$key} = $factory->cache[$this->code][$key];
@@ -146,7 +146,7 @@ class HTMLPurifier_Language
         $generator = \false;
         foreach ($args as $i => $value) {
             if (\is_object($value)) {
-                if ($value instanceof HTMLPurifier_Token) {
+                if ($value instanceof \WPDT\HTMLPurifier_Token) {
                     // factor this out some time
                     if (!$generator) {
                         $generator = $this->context->get('Generator');

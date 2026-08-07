@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates arbitrary text according to the HTML spec.
  */
-class HTMLPurifier_AttrDef_Text extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_Text extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @param string $string

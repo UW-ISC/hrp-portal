@@ -1,5 +1,8 @@
 <?php
 
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Core\UsageTracker;
+
 defined('ABSPATH') or die('Access denied.');
 
 /**
@@ -466,6 +469,8 @@ function wdtUninstallDelete()
         delete_option('wdtHighchartsCdnNotice');
         delete_option('wdtGlobalTableLoader');
         delete_option('wdtGlobalChartLoader');
+        UsageTracker::deleteStoredOptions(new WpDataTablesCollector());
+        delete_option('wpdatatables_usage_tracking_settings_optout_notice_handled');
 
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_columns");

@@ -64,8 +64,8 @@ class HTMLPurifier_HTMLModuleManager
     public function __construct()
     {
         // editable internal objects
-        $this->attrTypes = new HTMLPurifier_AttrTypes();
-        $this->doctypes = new HTMLPurifier_DoctypeRegistry();
+        $this->attrTypes = new \WPDT\HTMLPurifier_AttrTypes();
+        $this->doctypes = new \WPDT\HTMLPurifier_DoctypeRegistry();
         // setup basic modules
         $common = array(
             'CommonAttributes',
@@ -260,12 +260,12 @@ class HTMLPurifier_HTMLModuleManager
             }
         }
         // note the different choice
-        $this->contentSets = new HTMLPurifier_ContentSets(
+        $this->contentSets = new \WPDT\HTMLPurifier_ContentSets(
             // content set assembly deals with all possible modules,
             // not just ones deemed to be "safe"
             $this->modules
         );
-        $this->attrCollections = new HTMLPurifier_AttrCollections(
+        $this->attrCollections = new \WPDT\HTMLPurifier_AttrCollections(
             $this->attrTypes,
             // there is no way to directly disable a global attribute,
             // but using AllowedAttributes or simply not including

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Abstract class of a tag token (start, end or empty), and its behavior.
  */
-abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
+abstract class HTMLPurifier_Token_Tag extends \WPDT\HTMLPurifier_Token
 {
     /**
      * Static bool marker that indicates the class is a tag.
@@ -60,7 +60,7 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
     }
     public function toNode()
     {
-        return new HTMLPurifier_Node_Element($this->name, $this->attr, $this->line, $this->col, $this->armor);
+        return new \WPDT\HTMLPurifier_Node_Element($this->name, $this->attr, $this->line, $this->col, $this->armor);
     }
 }
 // vim: et sw=4 sts=4

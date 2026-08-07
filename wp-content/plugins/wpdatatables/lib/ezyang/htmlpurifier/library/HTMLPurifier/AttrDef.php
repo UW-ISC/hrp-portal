@@ -113,8 +113,8 @@ abstract class HTMLPurifier_AttrDef
                     // We have to be extremely careful when adding
                     // new characters, to make sure we're not breaking
                     // the encoding.
-                    $char = HTMLPurifier_Encoder::unichr(\hexdec($code));
-                    if (HTMLPurifier_Encoder::cleanUTF8($char) === '') {
+                    $char = \WPDT\HTMLPurifier_Encoder::unichr(\hexdec($code));
+                    if (\WPDT\HTMLPurifier_Encoder::cleanUTF8($char) === '') {
                         continue;
                     }
                     $ret .= $char;

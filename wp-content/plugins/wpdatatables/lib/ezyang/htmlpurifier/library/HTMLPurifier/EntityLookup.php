@@ -38,7 +38,7 @@ class HTMLPurifier_EntityLookup
         if ($prototype) {
             $instance = $prototype;
         } elseif (!$instance) {
-            $instance = new HTMLPurifier_EntityLookup();
+            $instance = new \WPDT\HTMLPurifier_EntityLookup();
             $instance->setup();
         }
         return $instance;

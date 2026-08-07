@@ -8,7 +8,7 @@ namespace WPDT;
  * A multilength is either a integer (pixel count), a percentage, or
  * a relative number.
  */
-class HTMLPurifier_AttrDef_HTML_MultiLength extends HTMLPurifier_AttrDef_HTML_Length
+class HTMLPurifier_AttrDef_HTML_MultiLength extends \WPDT\HTMLPurifier_AttrDef_HTML_Length
 {
     /**
      * @param string $string

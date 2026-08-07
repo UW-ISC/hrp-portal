@@ -14,7 +14,7 @@ class HTMLPurifier_ConfigSchema_Builder_ConfigSchema
      */
     public function build($interchange)
     {
-        $schema = new HTMLPurifier_ConfigSchema();
+        $schema = new \WPDT\HTMLPurifier_ConfigSchema();
         foreach ($interchange->directives as $d) {
             $schema->add($d->id->key, $d->default, $d->type, $d->typeAllowsNull);
             if ($d->allowed !== null) {

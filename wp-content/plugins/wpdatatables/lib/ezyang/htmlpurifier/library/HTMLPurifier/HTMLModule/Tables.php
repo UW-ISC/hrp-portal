@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * XHTML 1.1 Tables Module, fully defines accessible table elements.
  */
-class HTMLPurifier_HTMLModule_Tables extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Tables extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -17,7 +17,7 @@ class HTMLPurifier_HTMLModule_Tables extends HTMLPurifier_HTMLModule
     public function setup($config)
     {
         $this->addElement('caption', \false, 'Inline', 'Common');
-        $this->addElement('table', 'Block', new HTMLPurifier_ChildDef_Table(), 'Common', array('border' => 'Pixels', 'cellpadding' => 'Length', 'cellspacing' => 'Length', 'frame' => 'Enum#void,above,below,hsides,lhs,rhs,vsides,box,border', 'rules' => 'Enum#none,groups,rows,cols,all', 'summary' => 'Text', 'width' => 'Length'));
+        $this->addElement('table', 'Block', new \WPDT\HTMLPurifier_ChildDef_Table(), 'Common', array('border' => 'Pixels', 'cellpadding' => 'Length', 'cellspacing' => 'Length', 'frame' => 'Enum#void,above,below,hsides,lhs,rhs,vsides,box,border', 'rules' => 'Enum#none,groups,rows,cols,all', 'summary' => 'Text', 'width' => 'Length'));
         // common attributes
         $cell_align = array('align' => 'Enum#left,center,right,justify,char', 'charoff' => 'Length', 'valign' => 'Enum#top,middle,bottom,baseline');
         $cell_t = \array_merge(array(

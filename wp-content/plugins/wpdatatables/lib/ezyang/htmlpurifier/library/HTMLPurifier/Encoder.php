@@ -363,7 +363,7 @@ class HTMLPurifier_Encoder
             $str = \mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
             return $str;
         }
-        $bug = HTMLPurifier_Encoder::testIconvTruncateBug();
+        $bug = \WPDT\HTMLPurifier_Encoder::testIconvTruncateBug();
         if ($bug == self::ICONV_OK) {
             throw new \Exception('Encoding not supported, please install iconv');
         } else {

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates an integer representation of pixels according to the HTML spec.
  */
-class HTMLPurifier_AttrDef_HTML_Pixels extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_HTML_Pixels extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type int

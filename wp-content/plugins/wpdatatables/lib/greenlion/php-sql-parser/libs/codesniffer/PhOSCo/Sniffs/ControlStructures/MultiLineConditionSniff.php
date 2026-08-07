@@ -27,7 +27,7 @@ namespace WPDT;
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_ControlStructures_MultiLineConditionSniff implements PHP_CodeSniffer_Sniff
+class PhOSCo_Sniffs_ControlStructures_MultiLineConditionSniff implements \WPDT\PHP_CodeSniffer_Sniff
 {
     /**
      * The number of spaces code should be indented.
@@ -54,7 +54,7 @@ class PhOSCo_Sniffs_ControlStructures_MultiLineConditionSniff implements PHP_Cod
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         // We need to work out how far indented the if statement
@@ -105,7 +105,7 @@ class PhOSCo_Sniffs_ControlStructures_MultiLineConditionSniff implements PHP_Cod
                 }
                 if ($tokens[$i]['line'] !== $tokens[$closeBracket]['line']) {
                     $next = $phpcsFile->findNext(\T_WHITESPACE, $i, null, \true);
-                    if (\in_array($tokens[$next]['code'], PHP_CodeSniffer_Tokens::$booleanOperators) === \false) {
+                    if (\in_array($tokens[$next]['code'], \WPDT\PHP_CodeSniffer_Tokens::$booleanOperators) === \false) {
                         $error = 'Each line in a multi-line IF statement must begin with a boolean operator';
                         $phpcsFile->addError($error, $i, 'StartWithBoolean');
                     }

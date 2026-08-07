@@ -6,7 +6,7 @@ namespace WPDT;
  * Validates an IPv4 address
  * @author Feyd @ forums.devnetwork.net (public domain)
  */
-class HTMLPurifier_AttrDef_URI_IPv4 extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_URI_IPv4 extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * IPv4 regex, protected so that IPv6 can reuse it.

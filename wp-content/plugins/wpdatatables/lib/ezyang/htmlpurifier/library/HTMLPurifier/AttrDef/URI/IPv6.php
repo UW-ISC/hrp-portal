@@ -8,7 +8,7 @@ namespace WPDT;
  * @note This function requires brackets to have been removed from address
  *       in URI.
  */
-class HTMLPurifier_AttrDef_URI_IPv6 extends HTMLPurifier_AttrDef_URI_IPv4
+class HTMLPurifier_AttrDef_URI_IPv6 extends \WPDT\HTMLPurifier_AttrDef_URI_IPv4
 {
     /**
      * @param string $aIP

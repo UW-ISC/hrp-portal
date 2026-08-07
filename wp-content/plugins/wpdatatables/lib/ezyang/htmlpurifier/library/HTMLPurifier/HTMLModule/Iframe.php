@@ -9,7 +9,7 @@ namespace WPDT;
  * whitelisting mechanism is specified.  Currently, the only
  * such mechanism is %URL.SafeIframeRegexp
  */
-class HTMLPurifier_HTMLModule_Iframe extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_Iframe extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string

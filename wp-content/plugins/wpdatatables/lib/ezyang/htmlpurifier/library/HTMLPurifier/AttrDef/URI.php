@@ -6,7 +6,7 @@ namespace WPDT;
  * Validates a URI as defined by RFC 3986.
  * @note Scheme-specific mechanics deferred to HTMLPurifier_URIScheme
  */
-class HTMLPurifier_AttrDef_URI extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_URI extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_URIParser
@@ -21,7 +21,7 @@ class HTMLPurifier_AttrDef_URI extends HTMLPurifier_AttrDef
      */
     public function __construct($embeds_resource = \false)
     {
-        $this->parser = new HTMLPurifier_URIParser();
+        $this->parser = new \WPDT\HTMLPurifier_URIParser();
         $this->embedsResource = (bool) $embeds_resource;
     }
     /**
@@ -31,7 +31,7 @@ class HTMLPurifier_AttrDef_URI extends HTMLPurifier_AttrDef
     public function make($string)
     {
         $embeds = $string === 'embedded';
-        return new HTMLPurifier_AttrDef_URI($embeds);
+        return new \WPDT\HTMLPurifier_AttrDef_URI($embeds);
     }
     /**
      * @param string $uri

@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Decorator which enables !important to be used in CSS values.
  */
-class HTMLPurifier_AttrDef_CSS_ImportantDecorator extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_ImportantDecorator extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * @type HTMLPurifier_AttrDef

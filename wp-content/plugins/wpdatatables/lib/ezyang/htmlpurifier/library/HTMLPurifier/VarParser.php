@@ -42,10 +42,10 @@ class HTMLPurifier_VarParser
     public final function parse($var, $type, $allow_null = \false)
     {
         if (\is_string($type)) {
-            if (!isset(HTMLPurifier_VarParser::$types[$type])) {
-                throw new HTMLPurifier_VarParserException("Invalid type '{$type}'");
+            if (!isset(\WPDT\HTMLPurifier_VarParser::$types[$type])) {
+                throw new \WPDT\HTMLPurifier_VarParserException("Invalid type '{$type}'");
             } else {
-                $type = HTMLPurifier_VarParser::$types[$type];
+                $type = \WPDT\HTMLPurifier_VarParser::$types[$type];
             }
         }
         $var = $this->parseImplementation($var, $type, $allow_null);
@@ -125,7 +125,7 @@ class HTMLPurifier_VarParser
      */
     protected function error($msg)
     {
-        throw new HTMLPurifier_VarParserException($msg);
+        throw new \WPDT\HTMLPurifier_VarParserException($msg);
     }
     /**
      * Throws an inconsistency exception.
@@ -138,7 +138,7 @@ class HTMLPurifier_VarParser
      */
     protected function errorInconsistent($class, $type)
     {
-        throw new HTMLPurifier_Exception("Inconsistency in {$class}: " . HTMLPurifier_VarParser::getTypeName($type) . " not implemented");
+        throw new \WPDT\HTMLPurifier_Exception("Inconsistency in {$class}: " . \WPDT\HTMLPurifier_VarParser::getTypeName($type) . " not implemented");
     }
     /**
      * Generic error for if a type didn't work.
@@ -148,7 +148,7 @@ class HTMLPurifier_VarParser
     protected function errorGeneric($var, $type)
     {
         $vtype = \gettype($var);
-        $this->error("Expected type " . HTMLPurifier_VarParser::getTypeName($type) . ", got {$vtype}");
+        $this->error("Expected type " . \WPDT\HTMLPurifier_VarParser::getTypeName($type) . ", got {$vtype}");
     }
     /**
      * @param int $type
@@ -159,7 +159,7 @@ class HTMLPurifier_VarParser
         static $lookup;
         if (!$lookup) {
             // Lazy load the alternative lookup table
-            $lookup = \array_flip(HTMLPurifier_VarParser::$types);
+            $lookup = \array_flip(\WPDT\HTMLPurifier_VarParser::$types);
         }
         if (!isset($lookup[$type])) {
             return 'unknown';

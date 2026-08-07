@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates the border property as defined by CSS.
  */
-class HTMLPurifier_AttrDef_CSS_Border extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Border extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Local copy of properties this property is shorthand for.

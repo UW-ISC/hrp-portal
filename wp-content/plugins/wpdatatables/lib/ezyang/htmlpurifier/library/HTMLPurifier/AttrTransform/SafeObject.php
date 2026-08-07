@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Writes default type for all objects. Currently only supports flash.
  */
-class HTMLPurifier_AttrTransform_SafeObject extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_SafeObject extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type string

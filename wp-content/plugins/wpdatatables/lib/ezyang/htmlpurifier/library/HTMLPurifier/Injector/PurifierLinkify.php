@@ -6,7 +6,7 @@ namespace WPDT;
  * Injector that converts configuration directive syntax %Namespace.Directive
  * to links
  */
-class HTMLPurifier_Injector_PurifierLinkify extends HTMLPurifier_Injector
+class HTMLPurifier_Injector_PurifierLinkify extends \WPDT\HTMLPurifier_Injector
 {
     /**
      * @type string
@@ -51,11 +51,11 @@ class HTMLPurifier_Injector_PurifierLinkify extends HTMLPurifier_Injector
                 if ($bits[$i] === '') {
                     continue;
                 }
-                $token[] = new HTMLPurifier_Token_Text($bits[$i]);
+                $token[] = new \WPDT\HTMLPurifier_Token_Text($bits[$i]);
             } else {
-                $token[] = new HTMLPurifier_Token_Start('a', array('href' => \str_replace('%s', $bits[$i], $this->docURL)));
-                $token[] = new HTMLPurifier_Token_Text('%' . $bits[$i]);
-                $token[] = new HTMLPurifier_Token_End('a');
+                $token[] = new \WPDT\HTMLPurifier_Token_Start('a', array('href' => \str_replace('%s', $bits[$i], $this->docURL)));
+                $token[] = new \WPDT\HTMLPurifier_Token_Text('%' . $bits[$i]);
+                $token[] = new \WPDT\HTMLPurifier_Token_End('a');
             }
         }
     }

@@ -14,7 +14,7 @@ namespace WPDT;
  * @warning
  *      This class expects an injector to add the necessary parameters tags.
  */
-class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
+class HTMLPurifier_AttrTransform_SafeParam extends \WPDT\HTMLPurifier_AttrTransform
 {
     /**
      * @type string
@@ -30,9 +30,9 @@ class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
     public $wmode;
     public function __construct()
     {
-        $this->uri = new HTMLPurifier_AttrDef_URI(\true);
+        $this->uri = new \WPDT\HTMLPurifier_AttrDef_URI(\true);
         // embedded
-        $this->wmode = new HTMLPurifier_AttrDef_Enum(array('window', 'opaque', 'transparent'));
+        $this->wmode = new \WPDT\HTMLPurifier_AttrDef_Enum(array('window', 'opaque', 'transparent'));
     }
     /**
      * @param array $attr

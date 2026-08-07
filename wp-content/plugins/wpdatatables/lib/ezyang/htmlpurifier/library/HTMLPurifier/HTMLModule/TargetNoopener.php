@@ -6,7 +6,7 @@ namespace WPDT;
  * Module adds the target-based noopener attribute transformation to a tags.  It
  * is enabled by HTML.TargetNoopener
  */
-class HTMLPurifier_HTMLModule_TargetNoopener extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_TargetNoopener extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -18,6 +18,6 @@ class HTMLPurifier_HTMLModule_TargetNoopener extends HTMLPurifier_HTMLModule
     public function setup($config)
     {
         $a = $this->addBlankElement('a');
-        $a->attr_transform_post[] = new HTMLPurifier_AttrTransform_TargetNoopener();
+        $a->attr_transform_post[] = new \WPDT\HTMLPurifier_AttrTransform_TargetNoopener();
     }
 }

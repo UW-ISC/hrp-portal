@@ -64,10 +64,10 @@ msgstr ""
 #: source/class.wdtpermissionslisttable.php:262
 #: source/class.wdtpermissionslisttable.php:391
 #: source/class.wdttools.php:587
-#: source/class.wpdatatable.php:5137
-#: source/class.wpdatatable.php:5147
-#: source/class.wpdatatable.php:5153
-#: source/class.wpdatatable.php:5158
+#: source/class.wpdatatable.php:5149
+#: source/class.wpdatatable.php:5159
+#: source/class.wpdatatable.php:5165
+#: source/class.wpdatatable.php:5170
 #: templates/admin/chart_wizard/steps/step3.inc.php:103
 #: templates/admin/constructor/steps/query_builder_parts/constructor_2_posts.inc.php:54
 #: templates/admin/constructor/steps/query_builder_parts/constructor_2_posts.inc.php:73
@@ -86,7 +86,7 @@ msgstr ""
 #: admin/class.permissions.admin.php:254
 #: source/class.wdtpermissionslisttable.php:287
 #: source/class.wdtpermissionslisttable.php:417
-#: source/class.wpdatatable.php:5453
+#: source/class.wpdatatable.php:5465
 msgid "Edit"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgstr ""
 #: source/class.wdtpermissionslisttable.php:418
 #: source/class.wdttools.php:345
 #: source/class.wdttools.php:374
-#: source/class.wpdatatable.php:5451
+#: source/class.wpdatatable.php:5463
 #: templates/admin/browse/bulk_actions.inc.php:14
 #: templates/admin/permissions/modals.inc.php:258
 #: templates/common/delete_modal.inc.php:42
@@ -149,8 +149,8 @@ msgstr "Δημιουργία διαγράμματος"
 
 #: controllers/wdt_admin.php:60
 #: controllers/wdt_admin.php:61
-#: controllers/wdt_functions.php:2264
-#: templates/admin/dashboard/dashboard.inc.php:311
+#: controllers/wdt_functions.php:2269
+#: templates/admin/dashboard/dashboard.inc.php:312
 #: templates/admin/settings/settings.inc.php:21
 #: templates/admin/table-settings/simple_table_settings_block.inc.php:45
 #: templates/admin/table-settings/table_settings_block.inc.php:65
@@ -173,7 +173,7 @@ msgid "Get Help"
 msgstr "Ζητήστε βοήθεια"
 
 #: controllers/wdt_admin.php:102
-#: controllers/wdt_functions.php:2267
+#: controllers/wdt_functions.php:2272
 msgid "Add-ons"
 msgstr "Πρόσθετα"
 
@@ -212,52 +212,52 @@ msgstr "Αναβάθμιση"
 msgid "Welcome page"
 msgstr "Σελίδα καλωσορίσματος"
 
-#: controllers/wdt_admin_ajax_actions.php:155
+#: controllers/wdt_admin_ajax_actions.php:177
 msgid "API key is valid."
 msgstr "Το κλειδί API είναι έγκυρο."
 
-#: controllers/wdt_admin_ajax_actions.php:163
+#: controllers/wdt_admin_ajax_actions.php:185
 msgid "No results found. The Google Maps Geocoding API may not be enabled."
 msgstr "Δεν βρέθηκαν αποτελέσματα. Το Google Maps Geocoding API μπορεί να μην είναι ενεργοποιημένο."
 
-#: controllers/wdt_admin_ajax_actions.php:166
+#: controllers/wdt_admin_ajax_actions.php:188
 msgid "The Google Maps API usage limit has been exceeded. Check your billing status."
 msgstr "Το όριο χρήσης του Google Maps API έχει ξεπεραστεί. Ελέγξτε την κατάσταση χρέωσης."
 
-#: controllers/wdt_admin_ajax_actions.php:169
+#: controllers/wdt_admin_ajax_actions.php:191
 msgid "The Google Maps API request was denied. Check your API key and check your billing status."
 msgstr "Το αίτημα του Google Maps API απορρίφθηκε. Ελέγξτε το κλειδί API σας και ελέγξτε την κατάσταση χρέωσης."
 
-#: controllers/wdt_admin_ajax_actions.php:172
+#: controllers/wdt_admin_ajax_actions.php:194
 msgid "Invalid request. Check your API key and parameters."
 msgstr "Μη έγκυρο αίτημα. Ελέγξτε το κλειδί και τις παραμέτρους του API."
 
-#: controllers/wdt_admin_ajax_actions.php:175
+#: controllers/wdt_admin_ajax_actions.php:197
 msgid "Unknown error occurred."
 msgstr "Εμφανίστηκε άγνωστο σφάλμα."
 
-#: controllers/wdt_admin_ajax_actions.php:180
+#: controllers/wdt_admin_ajax_actions.php:202
 msgid "API key is invalid or there was an error."
 msgstr "Το κλειδί API είναι άκυρο ή υπήρξε σφάλμα."
 
-#: controllers/wdt_admin_ajax_actions.php:185
+#: controllers/wdt_admin_ajax_actions.php:207
 msgid "An error occurred while making the API request."
 msgstr "Παρουσιάστηκε σφάλμα κατά την εκτέλεση του αιτήματος API."
 
-#: controllers/wdt_admin_ajax_actions.php:780
+#: controllers/wdt_admin_ajax_actions.php:803
 msgid "There was an error while trying to import table"
 msgstr "Υπήρξε σφάλμα κατά την προσπάθεια εισαγωγής πίνακα"
 
-#: controllers/wdt_admin_ajax_actions.php:784
+#: controllers/wdt_admin_ajax_actions.php:807
 msgid "There was an error while trying to import table. Exception: "
 msgstr "Υπήρξε σφάλμα κατά την προσπάθεια εισαγωγής πίνακα. Εξαίρεση:"
 
-#: controllers/wdt_admin_ajax_actions.php:996
+#: controllers/wdt_admin_ajax_actions.php:1019
 msgid "Unable to retrieve data. Roots empty."
 msgstr "Αδυναμία ανάκτησης δεδομένων. Οι ρίζες είναι άδειες."
 
 #: controllers/wdt_ajax_actions.php:302
-#: source/class.wpdatatable.php:3534
+#: source/class.wpdatatable.php:3544
 msgid "You are trying to load a table of an unknown type. Probably you did not activate the addon which is required to use this table type."
 msgstr "Προσπαθείτε να φορτώσετε έναν πίνακα άγνωστου τύπου. Πιθανώς δεν έχετε ενεργοποιήσει το πρόσθετο που απαιτείται για τη χρήση αυτού του τύπου πίνακα."
 
@@ -322,122 +322,122 @@ msgstr "Η στήλη id που παρέχεται δεν υπάρχει."
 msgid "There was an error trying to delete row! Error: "
 msgstr "Υπήρξε σφάλμα κατά την προσπάθεια διαγραφής γραμμής! Σφάλμα:"
 
-#: controllers/wdt_functions.php:680
+#: controllers/wdt_functions.php:685
 msgid "Install failed."
 msgstr ""
 
-#: controllers/wdt_functions.php:883
-#: controllers/wdt_functions.php:904
+#: controllers/wdt_functions.php:888
+#: controllers/wdt_functions.php:909
 msgid "Security check failed."
 msgstr ""
 
-#: controllers/wdt_functions.php:887
-#: controllers/wdt_functions.php:908
+#: controllers/wdt_functions.php:892
+#: controllers/wdt_functions.php:913
 msgid "Unauthorized"
 msgstr ""
 
-#: controllers/wdt_functions.php:1077
+#: controllers/wdt_functions.php:1082
 msgid "You do not have permission to view this chart."
 msgstr ""
 
-#: controllers/wdt_functions.php:1083
-#: controllers/wdt_functions.php:1092
+#: controllers/wdt_functions.php:1088
+#: controllers/wdt_functions.php:1097
 msgid "wpDataChart with provided ID not found!"
 msgstr "wpDataChart με το παρεχόμενο ID δεν βρέθηκε!"
 
-#: controllers/wdt_functions.php:1133
-#: controllers/wdt_functions.php:1169
-#: controllers/wdt_functions.php:1613
-#: controllers/wdt_functions.php:1726
+#: controllers/wdt_functions.php:1138
+#: controllers/wdt_functions.php:1174
+#: controllers/wdt_functions.php:1618
+#: controllers/wdt_functions.php:1731
 msgid "wpDataTable with provided ID not found!"
 msgstr "wpDataTable με το παρεχόμενο ID δεν βρέθηκε!"
 
-#: controllers/wdt_functions.php:1164
-#: controllers/wdt_functions.php:1196
-#: controllers/wdt_functions.php:1206
+#: controllers/wdt_functions.php:1169
+#: controllers/wdt_functions.php:1201
+#: controllers/wdt_functions.php:1211
 msgid "Column key for provided table ID not found!"
 msgstr "Το κλειδί στήλης για το αναγνωριστικό του πίνακα που παρέχεται δεν βρέθηκε!"
 
-#: controllers/wdt_functions.php:1174
+#: controllers/wdt_functions.php:1179
 msgid "For getting cell value from simple table, column_id and column_id_value are not supported. Please use row_id."
 msgstr "Για τη λήψη της τιμής κελιού από απλό πίνακα, δεν υποστηρίζονται τα column_id και column_id_value. Παρακαλούμε χρησιμοποιήστε row_id."
 
-#: controllers/wdt_functions.php:1177
-#: controllers/wdt_functions.php:1193
-#: controllers/wdt_functions.php:1387
+#: controllers/wdt_functions.php:1182
+#: controllers/wdt_functions.php:1198
+#: controllers/wdt_functions.php:1392
 msgid "Row ID for provided table ID not found!"
 msgstr "Δεν βρέθηκε το αναγνωριστικό γραμμής για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1210
-#: controllers/wdt_functions.php:1216
+#: controllers/wdt_functions.php:1215
+#: controllers/wdt_functions.php:1221
 msgid "Column ID for provided table ID not found!"
 msgstr "Δεν βρέθηκε το αναγνωριστικό στήλης για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1213
-#: controllers/wdt_functions.php:1463
-#: controllers/wdt_functions.php:1510
+#: controllers/wdt_functions.php:1218
+#: controllers/wdt_functions.php:1468
+#: controllers/wdt_functions.php:1515
 msgid "Column ID value for provided table ID not found!"
 msgstr "Δεν βρέθηκε η τιμή ID στήλης για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1225
+#: controllers/wdt_functions.php:1230
 msgid "At the moment float, formula, date, datetime and time columns can not be used as column_id. Please use other column that contains unique identifiers."
 msgstr "Προς το παρόν, οι στήλες float, formula, date, datetime και time δεν μπορούν να χρησιμοποιηθούν ως column_id. Παρακαλούμε χρησιμοποιήστε άλλη στήλη που περιέχει μοναδικά αναγνωριστικά."
 
-#: controllers/wdt_functions.php:1228
+#: controllers/wdt_functions.php:1233
 msgid "Column Key an Column ID can not be the same!"
 msgstr "Το κλειδί στήλης και το αναγνωριστικό στήλης δεν μπορούν να είναι τα ίδια!"
 
-#: controllers/wdt_functions.php:1425
-#: controllers/wdt_functions.php:1432
+#: controllers/wdt_functions.php:1430
+#: controllers/wdt_functions.php:1437
 msgid "There was an error when trying to get cell value."
 msgstr "Υπήρξε σφάλμα κατά την προσπάθεια να ληφθεί η τιμή του κελιού."
 
-#: controllers/wdt_functions.php:1466
+#: controllers/wdt_functions.php:1471
 msgid "Row ID value for provided table ID not found!"
 msgstr "Δεν βρέθηκε η τιμή του αναγνωριστικού γραμμής για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1486
+#: controllers/wdt_functions.php:1491
 msgid "Table do not have data for provided table ID!"
 msgstr "Ο πίνακας δεν έχει δεδομένα για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1520
+#: controllers/wdt_functions.php:1525
 msgid "Entry ID not found! Please provide existing entry id from form."
 msgstr "Το αναγνωριστικό εισόδου δεν βρέθηκε! Παρακαλούμε δώστε το υπάρχον αναγνωριστικό εισόδου από τη φόρμα."
 
-#: controllers/wdt_functions.php:1529
+#: controllers/wdt_functions.php:1534
 msgid "Entry ID value for provided table ID not found!"
 msgstr "Δεν βρέθηκε η τιμή Entry ID για το αναγνωριστικό του πίνακα που δόθηκε!"
 
-#: controllers/wdt_functions.php:1606
+#: controllers/wdt_functions.php:1611
 msgid "You do not have permission to view this table."
 msgstr ""
 
-#: controllers/wdt_functions.php:1736
+#: controllers/wdt_functions.php:1741
 msgid "Provided column is not Integer or Float column type"
 msgstr "Εφόσον η στήλη δεν είναι τύπου Integer ή Float"
 
-#: controllers/wdt_functions.php:2207
-#: controllers/wdt_functions.php:2223
+#: controllers/wdt_functions.php:2212
+#: controllers/wdt_functions.php:2228
 msgid "settings"
 msgstr "ρυθμίσεις"
 
-#: controllers/wdt_functions.php:2210
-#: controllers/wdt_functions.php:2228
+#: controllers/wdt_functions.php:2215
+#: controllers/wdt_functions.php:2233
 #, fuzzy,php-format
 msgid "To receive automatic updates license activation is required. Please visit %s to activate wpDataTables."
 msgstr "Για να λαμβάνετε αυτόματες ενημερώσεις απαιτείται ενεργοποίηση της άδειας χρήσης. Παρακαλούμε επισκεφθείτε το %s για να ενεργοποιήσετε το wpDataTables."
 
-#: controllers/wdt_functions.php:2264
+#: controllers/wdt_functions.php:2269
 msgid "Go to Settings"
 msgstr "Μεταβείτε στις Ρυθμίσεις"
 
-#: controllers/wdt_functions.php:2270
-#: controllers/wdt_functions.php:2300
+#: controllers/wdt_functions.php:2275
+#: controllers/wdt_functions.php:2305
 msgid "Docs"
 msgstr "Έγγραφα"
 
-#: controllers/wdt_functions.php:2301
-#: templates/admin/dashboard/dashboard.inc.php:792
+#: controllers/wdt_functions.php:2306
+#: templates/admin/dashboard/dashboard.inc.php:807
 #: templates/admin/getting-started/getting_started.inc.php:257
 #: templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2633
 #: templates/admin/support/support.inc.php:24
@@ -2839,7 +2839,7 @@ msgid "Pick the vendor."
 msgstr "Διαλέξτε τον προμηθευτή."
 
 #: integrations/standard/separate-db-connection/templates/separate_connection_form.php:46
-#: templates/admin/dashboard/dashboard.inc.php:335
+#: templates/admin/dashboard/dashboard.inc.php:336
 msgid "MySQL"
 msgstr "MySQL"
 
@@ -3228,7 +3228,7 @@ msgid "Empty file"
 msgstr "Κενό αρχείο"
 
 #: integrations/starter/global-search-for-all-tables/templates/global_search_all_tables.inc.php:5
-#: source/class.wpdatatable.php:5519
+#: source/class.wpdatatable.php:5531
 msgid "Search table"
 msgstr "Πίνακας αναζήτησης"
 
@@ -3904,7 +3904,7 @@ msgstr "Κάντε κλικ για να αντιγράψετε τον σύντο
 
 #: source/class.wdtbrowsechartstable.php:164
 #: source/class.wdtbrowsetable.php:299
-#: source/class.wpdatatable.php:5454
+#: source/class.wpdatatable.php:5466
 #: templates/admin/browse/chart/duplicate_chart_modal.inc.php:48
 #: templates/admin/browse/table/duplicate_table_modal.inc.php:65
 msgid "Duplicate"
@@ -3912,7 +3912,7 @@ msgstr "Διπλό"
 
 #: source/class.wdtbrowsechartstable.php:170
 #: source/class.wdtbrowsetable.php:321
-#: templates/admin/dashboard/dashboard.inc.php:317
+#: templates/admin/dashboard/dashboard.inc.php:318
 msgid "Configure"
 msgstr "Ρύθμιση παραμέτρων"
 
@@ -4176,15 +4176,15 @@ msgid "Manual"
 msgstr "Χειροκίνητο"
 
 #: source/class.wdtbrowsetable.php:386
-#: source/class.wpdatatable.php:5308
-#: source/class.wpdatatable.php:5393
+#: source/class.wpdatatable.php:5320
+#: source/class.wpdatatable.php:5405
 #: templates/admin/table-settings/table_settings_block.inc.php:1302
 msgid "Excel"
 msgstr "Excel"
 
 #: source/class.wdtbrowsetable.php:388
-#: source/class.wpdatatable.php:5320
-#: source/class.wpdatatable.php:5406
+#: source/class.wpdatatable.php:5332
+#: source/class.wpdatatable.php:5418
 #: templates/admin/table-settings/table_settings_block.inc.php:1303
 msgid "CSV"
 msgstr "CSV"
@@ -4232,12 +4232,12 @@ msgstr "Δεν υπάρχουν wpDataTables στο σύστημα ακόμα."
 msgid "There was an error trying to fetch the table data: "
 msgstr "Υπήρξε σφάλμα κατά την προσπάθεια άντλησης των δεδομένων του πίνακα:"
 
-#: source/class.wdtconfigcontroller.php:1071
+#: source/class.wdtconfigcontroller.php:1074
 msgid "Table in data source has no rows."
 msgstr "Ο πίνακας στην πηγή δεδομένων δεν έχει γραμμές."
 
-#: source/class.wdtconfigcontroller.php:2030
-#: source/class.wdtconfigcontroller.php:2032
+#: source/class.wdtconfigcontroller.php:2034
+#: source/class.wdtconfigcontroller.php:2036
 msgid "Select a "
 msgstr ""
 
@@ -4262,7 +4262,7 @@ msgstr "Το λογιστικό φύλλο Google δεν έχει δεδομέν
 #: source/class.wdtsourcefile.php:405
 #: source/class.wdtsourcefile.php:471
 #: source/class.wdtsourcefile.php:1120
-#: source/class.wpdatatable.php:3709
+#: source/class.wpdatatable.php:3719
 msgid "There is no data in your source file. Please check your source file and try again."
 msgstr "Δεν υπάρχουν δεδομένα στο πηγαίο αρχείο σας. Ελέγξτε το αρχείο πηγής σας και προσπαθήστε ξανά."
 
@@ -4340,8 +4340,8 @@ msgstr ""
 
 #: source/class.wdttools.php:346
 #: source/class.wdttools.php:440
-#: source/class.wpdatatable.php:5333
-#: source/class.wpdatatable.php:5420
+#: source/class.wpdatatable.php:5345
+#: source/class.wpdatatable.php:5432
 #: templates/admin/table-settings/table_settings_block.inc.php:1304
 msgid "Copy"
 msgstr ""
@@ -4870,6 +4870,7 @@ msgstr ""
 
 #: source/class.wdttools.php:543
 #: source/class.wdttools.php:675
+#: templates/admin/table-settings/table_settings_block.inc.php:2240
 msgid "No matching records found"
 msgstr ""
 
@@ -4941,7 +4942,7 @@ msgid "Export table"
 msgstr ""
 
 #: source/class.wdttools.php:565
-#: source/class.wpdatatable.php:5452
+#: source/class.wpdatatable.php:5464
 msgid "New entry"
 msgstr ""
 
@@ -4958,7 +4959,7 @@ msgid "Duplicate row"
 msgstr ""
 
 #: source/class.wdttools.php:569
-#: source/class.wpdatatable.php:5232
+#: source/class.wpdatatable.php:5244
 #: templates/admin/table-settings/table_settings_block.inc.php:1181
 #: templates/frontend/filter_form.inc.php:41
 msgid "Clear filters"
@@ -6027,58 +6028,58 @@ msgstr "Μόνο μία στήλη μπορεί να είναι τύπου Strin
 msgid "You are mixing data types (several date axes and several number)"
 msgstr "Αναμιγνύετε τύπους δεδομένων (αρκετοί άξονες ημερομηνίας και αρκετοί αριθμοί)"
 
-#: source/class.wpdatatable.php:3365
+#: source/class.wpdatatable.php:3375
 msgid "No data fetched!  <br/> To create a wpDataTable, at least one row of data is required before saving. This ensures the table is generated correctly. If needed, you can remove the row later. <br/>"
 msgstr ""
 
-#: source/class.wpdatatable.php:3367
+#: source/class.wpdatatable.php:3377
 msgid "Rendered query: "
 msgstr ""
 
-#: source/class.wpdatatable.php:3369
+#: source/class.wpdatatable.php:3379
 msgid " MySQL said: "
 msgstr ""
 
-#: source/class.wpdatatable.php:3639
+#: source/class.wpdatatable.php:3649
 msgid "Excel file not found!"
 msgstr ""
 
-#: source/class.wpdatatable.php:4322
-#: source/class.wpdatatable.php:4341
-#: source/class.wpdatatable.php:4364
-#: source/class.wpdatatable.php:4372
+#: source/class.wpdatatable.php:4332
+#: source/class.wpdatatable.php:4351
+#: source/class.wpdatatable.php:4374
+#: source/class.wpdatatable.php:4382
 msgid "Unable to calculate"
 msgstr ""
 
-#: source/class.wpdatatable.php:4348
+#: source/class.wpdatatable.php:4358
 msgid "Result for first 5 rows: "
 msgstr ""
 
-#: source/class.wpdatatable.php:4350
-#: source/class.wpdatatable.php:4377
+#: source/class.wpdatatable.php:4360
+#: source/class.wpdatatable.php:4387
 msgid "Unable to calculate, error message: "
 msgstr ""
 
-#: source/class.wpdatatable.php:4374
+#: source/class.wpdatatable.php:4384
 msgid "Formula is good"
 msgstr ""
 
-#: source/class.wpdatatable.php:5263
+#: source/class.wpdatatable.php:5275
 #: templates/admin/table-settings/table_settings_block.inc.php:1301
 msgid "Print"
 msgstr ""
 
-#: source/class.wpdatatable.php:5265
+#: source/class.wpdatatable.php:5277
 msgid "Export"
 msgstr ""
 
-#: source/class.wpdatatable.php:5268
+#: source/class.wpdatatable.php:5280
 #: templates/admin/table-settings/columns_list_modal.inc.php:12
 msgid "Columns"
 msgstr "Στήλες"
 
-#: source/class.wpdatatable.php:5344
-#: source/class.wpdatatable.php:5432
+#: source/class.wpdatatable.php:5356
+#: source/class.wpdatatable.php:5444
 #: templates/admin/table-settings/table_settings_block.inc.php:1305
 msgid "PDF"
 msgstr ""
@@ -6088,12 +6089,12 @@ msgid "While wpDataTables itself provides quite a large amount of features and u
 msgstr "Ενώ το ίδιο το wpDataTables παρέχει αρκετά μεγάλο αριθμό χαρακτηριστικών και απεριόριστη ευελιξία προσαρμογής, μπορείτε να επιτύχετε ακόμη περισσότερα με τα πρόσθετα premium (εκτός από το πρόσθετο Forminator Forms integrations που είναι ΔΩΡΕΑΝ). Κάθε πρόσθετο σας προσφέρει κάποια μοναδική επέκταση της βασικής λειτουργικότητας. Θα υπάρξουν περισσότερα πρόσθετα που θα αναπτυχθούν με την πάροδο του χρόνου από τους δημιουργούς του wpDataTables και τους προγραμματιστές τρίτων, οπότε μείνετε συντονισμένοι.  Παρακαλούμε σημειώστε ότι τα πρόσθετα απαιτούν την έκδοση Premium του wpDataTables (εκτός από την ενσωμάτωση Forminator Froms που μπορεί να χρησιμοποιηθεί και με την έκδοση Lite)"
 
 #: templates/admin/addons/addons.inc.php:52
-#: templates/admin/dashboard/dashboard.inc.php:496
+#: templates/admin/dashboard/dashboard.inc.php:511
 msgid "Free"
 msgstr "Δωρεάν"
 
 #: templates/admin/addons/addons.inc.php:57
-#: templates/admin/dashboard/dashboard.inc.php:503
+#: templates/admin/dashboard/dashboard.inc.php:518
 msgid "Forminator Forms integration for wpDataTables"
 msgstr "Ενσωμάτωση Forminator Forms για wpDataTables"
 
@@ -6103,17 +6104,18 @@ msgstr "Ένα ισχυρό εργαλείο που προσθέτει το \"Fo
 
 #: templates/admin/addons/addons.inc.php:66
 #: templates/admin/chart_wizard/steps/step4.inc.php:2005
-#: templates/admin/dashboard/dashboard.inc.php:515
+#: templates/admin/dashboard/dashboard.inc.php:530
 msgid "Download"
 msgstr "Λήψη"
 
 #: templates/admin/addons/addons.inc.php:73
-#: templates/admin/dashboard/dashboard.inc.php:520
-#: templates/admin/dashboard/dashboard.inc.php:561
-#: templates/admin/dashboard/dashboard.inc.php:603
-#: templates/admin/dashboard/dashboard.inc.php:644
-#: templates/admin/dashboard/dashboard.inc.php:686
-#: templates/admin/dashboard/dashboard.inc.php:727
+#: templates/admin/dashboard/dashboard.inc.php:535
+#: templates/admin/dashboard/dashboard.inc.php:576
+#: templates/admin/dashboard/dashboard.inc.php:618
+#: templates/admin/dashboard/dashboard.inc.php:659
+#: templates/admin/dashboard/dashboard.inc.php:701
+#: templates/admin/dashboard/dashboard.inc.php:742
+#: templates/admin/settings/tabs/main_plugin_settings.php:496
 msgid "Learn more"
 msgstr "Μάθετε περισσότερα"
 
@@ -6123,12 +6125,12 @@ msgstr "Μάθετε περισσότερα"
 #: templates/admin/addons/addons.inc.php:189
 #: templates/admin/addons/addons.inc.php:227
 #: templates/admin/addons/addons.inc.php:263
-#: templates/admin/dashboard/dashboard.inc.php:527
-#: templates/admin/dashboard/dashboard.inc.php:569
-#: templates/admin/dashboard/dashboard.inc.php:611
-#: templates/admin/dashboard/dashboard.inc.php:652
-#: templates/admin/dashboard/dashboard.inc.php:694
-#: templates/admin/dashboard/dashboard.inc.php:735
+#: templates/admin/dashboard/dashboard.inc.php:542
+#: templates/admin/dashboard/dashboard.inc.php:584
+#: templates/admin/dashboard/dashboard.inc.php:626
+#: templates/admin/dashboard/dashboard.inc.php:667
+#: templates/admin/dashboard/dashboard.inc.php:709
+#: templates/admin/dashboard/dashboard.inc.php:750
 #: templates/admin/system-info/system_info.inc.php:284
 #: templates/admin/system-info/system_info.inc.php:306
 #: templates/admin/system-info/system_info.inc.php:325
@@ -6143,12 +6145,12 @@ msgid "NEW"
 msgstr "ΝΕΟ"
 
 #: templates/admin/addons/addons.inc.php:97
-#: templates/admin/dashboard/dashboard.inc.php:544
+#: templates/admin/dashboard/dashboard.inc.php:559
 msgid "Master Detail Tables for wpDataTables"
 msgstr "Κύριοι πίνακες λεπτομερειών για wpDataTables"
 
 #: templates/admin/addons/addons.inc.php:100
-#: templates/admin/dashboard/dashboard.inc.php:548
+#: templates/admin/dashboard/dashboard.inc.php:563
 msgid "A wpDataTables addon which allows showing additional details for a specific row in a popup or a separate page or post."
 msgstr "Ένα πρόσθετο wpDataTables που επιτρέπει την εμφάνιση πρόσθετων λεπτομερειών για μια συγκεκριμένη γραμμή σε ένα αναδυόμενο παράθυρο ή σε μια ξεχωριστή σελίδα ή ανάρτηση."
 
@@ -6165,16 +6167,16 @@ msgstr "Μάθετε περισσότερα"
 #: templates/admin/addons/addons.inc.php:183
 #: templates/admin/addons/addons.inc.php:221
 #: templates/admin/addons/addons.inc.php:257
-#: templates/admin/dashboard/dashboard.inc.php:557
-#: templates/admin/dashboard/dashboard.inc.php:599
-#: templates/admin/dashboard/dashboard.inc.php:640
-#: templates/admin/dashboard/dashboard.inc.php:682
-#: templates/admin/dashboard/dashboard.inc.php:723
+#: templates/admin/dashboard/dashboard.inc.php:572
+#: templates/admin/dashboard/dashboard.inc.php:614
+#: templates/admin/dashboard/dashboard.inc.php:655
+#: templates/admin/dashboard/dashboard.inc.php:697
+#: templates/admin/dashboard/dashboard.inc.php:738
 msgid "Purchase"
 msgstr "Αγορά"
 
 #: templates/admin/addons/addons.inc.php:135
-#: templates/admin/dashboard/dashboard.inc.php:586
+#: templates/admin/dashboard/dashboard.inc.php:601
 msgid "Powerful Filters for wpDataTables"
 msgstr "Ισχυρά φίλτρα για wpDataTables"
 
@@ -6183,32 +6185,32 @@ msgid "An add-on for wpDataTables that provides powerful filtering features: cas
 msgstr "Ένα πρόσθετο για το wpDataTables που παρέχει ισχυρά χαρακτηριστικά φιλτραρίσματος: κλιμακωτό φιλτράρισμα, εφαρμογή φίλτρων με κλικ στο κουμπί, εμφάνιση μόνο φίλτρου χωρίς τον πίνακα πριν ο χρήστης ορίσει τις τιμές αναζήτησης."
 
 #: templates/admin/addons/addons.inc.php:169
-#: templates/admin/dashboard/dashboard.inc.php:627
+#: templates/admin/dashboard/dashboard.inc.php:642
 msgid "Report Builder"
 msgstr "Δημιουργός αναφορών"
 
 #: templates/admin/addons/addons.inc.php:172
-#: templates/admin/dashboard/dashboard.inc.php:631
+#: templates/admin/dashboard/dashboard.inc.php:646
 msgid "A unique tool that allows you to generate almost any Word DOCX and Excel XLSX documents filled in with actual data from your database."
 msgstr "Ένα μοναδικό εργαλείο που σας επιτρέπει να δημιουργείτε σχεδόν οποιαδήποτε έγγραφα Word DOCX και Excel XLSX, τα οποία είναι συμπληρωμένα με πραγματικά δεδομένα από τη βάση δεδομένων σας."
 
 #: templates/admin/addons/addons.inc.php:205
-#: templates/admin/dashboard/dashboard.inc.php:669
+#: templates/admin/dashboard/dashboard.inc.php:684
 msgid "Formidable Forms integration for wpDataTables"
 msgstr "Ενσωμάτωση Formidable Forms για wpDataTables"
 
 #: templates/admin/addons/addons.inc.php:208
-#: templates/admin/dashboard/dashboard.inc.php:673
+#: templates/admin/dashboard/dashboard.inc.php:688
 msgid "Tool that adds \"Formidable Form\" as a new table type and allows you to create wpDataTables from Formidable Forms entries data."
 msgstr "Εργαλείο που προσθέτει τη \"Formidable Form\" ως νέο τύπο πίνακα και σας επιτρέπει να δημιουργείτε wpDataTables από δεδομένα καταχωρήσεων Formidable Forms."
 
 #: templates/admin/addons/addons.inc.php:241
-#: templates/admin/dashboard/dashboard.inc.php:710
+#: templates/admin/dashboard/dashboard.inc.php:725
 msgid "Gravity Forms integration for wpDataTables"
 msgstr "Ενσωμάτωση της Gravity Forms για wpDataTables"
 
 #: templates/admin/addons/addons.inc.php:244
-#: templates/admin/dashboard/dashboard.inc.php:714
+#: templates/admin/dashboard/dashboard.inc.php:729
 msgid "Tool that adds \"Gravity Form\" as a new table type and allows you to create wpDataTables from Gravity Forms entries data."
 msgstr "Εργαλείο που προσθέτει το \"Gravity Form\" ως νέο τύπο πίνακα και σας επιτρέπει να δημιουργείτε wpDataTables από δεδομένα καταχωρήσεων Gravity Forms."
 
@@ -6321,7 +6323,7 @@ msgstr "Ετικέτα"
 
 #: templates/admin/chart_wizard/chart_wizard.inc.php:158
 #: templates/admin/settings/tabs/color_and_font_settings.php:712
-#: templates/admin/table-settings/table_settings_block.inc.php:1993
+#: templates/admin/table-settings/table_settings_block.inc.php:1998
 msgid "Color"
 msgstr "Χρώμα"
 
@@ -7685,8 +7687,8 @@ msgstr ""
 #: templates/admin/settings/tabs/color_and_font_settings.php:111
 #: templates/admin/settings/tabs/color_and_font_settings.php:445
 #: templates/admin/settings/tabs/color_and_font_settings.php:691
-#: templates/admin/table-settings/table_settings_block.inc.php:1653
-#: templates/admin/table-settings/table_settings_block.inc.php:1971
+#: templates/admin/table-settings/table_settings_block.inc.php:1658
+#: templates/admin/table-settings/table_settings_block.inc.php:1976
 msgid "Background color"
 msgstr "Χρώμα φόντου"
 
@@ -7717,7 +7719,7 @@ msgstr ""
 #: templates/admin/chart_wizard/steps/step4.inc.php:1711
 #: templates/admin/settings/tabs/color_and_font_settings.php:130
 #: templates/admin/settings/tabs/color_and_font_settings.php:464
-#: templates/admin/table-settings/table_settings_block.inc.php:1674
+#: templates/admin/table-settings/table_settings_block.inc.php:1679
 msgid "Border color"
 msgstr "Χρώμα περιγράμματος"
 
@@ -7950,7 +7952,7 @@ msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:735
 #: templates/admin/settings/tabs/color_and_font_settings.php:45
-#: templates/admin/table-settings/table_settings_block.inc.php:1591
+#: templates/admin/table-settings/table_settings_block.inc.php:1596
 msgid "Font size"
 msgstr "Μέγεθος γραμματοσειράς"
 
@@ -7986,8 +7988,8 @@ msgstr ""
 #: templates/admin/settings/tabs/color_and_font_settings.php:76
 #: templates/admin/settings/tabs/color_and_font_settings.php:151
 #: templates/admin/settings/tabs/color_and_font_settings.php:485
-#: templates/admin/table-settings/table_settings_block.inc.php:1624
-#: templates/admin/table-settings/table_settings_block.inc.php:1696
+#: templates/admin/table-settings/table_settings_block.inc.php:1629
+#: templates/admin/table-settings/table_settings_block.inc.php:1701
 msgid "Font color"
 msgstr "Χρώμα γραμματοσειράς"
 
@@ -8657,7 +8659,7 @@ msgstr ""
 #: templates/admin/chart_wizard/steps/step4.inc.php:2179
 #: templates/admin/settings/tabs/charts.php:61
 #: templates/admin/settings/tabs/main_plugin_settings.php:474
-#: templates/admin/table-settings/table_settings_block.inc.php:2132
+#: templates/admin/table-settings/table_settings_block.inc.php:2137
 msgid "Loader visibility"
 msgstr "Ορατότητα φορτωτή"
 
@@ -8666,42 +8668,42 @@ msgid "Manage loader visibility while charts load"
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2185
-#: templates/admin/table-settings/table_settings_block.inc.php:2144
+#: templates/admin/table-settings/table_settings_block.inc.php:2149
 msgid "Enable this option to ensure loader is visible."
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2190
-#: templates/admin/table-settings/table_settings_block.inc.php:2155
+#: templates/admin/table-settings/table_settings_block.inc.php:2160
 msgid "Loader Color"
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2192
-#: templates/admin/table-settings/table_settings_block.inc.php:2158
+#: templates/admin/table-settings/table_settings_block.inc.php:2163
 msgid "This color is used for loader."
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2209
-#: templates/admin/table-settings/table_settings_block.inc.php:2177
+#: templates/admin/table-settings/table_settings_block.inc.php:2182
 msgid "Loader Animation Color"
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2211
-#: templates/admin/table-settings/table_settings_block.inc.php:2180
+#: templates/admin/table-settings/table_settings_block.inc.php:2185
 msgid "This color is used for loaders animation."
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2229
-#: templates/admin/table-settings/table_settings_block.inc.php:2200
+#: templates/admin/table-settings/table_settings_block.inc.php:2205
 msgid "Loader Style"
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2231
-#: templates/admin/table-settings/table_settings_block.inc.php:2203
+#: templates/admin/table-settings/table_settings_block.inc.php:2208
 msgid "Custom style for loader."
 msgstr ""
 
 #: templates/admin/chart_wizard/steps/step4.inc.php:2239
-#: templates/admin/table-settings/table_settings_block.inc.php:2207
+#: templates/admin/table-settings/table_settings_block.inc.php:2212
 msgid "Coming Soon..."
 msgstr ""
 
@@ -8950,7 +8952,7 @@ msgstr "Άνοιγμα σε επεξεργαστή που μοιάζει με τ
 #: templates/admin/table-settings/column_settings_panel.inc.php:1326
 #: templates/admin/table-settings/simple_table_settings_block.inc.php:727
 #: templates/admin/table-settings/table_preview_block.inc.php:96
-#: templates/admin/table-settings/table_settings_block.inc.php:2236
+#: templates/admin/table-settings/table_settings_block.inc.php:2268
 #: templates/admin/welcome_page/welcome_page.inc.php:238
 msgid "View Documentation"
 msgstr "Προβολή τεκμηρίωσης"
@@ -10298,51 +10300,51 @@ msgstr "Αυτή τη στιγμή χρησιμοποιείτε"
 msgid "Version "
 msgstr "Έκδοση"
 
-#: templates/admin/dashboard/dashboard.inc.php:286
+#: templates/admin/dashboard/dashboard.inc.php:287
 msgid "You are a premium user!"
 msgstr "Είστε premium χρήστης!"
 
-#: templates/admin/dashboard/dashboard.inc.php:292
+#: templates/admin/dashboard/dashboard.inc.php:293
 msgid "Manage your subscriptions"
 msgstr "Διαχειριστείτε τις συνδρομές σας"
 
-#: templates/admin/dashboard/dashboard.inc.php:299
+#: templates/admin/dashboard/dashboard.inc.php:300
 msgid "Thank you for choosing wpDataTables Premium"
 msgstr "Σας ευχαριστούμε που επιλέξατε το wpDataTables Premium"
 
-#: templates/admin/dashboard/dashboard.inc.php:301
+#: templates/admin/dashboard/dashboard.inc.php:302
 msgid "Enjoy using our premium features and professional support that we provide through our "
 msgstr "Απολαύστε τα premium χαρακτηριστικά μας και την επαγγελματική υποστήριξη που παρέχουμε μέσω του"
 
-#: templates/admin/dashboard/dashboard.inc.php:325
+#: templates/admin/dashboard/dashboard.inc.php:326
 msgid "Basic system info:"
 msgstr "Βασικές πληροφορίες συστήματος:"
 
-#: templates/admin/dashboard/dashboard.inc.php:328
+#: templates/admin/dashboard/dashboard.inc.php:329
 msgid "PHP"
 msgstr "PHP"
 
-#: templates/admin/dashboard/dashboard.inc.php:345
+#: templates/admin/dashboard/dashboard.inc.php:346
 msgid "Zip extension "
 msgstr "Επέκταση Zip"
 
-#: templates/admin/dashboard/dashboard.inc.php:355
+#: templates/admin/dashboard/dashboard.inc.php:356
 msgid "Curl extension "
 msgstr "Επέκταση μπούκλας"
 
-#: templates/admin/dashboard/dashboard.inc.php:367
+#: templates/admin/dashboard/dashboard.inc.php:382
 msgid "View Full System Info"
 msgstr "Προβολή πλήρων πληροφοριών συστήματος"
 
-#: templates/admin/dashboard/dashboard.inc.php:376
+#: templates/admin/dashboard/dashboard.inc.php:391
 msgid "News Blog"
 msgstr "Blog ειδήσεων"
 
-#: templates/admin/dashboard/dashboard.inc.php:381
+#: templates/admin/dashboard/dashboard.inc.php:396
 msgid "Checkout useful articles from wpdatatables.com"
 msgstr "Δείτε χρήσιμα άρθρα από το wpdatatables.com"
 
-#: templates/admin/dashboard/dashboard.inc.php:467
+#: templates/admin/dashboard/dashboard.inc.php:482
 msgid ""
 "Never miss notifications about new cool features, promotions,\n"
 "                                    giveaways or freebies – subscribe to our newsletter! Join 3000+ subscribers. We send\n"
@@ -10352,44 +10354,44 @@ msgstr ""
 "                                    δώρα ή δωρεάν προσφορές - εγγραφείτε στο ενημερωτικό μας δελτίο! Γίνετε μέλος 3000+ συνδρομητών. Στέλνουμε\n"
 "                                    περίπου 1 μήνυμα το μήνα και ποτέ δεν αποστέλλουμε spam!"
 
-#: templates/admin/dashboard/dashboard.inc.php:484
+#: templates/admin/dashboard/dashboard.inc.php:499
 msgid "wpDataTables Addons"
 msgstr "wpDataTables Πρόσθετα"
 
-#: templates/admin/dashboard/dashboard.inc.php:486
+#: templates/admin/dashboard/dashboard.inc.php:501
 msgid "While wpDataTables itself provides quite a large amount of features and unlimited customisation, flexibility, you can achieve even more with our premium addons."
 msgstr "Ενώ το ίδιο το wpDataTables παρέχει αρκετά μεγάλο αριθμό χαρακτηριστικών και απεριόριστη προσαρμογή, ευελιξία, μπορείτε να επιτύχετε ακόμη περισσότερα με τα premium πρόσθετα μας."
 
-#: templates/admin/dashboard/dashboard.inc.php:488
+#: templates/admin/dashboard/dashboard.inc.php:503
 msgid "(except Forminator Forms integration which is free and can be used with Lite version as well, all others requires wpDataTables Premium version)"
 msgstr "(εκτός από την ενσωμάτωση του Forminator Forms που είναι δωρεάν και μπορεί να χρησιμοποιηθεί και με την έκδοση Lite, όλες οι άλλες απαιτούν την έκδοση wpDataTables Premium)"
 
-#: templates/admin/dashboard/dashboard.inc.php:507
+#: templates/admin/dashboard/dashboard.inc.php:522
 msgid "Tool that adds \"Forminator Form\" as a new table type and allows you to create wpDataTables from Forminator Forms submissions."
 msgstr "Εργαλείο που προσθέτει το \"Forminator Form\" ως νέο τύπο πίνακα και σας επιτρέπει να δημιουργείτε wpDataTables από υποβολές φορμών Forminator Forms."
 
-#: templates/admin/dashboard/dashboard.inc.php:590
+#: templates/admin/dashboard/dashboard.inc.php:605
 msgid "An add-on for wpDataTables that provides powerful filtering features: cascade filtering, applying filters on button click, hide table before filtering."
 msgstr "Ένα πρόσθετο για το wpDataTables που παρέχει ισχυρά χαρακτηριστικά φιλτραρίσματος: κλιμακωτό φιλτράρισμα, εφαρμογή φίλτρων με κλικ στο κουμπί, απόκρυψη πίνακα πριν από το φιλτράρισμα."
 
-#: templates/admin/dashboard/dashboard.inc.php:746
+#: templates/admin/dashboard/dashboard.inc.php:761
 msgid "Need a booking plugin?"
 msgstr "Χρειάζεστε ένα πρόσθετο κράτησης"
 
-#: templates/admin/dashboard/dashboard.inc.php:755
+#: templates/admin/dashboard/dashboard.inc.php:770
 msgid "Appointments and Events WordPress Booking Plugin"
 msgstr "Ραντεβού και εκδηλώσεις WordPress Booking Plugin"
 
-#: templates/admin/dashboard/dashboard.inc.php:758
+#: templates/admin/dashboard/dashboard.inc.php:773
 #, php-format
 msgid "Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! %s businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage %s appointments and events worldwide each month."
 msgstr "Το Amelia είναι ένας απλός αλλά ισχυρός ειδικός σε θέματα αυτοματοποιημένων κρατήσεων, που λειτουργεί 24 ώρες το 24ωρο για να διασφαλίζει ότι οι πελάτες σας μπορούν να κλείνουν ραντεβού ή εκδηλώσεις και να πληρώνουν online ακόμη και όταν εσείς κοιμάστε! %s επιχειρήσεις από τους κλάδους της υγείας, της ομορφιάς, του αθλητισμού, της αυτοκινητοβιομηχανίας, της εκπαίδευσης, της δημιουργίας, του ανθρώπινου δυναμικού και άλλες βιομηχανίες χρησιμοποιούν το Amelia για την άψογη διαχείριση %s ραντεβού και εκδηλώσεων σε όλο τον κόσμο κάθε μήνα."
 
-#: templates/admin/dashboard/dashboard.inc.php:766
+#: templates/admin/dashboard/dashboard.inc.php:781
 msgid "Learn More"
 msgstr "Μάθετε περισσότερα"
 
-#: templates/admin/dashboard/dashboard.inc.php:777
+#: templates/admin/dashboard/dashboard.inc.php:792
 #: templates/admin/getting-started/getting_started.inc.php:241
 #: templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2617
 #: templates/admin/support/support.inc.php:87
@@ -10398,7 +10400,7 @@ msgstr "Μάθετε περισσότερα"
 msgid "Made by Melograno Venture Studio"
 msgstr ""
 
-#: templates/admin/dashboard/dashboard.inc.php:788
+#: templates/admin/dashboard/dashboard.inc.php:803
 #: templates/admin/getting-started/getting_started.inc.php:253
 #: templates/admin/lite-vs-premium/lite_vs_premium.inc.php:2629
 #: templates/admin/support/support.inc.php:45
@@ -11374,12 +11376,12 @@ msgstr "Για να χρησιμοποιήσετε το Maps JavaScript API κα
 #: templates/admin/settings/tabs/color_and_font_settings.php:18
 #: templates/admin/settings/tabs/color_and_font_settings.php:25
 #: templates/admin/table-settings/table_settings_block.inc.php:1442
-#: templates/admin/table-settings/table_settings_block.inc.php:1569
+#: templates/admin/table-settings/table_settings_block.inc.php:1574
 msgid "Font"
 msgstr "Γραμματοσειρά"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:27
-#: templates/admin/table-settings/table_settings_block.inc.php:1572
+#: templates/admin/table-settings/table_settings_block.inc.php:1577
 msgid "This font will be used in rendered tables. Leave blank not to override default theme settings"
 msgstr "Αυτή η γραμματοσειρά θα χρησιμοποιείται στους πίνακες που αποδίδονται. Αφήστε κενό για να μην παρακάμψετε τις προεπιλεγμένες ρυθμίσεις του θέματος"
 
@@ -11388,12 +11390,12 @@ msgid "Choose font for the table"
 msgstr "Επιλέξτε γραμματοσειρά για τον πίνακα"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:47
-#: templates/admin/table-settings/table_settings_block.inc.php:1594
+#: templates/admin/table-settings/table_settings_block.inc.php:1599
 msgid "Define the font size"
 msgstr "Ορίστε το μέγεθος της γραμματοσειράς"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:78
-#: templates/admin/table-settings/table_settings_block.inc.php:1627
+#: templates/admin/table-settings/table_settings_block.inc.php:1632
 msgid "This color is used for the main font in table cells."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για την κύρια γραμματοσειρά στα κελιά του πίνακα."
 
@@ -11404,27 +11406,27 @@ msgid "Header"
 msgstr "Κεφαλίδα"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:113
-#: templates/admin/table-settings/table_settings_block.inc.php:1656
+#: templates/admin/table-settings/table_settings_block.inc.php:1661
 msgid "The color is used for background of the table header."
 msgstr "Το χρώμα χρησιμοποιείται για το φόντο της κεφαλίδας του πίνακα."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:132
-#: templates/admin/table-settings/table_settings_block.inc.php:1677
+#: templates/admin/table-settings/table_settings_block.inc.php:1682
 msgid "This color is used for the border in the table header."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το περίγραμμα στην κεφαλίδα του πίνακα."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:153
-#: templates/admin/table-settings/table_settings_block.inc.php:1699
+#: templates/admin/table-settings/table_settings_block.inc.php:1704
 msgid "This color is used for the font in the table header."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για τη γραμματοσειρά στην κεφαλίδα του πίνακα."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:170
-#: templates/admin/table-settings/table_settings_block.inc.php:1717
+#: templates/admin/table-settings/table_settings_block.inc.php:1722
 msgid "Active and hover color\t"
 msgstr "Χρώμα ενεργού και hover"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:172
-#: templates/admin/table-settings/table_settings_block.inc.php:1720
+#: templates/admin/table-settings/table_settings_block.inc.php:1725
 msgid "This color is used when you hover the mouse above the table header, or when you choose a column."
 msgstr "Αυτό το χρώμα χρησιμοποιείται όταν μετακινείτε το ποντίκι πάνω από την επικεφαλίδα του πίνακα ή όταν επιλέγετε μια στήλη."
 
@@ -11434,47 +11436,47 @@ msgid "Table border"
 msgstr "Πίνακας περιθωρίου"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:208
-#: templates/admin/table-settings/table_settings_block.inc.php:1747
+#: templates/admin/table-settings/table_settings_block.inc.php:1752
 msgid "Inner border"
 msgstr "Εσωτερικά σύνορα"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:210
-#: templates/admin/table-settings/table_settings_block.inc.php:1750
+#: templates/admin/table-settings/table_settings_block.inc.php:1755
 msgid "This color is used for the inner border in the table between cells."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το εσωτερικό περίγραμμα στον πίνακα μεταξύ των κελιών."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:229
-#: templates/admin/table-settings/table_settings_block.inc.php:1769
+#: templates/admin/table-settings/table_settings_block.inc.php:1774
 msgid "Outer border"
 msgstr "Εξωτερικά σύνορα"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:231
-#: templates/admin/table-settings/table_settings_block.inc.php:1772
+#: templates/admin/table-settings/table_settings_block.inc.php:1777
 msgid "This color is used for the outer border of the whole table body."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το εξωτερικό περίγραμμα ολόκληρου του σώματος του πίνακα."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:250
-#: templates/admin/table-settings/table_settings_block.inc.php:1791
+#: templates/admin/table-settings/table_settings_block.inc.php:1796
 msgid "Table borders"
 msgstr "Πίνακας ορίων"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:252
-#: templates/admin/table-settings/table_settings_block.inc.php:1794
+#: templates/admin/table-settings/table_settings_block.inc.php:1799
 msgid "When this is checked, borders in table will be removed "
 msgstr "Όταν αυτό είναι επιλεγμένο, τα όρια στον πίνακα θα αφαιρεθούν"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:257
-#: templates/admin/table-settings/table_settings_block.inc.php:1800
+#: templates/admin/table-settings/table_settings_block.inc.php:1805
 msgid "Remove borders in table"
 msgstr "Αφαίρεση πλαισίων στον πίνακα"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:262
-#: templates/admin/table-settings/table_settings_block.inc.php:1805
+#: templates/admin/table-settings/table_settings_block.inc.php:1810
 msgid "Header border"
 msgstr "Όριο κεφαλίδας"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:264
-#: templates/admin/table-settings/table_settings_block.inc.php:1808
+#: templates/admin/table-settings/table_settings_block.inc.php:1813
 msgid "When this is checked,borders in header will be removed  "
 msgstr "Όταν αυτό είναι επιλεγμένο, τα όρια στην κεφαλίδα θα αφαιρεθούν"
 
@@ -11488,42 +11490,42 @@ msgid "Row color"
 msgstr "Χρώμα γραμμής"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:291
-#: templates/admin/table-settings/table_settings_block.inc.php:1827
+#: templates/admin/table-settings/table_settings_block.inc.php:1832
 msgid "Even row background"
 msgstr "Ακόμα και φόντο γραμμής"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:293
-#: templates/admin/table-settings/table_settings_block.inc.php:1830
+#: templates/admin/table-settings/table_settings_block.inc.php:1835
 msgid "This color is used for for background in even rows."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για φόντο σε ζυγές σειρές."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:310
-#: templates/admin/table-settings/table_settings_block.inc.php:1848
+#: templates/admin/table-settings/table_settings_block.inc.php:1853
 msgid "Odd row background"
 msgstr "Μοναδικό φόντο σειράς"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:312
-#: templates/admin/table-settings/table_settings_block.inc.php:1851
+#: templates/admin/table-settings/table_settings_block.inc.php:1856
 msgid "This color is used for for background in odd rows."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για φόντο σε μονές σειρές."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:329
-#: templates/admin/table-settings/table_settings_block.inc.php:1869
+#: templates/admin/table-settings/table_settings_block.inc.php:1874
 msgid "Hover row"
 msgstr "Σειρά αιώρησης"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:331
-#: templates/admin/table-settings/table_settings_block.inc.php:1872
+#: templates/admin/table-settings/table_settings_block.inc.php:1877
 msgid "This color is used for to highlight the row when you hover your mouse above it."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για την επισήμανση της γραμμής όταν περνάτε το ποντίκι σας από πάνω της."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:348
-#: templates/admin/table-settings/table_settings_block.inc.php:1890
+#: templates/admin/table-settings/table_settings_block.inc.php:1895
 msgid "Background for selected rows"
 msgstr "Φόντο για επιλεγμένες γραμμές"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:350
-#: templates/admin/table-settings/table_settings_block.inc.php:1893
+#: templates/admin/table-settings/table_settings_block.inc.php:1898
 msgid "This color is used for background in selected rows."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για φόντο στις επιλεγμένες γραμμές."
 
@@ -11533,22 +11535,22 @@ msgid "Cell color"
 msgstr "Χρώμα κυττάρου"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:386
-#: templates/admin/table-settings/table_settings_block.inc.php:1920
+#: templates/admin/table-settings/table_settings_block.inc.php:1925
 msgid "Sorted columns, even rows"
 msgstr "Ταξινομημένες στήλες, ζυγές γραμμές"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:388
-#: templates/admin/table-settings/table_settings_block.inc.php:1923
+#: templates/admin/table-settings/table_settings_block.inc.php:1928
 msgid "This color is used for background in cells which are in the active columns (columns used for sorting) in even rows."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για φόντο στα κελιά που βρίσκονται στις ενεργές στήλες (στήλες που χρησιμοποιούνται για την ταξινόμηση) σε ζυγές σειρές."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:407
-#: templates/admin/table-settings/table_settings_block.inc.php:1942
+#: templates/admin/table-settings/table_settings_block.inc.php:1947
 msgid "Sorted columns, odd rows"
 msgstr "Ταξινομημένες στήλες, μονές γραμμές"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:409
-#: templates/admin/table-settings/table_settings_block.inc.php:1945
+#: templates/admin/table-settings/table_settings_block.inc.php:1950
 msgid "This color is used for background in cells which are in the active columns (columns used for sorting) in odd rows."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για φόντο στα κελιά που βρίσκονται στις ενεργές στήλες (στήλες που χρησιμοποιούνται για την ταξινόμηση) σε μονές γραμμές."
 
@@ -11629,52 +11631,52 @@ msgid "This color will be used for overlay which appears below the plugin popups
 msgstr "Αυτό το χρώμα θα χρησιμοποιηθεί για την επικάλυψη που εμφανίζεται κάτω από τα αναδυόμενα παράθυρα του πρόσθετου."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:693
-#: templates/admin/table-settings/table_settings_block.inc.php:1974
+#: templates/admin/table-settings/table_settings_block.inc.php:1979
 msgid "This color is used for the background of the pagination"
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το φόντο της σελιδοποίησης"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:714
-#: templates/admin/table-settings/table_settings_block.inc.php:1996
+#: templates/admin/table-settings/table_settings_block.inc.php:2001
 msgid "This color is used for the color of the links in the pagination."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το χρώμα των συνδέσμων στην σελιδοποίηση."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:733
-#: templates/admin/table-settings/table_settings_block.inc.php:2015
+#: templates/admin/table-settings/table_settings_block.inc.php:2020
 msgid "Current page background color"
 msgstr "Χρώμα φόντου τρέχουσας σελίδας"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:735
-#: templates/admin/table-settings/table_settings_block.inc.php:2018
+#: templates/admin/table-settings/table_settings_block.inc.php:2023
 msgid "The color is used for background of the current page"
 msgstr "Το χρώμα χρησιμοποιείται για το φόντο της τρέχουσας σελίδας"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:753
-#: templates/admin/table-settings/table_settings_block.inc.php:2037
+#: templates/admin/table-settings/table_settings_block.inc.php:2042
 msgid "Current page color"
 msgstr "Χρώμα τρέχουσας σελίδας"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:755
-#: templates/admin/table-settings/table_settings_block.inc.php:2040
+#: templates/admin/table-settings/table_settings_block.inc.php:2045
 msgid "This color is used for the color of the current page."
 msgstr "Αυτό το χρώμα χρησιμοποιείται για το χρώμα της τρέχουσας σελίδας."
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:774
-#: templates/admin/table-settings/table_settings_block.inc.php:2059
+#: templates/admin/table-settings/table_settings_block.inc.php:2064
 msgid "Other pages hover background color"
 msgstr "Χρώμα φόντου άλλων σελίδων"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:776
-#: templates/admin/table-settings/table_settings_block.inc.php:2062
+#: templates/admin/table-settings/table_settings_block.inc.php:2067
 msgid "This background color is used when you hover the mouse above the other pages"
 msgstr "Αυτό το χρώμα φόντου χρησιμοποιείται όταν περνάτε το ποντίκι πάνω από τις άλλες σελίδες"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:794
-#: templates/admin/table-settings/table_settings_block.inc.php:2081
+#: templates/admin/table-settings/table_settings_block.inc.php:2086
 msgid "Other pages hover color"
 msgstr "Χρώμα άλλης σελίδας hover"
 
 #: templates/admin/settings/tabs/color_and_font_settings.php:796
-#: templates/admin/table-settings/table_settings_block.inc.php:2084
+#: templates/admin/table-settings/table_settings_block.inc.php:2089
 msgid "This color is used when you hover the mouse above the other pages."
 msgstr "Αυτό το χρώμα χρησιμοποιείται όταν περνάτε το ποντίκι πάνω από τις άλλες σελίδες."
 
@@ -11687,7 +11689,7 @@ msgid "This JS will be inserted as an inline script block on every page that has
 msgstr "Αυτό το JS θα εισαχθεί ως inline script block σε κάθε σελίδα που έχει ένα wpDataTable."
 
 #: templates/admin/settings/tabs/custom_js_and_css.php:31
-#: templates/admin/table-settings/table_settings_block.inc.php:2110
+#: templates/admin/table-settings/table_settings_block.inc.php:2115
 msgid "Custom wpDataTables CSS"
 msgstr "Προσαρμοσμένο wpDataTables CSS"
 
@@ -11716,17 +11718,17 @@ msgid "This feature streamlines workflow by eliminating the need for manual data
 msgstr "Αυτό το χαρακτηριστικό βελτιώνει τη ροή εργασίας εξαλείφοντας την ανάγκη για χειροκίνητη μεταφορά δεδομένων, δίνοντας στους χρήστες τη δυνατότητα να ενσωματώνουν χωρίς κόπο ζωντανά δεδομένα από τα ιδιωτικά τους φύλλα Google στους wpDataTables."
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:15
-#: templates/admin/table-settings/table_settings_block.inc.php:1487
+#: templates/admin/table-settings/table_settings_block.inc.php:1492
 msgid "Interface language"
 msgstr "Γλώσσα διεπαφής"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:17
-#: templates/admin/table-settings/table_settings_block.inc.php:1490
+#: templates/admin/table-settings/table_settings_block.inc.php:1495
 msgid "Pick the language which will be used in tables interface."
 msgstr "Επιλέξτε τη γλώσσα που θα χρησιμοποιηθεί στη διεπαφή πινάκων."
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:23
-#: templates/admin/table-settings/table_settings_block.inc.php:1496
+#: templates/admin/table-settings/table_settings_block.inc.php:1501
 msgid "English (default)"
 msgstr "Αγγλικά (προεπιλογή)"
 
@@ -11759,57 +11761,57 @@ msgid "Parse shortcodes in strings"
 msgstr "Ανάλυση σύντομων κωδικών σε συμβολοσειρές"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:108
-#: templates/admin/table-settings/table_settings_block.inc.php:1509
+#: templates/admin/table-settings/table_settings_block.inc.php:1514
 msgid "Base skin"
 msgstr "Βασικό δέρμα"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:110
-#: templates/admin/table-settings/table_settings_block.inc.php:1512
+#: templates/admin/table-settings/table_settings_block.inc.php:1517
 msgid "Choose the base skin for the plugin."
 msgstr "Επιλέξτε το βασικό skin για το πρόσθετο."
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:116
-#: templates/admin/table-settings/table_settings_block.inc.php:1519
+#: templates/admin/table-settings/table_settings_block.inc.php:1524
 msgid "Material"
 msgstr "Υλικό"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:117
-#: templates/admin/table-settings/table_settings_block.inc.php:1520
+#: templates/admin/table-settings/table_settings_block.inc.php:1525
 msgid "Light"
 msgstr "Φως"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:118
-#: templates/admin/table-settings/table_settings_block.inc.php:1521
+#: templates/admin/table-settings/table_settings_block.inc.php:1526
 msgid "Graphite"
 msgstr "Γραφίτης"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:119
-#: templates/admin/table-settings/table_settings_block.inc.php:1522
+#: templates/admin/table-settings/table_settings_block.inc.php:1527
 msgid "Aqua"
 msgstr "Aqua"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:120
-#: templates/admin/table-settings/table_settings_block.inc.php:1523
+#: templates/admin/table-settings/table_settings_block.inc.php:1528
 msgid "Purple"
 msgstr "Μωβ"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:121
-#: templates/admin/table-settings/table_settings_block.inc.php:1524
+#: templates/admin/table-settings/table_settings_block.inc.php:1529
 msgid "Dark"
 msgstr "Σκούρο"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:122
-#: templates/admin/table-settings/table_settings_block.inc.php:1525
+#: templates/admin/table-settings/table_settings_block.inc.php:1530
 msgid "Raspberry Cream"
 msgstr "Κρέμα βατόμουρου"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:123
-#: templates/admin/table-settings/table_settings_block.inc.php:1526
+#: templates/admin/table-settings/table_settings_block.inc.php:1531
 msgid "Mojito"
 msgstr "Mojito"
 
 #: templates/admin/settings/tabs/main_plugin_settings.php:124
-#: templates/admin/table-settings/table_settings_block.inc.php:1527
+#: templates/admin/table-settings/table_settings_block.inc.php:1532
 msgid "Dark Mojito"
 msgstr "Σκούρο Mojito"
 
@@ -14294,49 +14296,49 @@ msgstr ""
 msgid "Custom CSS"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1535
+#: templates/admin/table-settings/table_settings_block.inc.php:1540
 msgid "WCAG compatibility for table skin"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1543
+#: templates/admin/table-settings/table_settings_block.inc.php:1548
 msgid "Web Content Accessibility Guidelines"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1547
+#: templates/admin/table-settings/table_settings_block.inc.php:1552
 msgid "Enable this option to ensure table skin is WCAG compatible."
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1550
+#: templates/admin/table-settings/table_settings_block.inc.php:1555
 msgid "If you decide to enable this option, you might notice some changes in the appearance of the table. This is because we have fixed issues with low contrast or focus that were present before."
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1556
+#: templates/admin/table-settings/table_settings_block.inc.php:1561
 msgid "Make table skin WCAG compatible"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:1814
+#: templates/admin/table-settings/table_settings_block.inc.php:1819
 msgid "Remove borders in table header"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:2113
+#: templates/admin/table-settings/table_settings_block.inc.php:2118
 msgid "This CSS will be inserted as an inline style block on every page that has this wpDataTable."
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:2140
+#: templates/admin/table-settings/table_settings_block.inc.php:2145
 msgid "Manage loader visibility while tables load"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:2150
+#: templates/admin/table-settings/table_settings_block.inc.php:2155
 msgid "Enable table loader"
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:2256
+#: templates/admin/table-settings/table_settings_block.inc.php:2288
 msgid ""
 "Please note that enabling the \"Allow front-end editing\" option for tables, along with setting the \"Editor roles\" to \"Everyone\", \n"
 "                                grants all users, both authenticated and unauthenticated, the ability to manipulate table data on front-end pages or posts."
 msgstr ""
 
-#: templates/admin/table-settings/table_settings_block.inc.php:2260
+#: templates/admin/table-settings/table_settings_block.inc.php:2292
 msgid "It is recommended to selectively designate which Editor roles are permitted to modify table data for enhanced control and security."
 msgstr ""
 
@@ -14527,26 +14529,26 @@ msgstr "Σημείωση:"
 msgid "The wpDataTables plugin is disabled on your site until you fix the issue."
 msgstr "Το πρόσθετο wpDataTables είναι απενεργοποιημένο στον ιστότοπό σας μέχρι να διορθώσετε το πρόβλημα."
 
-#: wpdatatables.php:218
+#: wpdatatables.php:231
 msgid "wpDataTables MCP:"
 msgstr ""
 
 #. translators: 1: required WordPress version, 2: current WordPress version
-#: wpdatatables.php:237
+#: wpdatatables.php:250
 #, php-format
 msgid "MCP integration requires WordPress %1$s or newer. Your site is running WordPress %2$s."
 msgstr ""
 
-#: wpdatatables.php:250
+#: wpdatatables.php:263
 msgid "WordPress Abilities API"
 msgstr ""
 
-#: wpdatatables.php:254
+#: wpdatatables.php:267
 msgid "MCP Adapter"
 msgstr ""
 
 #. translators: %s: comma-separated list of missing components
-#: wpdatatables.php:260
+#: wpdatatables.php:273
 #, php-format
 msgid "MCP integration is unavailable because required components are missing: %s. Try reinstalling or updating wpDataTables."
 msgstr ""
@@ -14579,19 +14581,19 @@ msgstr ""
 msgid "Only wpDataTables shortcodes are allowed."
 msgstr ""
 
-#: source/class.wdtconfigcontroller.php:2061
+#: source/class.wdtconfigcontroller.php:2065
 msgid "Please create a wpDataChart first. You can check out how on this <a target=\"_blank\" rel=\"nofollow\" href=\"https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/\">link</a>."
 msgstr ""
 
-#: source/class.wdtconfigcontroller.php:2067
+#: source/class.wdtconfigcontroller.php:2071
 msgid "Please select a wpDataChart."
 msgstr ""
 
-#: source/class.wdtconfigcontroller.php:2073
+#: source/class.wdtconfigcontroller.php:2077
 msgid "Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target=\"_blank\" rel=\"nofollow\" href=\"https://wpdatatables.com/documentation/general/features-overview/\">link</a>."
 msgstr ""
 
-#: source/class.wdtconfigcontroller.php:2078
+#: source/class.wdtconfigcontroller.php:2082
 msgid "Please select a wpDataTable."
 msgstr ""
 
@@ -14606,4 +14608,33 @@ msgstr ""
 
 #: templates/admin/table-settings/table_settings_block.inc.php:1230
 msgid "Enable advanced special character filtering"
+msgstr ""
+
+#: templates/admin/dashboard/dashboard.inc.php:367
+msgid "Usage tracking"
+msgstr ""
+
+#: templates/admin/settings/tabs/main_plugin_settings.php:488
+msgid "Improve WPDataTables"
+msgstr ""
+
+#: templates/admin/settings/tabs/main_plugin_settings.php:494
+msgid "Help us improve WPDataTables by sharing anonymous data about your plugin usage. No personal data is collected."
+msgstr ""
+
+#: templates/admin/settings/tabs/main_plugin_settings.php:503
+msgid "Enable data usage"
+msgstr ""
+
+#: templates/admin/table-settings/table_settings_block.inc.php:1476
+msgid "Custom Strings"
+msgstr ""
+
+#: templates/admin/table-settings/table_settings_block.inc.php:2221
+#: templates/admin/table-settings/table_settings_block.inc.php:2229
+msgid "Custom No Entries Message"
+msgstr ""
+
+#: templates/admin/table-settings/table_settings_block.inc.php:2233
+msgid "Define a custom message to be displayed when no matching records are found in the table after filtering. If left blank, the default message 'No matching records found' will be used. "
 msgstr ""

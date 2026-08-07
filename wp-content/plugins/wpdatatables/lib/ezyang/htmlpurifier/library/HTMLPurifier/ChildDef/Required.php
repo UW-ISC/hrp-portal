@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Definition that allows a set of elements, but disallows empty children.
  */
-class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
+class HTMLPurifier_ChildDef_Required extends \WPDT\HTMLPurifier_ChildDef
 {
     /**
      * Lookup table of allowed elements.
@@ -81,13 +81,13 @@ class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
             if (!isset($this->elements[$node->name])) {
                 // special case text
                 // XXX One of these ought to be redundant or something
-                if ($pcdata_allowed && $node instanceof HTMLPurifier_Node_Text) {
+                if ($pcdata_allowed && $node instanceof \WPDT\HTMLPurifier_Node_Text) {
                     $result[] = $node;
                     continue;
                 }
                 // spill the child contents in
                 // ToDo: Make configurable
-                if ($node instanceof HTMLPurifier_Node_Element) {
+                if ($node instanceof \WPDT\HTMLPurifier_Node_Element) {
                     for ($i = \count($node->children) - 1; $i >= 0; $i--) {
                         $stack[] = $node->children[$i];
                     }

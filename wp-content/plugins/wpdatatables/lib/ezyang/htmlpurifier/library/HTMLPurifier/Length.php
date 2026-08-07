@@ -44,7 +44,7 @@ class HTMLPurifier_Length
      */
     public static function make($s)
     {
-        if ($s instanceof HTMLPurifier_Length) {
+        if ($s instanceof \WPDT\HTMLPurifier_Length) {
             return $s;
         }
         $n_length = \strspn($s, '1234567890.+-');
@@ -53,7 +53,7 @@ class HTMLPurifier_Length
         if ($unit === '') {
             $unit = \false;
         }
-        return new HTMLPurifier_Length($n, $unit);
+        return new \WPDT\HTMLPurifier_Length($n, $unit);
     }
     /**
      * Validates the number and unit.
@@ -71,11 +71,11 @@ class HTMLPurifier_Length
         if ($this->unit === \false || !\ctype_lower($this->unit)) {
             $this->unit = \strtolower($this->unit);
         }
-        if (!isset(HTMLPurifier_Length::$allowedUnits[$this->unit])) {
+        if (!isset(\WPDT\HTMLPurifier_Length::$allowedUnits[$this->unit])) {
             return \false;
         }
         // Hack:
-        $def = new HTMLPurifier_AttrDef_CSS_Number();
+        $def = new \WPDT\HTMLPurifier_AttrDef_CSS_Number();
         $result = $def->validate($this->n, \false, \false);
         if ($result === \false) {
             return \false;
@@ -134,7 +134,7 @@ class HTMLPurifier_Length
             return \false;
         }
         if ($l->unit !== $this->unit) {
-            $converter = new HTMLPurifier_UnitConverter();
+            $converter = new \WPDT\HTMLPurifier_UnitConverter();
             $l = $converter->convert($l, $this->unit);
             if ($l === \false) {
                 return \false;

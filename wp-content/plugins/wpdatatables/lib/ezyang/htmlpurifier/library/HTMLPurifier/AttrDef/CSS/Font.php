@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates shorthand CSS property font.
  */
-class HTMLPurifier_AttrDef_CSS_Font extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Font extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Local copy of validators

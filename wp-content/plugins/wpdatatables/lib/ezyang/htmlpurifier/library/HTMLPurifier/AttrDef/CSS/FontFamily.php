@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates a font family list according to CSS spec
  */
-class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_FontFamily extends \WPDT\HTMLPurifier_AttrDef
 {
     protected $mask = null;
     public function __construct()

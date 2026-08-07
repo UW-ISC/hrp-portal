@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Concrete element node class.
  */
-class HTMLPurifier_Node_Element extends HTMLPurifier_Node
+class HTMLPurifier_Node_Element extends \WPDT\HTMLPurifier_Node
 {
     /**
      * The lower-case name of the tag, like 'a', 'b' or 'blockquote'.
@@ -45,10 +45,10 @@ class HTMLPurifier_Node_Element extends HTMLPurifier_Node
     {
         // XXX inefficiency here, normalization is not necessary
         if ($this->empty) {
-            return array(new HTMLPurifier_Token_Empty($this->name, $this->attr, $this->line, $this->col, $this->armor), null);
+            return array(new \WPDT\HTMLPurifier_Token_Empty($this->name, $this->attr, $this->line, $this->col, $this->armor), null);
         } else {
-            $start = new HTMLPurifier_Token_Start($this->name, $this->attr, $this->line, $this->col, $this->armor);
-            $end = new HTMLPurifier_Token_End($this->name, array(), $this->endLine, $this->endCol, $this->endArmor);
+            $start = new \WPDT\HTMLPurifier_Token_Start($this->name, $this->attr, $this->line, $this->col, $this->armor);
+            $end = new \WPDT\HTMLPurifier_Token_End($this->name, array(), $this->endLine, $this->endCol, $this->endArmor);
             //$end->start = $start;
             return array($start, $end);
         }

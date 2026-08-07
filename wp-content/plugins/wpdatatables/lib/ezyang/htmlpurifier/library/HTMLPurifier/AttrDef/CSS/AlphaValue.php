@@ -2,7 +2,7 @@
 
 namespace WPDT;
 
-class HTMLPurifier_AttrDef_CSS_AlphaValue extends HTMLPurifier_AttrDef_CSS_Number
+class HTMLPurifier_AttrDef_CSS_AlphaValue extends \WPDT\HTMLPurifier_AttrDef_CSS_Number
 {
     public function __construct()
     {

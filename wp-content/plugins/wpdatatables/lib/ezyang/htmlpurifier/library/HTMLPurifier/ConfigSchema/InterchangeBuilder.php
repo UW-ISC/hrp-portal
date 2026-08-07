@@ -14,7 +14,7 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public function __construct($varParser = null)
     {
-        $this->varParser = $varParser ? $varParser : new HTMLPurifier_VarParser_Native();
+        $this->varParser = $varParser ? $varParser : new \WPDT\HTMLPurifier_VarParser_Native();
     }
     /**
      * @param string $dir
@@ -22,8 +22,8 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public static function buildFromDirectory($dir = null)
     {
-        $builder = new HTMLPurifier_ConfigSchema_InterchangeBuilder();
-        $interchange = new HTMLPurifier_ConfigSchema_Interchange();
+        $builder = new \WPDT\HTMLPurifier_ConfigSchema_InterchangeBuilder();
+        $interchange = new \WPDT\HTMLPurifier_ConfigSchema_Interchange();
         return $builder->buildDir($interchange, $dir);
     }
     /**
@@ -61,8 +61,8 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public function buildFile($interchange, $file)
     {
-        $parser = new HTMLPurifier_StringHashParser();
-        $this->build($interchange, new HTMLPurifier_StringHash($parser->parseFile($file)));
+        $parser = new \WPDT\HTMLPurifier_StringHashParser();
+        $this->build($interchange, new \WPDT\HTMLPurifier_StringHash($parser->parseFile($file)));
     }
     /**
      * Builds an interchange object based on a hash.
@@ -72,18 +72,18 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public function build($interchange, $hash)
     {
-        if (!$hash instanceof HTMLPurifier_StringHash) {
-            $hash = new HTMLPurifier_StringHash($hash);
+        if (!$hash instanceof \WPDT\HTMLPurifier_StringHash) {
+            $hash = new \WPDT\HTMLPurifier_StringHash($hash);
         }
         if (!isset($hash['ID'])) {
-            throw new HTMLPurifier_ConfigSchema_Exception('Hash does not have any ID');
+            throw new \WPDT\HTMLPurifier_ConfigSchema_Exception('Hash does not have any ID');
         }
         if (\strpos($hash['ID'], '.') === \false) {
             if (\count($hash) == 2 && isset($hash['DESCRIPTION'])) {
                 $hash->offsetGet('DESCRIPTION');
                 // prevent complaining
             } else {
-                throw new HTMLPurifier_ConfigSchema_Exception('All directives must have a namespace');
+                throw new \WPDT\HTMLPurifier_ConfigSchema_Exception('All directives must have a namespace');
             }
         } else {
             $this->buildDirective($interchange, $hash);
@@ -97,7 +97,7 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public function buildDirective($interchange, $hash)
     {
-        $directive = new HTMLPurifier_ConfigSchema_Interchange_Directive();
+        $directive = new \WPDT\HTMLPurifier_ConfigSchema_Interchange_Directive();
         // These are required elements:
         $directive->id = $this->id($hash->offsetGet('ID'));
         $id = $directive->id->toString();
@@ -109,13 +109,13 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
             }
             $directive->type = $type[0];
         } else {
-            throw new HTMLPurifier_ConfigSchema_Exception("TYPE in directive hash '{$id}' not defined");
+            throw new \WPDT\HTMLPurifier_ConfigSchema_Exception("TYPE in directive hash '{$id}' not defined");
         }
         if (isset($hash['DEFAULT'])) {
             try {
                 $directive->default = $this->varParser->parse($hash->offsetGet('DEFAULT'), $directive->type, $directive->typeAllowsNull);
-            } catch (HTMLPurifier_VarParserException $e) {
-                throw new HTMLPurifier_ConfigSchema_Exception($e->getMessage() . " in DEFAULT in directive hash '{$id}'");
+            } catch (\WPDT\HTMLPurifier_VarParserException $e) {
+                throw new \WPDT\HTMLPurifier_ConfigSchema_Exception($e->getMessage() . " in DEFAULT in directive hash '{$id}'");
             }
         }
         if (isset($hash['DESCRIPTION'])) {
@@ -177,7 +177,7 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     protected function id($id)
     {
-        return HTMLPurifier_ConfigSchema_Interchange_Id::make($id);
+        return \WPDT\HTMLPurifier_ConfigSchema_Interchange_Id::make($id);
     }
     /**
      * Triggers errors for any unused keys passed in the hash; such keys

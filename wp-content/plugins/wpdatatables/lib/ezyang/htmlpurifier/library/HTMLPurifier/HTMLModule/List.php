@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * XHTML 1.1 List Module, defines list-oriented elements. Core Module.
  */
-class HTMLPurifier_HTMLModule_List extends HTMLPurifier_HTMLModule
+class HTMLPurifier_HTMLModule_List extends \WPDT\HTMLPurifier_HTMLModule
 {
     /**
      * @type string
@@ -28,8 +28,8 @@ class HTMLPurifier_HTMLModule_List extends HTMLPurifier_HTMLModule
      */
     public function setup($config)
     {
-        $ol = $this->addElement('ol', 'List', new HTMLPurifier_ChildDef_List(), 'Common');
-        $ul = $this->addElement('ul', 'List', new HTMLPurifier_ChildDef_List(), 'Common');
+        $ol = $this->addElement('ol', 'List', new \WPDT\HTMLPurifier_ChildDef_List(), 'Common');
+        $ul = $this->addElement('ul', 'List', new \WPDT\HTMLPurifier_ChildDef_List(), 'Common');
         // XXX The wrap attribute is handled by MakeWellFormed.  This is all
         // quite unsatisfactory, because we generated this
         // *specifically* for lists, and now a big chunk of the handling

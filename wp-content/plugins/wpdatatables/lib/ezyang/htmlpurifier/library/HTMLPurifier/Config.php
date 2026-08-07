@@ -94,10 +94,10 @@ class HTMLPurifier_Config
     public function __construct($definition, $parent = null)
     {
         $parent = $parent ? $parent : $definition->defaultPlist;
-        $this->plist = new HTMLPurifier_PropertyList($parent);
+        $this->plist = new \WPDT\HTMLPurifier_PropertyList($parent);
         $this->def = $definition;
         // keep a copy around for checking
-        $this->parser = new HTMLPurifier_VarParser_Flexible();
+        $this->parser = new \WPDT\HTMLPurifier_VarParser_Flexible();
     }
     /**
      * Convenience constructor that creates a config object based on a mixed var
@@ -110,14 +110,14 @@ class HTMLPurifier_Config
      */
     public static function create($config, $schema = null)
     {
-        if ($config instanceof HTMLPurifier_Config) {
+        if ($config instanceof \WPDT\HTMLPurifier_Config) {
             // pass-through
             return $config;
         }
         if (!$schema) {
-            $ret = HTMLPurifier_Config::createDefault();
+            $ret = \WPDT\HTMLPurifier_Config::createDefault();
         } else {
-            $ret = new HTMLPurifier_Config($schema);
+            $ret = new \WPDT\HTMLPurifier_Config($schema);
         }
         if (\is_string($config)) {
             $ret->loadIni($config);
@@ -131,9 +131,9 @@ class HTMLPurifier_Config
      * @param HTMLPurifier_Config $config Configuration object to inherit from.
      * @return HTMLPurifier_Config object with $config as its parent.
      */
-    public static function inherit(HTMLPurifier_Config $config)
+    public static function inherit(\WPDT\HTMLPurifier_Config $config)
     {
-        return new HTMLPurifier_Config($config->def, $config->plist);
+        return new \WPDT\HTMLPurifier_Config($config->def, $config->plist);
     }
     /**
      * Convenience constructor that creates a default configuration object.
@@ -141,8 +141,8 @@ class HTMLPurifier_Config
      */
     public static function createDefault()
     {
-        $definition = HTMLPurifier_ConfigSchema::instance();
-        $config = new HTMLPurifier_Config($definition);
+        $definition = \WPDT\HTMLPurifier_ConfigSchema::instance();
+        $config = new \WPDT\HTMLPurifier_Config($definition);
         return $config;
     }
     /**
@@ -298,8 +298,8 @@ class HTMLPurifier_Config
         }
         try {
             $value = $this->parser->parse($value, $type, $allow_null);
-        } catch (HTMLPurifier_VarParserException $e) {
-            $this->triggerError('Value for ' . $key . ' is of invalid type, should be ' . HTMLPurifier_VarParser::getTypeName($type), \E_USER_WARNING);
+        } catch (\WPDT\HTMLPurifier_VarParserException $e) {
+            $this->triggerError('Value for ' . $key . ' is of invalid type, should be ' . \WPDT\HTMLPurifier_VarParser::getTypeName($type), \E_USER_WARNING);
             return;
         }
         if (\is_string($value) && \is_object($def)) {
@@ -411,7 +411,7 @@ class HTMLPurifier_Config
     public function getDefinition($type, $raw = \false, $optimized = \false)
     {
         if ($optimized && !$raw) {
-            throw new HTMLPurifier_Exception("Cannot set optimized = true when raw = false");
+            throw new \WPDT\HTMLPurifier_Exception("Cannot set optimized = true when raw = false");
         }
         if (!$this->finalized) {
             $this->autoFinalize();
@@ -419,7 +419,7 @@ class HTMLPurifier_Config
         // temporarily suspend locks, so we can handle recursive definition calls
         $lock = $this->lock;
         $this->lock = null;
-        $factory = HTMLPurifier_DefinitionCacheFactory::instance();
+        $factory = \WPDT\HTMLPurifier_DefinitionCacheFactory::instance();
         $cache = $factory->create($type, $this);
         $this->lock = $lock;
         if (!$raw) {
@@ -464,23 +464,23 @@ class HTMLPurifier_Config
             if ($optimized) {
                 if (\is_null($this->get($type . '.DefinitionID'))) {
                     // fatally error out if definition ID not set
-                    throw new HTMLPurifier_Exception("Cannot retrieve raw version without specifying %{$type}.DefinitionID");
+                    throw new \WPDT\HTMLPurifier_Exception("Cannot retrieve raw version without specifying %{$type}.DefinitionID");
                 }
             }
             if (!empty($this->definitions[$type])) {
                 $def = $this->definitions[$type];
                 if ($def->setup && !$optimized) {
                     $extra = $this->chatty ? " (try moving this code block earlier in your initialization)" : "";
-                    throw new HTMLPurifier_Exception("Cannot retrieve raw definition after it has already been setup" . $extra);
+                    throw new \WPDT\HTMLPurifier_Exception("Cannot retrieve raw definition after it has already been setup" . $extra);
                 }
                 if ($def->optimized === null) {
                     $extra = $this->chatty ? " (try flushing your cache)" : "";
-                    throw new HTMLPurifier_Exception("Optimization status of definition is unknown" . $extra);
+                    throw new \WPDT\HTMLPurifier_Exception("Optimization status of definition is unknown" . $extra);
                 }
                 if ($def->optimized !== $optimized) {
                     $msg = $optimized ? "optimized" : "unoptimized";
                     $extra = $this->chatty ? " (this backtrace is for the first inconsistent call, which was for a {$msg} raw definition)" : "";
-                    throw new HTMLPurifier_Exception("Inconsistent use of optimized and unoptimized raw definition retrievals" . $extra);
+                    throw new \WPDT\HTMLPurifier_Exception("Inconsistent use of optimized and unoptimized raw definition retrievals" . $extra);
                 }
             }
             // check if definition was in memory
@@ -524,7 +524,7 @@ class HTMLPurifier_Config
             $def->optimized = $optimized;
             return $def;
         }
-        throw new HTMLPurifier_Exception("The impossible happened!");
+        throw new \WPDT\HTMLPurifier_Exception("The impossible happened!");
     }
     /**
      * Initialise definition
@@ -538,13 +538,13 @@ class HTMLPurifier_Config
     {
         // quick checks failed, let's create the object
         if ($type == 'HTML') {
-            $def = new HTMLPurifier_HTMLDefinition();
+            $def = new \WPDT\HTMLPurifier_HTMLDefinition();
         } elseif ($type == 'CSS') {
-            $def = new HTMLPurifier_CSSDefinition();
+            $def = new \WPDT\HTMLPurifier_CSSDefinition();
         } elseif ($type == 'URI') {
-            $def = new HTMLPurifier_URIDefinition();
+            $def = new \WPDT\HTMLPurifier_URIDefinition();
         } else {
-            throw new HTMLPurifier_Exception("Definition of {$type} type not supported");
+            throw new \WPDT\HTMLPurifier_Exception("Definition of {$type} type not supported");
         }
         $this->definitions[$type] = $def;
         return $def;
@@ -611,7 +611,7 @@ class HTMLPurifier_Config
     public static function getAllowedDirectivesForForm($allowed, $schema = null)
     {
         if (!$schema) {
-            $schema = HTMLPurifier_ConfigSchema::instance();
+            $schema = \WPDT\HTMLPurifier_ConfigSchema::instance();
         }
         if ($allowed !== \true) {
             if (\is_string($allowed)) {
@@ -669,8 +669,8 @@ class HTMLPurifier_Config
      */
     public static function loadArrayFromForm($array, $index = \false, $allowed = \true, $mq_fix = \true, $schema = null)
     {
-        $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $schema);
-        $config = HTMLPurifier_Config::create($ret, $schema);
+        $ret = \WPDT\HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $schema);
+        $config = \WPDT\HTMLPurifier_Config::create($ret, $schema);
         return $config;
     }
     /**
@@ -683,7 +683,7 @@ class HTMLPurifier_Config
      */
     public function mergeArrayFromForm($array, $index = \false, $allowed = \true, $mq_fix = \true)
     {
-        $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $this->def);
+        $ret = \WPDT\HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $this->def);
         $this->loadArray($ret);
     }
     /**
@@ -704,7 +704,7 @@ class HTMLPurifier_Config
             $array = isset($array[$index]) && \is_array($array[$index]) ? $array[$index] : array();
         }
         $mq = $mq_fix && \version_compare(\PHP_VERSION, '7.4.0', '<') && \function_exists('get_magic_quotes_gpc') && \get_magic_quotes_gpc();
-        $allowed = HTMLPurifier_Config::getAllowedDirectivesForForm($allowed, $schema);
+        $allowed = \WPDT\HTMLPurifier_Config::getAllowedDirectivesForForm($allowed, $schema);
         $ret = array();
         foreach ($allowed as $key) {
             list($ns, $directive) = $key;

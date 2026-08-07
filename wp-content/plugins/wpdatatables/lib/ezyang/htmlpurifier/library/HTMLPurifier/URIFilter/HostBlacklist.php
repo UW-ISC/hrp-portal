@@ -6,7 +6,7 @@ namespace WPDT;
 // do not have canonical forms anymore. As far as I can tell, it's
 // not a problem (punycoding should be identity when no Unicode
 // points are involved), but I'm not 100% sure
-class HTMLPurifier_URIFilter_HostBlacklist extends HTMLPurifier_URIFilter
+class HTMLPurifier_URIFilter_HostBlacklist extends \WPDT\HTMLPurifier_URIFilter
 {
     /**
      * @type string

@@ -77,12 +77,12 @@ class HTMLPurifier_EntityParser
         $dec_part = isset($matches[2]) ? $matches[2] : null;
         $named_part = empty($matches[3]) ? empty($matches[4]) ? "" : $matches[4] : $matches[3];
         if ($hex_part !== NULL && $hex_part !== "") {
-            return HTMLPurifier_Encoder::unichr(\hexdec($hex_part));
+            return \WPDT\HTMLPurifier_Encoder::unichr(\hexdec($hex_part));
         } elseif ($dec_part !== NULL && $dec_part !== "") {
-            return HTMLPurifier_Encoder::unichr((int) $dec_part);
+            return \WPDT\HTMLPurifier_Encoder::unichr((int) $dec_part);
         } else {
             if (!$this->_entity_lookup) {
-                $this->_entity_lookup = HTMLPurifier_EntityLookup::instance();
+                $this->_entity_lookup = \WPDT\HTMLPurifier_EntityLookup::instance();
             }
             if (isset($this->_entity_lookup->table[$named_part])) {
                 return $this->_entity_lookup->table[$named_part];
@@ -148,13 +148,13 @@ class HTMLPurifier_EntityParser
             if (isset($this->_special_dec2str[$code])) {
                 return $entity;
             }
-            return HTMLPurifier_Encoder::unichr($code);
+            return \WPDT\HTMLPurifier_Encoder::unichr($code);
         } else {
             if (isset($this->_special_ent2dec[$matches[3]])) {
                 return $entity;
             }
             if (!$this->_entity_lookup) {
-                $this->_entity_lookup = HTMLPurifier_EntityLookup::instance();
+                $this->_entity_lookup = \WPDT\HTMLPurifier_EntityLookup::instance();
             }
             if (isset($this->_entity_lookup->table[$matches[3]])) {
                 return $this->_entity_lookup->table[$matches[3]];

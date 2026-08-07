@@ -8,7 +8,7 @@ namespace WPDT;
  *       values.
  * @note Assumes link types are ASCII text
  */
-class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_HTML_LinkTypes extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * Name config attribute to pull.

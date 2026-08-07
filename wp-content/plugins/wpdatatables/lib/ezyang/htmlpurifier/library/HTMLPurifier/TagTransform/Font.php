@@ -17,7 +17,7 @@ namespace WPDT;
  *          TagTransform operates before well-formedness is enforced, so
  *          the "active formatting elements" algorithm doesn't get applied.
  */
-class HTMLPurifier_TagTransform_Font extends HTMLPurifier_TagTransform
+class HTMLPurifier_TagTransform_Font extends \WPDT\HTMLPurifier_TagTransform
 {
     /**
      * @type string
@@ -35,7 +35,7 @@ class HTMLPurifier_TagTransform_Font extends HTMLPurifier_TagTransform
      */
     public function transform($tag, $config, $context)
     {
-        if ($tag instanceof HTMLPurifier_Token_End) {
+        if ($tag instanceof \WPDT\HTMLPurifier_Token_End) {
             $new_tag = clone $tag;
             $new_tag->name = $this->transform_to;
             return $new_tag;

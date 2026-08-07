@@ -17,11 +17,11 @@ namespace WPDT;
  */
 if (\class_exists('WPDT\\PHP_CodeSniffer_CommentParser_ClassCommentParser', \true) === \false) {
     $error = 'Class PHP_CodeSniffer_CommentParser_ClassCommentParser not found';
-    throw new PHP_CodeSniffer_Exception($error);
+    throw new \WPDT\PHP_CodeSniffer_Exception($error);
 }
 if (\class_exists('WPDT\\PhOSCo_Sniffs_Commenting_FileCommentSniff', \true) === \false) {
     $error = 'Class PhOSCo_Sniffs_Commenting_FileCommentSniff not found';
-    throw new PHP_CodeSniffer_Exception($error);
+    throw new \WPDT\PHP_CodeSniffer_Exception($error);
 }
 /**
  * Parses and verifies the doc comments for classes.
@@ -46,7 +46,7 @@ if (\class_exists('WPDT\\PhOSCo_Sniffs_Commenting_FileCommentSniff', \true) === 
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commenting_FileCommentSniff
+class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends \WPDT\PhOSCo_Sniffs_Commenting_FileCommentSniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -67,7 +67,7 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(\WPDT\PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $this->currentFile = $phpcsFile;
         $tokens = $phpcsFile->getTokens();
@@ -118,9 +118,9 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
         $comment = $phpcsFile->getTokensAsString($commentStart, $commentEnd - $commentStart + 1);
         // Parse the class comment.docblock.
         try {
-            $this->commentParser = new PHP_CodeSniffer_CommentParser_ClassCommentParser($comment, $phpcsFile);
+            $this->commentParser = new \WPDT\PHP_CodeSniffer_CommentParser_ClassCommentParser($comment, $phpcsFile);
             $this->commentParser->parse();
-        } catch (PHP_CodeSniffer_CommentParser_ParserException $e) {
+        } catch (\WPDT\PHP_CodeSniffer_CommentParser_ParserException $e) {
             $line = $e->getLineWithinComment() + $commentStart;
             $phpcsFile->addError($e->getMessage(), $line, 'FailedParse');
             return;

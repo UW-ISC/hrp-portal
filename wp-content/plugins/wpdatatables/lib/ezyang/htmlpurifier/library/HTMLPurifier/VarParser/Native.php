@@ -7,7 +7,7 @@ namespace WPDT;
  * this, it can represent all inputs; however, it is dangerous and cannot
  * be used by users.
  */
-class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
+class HTMLPurifier_VarParser_Native extends \WPDT\HTMLPurifier_VarParser
 {
     /**
      * @param mixed $var
@@ -29,7 +29,7 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
         $var = null;
         $result = eval("\$var = {$expr};");
         if ($result === \false) {
-            throw new HTMLPurifier_VarParserException("Fatal error in evaluated code");
+            throw new \WPDT\HTMLPurifier_VarParserException("Fatal error in evaluated code");
         }
         return $var;
     }

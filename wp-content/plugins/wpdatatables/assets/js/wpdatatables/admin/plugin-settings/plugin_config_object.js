@@ -350,5 +350,12 @@ var wpdatatable_plugin_config = {
         if (jQuery('#wdt-use-apexcharts-stable-version').val() != apexChartStableVersion) {
             jQuery('#wdt-use-apexcharts-stable-version').prop('checked', apexChartStableVersion);
         }
+    },
+
+    setUsageTrackingEnabled: function (usageTrackingEnabled) {
+        wdt_current_config.wdtUsageTrackingEnabled = usageTrackingEnabled;
+        if (jQuery('#wdt-usage-tracking-enabled').prop('checked') != usageTrackingEnabled) {
+            jQuery('#wdt-usage-tracking-enabled').prop('checked', usageTrackingEnabled);
+        }
     }
 };

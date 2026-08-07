@@ -447,7 +447,9 @@
         $('#wdt-pdf-page-orientation').change(function (e) {
             wpdatatable_config.setPdfPageOrientation($(this).val());
         });
-
+        $('#wdt-custom-strings-empty-filtering').change(function (e) {
+            wpdatatable_config.setCustomStringEmptyFiltering($(this).val());
+        });
         $('#wdt-custom-rows-per-page').change(function (e) {
             var isValidFormat = /^(-1|0|[1-9]\d*)(,(?!$)|,(?:-1|0|[1-9]\d*(?<!0))(?:(?!,,)(?<!0)\d*)*)*$/.test($(this).val());
             if (isValidFormat || $(this).val() === "") {

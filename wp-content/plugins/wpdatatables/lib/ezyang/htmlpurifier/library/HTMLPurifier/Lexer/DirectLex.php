@@ -12,7 +12,7 @@ namespace WPDT;
  *
  * @todo Reread XML spec and document differences.
  */
-class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
+class HTMLPurifier_Lexer_DirectLex extends \WPDT\HTMLPurifier_Lexer
 {
     /**
      * @type bool
@@ -110,7 +110,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
             }
             if (!$inside_tag && $position_next_lt !== \false) {
                 // We are not inside tag and there still is another tag to parse
-                $token = new HTMLPurifier_Token_Text($this->parseText(\substr($html, $cursor, $position_next_lt - $cursor), $config));
+                $token = new \WPDT\HTMLPurifier_Token_Text($this->parseText(\substr($html, $cursor, $position_next_lt - $cursor), $config));
                 if ($maintain_line_numbers) {
                     $token->rawPosition($current_line, $current_col);
                     $current_line += \substr_count($html, $nl, $cursor, $position_next_lt - $cursor);
@@ -126,7 +126,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                     break;
                 }
                 // Create Text of rest of string
-                $token = new HTMLPurifier_Token_Text($this->parseText(\substr($html, $cursor), $config));
+                $token = new \WPDT\HTMLPurifier_Token_Text($this->parseText(\substr($html, $cursor), $config));
                 if ($maintain_line_numbers) {
                     $token->rawPosition($current_line, $current_col);
                 }
@@ -138,7 +138,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                 $strlen_segment = $position_next_gt - $cursor;
                 if ($strlen_segment < 1) {
                     // there's nothing to process!
-                    $token = new HTMLPurifier_Token_Text('<');
+                    $token = new \WPDT\HTMLPurifier_Token_Text('<');
                     $cursor++;
                     continue;
                 }
@@ -166,7 +166,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                     }
                     $strlen_segment = $position_comment_end - $cursor;
                     $segment = \substr($html, $cursor, $strlen_segment);
-                    $token = new HTMLPurifier_Token_Comment(\substr($segment, 3, $strlen_segment - 3));
+                    $token = new \WPDT\HTMLPurifier_Token_Comment(\substr($segment, 3, $strlen_segment - 3));
                     if ($maintain_line_numbers) {
                         $token->rawPosition($current_line, $current_col);
                         $current_line += \substr_count($html, $nl, $cursor, $strlen_segment);
@@ -180,7 +180,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                 $is_end_tag = \strpos($segment, '/') === 0;
                 if ($is_end_tag) {
                     $type = \substr($segment, 1);
-                    $token = new HTMLPurifier_Token_End($type);
+                    $token = new \WPDT\HTMLPurifier_Token_End($type);
                     if ($maintain_line_numbers) {
                         $token->rawPosition($current_line, $current_col);
                         $current_line += \substr_count($html, $nl, $cursor, $position_next_gt - $cursor);
@@ -198,7 +198,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                     if ($e) {
                         $e->send(\E_NOTICE, 'Lexer: Unescaped lt');
                     }
-                    $token = new HTMLPurifier_Token_Text('<');
+                    $token = new \WPDT\HTMLPurifier_Token_Text('<');
                     if ($maintain_line_numbers) {
                         $token->rawPosition($current_line, $current_col);
                         $current_line += \substr_count($html, $nl, $cursor, $position_next_gt - $cursor);
@@ -220,9 +220,9 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                 $position_first_space = \strcspn($segment, $this->_whitespace);
                 if ($position_first_space >= $strlen_segment) {
                     if ($is_self_closing) {
-                        $token = new HTMLPurifier_Token_Empty($segment);
+                        $token = new \WPDT\HTMLPurifier_Token_Empty($segment);
                     } else {
-                        $token = new HTMLPurifier_Token_Start($segment);
+                        $token = new \WPDT\HTMLPurifier_Token_Start($segment);
                     }
                     if ($maintain_line_numbers) {
                         $token->rawPosition($current_line, $current_col);
@@ -242,9 +242,9 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                     $attr = array();
                 }
                 if ($is_self_closing) {
-                    $token = new HTMLPurifier_Token_Empty($type, $attr);
+                    $token = new \WPDT\HTMLPurifier_Token_Empty($type, $attr);
                 } else {
-                    $token = new HTMLPurifier_Token_Start($type, $attr);
+                    $token = new \WPDT\HTMLPurifier_Token_Start($type, $attr);
                 }
                 if ($maintain_line_numbers) {
                     $token->rawPosition($current_line, $current_col);
@@ -259,7 +259,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
                 if ($e) {
                     $e->send(\E_WARNING, 'Lexer: Missing gt');
                 }
-                $token = new HTMLPurifier_Token_Text('<' . $this->parseText(\substr($html, $cursor), $config));
+                $token = new \WPDT\HTMLPurifier_Token_Text('<' . $this->parseText(\substr($html, $cursor), $config));
                 if ($maintain_line_numbers) {
                     $token->rawPosition($current_line, $current_col);
                 }

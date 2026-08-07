@@ -101,6 +101,7 @@ var wpdatatable_config = {
     table_wcag: 0,
     simple_template_id: 0,
     customRowDisplay: '',
+    customStringEmptyFiltering: '',
     loader: parseInt(wpdatatables_settings.wdtGlobalTableLoader),
     index_column: jQuery('#wdt-index-column').val(),
     advanced_filter_option: 0,
@@ -1129,6 +1130,12 @@ var wpdatatable_config = {
             jQuery('#wdt-custom-rows-per-page').val(customRowDisplay);
         }
     },
+    setCustomStringEmptyFiltering: function (customString) {
+        wpdatatable_config.customStringEmptyFiltering = customString;
+        if (jQuery('#wdt-custom-strings-empty-filtering').val() != customString) {
+            jQuery('#wdt-custom-strings-empty-filtering').val(customString);
+        }
+    },
     /**
      * Set the VAR 1 placeholder value
      */
@@ -1553,6 +1560,7 @@ var wpdatatable_config = {
         }
         wpdatatable_config.setContent(tableJSON.content);
         wpdatatable_config.setCustomDisplayLengthPerRow(tableJSON.customRowDisplay);
+        wpdatatable_config.setCustomStringEmptyFiltering(tableJSON.customStringEmptyFiltering);
         wpdatatable_config.setDisplayLength(tableJSON.display_length);
         wpdatatable_config.setShowRowsPerPage(tableJSON.showRowsPerPage);
         wpdatatable_config.setShowDescription(tableJSON.show_table_description);

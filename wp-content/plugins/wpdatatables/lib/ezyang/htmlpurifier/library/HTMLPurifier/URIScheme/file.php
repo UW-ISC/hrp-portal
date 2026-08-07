@@ -5,7 +5,7 @@ namespace WPDT;
 /**
  * Validates file as defined by RFC 1630 and RFC 1738.
  */
-class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
+class HTMLPurifier_URIScheme_file extends \WPDT\HTMLPurifier_URIScheme
 {
     /**
      * Generally file:// URLs are not accessible from most

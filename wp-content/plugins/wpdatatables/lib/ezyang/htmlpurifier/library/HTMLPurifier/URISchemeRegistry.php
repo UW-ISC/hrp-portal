@@ -21,7 +21,7 @@ class HTMLPurifier_URISchemeRegistry
         if ($prototype !== null) {
             $instance = $prototype;
         } elseif ($instance === null || $prototype == \true) {
-            $instance = new HTMLPurifier_URISchemeRegistry();
+            $instance = new \WPDT\HTMLPurifier_URISchemeRegistry();
         }
         return $instance;
     }
@@ -40,7 +40,7 @@ class HTMLPurifier_URISchemeRegistry
     public function getScheme($scheme, $config, $context)
     {
         if (!$config) {
-            $config = HTMLPurifier_Config::createDefault();
+            $config = \WPDT\HTMLPurifier_Config::createDefault();
         }
         // important, otherwise attacker could include arbitrary file
         $allowed_schemes = $config->get('URI.AllowedSchemes');

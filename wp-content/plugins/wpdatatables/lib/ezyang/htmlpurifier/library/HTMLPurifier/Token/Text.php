@@ -11,7 +11,7 @@ namespace WPDT;
  * does have a "tag name" called #PCDATA, which is how the DTD represents it
  * in permissible child nodes.
  */
-class HTMLPurifier_Token_Text extends HTMLPurifier_Token
+class HTMLPurifier_Token_Text extends \WPDT\HTMLPurifier_Token
 {
     /**
      * @type string
@@ -43,7 +43,7 @@ class HTMLPurifier_Token_Text extends HTMLPurifier_Token
     }
     public function toNode()
     {
-        return new HTMLPurifier_Node_Text($this->data, $this->is_whitespace, $this->line, $this->col);
+        return new \WPDT\HTMLPurifier_Node_Text($this->data, $this->is_whitespace, $this->line, $this->col);
     }
 }
 // vim: et sw=4 sts=4

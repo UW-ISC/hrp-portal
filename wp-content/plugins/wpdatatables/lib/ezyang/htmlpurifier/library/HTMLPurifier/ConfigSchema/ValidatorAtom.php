@@ -113,7 +113,7 @@ class HTMLPurifier_ConfigSchema_ValidatorAtom
      */
     protected function error($msg)
     {
-        throw new HTMLPurifier_ConfigSchema_Exception(\ucfirst($this->member) . ' in ' . $this->context . ' ' . $msg);
+        throw new \WPDT\HTMLPurifier_ConfigSchema_Exception(\ucfirst($this->member) . ' in ' . $this->context . ' ' . $msg);
     }
 }
 // vim: et sw=4 sts=4

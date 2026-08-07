@@ -11,7 +11,7 @@ namespace WPDT;
  * especially useful for CSS values, which often are a choice between
  * an enumerated set of predefined values or a flexible data type.
  */
-class HTMLPurifier_AttrDef_CSS_Composite extends HTMLPurifier_AttrDef
+class HTMLPurifier_AttrDef_CSS_Composite extends \WPDT\HTMLPurifier_AttrDef
 {
     /**
      * List of objects that may process strings.

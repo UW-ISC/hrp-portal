@@ -249,6 +249,18 @@
         });
 
         /**
+         * Toggle usage tracking
+         */
+        $('#wdt-usage-tracking-enabled').change(function (e) {
+            wpdatatable_plugin_config.setUsageTrackingEnabled($(this).is(':checked') ? 1 : 0);
+            updateUsageTrackingEnabledIndicator();
+        });
+
+        function updateUsageTrackingEnabledIndicator() {
+            var isEnabled = $('#wdt-usage-tracking-enabled').is(':checked');
+            $('#wdt-usage-tracking-enabled-indicator').toggle(isEnabled);
+        }
+        /**
          * Toggle chart loaders
          */
         $('#wdt-global-chart-loader').change(function (e) {
@@ -328,6 +340,8 @@
         wpdatatable_plugin_config.setAlignNumber(wdt_current_config.wdtNumbersAlign == 1 ? 1 : 0);
         wpdatatable_plugin_config.setGlobalTableLoaders(wdt_current_config.wdtGlobalTableLoader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setGlobalChartLoaders(wdt_current_config.wdtGlobalChartLoader == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setUsageTrackingEnabled(wdt_current_config.wdtUsageTrackingEnabled == 1 ? 1 : 0);
+        updateUsageTrackingEnabledIndicator();
         wpdatatable_plugin_config.setCustomCss(wdt_current_config.wdtCustomCss);
         wpdatatable_plugin_config.setCustomJs(wdt_current_config.wdtCustomJs);
         wpdatatable_plugin_config.setMinifiedJs(wdt_current_config.wdtMinifiedJs == 1 ? 1 : 0);
