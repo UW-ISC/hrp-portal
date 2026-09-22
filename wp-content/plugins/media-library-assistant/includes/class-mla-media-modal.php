@@ -81,7 +81,7 @@ class MLAModal {
 		 * do_action( 'wp_enqueue_media' );
 		 */
 
-		if ( ( ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) || ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) ) ) {
+		if ( ( ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) || ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) ) ) {
 			add_filter( 'media_view_settings', 'MLAModal::mla_media_view_settings_filter', 10, 2 );
 			add_filter( 'media_view_strings', 'MLAModal::mla_media_view_strings_filter', 10, 2 );
 			add_action( 'wp_enqueue_media', 'MLAModal::mla_wp_enqueue_media_action', 10, 0 );
@@ -103,7 +103,7 @@ class MLAModal {
 	 *
 	 * @since 2.66
 	 *
-	 * @param array|null An array of objects with `month` and `year`
+	 * @param array|null $months An array of objects with `month` and `year`
 	 *                   properties, or `null` (or any other non-array value)
 	 *                   for default behavior.
 	 *
@@ -139,12 +139,12 @@ class MLAModal {
 		$month_count = count( $months );
 		$month_array = array( '0' => __( 'All dates', 'media-library-assistant' ) );
 
-		if ( !$month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
+		if ( !$month_count || ( 1 === $month_count && 0 === $months[0]->month ) ) {
 			return $month_array;
 		}
 
 		foreach ( $months as $index => $arc_row ) {
-			if ( 0 == $arc_row->year ) {
+			if ( 0 === $arc_row->year ) {
 				continue;
 			}
 
@@ -164,13 +164,13 @@ class MLAModal {
 	 *
 	 * @since 1.20
 	 *
-	 * @param	string	HTML markup for taxonomy terms dropdown <select> tag
+	 * @param	string	$markup HTML markup for taxonomy terms dropdown <select> tag
 	 *
 	 * @return	array	( 'class' => $class_array, 'value' => $value_array, 'text' => $text_array )
 	 */
 	public static function mla_terms_options( $markup ) {
 		$match_count = preg_match_all( "#\<option(( class=\"([^\"]+)\" )|( ))value=((\'([^\']+)\')|(\"([^\"]+)\"))([^\>]*)\>([^\<]*)\<.*#", $markup, $matches );
-		if ( ( $match_count == false ) || ( $match_count == 0 ) ) {
+		if ( ( $match_count === false ) || ( $match_count === 0 ) ) {
 			return array( 'class' => array( '' ), 'value' => array( '0' ), 'text' => array( 'All terms' ) );
 		}
 
@@ -180,7 +180,7 @@ class MLAModal {
 
 		foreach ( $matches[11] as $index => $text ) {
 			$class_array[ $index ] = $matches[3][ $index ];
-			$value_array[ $index ] = ( ! '' == $matches[6][ $index ] )? $matches[7][ $index ] : $matches[9][ $index ];
+			$value_array[ $index ] = ( ! '' === $matches[6][ $index ] )? $matches[7][ $index ] : $matches[9][ $index ];
 
 			$current_version = get_bloginfo( 'version' );
 			if ( version_compare( $current_version, '3.9', '<' ) && version_compare( $current_version, '3.6', '>=' ) ) {
@@ -251,8 +251,8 @@ class MLAModal {
 	 *
 	 * @since 1.20
 	 *
-	 * @param	array	associative array with setting => value pairs
-	 * @param	object || NULL	current post object, if available
+	 * @param	array	$settings associative array with setting => value pairs
+	 * @param	object|NULL	$post current post object, if available
 	 *
 	 * @return	array	updated $settings array
 	 */
@@ -262,14 +262,14 @@ class MLAModal {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 
-			if ( is_object( $screen) && 'upload' == $screen->base ) {
+			if ( is_object( $screen) && 'upload' === $screen->base ) {
 				self::$mla_media_modal_settings['screen'] = 'grid';
 			}
 		}
 
 		$default_types = MLACore::mla_get_option( MLACoreOptions::MLA_POST_MIME_TYPES, true );
 		self::$mla_media_modal_settings['comma'] = _x( ',', 'tag_delimiter', 'media-library-assistant' );
-		self::$mla_media_modal_settings['ajaxNonce'] = wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+		self::$mla_media_modal_settings['ajaxNonce'] = wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION );
 		self::$mla_media_modal_settings['prefix'] = 0;
 		self::$mla_media_modal_settings['allMimeTypes'] = MLAMime::mla_pluck_table_views();
 		self::$mla_media_modal_settings['allMimeTypes']['detached'] = $default_types['detached']['plural'];
@@ -284,11 +284,11 @@ class MLAModal {
 		// Set Featured Image allows views based on custom field queries
 		self::$mla_media_modal_settings['uploadMimeTypes'] = MLAMime::mla_pluck_table_views( true );
 
-		self::$mla_media_modal_settings['months'] = self::_months_dropdown('attachment');
+		self::$mla_media_modal_settings['months'] = self::_months_dropdown();
 
 		self::$mla_media_modal_settings['termsTaxonomy'] =  MLACore::mla_taxonomy_support('', 'filter');
 		$terms_options = self::mla_terms_options( MLA_List_Table::mla_get_taxonomy_filter_dropdown() );
-		self::$mla_media_modal_settings['termsCustom'] = ( MLACoreOptions::MLA_FILTER_METAKEY ==  self::$mla_media_modal_settings['termsTaxonomy'] );
+		self::$mla_media_modal_settings['termsCustom'] = ( MLACoreOptions::MLA_FILTER_METAKEY ===  self::$mla_media_modal_settings['termsTaxonomy'] );
 		self::$mla_media_modal_settings['termsClass'] = $terms_options['class'];
 		self::$mla_media_modal_settings['termsValue'] = $terms_options['value'];
 		self::$mla_media_modal_settings['termsText'] = $terms_options['text'];
@@ -311,22 +311,22 @@ class MLAModal {
 			self::$mla_media_modal_settings['createToolbar70'] = true;
 		}
 		
-		self::$mla_media_modal_settings['enableMediaGrid'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) );
-		self::$mla_media_modal_settings['enableMediaModal'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) );
-		self::$mla_media_modal_settings['enableDetailsCategory'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) );
-		self::$mla_media_modal_settings['enableDetailsTag'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_TAG_METABOX ) );
-		self::$mla_media_modal_settings['enableMimeTypes'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_MIMETYPES ) );
-		self::$mla_media_modal_settings['enableMonthsDropdown'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_MONTHS ) );
-		self::$mla_media_modal_settings['enableSearchBox'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX ) );
-		self::$mla_media_modal_settings['enableSearchBoxControls'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) );
+		self::$mla_media_modal_settings['enableMediaGrid'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) );
+		self::$mla_media_modal_settings['enableMediaModal'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) );
+		self::$mla_media_modal_settings['enableDetailsCategory'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) );
+		self::$mla_media_modal_settings['enableDetailsTag'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_TAG_METABOX ) );
+		self::$mla_media_modal_settings['enableMimeTypes'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_MIMETYPES ) );
+		self::$mla_media_modal_settings['enableMonthsDropdown'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_MONTHS ) );
+		self::$mla_media_modal_settings['enableSearchBox'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX ) );
+		self::$mla_media_modal_settings['enableSearchBoxControls'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) );
 
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('support');
-		self::$mla_media_modal_settings['enableTermsDropdown'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS ) ) && ( ! empty( $supported_taxonomies ) );
-		self::$mla_media_modal_settings['enableTermsAutofill'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOFILL ) ) && ( ! empty( $supported_taxonomies ) );
-		self::$mla_media_modal_settings['enableTermsAutoopen'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOOPEN ) ) && ( ! empty( $supported_taxonomies ) );
+		self::$mla_media_modal_settings['enableTermsDropdown'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS ) ) && ( ! empty( $supported_taxonomies ) );
+		self::$mla_media_modal_settings['enableTermsAutofill'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOFILL ) ) && ( ! empty( $supported_taxonomies ) );
+		self::$mla_media_modal_settings['enableTermsAutoopen'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOOPEN ) ) && ( ! empty( $supported_taxonomies ) );
 
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('term-search');
-		self::$mla_media_modal_settings['enableTermsSearch'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) && ( ! empty( $supported_taxonomies ) );
+		self::$mla_media_modal_settings['enableTermsSearch'] = ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) && ( ! empty( $supported_taxonomies ) );
 
 		// Compile a list of the enhanced taxonomies
 		self::$mla_media_modal_settings['enhancedTaxonomies'] = array();
@@ -396,8 +396,8 @@ class MLAModal {
 	 *
 	 * @since 1.20
 	 *
-	 * @param	array	associative array with string => value pairs
-	 * @param	object || NULL	current post object, if available
+	 * @param	array	$strings => values pairs
+	 * @param	object|NULL	$post current post object, if available
 	 *
 	 * @return	array	updated $strings array
 	 */
@@ -407,12 +407,12 @@ class MLAModal {
 			'filterByTermLabel' => __( 'Filter by term', 'media-library-assistant' ),
 			'searchBoxPlaceholder' => __( 'Search Box', 'media-library-assistant' ),
 			'loadingText' => __( 'Loading...', 'media-library-assistant' ),
-			'searchBoxControlsStyle' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) ) ? 'display: inline;' : 'display: none;',
+			'searchBoxControlsStyle' => ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) ) ? 'display: inline;' : 'display: none;',
 			);
 
 		$strings = array_merge( $strings, array( 'mla_strings' => $mla_strings ) );
 		return apply_filters( 'mla_media_modal_strings', $strings, $post );
-	} // mla_mla_media_view_strings_filter
+	} // mla_media_view_strings_filter
 
 	/**
 	 * Enqueues the mla-media-modal-scripts.js file, adding it to the Media Manager scripts.
@@ -430,11 +430,11 @@ class MLAModal {
 			$screen = get_current_screen();
 
 			if ( is_object( $screen ) ) {
-				if ( 'upload' == $screen->base ) {
-					if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
+				if ( 'upload' === $screen->base ) {
+					if ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
 						return;
 					}
-				} elseif ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
+				} elseif ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
 					return;
 				}
 			}
@@ -460,7 +460,7 @@ class MLAModal {
 			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::mla_script_version(), true );
 		}
 		
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) {
+		if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) {
 			MLAModal::mla_add_terms_search_scripts();
 		}
 	} // mla_wp_enqueue_media_action
@@ -481,11 +481,11 @@ class MLAModal {
 			$screen = get_current_screen();
 
 			if ( is_object( $screen ) ) {
-				if ( 'upload' == $screen->base ) {
-					if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
+				if ( 'upload' === $screen->base ) {
+					if ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
 						return;
 					}
-				} elseif ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
+				} elseif ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
 					return;
 				}
 			}
@@ -527,12 +527,12 @@ class MLAModal {
 				}
 
 				if ( $use_checklist ) {
-					if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) ) {
+					if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) ) {
 						$enhanced_taxonomies[] = $key;
 
 						if ( class_exists( 'Media_Categories' ) && is_array( Media_Categories::$instances ) ) {
 							foreach( Media_Categories::$instances as $index => $instance ) {
-								if ( $instance->taxonomy == $key ) {
+								if ( $instance->taxonomy === $key ) {
 									// unset( Media_Categories::$instances[ $index ] );
 									Media_Categories::$instances[ $index ]->taxonomy = 'MLA-has-disabled-this-instance';
 								}
@@ -627,8 +627,8 @@ class MLAModal {
 	 *
 	 * @since 3.08
 	 *
-	 * @param	integer	currently selected term_id || zero (default)
-	 * @param	array	additional wp_dropdown_categories options; default empty
+	 * @param	integer	$selected term_id || zero (default)
+	 * @param	array	$dropdown_options additional wp_dropdown_categories options; default empty
 	 *
 	 * @return	string	HTML markup for dropdown box
 	 */

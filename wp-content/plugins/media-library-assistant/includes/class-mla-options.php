@@ -158,7 +158,7 @@ class MLAOptions {
 	 * @return	array	taxonomies assigned to $support_type; can be empty.
 	 */
 	public static function mla_supported_taxonomies($support_type = 'support') {
-		return MLACore::mla_supported_taxonomies( $tax_name, $support_type ); 
+		return MLACore::mla_supported_taxonomies( $support_type ); 
 	} // mla_supported_taxonomies
 
 	/**
@@ -960,7 +960,7 @@ class MLAOptions {
 					$meta_key = substr( $setting_value['name'], 5 );
 
 					if ( NULL === $attachment_metadata ) {
-						$attachment_metadata = maybe_unserialize( get_metadata( 'post', $post->ID, '_wp_attachment_metadata', true ) );
+						$attachment_metadata = maybe_unserialize( get_metadata( 'post', $post_id, '_wp_attachment_metadata', true ) );
 					}
 
 					if ( array( $attachment_metadata ) ) {
@@ -1469,11 +1469,7 @@ class MLAOptions {
 					foreach ( $new_text as $text ) {
 							$fragments = explode( $delimiter, $text );
 							foreach( $fragments as $fragment ) {
-								if ( MLATest::$wp_3dot5 ) {
-									$fragment = trim( stripslashes_deep( $fragment ) );
-								} else {
-									$fragment = trim( wp_unslash( $fragment ) );
-								}
+								$fragment = trim( wp_unslash( $fragment ) );
 
 								if ( ! empty( $fragment ) ) {
 									$new_terms[] = $fragment;

@@ -34,7 +34,11 @@ class MLASettings_Image {
 		global $wpdb, $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'image' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'image' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -45,7 +49,7 @@ class MLASettings_Image {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => true,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG ),
 			'tab' => 'image',
 			'fields' => array( 'original_slug', 'slug', 'name', 'width', 'height', 'horizontal', 'vertical' ),
 			'checkboxes' => array( 'crop', 'disabled' ),
@@ -94,10 +98,10 @@ class MLASettings_Image {
 	 *
 	 * @since 3.25
 	 *
-	 * @param	array	Display template array
-	 * @param	string	HTML name attribute value
-	 * @param	string	'horizontal'|'vertical'
-	 * @param	string	currently selected Icon Type
+	 * @param	array	$templates Display template array
+	 * @param	string	$name HTML name attribute value
+	 * @param	string	$dimension 'horizontal'|'vertical'
+	 * @param	string	$selection currently selected Icon Type
 	 *
 	 * @return string HTML select element or empty string on failure.
 	 */
@@ -253,6 +257,14 @@ class MLASettings_Image {
 
 		foreach ( $item as $key => $value ) {
 			switch ( $key ) {
+				case 'slug':
+				case 'name':
+					$page_values[ $key ] = esc_attr( $value );
+					break;
+				case 'width':
+				case 'height':
+					$page_values[ $key ] = absint( $value );
+					break;
 				case 'crop':
 				case 'disabled':
 					$page_values[ $key ] = $value ? 'checked="checked"' : '';
@@ -593,13 +605,16 @@ class MLASettings_Image {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_IMAGE_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['original_slug'] ) ) {
 			$message = __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'No image slug found', 'media-library-assistant' );
 			MLACore::mla_debug_add( $message, MLACore::MLA_DEBUG_CATEGORY_ANY );
-			echo esc_html( $message );
-			die();
+			wp_die( esc_html( $message ) );
 		}
 
 		$request = self::_sanitize_inline_image_item();
@@ -608,6 +623,7 @@ class MLASettings_Image {
 		if ( false === strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
 			$new_item = (object) MLAImage_Size::mla_get_image_size( $request['slug'] );
 		} else {
+			wp_die( esc_html( $results['message'] ) );
 			$new_item = (object) MLAImage_Size::mla_get_image_size( $request['original_slug'] );
 		}
 
@@ -678,9 +694,9 @@ class MLA_Image_List_Table extends WP_List_Table {
 	 *
 	 * @since 3.25
 	 *
-	 * @param	mixed	false or array with current list of hidden columns, if any
-	 * @param	string	'managesettings_page_mla-settings-menu-imagecolumnshidden'
-	 * @param	object	WP_User object, if logged in
+	 * @param	mixed	$result false or array with current list of hidden columns, if any
+	 * @param	string	$option 'managesettings_page_mla-settings-menu-imagecolumnshidden'
+	 * @param	object	$user_data WP_User object, if logged in
 	 *
 	 * @return	array	updated list of hidden columns
 	 */
@@ -716,7 +732,7 @@ class MLA_Image_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] === 'image' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] === 'image' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-imagecolumnshidden', 'MLA_Image_List_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-image_columns', 'MLA_Image_List_Table::mla_manage_columns_filter', 10, 0 );
 		}
@@ -1317,7 +1333,7 @@ class MLA_Image_List_Table extends WP_List_Table {
 		$row_class = ( $row_class === '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="image-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Image_List_Table

@@ -3,8 +3,8 @@ Contributors: donncha, automattic, adnan007, dilirity, mikemayhem3030, pyronaur,
 Tags: performance, caching, wp-cache, wp-super-cache, cache
 Requires at least: 6.8
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 3.1.1
+Tested up to: 7.1
+Stable tag: 3.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,6 +255,23 @@ Your theme is probably responsive which means it resizes the page to suit whatev
 
 
 == Changelog ==
+### 3.1.3 - 2026-08-26
+* Fix: a direct page path ending in a backslash no longer breaks the cache config file.
+* Fix: sanitise the CDN URL and CNAME settings so a value containing a quote or an angle bracket can no longer break the asset URLs they are substituted into.
+* Fix: escape string settings written to the cache config file, so a value containing a quote or a backslash no longer corrupts it.
+* Fix: a cookie named "0" could make a logged-in visitor look anonymous to the cache, so their page was served to everyone.
+
+### 3.1.2 - 2026-08-19
+* Fix: stop the error log filling with path length warnings when a request URL is too long to build a cache directory from.
+* Fix: clear the cache for category, tag and archive pages whose slug contains non-ASCII characters. The delete cache button could not clear those pages either, and now can.
+* Fix: clear the cache correctly when saving a post whose slug contains non-ASCII characters.
+* Removed the Bad Behavior plugin integration. The upstream plugin is no longer maintained and a long-standing inverted guard meant the integration never actually ran.
+* Fix: ignore a post ID of 0 when clearing the cache after a post edit, which could delete the front page cache unexpectedly.
+* Split wp-cache.php into per-responsibility inc/ files (#1061) (#1065)
+* Fix: cache modern security headers, including Permissions-Policy, the Cross-Origin-Opener/Embedder/Resource-Policy family and the remaining CORS headers, so they are sent on cached responses.
+* Fix: honour quality values in the Accept header, so monitoring tools and browsers that list JSON below HTML are served the cached page instead of rebuilding it on every request.
+* Fix: hide debug HTML comments in REST and Ajax responses (#1021)
+
 ### 3.1.1 - 2026-05-27
 - Security: harden supercache filename generation so request-derived data cannot escape the cache directory.
 - Fix: avoid a fatal error on PHP 8+ when closing an unopened file handle in supercache-only mode.
@@ -271,7 +288,3 @@ Your theme is probably responsive which means it resizes the page to suit whatev
 - Device Detection: use an embedded version instead of the Composer dependency.
 - Fix: str_starts_with() null deprecation on PHP 8.1+.
 - Fix: handle array type for supercache_last_cached option.
-
---------
-
-[See previous releases on GitHub.](https://github.com/Automattic/wp-super-cache/releases)

@@ -34,7 +34,11 @@ class MLASettings_Upload {
 		global $wpdb;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'upload' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'upload' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -45,7 +49,7 @@ class MLASettings_Upload {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => true,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG ),
 			'tab' => 'upload',
 			'fields' => array( 'original_slug', 'slug', 'mime_type', 'icon_type', 'core_type', 'mla_type', 'source', 'standard_source' ),
 			'checkboxes' => array( 'disabled' ),
@@ -155,7 +159,7 @@ class MLASettings_Upload {
 		}
 		
 		$item['slug'] = isset( $_REQUEST['mla_upload_item']['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_upload_item']['slug'] ) ) : '';
-		$item['mime_type'] = isset( $_REQUEST['mla_upload_item']['mime_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_upload_item']['mime_type'] ) ) : '';
+		$item['mime_type'] = isset( $_REQUEST['mla_upload_item']['mime_type'] ) ? sanitize_mime_type( wp_unslash( $_REQUEST['mla_upload_item']['mime_type'] ) ) : '';
 		$item['icon_type'] = isset( $_REQUEST['mla_upload_item']['icon_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_upload_item']['icon_type'] ) ) : '.none.';
 		$item['disabled'] = isset( $_REQUEST['mla_upload_item']['disabled'] );
 
@@ -181,7 +185,7 @@ class MLASettings_Upload {
 			'Edit Upload MIME' => __( 'Edit Upload MIME Type', 'media-library-assistant' ),
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-upload&mla_tab=upload',
 			'action' => MLACore::MLA_ADMIN_SINGLE_EDIT_UPDATE,
-			'original_slug' => $item['slug'],
+			'original_slug' => esc_attr( $item['slug'] ),
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'Extension' => __( 'Extension', 'media-library-assistant' ),
 			'The extension is' => __( 'The &#8220;extension&#8221; is the file extension for this type, and a unique key for the item. It must be all lowercase and contain only letters and numbers.', 'media-library-assistant' ),
@@ -200,6 +204,10 @@ class MLASettings_Upload {
 
 		foreach ( $item as $key => $value ) {
 			switch ( $key ) {
+				case 'mime_type':
+				case 'slug':
+					$page_values[ $key ] = esc_attr( $value );
+					break;
 				case 'disabled':
 					$page_values[ $key ] = $value ? 'checked="checked"' : '';
 					break;
@@ -617,16 +625,18 @@ class MLASettings_Upload {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['original_slug'] ) ) {
-			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' );
-			die();
+			wp_die( esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' ) );
 		}
 
 		if ( false === MLAMime::mla_get_upload_mime( sanitize_text_field( wp_unslash( $_REQUEST['original_slug'] ) ) ) ) {
-			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' );
-			die();
+			wp_die( esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No upload slug found', 'media-library-assistant' ) );
 		}
 
 		$request = array();
@@ -643,6 +653,7 @@ class MLASettings_Upload {
 		if ( false === strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
 			$new_item = (object) MLAMime::mla_get_upload_mime( $request['slug'] );
 		} else {
+			wp_die( esc_html( $results['message'] ) );
 			$new_item = (object) MLAMime::mla_get_upload_mime( $request['original_slug'] );
 		}
 
@@ -827,7 +838,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] == 'upload' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] == 'upload' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-uploadcolumnshidden', 'MLA_Upload_list_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-upload_columns', 'MLA_Upload_list_Table::mla_manage_columns_filter', 10, 0 );
 			add_action( 'admin_print_styles', 'MLA_Upload_List_Table::mla_admin_print_styles_action' );
@@ -1130,7 +1141,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 	 *
 	 * @since 3.25
 	 * 
-	 * @param string	'top' | 'bottom'
+	 * @param string	$which 'top' | 'bottom'
 	 */
 	function pagination( $which ) {
 		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
@@ -1336,7 +1347,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 	 *
 	 * @since 3.25
 	 * 
-	 * @param	string	'top' or 'bottom', i.e., above or below the table rows
+	 * @param	string	$which 'top' or 'bottom', i.e., above or below the table rows
 	 *
 	 * @return	void
 	 */
@@ -1430,7 +1441,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="upload-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Upload_List_Table
@@ -1508,9 +1519,9 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.40
 	 *
-	 * @param	mixed	false or array with current list of hidden columns, if any
-	 * @param	string	'managesettings_page_mla-settings-menu-uploadcolumnshidden'
-	 * @param	object	WP_User object, if logged in
+	 * @param	mixed	$result false or array with current list of hidden columns, if any
+	 * @param	string	$option 'managesettings_page_mla-settings-menu-uploadcolumnshidden'
+	 * @param	object	$user_data WP_User object, if logged in
 	 *
 	 * @return	array	updated list of hidden columns
 	 */
@@ -1813,7 +1824,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="optional-upload-' . $item->ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Upload_Optional_List_Table

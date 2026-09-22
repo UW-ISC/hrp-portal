@@ -135,7 +135,7 @@ class MLA_Polylang {
 		/*
 		 * Add styles for the language management column
 		 */
-		if ( isset( $_REQUEST['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_REQUEST['page'] ) ) {
+		if ( isset( $_GET['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_GET['page'] ) ) {
 			add_action( 'admin_print_styles', 'MLA_Polylang::mla_list_table_add_pll_styles' );
 		}
 

@@ -34,7 +34,11 @@ class MLASettings_View {
 		global $wpdb, $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'view' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'view' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -45,7 +49,7 @@ class MLASettings_View {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => false,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG ),
 			'tab' => 'view',
 			'fields' => array( 'original_slug', 'slug', 'singular', 'plural', 'specification', 'menu_order' ),
 			'checkboxes' => array( 'post_mime_type', 'table_view' ),
@@ -131,9 +135,18 @@ class MLASettings_View {
 
 		foreach ( $view as $key => $value ) {
 			switch ( $key ) {
+				case 'slug':
+				case 'singular':
+				case 'plural':
+				case 'specification':
+					$page_values[ $key ] = esc_attr( $value );
+					break;
 				case 'post_mime_type':
 				case 'table_view':
 					$page_values[ $key ] = $value ? 'checked="checked"' : '';
+					break;
+				case 'menu_order':
+					$page_values[ $key ] = absint( $value );
 					break;
 				default:
 					$page_values[ $key ] = $value;
@@ -432,11 +445,14 @@ class MLASettings_View {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['original_slug'] ) ) {
-			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No view slug found', 'media-library-assistant' );
-			die();
+			wp_die( esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No view slug found', 'media-library-assistant' ) );
 		}
 
 		$request = array();
@@ -453,6 +469,7 @@ class MLASettings_View {
 		if ( false === strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
 			$new_item = (object) MLAMime::mla_get_post_mime_type( $request['slug'] );
 		} else {
+			wp_die( esc_html( $results['message'] ) );
 			$new_item = (object) MLAMime::mla_get_post_mime_type( $request['original_slug'] );
 		}
 
@@ -553,9 +570,9 @@ class MLA_View_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.40
 	 *
-	 * @param	mixed	false or array with current list of hidden columns, if any
-	 * @param	string	'managesettings_page_mla-settings-menu-viewcolumnshidden'
-	 * @param	object	WP_User object, if logged in
+	 * @param	mixed	$result false or array with current list of hidden columns, if any
+	 * @param	string	$option 'managesettings_page_mla-settings-menu-viewcolumnshidden'
+	 * @param	object	$user_data WP_User object, if logged in
 	 *
 	 * @return	array	updated list of hidden columns
 	 */
@@ -591,7 +608,7 @@ class MLA_View_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] == 'view' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] == 'view' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-viewcolumnshidden', 'MLA_View_List_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-view_columns', 'MLA_View_List_Table::mla_manage_columns_filter', 10, 0 );
 		}
@@ -996,7 +1013,7 @@ class MLA_View_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="view-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_View_List_Table

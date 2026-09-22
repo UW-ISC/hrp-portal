@@ -46,6 +46,7 @@
 		<option [+id_selected+] value="id">ID (or .ID)</option>
 		<option [+base_file_selected+] value="base_file">Base File</option>
 		<option [+file_name_selected+] value="file_name">File Name (only)</option>
+		<option [+url_selected+] value="url">URL</option>
     </select>
     <div class="mla-settings-help">&nbsp;&nbsp;Select the key used to match the item to the CSV variables.</div>
   </td>

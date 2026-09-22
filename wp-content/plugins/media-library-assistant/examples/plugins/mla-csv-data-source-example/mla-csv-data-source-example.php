@@ -59,7 +59,7 @@
  * https://wordpress.org/support/topic/import-export-to-csv-for-bulk-edit/
  *
  * @package MLA CSV Data Source Example
- * @version 1.05
+ * @version 1.06
  */
 
 /*
@@ -67,7 +67,7 @@ Plugin Name: MLA CSV Data Source Example
 Plugin URI: http://davidlingren.com/
 Description: Populates one or more data sources from a CSV file
 Author: David Lingren
-Version: 1.05
+Version: 1.06
 Author URI: http://davidlingren.com/
 
 Copyright 2020 David Lingren
@@ -103,7 +103,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.05';
+	const PLUGIN_VERSION = '1.06';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -148,7 +148,8 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.02
 	 *
-	 * @var	array
+	 * @var	object
+	 * 
 	 */
 	private static $plugin_settings = NULL;
 
@@ -168,8 +169,8 @@ class MLACSVDataSourceExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -177,7 +178,7 @@ class MLACSVDataSourceExample {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 		
 		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_options_export'] ) ) {
 			// Match Keys download will be handled in the admin_init filter
@@ -203,6 +204,7 @@ class MLACSVDataSourceExample {
 		$general_tab_values['id_selected'] = 'id' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
 		$general_tab_values['base_file_selected'] = 'base_file' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
 		$general_tab_values['file_name_selected'] = 'file_name' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
+		$general_tab_values['url_selected'] = 'url' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
 		self::$plugin_settings->update_plugin_argument('general_tab_values', $general_tab_values );
 	} // initialize
 
@@ -271,7 +273,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.01
 	 *
-	 * @return	none	terminates execution with exit();
+	 * @ return	none	terminates execution with exit();
 	 */
 	public static function export_item_values_action() {
 		global $wpdb;
@@ -287,7 +289,7 @@ class MLACSVDataSourceExample {
 		$upload_dir = $upload_dir['basedir'];
 		$date = date("Ymd_B");
 		$filename = "{$upload_dir}/match_keys_{$date}.csv";
-		$column_names = array( 'Base Name', 'File Name', 'ID' );
+		$column_names = array( 'Base Name', 'File Name', 'URL', 'ID' );
 		$export_specifications = array();
 
 		// Prepare optional columns
@@ -350,7 +352,8 @@ class MLACSVDataSourceExample {
 			foreach( $items as $item ) {
 				$pathinfo = pathinfo( $item->meta_value );
 				$file_name = $pathinfo['basename'];
-				$fields = array( $item->meta_value, $file_name, $item->post_id );
+				$url = wp_get_attachment_url( $item->post_id );
+				$fields = array( $item->meta_value, $file_name, $url, $item->post_id );
 				
 				// Add optional columns
 				foreach ( $export_specifications as $specification ) {
@@ -399,7 +402,7 @@ class MLACSVDataSourceExample {
  	 *
 	 * @since 1.00
 	 *
-	 * @param	integer	Optional item ID value for the current source file, default 0
+	 * @param	integer	$current_id Optional item ID value for the current source file, default 0
 	 *
 	 * @return	string	HTML markup for the Source file <select> list, if any
 	 */
@@ -463,7 +466,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @var array $_csv_variables { $index => 
+	 * @var array $_csv_variable_names { $index => 
 	 *     @type array  $names The variable name for each data source
 	 *     }
 	 */
@@ -492,7 +495,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	boolean	Optional, Use existing values, if present. Default true.
+	 * @param	boolean	$use_existing Optional, Use existing values, if present. Default true.
 	 *
 	 * @return	boolean	True if variable exists in file else false.
 	 */
@@ -521,6 +524,11 @@ class MLACSVDataSourceExample {
 						return true;
 					}
 					break;
+				case 'url':
+					if ( false !== array_search( 'URL', self::$_csv_variable_names ) ) {
+						return true;
+					}
+					break;
 			}
 		}
 
@@ -532,8 +540,8 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	boolean	Optional, Use existing values, if present. Default true.
-	 * @param	boolean	Optional, Load names only, from first line of the file. Default false.
+	 * @param	boolean	$use_existing Optional, Use existing values, if present. Default true.
+	 * @param	boolean	$names_only Optional, Load names only, from first line of the file. Default false.
 	 */
 	private static function _load_csv_file( $use_existing = true, $names_only = false ) {
 		if ( $use_existing && !empty( self::$_csv_variables ) ) {
@@ -576,6 +584,9 @@ class MLACSVDataSourceExample {
 						case 'file_name':
 							$match_index = array_search( 'File Name', self::$_csv_variable_names );
 							break;
+						case 'url':
+							$match_index = array_search( 'URL', self::$_csv_variable_names );
+							break;
 					} // case $match
 				} // have variable names
 
@@ -608,7 +619,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	integer	attachment ID for attachment-specific values
+	 * @param	integer	$post_id attachment ID for attachment-specific values
 	 *
 	 * @return	mixed	array of CSV variables, if found, else false
 	 */
@@ -623,6 +634,9 @@ class MLACSVDataSourceExample {
 			case 'file_name':
 				$pathinfo = pathinfo( get_post_meta( $post_id, '_wp_attached_file', true ) );
 				$key = $pathinfo['basename'];
+				break;
+			case 'url':
+				$key = wp_get_attachment_url( $post_id );
 				break;
 			default:
 				$key = '';
@@ -645,14 +659,14 @@ class MLACSVDataSourceExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	string	NULL, indicating that by default, no custom value is available
-	 * @param	string	the data-source name 
-	 * @param	array	data-source components; prefix (empty), value, option, format and args (if present)
-	 * @param	array	values from the query, if any, e.g. shortcode parameters
-	 * @param	array	item-level markup template values, if any
-	 * @param	integer	attachment ID for attachment-specific values
-	 * @param	boolean	for option 'multi', retain existing values
-	 * @param	string	default option value
+	 * @param	string	$custom_value NULL, indicating that by default, no custom value is available
+	 * @param	string	$key the data-source name 
+	 * @param	array	$value data-source components; prefix (empty), value, option, format and args (if present)
+	 * @param	array	$query values from the query, if any, e.g. shortcode parameters
+	 * @param	array	$markup_values item-level markup template values, if any
+	 * @param	integer	$post_id attachment ID for attachment-specific values
+	 * @param	boolean	$keep_existing for option 'multi', retain existing values
+	 * @param	string	$default_option default option value
 	 */
 	public static function mla_expand_custom_prefix( $custom_value, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
 		static $match_cache = null;

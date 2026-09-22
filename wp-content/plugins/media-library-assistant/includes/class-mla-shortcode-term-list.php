@@ -152,6 +152,7 @@ class MLATermList {
 			$current_is_slug = in_array( $arguments['mla_item_value'], array( '{+slug+}', '[+slug+]' ) );
 		}
 
+		$close_template = '';
 		if ( $is_list || $is_dropdown || $is_checklist ) {
 			if ( $term->parent ) {
 				$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'term-list', 'markup', 'child-open' );
@@ -560,6 +561,9 @@ class MLATermList {
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_item_parameter'] ) );
 		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
+
 		/*
 		 * Special handling of mla_item_parameter to make multiple lists per page easier.
 		 * Look for this parameter in $_REQUEST if it's not present in the shortcode itself.
@@ -901,6 +905,9 @@ class MLATermList {
 					$arguments['option_none_text'] = __( 'no-terms', 'media-library-assistant' );
 				}
 
+				$option_none_id = -1;
+				$option_none_slug = sanitize_title( $arguments['option_none_text'] );
+
 				if ( ! is_null( $arguments['option_none_value'] ) ) {
 					if ( empty( $arguments['option_none_value'] ) ) {
 					$option_none_value = '';
@@ -910,12 +917,10 @@ class MLATermList {
 							$option_none_id = (int) $option_none_value;
 							$option_none_slug = sanitize_title( $arguments['option_none_text'] );
 						} else {
-							$option_none_id = -1;
 							$option_none_slug = sanitize_title( $option_none_value );
 						}
 					}
 				} else {
-					$option_none_id = -1;
 					$option_none_slug = sanitize_title( $arguments['option_none_text'] );
 				}
 
@@ -1260,7 +1265,7 @@ class MLATermList {
 					'slug' => $option_any_terms_slug,
 					'term_group' => '0',
 					'term_taxonomy_id' => $option_any_terms_id,
-					'taxonomy' => $taxonomy,
+					'taxonomy' => $style_values['taxonomy'],
 					'description' => '',
 					'parent' => '0',
 					'count' => -1,
@@ -1280,7 +1285,7 @@ class MLATermList {
 					'slug' => $option_no_terms_slug,
 					'term_group' => '0',
 					'term_taxonomy_id' => $option_no_terms_id,
-					'taxonomy' => $taxonomy,
+					'taxonomy' => $style_values['taxonomy'],
 					'description' => '',
 					'parent' => '0',
 					'count' => -1,
@@ -1300,7 +1305,7 @@ class MLATermList {
 					'slug' => $option_all_slug,
 					'term_group' => '0',
 					'term_taxonomy_id' => $option_all_id,
-					'taxonomy' => $taxonomy,
+					'taxonomy' => $style_values['taxonomy'],
 					'description' => '',
 					'parent' => '0',
 					'count' => -1,
