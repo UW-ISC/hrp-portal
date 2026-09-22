@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.39';
+	const CURRENT_MLA_VERSION = '3.41';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -382,6 +382,15 @@ class MLACore {
 	 * @var	string
 	 */
 	const JAVASCRIPT_UPDATE_COMPAT_ACTION = 'mla-update-compat-fields';
+
+	/**
+	 * Slug for the "dismiss admin notice" action
+	 *
+	 * @since 3.41
+	 *
+	 * @var	string
+	 */
+	const JAVASCRIPT_DISMISS_NOTICE_ACTION = 'mla-dismiss-notice';
 
 	/**
 	 * Option setting for "Featured in" reporting
@@ -2039,105 +2048,9 @@ class MLACore {
 				break;
 		}
 	}
-
-	/**
-	 * Admin Columns support storage model object for the Media/Assistant submenu
-	 *
-	 * @since 2.22
-	 *
-	 * @var	object
-	 */
-	public static $admin_columns_storage_model = NULL;
-
-	/**
-	 * Define the Media/Assistant submenu screen to the (old) Admin Columns plugin
-	 * Supports Admin Columns before 3.0 and Admin Columns Pro before 4.0
-	 *
-	 * @since 2.22
-	 *
-	 * @param	array	$storage_models List of storage model class instances ( [key] => [CPAC_Storage_Model object] )
-	 * @param	object	$cpac CPAC, the root CodePress Admin Columns object
-	 */
-	public static function admin_columns_support_deprecated( $storage_models, $cpac ) {
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support-deprecated.php' );
-		MLACore::$admin_columns_storage_model = new CPAC_Deprecated_Storage_Model_MLA();
-
-		// Put MLA before/after WP Media Library so is_columns_screen() will work
-		$new_models = array();
-		foreach ( $storage_models as $key => $model ) {
-			if ( 'wp-media' == $key ) {
-				if ( version_compare( CPAC_VERSION, '2.4.9', '>=' ) ) {
-					$new_models[ $key ] = $model;
-					$new_models[  MLACore::$admin_columns_storage_model->key ] = MLACore::$admin_columns_storage_model;
-				} else {
-					$new_models[  MLACore::$admin_columns_storage_model->key ] = MLACore::$admin_columns_storage_model;
-					$new_models[ $key ] = $model;
-				}
-			} else {
-				$new_models[ $key ] = $model;
-			}
-		}
-
-		// If we didn't find wp-media, add our entry to the end
-		if ( count( $storage_models ) == count( $new_models ) ) {
-			$new_models[ $storage_model->key ] = MLACore::$admin_columns_storage_model;
-		}
-
-		return $new_models;
-	}
-
-	/**
-	 * Create and register MLA-specific list screen handler for Admin Columns
-	 * Supports Admin Columns 3.0+ and Admin Columns Pro 4.0+
-	 *
-	 * @since 2.50
-	 */
-	public static function register_list_screen() {
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support.php' );
-
-		if ( function_exists( 'ACP' ) ) {
-			$legacy_version = version_compare( ACP()->get_version(), '5.0.0', '<' );
-
-			if ( version_compare( ACP()->get_version(), '6.0', '>=' ) ) {
-				// Load the latest version, with PHP 7.2 changes
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support.php' );
-			} elseif ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) {
-				// Load the interim version, with bulk edit support
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-45.php' );
-			} elseif ( version_compare( ACP()->get_version(), '4.3', '>=' ) ) {
-				// Load the interim version, with namespace support, without bulk edit support
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-44.php' );
-			} elseif ( version_compare( ACP()->get_version(), '4.2.3', '>=' ) ) {
-				// Load the interim version, with export support
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-423.php' );
-			} elseif ( version_compare( ACP()->get_version(), '4.2.0', '>=' ) ) {
-				// Load the interim version, with inline editing support
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-42.php' );
-			} else {
-				// Load the legacy version
-				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-40.php' );
-			}
-
-			if ( $legacy_version ) {
-				AC()->register_list_screen( new ACP_Addon_MLA_ListScreen );
-			} else {
-				AC\ListScreenTypes::instance()->register_list_screen( new ACP_Addon_MLA_ListScreen );
-			}
-		} else {
-			$legacy_version = version_compare( AC()->get_version(), '4.1.0', '<' );
-
-			if ( $legacy_version ) {
-				AC()->register_list_screen( new AC_Addon_MLA_ListScreen );
-			} else {
-				AC\ListScreenTypes::instance()->register_list_screen( new AC_Addon_MLA_ListScreen );
-			}
-		}
-	}
 } // Class MLACore
 
-/*
- * Option definitions and default values.
- */
+// Option definitions and default values.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-core-options.php' );
 
 /**
@@ -2213,8 +2126,4 @@ add_action( 'init', 'MLAMime::initialize', 0x800 ); // 0x7FFFFFFF );
 // Intermediate image sizes functions; some filters required in all modes.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-image-sizes.php' );
 add_action( 'init', 'MLAImage_Size::initialize', 0x800 ); // 0x7FFFFFFF );
-
-// Admin Columns plugin support
-//add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );
-//add_action( 'ac/list_screens', 'MLACore::register_list_screen', 10, 0 );
 ?>

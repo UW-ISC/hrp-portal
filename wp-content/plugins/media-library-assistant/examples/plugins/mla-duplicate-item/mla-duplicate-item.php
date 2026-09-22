@@ -9,7 +9,7 @@
  * https://wordpress.org/support/topic/feature-request-duplicate-media/
  *
  * @package MLA Duplicate Item
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -17,7 +17,7 @@ Plugin Name: MLA Duplicate Item
 Plugin URI: http://davidlingren.com/
 Description: Duplicate a Media Library item, including term assignments and custom fields
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
 Copyright 2023 David Lingren
@@ -53,7 +53,7 @@ class MLADuplicateItem {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.03';
+	const PLUGIN_VERSION = '1.04';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -78,7 +78,7 @@ class MLADuplicateItem {
 	 *
 	 * @since 1.00
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -167,8 +167,8 @@ class MLADuplicateItem {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -176,7 +176,7 @@ class MLADuplicateItem {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 		
 		// The remaining filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() ) {

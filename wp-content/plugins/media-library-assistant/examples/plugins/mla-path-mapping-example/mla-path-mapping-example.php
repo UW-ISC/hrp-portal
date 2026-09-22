@@ -19,7 +19,7 @@
  * https://wordpress.org/support/topic/taxonomy-in-the-assistant-listing/
  *
  * @package MLA Path Mapping Example
- * @version 1.14
+ * @version 1.15
  */
 
 /*
@@ -27,7 +27,7 @@ Plugin Name: MLA Path Mapping Example
 Plugin URI: http://davidlingren.com/
 Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features, and has tools to copy term definitions and assignments between taxonomies.
 Author: David Lingren
-Version: 1.14
+Version: 1.15
 Author URI: http://davidlingren.com/
 
 Copyright 2018-2025 David Lingren
@@ -61,7 +61,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.14';
+	const PLUGIN_VERSION = '1.15';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -86,7 +86,7 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.10
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -185,8 +185,8 @@ class MLAPathMappingExample {
 		add_filter( 'mla_mapping_updates', 'MLAPathMappingExample::mla_mapping_updates', 10, 5 );
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103', false ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -212,7 +212,7 @@ class MLAPathMappingExample {
 		}
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 
 		// Load template array for front-end shortcodes
 		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
@@ -604,7 +604,7 @@ class MLAPathMappingExample {
 		} else {
 			$messages = '';
 
-			$source_count = self::_get_source_terms( $source_taxonomy );
+			$source_count = self::_get_source_terms( $source_taxonomy, false );
 			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_assignments_action( {$source_count} )", self::MLA_DEBUG_CATEGORY );
 
 			$messages .= sprintf( 'Source %1$s - gathered %2$d term definitions.<br />', $source_taxonomy, $source_count ) . "\r\n";
@@ -642,10 +642,10 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array 	custom_field_mapping rule
-	 * @param	integer post ID to be evaluated
-	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array 	attachment_metadata, default NULL
+	 * @param	array 	$setting_value custom_field_mapping rule
+	 * @param	integer $post_id post ID to be evaluated
+	 * @param	string 	$category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	array 	$attachment_metadata, default NULL
 	 *
 	 * @return	array	updated custom_field_mapping rule
 	 */
@@ -678,11 +678,11 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	mixed 	string or array value returned by the rule
-	 * @param	string 	rule key - standard field slug, taxonomy slug or custom field name
-	 * @param	integer post ID to be evaluated
-	 * @param	string 	category/scope to evaluate against: iptc_exif_standard_mapping, iptc_exif_taxonomy_mapping or iptc_exif_custom_mapping
-	 * @param	array 	attachment_metadata, default NULL
+	 * @param	mixed 	$new_text string or array value returned by the rule
+	 * @param	string 	$setting_key rule key - standard field slug, taxonomy slug or custom field name
+	 * @param	integer $post_id post ID to be evaluated
+	 * @param	string 	$category/scope to evaluate against: iptc_exif_standard_mapping, iptc_exif_taxonomy_mapping or iptc_exif_custom_mapping
+	 * @param	array 	$attachment_metadata, default NULL
 	 *
 	 * @return	array	updated rule EXIF/Template value
 	 */
@@ -878,11 +878,11 @@ class MLAPathMappingExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	updates for the attachment's standard fields, taxonomies and/or custom fields
-	 * @param	integer post ID to be evaluated
-	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array 	mapping rules
-	 * @param	array 	attachment_metadata, default NULL
+	 * @param	array	$updates for the attachment's standard fields, taxonomies and/or custom fields
+	 * @param	integer $post_id post ID to be evaluated
+	 * @param	string 	$category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	array 	$settings mapping rules
+	 * @param	array 	$attachment_metadata, default NULL
 	 *
 	 * @return	array	updated attachment's updates
 	 */

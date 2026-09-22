@@ -239,6 +239,10 @@ class MLAShortcode_Support {
 
 				$src_file = $icon_dir . '/' . wp_basename( $src );
 				@list( $width, $height ) = getimagesize( $src_file );
+			} else {
+				$src = false;
+				$width = false;
+				$height = false;
 			}
 
 			if ( $src && $width && $height ) {
@@ -601,7 +605,7 @@ class MLAShortcode_Support {
 		if ( !empty( $date_query ) ) {
 			// Add existing queries to our date_query
 			if ( !empty( $shortcode_attributes['date_query'] ) ) {
-				$existing_query = self::_convert_query_parameter( 'archive_query', $shortcode_attributes['date_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
+				$existing_query = self::mla_convert_array_parameter( 'archive_query', $shortcode_attributes['date_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
 
 				if( is_array( $existing_query ) ) {
 					$existing_query[] = $date_query;
@@ -620,7 +624,7 @@ class MLAShortcode_Support {
 		if ( !empty( $meta_query ) ) {
 			// Add existing queries to our date_query
 			if ( !empty( $shortcode_attributes['meta_query'] ) ) {
-				$existing_query = self::_convert_query_parameter( 'archive_query', $shortcode_attributes['meta_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
+				$existing_query = self::mla_convert_array_parameter( 'archive_query', $shortcode_attributes['meta_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
 
 				if( is_array( $existing_query ) ) {
 					$existing_query[] = $meta_query;
@@ -719,6 +723,9 @@ class MLAShortcode_Support {
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_page_parameter = sanitize_title( $mla_page_parameter, self::$mla_get_shortcode_attachments_parameters['mla_page_parameter'] );
+
 		/*
 		 * Special handling of the mla_paginate_current parameter to make
 		 * "MLA pagination" easier. Look for this parameter in $_REQUEST
@@ -734,8 +741,9 @@ class MLAShortcode_Support {
 		 * The mla_archive_current parameter can be changed to support
 		 * multiple galleries per page.
 		 */
+		$default_archive_parameter = self::$mla_get_shortcode_attachments_parameters['mla_archive_parameter'];
 		if ( ! isset( $attr['mla_archive_parameter'] ) ) {
-			$attr['mla_archive_parameter'] = self::$mla_get_shortcode_attachments_parameters['mla_archive_parameter'];
+			$attr['mla_archive_parameter'] = $default_archive_parameter;
 		}
 
 		// The mla_archive_parameter can contain page_level parameters like {+page_ID+}
@@ -748,7 +756,10 @@ class MLAShortcode_Support {
 			$mla_archive_parameter = substr( $mla_archive_parameter, 0, $archive_empty_gallery );
 			$archive_empty_gallery = true;
 		}
-			
+
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_archive_parameter );
+
 		/*
 		 * Special handling of the mla_archive_current parameter to make
 		 * "MLA pagination" easier. Look for this parameter in $_REQUEST
@@ -756,7 +767,7 @@ class MLAShortcode_Support {
 		 */
 		if ( ! isset( $attr[ $mla_archive_parameter ] ) ) {
 			if ( isset( $_REQUEST[ $mla_archive_parameter ] ) ) {
-				$attr[ $mla_archive_parameter ] = sanitize_text_field( wp_unslash( $_REQUEST[ $mla_archive_parameter ] ) );
+				$attr[ $mla_archive_parameter ] = sanitize_title( wp_unslash( $_REQUEST[ $mla_archive_parameter ] ) );
 			}
 		}
 
@@ -1101,6 +1112,11 @@ class MLAShortcode_Support {
 
 		// Look for user-specified alternate gallery shortcode
 		$processing_alt_ids_value = false;
+		$mla_alt_ids_value = NULL;
+		$mla_alt_ids_template = NULL;
+		$mla_alt_shortcode_args = NULL;
+		$mla_alt_shortcode_ids = NULL;
+
 		if ( is_string( $arguments['mla_alt_shortcode'] ) ) {
 			// Replace data-selection parameters with the "ids" list
 			$blacklist = array_merge( self::$mla_get_shortcode_attachments_parameters, self::$mla_get_shortcode_dynamic_attachments_parameters );
@@ -1477,6 +1493,7 @@ class MLAShortcode_Support {
 		 * For "previous_link", "current_link" and "next_link",
 		 * discard all of the $attachments except the appropriate choice
 		 */
+		$pagination_index = 1;
 		if ( ! $is_gallery ) {
 			$link_type = $mla_output;
 
@@ -1486,7 +1503,7 @@ class MLAShortcode_Support {
 
 			$current_id = (int) ( ! empty( $arguments['id'] ) ? $arguments['id'] : $markup_values['page_ID'] );
 
-			$pagination_index = 1;
+			$attachment_index = 0;
 			$found_index = false;
 			foreach ( $attachments as $attachment_index => $attachment ) {
 				if ( $attachment->ID === $current_id ) {
@@ -2302,7 +2319,7 @@ class MLAShortcode_Support {
 	 *
 	 * @param array query elements
 	 *
-	 * @return array valid query elements
+	 * @return string URL-encoded valid query elements
 	 */
 	private static function _build_clean_query( $test_query ) {
 		$clean_query = array();
@@ -2312,6 +2329,8 @@ class MLAShortcode_Support {
 			if ( $test_key === urldecode( $test_key ) ) {
 				// Query argument names cannot have HTML special characters
 				if ( $test_key === htmlspecialchars ( $test_key, ENT_QUOTES, 'UTF-8' ) ) {
+					$test_key = urlencode( $test_key );
+
 					if ( is_array( $test_value ) ) {
 						$test_value = self::_build_clean_query( $test_value );
 						if ( ! empty( $test_value ) ) {
@@ -2690,7 +2709,7 @@ class MLAShortcode_Support {
 			$paged = absint( $arguments['paged'] );
 		}
 
-		if ( 0 == $paged ) {
+		if ( 0 === $paged ) {
 			$paged = 1;
 		}
 
@@ -2698,6 +2717,7 @@ class MLAShortcode_Support {
 			$paged = $max_page;
 		}
 
+		$new_page = 0;
 		switch ( $mla_output ) {
 			case 'previous_page':
 				if ( 1 < $paged ) {
@@ -2735,8 +2755,7 @@ class MLAShortcode_Support {
 				}
 
 				break;
-			case 'paginate_links':
-				$new_page = 0;
+			//case 'paginate_links':
 		}
 
 		$markup_values['current_page'] = $paged;
@@ -2745,13 +2764,13 @@ class MLAShortcode_Support {
 		$markup_values['posts_per_page'] = $posts_per_page;
 		$markup_values['found_rows'] = $found_rows;
 
-		if ( $paged ) {
+		if ( 0 !== $paged ) {
 			$markup_values['current_offset'] = ( $paged - 1 ) * $posts_per_page;
 		} else {
 			$markup_values['current_offset'] = 0;
 		}
 
-		if ( $new_page ) {
+		if ( 0 !== $new_page ) {
 			$markup_values['new_offset'] = ( $new_page - 1 ) * $posts_per_page;
 		} else {
 			$markup_values['new_offset'] = 0;
@@ -2780,8 +2799,8 @@ class MLAShortcode_Support {
 			$uri_query = add_query_arg( array(  $mla_page_parameter  => $new_page ), $uri_query );	
 		}
 
-		if ( ( 0 < strlen( $uri_query ) ) && ( '?' !== $uri_query[0] ) ) {
-			$uri_query = '?' . $uri_query;
+		if ( ( 0 < strlen( $uri_query ) ) && ( '?' === $uri_query[0] ) ) {
+			$uri_query = substr( $uri_query, 1 );
 		}
 
 		// Validate the query arguments to prevent cross-site scripting (reflection) attacks
@@ -2792,7 +2811,7 @@ class MLAShortcode_Support {
 		$markup_values['query_string'] = $clean_query;
 
 		if ( !empty( $clean_query ) ) {
-			$markup_values['request_uri'] = $uri_path . $clean_query;	
+			$markup_values['request_uri'] = $uri_path . '?' . $clean_query;	
 		} else {
 			$markup_values['request_uri'] = $uri_path;
 		}
@@ -2818,7 +2837,7 @@ class MLAShortcode_Support {
 			return self::_paginate_links( $output_parameters, $markup_values, $arguments, $found_rows, $output );
 		}
 
-		if ( 0 == $new_page ) {
+		if ( 0 === $new_page ) {
 			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
 				return wp_kses( self::mla_process_shortcode_parameter( $arguments['mla_nolink_text'] . 'page', $markup_values ), 'post' );
 			} else {
@@ -3387,7 +3406,7 @@ class MLAShortcode_Support {
 //error_log( __LINE__ . " _convert_meta_date_query( {$meta_date_key} ) date_query = " . var_export( $date_query, true ), 0 );
 
 		if ( is_string( $date_query ) ) {
-			$date_query = self::_convert_query_parameter( 'meta_date_query', $query_string, array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
+			$date_query = self::mla_convert_array_parameter( 'meta_date_query', $date_query, array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
 		}
 
 //error_log( __LINE__ . " _convert_meta_date_query( {$meta_date_key} ) date_query = " . var_export( $date_query, true ), 0 );
@@ -3425,18 +3444,18 @@ class MLAShortcode_Support {
 	}
 
 	/**
-	 * Convert a taxonomy, date or meta query parameter to an array
+	 * Convert a taxonomy, date, archive, meta or orderby shortcode parameter to an array
 	 *
 	 * @since 2.99
 	 *
-	 * @param string $query_type 'archive_query', 'tax_query', 'date_query', 'meta_query', 'meta_date_query'.
+	 * @param string $query_type e.g., 'archive_query', 'tax_query', 'date_query', 'meta_query', 'meta_date_query'.
 	 * @param mixed $query_string Array specification in text or array format, e.g., array of arrays.
 	 * @param array $where_used_alternative Harmless substitute for invalid "where-used" queries.
 	 *
 	 * @return mixed An array on success, error message string on failure
 	 */
-	private static function _convert_query_parameter( $query_type, $query_string, $where_used_alternative ) {
-//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) query_string = " . var_export( $query_string, true ), 0 );
+	public static function mla_convert_array_parameter( $query_type, $query_string, $where_used_alternative ) {
+//error_log( __LINE__ . " mla_convert_array_parameter( {$query_type} ) query_string = " . var_export( $query_string, true ), 0 );
 		if ( is_array( $query_string ) ) {
 			return $query_string;
 		}
@@ -3448,7 +3467,7 @@ class MLAShortcode_Support {
 		                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $candidate );
 
 		$candidate = trim( $candidate, ' ,"\`' );
-//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) candidate = " . var_export( $candidate, true ), 0 );
+//error_log( __LINE__ . " mla_convert_array_parameter( {$query_type} ) candidate = " . var_export( $candidate, true ), 0 );
 
 		// Unexpanded substitution parameters are not allowed
 		if ( false !== strpos( $candidate, '{+' ) ) {
@@ -3458,7 +3477,7 @@ class MLAShortcode_Support {
 			// Check for nested array specification(s) and reject anything else.
 			$converted_result = self::_validate_array_specification( $candidate );
 		}
-//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) converted_result = " . var_export( $converted_result, true ), 0 );
+//error_log( __LINE__ . " mla_convert_array_parameter( {$query_type} ) converted_result = " . var_export( $converted_result, true ), 0 );
 
 		if ( false === $converted_result ) {
 			// Replace invalid queries from "where-used" callers with a harmless equivalent
@@ -3607,7 +3626,7 @@ class MLAShortcode_Support {
 						$query_arguments[ $key ] = $value;
 						self::$mla_get_shortcode_dynamic_attachments_parameters[ $key ] = $value;
 					} else {
-						$tax_query = self::_convert_query_parameter( 'tax_query', $value, array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) ) );
+						$tax_query = self::mla_convert_array_parameter( 'tax_query', $value, array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) ) );
 
 						if ( is_array( $tax_query ) ) {
 							// Check for ignore.terms.assigned/-3, no.terms.assigned/-1 or any.terms.assigned/-2
@@ -4161,7 +4180,7 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$date_query = self::_convert_query_parameter( 'date_query', $value, ( $where_used_query ? array( array( 'column' => 'post_date', 'year' => '9999' ) ) : '' ) );
+						$date_query = self::mla_convert_array_parameter( 'date_query', $value, ( $where_used_query ? array( array( 'column' => 'post_date', 'year' => '9999' ) ) : '' ) );
  
 						if ( is_array( $date_query ) ) {
 							$query_arguments[ $key ] = $date_query;
@@ -4181,7 +4200,7 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$meta_query = self::_convert_query_parameter( 'meta_query', $value, ( $where_used_query ? array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) ) : '' ) );
+						$meta_query = self::mla_convert_array_parameter( 'meta_query', $value, ( $where_used_query ? array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) ) : '' ) );
 
 						if ( is_array( $meta_query ) ) {
 							$query_arguments[ $key ] = $meta_query;
@@ -4219,7 +4238,7 @@ class MLAShortcode_Support {
 				$query_arguments['date_query'][0] = $simple_date_query;
 			} else {
 				if ( is_string( $query_arguments['date_query'] ) ) {
-					$query_arguments['date_query'] = self::_convert_query_parameter( 'meta_date_query', $query_arguments['date_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
+					$query_arguments['date_query'] = self::mla_convert_array_parameter( 'meta_date_query', $query_arguments['date_query'], array( array( 'column' => 'post_date', 'year' => '9999' ) ) );
 				}
 
 				$query_arguments['date_query'][] = $simple_date_query;
@@ -4910,7 +4929,8 @@ class MLAShortcode_Support {
 		if ( is_array( $arguments['taxonomy'] ) ) {
 			$taxonomy = reset( $arguments['taxonomy'] );
 		} else {
-			$taxonomy = reset( explode( ',', $arguments['taxonomy'] ) );
+			$arguments['taxonomy'] = explode( ',', $arguments['taxonomy'] );
+			$taxonomy = reset( $arguments['taxonomy'] );
 		}
 
 		$clause = array( 'SELECT' );
@@ -5197,6 +5217,18 @@ class MLAShortcode_Support {
 			}
 		}
 
+		if ( is_array( $arguments['post_type'] ) ) {
+			$post_types = $arguments['post_type'];
+		} else {
+			$post_types = array( $arguments['post_type'] );
+		}
+
+		if ( is_array( $arguments['post_status'] ) ) {
+			$post_stati = $arguments['post_status'];
+		} else {
+			$post_stati = array( $arguments['post_status'] );
+		}
+
 		$clauses['fields'] = implode( ',', $field_array );
 		$clause = array ( 'INNER JOIN `' . $wpdb->term_taxonomy . '` AS tt ON t.term_id = tt.term_id' );
 		$clause_parameters = array();
@@ -5216,12 +5248,6 @@ class MLAShortcode_Support {
 			$clause[] = 'LEFT JOIN `' . $wpdb->posts . '` AS p ON ( tr.object_id = p.ID';
 
 			// Add type and status constraints
-			if ( is_array( $arguments['post_type'] ) ) {
-				$post_types = $arguments['post_type'];
-			} else {
-				$post_types = array( $arguments['post_type'] );
-			}
-
 			$placeholders = array();
 			foreach ( $post_types as $post_type ) {
 				$placeholders[] = '%s';
@@ -5229,12 +5255,6 @@ class MLAShortcode_Support {
 			}
 
 			$clause[] = 'AND p.post_type IN (' . join( ',', $placeholders ) . ')';
-
-			if ( is_array( $arguments['post_status'] ) ) {
-				$post_stati = $arguments['post_status'];
-			} else {
-				$post_stati = array( $arguments['post_status'] );
-			}
 
 			$placeholders = array();
 			foreach ( $post_stati as $post_status ) {

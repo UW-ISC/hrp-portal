@@ -191,7 +191,7 @@ class MLACustomList {
 	 *
 	 * @since 3.13
 	 *
-	 * @param	array	custom field to search and query parameters
+	 * @param	array	$attr custom field to search and query parameters
 	 *
 	 * @return	array	( 'ignore.values.assigned' => count, 'no.values.assigned' => count, 'any.values.assigned' => count )
 	 */
@@ -307,7 +307,7 @@ class MLACustomList {
 	 *
 	 * @param array $item_values Style and list-level substitution parameters, by reference
 	 * @param string $item_template Item element of the markup template
-	 * @param array $value Custom List object
+	 * @param object $value Custom List object
 	 * @param array $arguments Shortcode parameters, including defaults, by reference
 	 * @param array $attr Shortcode parameters, explicit, by reference
 	 *
@@ -392,7 +392,7 @@ class MLACustomList {
 
 		// Add item_specific field-level substitution parameters  TODO
 		$new_text = isset( $item_template ) ? $item_template : '';
-		foreach( self::$item_specific_arguments as $index => $value ) {
+		foreach( self::$item_specific_arguments as $index => $arg_value ) {
 			$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
 		}
 
@@ -573,24 +573,31 @@ class MLACustomList {
 			$current_item = $arguments['current_item'];
 //error_log( __LINE__ . ' _compose_custom_pagination current_item = ' . var_export( $current_item, true ), 0 );
 
+			$index = 0;
+			$found_index = false;
 			foreach ( $values as $index => $value ) {
 				if ( $value->meta_value == $current_item ) {
+					$found_index = true;
 					break;
 				}
 			}
 //error_log( __LINE__ . ' _compose_custom_pagination index = ' . var_export( $index, true ), 0 );
 
-			switch ( $mla_output ) {
-				case 'previous_link':
-					$target_index = $index - 1;
-					break;
-				case 'next_link':
-					$target_index = $index + 1;
-					break;
-				case 'current_link':
-				default:
-					$target_index = $index;
-			} // link_type
+			if ( $found_index ) {
+				switch ( $mla_output ) {
+					case 'previous_link':
+						$target_index = $index - 1;
+						break;
+					case 'next_link':
+						$target_index = $index + 1;
+						break;
+					case 'current_link':
+					default:
+						$target_index = $index;
+				} // link_type
+			} else {
+				$target_value = -2;
+			}
 		}
 //error_log( __LINE__ . ' _compose_custom_pagination target_index = ' . var_export( $target_index, true ), 0 );
 
@@ -945,6 +952,9 @@ class MLACustomList {
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_item_parameter'] ) );
 		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
+
 		/*
 		 * Special handling of mla_item_parameter to make multiple lists per page easier.
 		 * Look for this parameter in $_REQUEST if it's not present in the shortcode itself.
@@ -969,6 +979,9 @@ class MLACustomList {
 		// The mla_page_parameter can contain page_level parameters like {+page_ID+}
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_page_parameter = sanitize_title( $mla_page_parameter, $defaults['mla_page_parameter'] );
 
 		/*
 		 * Special handling of the mla_custom_list_current parameter to make "MLA pagination"
@@ -1757,9 +1770,10 @@ class MLACustomList {
 	 * 
 	 * @since 3.33
 	 *
-	 * @param	string	comma-separated string of qualified field names, e.g., tt.taxonomy
+	 * @param	string	$fields comma-separated string of qualified field names, e.g., tt.taxonomy
+	 * @param	boolean	$no_count true if the SELECT clause should not include any post fields
 	 *
-	 * @return	array	exploded array of validated field names, or false if validation fails
+	 * @return	string	imploded array of validated field names, or false if validation fails
 	 */
 	private static function mla_validate_get_custom_values_fields( $fields, $no_count = false) {
 		$fields =  array_map( 'trim', explode( ',', $fields ) );
@@ -1789,7 +1803,7 @@ class MLACustomList {
 	 *
 	 * @since 3.13
 	 *
-	 * @param	array	meta_key and query parameters
+	 * @param	array	$attr meta_key and query parameters
 	 *
 	 * @return	array	array of custom field objects, empty if none found
 	 */	

@@ -53,6 +53,7 @@ class MLAData_Source {
 		'current_datetime',
 		'current_getdate',
 
+		'absolute_url',
 		'absolute_path',
 		'absolute_file_name',
 		'base_file',
@@ -123,7 +124,7 @@ class MLAData_Source {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string 	candidate data source name
+	 * @param	string 	$candidate_name candidate data source name
 	 *
 	 * @return	boolean	true if candidate name matches a data source
 	 */
@@ -158,10 +159,10 @@ class MLAData_Source {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	integer	post->ID of attachment
-	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array	data source specification ( data_source, qualifier, meta_name, keep_existing, format, option )
-	 * @param	array 	(optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
+	 * @param	integer	$post_id post->ID of attachment
+	 * @param	string 	$category category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	array	$data_value data source specification ( data_source, qualifier, meta_name, keep_existing, format, option )
+	 * @param	array 	$attachment_metadata (optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
 	 *
 	 * @return	string|array	data source value
 	 */
@@ -194,10 +195,10 @@ class MLAData_Source {
 	 * 
 	 * @since 3.24
 	 *
-	 * @param	int		the level of the error raised
-	 * @param	string	the error message
-	 * @param	string	the filename that the error was raised in
-	 * @param	int		the line number the error was raised at
+	 * @param	int		$type the level of the error raised
+	 * @param	string	$string the error message
+	 * @param	string	$file the filename that the error was raised in
+	 * @param	int		$line the line number the error was raised at
 	 *
 	 * @return	boolean	true, to bypass PHP error handler
 	 */
@@ -212,7 +213,7 @@ class MLAData_Source {
 	 * 
 	 * @since 3.24
 	 *
-	 * @param	string	the absolute path and filename
+	 * @param	string	$file the absolute path and filename
 	 *
 	 * @return	mixed	integer file size or false if failure
 	 */
@@ -235,10 +236,10 @@ class MLAData_Source {
  	 *
 	 * @since 2.20
 	 *
-	 * @param	string	absolute path the the uploads base directory
-	 * @param	array	_wp_attached_file meta_value array, indexed by post_id
-	 * @param	array	_wp_attachment_metadata meta_value array, indexed by post_id
-	 * @param	integer	post->ID of attachment
+	 * @param	string	$upload_dir absolute path to the uploads base directory
+	 * @param	array	$wp_attached_files _wp_attached_file meta_value array, indexed by post_id
+	 * @param	array	$wp_attachment_metadata _wp_attachment_metadata meta_value array, indexed by post_id
+	 * @param	integer	$post_id post->ID of attachment
 	 *
 	 * @return	array	absolute_path_raw, absolute_path, absolute_file_name_raw, absolute_file_name, absolute_file, base_file, path, file_name, extension, dimensions, width, height, hwstring_small, array of intermediate sizes
 	 */
@@ -381,9 +382,9 @@ class MLAData_Source {
  	 *
 	 * @since 2.20
 	 *
-	 * @param	integer	post->ID of attachment
-	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	string	data source name ( post_date or post_parent )
+	 * @param	integer	$post_id post->ID of attachment
+	 * @param	string 	$category category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	string	$data_source data source name ( post_date or post_parent )
 	 *
 	 * @return	mixed	(string)/'' or  (int) /0 depending on $data_source type
 	 */
@@ -439,9 +440,9 @@ class MLAData_Source {
  	 *
 	 * @since 2.20
 	 *
-	 * @param	array	field value(s)
-	 * @param	string 	format option text|single|export|array|multi
-	 * @param	boolean	keep existing value(s) - for 'multi' option
+	 * @param	array	$value field value(s)
+	 * @param	string 	$option format option text|single|export|array|multi
+	 * @param	boolean	$keep_existing keep existing value(s) - for 'multi' option
 	 *
 	 * @return	mixed	array for option = array|multi else string
 	 */
@@ -473,10 +474,10 @@ class MLAData_Source {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	integer	post->ID of attachment
-	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array	data source specification ( name, *data_source, *keep_existing, *format, mla_column, quick_edit, bulk_edit, *meta_name, *option, no_null )
-	 * @param	array 	(optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
+	 * @param	integer	$post_id post->ID of attachment
+	 * @param	string 	$category category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	array	$data_value data source specification ( name, *data_source, *keep_existing, *format, mla_column, quick_edit, bulk_edit, *meta_name, *option, no_null )
+	 * @param	array 	$attachment_metadata (optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
 	 *
 	 * @return	string|array	data source value
 	 */
@@ -704,6 +705,9 @@ class MLAData_Source {
 				} else {
 					$result = '';
 				}
+				break;
+			case 'absolute_url':
+				$result = wp_get_attachment_url( $post_id );
 				break;
 			case 'absolute_path':
 			case 'absolute_file_name':

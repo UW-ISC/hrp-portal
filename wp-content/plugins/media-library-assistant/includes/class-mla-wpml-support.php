@@ -88,7 +88,7 @@ class MLA_WPML {
 	 */
 	public static function admin_init() {
 		// Add styles for the language management column
-		if ( isset( $_REQUEST['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_REQUEST['page'] ) ) {
+		if ( isset( $_GET['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_GET['page'] ) ) {
 			add_action( 'admin_print_styles', 'MLA_WPML_Table::mla_list_table_add_icl_styles' );
 		}
 

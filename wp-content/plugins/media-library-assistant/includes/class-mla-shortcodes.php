@@ -88,6 +88,25 @@ class MLAShortcodes {
 		}
 		
 		return MLAShortcode_Support::mla_validate_attributes( $attr, $content );
+}
+
+	/**
+	 * Convert a taxonomy, date, archive, meta or orderby shortcode parameter to an array
+	 *
+	 * @since 3.40
+	 *
+	 * @param string $query_type, e.g., 'archive_query', 'tax_query', 'date_query', 'meta_query', 'meta_date_query'.
+	 * @param mixed $query_string Array specification in text or array format, e.g., array of arrays.
+	 * @param array $where_used_alternative Harmless substitute for invalid "where-used" queries.
+	 *
+	 * @return mixed An array on success, error message string on failure
+	 */
+	public static function mla_convert_array_parameter( $query_type, $query_string, $where_used_alternative ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+		
+		return MLAShortcode_Support::mla_convert_array_parameter( $query_type, $query_string, $where_used_alternative );
 	}
 
 	/**

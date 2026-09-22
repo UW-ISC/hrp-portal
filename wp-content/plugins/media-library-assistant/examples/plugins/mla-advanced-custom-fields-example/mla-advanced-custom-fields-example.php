@@ -48,7 +48,7 @@
  * https://wordpress.org/support/topic/bulk-edit-acf-custom-field/
  *
  * @package MLA Advanced Custom Fields Example
- * @version 1.11
+ * @version 1.12
  */
 
 /*
@@ -56,7 +56,7 @@ Plugin Name: MLA Advanced Custom Fields Example
 Plugin URI: http://davidlingren.com/
 Description: Supports an ACF checkbox, "where-used" in an ACF repeater, one or more ACF "image" fields and one or more ACF "select" fields.
 Author: David Lingren
-Version: 1.11
+Version: 1.12
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2021 David Lingren
@@ -92,7 +92,7 @@ class MLAACFExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.11';
+	const PLUGIN_VERSION = '1.12';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -152,7 +152,7 @@ class MLAACFExample {
 	 *
 	 * @since 1.06
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -175,15 +175,15 @@ class MLAACFExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
 		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 		MLACore::mla_debug_add( __LINE__ . ' MLAACFExample::initialize plugin_settings = ' . var_export( self::$plugin_settings->get_plugin_option( 'current_settings' ), true ), self::MLA_DEBUG_CATEGORY );
 
 		// Defined in /media-library-assistant/includes/class-mla-data.php
@@ -437,7 +437,7 @@ class MLAACFExample {
 					$messages .= sprintf( __( 'Deleting %1$s', 'media-library-assistant' ) . '<br>', $field );
 				} else {
 					update_post_meta( $post_id, $field, self::$acf_checkbox_value );
-					$messages .= sprintf( __( 'Adding %1$s = %2$s', 'media-library-assistant' ) . '<br>', $field, implode( ',', self::$acf_checkbox_value ) );
+					$messages .= sprintf( __( 'Adding %1$s = %2$s', 'media-library-assistant' ) . '<br>', $field, self::$acf_checkbox_value );
 				}
 			}
 		} // acf_checkbox_enabled

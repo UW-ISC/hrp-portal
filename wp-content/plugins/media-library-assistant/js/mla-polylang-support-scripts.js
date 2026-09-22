@@ -127,7 +127,7 @@ var jQuery,
 			$( '#pll-bulk-translate' ).addClass( 'inline-translator' ).show();
 
 			// Make sure at least one item has been selected
-			$( 'tbody th.check-column input[type="checkbox"]' ).each( function(){
+			$( 'tbody .check-column input[type="checkbox"]' ).each( function(){
 				if ( $( this ).prop( 'checked' ) ) {
 					c = false;
 					var id = $( this ).val(), theTitle;

@@ -94,9 +94,9 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	int	post ID of attachment
-	 * @param	int	post ID of attachment's parent, if any
-	 * @param	boolean	True to compute references, false to return empty values
+	 * @param	int	$ID post ID of attachment
+	 * @param	int	$parent post ID of attachment's parent, if any
+	 * @param	boolean	$add_references True to compute references, false to return empty values
 	 *
 	 * @return	array	Reference information; see $references array comments
 	 */
@@ -123,7 +123,7 @@ class MLAQuery {
 	 *
 	 * @since 1.94
 	 *
-	 * @param	array	WP_Post objects, passed by reference
+	 * @param	array	$attachments WP_Post objects, passed by reference
 	 *
 	 * @return	void	updates WP_Post objects with new mla_references property
 	 */
@@ -143,7 +143,7 @@ class MLAQuery {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	string name of the gallery's cache/option variable
+	 * @param	string $option_name name of the gallery's cache/option variable
 	 *
 	 * @return	void
 	 */
@@ -326,7 +326,7 @@ class MLAQuery {
 	 *
 	 * @since 1.40
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $mla_list_table_items = NULL;
 
@@ -335,8 +335,8 @@ class MLAQuery {
 	 *
 	 * @since 2.66
 	 *
-	 * @param	mixed	single taxonomy (string) or taxonomy list (array of strings)
-	 * @param	array	arguments for taxonomy terms query
+	 * @param	mixed	$taxonomy taxonomy (string) or taxonomy list (array of strings)
+	 * @param	array	$args arguments for taxonomy terms query
 	 *
 	 * @return	array|int|WP_Error List of WP_Term instances and their children. Will return WP_Error, if any of $taxonomies do not exist.
 	 */
@@ -356,9 +356,9 @@ class MLAQuery {
 	 *
 	 * @since 0.30
 	 *
-	 * @param	array	Query variables, e.g., from $_REQUEST
-	 * @param	int		(optional) number of rows to skip over to reach desired page
-	 * @param	int		(optional) number of rows on each page
+	 * @param	array	$request Query variables, e.g., from $_REQUEST
+	 * @param	int		$offset (optional) number of rows to skip over to reach desired page
+	 * @param	int		$count (optional) number of rows on each page
 	 *
 	 * @return	integer	Number of attachment posts
 	 */
@@ -396,9 +396,9 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	array	query parameters from web page, usually found in $_REQUEST
-	 * @param	int		number of rows to skip over to reach desired page
-	 * @param	int		number of rows on each page
+	 * @param	array	$request query parameters from web page, usually found in $_REQUEST
+	 * @param	int		$offset number of rows to skip over to reach desired page
+	 * @param	int		$count number of rows on each page
 	 *
 	 * @return	array	attachment objects (posts) including parent data, meta data and references
 	 */
@@ -441,9 +441,9 @@ class MLAQuery {
 	 *
 	 * @since 1.20
 	 *
-	 * @param	array	query parameters from Media Manager
-	 * @param	int		number of rows to skip over to reach desired page
-	 * @param	int		number of rows on each page
+	 * @param	array	$request query parameters from Media Manager
+	 * @param	int		$offset number of rows to skip over to reach desired page
+	 * @param	int		$count number of rows on each page
 	 *
 	 * @return	object	WP_Query object with query results
 	 */
@@ -460,7 +460,7 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	int		post ID of attachment's parent, if any
+	 * @param	int		$parent_id post ID of attachment's parent, if any
 	 *
 	 * @return	array	Parent information; post_date, post_title and post_type
 	 */
@@ -511,7 +511,7 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	int		post ID of attachment
+	 * @param	int		$post_id post ID of attachment
 	 *
 	 * @return	array	Meta data variables
 	 */
@@ -535,6 +535,8 @@ class MLAQuery {
 				if ( empty( $post_meta_key ) ) {
 					continue;
 				}
+
+				$key = 'mla_item_' . $post_meta_key;
 
 				if ( '_' == $post_meta_key[0] ) {
 					if ( stripos( $post_meta_key, '_wp_attached_file' ) === 0 ) {
@@ -660,7 +662,7 @@ class MLAQuery {
  	 *
 	 * @since 1.10
 	 *
-	 * @param	string	slug, e.g., 'c_File Size' for the 'File Size' field
+	 * @param	string	$slug e.g., 'c_File Size' for the 'File Size' field
 	 *
 	 * @return	array	option value, e.g., array( 'name' => 'File Size', ... )
 	 */
@@ -683,9 +685,9 @@ class MLAQuery {
 	 *
 	 * @uses	array	self::$search_parameters
 	 *
-	 * @param	string	whole_string e.g., ( "a phrase" separate phrase ) without parens, space delimited
-	 * @param	string	term_delimiter separator between terms for terms search
-	 * @param	string	negative_delimiter delimiter for negative phrases, e.g., /exclude this/, /"exclude also"/
+	 * @param	string	$whole_string e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 * @param	string	$term_delimiter separator between terms for terms search
+	 * @param	string	$negative_delimiter delimiter for negative phrases, e.g., /exclude this/, /"exclude also"/
 	 *
 	 * @return	array	( 'original' => all phrases, 'positive' => positive phrases, 'negative' => negative phrases )
 	 */
@@ -830,9 +832,9 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	array	query parameters from web page, usually found in $_REQUEST
-	 * @param	int		Optional number of rows (default 0) to skip over to reach desired page
-	 * @param	int		Optional number of rows on each page (0 = all rows, default)
+	 * @param	array	$raw_request query parameters from web page, usually found in $_REQUEST
+	 * @param	int		$offset Optional number of rows (default 0) to skip over to reach desired page
+	 * @param	int		$count Optional number of rows on each page (0 = all rows, default)
 	 *
 	 * @return	array	revised arguments suitable for WP_Query
 	 */
@@ -1037,16 +1039,42 @@ class MLAQuery {
 					if ( is_string( $value ) ) {
 						break;
 					}
-					
-					// Search on filter term only is valid, so make sure filter is defined
-					if ( empty( $value['filter'] ) ) {
-						$value['filter'] = 0;
+
+					// Filter the value to exclude invalid keys
+					$clean_value = array();
+					$clean_value['filter'] = isset( $value['filter'] ) ? (int) $value['filter'] : 0;
+					$clean_value['phrases'] = isset( $value['phrases'] ) ? wp_kses( wp_unslash( $value['phrases'] ), 'post' ) : '';
+					$clean_value['taxonomies'] = isset( $value['taxonomies'] ) ? array_map( 'sanitize_text_field', wp_unslash( $value['taxonomies'] ) ) : array();
+					$clean_value['radio_phrases'] = isset( $value['radio_phrases'] ) ? sanitize_text_field( wp_unslash( $value['radio_phrases'] ) ) : 'AND';
+					$clean_value['radio_terms'] = isset( $value['radio_terms'] ) ? sanitize_text_field( wp_unslash( $value['radio_terms'] ) ) : 'OR';
+
+					if ( isset( $value['exact'] ) ) {
+						$clean_value['exact'] = 'exact';
 					}
 
-					if ( ! empty( $value['phrases'] ) && ! empty( $value['taxonomies'] ) ) {
-						$value['phrases'] = stripslashes( trim( $value['phrases'] ) );
-						if ( ! empty( $value['phrases'] ) ) {
-							switch ( substr( $value['phrases'], 0, 3 ) ) {
+					if ( isset( $value['whole_word'] ) ) {
+						$clean_value['whole_word'] = 'whole_word';
+					}
+					
+					// Search on filter term only is valid, so make sure filter is defined
+					if ( empty( $clean_value['filter'] ) ) {
+						$clean_value['filter'] = 0;
+					}
+
+					// The default for radio_phrases is AND
+					if ( isset( $clean_value['radio_phrases'] ) ) {
+						$clean_value['radio_phrases'] = ( 'OR' === strtoupper( $clean_value['radio_phrases'] ) ) ? 'OR' : 'AND';
+					}
+
+					// The default for radio_terms is OR
+					if ( isset( $clean_value['radio_terms'] ) ) {
+						$clean_value['radio_terms'] = ( 'AND' === strtoupper( $clean_value['radio_terms'] ) ) ? 'AND' : 'OR';
+					}
+
+					if ( ! empty( $clean_value['phrases'] ) && ! empty( $clean_value['taxonomies'] ) ) {
+						$clean_value['phrases'] = trim( $clean_value['phrases'] );
+						if ( ! empty( $clean_value['phrases'] ) ) {
+							switch ( substr( $clean_value['phrases'], 0, 3 ) ) {
 								case '}|{':
 									$clean_request['debug'] = 'console';
 									break;
@@ -1056,19 +1084,20 @@ class MLAQuery {
 							}
 		
 							if ( isset( $clean_request['debug'] ) ) {
-								$value['phrases'] = substr( $value['phrases'], 3 );
+								$clean_value['phrases'] = substr( $clean_value['phrases'], 3 );
 							}
 
-							if ( ! empty( $value['phrases'] ) ) {
-								$clean_request[ $key ] = $value;
+							if ( ! empty( $clean_value['phrases'] ) ) {
+								$clean_request[ $key ] = $clean_value;
 							}
 						}
-					} elseif ( 0 !== $value['filter'] ) {
-						$clean_request[ $key ] = $value;
+					} elseif ( 0 !== $clean_value['filter'] ) {
+						$clean_request[ $key ] = $clean_value;
 					}
 
 					break;
 				case 'mla_search_connector':
+					$value = ( 'OR' === strtoupper( $value ) ) ? 'OR' : 'AND';
 				case 'mla_search_fields':
 					$clean_request[ $key ] = $value;
 					break;
@@ -1413,7 +1442,7 @@ class MLAQuery {
 	 *
 	 * @since 0.30
 	 *
-	 * @param	array	query parameters from web page, usually found in $_REQUEST
+	 * @param	array	$request query parameters from web page, usually found in $_REQUEST
 	 *
 	 * @return	object	WP_Query object with query results
 	 */
@@ -1453,7 +1482,7 @@ class MLAQuery {
 		}
 
 		// Remove WP Media Folders actions from MLA queries for the Media/Assistant submenu table
-		if ( isset( $GLOBALS['wp_media_folder'] ) && isset( $_REQUEST['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_REQUEST['page'] ) ) {
+		if ( isset( $GLOBALS['wp_media_folder'] ) && isset( $_GET['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_GET['page'] ) ) {
 			$wpmf_pre_get_posts_priority = has_filter( 'pre_get_posts', array( $GLOBALS['wp_media_folder'], 'wpmf_pre_get_posts' ) );
 			$wpmf_pre_get_posts1_priority = has_filter( 'pre_get_posts', array( $GLOBALS['wp_media_folder'], 'wpmf_pre_get_posts1' ) );
 		}
@@ -1538,7 +1567,7 @@ class MLAQuery {
 	 *
 	 * @since 2.13
 	 *
-	 * @param	string	search string
+	 * @param	string	$search_string search string
 	 *
 	 * @return	boolean	true if wildcard
 	 */
@@ -1567,7 +1596,7 @@ class MLAQuery {
 	 *
 	 * @since 1.51
 	 *
-	 * @param	string	search term before modification
+	 * @param	string	$term search term before modification
 	 *
 	 * @return	string	cleaned up search term
 	 */
@@ -1582,8 +1611,8 @@ class MLAQuery {
 	 *
 	 * @since 2.11
 	 *
-	 * @param	string	the quoted phrase (without enclosing quotes)
-	 * @param	string	the entire term
+	 * @param	string	$needle the quoted phrase (without enclosing quotes)
+	 * @param	string	$haystack the entire term
 	 *
 	 * @return	boolean	$needle is a word match within $haystack
 	 */
@@ -1611,9 +1640,9 @@ class MLAQuery {
 	 *
 	 * @since 2.31
 	 *
-	 * @param	string	phrases, e.g., ( "a phrase" separate phrase ) without parens, space delimited
-	 * @param	string	inter-term/phrase delimiter
-	 * @param	boolean	true escape backslash values, false to preserve them
+	 * @param	string	$whole_string phrases, e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 * @param	string	$delimiter inter-term/phrase delimiter
+	 * @param	boolean	$full_parse true escape backslash values, false to preserve them
 	 *
 	 * @return	array	individual arguments, e.g. array( 0 => '"a phrase"', 1 => 'separate', 2 => 'phrase' )
 	 */
@@ -1694,8 +1723,8 @@ class MLAQuery {
 	 *
 	 * @since 0.60
 	 *
-	 * @param	array	Terms search phrases and delimiters
-	 * @param	string	SQL clause for tax query, by reference
+	 * @param	array	$terms_search_parameters search phrases and delimiters
+	 * @param	string	$tax_clause SQL clause for tax query, by reference
 	 *
 	 * @return	integer	Taxonomy JOIN clauses required. Updates $tax_clause as well
 	 */
@@ -1859,7 +1888,7 @@ class MLAQuery {
 	 *
 	 * @since 0.60
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$search_string query clause before modification
 	 *
 	 * @return	string	query clause after keyword search addition
 	 */
@@ -2049,7 +2078,7 @@ class MLAQuery {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$where_clause query clause before modification
 	 *
 	 * @return	string	query clause after modification
 	 */
@@ -2123,7 +2152,7 @@ class MLAQuery {
 	 *
 	 * @since 0.30
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$join_clause query clause before modification
 	 *
 	 * @return	string	query clause after "LEFT JOIN view ON post_id" item modification
 	 */
@@ -2196,7 +2225,7 @@ class MLAQuery {
 	 *
 	 * @since 1.90
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$groupby_clause query clause before modification
 	 *
 	 * @return	string	updated query clause
 	 */
@@ -2218,7 +2247,7 @@ class MLAQuery {
 	 *
 	 * @since 0.30
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$orderby_clause query clause before modification
 	 *
 	 * @return	string	updated query clause
 	 */
@@ -2292,7 +2321,7 @@ class MLAQuery {
 	 *
 	 * @since 1.80
 	 *
-	 * @param	boolean	Default setting
+	 * @param	boolean	$admin_search_ok Default setting
 	 *
 	 * @return	boolean	Updated setting
 	 */
@@ -2306,7 +2335,7 @@ class MLAQuery {
 	 *
 	 * @since 2.25
 	 *
-	 * @param	boolean	Default setting
+	 * @param	boolean	$prevent Default setting
 	 *
 	 * @return	boolean	Updated setting
 	 */
@@ -2356,7 +2385,7 @@ class MLAQuery {
 	 *
 	 * @since 1.80
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 *
 	 * @return	array	query clauses after modification (none)
 	 */
@@ -2375,7 +2404,7 @@ class MLAQuery {
 	 *
 	 * @since 1.80
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 *
 	 * @return	array	query clauses after modification (none)
 	 */

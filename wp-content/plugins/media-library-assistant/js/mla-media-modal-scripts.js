@@ -206,6 +206,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 
 			searchValues = {
 				'mla_state': state,
+				'mla_admin_nonce': mlaModal.settings.ajaxNonce,
 				'mla_filter_mime': mlaModal.settings.query[state].filterMime,
 				'mla_filter_uploaded': mlaModal.settings.query[state].filterUploaded,
 				'mla_filter_month': mlaModal.settings.query[state].filterMonth,
@@ -655,6 +656,12 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 								case 'mla_terms_search[radio_terms]':
 									termsSearch.radio_terms = inputs[ inputIndex ].value;
 									break;
+								case 'mla_terms_search[exact]':
+									termsSearch.exact = inputs[ inputIndex ].value;
+									break;
+								case 'mla_terms_search[whole_word]':
+									termsSearch.whole_word = inputs[ inputIndex ].value;
+									break;
 								case 'mla_terms_search[taxonomies][]':
 									termsSearch.taxonomies[ termsSearch.taxonomies.length ] = inputs[ inputIndex ].value;
 									break;
@@ -906,50 +913,50 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 			
 			adjustLayout: function() {
-				var wrapper = null, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
+				var toolbar = this.toolbar, totalWidth, toolbarHeight, primaryHeight, secondaryHeight;
 
-				if ( 'object' === typeof this.attachmentsWrapper ) {
-					wrapper = this.attachmentsWrapper;
-				} else {
-					if ( 'object' === typeof this.attachments ) {
-						wrapper = this.attachments;	
-					}
-				}
-
-				if ( null === wrapper ) {
+				totalWidth = toolbar.$el.width();
+				if ( totalWidth === 0 ) {
 					return;
 				}
 
-				totalWidth = toolbar.$el.width();
-				if ( totalWidth > 0 ) {
-					// Try to find the unconstrained width of the search form
-					toolbar.secondary.$el.css( 'max-width', '100px' );
-					toolbar.primary.$el.css( 'max-width', totalWidth - 100 + 'px' );
-					primaryWidth = toolbar.primary.$el.width();
-					secondaryWidth = toolbar.secondary.$el.width();
+				// Try to find the unconstrained width of the search form
+				toolbar.secondary.$el.css( 'max-width', '100px' );
+				toolbar.primary.$el.css( 'max-width', totalWidth - 100 + 'px' );
+				primaryWidth = toolbar.primary.$el.width();
+				secondaryWidth = toolbar.secondary.$el.width();
 
-					// Don't be too greedy
-					if ( primaryWidth > ( totalWidth / 2 ) ) {
-						primaryWidth = totalWidth / 2;
-					}
-
-					// 20px is the width of the hidden "spinner" span, 1px is a margin between primary and secondary
-					toolbar.secondary.$el.css( 'max-width', totalWidth - (primaryWidth + 20 + 1) + 'px' );
-					toolbar.primary.$el.css( 'max-width', (primaryWidth + 1) + 'px' );
+				// Don't be too greedy
+				if ( primaryWidth > ( totalWidth / 2 ) ) {
+					primaryWidth = totalWidth / 2;
 				}
+
+				// 20px is the width of the hidden "spinner" span, 1px is a margin between primary and secondary
+				toolbar.secondary.$el.css( 'max-width', totalWidth - (primaryWidth + 20 + 1) + 'px' );
+				toolbar.primary.$el.css( 'max-width', (primaryWidth + 1) + 'px' );
 
 				primaryHeight = toolbar.primary.$el.height();
 				secondaryHeight = toolbar.secondary.$el.height();
 
+				// 26 = toolbar padding plus 2px for good measure
 				if ( primaryHeight > secondaryHeight ) {
-					toolbarHeight = primaryHeight;
+					toolbarHeight = primaryHeight + 26;
 				} else {
-					toolbarHeight = secondaryHeight;
+					toolbarHeight = secondaryHeight + 26;
 				}
 
 				if ( ( 0 < toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
-					// 26 = toolbar padding plus 2px for good measure
-					wrapper.$el.css( 'top', toolbarHeight + 26 + 'px' );
+					// WP 7.1 sets the position to absolute, which looks terrible
+					$( '.spinner', toolbar.secondary.$el ).css( 'position', 'static' );
+
+					if ( 'object' === typeof this.attachmentsWrapper ) {
+						this.attachmentsWrapper.$el.css( 'top', toolbarHeight + 'px' );
+					}
+
+					if ( 'object' === typeof this.attachments ) {
+						this.attachments.$el.css( 'top', toolbarHeight + 'px' );
+					}
+
 					mlaModal.settings.oldHeight = toolbarHeight;
 				}
 			},

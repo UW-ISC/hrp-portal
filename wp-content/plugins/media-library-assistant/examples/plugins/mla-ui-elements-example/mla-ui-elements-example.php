@@ -58,7 +58,7 @@
  * https://wordpress.org/support/topic/cleaning-up-url-queries-in-paginated-gallery-pages/
  *
  * @package MLA UI Elements Example
- * @version 2.08
+ * @version 2.09
  */
 
 /*
@@ -66,7 +66,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes.
 Author: David Lingren
-Version: 2.08
+Version: 2.09
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2022 David Lingren
@@ -100,7 +100,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.08';
+	const PLUGIN_VERSION = '2.09';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -165,15 +165,15 @@ class MLAUIElementsExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
 		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 
 		// The remaining filters are only useful for front-end posts/pages; exit if in the admin section
 		if ( is_admin() )
@@ -1044,6 +1044,15 @@ class MLAUIElementsExample {
 					'random' => 'Random', 
 				);
 				break;
+			case 'mla_custom_list':
+				$allowed_fields = array(
+					'empty' => '- select -',
+					'count' => 'Count',
+					'meta_value' => 'Meta value',
+					'none' => 'No order', 
+					'random' => 'Random', 
+				);
+				break;
 			default:
 				$allowed_fields = array();
 		}
@@ -1054,13 +1063,12 @@ class MLAUIElementsExample {
 			$sort_fields = array();
 
 			if ( 0 === strpos( $arguments['sort_fields'], 'array' ) ) {
-				$function = @create_function('', 'return ' . $arguments['sort_fields'] . ';' );
-				if ( is_callable( $function ) ) {
-					$field_array = $function();
-				}
-
+				$field_array = MLAShortcodes::mla_convert_array_parameter( 'muie_orderby', $arguments['sort_fields'], array() );
+					
 				if ( is_array( $field_array ) ) {
 					$sort_fields = $field_array;
+				} else {
+					return $field_array; // error message
 				}
 			} else {
 				foreach( explode( ',', $arguments['sort_fields'] ) as $field ) {

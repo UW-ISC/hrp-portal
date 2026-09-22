@@ -72,7 +72,7 @@ mlaInlineEditSettings = {
 		$('table.widefat tbody').prepend( $('#bulk-edit') );
 		$('#bulk-edit').addClass('inline-editor').show();
 
-		$('tbody th.check-column input[type="checkbox"]').each(function(){
+		$('tbody .check-column input[type="checkbox"]').each(function(){
 			if ( $(this).prop('checked') ) {
 				c = false;
 				var id = $(this).val(), theTitle;
