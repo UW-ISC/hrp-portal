@@ -34,7 +34,7 @@
  * https://wordpress.org/support/topic/index-images-in-yoast-seo-sitemap/
  *
  * @package MLA Yoast SEO Example
- * @version 2.02
+ * @version 2.03
  */
 
 /*
@@ -42,7 +42,7 @@ Plugin Name: MLA Yoast SEO Example
 Plugin URI: http://davidlingren.com/
 Description: Supports WordPress SEO by Yoast Page Schema and XMP Sitemap generation
 Author: David Lingren
-Version: 2.02
+Version: 2.03
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -75,7 +75,7 @@ class MLAYoastSEOExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '2.02';
+	const PLUGIN_VERSION = '2.03';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -100,7 +100,7 @@ class MLAYoastSEOExample {
 	 *
 	 * @since 2.00
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -185,8 +185,8 @@ class MLAYoastSEOExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -194,7 +194,7 @@ class MLAYoastSEOExample {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 
 		/*
 		 * Filter: 'wpseo_sitemap_urlimages' - Allows updates to the list of images in the page/post
@@ -335,7 +335,7 @@ class MLAYoastSEOExample {
 	 *
 	 * @since 2.00
 	 *
-	 * @param	array	parameter_name => parameter_value pairs
+	 * @param	array	$item_values	parameter_name => parameter_value pairs
 	 */
 	public static function mla_gallery_item_values( $item_values ) {
 		//error_log( 'MLAYoastSEOExample::mla_gallery_item_values $item_values = ' . var_export( $item_values, true ), 0 );

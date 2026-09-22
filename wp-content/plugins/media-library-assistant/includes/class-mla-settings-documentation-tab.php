@@ -41,7 +41,11 @@ class MLASettings_Documentation {
 		global $wpdb, $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'documentation' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'documentation' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -266,10 +270,10 @@ class MLASettings_Documentation {
 				foreach ( $post_ids as $post_ID ) {
 					switch ( $bulk_action ) {
 						case 'install':
-							$item_content = MLA_Example_List_Table::mla_install_example_plugin( $ID );
+							$item_content = MLA_Example_List_Table::mla_install_example_plugin( $post_ID );
 							break;
 						case 'update':
-							$item_content = MLA_Example_List_Table::mla_update_example_plugin( $ID );
+							$item_content = MLA_Example_List_Table::mla_update_example_plugin( $post_ID );
 							break;
 						default:
 							/* translators: 1: bulk_action, e.g., delete, edit, restore, trash */
@@ -928,7 +932,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="example-' . absint( $item->post_ID ) . '"' . esc_html( $row_class ) . '>';
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 
@@ -966,12 +970,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 		$source_root = MLA_PLUGIN_PATH . 'examples/plugins/' . $source_dir;
 		$target_root = WP_PLUGIN_DIR . '/' . $source_dir;
 
-		if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
-			$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin_53() );
-		} else {
-			$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin() );
-		}
-		
+		$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin() );
 		$upgrader->init();
 		$result = $upgrader->fs_connect( array( WP_PLUGIN_DIR, $target_root ) );
 		if ( is_wp_error($result) ) {
@@ -1197,6 +1196,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 				$plugin_status = get_plugin_data( WP_PLUGIN_DIR . '/' . $file );
 				$plugin_version = $plugin_status['Version'];
 			} else {
+				$plugin_file = '';
 				// Look for a directory-based target for a single-file source
 				if ( false === strpos( $file, '/' ) ) {
 					$source_dir = str_replace( '.php', '', $file );
@@ -1585,104 +1585,52 @@ class MLA_Example_List_Table extends WP_List_Table {
 	}
 } // class MLA_Example_List_Table
 
-if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
+/**
+ * Skin for the MLA_Example_List_Table Install and Update functions.
+ *
+ * Extends the core WP_Upgrader_Skin class for WP Version 5.3 and later.
+ *
+ * @package Media Library Assistant
+ * @since 2.81
+ */
+class MLA_Upgrader_Skin extends WP_Upgrader_Skin {
 	/**
-	 * Skin for the MLA_Example_List_Table Install and Update functions.
+	 * Messages sent to MLA_Upgrader_Skin::feedback()
 	 *
-	 * Extends the core WP_Upgrader_Skin class for WP Version 5.3 and later.
-	 *
-	 * @package Media Library Assistant
-	 * @since 2.81
-	 */
-	class MLA_Upgrader_Skin_53 extends WP_Upgrader_Skin {
-		/**
-		 * Messages sent to MLA_Upgrader_Skin::feedback()
-		 *
-		 * @since 2.32
-		 *
-		 * @var	array
-		 */
-		public $feedback = array();
-	
-		/**
-		 * Receive feedback from the WP_Upgrader::install() process
-		 *
-		 * @since 2.32
-		 *
-		 * @param string $string
-		 * @param mixed  ...$args Optional text replacements.
-		 */
-		public function feedback( $string, ...$args ) {
-			if ( isset( $this->upgrader->strings[$string] ) ) {
-				$feedback = $this->upgrader->strings[$string];
-			} else {
-				$feedback = $string;
-			}
-	
-			if ( strpos( $feedback, '%' ) !== false ) {
-				if ( $args ) {
-					$args = array_map( 'strip_tags', $args );
-					$args = array_map( 'esc_html', $args );
-					$feedback = vsprintf( $feedback, $args );
-				}
-			}
-	
-			if ( empty( $feedback ) ) {
-				return;
-			}
-	
-			$this->feedback[] = $feedback;
-		}
-	}
-} else {
-	/**
-	 * Skin for the MLA_Example_List_Table Install and Update functions.
-	 *
-	 * Extends the core WP_Upgrader_Skin class.
-	 *
-	 * @package Media Library Assistant
 	 * @since 2.32
+	 *
+	 * @var	array
 	 */
-	class MLA_Upgrader_Skin extends WP_Upgrader_Skin {
-		/**
-		 * Messages sent to MLA_Upgrader_Skin::feedback()
-		 *
-		 * @since 2.32
-		 *
-		 * @var	array
-		 */
-		public $feedback = array();
-	
-		/**
-		 * Receive feedback from the WP_Upgrader::install() process
-		 *
-		 * @since 2.32
-		 *
-		 * @param string $string
-		 */
-		public function feedback( $string ) {
-			if ( isset( $this->upgrader->strings[$string] ) ) {
-				$feedback = $this->upgrader->strings[$string];
-			} else {
-				$feedback = $string;
-			}
-	
-			if ( strpos( $feedback, '%' ) !== false ) {
-				$args = func_get_args();
-				$args = array_splice( $args, 1 );
-				if ( $args ) {
-					$args = array_map( 'strip_tags', $args );
-					$args = array_map( 'esc_html', $args );
-					$feedback = vsprintf( $feedback, $args );
-				}
-			}
-	
-			if ( empty( $feedback ) ) {
-				return;
-			}
-	
-			$this->feedback[] = $feedback;
+	public $feedback = array();
+
+	/**
+	 * Receive feedback from the WP_Upgrader::install() process
+	 *
+	 * @since 2.32
+	 *
+	 * @param string $string
+	 * @param mixed  ...$args Optional text replacements.
+	 */
+	public function feedback( $string, ...$args ) {
+		if ( isset( $this->upgrader->strings[$string] ) ) {
+			$feedback = $this->upgrader->strings[$string];
+		} else {
+			$feedback = $string;
 		}
+
+		if ( strpos( $feedback, '%' ) !== false ) {
+			if ( $args ) {
+				$args = array_map( 'strip_tags', $args );
+				$args = array_map( 'esc_html', $args );
+				$feedback = vsprintf( $feedback, $args );
+			}
+		}
+
+		if ( empty( $feedback ) ) {
+			return;
+		}
+
+		$this->feedback[] = $feedback;
 	}
 }
 
@@ -1690,6 +1638,5 @@ if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
  * Actions are added here, when the source file is loaded, because the MLA_Example_List_Table
  * object is created too late to be useful.
  */
-//add_action( 'admin_enqueue_scripts', 'MLASettings_Documentation::mla_admin_enqueue_scripts' );
 add_action( 'admin_init', 'MLA_Example_List_Table::mla_admin_init' );
 ?>

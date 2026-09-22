@@ -140,9 +140,9 @@ class MLAArchiveList {
 	 *
 	 * @since 3.31
 	 *
-	 * @param string argument name
-	 * @param mixed argument value (string) or false to remove argument
-	 * @param string url
+	 * @param string $key argument name
+	 * @param mixed $value argument value (string) or false to remove argument
+	 * @param string $url url
 	 *
 	 * @return string url with argument replaced
 	 */
@@ -410,6 +410,7 @@ class MLAArchiveList {
 		} // empty archive
 
 		// Load the appropriate templates
+		$open_template = $item_template = $close_template = '';
 		if ( $is_list || $is_dropdown || $is_flat_div ) {
 			$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'archive-list', 'markup', 'open' );
 			$item_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'archive-list', 'markup', 'item' );
@@ -881,7 +882,7 @@ class MLAArchiveList {
 
 			switch ( $link_type ) {
 				case 'paginate_values':
-					return self::_paginate_values( $item_default_values, $target_key, $list, $found_rows );
+					return self::_paginate_values( $item_default_values, $target_key, $list );
 				case 'previous_link':
 					$target_key = $target_key - 1;
 					break;
@@ -1368,14 +1369,15 @@ class MLAArchiveList {
 		}
 
 		// The current_archive parameter can be changed to support multiple lists per page
+		$default_archive_parameter = self::$default_shortcode_arguments['mla_archive_parameter'];
 		if ( isset( $attr['mla_archive_parameter'] ) ) {
-			$mla_archive_parameter = $attr['mla_archive_parameter'];
+			$mla_archive_parameter = sanitize_title( $attr['mla_archive_parameter'], $default_archive_parameter );
 		} else {
-			$mla_archive_parameter = 'mla_archive_current';
+			$mla_archive_parameter = $default_archive_parameter;
 		}
 
 		if ( empty( $attr[ $mla_archive_parameter ] ) && ! empty( $_REQUEST[ $mla_archive_parameter ] ) ) {
-			$attr[ $mla_archive_parameter ] = $_REQUEST[ $mla_archive_parameter ];
+			$attr[ $mla_archive_parameter ] = sanitize_text_field( wp_unslash( $_REQUEST[ $mla_archive_parameter ] ) );
 		}
 
 		if ( self::$mla_debug ) {
@@ -1462,6 +1464,9 @@ class MLAArchiveList {
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_archive_parameter'] ) );
 		$mla_archive_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_arguments['mla_archive_parameter'] );
+
 		/*
 		 * Special handling of mla_archive_parameter to make multiple lists per page easier.
 		 * Look for this parameter in $_REQUEST if it's not present in the shortcode itself.
@@ -1471,7 +1476,7 @@ class MLAArchiveList {
 				$attr[ $mla_archive_parameter ] = sanitize_text_field( wp_unslash( $_REQUEST[ $mla_archive_parameter ] ) );
 			}
 		}
-		 
+
 		// The mla_archive_list_current parameter can be changed to support multiple galleries per page.
 		if ( ! isset( $attr['mla_page_parameter'] ) ) {
 			$attr['mla_page_parameter'] = $default_arguments['mla_page_parameter'];
@@ -1480,6 +1485,9 @@ class MLAArchiveList {
 		// The mla_page_parameter can contain page_level parameters like {+page_ID+}
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+
+		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
+		$mla_page_parameter = sanitize_title( $mla_page_parameter, $default_arguments['mla_page_parameter'] );
 
 		/*
 		 * Special handling of the mla_archive_list_current parameter to make "MLA pagination"

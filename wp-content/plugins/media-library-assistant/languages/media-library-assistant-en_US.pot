@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2026-07-10 11:27-0700\n"
+"POT-Creation-Date: 2026-08-17 14:23-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -579,23 +579,6 @@ msgid ""
 "in the \"ATTACHMENT DETAILS\" pane<br>&nbsp;&nbsp;when the item is selected."
 msgstr ""
 
-msgid "Media Manager Order By"
-msgstr ""
-
-msgid "Media Manager Default"
-msgstr ""
-
-msgid "Title/Name"
-msgstr ""
-
-msgid ""
-"If you want to override the Media Manager default,<br>&nbsp;&nbsp;select a "
-"column for the sort order of the Media Library listing."
-msgstr ""
-
-msgid "Media Manager Order"
-msgstr ""
-
 msgid "Attachment Display Settings"
 msgstr ""
 
@@ -614,6 +597,9 @@ msgstr ""
 msgid ""
 "Select a value for the default %1$s option in the Attachment Display "
 "Settings."
+msgstr ""
+
+msgid "Media Manager Default"
 msgstr ""
 
 msgid "Left"
@@ -2223,6 +2209,10 @@ msgstr ""
 msgid "Extension is required"
 msgstr ""
 
+#, php-format
+msgid "%1$s: Unallowed executable extension \"%2$s\""
+msgstr ""
+
 msgid "Extension"
 msgstr ""
 
@@ -2818,6 +2808,9 @@ msgid "Add New Custom Field Rule"
 msgstr ""
 
 msgid "Add Rule"
+msgstr ""
+
+msgid "You do not have permission to manage plugin settings."
 msgstr ""
 
 msgid "Nothing to execute"
@@ -3879,9 +3872,6 @@ msgstr ""
 
 #, php-format
 msgid "Click %1$s to update the %2$s."
-msgstr ""
-
-msgid "You do not have permission to manage plugin settings."
 msgstr ""
 
 msgid "Cannot render content tab"

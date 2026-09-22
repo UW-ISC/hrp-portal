@@ -2,8 +2,8 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Tested up to: 7.0
-Stable tag: 3.39
+Tested up to: 7.1
+Stable tag: 3.41
 Requires at least: 5.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -32,6 +32,8 @@ The Media Library Assistant provides several enhancements for managing the Media
 * Complete control over **Post MIME Types, File Upload extensions/MIME Types and file type icon images**. Fifty four (54) additional upload types, 112 file type icon images and a searchable list of over 1,500 file extension/MIME type associations.
 
 * Complete control over **Intermediate Image Sizes**, used by WordPress to generate and access intermediate image sizes for Media Library items.
+
+* Works with the **[Media Library Assistant Blocks](https://wordpress.org/plugins/media-library-assistant-blocks/)** companion plugin. MLA Blocks make it easy to add and configure the MLA shortcodes in the Gutenberg environment.
 
 * The **`[mla_gallery]` shortcode**, used in a post, page or custom post type to add a gallery of images and/or other Media Library items (such as PDF documents). MLA Gallery is a superset of the WordPress `[gallery]` shortcode; it is compatible with `[gallery]` and provides many enhancements. These include: 1) full query and display support for WordPress categories, tags, custom taxonomies and custom fields, 2) support for all post_mime_type values, not just images 3) media Library items need not be "attached" to the post, and 4) control over the styles, markup and content of each gallery using Style and Markup Templates. **Twenty-eight hooks** are provided for complete gallery customization from your theme or plugin code.
 
@@ -196,6 +198,20 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 21. The Settings page Debug tab, where you can activate debug logging categories as well as manage and display the error log.
 
 == Changelog ==
+
+= 3.41 =
+* New: Support for the just-released **[Media Library Assistant Blocks](https://wordpress.org/plugins/media-library-assistant-blocks/)** companion plugin.
+* Fix: IMPORTANT: For pagination shortcodes, a Reflected Cross Site Scripting security risk (Wordfence CVE-2026-77813) has been mitigated.
+
+= 3.40 =
+* New: For the "MLA CSV Data Source Example" plugin, matching on file/item URL is now supported.
+* Fix: IMPORTANT: For five Settings tabs, a Cross Site Scripting security risk (Patchstack 33662) has been mitigated.
+* Fix: IMPORTANT: For one Settings tab, an Arbitrary File Upload security risk (Patchstack 33653) has been mitigated.
+* Fix: IMPORTANT: An SQL Injection security risk (credit Joao Ramos Maciel and WPScan) has been mitigated.
+* Fix: IMPORTANT: For all shortcodes, a Cross Site Scripting security risk (Patchstack 33204) has been mitigated.
+* Fix: IMPORTANT: For WP 7.1, Media Library Grid mode and MMMW popup window toolbar formatting changes have been accomodated.
+* Fix: IMPORTANT: For WP 7.1, Bulk actions checkbox handling changes have been accomodated.
+* Fix: For several example plugins, a defect in parsing general option values has been corrected.
 
 = 3.39 =
 * New: Shortcode material in the Settings/Media Library Assistant Documentation tab has been reorganized and improved.
@@ -391,8 +407,8 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Upgrade Notice ==
 
-= 3.39 =
-IMPORTANT: Cross Site Scripting security risk (Patchstack 32618) mitigation, shortcode and documentation enhancements, Media Library Grid mode and MMMW popup window toolbar format fixes. Four enhancements, six fixes in all.
+= 3.41 =
+IMPORTANT: Cross-site scripting security risk mitigation. Support for the new Media Library Assistant Blocks plugin. One enhancement, one fix in all.
 
 == Acknowledgements ==
 

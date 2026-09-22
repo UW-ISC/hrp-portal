@@ -73,7 +73,7 @@ class MLA_Ajax {
 	 *
 	 * @since 2.84
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 */
 	public static function mla_mmmw_query_posts_clauses_filter( $pieces ) {
 		/* translators: 1: DEBUG tag 2: SQL clauses */
@@ -90,7 +90,7 @@ class MLA_Ajax {
 	 *
 	 * @since 2.84
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 */
 	public static function mla_mmmw_query_posts_clauses_request_filter( $pieces ) {
 		/* translators: 1: DEBUG tag 2: SQL clauses */
@@ -107,7 +107,7 @@ class MLA_Ajax {
 	 *
 	 * @since 2.84
 	 *
-	 * @param	array	SQL query before sending
+	 * @param	array	$request SQL query before sending
 	 */
 	public static function mla_mmmw_query_posts_request_filter( $request ) {
 		/* translators: 1: DEBUG tag 2: SQL clauses */
@@ -178,6 +178,7 @@ class MLA_Ajax {
 		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_EXPORT_PRESETS_SLUG, 'MLA_Ajax::mla_bulk_edit_form_presets_action' );
 		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_FIND_POSTS_SLUG, 'MLA_Ajax::mla_find_posts_ajax_action' );
 		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-set-parent', 'MLA_Ajax::mla_set_parent_ajax_action' );
+		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_DISMISS_NOTICE_ACTION, 'MLA_Ajax::mla_dismiss_notice_action' );
 	}
 
 	/**
@@ -187,7 +188,7 @@ class MLA_Ajax {
 	 *
 	 * @since 2.20
 	 *
-	 * @param string The taxonomy name, from $_REQUEST['action']
+	 * @param string $key The taxonomy name, from $_REQUEST['action']
 	 *
 	 * @return void Sends JSON response with updated HTML for the checklist
 	 */
@@ -625,6 +626,44 @@ class MLA_Ajax {
 		$MLAListTable->single_row( $new_item );
 		die(); // this is required to return a proper result
 	} // mla_set_parent_ajax_action
+
+	/**
+	 * Ajax handler to dismiss an admin notice
+	 *
+	 * @since 3.41
+	 *
+	 * @return	void	echo HTML <td> innerHTML for updated call or error message, then die()
+	 */
+	public static function mla_dismiss_notice_action() {
+		check_ajax_referer( MLACore::JAVASCRIPT_DISMISS_NOTICE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
+		if ( empty( $_REQUEST['notice_id'] ) ) {
+			die();
+		}
+
+		$notice_id = sanitize_text_field( wp_unslash( $_REQUEST['notice_id'] ) );
+		$user_id = get_current_user_id();
+		$notices = get_user_meta( $user_id, MLACoreOptions::MLA_ADMIN_NOTICES_OPTION, true );
+		
+		error_log( "DEBUG: mla_dismiss_notice_action $notice_id, $user_id \$notices = " . var_export( $notices, true ), 0 );
+		if ( is_array( $notices ) && ! empty( $notices ) ) {
+			foreach ( $notices as $id => $notice ) {
+				if ( $id === $notice_id ) {
+					unset( $notices[ $id ] );
+					break;
+				}
+			}
+			error_log( "DEBUG: mla_dismiss_notice_action $notice_id, $user_id \$notices = " . var_export( $notices, true ), 0 );
+
+			if ( empty( $notices ) ) {
+				delete_user_meta( $user_id, MLACoreOptions::MLA_ADMIN_NOTICES_OPTION );
+			} else {
+				update_user_meta( $user_id, MLACoreOptions::MLA_ADMIN_NOTICES_OPTION, $notices );
+			}
+		}
+
+		die();
+	} // mla_dismiss_notice_action
 } // Class MLA_Ajax
 
 // Check for Media Manager Enhancements

@@ -1146,9 +1146,12 @@ class MLAMime {
 
 		// Load and number the entries
 		foreach ( $mla_types as $slug => $value ) {
-			self::$mla_post_mime_templates[ $slug ] = $value;
-			self::$mla_post_mime_templates[ $slug ]['post_ID'] = ++self::$mla_post_mime_highest_ID;
+			$slug = self::_validate_upload_mime_slug( $slug );
+			if ( ! empty( $slug ) ) {
+				self::$mla_post_mime_templates[ $slug ] = $value;
+				self::$mla_post_mime_templates[ $slug ]['post_ID'] = ++self::$mla_post_mime_highest_ID;
 			}
+		}
 
 		self::_put_post_mime_templates();
 		return true;
@@ -2067,6 +2070,9 @@ class MLAMime {
 			$filtered_types = array();
 		}
 
+		// Remove executable types from the core list, since they are not allowed in WordPress
+		unset( $core_types['swf'], $core_types['exe'] );
+
 		// Find the custom types we already know or start from scratch
 		$save_changes = false;
 		$mla_upload_mimes = MLACore::mla_get_option( MLACoreOptions::MLA_UPLOAD_MIMES );
@@ -2337,6 +2343,45 @@ class MLAMime {
 	}
 
 	/**
+	 * Executable file extension blacklist
+	 *
+	 * @since 3.40
+	 *
+	 * @var	array
+	 */
+	public static $executable_extensions = array(
+		'php', 'phtml', 'phar', 'php3', 'php4', 'php5', 'phps', 'phtm', 'shtml',
+		'exe', 'dll', 'sh', 'pl', 'py', 'asp', 'aspx', 'com', 'bat', 'cmd', 'cgi',
+		'htaccess', 'scr', 'pif' );
+
+	/**
+	 * Validate a slug (file extension) for an MLA Upload MIME Type object
+	 *
+	 * @since 3.40
+	 *
+	 * @param	string	$slug Slug (file extension) candidate
+	 *
+	 * @return	false|string	Validated slug, false if unallowed executable type
+	 */
+	private static function _validate_upload_mime_slug( $slug ) {
+
+		$clean_slug = '';
+		for ( $i = 0; $i < strlen( $slug ); $i++ ) {
+			$char = substr( $slug, $i, 1 );
+			if ( ctype_alnum( $char ) ) {
+				$clean_slug .= $char;
+			}
+		}
+
+		$clean_slug =  strtolower( $clean_slug );
+		if ( in_array( $clean_slug, self::$executable_extensions ) ) {
+			return false;
+		}
+
+		return $clean_slug;
+	}
+
+	/**
 	 * Add an MLA Upload MIME Type object
 	 *
 	 * @since 1.40
@@ -2357,35 +2402,39 @@ class MLAMime {
 
 		$messages = '';
 
-		/*
-		 * Sanitize slug value
-		 */
+		// Sanitize slug value
 		if ( empty( $request['slug'] ) ) {
+			$slug = '';
 			$errors .= '<br>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Extension is required', 'media-library-assistant' );
 		} else {
-			$slug = pathinfo( 'X.' . strtolower( trim( $request['slug'] ) ), PATHINFO_EXTENSION );
-			if ( $slug != $request['slug'] ) {
+			$slug = self::_validate_upload_mime_slug( $request['slug'] );
+			if ( empty( $slug ) ) {
+				if ( false === $slug ) {
+					/* translators: 1: ERROR tag 2: bad_value */
+					$errors .= '<br>' . sprintf( __( '%1$s: Unallowed executable extension "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $request['slug'] );
+				} else {
+					$slug = '';
+					$errors .= '<br>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Extension is required', 'media-library-assistant' );
+				}
+			} elseif ( $slug != $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
 				$messages .= sprintf( '<br>' . __( 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Extension', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
-			/*
-			 * Make sure new slug is unique
-			 */
+			// Make sure new slug is unique
 			if ( isset( self::$mla_upload_mime_templates[ $slug ] ) ) {
 				/* translators: 1: ERROR tag 2: slug */
 				$errors .= '<br>' . sprintf( __( '%1$s: Could not add extension "%2$s"; value already exists', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $slug );
 			}
 		}
 
-		/*
-		 * Validate mime_type
-		 */
+		// Validate mime_type
 		if ( empty( $request['mime_type'] ) ) {
+			$clean_mime_type = '';
 			$errors .= '<br>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'MIME type is required', 'media-library-assistant' );
 		} else {
 			$clean_mime_type = sanitize_mime_type( $request['mime_type'] );
-			if ( $clean_mime_type != $request['mime_type'] ) {
+			if ( $clean_mime_type !== $request['mime_type'] ) {
 				/* translators: 1: ERROR tag 2: clean_mime_type */
 				$errors .= '<br>' . sprintf( __( '%1$s: Bad MIME type; try "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $clean_mime_type );
 			}
@@ -2461,7 +2510,22 @@ class MLAMime {
 		}
 
 		$messages = '';
-		$slug = pathinfo( 'X.' . strtolower( trim( $request['slug'] ) ), PATHINFO_EXTENSION );
+		$slug = self::_validate_upload_mime_slug( $request['slug'] );
+		if ( empty( $slug ) ) {
+			if ( false === $slug ) {
+				/* translators: 1: ERROR tag 2: bad_value */
+				$errors .= '<br>' . sprintf( __( '%1$s: Unallowed executable extension "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $request['slug'] );
+			} else {
+				$slug = '';
+				$errors .= '<br>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Extension is required', 'media-library-assistant' );
+			}
+
+			return array(
+				'message' => substr( $errors . $messages, 4),
+				'body' => ''
+			);
+		}
+
 		$original_slug = isset( $request['original_slug'] ) ? $request['original_slug'] : $slug;
 		unset( $request['original_slug'] );
 

@@ -15,15 +15,6 @@
  */
 class MLATest {
 	/**
-	 * True if WordPress version is 3.5.x
-	 *
-	 * @since 2.14
-	 *
-	 * @var	boolean
-	 */
-	public static $wp_3dot5 = null;
-
-	/**
 	 * True if WordPress version is 4.3 or newer
 	 *
 	 * @since 2.13
@@ -33,15 +24,6 @@ class MLATest {
 	public static $wp_4dot3_plus = null;
 
 	/**
-	 * True if PHP version is 8.0.0 or newer
-	 *
-	 * @since 3.39
-	 *
-	 * @var	boolean
-	 */
-	public static $php_8dot0_plus = null;
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 0.60
@@ -49,9 +31,7 @@ class MLATest {
 	 * @return	void
 	 */
 	public static function initialize() {
-		MLATest::$wp_3dot5 = ( version_compare( get_bloginfo( 'version' ), '3.5.0', '>=' ) && version_compare( get_bloginfo( 'version' ), '3.5.99', '<=' ) );
 		MLATest::$wp_4dot3_plus = version_compare( get_bloginfo( 'version' ), '4.2.99', '>=' );
-		MLATest::$php_8dot0_plus = version_compare( phpversion(), '7.9.99', '>=' );
 
 		// This is the earliest effective place to change error_reporting
 		$php_reporting = trim( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_REPORTING ) );
@@ -65,7 +45,7 @@ class MLATest {
 	 *
 	 * @since 0.1
 	 *
-	 * @param	string	representing the minimum required version of PHP, e.g. '5.3.2'
+	 * @param	string	$min_version representing the minimum required version of PHP, e.g. '5.3.2'
 	 *
 	 * @return	string	'' if pass else error message
 	 */
@@ -84,7 +64,7 @@ class MLATest {
 	 *
 	 * @since 0.1
 	 *
-	 * @param string	representing the minimum required version of WordPress, e.g. '3.5.0'
+	 * @param string	$min_version representing the minimum required version of WordPress, e.g. '3.5.0'
 	 *
 	 * @return	string	'' if pass else error message
 	 */

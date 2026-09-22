@@ -1559,7 +1559,7 @@ A more complete discussion of each pagination output type follows the descriptio
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_paginate_current". You can change the name if you need multiple paginated galleries on one post/page. If you use this parameter, make sure you add it to the gallery shortcode and all pagination shortcodes for that gallery, and use the same unique value in all shortcodes for the specific gallery.</td>
+<td>the name of the parameter containing the current page number; default "mla_paginate_current". You can change the name if you need multiple paginated galleries on one post/page. If you use this parameter, make sure you add it to the gallery shortcode and all pagination shortcodes for that gallery, and use the same unique value in all shortcodes for the specific gallery. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_paginate_current</td>
@@ -2640,7 +2640,7 @@ For the "dropdown" archive_output type, the list comprises a select tag (&lt;sel
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_archive_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "mla_archive_current"</strong>. You can change the name if you need multiple controls/lists on one post/page.</td>
+<td>The name of the parameter containing the current item value; <strong>default "mla_archive_current"</strong>. You can change the name if you need multiple controls/lists on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_archive_current</td>
@@ -2989,7 +2989,7 @@ The "paginate_values" format returns an empty string if the archive list is empt
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
+<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)/td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_paginate_total</td>
@@ -3793,7 +3793,7 @@ Each item in the tag cloud comprises a term name of varying size, a hyperlink su
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item in the cloud; <strong>default "current_item"</strong>. You can change the name if you need multiple clouds on one post/page.</td>
+<td>The name of the parameter containing the current item in the cloud; <strong>default "current_item"</strong>. You can change the name if you need multiple clouds on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">current_item_class</td>
@@ -4179,7 +4179,7 @@ The <strong>"mla_output"</strong> parameter determines the type of output the sh
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_cloud_current". You can change the name if you need multiple paginated clouds on one post/page.</td>
+<td>the name of the parameter containing the current page number; default "mla_cloud_current". You can change the name if you need multiple paginated clouds on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_cloud_current</td>
@@ -5011,7 +5011,7 @@ For the array, flat and list formats, each item in the list comprises a term nam
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
+<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">current_item</td>
@@ -5969,7 +5969,7 @@ The following parameters customize item content and markup for all of the output
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_item_parameter</td>
-<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
+<td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">current_item</td>
@@ -6372,7 +6372,7 @@ The <strong>"mla_output"</strong> parameter determines the type of output the sh
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_page_parameter</td>
-<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page.</td>
+<td>the name of the parameter containing the current page number; default "mla_custom_list_current". You can change the name if you need multiple paginated lists on one post/page. The name is limited to alphanumeric characters, underscore (_) and dash (-)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_paginate_total</td>
@@ -7810,6 +7810,10 @@ Each Media Library attachment item has a row in the "posts" database table that 
 	</tr>
 </table>
 </td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">absolute_url</td>
+<td>full path and file name in URL format</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">absolute_path</td>

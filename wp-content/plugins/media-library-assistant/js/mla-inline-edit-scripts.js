@@ -279,7 +279,7 @@ var jQuery,
 			$('#ajax-response').attr( 'id', 'default-ajax-response' );
 			$( '#bulk-edit #bulkrow-ajax-response' ).attr( 'id', 'ajax-response' );
 
-			$('tbody th.check-column input[type="checkbox"]').each(function(){
+			$('tbody .check-column input[type="checkbox"]').each(function(){
 				if ( $(this).prop('checked') ) {
 					c = false;
 					var id = $(this).val(), theTitle;
@@ -343,7 +343,7 @@ var jQuery,
 			mla.bulkEdit.chunkSize = +mla.settings.bulkChunkSize;
 			mla.bulkEdit.targetName = e.target.name;
 			mla.bulkEdit.fields = $('#bulk-edit :input').serialize();
-			ids = $('tbody th.check-column input[type="checkbox"]').serializeArray();
+			ids = $('tbody .check-column input[type="checkbox"]').serializeArray();
 			$.each( ids, function( index, id ) {
 				mla.bulkEdit.ids[ index ] = +id.value;
 			});
@@ -365,7 +365,7 @@ var jQuery,
 			$('#cb-select-all-1' ).removeAttr( 'checked' );
 			$('#cb-select-all-2' ).removeAttr( 'checked' );
 
-			$('tbody th.check-column input[type="checkbox"]').each(function(){
+			$('tbody .check-column input[type="checkbox"]').each(function(){
 				if ( $(this).prop('checked') ) {
 					c = false;
 					var id = $(this).val(), theTitle;

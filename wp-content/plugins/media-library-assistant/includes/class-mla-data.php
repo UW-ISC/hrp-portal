@@ -1185,6 +1185,8 @@ class MLAData {
 					break;
 				}
 
+				$count = 0;
+				$matches = array();
 				set_error_handler( 'MLAData::preg_error_handler' );
 				try {
 					$count = preg_match( $pattern, $value, $matches );
@@ -1232,6 +1234,8 @@ class MLAData {
 					break;
 				}
 
+				$count = 0;
+				$matches = array();
 				set_error_handler( 'MLAData::preg_error_handler' );
 				try {
 					$count = preg_match( $pattern, $value, $matches );
@@ -1294,6 +1298,8 @@ class MLAData {
 
 				// If $return_value is true we return only the matched portion with the modifications applied
 				if ( $return_value ) {
+					$count = 0;
+					$matches = array();
 					set_error_handler( 'MLAData::preg_error_handler' );
 					try {
 						$count = preg_match( $pattern, $value, $matches );
@@ -1339,11 +1345,13 @@ class MLAData {
 	 *
 	 * @param	array	$value Field definition with
 	 * 					['prefix'] => string, ['value'] => string, ['option'] => string 'text'|'single'|'export'|'array'|'multi'
-	 * @param	integer	Attachment or post ID
+	 * @param	integer	$post_id Attachment or post ID
+	 * @param	array	$query Optional: an array of values from the query, if any, e.g. shortcode parameters
+	 * @param	array	$markup_values Optional: an array of values to add to the returned array
 	 *
 	 * @return	mixed	Text representation of term(s) value or false on failure
 	 */
-	private static function _expand_terms( $value, $post_id ) {
+	private static function _expand_terms( $value, $post_id, $query = NULL, $markup_values = array() ) {
 		$taxonomy = $value['value'];
 		$field = ! empty( $value['qualifier'] ) ? $value['qualifier'] : 'name';
 
@@ -1576,7 +1584,7 @@ class MLAData {
 					break;
 				case 'terms':
 					if ( 0 < $post_id ) {
-						$text = self::_expand_terms( $value, $post_id );
+						$text = self::_expand_terms( $value, $post_id, $query, $markup_values );
 						
 						if ( false !== $text ) {
 							$markup_values[ $markup_key ] = $text;
@@ -1588,7 +1596,7 @@ class MLAData {
 					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (int) $markup_values[ 'page_ID' ] : 0;
 					
 					if ( 0 < $page_id ) {
-						$text = self::_expand_terms( $value, $page_id );
+						$text = self::_expand_terms( $value, $page_id, $query, $markup_values );
 						
 						if ( false !== $text ) {
 							$markup_values[ $markup_key ] = $text;
@@ -1600,7 +1608,7 @@ class MLAData {
 					$parent_id = isset( $markup_values[ 'parent' ] ) ? (int) $markup_values[ 'parent' ] : 0;
 					
 					if ( 0 < $parent_id ) {
-						$text = self::_expand_terms( $value, $parent_id );
+						$text = self::_expand_terms( $value, $parent_id, $query, $markup_values );
 						
 						if ( false !== $text ) {
 							$markup_values[ $markup_key ] = $text;
@@ -2222,7 +2230,7 @@ class MLAData {
 
 						$haystack = var_export( $clean_data, true);
 					} else {
-						$haystack = var_export( $record, true );
+						$haystack = var_export( $haystack, true );
 					}
 					break;
 				case 'multi':
@@ -2400,8 +2408,8 @@ class MLAData {
 			MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xml_string set option failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		}
 
-		// Deprecated in PHP 8.5.0
-		if ( ! MLATest::$php_8dot0_plus ) {
+		// Disabled in PHP 8.0.0, deprecated in PHP 8.5.0
+		if ( version_compare( phpversion(), '7.9.99', '<=' ) ) {
 			xml_parser_free( $xml_parser );
 		}
 
@@ -5611,7 +5619,7 @@ return $results;
 				if ( ! empty( $result ) ) {
 					delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $taxonomy );
 					/* translators: 1: action_name, 2: taxonomy */
-					$message .= sprintf( __( '%1$s "%2$s" terms', 'media-library-assistant' ) . '<br>', $action_name, $taxonomy );
+					$message .= sprintf( __( '%1$s "%2$s" terms', 'media-library-assistant' ) . '<br>', $tax_action, $taxonomy );
 				}
 			} // foreach $tax_input
 		} // ! empty $tax_input

@@ -246,10 +246,10 @@ class MLATagCloud {
 		 * page_level parameters like {+page_ID+}
 		 */
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_item_parameter'] ) );
-		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+		$mla_item_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_item_parameter'] );
 
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
-		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
+		$mla_page_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_page_parameter'] );
 
 		/*
 		 * Special handling of current_item and mla_page_parameter to make "MLA pagination" easier.
@@ -865,6 +865,7 @@ class MLATagCloud {
 
 		$markup_values = $style_values;
 
+		$row_open_template = $row_close_template = $close_template = '';
 		if ( $is_flat_div || $is_list || $is_grid ) {
 			$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'tag-cloud', 'markup', 'open' );
 			if ( false === $open_template ) {
@@ -948,6 +949,7 @@ class MLATagCloud {
 				$target_id = -2; // won't match anything
 			} else {
 				$current_id = $markup_values['current_item'];
+				$id = 0;
 
 				foreach ( $tags as $id => $tag ) {
 					if ( $current_is_slug ) {

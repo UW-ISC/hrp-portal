@@ -13,7 +13,7 @@
  * https://wordpress.org/support/topic/
  *
  * @package MLA WFU Data Source
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -21,7 +21,7 @@ Plugin Name: MLA WFU Data Source
 Plugin URI: http://davidlingren.com/
 Description: Enhanced MLA data sources for Windows File Uploads additional data fields
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -57,7 +57,7 @@ class MLAWFUDataSource {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.02';
+	const PLUGIN_VERSION = '1.03';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -82,7 +82,7 @@ class MLAWFUDataSource {
 	 *
 	 * @since 1.00
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -183,8 +183,8 @@ class MLAWFUDataSource {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -192,7 +192,7 @@ class MLAWFUDataSource {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 		
 		// Defined in /media-library-assistant/includes/class-mla-data.php
 		add_filter( 'mla_expand_custom_prefix', 'MLAWFUDataSource::mla_expand_custom_prefix', 10, 8 );
@@ -380,14 +380,14 @@ class MLAWFUDataSource {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	string	NULL, indicating that by default, no custom value is available
-	 * @param	string	the data-source name 
-	 * @param	array	data-source components; prefix (empty), value, option, format and args (if present)
-	 * @param	array	values from the query, if any, e.g. shortcode parameters
-	 * @param	array	item-level markup template values, if any
-	 * @param	integer	attachment ID for attachment-specific values
-	 * @param	boolean	for option 'multi', retain existing values
-	 * @param	string	default option value
+	 * @param	string	$custom_value	NULL, indicating that by default, no custom value is available
+	 * @param	string	$key	the data-source name 
+	 * @param	array	$value	data-source components; prefix (empty), value, option, format and args (if present)
+	 * @param	array	$query	values from the query, if any, e.g. shortcode parameters
+	 * @param	array	$markup_values	item-level markup template values, if any
+	 * @param	integer	$post_id	attachment ID for attachment-specific values
+	 * @param	boolean	$keep_existing	for option 'multi', retain existing values
+	 * @param	string	$default_option	default option value
 	 */
 	public static function mla_expand_custom_prefix( $custom_value, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
 		if ( 'wfu' !== strtolower( $value['prefix'] ) ) {
@@ -533,9 +533,9 @@ class MLAWFUDataSource {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	Attachment metadata for just-inserted attachment
-	 * @param	integer	ID of just-inserted attachment
-	 * @param	array	MLA mapping option settings
+	 * @param	array	$data	Attachment metadata for just-inserted attachment
+	 * @param	integer	$post_id	ID of just-inserted attachment
+	 * @param	array	$options	MLA mapping option settings
 	 */
 
 	public static function mla_update_attachment_metadata_prefilter( $data, $post_id, $options ) {

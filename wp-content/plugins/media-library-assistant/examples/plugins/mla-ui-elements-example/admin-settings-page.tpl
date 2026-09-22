@@ -368,19 +368,22 @@ You can use the <code>muie_attributes</code> parameter to replace the default <c
 </p>
 <h3>The [muie_orderby] and [muie_order] shortcodes</h3>
 <p>
-The <code>[muie_orderby]</code> shortcode generates a dropdown control for passing the "orderby" parameter to an <code>[mla_gallery]</code>, <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> shortcode. You can add parameters to this shortcode to change the default value:
+The <strong><code>[muie_orderby]</code></strong> shortcode generates a dropdown control for passing the "orderby" parameter to an <code>[mla_gallery]</code>, <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> shortcode. You can add parameters to this shortcode to change the default value:
 </p>
 <ul class="mla-doc-toc-list">
-<li>shortcode - mla_gallery, mla_tag_cloud, or mla_term_list</li>
-<li>sort_fields</li>
-<li>meta_value_num</li>
-<li>meta_value</li>
+<li>shortcode - mla_gallery, mla_tag_cloud, mla_term_list or mla_custom_list.</li>
+<li>sort_fields (optional)</li>
+<li>meta_value_num (for the meta_value sort field)</li>
+<li>meta_value (for the meta_value sort field)</li>
 </ul>
 <p>
-The <code>shortcode</code> parameter simply validates the list of sort fields allowed for each shortcode. For <code>[mla_gallery]</code>, the <code>[muie_orderby]</code> value is automatically translated to the <code>orderby</code> parameter. For <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> you must add something like <code>orderby="{+template:{+request:muie_orderby+}|name+}+}"</code> to the shortcode parameters.
+The <code>shortcode</code> parameter simply validates the list of sort fields allowed for each shortcode. For <code>[mla_gallery]</code>, the <code>[muie_orderby]</code> value is automatically translated to the <code>orderby</code> parameter. For <code>[mla_tag_cloud]</code>, <code>[mla_term_list]</code> or <code>[mla_custom_list]</code> you must add something like <code>orderby="{+template:{+request:muie_orderby+}|name+}+}"</code> to the shortcode parameters. Note that <code>[mla_archive_list]</code> does not have an orderby parameter.
 </p>
 <p>
-The <code>[muie_order]</code> shortcode generates a radio button control for passing the "order" parameter to an <code>[mla_gallery]</code>, <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> shortcode. You can add parameters to this shortcode to change the default value:
+The <code>sort_fields</code> parameter can be used to restrict allowed values to a subset of those allowed by the shortcode. For this purpose, enter a comma-separated list of allowed values. For other applications you can completely replace the allowed values by entering an array specification containing the values and labels you want. For example. <code>sort_fields="array( 'first_value' => 'First Value', 'second_value' => 'Second Value' )"</code>.
+</p>
+<p>
+The <strong><code>[muie_order]</code></strong> shortcode generates a radio button control for passing the "order" parameter to an <code>[mla_gallery]</code>, <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> shortcode. You can add parameters to this shortcode to change the default value:
 </p>
 <ul class="mla-doc-toc-list">
 <li>default_order - ASC or DESC</li>

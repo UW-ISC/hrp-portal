@@ -34,7 +34,11 @@ class MLASettings_IPTCEXIF {
 		global $wpdb,  $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'iptc_exif' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'iptc_exif' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -79,7 +83,7 @@ class MLASettings_IPTCEXIF {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG ),
 			'bulkChunkSize' => MLACore::mla_get_option( MLACoreOptions::MLA_BULK_CHUNK_SIZE ),
 			'bulkWaiting' => __( 'Waiting', 'media-library-assistant' ),
 			'bulkRunning' => __( 'Running', 'media-library-assistant' ),
@@ -113,7 +117,7 @@ class MLASettings_IPTCEXIF {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG ),
 			'tab' => 'iptc_exif',
 			'fields' => array( 'type', 'name', 'rule_name', 'type', 'iptc_value', 'exif_value', 'iptc_first', 'keep_existing', 'active', 'delimiters', 'parent_options', 'parent', 'format', 'tax_option', 'option' ),
 			'checkboxes' => array( 'no_null' ),
@@ -571,12 +575,12 @@ class MLASettings_IPTCEXIF {
 			'post_ID' => $item['post_ID'],
 			'type' => $item['type'],
 			'key' => $item['key'],
-			'rule_name' => $item['rule_name'],
+			'rule_name' => esc_attr( $item['rule_name'] ),
 			'hierarchical' => '0',
-			'name' => $item['name'],
+			'name' => esc_attr( $item['name'] ),
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'Name' => __( 'Name', 'media-library-assistant' ),
-			'display_name' => esc_html( $display_name ),
+			'display_name' => esc_attr( $display_name ),
 			'new_names' => '',
 			'Enter Name' => __( 'This is the name of the custom field to which the rule applies.<br>Only one rule is allowed for each custom field.', 'media-library-assistant' ),
 			'Change Name' => __( 'Change Name', 'media-library-assistant' ),
@@ -609,7 +613,7 @@ class MLASettings_IPTCEXIF {
 			'taxonomy_class' => 'hidden', // Set below
 			'Delimiters' => __( 'Delimiters', 'media-library-assistant' ),
 			'delimiters_size' => 4,
-			'delimiters_text' => $item['delimiters'],
+			'delimiters_text' => esc_attr( $item['delimiters'] ),
 			'Parent' => __( 'Parent', 'media-library-assistant' ),
 			'parent_class' => 'hidden', // Set below
 			'parent_select' => '', // Set below
@@ -1076,6 +1080,10 @@ class MLASettings_IPTCEXIF {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		// Find the current chunk
@@ -1153,6 +1161,10 @@ class MLASettings_IPTCEXIF {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		$error_message = '';
@@ -1166,8 +1178,7 @@ class MLASettings_IPTCEXIF {
 		}
 
 		if ( !empty( $error_message ) ) {
-			echo esc_html( $error_message );
-			die();
+			wp_die( esc_html( $error_message ) );
 		}
 
 		$rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['iptc_value'] ) ? wp_unslash( $_REQUEST['iptc_value'] ) : 'none' );
@@ -1212,8 +1223,7 @@ class MLASettings_IPTCEXIF {
 		$rule = stripslashes_deep( $rule );
 
 		if ( false === MLA_IPTC_EXIF_Query::mla_replace_iptc_exif_rule( $rule ) ) {
-			echo esc_html( __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' ) );
-			die();
+			wp_die( esc_html( __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' ) ) );
 		}
 
 		MLA_IPTC_EXIF_Query::mla_put_iptc_exif_rules();
@@ -1426,9 +1436,9 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.60
 	 *
-	 * @param mixed	false or array with current list of hidden columns, if any
-	 * @param string	'managesettings_page_mla-settings-menu-iptc_exifcolumnshidden'
-	 * @param object	WP_User object, if logged in
+	 * @param mixed		$result false or array with current list of hidden columns, if any
+	 * @param string	$option The option name
+	 * @param object	$user_data WP_User object, if logged in
 	 *
 	 * @return	array	updated list of hidden columns
 	 */
@@ -1494,7 +1504,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] == 'iptc_exif' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] == 'iptc_exif' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-iptc_exifcolumnshidden', 'MLA_IPTC_EXIF_List_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-iptc_exif_columns', 'MLA_IPTC_EXIF_List_Table::mla_manage_columns_filter', 10, 0 );
 		}
@@ -2042,7 +2052,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.40
 	 * 
-	 * @param	string	'top' or 'bottom', i.e., above or below the table rows
+	 * @param	string	$which 'top' or 'bottom', i.e., above or below the table rows
 	 *
 	 * @return	void
 	 */
@@ -2140,7 +2150,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="iptc_exif-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_IPTC_EXIF_List_Table

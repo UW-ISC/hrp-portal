@@ -34,7 +34,11 @@ class MLASettings_CustomFields {
 		global $wpdb,  $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'custom_field' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'custom_field' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -56,7 +60,7 @@ class MLASettings_CustomFields {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG ),
 			'bulkChunkSize' => MLACore::mla_get_option( MLACoreOptions::MLA_BULK_CHUNK_SIZE ),
 			'bulkWaiting' => __( 'Waiting', 'media-library-assistant' ),
 			'bulkRunning' => __( 'Running', 'media-library-assistant' ),
@@ -89,7 +93,7 @@ class MLASettings_CustomFields {
 			'notitle' => '(' . __( 'no slug', 'media-library-assistant' ) . ')',
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => $use_spinner_class,
-			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajax_nonce' => wp_create_nonce( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG ),
 			'tab' => 'custom_field',
 			'fields' => array( 'name', 'rule_name', 'data_source', 'meta_name', 'format', 'option', 'keep_existing', 'active' ),
 			'checkboxes' => array( 'no_null', 'mla_column', 'quick_edit', 'bulk_edit' ),
@@ -514,11 +518,11 @@ class MLASettings_CustomFields {
 			'Edit Rule' => __( 'Edit Rule', 'media-library-assistant' ),
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-custom_field&mla_tab=custom_field',
 			'post_ID' => $item['post_ID'],
-			'name' => $item['name'],
-			'rule_name' => $item['rule_name'],
+			'name' => esc_attr( $item['name'] ),
+			'rule_name' => esc_attr( $item['rule_name'] ),
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'Name' => __( 'Name', 'media-library-assistant' ),
-			'display_name' => $display_name,
+			'display_name' => esc_attr( $display_name ),
 			'new_names' => MLAOptions::mla_compose_custom_field_option_list( '', MLA_Custom_Field_Query::mla_custom_field_rule_names() ),
 			'Enter Name' => __( 'This is the name of the custom field to which the rule applies.<br>Only one rule is allowed for each custom field.', 'media-library-assistant' ),
 			'Change Name' => __( 'Change Name', 'media-library-assistant' ),
@@ -526,7 +530,7 @@ class MLASettings_CustomFields {
 			'Enter new field' => __( 'Enter new field', 'media-library-assistant' ),
 			'Cancel new field' => __( 'Cancel new field', 'media-library-assistant' ),
 			'Description' => __( 'Description', 'media-library-assistant' ),
-			'description' => $item['description'],
+			'description' => esc_attr( $item['description'] ),
 			'description_rows' => 3,
 			'description_help' => __( 'Notes for the Custom Fields tab submenu table.', 'media-library-assistant' ),
 			'Data Source' => __( 'Data Source', 'media-library-assistant' ),
@@ -936,6 +940,10 @@ class MLASettings_CustomFields {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		// Find the current chunk
@@ -1028,6 +1036,10 @@ class MLASettings_CustomFields {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
+		}
+
 		check_ajax_referer( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		$error_message = '';
@@ -1041,8 +1053,7 @@ class MLASettings_CustomFields {
 		}
 
 		if ( !empty( $error_message ) ) {
-			echo esc_html( $error_message );
-			die();
+			wp_die( esc_html( $error_message ) );
 		}
 
 		$rule['data_source'] = sanitize_text_field( isset( $_REQUEST['data_source'] ) ? wp_unslash( $_REQUEST['data_source'] ) : 'none' );
@@ -1081,8 +1092,7 @@ class MLASettings_CustomFields {
 		$rule = stripslashes_deep( $rule );
 
 		if ( false === MLA_Custom_Field_Query::mla_replace_custom_field_rule( $rule ) ) {
-			echo esc_html( __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' ) );
-			die();
+			wp_die( esc_html( __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' ) ) );
 		}
 
 		MLA_Custom_Field_Query::mla_put_custom_field_rules();
@@ -1357,7 +1367,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] == 'custom_field' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] == 'custom_field' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-custom_fieldcolumnshidden', 'MLA_Custom_Fields_List_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-custom_field_columns', 'MLA_Custom_Fields_List_Table::mla_manage_columns_filter', 10, 0 );
 		}
@@ -1693,7 +1703,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.50
 	 * 
-	 * @param string	'top' | 'bottom'
+	 * @param string	$which 'top' | 'bottom'
 	 */
 	function pagination( $which ) {
 		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
@@ -1862,7 +1872,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.40
 	 * 
-	 * @param	string	'top' or 'bottom', i.e., above or below the table rows
+	 * @param	string	$which 'top' or 'bottom', i.e., above or below the table rows
 	 *
 	 * @return	void
 	 */
@@ -1960,7 +1970,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="custom_field-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Custom_Fields_List_Table

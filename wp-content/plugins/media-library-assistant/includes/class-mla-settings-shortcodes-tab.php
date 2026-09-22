@@ -41,7 +41,11 @@ class MLASettings_Shortcodes {
 		global $wpdb, $wp_locale;
 
 		// Without a tab value that matches ours, there's nothing to do
-		if ( empty( $_REQUEST['mla_tab'] ) || 'shortcodes' !== $_REQUEST['mla_tab'] ) {
+		if ( empty( $_GET['mla_tab'] ) || 'shortcodes' !== $_GET['mla_tab'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -484,7 +488,7 @@ class MLASettings_Shortcodes {
 			'ID' => $item['post_ID'],
 			'type' => $item['type'],
 			'shortcode' => $item['shortcode'],
-			'name' => $item['name'],
+			'name' => esc_attr( $item['name'] ),
 			'readonly' => $item['default'] ? 'readonly="readonly"' : '',
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'controls' => '', //MLAData::mla_parse_template( $template['single-item-controls'], array() ),
@@ -1015,7 +1019,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-		if ( isset( $_REQUEST['mla_tab'] ) && $_REQUEST['mla_tab'] == 'shortcodes' ) {
+		if ( isset( $_GET['mla_tab'] ) && $_GET['mla_tab'] == 'shortcodes' ) {
 			add_filter( 'get_user_option_managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-shortcodescolumnshidden', 'MLA_Template_List_Table::mla_manage_hidden_columns_filter', 10, 3 );
 			add_filter( 'manage_settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-shortcodes_columns', 'MLA_Template_List_Table::mla_manage_columns_filter', 10, 0 );
 		}
@@ -1437,7 +1441,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
 		echo '<tr id="template-' . absint( $item->post_ID ) . '"' . esc_html( $row_class ) . '>';
-		echo parent::single_row_columns( $item ); // phpcs:ignore
+		parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Template_List_Table
@@ -1714,9 +1718,7 @@ class MLA_Template_Query {
 			return array ();
 		}
 
-		/*
-		 * Sort and filter the list
-		 */
+		// Sort and filter the list
 		$keywords = isset( $request['s'] ) ? $request['s'] : '';
 		preg_match_all('/".*?("|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $keywords, $matches);
 		$keywords = array_map( 'MLAQuery::mla_search_terms_tidy', $matches[0]);
@@ -1800,7 +1802,7 @@ class MLA_Template_Query {
 					$sorted_items[ ( empty( $value['sections']['description'] ) ? chr(1) : $value['sections']['description'] ) . $ID ] = (object) $value;
 					break;
 				default:
-					$sorted_items[ $slug ] = (object) $value;
+					$sorted_items[ $ID ] = (object) $value;
 					break;
 			} //orderby
 		}

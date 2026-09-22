@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/save-and-import-settings-for-multisite/
  *
  * @package MLA Multisite Extensions
- * @version 1.16
+ * @version 1.17
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
 Description: Adds Multisite filters to MLA shortcodes, supports the "Multisite Global Media" plugin, copies MLA option settings between sites.
 Author: David Lingren
-Version: 1.16
+Version: 1.17
 Author URI: http://davidlingren.com/
 
 Copyright 2017-2023 David Lingren
@@ -62,7 +62,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.16';
+	const PLUGIN_VERSION = '1.17';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -87,7 +87,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @since 1.10
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -187,8 +187,8 @@ class MLAMultisiteExtensions {
 		}
 		
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103', false ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -216,7 +216,7 @@ class MLAMultisiteExtensions {
 		}
 		
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 
 		if ( is_multisite() ) {
 			add_filter( 'mla_gallery_attributes', 'MLAMultisiteExtensions::mla_gallery_attributes', 10, 1 );
@@ -468,8 +468,8 @@ class MLAMultisiteExtensions {
 	 *
 	 * @since 1.12
 	 *
-	 * @param	$source_site_taxonomy taxonomy slug for this term
-	 * @param	$source_site_term_id ID/index for self::$source_terms
+	 * @param	string $taxonomy taxonomy slug for this term
+	 * @param	integer $source_site_term_id ID/index for self::$source_terms
 	 *
 	 * @return	integer	Destination site ID for this term
 	 */
@@ -638,7 +638,7 @@ class MLAMultisiteExtensions {
 					}
 				}
 			} else {
-				$messages = "ERROR: Invalid Source Site: {$options_source}";
+				$messages = "ERROR: Invalid Source Site: {$terms_source}";
 			}
 		} // good $options_source
 
@@ -1042,7 +1042,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	the shortcode parameters passed in to the shortcode
+	 * @param	array	$shortcode_attributes the shortcode parameters passed in to the shortcode
 	 *
 	 * @return	array	updated shortcode attributes
 	 */
@@ -1075,7 +1075,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	shortcode arguments merged with attachment selection defaults, so every possible parameter is present
+	 * @param	array	$all_query_parameters shortcode arguments merged with attachment selection defaults, so every possible parameter is present
 	 *
 	 * @return	array	updated attachment query arguments
 	 */
@@ -1412,17 +1412,17 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 					$limit = 0x7FFF;
 				}
 
-				foreach( self::$all_attachments as $site_id => &$attachments ) {
+				foreach( self::$all_attachments as $site_id => &$site_attachments ) {
 					$total_sites += 1;
 					
-					if ( count( $attachments ) ) {
+					if ( count( $site_attachments ) ) {
 
 						$primary_attachments = &$filtered_attachments;
 						$first = array_shift( $primary_attachments );
 						unset( $filtered_attachments );
 						$filtered_attachments = array();
 
-						foreach( $attachments as $attachment ) {
+						foreach( $site_attachments as $attachment ) {
 							$attachment->site_id = $site_id;
 
 							while ( 1 !== self::_compare_attachments( $orderby, $first, $attachment ) ) {
@@ -1491,7 +1491,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 	 *
 	 * @since 1.00
 	 *
-	 * @var	array
+	 * @var	int
 	 */
 	private static $attachment_count = 0;
 
@@ -1513,7 +1513,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 	 * @since 1.00
 	 *
 	 * @param array	$markup_values gallery-level parameter_name => parameter_value pairs
-	 * @param array $attachment WP_Post object of the current item
+	 * @param object $attachment WP_Post object of the current item
 	 */
 	public static function mla_gallery_item_initial_values( $markup_values, $attachment ) {
 		if ( isset( $attachment->site_id ) ) {
@@ -1535,7 +1535,7 @@ MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shor
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	parameter_name => parameter_value pairs
+	 * @param	array	$item_values parameter_name => parameter_value pairs
 	 *
 	 * @return	array	updated substitution parameter name => value pairs
 	 */

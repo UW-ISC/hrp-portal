@@ -94,7 +94,7 @@ var jQuery,
 					return true;
 				}
 				
-				ids = $('tbody th.check-column input[type="checkbox"]').serializeArray();
+				ids = $('tbody .check-column input[type="checkbox"]').serializeArray();
 				if ( 0 === ids.length ) {
 					return true;
 				}
@@ -115,7 +115,7 @@ var jQuery,
 					return true;
 				}
 				
-				ids = $('tbody th.check-column input[type="checkbox"]').serializeArray();
+				ids = $('tbody .check-column input[type="checkbox"]').serializeArray();
 				if ( 0 === ids.length ) {
 					return true;
 				}

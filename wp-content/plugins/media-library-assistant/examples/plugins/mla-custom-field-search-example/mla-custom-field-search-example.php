@@ -28,7 +28,7 @@
  * https://wordpress.org/support/topic/search-media-by-custom-field/
  *
  * @package MLA Custom Field Search Example
- * @version 1.09
+ * @version 1.10
  */
 
 /*
@@ -36,7 +36,7 @@ Plugin Name: MLA Custom Field Search Example
 Plugin URI: http://davidlingren.com/
 Description: Extends the Media/Assistant "Search Media" box to custom field values
 Author: David Lingren
-Version: 1.09
+Version: 1.10
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2020 David Lingren
@@ -70,7 +70,7 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.09';
+	const PLUGIN_VERSION = '1.10';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -123,7 +123,7 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @since 1.06
 	 *
-	 * @var	array
+	 * @var	object
 	 */
 	private static $plugin_settings = NULL;
 
@@ -146,15 +146,15 @@ class MLACustomFieldSearchExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings103' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-103.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings104' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-104.php' );
 		}
 
 		// Add the run-time values to the arguments
 		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings103( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings104( self::$settings_arguments );
 
 		if ( self::$plugin_settings->get_plugin_option( 'media_assistant_support' ) ) {
 			// Defined in /media-library-assistant/includes/class-mla-main.php
@@ -259,7 +259,7 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @since 1.01
 	 *
-	 * @param	array	WP_Query request prepared by "Prepare List Table Query"
+	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
 	 *
 	 * @return	array	updated WP_Query request
 	 */
@@ -399,8 +399,8 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @since 1.03
 	 *
-	 * @param	array	WP_Query terms supported for "Query Attachments"
-	 * @param	array	All terms passed in the request
+	 * @param	array	$query WP_Query terms supported for "Query Attachments"
+	 * @param	array	$raw_query All terms passed in the request
 	 */
 	public static function mla_media_modal_query_initial_terms( $query, $raw_query ) {
 		/*
@@ -446,7 +446,7 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @since 1.03
 	 *
-	 * @param	array	WP_Query request prepared by "Prepare List Table Query"
+	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
 	 */
 	public static function mla_media_modal_query_final_terms( $request ) {
 		// The logic used in the Media/Assistant Search Media box will work here as well
