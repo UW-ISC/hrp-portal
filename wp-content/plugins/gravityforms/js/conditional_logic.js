@@ -6,7 +6,7 @@ gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
 		return;
 	}
 	var dependentFieldIds = rgars( gf_form_conditional_logic, [ formId, 'fields', gformExtractFieldId( fieldId ) ].join( '/' ) );
-	if( dependentFieldIds ) {
+	if( dependentFieldIds.length ) {
 		gf_apply_rules( formId, dependentFieldIds );
 	}
 }, 10 );
@@ -41,9 +41,6 @@ function gf_apply_rules(formId, fields, isInit){
 					native: false,
 					data: { formId: formId, fields: fields, dependentFields: dependentFields, isInit: isInit },
 				} );
-				if( window.gformCalculateTotalPrice ) {
-					window.gformCalculateTotalPrice( formId );
-				}
 			}
 		});
 	}
@@ -229,10 +226,23 @@ function gf_is_checkable_empty( $inputs ) {
 
 function gf_is_match_default( $input, rule, formId, fieldId ) {
 
-	var val           = $input.val(),
-		values        = ( val instanceof Array ) ? val : [ val ], // transform regular value into array to support multi-select (which returns an array of selected items)
+	var val = $input.val();
+	if ( val === undefined ) {
+		val = [];
+	}
+
+	var values        = ( val instanceof Array ) ? val : [ val ], // transform regular value into array to support multi-select (which returns an array of selected items)
 		matchCount    = 0,
 		valuesLength  = Math.max( values.length, 1 ); // jQuery 3.0: Make sure our length is at least 1 so that the following loop fires.
+
+	// Back-compat for rules based on the address field country input that are still using the country name instead of the code; gets the code from the default countries list in gf_global.
+	if ( rule.fieldId === `${ fieldId }.6` && rule.value.length > 2 && $input.closest( '.ginput_container_address' ).length === 1 && val.length === 2 ) {
+		const ruleValueLowerCase = rule.value.toLowerCase();
+
+		rule.value = Object.entries( window.gf_global?.countries || {} ).find(
+			( [ code, name ] ) => name.toLowerCase() === ruleValueLowerCase
+		)?.[ 0 ] || rule.value;
+	}
 
 	for( var i = 0; i < valuesLength; i++ ) {
 
@@ -448,7 +458,11 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 		return;
 	}
 
+	// Fields that shouldn't be displayed by logic rules.
+	const isHiddenType = ! $target.hasClass( 'gfield_error' ) && $target.is( '.gfield--input-type-hidden, .gfield--input-type-hiddenproduct, .gfield_visibility_hidden' );
+
 	if(action == "show"){
+
 		// reset tabindex for selects
 		$target.find( 'select' ).each( function() {
 			var $select = jQuery( this );
@@ -461,8 +475,13 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 				if ( $target.is( 'input[type="submit"]' ) || $target.hasClass( 'gform_next_button' ) ) {
 					gf_show_button( $target );
 				}
-				$target.slideDown(callback);
+
+				if ( ! isHiddenType ) {
+					$target.slideDown(callback);
+				}
+
 				$target.attr( 'data-conditional-logic', 'visible' );
+
 			} else if(callback){
 				callback();
 			}
@@ -480,7 +499,10 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 			if ( $target.is( 'input[type="submit"]' ) || $target.hasClass( 'gform_next_button' ) ) {
 				gf_show_button( $target );
 			} else {
-				$target.css( 'display', display );
+				if ( ! isHiddenType ) {
+					$target.css( 'display', display );
+				}
+
 				if( display == 'none' ) {
 					$target.attr( 'data-conditional-logic', 'hidden' );
 				} else {
@@ -520,7 +542,9 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 			if( $target.is( 'input[type="submit"]' ) || $target.hasClass( 'gform_next_button' ) ) {
 				gf_hide_button( $target );
 			} else if ( $target.length > 0 && $target.is( ":visible" ) ) {
-				$target.slideUp( callback );
+				if ( ! isHiddenType ) {
+					$target.slideUp( callback );
+				}
 				$target.attr( 'data-conditional-logic', 'hidden' );
 			} else if ( callback ) {
 				callback();
@@ -531,7 +555,9 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 			if ( $target.is( 'input[type="submit"]' ) || $target.hasClass( 'gform_next_button' ) ) {
 				gf_hide_button( $target );
 			} else {
-				$target.css( 'display', 'none' );
+				if ( ! isHiddenType ) {
+					$target.css( 'display', 'none' );
+				}
 				$target.attr( 'data-conditional-logic', 'hidden' );
 			}
 			$target.find(':input:hidden:not(.gf-default-disabled)').attr( 'disabled', 'disabled' );
@@ -715,6 +741,8 @@ function gf_reset_to_default(targetId, defaultValue){
 			}
 			else{
 				jQuery(this).prop('checked', doCheck).change();
+				// Triggering native change event so that non-jQuery code can listen to it.
+				this.dispatchEvent( new Event( 'change', { bubbles: true } ) );
 			}
 
 		}

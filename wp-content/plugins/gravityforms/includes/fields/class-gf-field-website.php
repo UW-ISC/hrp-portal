@@ -125,7 +125,21 @@ class GF_Field_Website extends GF_Field {
 		return GFCommon::is_valid_url( $value ) && $format == 'html' ? "<a href='$safe_value' target='_blank'>$safe_value</a>" : $safe_value;
 	}
 
-	public function get_value_save_entry( $value, $form, $input_name, $lead_id, $lead ) {
+	/**
+	 * Sanitize and format the value before it is saved to the Entry Object.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $value          The value to be saved.
+	 * @param array  $form           The Form object currently being processed.
+	 * @param string $input_name     The input name used when accessing the $_POST.
+	 * @param int    $entry_id        The ID of the entry currently being processed.
+	 * @param array  $entry           The entry currently being processed.
+	 * @param string $repeater_index The repeater index if the field is inside a repeater.
+	 *
+	 * @return array|string The sanitized and formatted input value to be saved.
+	 */
+	public function get_value_save_input( $value, $form, $input_name, $entry_id, $entry, $repeater_index = '' ) {
 
 		if ( empty( $value ) || in_array( $value, array( 'http://', 'https://' ) ) ) {
 			return '';
@@ -134,6 +148,26 @@ class GF_Field_Website extends GF_Field {
 		$value = filter_var( $value, FILTER_VALIDATE_URL );
 
 		return $value ? $value : '';
+	}
+
+
+	/**
+	 * Format the entry value safe for displaying on the entry list page.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @uses GF_Field::get_allowable_tags()
+	 *
+	 * @param string $value    The field value.
+	 * @param array  $entry    The Entry Object currently being processed.
+	 * @param string $field_id The field or input ID currently being processed.
+	 * @param array  $columns  The properties for the columns being displayed on the entry list page.
+	 * @param array  $form     The Form Object currently being processed.
+	 *
+	 * @return string
+	 */
+	public function get_value_entry_list( $value, $entry, $field_id, $columns, $form ) {
+		return esc_url( wp_strip_all_tags( $value ) );
 	}
 
 	// # FIELD FILTER UI HELPERS ---------------------------------------------------------------------------------------
