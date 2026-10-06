@@ -70,6 +70,8 @@
 
                         <div class="chart-wizard-step step1" data-step="step1">
 
+                            <?php do_action('wpdatatables_chart_wizard_ai_suggester'); ?>
+
                             <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/steps/step1.inc.php'; ?>
 
                         </div>

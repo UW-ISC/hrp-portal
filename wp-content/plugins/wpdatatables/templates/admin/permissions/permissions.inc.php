@@ -16,7 +16,7 @@
                         <li>
                             <button class="btn btn-primary wdt-add-manager-btn" id="wdt-add-manager-btn">
                                 <i class="wpdt-icon-plus"></i>
-                                <?php esc_html_e('Add Manager', 'wpdatatables'); ?>
+                                <?php esc_html_e('Add Permission', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>
@@ -24,10 +24,27 @@
                 <div class="card-body card-padding p-t-10">
                     <div class="alert alert-info m-b-15">
                         <strong><?php esc_html_e('WordPress Capabilities', 'wpdatatables'); ?></strong><br>
-                        <?php esc_html_e('This permissions system uses WordPress capabilities:', 'wpdatatables'); ?>
-                        <code>wpdt_view_tables</code> <?php esc_html_e('and', 'wpdatatables'); ?>
-                        <code>wpdt_view_charts</code>.
-                        <?php esc_html_e('When you add a manager below, they receive the corresponding capability.', 'wpdatatables'); ?>
+                        <?php esc_html_e('Assign Role or User access rules for tables and charts. Global grants (all items) are mirrored as WordPress capabilities so Members / User Role Editor can see them. Item-scoped rules stay in wpDataTables only and are not mirrored as blanket caps.', 'wpdatatables'); ?>
+                        <br><br>
+                        <strong><?php esc_html_e('Tables:', 'wpdatatables'); ?></strong>
+                        <code>wpdt_list_tables</code>,
+                        <code>wpdt_create_tables</code>,
+                        <code>wpdt_edit_tables</code>,
+                        <code>wpdt_delete_tables</code>,
+                        <code>wpdt_view_tables</code>
+                        <br>
+                        <strong><?php esc_html_e('Charts:', 'wpdatatables'); ?></strong>
+                        <code>wpdt_list_charts</code>,
+                        <code>wpdt_create_charts</code>,
+                        <code>wpdt_edit_charts</code>,
+                        <code>wpdt_delete_charts</code>,
+                        <code>wpdt_view_charts</code>
+                        <br>
+                        <strong><?php esc_html_e('Menu access:', 'wpdatatables'); ?></strong>
+                        <code>wpdt_access_plugin</code>
+                        <?php esc_html_e('(granted automatically when a principal has any wpDataTables permission).', 'wpdatatables'); ?>
+                        <br>
+                        <?php esc_html_e('Settings, System info, and this Permissions screen stay limited to administrators (manage_options).', 'wpdatatables'); ?>
                     </div>
                     <div role="tabpanel">
                         <ul class="tab-nav" role="tablist">

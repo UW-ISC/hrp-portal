@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 7.5.2.3
+ * @version 8.0.2
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 7.5.2.3
+Version: 8.0.2
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: Melograno Ventures
@@ -81,14 +81,6 @@ if (version_compare(WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<')) {
     return;
 }
 
-//[<-- Full version -->]//
-// AJAX actions handlers
-require_once(WDT_ROOT_PATH . 'controllers/wdt_ajax_actions.php');
-//[<--/ Full version -->]//
-
-// Plugin functions
-require_once(WDT_ROOT_PATH . 'controllers/wdt_functions.php');
-
 // Load dependencies
 require_once WDT_ROOT_PATH . 'lib/autoload.php';
 
@@ -99,68 +91,22 @@ if (!defined('MELOGRANO_BI_GATE_URL')) {
     define('MELOGRANO_BI_GATE_URL', 'https://bi.melograno.io');
 }
 
-function wpdatatables_load()
-{
-    if (is_admin()) {
-        // Admin panel controller
-        require_once(WDT_ROOT_PATH . 'controllers/wdt_admin.php');
-        // Admin panel AJAX actions
-        require_once(WDT_ROOT_PATH . 'controllers/wdt_admin_ajax_actions.php');
-        //[<-- Full version -->]//
-        // Table constructor
-        require_once(WDT_ROOT_PATH . 'source/class.constructor.php');
-        //[<--/ Full version -->]//
-    }
-    require_once(WDT_ROOT_PATH . 'source/class.wdttools.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtconfigcontroller.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablelimitreadfilter.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtsourcefile.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtsettingscontroller.php');
-    require_once(WDT_ROOT_PATH . 'admin/class.permissions.admin.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtexception.php');
-    require_once(WDT_ROOT_PATH . 'source/class.connection.php');
-    require_once(WDT_ROOT_PATH . 'source/class.permissions.enforcer.php');
+// Load the layered backend: scoped PHP-DI (WPDataTables\Vendor\) first, then
+// the PSR-4 WPDataTables\ source.
+require_once WDT_ROOT_PATH . 'backend/scope-vendor/autoload.php';
+require_once WDT_ROOT_PATH . 'backend/vendor/autoload.php';
 
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatatable.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatacolumn.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablerows.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtgooglesheets.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablecache.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtnestedjson.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablestemplates.php');
-    require_once(WDT_ROOT_PATH . 'source/class.feedback.php');
-    //[<-- Full version -->]//
-    require_once(WDT_ROOT_PATH . 'source/class.wpexceldatatable.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpexcelcolumn.php');
-    require_once(WDT_ROOT_PATH . 'source/class.filterwidget.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wpdatachart.php');
-    //[<--/ Full version -->]//
-    require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsetable.php');
-    require_once(WDT_ROOT_PATH . 'source/class.wdtbrowsechartstable.php');
-
-    require_once(WDT_ROOT_PATH . 'integrations/wdt-integrations-loader.php');
-
-    add_action('plugins_loaded', 'wdtLoadTextdomain');
-
-    add_action('plugins_loaded', static function () {
-        UsageTracker::init(new WpDataTablesCollector(), __FILE__);
-    });
-
-    if (is_admin()) {
-        if (get_option('wdtSeparateCon') === false) {
-            add_action('plugins_loaded', 'wdtEnableMultipleConnections', 1, __FILE__);
-        }
-
-        if (WDT_CURRENT_VERSION !== get_option('wdtVersion')) {
-            if (!function_exists('is_plugin_active_for_network')) {
-                include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-            }
-
-            wdtActivation(is_plugin_active_for_network(__FILE__));
-            update_option('wdtVersion', WDT_CURRENT_VERSION);
-        }
+// Boot the layered plugin: builds the DI container, registers hook owners, and
+// loads backward-compatibility global functions (Phase K).
+try {
+    WPDataTables\Plugin\Plugin::getInstance();
+    WPDataTables\Plugin\Plugin::bootIntegrations();
+} catch (Exception $e) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('wpDataTables backend boot failed: ' . $e->getMessage());
     }
 }
+
 
 //[<-- Full version -->]//
 // Globals for the shortcode variables
@@ -174,15 +120,6 @@ $wdtVar7 = '';
 $wdtVar8 = '';
 $wdtVar9 = '';
 
-
-/*******************
- * Filtering widget *
- *******************/
-function wdt_register_widget()
-{
-    register_widget('wdtFilterWidget');
-}
-
 //[<--/ Full version -->]//
 
 /********
@@ -191,22 +128,6 @@ function wdt_register_widget()
 register_activation_hook(__FILE__, 'wdtActivation');
 register_deactivation_hook(__FILE__, 'wdtDeactivation');
 register_uninstall_hook(__FILE__, 'wdtUninstall');
-
-add_shortcode('wpdatatable', 'wdtWpDataTableShortcodeHandler');
-add_shortcode('wpdatachart', 'wdtWpDataChartShortcodeHandler');
-add_shortcode('wpdatatable_cell', 'wdtWpDataTableCellShortcodeHandler');
-add_shortcode('wpdatatable_sum', 'wdtFuncsShortcodeHandler');
-add_shortcode('wpdatatable_avg', 'wdtFuncsShortcodeHandler');
-add_shortcode('wpdatatable_min', 'wdtFuncsShortcodeHandler');
-add_shortcode('wpdatatable_max', 'wdtFuncsShortcodeHandler');
-
-
-//[<-- Full version -->]//
-// Widget
-add_action('widgets_init', 'wdt_register_widget');
-//[<--/ Full version -->]//
-
-wpdatatables_load();
 
 /**
  * Show an admin notice when MCP integration cannot be loaded.
@@ -240,6 +161,13 @@ function wdtmcp_register_unavailable_notice($message)
 function wdtmcp_load_integration()
 {
     global $wp_version;
+
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpFeatureGate.php';
+
+    // Opt-out via Settings → Main settings or filter `wpdatatables/mcp/enabled`.
+    if (!\WDTMCP\Infrastructure\WP\MCP\WdtmcpFeatureGate::isEnabled()) {
+        return;
+    }
 
     if (version_compare($wp_version, WDTMCP_MIN_WP_VERSION, '<')) {
         wdtmcp_register_unavailable_notice(
@@ -276,13 +204,18 @@ function wdtmcp_load_integration()
         return;
     }
 
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/Helpers/McpHelpers/WdtmcpAbilitiesHelper.php';
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/Helpers/McpHelpers/WdtmcpLicenseGuideHelper.php';
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/Prompts/FileUploadWorkflowPrompt.php';
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/WdtmcpAbilitiesRegistrar.php';
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/WdtmcpMcpHttpTransport.php';
-    require_once WDT_ROOT_PATH . 'Infrastructure/WP/MCP/WdtmcpMcpServerRegistrar.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/Helpers/McpHelpers/WdtmcpAbilitiesHelper.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpAbilityCatalog.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/Helpers/McpHelpers/WdtmcpPermissionsHelper.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/Helpers/McpHelpers/WdtmcpLicenseGuideHelper.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/Prompts/FileUploadWorkflowPrompt.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpAbilitiesRegistrar.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpMcpHttpTransport.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpMcpServerRegistrar.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpSessionMetaLock.php';
+    require_once WDT_ROOT_PATH . 'backend/src/Infrastructure/WP/MCP/WdtmcpAngieRegistrar.php';
 
+    \WDTMCP\Infrastructure\WP\MCP\WdtmcpSessionMetaLock::init();
     \WP\MCP\Core\McpAdapter::instance();
 
     add_action(
@@ -297,6 +230,7 @@ function wdtmcp_load_integration()
         'wp_abilities_api_init',
         array('\WDTMCP\Infrastructure\WP\MCP\WdtmcpAbilitiesRegistrar', 'registerAbilities')
     );
+    \WDTMCP\Infrastructure\WP\MCP\WdtmcpAngieRegistrar::init();
     add_action('init', 'wdtmcp_maybe_migrate_css_to_global', 99);
 }
 

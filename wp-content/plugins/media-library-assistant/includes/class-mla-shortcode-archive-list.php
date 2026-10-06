@@ -1353,7 +1353,7 @@ class MLAArchiveList {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_archive_list REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_archive_list encoded _REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_archive_list shortcode attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $raw_attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_archive_list shortcode content', 'media-library-assistant' ) . '</strong> = ' . var_export( $content, true ) );
 		}
@@ -1778,7 +1778,7 @@ class MLAArchiveList {
 		$get_shortcode_arguments = array_diff_key( $attr, self::$archive_list_arguments );
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() _REQUEST = " . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ) );
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() self::\$archive_list_attr = " . var_export( self::$archive_list_attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() self::\$archive_list_arguments = " . var_export( self::$archive_list_arguments, true ) );
 			MLACore::mla_debug_add( __LINE__ . " mla_archive_list() get_shortcode_arguments = " . var_export( $get_shortcode_arguments, true ) );

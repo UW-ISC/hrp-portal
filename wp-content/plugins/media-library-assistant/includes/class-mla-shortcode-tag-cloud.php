@@ -337,7 +337,7 @@ class MLATagCloud {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug encoded _REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
@@ -733,11 +733,8 @@ class MLATagCloud {
 		 */
 		 
 		$columns = absint( $arguments['columns'] );
-		$margin_string = strtolower( trim( $arguments['mla_margin'] ) );
 
-		if ( is_numeric( $margin_string ) && ( 0 != $margin_string) ) {
-			$margin_string .= '%'; // Legacy values are always in percent
-		}
+		$margin_string = MLAShortcode_Support::mla_validate_margin( $arguments['mla_margin'], '1.5%' );
 
 		if ( '%' === substr( $margin_string, -1 ) ) {
 			$margin_percent = (float) substr( $margin_string, 0, strlen( $margin_string ) - 1 );
@@ -745,24 +742,7 @@ class MLATagCloud {
 			$margin_percent = 0;
 		}
 
-		$width_string = strtolower( trim( $arguments['mla_itemwidth'] ) );
-		if ( 'none' !== $width_string ) {
-			switch ( $width_string ) {
-				case 'auto':
-				case 'inherit':
-					break;
-				case 'exact':
-					$margin_percent = 0;
-					// fallthru
-				case 'calculate':
-					$width_string = $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
-					// fallthru
-				default:
-					if ( is_numeric( $width_string ) && ( 0 != $width_string) ) {
-						$width_string .= '%'; // Legacy values are always in percent
-					}
-			}
-		} // $use_width
+		$width_string = MLAShortcode_Support::mla_validate_itemwidth( $arguments['mla_itemwidth'], $columns, $margin_percent, 'calculate' );
 
 		// Calculate cloud parameters
 		$spread = $max_scaled_count - $min_scaled_count;

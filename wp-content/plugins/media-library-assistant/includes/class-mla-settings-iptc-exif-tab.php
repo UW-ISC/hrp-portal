@@ -1075,7 +1075,7 @@ class MLASettings_IPTCEXIF {
 	 * @return	void	echo json response object, then die()
 	 */
 	public static function mla_inline_mapping_iptc_exif_action() {
-		// MLACore::mla_debug_add( __LINE__ . ' MLASettings_IPTCEXIF::mla_inline_mapping_custom_action $_REQUEST = ' . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		// MLACore::mla_debug_add( __LINE__ . ' MLASettings_IPTCEXIF::mla_inline_mapping_custom_action encoded _REQUEST = ' . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		if ( isset( $_REQUEST['screen'] ) ) {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}

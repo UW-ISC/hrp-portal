@@ -648,3 +648,241 @@ input::-webkit-inner-spin-button {
     width: 100%;
     max-width: 1440px;
 }
+
+/* AI Chart Type Suggester */
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-suggester-section {
+    margin: 0 0 10px;
+    position: relative;
+    z-index: 30;
+    overflow: visible;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card {
+    display: block;
+    width: 100%;
+    margin: 13px 0 15px;
+    padding: 20px;
+    border: 1px solid #EBECF0;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(23, 43, 77, 0.04), 0 0 2px rgba(23, 43, 77, 0.04);
+    background: #FFFFFF;
+    overflow: visible;
+    position: relative;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card:hover {
+    border: 1px solid #EBECF0;
+    box-shadow: 0 2px 4px rgba(23, 43, 77, 0.04), 0 0 2px rgba(23, 43, 77, 0.04);
+    cursor: default;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card__icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card__body {
+    overflow: visible;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card .form-group,
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card .bootstrap-select,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-control {
+    overflow: visible;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-chart-card h4 .wpdt-icon-info-circle-thin {
+    font-size: 14px;
+    color: #5A6C89;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-control {
+    min-width: 0;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-control--table {
+    flex: 1 1 280px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-control--model {
+    flex: 1 1 260px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-control--actions {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-generate.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 96px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 13px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls h4 {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result select.wdt-ai-cs-pending-picker {
+    display: none !important;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls .bootstrap-select,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result .bootstrap-select {
+    width: 100% !important;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls .bootstrap-select > .dropdown-toggle,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-controls .bootstrap-select > .btn,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result .bootstrap-select > .dropdown-toggle,
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result .bootstrap-select > .btn {
+    max-height: 40px;
+    overflow: hidden;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result {
+    clear: both;
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result > .row {
+    position: relative;
+    z-index: 2;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-result .form-group {
+    margin-bottom: 12px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-reason {
+    clear: both;
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin: 8px 0 12px;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-alternatives {
+    clear: both;
+    position: relative;
+    z-index: 1;
+    display: block;
+}
+
+/*
+ * Compact AI dropdown menus (match constructor AI panels).
+ * Do not use a class name containing "selectpicker" — bootstrap-select's
+ * setStyle() strips that substring when copying classes onto the wrapper.
+ */
+.wpdt-c .wdt-chart-wizard .bootstrap-select.wdt-ai-dropdown .dropdown-menu,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu {
+    padding: 4px 0 !important;
+    max-height: 260px;
+}
+
+.wpdt-c .wdt-chart-wizard .bootstrap-select.wdt-ai-dropdown .dropdown-menu li,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu li,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu li {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 20px !important;
+    border: 0 !important;
+}
+
+.wpdt-c .wdt-chart-wizard .bootstrap-select.wdt-ai-dropdown .dropdown-menu li a,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu li a,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu li a {
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 20px !important;
+    font-size: 13px !important;
+    border: 0 !important;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-alt-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #304463;
+    margin-bottom: 8px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-cs-alt-btn {
+    margin: 0 6px 6px 0;
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+    height: auto;
+    line-height: 1.35;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-constructor-section-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #5A6C89;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-constructor-section-divider::before,
+.wpdt-c .wdt-chart-wizard .wdt-constructor-section-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #EBECF0;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-constructor-section-divider span {
+    padding: 0 16px;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-unavailable-card.wdt-premium-feature {
+    border: 1px solid #091D70;
+    box-shadow: none !important;
+}
+
+.wpdt-c .wdt-chart-wizard .wdt-ai-unavailable-card .wdt-upgrade-btn {
+    background: #091D70 !important;
+}

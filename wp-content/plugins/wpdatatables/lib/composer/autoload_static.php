@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd5b6b783c91418f67131950ec953168a
+class ComposerStaticInitc89f290839141c07710070ca63d28d26
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -21,7 +21,6 @@ class ComposerStaticInitd5b6b783c91418f67131950ec953168a
             'WPDT\\ZipStream\\' => 15,
             'WPDT\\Psr\\SimpleCache\\' => 21,
             'WPDT\\Psr\\Http\\Message\\' => 22,
-            'WPDT\\Psr\\Http\\Client\\' => 21,
             'WPDT\\PhpOffice\\PhpSpreadsheet\\' => 30,
             'WPDT\\PHPSQLParser\\' => 18,
             'WPDT\\MyCLabs\\Enum\\' => 18,
@@ -61,12 +60,7 @@ class ComposerStaticInitd5b6b783c91418f67131950ec953168a
         ),
         'WPDT\\Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'WPDT\\Psr\\Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'WPDT\\PhpOffice\\PhpSpreadsheet\\' => 
         array (
@@ -166,6 +160,7 @@ class ComposerStaticInitd5b6b783c91418f67131950ec953168a
         'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaFeatureTelemetry' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/AmeliaFeatureTelemetry.php',
         'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/IvyFormsCollector.php',
         'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/WpDataTablesCollector.php',
+        'WPDT\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesFeatureTelemetry' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/WpDataTablesFeatureTelemetry.php',
         'WPDT\\Melograno\\UsageTracker\\Core\\Anonymizer' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/Anonymizer.php',
         'WPDT\\Melograno\\UsageTracker\\Core\\ConsentManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentManager.php',
         'WPDT\\Melograno\\UsageTracker\\Core\\ConsentNoticeService' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentNoticeService.php',
@@ -853,22 +848,12 @@ class ComposerStaticInitd5b6b783c91418f67131950ec953168a
         'WPDT\\PhpOffice\\PhpSpreadsheet\\Writer\\ZipStream0' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Writer/ZipStream0.php',
         'WPDT\\PhpOffice\\PhpSpreadsheet\\Writer\\ZipStream2' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Writer/ZipStream2.php',
         'WPDT\\PhpOffice\\PhpSpreadsheet\\Writer\\ZipStream3' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Writer/ZipStream3.php',
-        'WPDT\\Psr\\Http\\Client\\ClientExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientExceptionInterface.php',
-        'WPDT\\Psr\\Http\\Client\\ClientInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientInterface.php',
-        'WPDT\\Psr\\Http\\Client\\NetworkExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/NetworkExceptionInterface.php',
-        'WPDT\\Psr\\Http\\Client\\RequestExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/RequestExceptionInterface.php',
         'WPDT\\Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
-        'WPDT\\Psr\\Http\\Message\\RequestFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/RequestFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
-        'WPDT\\Psr\\Http\\Message\\ResponseFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/ResponseFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
-        'WPDT\\Psr\\Http\\Message\\ServerRequestFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/ServerRequestFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/ServerRequestInterface.php',
-        'WPDT\\Psr\\Http\\Message\\StreamFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/StreamFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/..' . '/psr/http-message/src/StreamInterface.php',
-        'WPDT\\Psr\\Http\\Message\\UploadedFileFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UploadedFileFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
-        'WPDT\\Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UriFactoryInterface.php',
         'WPDT\\Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
         'WPDT\\Psr\\SimpleCache\\CacheException' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheException.php',
         'WPDT\\Psr\\SimpleCache\\CacheInterface' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheInterface.php',
@@ -1152,9 +1137,9 @@ class ComposerStaticInitd5b6b783c91418f67131950ec953168a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd5b6b783c91418f67131950ec953168a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc89f290839141c07710070ca63d28d26::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc89f290839141c07710070ca63d28d26::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc89f290839141c07710070ca63d28d26::$classMap;
 
         }, null, ClassLoader::class);
     }

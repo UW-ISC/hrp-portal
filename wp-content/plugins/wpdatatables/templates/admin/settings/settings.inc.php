@@ -71,6 +71,7 @@
                                 <a href="#wdt-charts" aria-controls="wdt-charts" role="tab"
                                    data-toggle="tab"><?php esc_html_e('Charts', 'wpdatatables'); ?></a>
                             </li>
+                            <?php do_action('wpdatatables_add_tab_nav_in_main_settings'); ?>
                         </ul>
 
                         <div class="tab-content">

@@ -1,5 +1,8 @@
 <?php
 
+use Redirection\Database\Database;
+use Redirection\Database\Status;
+
 /**
  * Implements example command.
  */
@@ -109,7 +112,7 @@ class Redirection_Cli extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 * <name>
-	 * : The plugin name to import from. Supported importers include wp-simple-redirect, seo-redirection, safe-redirect-manager, wordpress-old-slugs, rank-math, quick-redirects, pretty-links, seopress, slim-seo, eps-301-redirects, and fake-redirection.
+	 * : The plugin name to import from. Supported importers include wp-simple-redirect, seo-redirection, safe-redirect-manager, wordpress-old-slugs, rank-math, quick-redirects, pretty-links, seopress, slim-seo, eps-301-redirects, yoast-seo, and fake-redirection.
 	 *
 	 * [--group=<groupid>]
 	 * : The group ID to import into. Defaults to the first available group.
@@ -449,9 +452,9 @@ class Redirection_Cli extends WP_CLI_Command {
 		}
 
 		if ( $args[0] === 'install' ) {
-			Red_Database::apply_to_sites(
+			Database::apply_to_sites(
 				function () {
-					$latest = Red_Database::get_latest_database();
+					$latest = Database::get_latest_database();
 					$latest->install();
 
 					WP_CLI::success( 'Site ' . get_current_blog_id() . ' database is installed' );
@@ -464,10 +467,10 @@ class Redirection_Cli extends WP_CLI_Command {
 
 			$wpdb->show_errors( false );
 
-			Red_Database::apply_to_sites(
+			Database::apply_to_sites(
 				function () use ( $skip ) {
-					$database = new Red_Database();
-					$status = new Red_Database_Status();
+					$database = new Database();
+					$status = new Status();
 
 					if ( ! $status->needs_updating() ) {
 						WP_CLI::success( 'Site ' . get_current_blog_id() . ' database is already the latest version' );
@@ -503,9 +506,9 @@ class Redirection_Cli extends WP_CLI_Command {
 
 			WP_CLI::success( 'Database upgrade finished' );
 		} elseif ( $args[0] === 'remove' ) {
-			Red_Database::apply_to_sites(
+			Database::apply_to_sites(
 				function () {
-					$latest = Red_Database::get_latest_database();
+					$latest = Database::get_latest_database();
 					$latest->remove();
 				}
 			);

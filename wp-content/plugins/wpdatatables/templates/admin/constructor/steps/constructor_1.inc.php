@@ -1,9 +1,6 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <div class="row wdt-constructor-step bg-white" data-step="1">
-    <h4 class="c-title-color m-b-20 m-t-0 p-l-0 f-15">
-        <?php esc_html_e('Choose what kind of table would you like to construct', 'wpdatatables'); ?>
-    </h4>
 
     <?php if (Connection::enabledSeparate()) { ?>
         <?php do_action('wpdatatables_add_separate_connection_element_in_wizard'); ?>
@@ -11,6 +8,12 @@
         ?>
         <input type="hidden" id="wdt-constructor-table-connection" value="">
     <?php } ?>
+
+    <?php do_action('wpdatatables_constructor_ai_table_generator'); ?>
+
+    <h4 class="c-title-color m-b-20 m-t-0 p-l-0 f-15">
+        <?php esc_html_e('Choose what kind of table would you like to construct', 'wpdatatables'); ?>
+    </h4>
 
     <div class="col-sm-12 p-0">
 

@@ -462,7 +462,7 @@ class MLAImageProcessor {
 	 * @return	void	echos image content and calls exit();
 	 */
 	public static function mla_process_stream_image() {
-		self::_mla_debug_add( 'MLAImageProcessor::mla_process_stream_image REQUEST = ' . var_export( $_REQUEST, true ) );
+		self::_mla_debug_add( 'MLAImageProcessor::mla_process_stream_image encoded _REQUEST = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 		if ( ! class_exists( 'Imagick' ) ) {
 			self::mla_image_processor_die( 'Imagick not installed', __LINE__, 500 );
 		}

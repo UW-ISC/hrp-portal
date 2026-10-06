@@ -864,7 +864,7 @@ class Html extends BaseReader
         $height = isset($attributes['height']) ? (float) $attributes['height'] : null;
         $name = $attributes['alt'] ?? null;
         $drawing = new Drawing();
-        $drawing->setPath($src, \false, null, $this->allowExternalImages);
+        $drawing->setPath($src, \false, null, $this->allowExternalImages, $this->isWhitelisted);
         if ($drawing->getPath() === '') {
             return;
         }

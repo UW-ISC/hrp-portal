@@ -1,19 +1,34 @@
 /**
- * Permissions Admin Page JavaScript
+ * Permissions Admin Page JavaScript — Role | User access rules.
  */
 
 (function ($) {
     'use strict';
 
-    // Get current tab from URL
+    var metaCache = null;
+    var rowActionsBound = false;
+
     function getCurrentTab() {
-        const urlParams = new URLSearchParams(window.location.search);
+        var urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('tab') || 'tables';
     }
 
-    // Load managers data for the current tab
+    function i18n(key, fallback) {
+        if (wdtPermissions.i18n && wdtPermissions.i18n[key]) {
+            return wdtPermissions.i18n[key];
+        }
+        return fallback || key;
+    }
+
+    function catalogForTab(tab) {
+        if (wdtPermissions.catalog && wdtPermissions.catalog[tab]) {
+            return wdtPermissions.catalog[tab];
+        }
+        return [];
+    }
+
     function loadManagersData() {
-        const tab = getCurrentTab();
+        var tab = getCurrentTab();
         $.ajax({
             type: 'POST',
             url: wdtPermissions.ajax_url,
@@ -23,30 +38,35 @@
                     tab: tab,
                     nonce: wdtPermissions.nonce
                 };
-                // include current search term if present
                 var $search = $('.wpdt-search-box input[name="s"]');
                 if ($search.length) {
                     params.s = $search.val();
                 } else {
                     var urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('s')) params.s = urlParams.get('s');
+                    if (urlParams.has('s')) {
+                        params.s = urlParams.get('s');
+                    }
                 }
-                // include optional ordering/paging to keep state
                 var urlParams2 = new URLSearchParams(window.location.search);
-                if (urlParams2.has('orderby')) params.orderby = urlParams2.get('orderby');
-                if (urlParams2.has('order')) params.order = urlParams2.get('order');
-                if (urlParams2.has('paged')) params.paged = urlParams2.get('paged');
+                if (urlParams2.has('orderby')) {
+                    params.orderby = urlParams2.get('orderby');
+                }
+                if (urlParams2.has('order')) {
+                    params.order = urlParams2.get('order');
+                }
+                if (urlParams2.has('paged')) {
+                    params.paged = urlParams2.get('paged');
+                }
                 return params;
             })(),
             success: function (response) {
                 if (response.success) {
-                    // Insert returned rows into the table body. target the-list tbody used by templates
                     $('#the-list').html(response.data.html);
                     bindRowActions();
                 } else {
                     $('#the-list').html(
                         '<tr><td colspan="7" style="text-align: center; padding: 24px; color: red;">' +
-                        'Error loading permissions: ' + response.data.message +
+                        'Error loading permissions: ' + (response.data && response.data.message ? response.data.message : '') +
                         '</td></tr>'
                     );
                 }
@@ -61,295 +81,421 @@
         });
     }
 
-    // Bind edit and delete actions
+    function fetchMeta(callback) {
+        var tab = getCurrentTab();
+        if (metaCache && metaCache.resource === tab) {
+            callback(metaCache);
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: wdtPermissions.ajax_url,
+            data: {
+                action: 'wpdatatables_permissions_meta',
+                tab: tab,
+                nonce: wdtPermissions.nonce
+            },
+            success: function (response) {
+                if (response.success) {
+                    metaCache = response.data;
+                    callback(metaCache);
+                } else {
+                    $('#wdt-permission-modal .form-general-error')
+                        .text(response.data && response.data.message ? response.data.message : 'Error loading meta')
+                        .show();
+                }
+            },
+            error: function () {
+                $('#wdt-permission-modal .form-general-error').text('Error loading meta').show();
+            }
+        });
+    }
+
     function bindRowActions() {
+        if (rowActionsBound) {
+            return;
+        }
+        rowActionsBound = true;
 
         $(document).on('click', '.wdt-edit-permission', function (e) {
             e.preventDefault();
-            const userId = $(this).data('id');
-            editPermission(userId);
+            editPermission($(this).data('id'));
         });
 
         $(document).on('click', '.wdt-delete-permission', function (e) {
             e.preventDefault();
-            const userId = $(this).data('id');
-            // Open custom modal for delete confirmation
-            $('#wdt-delete-permission-modal').data('user-id', userId);
+            $('#wdt-delete-permission-modal').data('rule-id', $(this).data('id'));
             $('#wdt-delete-permission-modal').modal('show');
         });
 
-        // Initialize sorting
         initTableSorting();
     }
 
-    // Initialize table column sorting
     function initTableSorting() {
         $('.wdt-permissions-table thead th.sortable, .wdt-permissions-table thead th.sorted').off('click').on('click', function (e) {
             e.preventDefault();
-            const $th = $(this);
-            const columnIndex = $th.index();
-            const isAsc = $th.hasClass('asc');
+            var $th = $(this);
+            var columnIndex = $th.index();
+            var isAsc = $th.hasClass('asc');
 
-            // Remove sorted classes from all headers
             $('.wdt-permissions-table thead th').removeClass('sorted asc desc');
-
-            // Add sorted class and direction to clicked header
             $th.addClass('sorted');
             if (isAsc) {
                 $th.removeClass('asc').addClass('desc');
             } else {
                 $th.removeClass('desc').addClass('asc');
             }
-
-            // Sort the table rows
             sortTable(columnIndex, !isAsc);
         });
     }
 
-    // Sort table by column
     function sortTable(columnIndex, ascending) {
-        const $tbody = $('.wdt-permissions-table tbody');
-        const rows = $tbody.find('tr').toArray();
+        var $tbody = $('.wdt-permissions-table tbody');
+        var rows = $tbody.find('tr').toArray();
 
         rows.sort(function (a, b) {
-            const aValue = $(a).find('td').eq(columnIndex).text().trim();
-            const bValue = $(b).find('td').eq(columnIndex).text().trim();
-
-            // Check if values are numbers
-            const aNum = parseFloat(aValue);
-            const bNum = parseFloat(bValue);
+            var aValue = $(a).find('td').eq(columnIndex).text().trim();
+            var bValue = $(b).find('td').eq(columnIndex).text().trim();
+            var aNum = parseFloat(aValue);
+            var bNum = parseFloat(bValue);
 
             if (!isNaN(aNum) && !isNaN(bNum)) {
                 return ascending ? aNum - bNum : bNum - aNum;
             }
-
-            // String comparison
             if (ascending) {
                 return aValue.localeCompare(bValue);
-            } else {
-                return bValue.localeCompare(aValue);
             }
+            return bValue.localeCompare(aValue);
         });
 
         $tbody.html(rows);
     }
 
-    // Edit permission
-    function editPermission(userId) {
-        const tab = getCurrentTab();
+    function renderPermissionCheckboxes(catalog, selected) {
+        selected = selected || [];
+        var $wrap = $('#wdt-permission-checkboxes').empty();
+        catalog.forEach(function (def, index) {
+            var id = 'wdt-perm-' + def.key;
+            var checked = selected.indexOf(def.key) !== -1 || (selected.length === 0 && def.key.indexOf('view_') === 0);
+            var $row = $('<div class="toggle-switch m-b-10" data-ts-color="blue"></div>');
+            $row.append(
+                $('<input type="checkbox">')
+                    .attr({ id: id, value: def.key })
+                    .prop('checked', checked)
+                    .addClass('wdt-permission-key')
+            );
+            $row.append(
+                $('<label class="ts-label"></label>').attr('for', id).text(def.label)
+            );
+            $wrap.append($row);
+        });
+    }
 
-        // Load permission data via AJAX
+    function populateRolesSelect(roles, selectedSlugs) {
+        selectedSlugs = selectedSlugs || [];
+        var $select = $('#wdt-permission-roles-select').empty();
+        roles.forEach(function (role) {
+            $select.append(
+                $('<option></option>')
+                    .val(role.slug)
+                    .text(role.name)
+                    .prop('selected', selectedSlugs.indexOf(role.slug) !== -1)
+            );
+        });
+        $select.selectpicker('refresh');
+    }
+
+    function populateItemsSelect(items, selectedIds) {
+        selectedIds = (selectedIds || []).map(String);
+        var $select = $('#wdt-permission-items-select').empty();
+        items.forEach(function (item) {
+            $select.append(
+                $('<option></option>')
+                    .val(String(item.id))
+                    .text(item.title)
+                    .prop('selected', selectedIds.indexOf(String(item.id)) !== -1)
+            );
+        });
+        $select.selectpicker('refresh');
+    }
+
+    function populateUsersSelect(users, selectedIds) {
+        selectedIds = (selectedIds || []).map(String);
+        var $select = $('#wdt-permission-users-select');
+        var existing = {};
+        $select.find('option').each(function () {
+            existing[String($(this).val())] = true;
+        });
+
+        users.forEach(function (user) {
+            var id = String(user.id);
+            if (existing[id]) {
+                return;
+            }
+            $select.append(
+                $('<option></option>')
+                    .val(id)
+                    .text(user.label || user.login)
+                    .prop('selected', selectedIds.indexOf(id) !== -1)
+            );
+            existing[id] = true;
+        });
+
+        selectedIds.forEach(function (id) {
+            if (!existing[id]) {
+                return;
+            }
+            $select.find('option[value="' + id + '"]').prop('selected', true);
+        });
+
+        $select.selectpicker('refresh');
+    }
+
+    function searchUsers(term) {
         $.ajax({
             type: 'POST',
             url: wdtPermissions.ajax_url,
             data: {
-                action: 'wpdatatables_get_permission',
-                user_id: userId,
-                tab: tab,
+                action: 'wpdatatables_search_permission_users',
+                search: term || '',
                 nonce: wdtPermissions.nonce
             },
             success: function (response) {
-                if (response.success) {
-                    const perm = response.data;
-
-                    if (tab === 'charts') {
-                        $('#wdt-chart-manager-modal-title').text('Edit Chart Manager');
-                        $('#wdt-chart-user-select').val(perm.user_id).selectpicker('refresh');
-                        $('#wdt-chart-perm-view').prop('checked', perm.has_capability);
-
-                        if (perm.all_items) {
-                            $('#wdt-enable-specific-charts').prop('checked', false);
-                            $('#wdt-specific-charts-container').hide();
-                        } else {
-                            $('#wdt-enable-specific-charts').prop('checked', true);
-                            $('#wdt-specific-charts-container').show();
-                            $('#wdt-chart-items-select').val(perm.item_ids).selectpicker('refresh');
-                        }
-
-                        $('#wdt-chart-manager-modal').data('user-id', userId);
-                        $('#wdt-chart-manager-modal').modal('show');
-                    } else {
-                        $('#wdt-table-manager-modal-title').text('Edit Table Manager');
-                        $('#wdt-table-user-select').val(perm.user_id).selectpicker('refresh');
-                        $('#wdt-table-perm-view').prop('checked', perm.has_capability);
-
-                        if (perm.all_items) {
-                            $('#wdt-enable-specific-tables').prop('checked', false);
-                            $('#wdt-specific-tables-container').hide();
-                        } else {
-                            $('#wdt-enable-specific-tables').prop('checked', true);
-                            $('#wdt-specific-tables-container').show();
-                            $('#wdt-table-items-select').val(perm.item_ids).selectpicker('refresh');
-                        }
-
-                        $('#wdt-table-manager-modal').data('user-id', userId);
-                        $('#wdt-table-manager-modal').modal('show');
-                    }
+                if (response.success && response.data.users) {
+                    var selected = $('#wdt-permission-users-select').val() || [];
+                    populateUsersSelect(response.data.users, selected);
                 }
             }
         });
     }
 
-    // Confirm delete permission
+    function setTargetType(type, lock) {
+        $('input[name="wdt-permission-target-type"][value="' + type + '"]').prop('checked', true);
+        if (type === 'role') {
+            $('#wdt-permission-roles-wrap').show();
+            $('#wdt-permission-users-wrap').hide();
+        } else {
+            $('#wdt-permission-roles-wrap').hide();
+            $('#wdt-permission-users-wrap').show();
+        }
+        if (lock) {
+            $('#wdt-permission-target-type-wrap').hide();
+            $('#wdt-permission-roles-select, #wdt-permission-users-select').prop('disabled', true);
+        } else {
+            $('#wdt-permission-target-type-wrap').show();
+            $('#wdt-permission-roles-select, #wdt-permission-users-select').prop('disabled', false);
+        }
+        $('#wdt-permission-roles-select, #wdt-permission-users-select').selectpicker('refresh');
+    }
+
+    function applyTabCopy(tab) {
+        if (tab === 'charts') {
+            $('#wdt-enable-specific-items-label').text(i18n('limit_charts', 'Limit to specific charts'));
+            $('#wdt-enable-specific-items-help').text(i18n('limit_charts_help', 'If unchecked, permissions apply to all charts.'));
+            $('#wdt-specific-items-heading').text(i18n('select_charts', 'Select charts'));
+        } else {
+            $('#wdt-enable-specific-items-label').text(i18n('limit_tables', 'Limit to specific tables'));
+            $('#wdt-enable-specific-items-help').text(i18n('limit_tables_help', 'If unchecked, permissions apply to all tables.'));
+            $('#wdt-specific-items-heading').text(i18n('select_tables', 'Select tables'));
+        }
+    }
+
+    function resetModal() {
+        var tab = getCurrentTab();
+        $('#wdt-permission-modal').removeData('rule-id');
+        $('#wdt-permission-modal .form-general-error').hide().text('');
+        $('#wdt-permission-roles-error, #wdt-permission-users-error, #wdt-permission-perms-error, #wdt-permission-items-error').hide();
+        $('#wdt-enable-specific-items').prop('checked', false);
+        $('#wdt-specific-items-container').hide();
+        $('#wdt-permission-roles-select').val([]).empty();
+        $('#wdt-permission-users-select').val([]).empty();
+        $('#wdt-permission-items-select').val([]).empty();
+        setTargetType('role', false);
+        applyTabCopy(tab);
+        renderPermissionCheckboxes(catalogForTab(tab), []);
+    }
+
+    function openAddManagerModal() {
+        resetModal();
+        fetchMeta(function (meta) {
+            populateRolesSelect(meta.roles || [], []);
+            populateItemsSelect(meta.items || [], []);
+            renderPermissionCheckboxes(meta.catalog || catalogForTab(getCurrentTab()), []);
+            searchUsers('');
+            $('#wdt-permission-modal-title').text(i18n('add_permission', 'Add Permission'));
+            $('#wdt-permission-modal').modal('show');
+        });
+    }
+
+    function editPermission(ruleId) {
+        var tab = getCurrentTab();
+        resetModal();
+
+        $.ajax({
+            type: 'POST',
+            url: wdtPermissions.ajax_url,
+            data: {
+                action: 'wpdatatables_get_permission',
+                rule_id: ruleId,
+                tab: tab,
+                nonce: wdtPermissions.nonce
+            },
+            success: function (response) {
+                if (!response.success) {
+                    return;
+                }
+                var perm = response.data;
+                fetchMeta(function (meta) {
+                    populateRolesSelect(meta.roles || [], []);
+                    populateItemsSelect(meta.items || [], perm.item_ids || []);
+                    renderPermissionCheckboxes(meta.catalog || catalogForTab(tab), perm.permissions || []);
+
+                    if (perm.type === 'role') {
+                        setTargetType('role', true);
+                        populateRolesSelect(meta.roles || [], [perm.role_slug]);
+                    } else {
+                        setTargetType('user', true);
+                        populateUsersSelect([{
+                            id: perm.user_id,
+                            login: perm.principal,
+                            email: perm.email || '',
+                            label: perm.email ? (perm.principal + ' (' + perm.email + ')') : perm.principal
+                        }], [perm.user_id]);
+                    }
+
+                    if (perm.all_items) {
+                        $('#wdt-enable-specific-items').prop('checked', false);
+                        $('#wdt-specific-items-container').hide();
+                    } else {
+                        $('#wdt-enable-specific-items').prop('checked', true);
+                        $('#wdt-specific-items-container').show();
+                        $('#wdt-permission-items-select').val((perm.item_ids || []).map(String)).selectpicker('refresh');
+                    }
+
+                    $('#wdt-permission-modal').data('rule-id', ruleId);
+                    $('#wdt-permission-modal-title').text(i18n('edit_permission', 'Edit Permission'));
+                    $('#wdt-permission-modal').modal('show');
+                });
+            }
+        });
+    }
+
+    function collectCheckedPermissions() {
+        var perms = [];
+        $('#wdt-permission-checkboxes .wdt-permission-key:checked').each(function () {
+            perms.push($(this).val());
+        });
+        return perms;
+    }
+
+    function savePermission() {
+        var tab = getCurrentTab();
+        var ruleId = $('#wdt-permission-modal').data('rule-id');
+        var targetType = $('input[name="wdt-permission-target-type"]:checked').val() || 'role';
+        var permissions = collectCheckedPermissions();
+        var enableSpecific = $('#wdt-enable-specific-items').is(':checked') ? 1 : 0;
+        var itemIds = enableSpecific ? ($('#wdt-permission-items-select').val() || []) : [];
+
+        $('#wdt-permission-roles-error, #wdt-permission-users-error, #wdt-permission-perms-error, #wdt-permission-items-error').hide();
+        $('#wdt-permission-modal .form-general-error').hide().text('');
+
+        if (!ruleId) {
+            if (targetType === 'role') {
+                var roles = $('#wdt-permission-roles-select').val() || [];
+                if (!roles.length) {
+                    $('#wdt-permission-roles-error').show();
+                    return;
+                }
+            } else {
+                var users = $('#wdt-permission-users-select').val() || [];
+                if (!users.length) {
+                    $('#wdt-permission-users-error').show();
+                    return;
+                }
+            }
+        }
+
+        if (!permissions.length) {
+            $('#wdt-permission-perms-error').show();
+            return;
+        }
+
+        if (enableSpecific && !itemIds.length) {
+            $('#wdt-permission-items-error').show();
+            return;
+        }
+
+        var data = {
+            action: ruleId ? 'wpdatatables_update_permission' : 'wpdatatables_save_permission',
+            tab: tab,
+            permissions: permissions,
+            enable_specific: enableSpecific,
+            item_ids: itemIds,
+            nonce: wdtPermissions.nonce
+        };
+
+        if (ruleId) {
+            data.rule_id = ruleId;
+        } else {
+            data.target_type = targetType;
+            if (targetType === 'role') {
+                data.role_slugs = $('#wdt-permission-roles-select').val() || [];
+            } else {
+                data.user_ids = $('#wdt-permission-users-select').val() || [];
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: wdtPermissions.ajax_url,
+            data: data,
+            success: function (response) {
+                if (response.success) {
+                    metaCache = null;
+                    $('#wdt-permission-modal').modal('hide');
+                    loadManagersData();
+                } else {
+                    $('#wdt-permission-modal .form-general-error')
+                        .text((response.data && response.data.message) ? response.data.message : 'Error saving permission')
+                        .show();
+                }
+            },
+            error: function () {
+                $('#wdt-permission-modal .form-general-error').text('Error saving permission.').show();
+            }
+        });
+    }
+
     function confirmDeletePermission() {
-        const userId = $('#wdt-delete-permission-modal').data('user-id');
-        const tab = getCurrentTab();
+        var ruleId = $('#wdt-delete-permission-modal').data('rule-id');
+        var tab = getCurrentTab();
 
         $.ajax({
             type: 'POST',
             url: wdtPermissions.ajax_url,
             data: {
                 action: 'wpdatatables_delete_permission',
-                user_id: userId,
+                rule_id: ruleId,
                 tab: tab,
                 nonce: wdtPermissions.nonce
             },
             success: function (response) {
                 $('#wdt-delete-permission-modal').modal('hide');
                 if (response.success) {
+                    metaCache = null;
                     loadManagersData();
                 } else {
-                    // Show error inline in the modal footer
-                    $('#wdt-delete-permission-modal .form-general-error').text('Error deleting permission: ' + response.data.message).show();
+                    window.alert('Error deleting permission: ' + (response.data && response.data.message ? response.data.message : ''));
                 }
             },
             error: function () {
-                $('#wdt-delete-permission-modal .form-general-error').text('Error deleting permission.').show();
+                window.alert('Error deleting permission.');
             }
         });
     }
 
-    // Open Add Manager modal
-    function openAddManagerModal() {
-        const tab = getCurrentTab();
-        // Reset modal
-        resetModal(tab);
-
-        if (tab === 'charts') {
-            $('#wdt-chart-manager-modal-title').text('Add Chart Manager');
-            $('#wdt-chart-manager-modal').modal('show');
-        } else {
-            $('#wdt-table-manager-modal-title').text('Add Table Manager');
-            $('#wdt-table-manager-modal').modal('show');
-        }
-    }
-
-    // Reset modal fields
-    function resetModal(tab) {
-        if (tab === 'charts') {
-            $('#wdt-chart-user-select').val('').selectpicker('refresh');
-            $('#wdt-chart-user-error').hide();
-            $('#wdt-chart-perm-view').prop('checked', true);
-            $('#wdt-enable-specific-charts').prop('checked', false);
-            $('#wdt-specific-charts-container').hide();
-            $('#wdt-chart-items-select').val([]).selectpicker('refresh');
-            $('#wdt-chart-manager-modal').removeData('user-id');
-        } else {
-            $('#wdt-table-user-select').val('').selectpicker('refresh');
-            $('#wdt-table-user-error').hide();
-            $('#wdt-table-perm-view').prop('checked', true);
-            $('#wdt-enable-specific-tables').prop('checked', false);
-            $('#wdt-specific-tables-container').hide();
-            $('#wdt-table-items-select').val([]).selectpicker('refresh');
-            $('#wdt-table-manager-modal').removeData('user-id');
-        }
-    }
-
-    // Save table manager
-    function saveTableManager() {
-        const userId = $('#wdt-table-user-select').val();
-        if (!userId) {
-            $('#wdt-table-user-error').show();
-            return;
-        }
-        $('#wdt-table-user-error').hide();
-
-        // Permissions validation - checkbox should be checked to grant capability
-        if (!$('#wdt-table-perm-view').is(':checked')) {
-            $('.permissions-error').text('Please grant at least one capability.').show();
-            return;
-        } else {
-            $('.permissions-error').hide();
-        }
-
-        const enableSpecific = $('#wdt-enable-specific-tables').is(':checked') ? 1 : 0;
-        const itemIds = enableSpecific ? $('#wdt-table-items-select').val() || [] : [];
-        const userId_data = $('#wdt-table-manager-modal').data('user-id');
-
-        $.ajax({
-            type: 'POST',
-            url: wdtPermissions.ajax_url,
-            data: {
-                action: userId_data ? 'wpdatatables_update_permission' : 'wpdatatables_save_permission',
-                user_id: userId,
-                tab: 'tables',
-                enable_specific: enableSpecific,
-                item_ids: itemIds,
-                nonce: wdtPermissions.nonce
-            },
-            success: function (response) {
-                if (response.success) {
-                    $('#wdt-table-manager-modal').modal('hide');
-                    loadManagersData();
-                } else {
-                    $('#wdt-table-manager-modal .form-general-error').text('Error saving permission: ' + response.data.message).show();
-                }
-            },
-            error: function () {
-                $('#wdt-table-manager-modal .form-general-error').text('Error saving permission.').show();
-            }
-        });
-    }
-
-    // Save chart manager
-    function saveChartManager() {
-        const userId = $('#wdt-chart-user-select').val();
-        if (!userId) {
-            $('#wdt-chart-user-error').show();
-            return;
-        }
-        $('#wdt-chart-user-error').hide();
-
-        // Permissions validation
-        if (!$('#wdt-chart-perm-view').is(':checked')) {
-            $('.permissions-error').text('Please grant at least one capability.').show();
-            return;
-        } else {
-            $('.permissions-error').hide();
-        }
-
-        const enableSpecific = $('#wdt-enable-specific-charts').is(':checked') ? 1 : 0;
-        const itemIds = enableSpecific ? $('#wdt-chart-items-select').val() || [] : [];
-        const userId_data = $('#wdt-chart-manager-modal').data('user-id');
-
-        $.ajax({
-            type: 'POST',
-            url: wdtPermissions.ajax_url,
-            data: {
-                action: userId_data ? 'wpdatatables_update_permission' : 'wpdatatables_save_permission',
-                user_id: userId,
-                tab: 'charts',
-                enable_specific: enableSpecific,
-                item_ids: itemIds,
-                nonce: wdtPermissions.nonce
-            },
-            success: function (response) {
-                if (response.success) {
-                    $('#wdt-chart-manager-modal').modal('hide');
-                    loadManagersData();
-                } else {
-                    $('#wdt-chart-manager-modal .form-general-error').text('Error saving permission: ' + response.data.message).show();
-                }
-            },
-            error: function () {
-                $('#wdt-chart-manager-modal .form-general-error').text('Error saving permission.').show();
-            }
-        });
-    }
-
-    // Initialize on document ready
     $(document).ready(function () {
-        // Load initial data
         loadManagersData();
 
         var doSearch = function () {
@@ -368,93 +514,55 @@
             })();
         }
 
-        // Use the Browse input id pattern to match template
         $(document).on('keyup input', 'input#search_id-search-input, .wpdt-search-box input[name="s"]', function () {
             debounceFn();
         });
 
-        // Search button click should trigger search as well
         $(document).on('click', '#search-submit', function (e) {
             e.preventDefault();
             loadManagersData();
         });
 
-        // Handle Add Manager button click
         $('#wdt-add-manager-btn').on('click', function (e) {
             e.preventDefault();
             openAddManagerModal();
         });
 
-        // Modal close buttons for table modal
-        $('#wdt-table-modal-close, #wdt-table-modal-cancel').on('click', function (e) {
-            e.preventDefault();
-            $('#wdt-table-manager-modal').modal('hide');
-        });
-        // Modal close buttons for chart modal
-        $('#wdt-chart-modal-close, #wdt-chart-modal-cancel').on('click', function (e) {
-            e.preventDefault();
-            $('#wdt-chart-manager-modal').modal('hide');
-        });
-
-        $('#wdt-edit-modal-close, #wdt-edit-modal-cancel').on('click', function (e) {
-            e.preventDefault();
-            $('#wdt-table-manager-modal, #wdt-chart-manager-modal').modal('hide');
-        });
-
-        // Close modal when clicking outside
-        $(window).on('click', function (e) {
-            if (e.target.id === 'wdt-table-manager-modal') {
-                $('#wdt-table-manager-modal').modal('hide');
-            }
-            if (e.target.id === 'wdt-chart-manager-modal') {
-                $('#wdt-chart-manager-modal').modal('hide');
+        $(document).on('change', 'input[name="wdt-permission-target-type"]', function () {
+            setTargetType($(this).val(), false);
+            if ($(this).val() === 'user') {
+                searchUsers('');
             }
         });
 
-        // Toggle specific tables container for table modal
-        $('#wdt-enable-specific-tables').on('change', function () {
+        $('#wdt-enable-specific-items').on('change', function () {
             if ($(this).is(':checked')) {
-                $('#wdt-specific-tables-container').slideDown();
+                $('#wdt-specific-items-container').slideDown();
             } else {
-                $('#wdt-specific-tables-container').slideUp();
-            }
-        });
-        // Toggle specific charts container for chart modal
-        $('#wdt-enable-specific-charts').on('change', function () {
-            if ($(this).is(':checked')) {
-                $('#wdt-specific-charts-container').slideDown();
-            } else {
-                $('#wdt-specific-charts-container').slideUp();
+                $('#wdt-specific-items-container').slideUp();
             }
         });
 
-        // Update label based on tab
-        const tab = getCurrentTab();
-        const label = tab === 'tables' ? 'Select Tables' : 'Select Charts';
-        $('#wdt-items-label').text(label);
-        $('#wdt-edit-items-label').text(label);
-
-        // Save buttons
-        $('#wdt-table-manager-submit').on('click', function (e) {
-            e.preventDefault();
-            saveTableManager();
+        // Live-search users when bootstrap-select search is used.
+        $(document).on('keyup', '.bootstrap-select .bs-searchbox input', function () {
+            var $select = $(this).closest('.bootstrap-select').find('select');
+            if ($select.attr('id') === 'wdt-permission-users-select') {
+                searchUsers($(this).val());
+            }
         });
 
-        $('#wdt-chart-manager-submit').on('click', function (e) {
+        $('#wdt-permission-modal-submit').on('click', function (e) {
             e.preventDefault();
-            saveChartManager();
+            savePermission();
         });
 
-        // Delete confirmation
         $('#wdt-confirm-delete-permission').on('click', function (e) {
             e.preventDefault();
             confirmDeletePermission();
         });
 
-        // Handle tab switching
-        $('.tab-nav a').on('click', function (e) {
-            const href = $(this).attr('href');
-            window.location.href = href;
+        $('.tab-nav a').on('click', function () {
+            metaCache = null;
         });
     });
 

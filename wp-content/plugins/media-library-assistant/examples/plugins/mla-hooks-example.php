@@ -16,7 +16,7 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.18
+ * @version 1.19
  */
 
 /*
@@ -25,7 +25,7 @@ Plugin URI: http://davidlingren.com/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
 Tags: Hooks,MLA Gallery,Shortcode
 Author: David Lingren
-Version: 1.18
+Version: 1.19
 Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2023 David Lingren
@@ -75,7 +75,7 @@ class MLAGalleryHooksExample {
 		 *
 		 * Comment out the filters you don't need; save them for future use
 		 */
-		add_filter( 'mla_gallery_raw_attributes', 'MLAGalleryHooksExample::mla_gallery_raw_attributes', 10, 1 );
+		add_filter( 'mla_gallery_raw_attributes', 'MLAGalleryHooksExample::mla_gallery_raw_attributes', 10, 4 );
 		add_filter( 'mla_gallery_attributes', 'MLAGalleryHooksExample::mla_gallery_attributes', 10, 1 );
 		add_filter( 'mla_gallery_initial_content', 'MLAGalleryHooksExample::mla_gallery_initial_content', 10, 2 );
 		add_filter( 'mla_gallery_arguments', 'MLAGalleryHooksExample::mla_gallery_arguments', 10, 1 );
@@ -140,13 +140,20 @@ class MLAGalleryHooksExample {
 	 *
 	 * @since 1.03
 	 *
-	 * @param	array	the raw shortcode parameters passed in to the shortcode
+	 * @param	array	the shortcode parameters after mla_validate_attributes() has been applied
+	 * @param	array	the raw shortcode attributes passed in to the shortcode
+	 * @param	string	the (enclosing) shortcode content
+	 * @param	string	the page-level substitution values
+	 *
 	 *
 	 * @return	array	updated shortcode attributes
 	 */
-	public static function mla_gallery_raw_attributes( $shortcode_attributes ) {
+	public static function mla_gallery_raw_attributes( $shortcode_attributes, $raw_shortcode_attributes, $shortcode_content, $page_values ) {
 		// Uncomment the error_log statements in any of the filters to see what's passed in
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $raw_shortcode_attributes = ' . var_export( $raw_shortcode_attributes, true ), 0 );
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $shortcode_content = ' . var_export( $shortcode_content, true ), 0 );
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $page_values = ' . var_export( $page_values, true ), 0 );
 
 		/*
 		 * Note that the global $post; object is available here and in all later filters.

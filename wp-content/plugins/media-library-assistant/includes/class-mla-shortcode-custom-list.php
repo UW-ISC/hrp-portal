@@ -60,7 +60,7 @@ class MLACustomList {
 			'columns' => 3,
 			'mla_float' => 'left', // is_rtl() ? 'right' : 'left',
 			'mla_margin' => '1.5%',
-			'mla_itemwidth' => '33.3%',
+			'mla_itemwidth' => 'calculate',
 
 			'itemtag' => 'ul',
 			'valuetag' => 'li',
@@ -254,7 +254,7 @@ class MLACustomList {
 		$placeholders = array();
 		$clause_parameters = array();
 		foreach ( $post_stati as $post_status ) {
-			if ( ( 'private' != $post_status ) || is_user_logged_in() ) {
+			if ( ( 'private' !== $post_status ) || is_user_logged_in() ) {
 				$placeholders[] = '%s';
 				$clause_parameters[] = $post_status;
 			}
@@ -576,7 +576,7 @@ class MLACustomList {
 			$index = 0;
 			$found_index = false;
 			foreach ( $values as $index => $value ) {
-				if ( $value->meta_value == $current_item ) {
+				if ( $value->meta_value === $current_item ) {
 					$found_index = true;
 					break;
 				}
@@ -1145,7 +1145,7 @@ class MLACustomList {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_custom_list REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_custom_list encoded _REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_custom_list attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_custom_list arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
@@ -1501,33 +1501,16 @@ class MLACustomList {
 		 */
 
 		$columns = absint( $arguments['columns'] );
-		$margin_string = strtolower( trim( $arguments['mla_margin'] ) );
 
-		if ( is_numeric( $margin_string ) && ( 0 != $margin_string) ) {
-			$margin_string .= '%'; // Legacy values are always in percent
-		}
+		$margin_string = MLAShortcode_Support::mla_validate_margin( $arguments['mla_margin'], '1.5%' );
 
-		if ( '%' == substr( $margin_string, -1 ) ) {
+		if ( '%' === substr( $margin_string, -1 ) ) {
 			$margin_percent = (float) substr( $margin_string, 0, strlen( $margin_string ) - 1 );
 		} else {
 			$margin_percent = 0;
 		}
 
-		$width_string = strtolower( trim( $arguments['mla_itemwidth'] ) );
-		if ( 'none' != $width_string ) {
-			switch ( $width_string ) {
-				case 'exact':
-					$margin_percent = 0;
-					// fallthru
-				case 'calculate':
-					$width_string = $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
-					// fallthru
-				default:
-					if ( is_numeric( $width_string ) && ( 0 != $width_string) ) {
-						$width_string .= '%'; // Legacy values are always in percent
-					}
-			}
-		} // $use_width
+		$width_string = MLAShortcode_Support::mla_validate_itemwidth( $arguments['mla_itemwidth'], $columns, $margin_percent, 'calculate' );
 
 		$float = strtolower( $arguments['mla_float'] );
 		if ( ! in_array( $float, array( 'left', 'none', 'right' ) ) ) {
@@ -1598,13 +1581,13 @@ class MLACustomList {
 				// Look for 'query' and 'request' substitution parameters
 				$style_values = MLAData::mla_expand_field_level_parameters( $style_template, $attr, $style_values );
 
-				// Clean up the template to resolve width or margin == 'none'
-				if ( 'none' == $margin_string ) {
+				// Clean up the template to resolve width or margin === 'none'
+				if ( 'none' === $margin_string ) {
 					$style_values['margin'] = '0';
 					$style_template = preg_replace( '/margin:[\s]*\[\+margin\+\][\%]*[\;]*/', '', $style_template );
 				}
 
-				if ( 'none' == $width_string ) {
+				if ( 'none' === $width_string ) {
 					$style_values['itemwidth'] = 'auto';
 					$style_template = preg_replace( '/width:[\s]*\[\+itemwidth\+\][\%]*[\;]*/', '', $style_template );
 				}
@@ -1876,7 +1859,7 @@ class MLACustomList {
 
 			$placeholders = array();
 			foreach ( $post_stati as $post_status ) {
-				if ( ( 'private' != $post_status ) || is_user_logged_in() ) {
+				if ( ( 'private' !== $post_status ) || is_user_logged_in() ) {
 					$placeholders[] = '%s';
 					$clause_parameters[] = $post_status;
 				}

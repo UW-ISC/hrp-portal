@@ -2,6 +2,7 @@
 
 namespace WPDT\PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\AddressRange;
 use WPDT\PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use WPDT\PhpOffice\PhpSpreadsheet\Reader\DefaultReadFilter;
 use WPDT\PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
@@ -167,24 +168,31 @@ class ColumnAndRowAttributes extends BaseParserClass
     private function readRowAttributes(SimpleXMLElement $worksheetRow, bool $readDataOnly) : array
     {
         $rowAttributes = [];
+        $rowIndex = 0;
         foreach ($worksheetRow as $rowx) {
-            /** @scrutinizer ignore-call */
             $row = $rowx->attributes();
+            ++$rowIndex;
             if ($row !== null) {
+                if (isset($row['r'])) {
+                    $rowIndex = (int) $row['r'];
+                }
+                if ($rowIndex < 1 || $rowIndex > AddressRange::MAX_ROW) {
+                    continue;
+                }
                 if (isset($row['ht']) && !$readDataOnly) {
-                    $rowAttributes[(int) $row['r']]['rowHeight'] = (float) $row['ht'];
+                    $rowAttributes[$rowIndex]['rowHeight'] = (float) $row['ht'];
                 }
                 if (isset($row['hidden']) && self::boolean($row['hidden'])) {
-                    $rowAttributes[(int) $row['r']]['visible'] = \false;
+                    $rowAttributes[$rowIndex]['visible'] = \false;
                 }
                 if (isset($row['collapsed']) && self::boolean($row['collapsed'])) {
-                    $rowAttributes[(int) $row['r']]['collapsed'] = \true;
+                    $rowAttributes[$rowIndex]['collapsed'] = \true;
                 }
                 if (isset($row['outlineLevel']) && (int) $row['outlineLevel'] > 0) {
-                    $rowAttributes[(int) $row['r']]['outlineLevel'] = (int) $row['outlineLevel'];
+                    $rowAttributes[$rowIndex]['outlineLevel'] = (int) $row['outlineLevel'];
                 }
                 if (isset($row['s']) && !$readDataOnly) {
-                    $rowAttributes[(int) $row['r']]['xfIndex'] = (int) $row['s'];
+                    $rowAttributes[$rowIndex]['xfIndex'] = (int) $row['s'];
                 }
             }
         }

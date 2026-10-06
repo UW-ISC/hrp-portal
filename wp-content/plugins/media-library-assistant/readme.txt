@@ -2,8 +2,8 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Tested up to: 7.1
-Stable tag: 3.41
+Tested up to: 7.1.2
+Stable tag: 3.42
 Requires at least: 5.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -198,6 +198,14 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 21. The Settings page Debug tab, where you can activate debug logging categories as well as manage and display the error log.
 
 == Changelog ==
+
+= 3.42 =
+* Fix: IMPORTANT: A Cross Site Request Forgery vulnerability (Patchstack 35557) has been mitigated.
+* Fix: IMPORTANT: A Cross-Site Scripting vulnerability (Patchstack 35483) has been mitigated.
+* Fix: IMPORTANT: An SQL Injection vulnerability (Patchstack 35455) has been mitigated.
+* Fix: IMPORTANT: A Stored Cross-Site Scripting vulnerability (Patchstack 34858) has been mitigated.
+* Fix: For the `[mla_gallery]` shortcode, repair of parameters damaged by the Visual Editor has been improved.
+* Fix: For the WPML plugin, term synchronization fixes and updates to support WPML 5.0+
 
 = 3.41 =
 * New: Support for the just-released **[Media Library Assistant Blocks](https://wordpress.org/plugins/media-library-assistant-blocks/)** companion plugin.
@@ -407,8 +415,8 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Upgrade Notice ==
 
-= 3.41 =
-IMPORTANT: Cross-site scripting security risk mitigation. Support for the new Media Library Assistant Blocks plugin. One enhancement, one fix in all.
+= 3.42 =
+IMPORTANT: Four security vulnerabilities (Patchstack 34858, 35455, 35483, 35557) have been mitigated. Handling of damaged parameters in [mla_gallery] has been improved. For WPML, term synchronization fixes and updates to support WPML 5.0+. Six fixes in all.
 
 == Acknowledgements ==
 

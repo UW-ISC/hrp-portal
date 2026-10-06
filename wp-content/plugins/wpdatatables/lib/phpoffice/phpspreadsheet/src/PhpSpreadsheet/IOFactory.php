@@ -27,7 +27,7 @@ abstract class IOFactory
     public const WRITER_ODS = 'Ods';
     public const WRITER_CSV = 'Csv';
     public const WRITER_HTML = 'Html';
-    /** @var string[] */
+    /** @var array<string, class-string<IReader>> */
     private static $readers = [self::READER_XLSX => Reader\Xlsx::class, self::READER_XLS => Reader\Xls::class, self::READER_XML => Reader\Xml::class, self::READER_ODS => Reader\Ods::class, self::READER_SLK => Reader\Slk::class, self::READER_GNUMERIC => Reader\Gnumeric::class, self::READER_HTML => Reader\Html::class, self::READER_CSV => Reader\Csv::class];
     /** @var string[] */
     private static $writers = [self::WRITER_XLS => Writer\Xls::class, self::WRITER_XLSX => Writer\Xlsx::class, self::WRITER_ODS => Writer\Ods::class, self::WRITER_CSV => Writer\Csv::class, self::WRITER_HTML => Writer\Html::class, 'Tcpdf' => Writer\Pdf\Tcpdf::class, 'Dompdf' => Writer\Pdf\Dompdf::class, 'Mpdf' => Writer\Pdf\Mpdf::class];
@@ -196,5 +196,16 @@ abstract class IOFactory
             throw new Reader\Exception('Registered readers must implement ' . IReader::class);
         }
         self::$readers[$readerType] = $readerClass;
+    }
+    /**
+     * @return array<string, class-string<IReader>>
+     *
+     * @internal
+     *
+     * @codeCoverageIgnore
+     */
+    public static function getReaders() : array
+    {
+        return self::$readers;
     }
 }

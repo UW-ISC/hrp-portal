@@ -79,6 +79,7 @@
                 </div>
             </div>
         </div>
+        <?php do_action('wpdatatables_admin_after_dashboard_welcome'); ?>
         <div class="row">
             <div class="col-sm-6 card-columns p-r-12 p-l-0">
                 <div class="card wdt-table-card">
@@ -267,13 +268,34 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with a new feature and an improvement:
+                            New update with new features and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added ability to customize the "No matching records found" message per table via the Custom Strings tab in table settings.</li>
-                                <li><strong>Improvement:</strong> Optimized internal processing for tables and charts.</li>
+                                <li><strong>Feature:</strong> Added a public REST API for tables and data (Developer licence).</li>
+                                <li><strong>Feature:</strong> Added MCP support so AI assistants can work with wpDataTables using the user permission system.</li>
+                                <li><strong>Feature:</strong> Added role- and user-based permissions for tables and charts.</li>
+                                <li><strong>Feature:</strong> Added Angie AI (Elementor AI Agent) integration.</li>
+                                <li><strong>Feature:</strong> Added AI-powered SQL/query generation and chart suggestions.</li>
+                                <li><strong>Feature:</strong> Added webhooks for table data events.</li>
+                                <li><strong>Feature:</strong> Added server-side support for updating IvyForms entries from wpDataTables.</li>
+                                <li><strong>Feature:</strong> Added the ability to customize the "No matching records found" message per table via the Custom Strings tab in table settings.</li>
+                                <li><strong>BugFix:</strong> Fixed reflected XSS in Browse Tables pagination via an unsanitized search parameter.</li>
+                                <li><strong>BugFix:</strong> Fixed unauthenticated SQL injection via aggregate columns (sum/avg/min/max) in server-side AJAX.</li>
+                                <li><strong>BugFix:</strong> Fixed SQL column aliases breaking filtering on server-side processing tables.</li>
+                                <li><strong>BugFix:</strong> Fixed separate database connection fields not displaying after enabling "Use separate connection".</li>
+                                <li><strong>BugFix:</strong> Fixed a JavaScript error and page freeze with Fixed Header when Excel or Excel+Manual tables are on the same page.</li>
+                                <li><strong>BugFix:</strong> Fixed same-domain URLs being corrupted in the Manual table HTML editor after save.</li>
+                                <li><strong>BugFix:</strong> Fixed placeholder values containing the word "AND" being parsed as a SQL operator and breaking filters.</li>
+                                <li><strong>BugFix:</strong> Fixed an MCP server error (create_server failed / ErrorLogMcpErrorHandler interface mismatch).</li>
+                                <li><strong>BugFix:</strong> Fixed Forminator notice text contrast so the message remains readable.</li>
+                                <li><strong>BugFix:</strong> Fixed a fatal PHP error on table shortcode render caused by incorrect WDTTools class name casing.</li>
+                                <li><strong>BugFix:</strong> Fixed a fatal PHP error when fetching remote data caused by a missing Exception import in the HTTP client.</li>
+                                <li><strong>BugFix:</strong> Fixed fatal PHP errors when loading public Google Sheets and other namespaced data-processing paths.</li>
+                                <li><strong>BugFix:</strong> Fixed derived-table subqueries failing during server-side filtering and row counting.</li>
+                                <li><strong>BugFix:</strong> Fixed own-row editing permissions failing because the database connection class was resolved incorrectly.</li>
+                                <li><strong>BugFix:</strong> Fixed the User ID column selection not displaying after reload and not being possible to clear.</li>
                             </ul>
                         </div>
 

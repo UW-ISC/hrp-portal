@@ -32,7 +32,7 @@ class IvyFormsCollector extends BaseCollector implements ConsentNoticeCollectorI
     }
     public function shouldEnableConsentByDefault() : bool
     {
-        return \false;
+        return $this->isProPluginActive();
     }
     public function shouldShowAdminNotice() : bool
     {

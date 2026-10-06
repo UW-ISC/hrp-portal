@@ -4,7 +4,7 @@ Tags: performance, caching, wp-cache, wp-super-cache, cache
 Requires at least: 6.8
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,6 +255,10 @@ Your theme is probably responsive which means it resizes the page to suit whatev
 
 
 == Changelog ==
+### 3.1.4 - 2026-09-30
+* Fix: the settings page no longer scrolls sideways in right-to-left languages.
+* Update the tested-up-to version to WordPress 7.1.
+
 ### 3.1.3 - 2026-08-26
 * Fix: a direct page path ending in a backslash no longer breaks the cache config file.
 * Fix: sanitise the CDN URL and CNAME settings so a value containing a quote or an angle bracket can no longer break the asset URLs they are substituted into.

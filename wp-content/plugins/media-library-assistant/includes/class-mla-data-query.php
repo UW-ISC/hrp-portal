@@ -1543,7 +1543,7 @@ class MLAQuery {
 	}
 
 	/**
-	 * Intercepts results of a table view shortcode queryto apply [mla_gallery] capabilities
+	 * Intercepts results of a table view shortcode query to apply [mla_gallery] capabilities
 	 *
 	 * @since 3.34
 	 *

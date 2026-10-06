@@ -192,6 +192,13 @@
         });
 
         /**
+         * Toggle MCP for AI assistants
+         */
+        $('#wdt-mcp-enabled').change(function (e) {
+            wpdatatable_plugin_config.setMcpEnabled($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Toggle Align numbers
          */
         $('#wdt-numbers-align').change(function (e) {
@@ -253,13 +260,8 @@
          */
         $('#wdt-usage-tracking-enabled').change(function (e) {
             wpdatatable_plugin_config.setUsageTrackingEnabled($(this).is(':checked') ? 1 : 0);
-            updateUsageTrackingEnabledIndicator();
         });
 
-        function updateUsageTrackingEnabledIndicator() {
-            var isEnabled = $('#wdt-usage-tracking-enabled').is(':checked');
-            $('#wdt-usage-tracking-enabled-indicator').toggle(isEnabled);
-        }
         /**
          * Toggle chart loaders
          */
@@ -337,11 +339,13 @@
         wpdatatable_plugin_config.setIncludeBootstrapBackEnd(wdt_current_config.wdtIncludeBootstrapBackEnd == 1 ? 1 : 0);
         wpdatatable_plugin_config.setPreventDeletingTables(wdt_current_config.wdtPreventDeletingTables == 1 ? 1 : 0);
         wpdatatable_plugin_config.setParseShortcodes(wdt_current_config.wdtParseShortcodes == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setMcpEnabled(
+            (typeof wdt_current_config.wdtMcpEnabled === 'undefined' || wdt_current_config.wdtMcpEnabled == 1) ? 1 : 0
+        );
         wpdatatable_plugin_config.setAlignNumber(wdt_current_config.wdtNumbersAlign == 1 ? 1 : 0);
         wpdatatable_plugin_config.setGlobalTableLoaders(wdt_current_config.wdtGlobalTableLoader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setGlobalChartLoaders(wdt_current_config.wdtGlobalChartLoader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setUsageTrackingEnabled(wdt_current_config.wdtUsageTrackingEnabled == 1 ? 1 : 0);
-        updateUsageTrackingEnabledIndicator();
         wpdatatable_plugin_config.setCustomCss(wdt_current_config.wdtCustomCss);
         wpdatatable_plugin_config.setCustomJs(wdt_current_config.wdtCustomJs);
         wpdatatable_plugin_config.setMinifiedJs(wdt_current_config.wdtMinifiedJs == 1 ? 1 : 0);
@@ -381,8 +385,11 @@
          */
         $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) [data-toggle="tab"]').on('click', function (e) {
             e.preventDefault()
-            $('.wdt-datatables-admin-wrap .tab-content .tab-pane').removeClass('active in')
-            $($(this)[0].hash).addClass('active in')
+            var $targetPane = $($(this)[0].hash)
+            // Only deactivate panes that belong to the same tab-content, so nested
+            // tabs (e.g. the separate connection forms) keep their active pane.
+            $targetPane.closest('.tab-content').children('.tab-pane').removeClass('active in')
+            $targetPane.addClass('active in')
             var scrollmem = $('body').scrollTop();
             window.location.hash = this.hash;
             $('html,body').scrollTop(scrollmem);
@@ -547,7 +554,7 @@
             var navigation = element.find(".tab-nav");
             navigation.find("a").parent().removeClass("active");
 
-            var newConnectionNav = $('<li class="active"><a href="#connection' + count + '" aria-controls="connection-' + count + '" role="tab" data-toggle="tab" style="text-transform: none;">New Connection</a></li>');
+            var newConnectionNav = $('<li class="active"><a href="#connection' + count + '" aria-controls="connection' + count + '" role="tab" data-toggle="tab" style="text-transform: none;">New Connection</a></li>');
             navigation.append(newConnectionNav);
 
             // Content

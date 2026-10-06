@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2026-08-17 14:23-0700\n"
+"POT-Creation-Date: 2026-09-26 09:35-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -20,47 +20,6 @@ msgstr ""
 "X-Poedit-SearchPath-0: includes\n"
 "X-Poedit-SearchPath-1: tests\n"
 "X-Poedit-SearchPath-2: index.php\n"
-
-msgid "Draft"
-msgstr ""
-
-msgid "Scheduled"
-msgstr ""
-
-msgctxt "post state"
-msgid "Pending"
-msgstr ""
-
-msgid "Trash"
-msgstr ""
-
-msgid "NO REFERENCE TESTS"
-msgstr ""
-
-msgid "Disabled"
-msgstr ""
-
-msgid "PARENT"
-msgstr ""
-
-msgid "None"
-msgstr ""
-
-msgid "(Private post)"
-msgstr ""
-
-msgid "Y/m/d"
-msgstr ""
-
-msgctxt "table_view_singular"
-msgid "Unattached"
-msgstr ""
-
-msgid "Media Library Assistant"
-msgstr ""
-
-msgid "Assistant"
-msgstr ""
 
 #, php-format
 msgctxt "error_log"
@@ -112,7 +71,16 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
+msgid "Scheduled"
+msgstr ""
+
 msgid "Pending Review"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Y/m/d"
 msgstr ""
 
 msgid "ERROR"
@@ -158,6 +126,9 @@ msgid "Featured in"
 msgstr ""
 
 msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "Search database posts and pages for Featured Image attachments."
@@ -274,10 +245,16 @@ msgstr ""
 msgid "Page Title"
 msgstr ""
 
+msgid "Media Library Assistant"
+msgstr ""
+
 msgid "Enter the title for the Media/Assistant submenu page"
 msgstr ""
 
 msgid "Menu Title"
+msgstr ""
+
+msgid "Assistant"
 msgstr ""
 
 msgid "Enter the title for the Media/Assistant submenu entry"
@@ -313,6 +290,9 @@ msgid "Table Defaults"
 msgstr ""
 
 msgid "Order By"
+msgstr ""
+
+msgid "None"
 msgstr ""
 
 msgid "ID/Parent"
@@ -971,6 +951,10 @@ msgctxt "post_mime_types_description"
 msgid "All application subtypes"
 msgstr ""
 
+msgctxt "table_view_singular"
+msgid "Unattached"
+msgstr ""
+
 msgctxt "table_view_plural"
 msgid "Unattached"
 msgstr ""
@@ -1308,6 +1292,9 @@ msgctxt "error_log"
 msgid ""
 "%1$s: class-mla-data-references.php WARNING: _wp_attached_file is not a "
 "string for Item \"%2$d\". Value = %3$s."
+msgstr ""
+
+msgid "NO REFERENCE TESTS"
 msgstr ""
 
 msgid "ORPHAN"
@@ -1675,10 +1662,17 @@ msgctxt "error_log"
 msgid "%1$s: %2$s discarding \"%3$s\"; no title/order"
 msgstr ""
 
+msgctxt "post state"
+msgid "Pending"
+msgstr ""
+
 msgid "Post Parent"
 msgstr ""
 
 msgid "Select Parent"
+msgstr ""
+
+msgid "PARENT"
 msgstr ""
 
 msgctxt "list_table_column"
@@ -1807,6 +1801,9 @@ msgstr ""
 msgid "column_default: %1$s, %2$s"
 msgstr ""
 
+msgid "Trash"
+msgstr ""
+
 msgid "Restore this item from the Trash"
 msgstr ""
 
@@ -1864,6 +1861,9 @@ msgstr ""
 
 #, php-format
 msgid "%1$s ago"
+msgstr ""
+
+msgid "(Private post)"
 msgstr ""
 
 msgid "Set Parent"
@@ -3985,7 +3985,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-msgid "mla_archive_list REQUEST"
+msgid "mla_archive_list encoded _REQUEST"
 msgstr ""
 
 msgid "mla_archive_list shortcode attributes"
@@ -4009,7 +4009,7 @@ msgstr ""
 msgid "mla_debug results"
 msgstr ""
 
-msgid "mla_custom_list REQUEST"
+msgid "mla_custom_list encoded _REQUEST"
 msgstr ""
 
 msgid "mla_custom_list attributes"
@@ -4054,13 +4054,22 @@ msgstr ""
 msgid "mla_debug values"
 msgstr ""
 
-msgid "mla_debug REQUEST"
+msgid "mla_debug encoded _REQUEST"
 msgstr ""
 
 msgid "mla_debug attributes_errors[raw]"
 msgstr ""
 
 msgid "mla_debug attributes_errors[escaped]"
+msgstr ""
+
+msgid "mla_debug raw attributes"
+msgstr ""
+
+msgid "mla_debug raw content"
+msgstr ""
+
+msgid "mla_debug validated attributes"
 msgstr ""
 
 msgid "mla_debug empty gallery"

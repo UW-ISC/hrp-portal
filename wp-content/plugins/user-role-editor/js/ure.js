@@ -1,3 +1,5 @@
+'use strict';
+
 // get/post via jQuery
 (function ($) {
     $.extend({
@@ -43,7 +45,7 @@ jQuery(function() {
             label: ure_data.delete_capability
         }).on('click', (function ( event ) {
             event.preventDefault();
-            jQuery.ajax( ure_main.get_caps_to_remove );
+            ure_main.get_caps_to_remove();
         }));
     }            
 
@@ -59,7 +61,7 @@ jQuery(function() {
 
     jQuery('#ure_rename_role').button({
         label: ure_data.rename_role
-    }).on('click', (function (event) {
+    }).on('click', (function ( event ) {
         event.preventDefault();
         ure_main.show_rename_role_dialog();
     }));
@@ -109,9 +111,27 @@ var ure_main = {
     },
 
 
+    // POST a { action: 'ure_ajax', sub_action: ... } request, filling in the fields common to every URE AJAX call
+    ajax_post: function (sub_action, extra_data, success, error) {
+        jQuery.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: jQuery.extend({
+                action: 'ure_ajax',
+                sub_action: sub_action,
+                network_admin: ure_data.network_admin,
+                wp_nonce: ure_data.wp_nonce
+            }, extra_data || {}),
+            success: success,
+            error: error || ure_main.ajax_error
+        });
+    },
+
+
     // change color of apply to all check box - for multi-site setup only
     apply_to_all_on_click: function (cb) {
-        el = document.getElementById('ure_apply_to_all_div');
+        var el = document.getElementById('ure_apply_to_all_div');
         if (cb.checked) {
             el.style.color = '#FF0000';
         } else {
@@ -211,7 +231,7 @@ var ure_main = {
 
 
     change_caps_columns_quant: function () {
-        var selected_index = parseInt( jQuery('#caps_columns_quant').val() );
+        var selected_index = parseInt( jQuery('#caps_columns_quant').val(), 10 );
         var columns = ure_main.validate_columns( selected_index );
         var el = jQuery('#ure_caps_list');
         el.css('-moz-column-count', String( columns ) );
@@ -223,7 +243,7 @@ var ure_main = {
 
     caps_refresh: function ( group ) {
 
-        var group_id = group.substr(15);
+        var group_id = group.slice(15);
         ure_main.selected_group = group_id;
         if (group_id === 'all') {
             ure_main.caps_refresh_all();
@@ -250,7 +270,7 @@ var ure_main = {
             if ( !cap_div.hasClass(ure_main.class_prefix + ure_main.selected_group ) ) {    // apply to the currently selected group only
                 return;
             }
-            var cap_id = cap_div.attr('id').substr( 12 );        
+            var cap_id = cap_div.attr('id').slice( 12 );        
             var granted = jQuery('#'+ cap_id).prop('checked');
             if ( granted ) {
                 return;
@@ -291,7 +311,7 @@ var ure_main = {
 
     validate_columns: function (columns) {    
         
-        if ( columns==1 || ure_main.selected_group==='all' ) {  
+        if ( columns===1 || ure_main.selected_group==='all' ) {
             return columns;
         }
 
@@ -312,7 +332,7 @@ var ure_main = {
     init_caps_counter: function () {
         ure_main.caps_counter = new Array();
         jQuery('#ure_caps_groups_list li').each(function() {
-            var group_id = jQuery(this).attr('id').substr(15);
+            var group_id = jQuery(this).attr('id').slice(15);
             var group_counter = {'id': group_id, 'total': 0, 'granted':0};
             ure_main.caps_counter.push( group_counter );
         });
@@ -325,7 +345,7 @@ var ure_main = {
     
         jQuery('.ure-cap-div').each(function () {
             var cap_div = jQuery(this);
-            var capability = cap_div.attr('id').substr(12);
+            var capability = cap_div.attr('id').slice(12);
             for (var i=0; i<ure_main.caps_counter.length; i++) {
                 if (cap_div.hasClass(ure_main.class_prefix + ure_main.caps_counter[i].id)) {
                     ure_main.caps_counter[i].total++;
@@ -341,7 +361,7 @@ var ure_main = {
             var old_text = el.text();
             var key_pos = old_text.indexOf('(');    // exclude (0/0) text if it is in string already
             if ( key_pos>0 ) {
-                old_text = old_text.substr( 0, key_pos - 1 );
+                old_text = old_text.slice( 0, key_pos - 1 );
             }
             var value = old_text +' ('+ ure_main.caps_counter[i].total +'/'+ ure_main.caps_counter[i].granted +')';
 
@@ -353,7 +373,7 @@ var ure_main = {
 
     refresh_role_view: function ( response ) {
         jQuery('#ure_task_status').hide();
-        if (response!==null && response.result=='error') {
+        if (response!==null && response.result==='error') {
             jQuery.notify( response.message, 'error');
             return;
         }
@@ -377,7 +397,7 @@ var ure_main = {
             if ( response.hasOwnProperty( 'caps' ) ) {
                 jQuery(this).prop('checked', response.caps.hasOwnProperty(this.id) && response.caps[this.id]);
             }
-            if ( ure_data.do_not_revoke_from_admin==1 ) {  
+            if ( ure_data.do_not_revoke_from_admin==='1' ) {
                 var el = document.getElementById(this.id);
                 if ( 'administrator'===ure_current_role ) {
                     el.addEventListener( 'click', ure_main.turn_it_back );
@@ -415,20 +435,23 @@ var ure_main = {
 
 
     show_add_role_dialog: function() {
-        
+
+        jQuery('#user_role_id').val('');
+        jQuery('#user_role_name').val('');
+
         jQuery('#ure_add_role_dialog').dialog({
             dialogClass: 'wp-dialog',
             modal: true,
             autoOpen: true,
             closeOnEscape: true,
             width: 450,
-            height: 230,
+            height: 250,
             resizable: false,
             title: ure_data.add_new_role_title,
             'buttons': {
                 'Add Role': function () {
                     var role_id = jQuery('#user_role_id').val();
-                    if ( role_id=='' ) {
+                    if ( role_id==='' ) {
                         jQuery.notify( ure_data.role_name_required, 'warn');
                         return false;
                     }
@@ -444,23 +467,11 @@ var ure_main = {
                     var role_copy_from = jQuery('#user_role_copy_from').val();
 
                     jQuery('#ure_task_status').show();
-                    jQuery.ajax( {
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        async: true,
-                        data: {
-                            action: 'ure_ajax',
-                            sub_action: 'add_role',                            
-                            user_role_id: role_id,
-                            user_role_name: role_name,
-                            user_role_copy_from: role_copy_from,
-                            network_admin: ure_data.network_admin,
-                            wp_nonce: ure_data.wp_nonce
-                        },
-                        success: ure_main.add_role_success,
-                        error: ure_main.ajax_error
-                    } );
+                    ure_main.ajax_post('add_role', {
+                        user_role_id: role_id,
+                        user_role_name: role_name,
+                        user_role_copy_from: role_copy_from
+                    }, ure_main.add_role_success);
 
                     jQuery( this ).dialog('close');
                 },
@@ -495,39 +506,56 @@ var ure_main = {
     },
 
     
-    sort_roles_select: function ( role_id ) {
-        var select_list = jQuery('#user_role option');
+    sort_select_options: function ( select_id ) {
+        var select_list = jQuery('#'+ select_id +' option');
         select_list.sort( function( a, b ) {
-            var res = 0;
-            if (a.value<b.value) {
-                res = -1;
-            } else {
-                res = 1;
-            }
-            return res;
+            return a.value<b.value ? -1 : ( a.value>b.value ? 1 : 0 );
         });
-        jQuery('#user_role').html( select_list );
+        jQuery('#'+ select_id).html( select_list );
+    },
+
+
+    sort_roles_select: function ( role_id ) {
+        ure_main.sort_select_options('user_role');
         jQuery('#user_role').val( role_id );
     },
-        
-    sort_roles_del_select: function ( ) {
-        var select_list = jQuery('#del_user_role option');
-        select_list.sort( function( a, b ) {
-            var res = 0;
-            if (a.value<b.value) {
-                res = -1;
-            } else {
-                res = 1;
-            }
-            return res;
-        });
-        jQuery('#del_user_role').html( select_list );
 
+    add_role_to_delete_table: function( role_id, role_name ) {
+        var cb_id = 'del_' + role_id;
+        var row = jQuery('<tr>');
+        row.append( jQuery('<td>').append(
+            jQuery('<input>', {type: 'checkbox', name: cb_id, id: cb_id, 'class': 'ure-role-cb-column', value: role_id})
+        ));
+        row.append( jQuery('<td>').append( jQuery('<label>', {'for': cb_id, text: role_name}) ) );
+        row.append( jQuery('<td>').append( jQuery('<label>', {'for': cb_id, text: role_id}) ) );
+        jQuery('#ure_delete_role_table').append( row );
     },
-    
+
+
+    sort_delete_role_table: function () {
+        var rows = jQuery('#ure_delete_role_table tr').slice(1).get();   // skip the header row
+        rows.sort( function( a, b ) {
+            var value_a = jQuery(a).find('.ure-role-cb-column').val();
+            var value_b = jQuery(b).find('.ure-role-cb-column').val();
+            return value_a<value_b ? -1 : ( value_a>value_b ? 1 : 0 );
+        });
+        var table = jQuery('#ure_delete_role_table');
+        jQuery.each( rows, function( i, row ) {
+            table.append( row );
+        });
+    },
+
+    update_success: function (data) {
+      jQuery('#ure_task_status').hide();
+      if (data.result==='success') {
+        jQuery.notify(data.message, 'success');
+      } else {
+        jQuery.notify(data.message, 'error');
+      }
+    },
+  
     add_role_success: function( data ) {
-        jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             if ( data.role_id.length>0 ) {
                 // update list of roles available for selection as current role
                 ure_main.add_role_to_select( 'user_role', data.role_id, data.role_name );
@@ -535,16 +563,14 @@ var ure_main = {
                 ure_main.role_change( data.role_id );                
                 
                 // Update the list of roles available for deletion
-                ure_main.add_role_to_select( 'del_user_role', data.role_id, data.role_name );
-                ure_main.sort_roles_del_select();
+                ure_main.add_role_to_delete_table( data.role_id, data.role_name );
+                ure_main.sort_delete_role_table();
                 if ( !jQuery( '#ure_delete_role' ).is( ':visible') ) {
                     jQuery( '#ure_delete_role' ).show();
                 }
             }
-            jQuery.notify( data.message, 'success' );
-        } else {
-            jQuery.notify( data.message, 'error' );
         }
+        ure_main.update_success( data );
     },
     
     
@@ -562,31 +588,19 @@ var ure_main = {
             'buttons': {
                 'Add Capability': function () {
                     var capability_id = jQuery( '#capability_id' ).val();
-                    if ( capability_id == '' ) {
+                    if ( capability_id === '' ) {
                         jQuery.notify( ure_data.capability_name_required, 'warn' );
                         return false;
                     }
                     if ( !( /^[\w-]*$/.test( capability_id ) ) ) {
                         jQuery.notify( ure_data.capability_name_valid_chars, 'warn' );
                         return false;
-                    }  
+                    }
                     jQuery('#ure_task_status').show();
-                    jQuery.ajax( {
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        async: true,
-                        data: {
-                            action: 'ure_ajax',
-                            sub_action: 'add_capability',                            
-                            capability_id: capability_id,
-                            user_role: jQuery('#user_role').val(),
-                            network_admin: ure_data.network_admin,
-                            wp_nonce: ure_data.wp_nonce
-                        },
-                        success: ure_main.add_capability_success,
-                        error: ure_main.ajax_error
-                    } );
+                    ure_main.ajax_post('add_capability', {
+                        capability_id: capability_id,
+                        user_role: jQuery('#user_role').val()
+                    }, ure_main.add_capability_success);
                     jQuery( this ).dialog( 'close' );
                 },
                 CancelAddCapability: function () {
@@ -604,7 +618,7 @@ var ure_main = {
 
     add_capability_success: function( data ) {
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             if ( data.html.length>0 ) {
                 jQuery( '#ure_caps_list' ).html( data.html );
                 ure_main.refresh_role_view( data );
@@ -622,7 +636,7 @@ var ure_main = {
             modal: true,
             autoOpen: true,
             closeOnEscape: true,
-            width: 350,
+            width: 380,
             height: 400,
             resizable: false,
             title: ure_data.delete_capability,
@@ -636,21 +650,9 @@ var ure_main = {
                         values[field.name] = field.value;
                     });
                     jQuery('#ure_task_status').show();
-                    jQuery.ajax( {
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        async: true,
-                        data: {
-                            action: 'ure_ajax',
-                            sub_action: 'delete_capability',
-                            values: values,
-                            network_admin: ure_data.network_admin,
-                            wp_nonce: ure_data.wp_nonce
-                        },
-                        success: ure_main.delete_capability_success,
-                        error: ure_main.ajax_error
-                    } );
+                    ure_main.ajax_post('delete_capability', {
+                        values: values
+                    }, ure_main.delete_capability_success);
                     jQuery(this).dialog('close');
                 },
                 CancelDeleteCapability: function () {
@@ -664,12 +666,15 @@ var ure_main = {
         jQuery('.ui-dialog-buttonpane button:contains("CancelDeleteCapability")').attr('id', 'delete-capability-dialog-cancel-button');
         jQuery('#delete-capability-dialog-cancel-button').html(this.ui_button_text(ure_data.cancel));
         jQuery('#ure_remove_caps_select_all').on('click', (this.remove_caps_auto_select) );
+        jQuery('#ure_remove_caps_quick_filter').val('').on('keyup', function () {
+            ure_main.filter_remove_caps( jQuery(this).val() );
+        });
     },
     
     
     delete_capability_success: function( data ) {
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             if ( data.deleted_caps.length>0 ) {
                 for(var i=0; i<data.deleted_caps.length; i++) {
                     jQuery('#ure_cap_div_'+ data.deleted_caps[i]).remove();
@@ -684,89 +689,88 @@ var ure_main = {
     
     
     // Get from the server a list of capabilities we can delete and show dialog to select what to delete
-    get_caps_to_remove: {
-        url: ajaxurl,
-        type: 'POST',
-        dataType: 'json',
-        async: true,
-        data: {
-            action: 'ure_ajax',
-            sub_action: 'get_caps_to_remove',
-            current_role: jQuery('#user_role').val(),
-            network_admin: ure_data.network_admin,
-            wp_nonce: ure_data.wp_nonce
-        },
-        success: function ( response ) {
-            //var data = jQuery.parseJSON(response);
+    get_caps_to_remove: function () {
+        ure_main.ajax_post('get_caps_to_remove', {
+            current_role: jQuery('#user_role').val()
+        }, function ( response ) {
             if ( typeof response.result !== 'undefined' ) {
                 if ( response.result === 'success' ) {
                     jQuery('#ure_delete_capability_dialog .ure-input').html( response.html );
                     ure_main.show_delete_capability_dialog();
-                } else if (data.result === 'failure') {
-                    jQuery.notify( data.message, 'error' );
+                } else if (response.result === 'failure') {
+                    jQuery.notify( response.message, 'error' );
                 } else {
                     jQuery.notify( 'Wrong response: ' + response, 'error' )
                 }
             } else {
                 jQuery.notify( 'Wrong response: ' + response, 'error' )
             }
-        },
-        error: this.ajax_error        
+        });
     },
     
+    filter_remove_caps: function ( filter_value ) {
+        jQuery('#ure_remove_caps_table tr').slice(1).each( function () {
+            var row = jQuery(this);
+            var cap_id = row.find('.ure-cb-column').val();
+            if ( filter_value==='' || cap_id.indexOf(filter_value)!==-1 ) {
+                row.show();
+            } else {
+                row.hide();
+            }
+        });
+    },
+
+
     remove_caps_auto_select: function (event) {
+        // only visible (not quick-filtered-out) capability rows are affected, same as the main page's "select all"
+        var visible_caps = jQuery('#ure_remove_caps_table tr:visible').find('.ure-cb-column');
         if (event.shiftKey) {
-            jQuery('.ure-cb-column').each(function () {   // reverse selection
+            visible_caps.each(function () {   // reverse selection
                 jQuery(this).prop('checked', !jQuery(this).prop('checked'));
             });
         } else {    // switch On/Off all checkboxes
-            jQuery('.ure-cb-column').prop('checked', jQuery('#ure_remove_caps_select_all').prop('checked'));
+            visible_caps.prop('checked', jQuery('#ure_remove_caps_select_all').prop('checked'));
 
         }
     },
     
     
     show_delete_role_dialog: function () {
+        jQuery('#ure_delete_role_select_all').prop('checked', false);
+        jQuery('.ure-role-cb-column').prop('checked', false);
+
         jQuery('#ure_delete_role_dialog').dialog({
             dialogClass: 'wp-dialog',
             modal: true,
             autoOpen: true,
             closeOnEscape: true,
-            width: 320,
-            height: 190,
+            width: 400,
+            height: 400,
             resizable: false,
             title: ure_data.delete_role,
             buttons: {
                 'Delete Role': function () {
-                    var user_role_id = jQuery('#del_user_role').val();
-                    var question = '';
-                    if (user_role_id!=-1) {
-                        question = ure_data.delete_role +' "'+ user_role_id +'"';
-                    } else {
-                        question = jQuery('#del_user_role').find('option:selected').text();
-                    }
-                    question += '?';
-                    if ( !confirm( question ) ) {
+                    var role_ids = [];
+                    jQuery('#ure_delete_role_form .ure-role-cb-column:checked').each( function () {
+                        role_ids.push( jQuery(this).val() );
+                    });
+                    if ( role_ids.length===0 ) {
+                        jQuery.notify( ure_data.role_not_selected, 'warn' );
                         return false;
                     }
-                    
+                    if ( !confirm( ure_data.delete_role +' "'+ role_ids.join('", "') +'"?' ) ) {
+                        return false;
+                    }
+
+                    var values = {};
+                    jQuery.each( jQuery('#ure_delete_role_form').serializeArray(), function ( i, field ) {
+                        values[field.name] = field.value;
+                    });
                     jQuery('#ure_task_status').show();
-                    jQuery.ajax( {
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        async: true,
-                        data: {
-                            action: 'ure_ajax',
-                            sub_action: 'delete_role',
-                            user_role_id: user_role_id,
-                            network_admin: ure_data.network_admin,
-                            wp_nonce: ure_data.wp_nonce
-                        },
-                        success: ure_main.delete_role_success,
-                        error: ure_main.ajax_error
-                    } );
-                    
+                    ure_main.ajax_post('delete_role', {
+                        values: values
+                    }, ure_main.delete_role_success);
+
                     jQuery(this).dialog('close');
                 },
                 CancelDeleteRole: function () {
@@ -779,26 +783,38 @@ var ure_main = {
         jQuery('#dialog-delete-role-button').html( ure_main.ui_button_text( ure_data.delete_role ) );
         jQuery('.ui-dialog-buttonpane button:contains("CancelDeleteRole")').attr('id', 'dialog-delete-role-cancel-button');
         jQuery('#dialog-delete-role-cancel-button').html( ure_main.ui_button_text( ure_data.cancel ) );
+        jQuery('#ure_delete_role_select_all').on('click', ure_main.delete_role_auto_select );
     },
-    
-    
+
+
+    delete_role_auto_select: function (event) {
+        if (event.shiftKey) {
+            jQuery('.ure-role-cb-column').each(function () {   // reverse selection
+                jQuery(this).prop('checked', !jQuery(this).prop('checked'));
+            });
+        } else {    // switch On/Off all checkboxes
+            jQuery('.ure-role-cb-column').prop('checked', jQuery('#ure_delete_role_select_all').prop('checked'));
+        }
+    },
+
+
     delete_role_success: function( data ) {
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             if ( data.deleted_roles.length>0 ) {
-                force_current_role_change = false;
+                var force_current_role_change = false;
                 for( var i=0; i<data.deleted_roles.length; i++ ) {
-                    jQuery('#del_user_role option[value="'+ data.deleted_roles[i] +'"]').remove();                                        
+                    jQuery('#ure_delete_role_table .ure-role-cb-column[value="'+ data.deleted_roles[i] +'"]').closest('tr').remove();
                     jQuery('#user_role option[value="'+ data.deleted_roles[i] +'"]').remove();
-                    if ( data.deleted_roles[i]==ure_current_role ) {
+                    if ( data.deleted_roles[i]===ure_current_role ) {
                         force_current_role_change = true;
                     }
-                } 
-                var del_role_list = jQuery('#del_user_role option');                
-                if ( del_role_list.length==1 ) {
+                }
+                var remaining_roles = jQuery('#ure_delete_role_table tr').length - 1;   // minus the header row
+                if ( remaining_roles<=0 ) {
                     jQuery( '#ure_delete_role' ).hide();
                 }
-                if ( force_current_role_change ) {                                        
+                if ( force_current_role_change ) {
                     var select_role_list = jQuery('#user_role option');
                     var el = select_role_list[select_role_list.length-1];
                     var role_id = el.value;
@@ -806,7 +822,7 @@ var ure_main = {
                     ure_main.role_change( role_id );
                 }
             }
-            jQuery.notify( data.message, 'success' );            
+            jQuery.notify( data.message, 'success' );
         } else {
             jQuery.notify( data.message, 'error' );
         }
@@ -829,22 +845,10 @@ var ure_main = {
                     var role_id = jQuery('#ren_user_role_id').val();
                     var role_name = jQuery('#ren_user_role_name').val();
                     jQuery('#ure_task_status').show();
-                    jQuery.ajax( {
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        async: true,
-                        data: {
-                            action: 'ure_ajax',
-                            sub_action: 'rename_role',
-                            user_role_id: role_id,
-                            user_role_name: role_name,
-                            network_admin: ure_data.network_admin,
-                            wp_nonce: ure_data.wp_nonce
-                        },
-                        success: ure_main.rename_role_success,
-                        error: ure_main.ajax_error
-                    } );                    
+                    ure_main.ajax_post('rename_role', {
+                        user_role_id: role_id,
+                        user_role_name: role_name
+                    }, ure_main.rename_role_success);
                     jQuery(this).dialog('close');
                 },
                 CancelRenameRole: function () {
@@ -866,7 +870,7 @@ var ure_main = {
     rename_role_success: function( data ) {
         
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             if ( data.role_id.length>0 ) {
                 jQuery( '#user_role option[value="'+ data.role_id+'"]' ).text( data.role_name +' ('+ data.role_id +')' );
                 ure_current_role_name = data.role_name;
@@ -879,25 +883,12 @@ var ure_main = {
     
     hide_pro_banner: function() {
         jQuery('#ure_task_status').show();
-        jQuery.ajax( {
-            url: ajaxurl,
-            type: 'POST',
-            dataType: 'json',
-            async: true,
-            data: {
-                action: 'ure_ajax',
-                sub_action: 'hide_pro_banner',                
-                network_admin: ure_data.network_admin,
-                wp_nonce: ure_data.wp_nonce
-            },
-            success: ure_main.hide_pro_banner_success,
-            error: ure_main.ajax_error
-        } );        
+        ure_main.ajax_post('hide_pro_banner', {}, ure_main.hide_pro_banner_success);
     },
     
     hide_pro_banner_success: function( data ) {
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {
+        if ( data.result==='success' ) {
             jQuery( '#ure_pro_advertisement' ).hide();
         } else {
             jQuery.notify( data.message, 'error' );
@@ -909,7 +900,7 @@ var ure_main = {
         for (var i = 0; i < div_list.length; i++) {
             var el = jQuery('#'+ div_list[i].id);
             if ( cap_id !== '' ) {
-                if (div_list[i].id.substr(11).indexOf(cap_id) !== -1 ) {
+                if (div_list[i].id.slice(11).indexOf(cap_id) !== -1 ) {
                     el.addClass('ure_tag');
                     el.removeClass('filtered');
                     div_list[i].style.color = '#27CF27';
@@ -943,29 +934,16 @@ var ure_main = {
             values[field.name] = field.value;
         });
         jQuery('#ure_task_status').show();
-        jQuery.ajax( {
-            url: ajaxurl,
-            type: 'POST',
-            dataType: 'json',
-            async: true,
-            data: {
-                action: 'ure_ajax',
-                sub_action: 'update_role',
-                values: values,
-                user_role_id: values['user_role'],
-                network_admin: ure_data.network_admin,
-                wp_nonce: ure_data.wp_nonce
-            },
-            success: ure_main.update_role_success,
-            error: ure_main.ajax_error
-        } );
-        
+        ure_main.ajax_post('update_role', {
+            values: values,
+            user_role_id: values['user_role']
+        }, ure_main.update_role_success);
     },
     
     update_role_success: function( data ) {
         
         jQuery('#ure_task_status').hide();
-        if ( data.result=='success' ) {    
+        if ( data.result==='success' ) {    
             ure_main.count_caps_in_groups();
             jQuery.notify( data.message, 'success');
         } else {
@@ -995,33 +973,18 @@ var ure_main = {
 //-------------------------------
 
 
-function ure_ui_button_text(caption) {
-    var wrapper = '<span class="ui-button-text">' + caption + '</span>';
-
-    return wrapper;
-}
-
-
 jQuery(function ($) {
             
     $('#ure_update_role').button({
         label: ure_data.update
-    }).on('click', (function () {
+    }).on('click', ( function ( event ) {
         event.preventDefault();
-        if (ure_data.confirm_role_update == 1) {            
-            //ure_confirm(ure_data.confirm_submit, ure_form_submit);
+        if ( ure_data.confirm_role_update==='1' ) {
             ure_confirm( ure_data.confirm_submit, ure_main.update_role );
         } else {
             ure_main.update_role();
         }
     }));
-
-/*
-    function ure_form_submit() {
-        $('#ure_form').submit();
-    }
-*/
-
     
     
     function ure_show_default_role_dialog() {
@@ -1048,23 +1011,23 @@ jQuery(function ($) {
         });
         // translate buttons caption
         $('.ui-dialog-buttonpane button:contains("Set New Default Role")').attr('id', 'dialog-default-role-button');
-        $('#dialog-default-role-button').html(ure_ui_button_text(ure_data.set_new_default_role));
+        $('#dialog-default-role-button').html(ure_main.ui_button_text(ure_data.set_new_default_role));
         $('.ui-dialog-buttonpane button:contains("CancelDefaultRole")').attr('id', 'default-role-dialog-cancel-button');
-        $('#default-role-dialog-cancel-button').html(ure_ui_button_text(ure_data.cancel));
+        $('#default-role-dialog-cancel-button').html(ure_main.ui_button_text(ure_data.cancel));
     }
     
 
     if ($('#ure_default_role').length > 0) {
         $('#ure_default_role').button({
             label: ure_data.default_role
-        }).on('click', (function (event) {
+        }).on('click', (function ( event ) {
             event.preventDefault();                
             ure_show_default_role_dialog();
         }));
     }
     
 
-    function ure_confirm(message, routine) {
+    function ure_confirm( message, routine ) {
 
         $('#ure_confirmation_dialog').dialog({
             dialogClass: 'wp-dialog',
@@ -1090,9 +1053,9 @@ jQuery(function ($) {
         $('#ure_cd_html').html(message);
 
         $('.ui-dialog-buttonpane button:contains("No")').attr('id', 'dialog-no-button');
-        $('#dialog-no-button').html(ure_ui_button_text(ure_data.no_label));
+        $('#dialog-no-button').html(ure_main.ui_button_text(ure_data.no_label));
         $('.ui-dialog-buttonpane button:contains("Yes")').attr('id', 'dialog-yes-button');
-        $('#dialog-yes-button').html(ure_ui_button_text(ure_data.yes_label));
+        $('#dialog-yes-button').html(ure_main.ui_button_text(ure_data.yes_label));
 
     }
     // end of ure_confirm()
