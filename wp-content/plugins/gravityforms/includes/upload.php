@@ -75,7 +75,7 @@ class GFAsyncUpload {
 			GFForms::add_security_files();
 		} else if ( ! file_exists( GFFormsModel::get_upload_path( $form_id ) . '/index.html' ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) );
-		} else if ( ! file_exists( GFFormsModel::get_upload_path( $form_id ) . "/$y/index.html" ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization 
+		} else if ( ! file_exists( GFFormsModel::get_upload_path( $form_id ) . "/$y/index.html" ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) . "/$y" );
 		} else if ( is_dir( GFFormsModel::get_upload_path( $form_id ) . "/$y/$m" ) ) { // Prevent adding the index file if the month upload folder is not created yet.
 			GFCommon::recursive_add_index_file( GFFormsModel::get_upload_path( $form_id ) . "/$y/$m" );
@@ -86,9 +86,12 @@ class GFAsyncUpload {
 		}
 
 		$uploaded_filename = sanitize_file_name( rgar( $_REQUEST, 'original_filename' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		self::die_if_extension_disallowed( $uploaded_filename, 'original_filename' );
+		$file_name         = sanitize_file_name( rgar( $_REQUEST, 'name' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! self::is_valid_upload_filename( $uploaded_filename ) || ! self::is_valid_upload_filename( $file_name ) ) {
+			self::die_error();
+		}
 
-		$file_name = sanitize_file_name( rgar( $_REQUEST, 'name' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		self::die_if_extension_disallowed( $uploaded_filename, 'original_filename' );
 		self::die_if_extension_disallowed( $file_name, 'name' );
 
 		self::die_if_extensions_different( $uploaded_filename, $file_name );
@@ -102,48 +105,69 @@ class GFAsyncUpload {
 		$max_upload_size_in_bytes = $field->get_max_file_size_bytes();
 		$max_upload_size_in_mb    = $max_upload_size_in_bytes / 1048576;
 
-		if ( $_FILES['file']['size'] > 0 && $_FILES['file']['size'] > $max_upload_size_in_bytes ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
+		$upload_error = self::get_upload_error_code();
+		if ( UPLOAD_ERR_INI_SIZE === $upload_error || UPLOAD_ERR_FORM_SIZE === $upload_error ) {
 			// translators: %d: Maximum file size in MB.
 			self::die_error( 104, sprintf( __( 'File exceeds size limit. Maximum file size: %dMB', 'gravityforms' ), $max_upload_size_in_mb ) );
 		}
 
+		if ( 0 !== $upload_error ) {
+			self::die_error( 103, __( 'Failed to move uploaded file.', 'gravityforms' ) );
+		}
+
+		$incoming_size = isset( $_FILES['file']['size'] ) ? (int) $_FILES['file']['size'] : 0; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
+		self::die_if_exceeds_max_file_size( $incoming_size, $max_upload_size_in_bytes, $max_upload_size_in_mb );
+
 		$chunk         = isset( $_REQUEST['chunk'] ) ? intval( $_REQUEST['chunk'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$chunks        = isset( $_REQUEST['chunks'] ) ? intval( $_REQUEST['chunks'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$chunk_data    = $chunks && $file_name ? rgar( $_REQUEST, str_replace( '.', '_', $file_name ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$chunk_data    = is_array( $chunk_data ) ? $chunk_data : array();
 		$tmp_file_name = '';
+		$write_offset  = 0;
 
-		if ( $chunk ) {
-			if ( empty( $chunk_data['hash'] ) || ( $chunk_data['hash'] !== self::get_chunk_hash( $chunk_data['temp_filename'], ( $chunk - 1 ), $form_id, $field_id, $uploaded_filename ) ) ) {
+		if ( $chunks < 0 || $chunk < 0 || ( ! $chunks && $chunk ) || ( $chunks && $chunk >= $chunks ) ) {
+			self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+		}
+
+		if ( $chunks && $chunk ) {
+			$submitted_tmp_file_name = rgar( $chunk_data, 'temp_filename' );
+			$chunk_state             = self::decode_chunk_token( rgar( $chunk_data, 'hash' ) );
+
+			if ( ! self::is_valid_chunk_state( $chunk_state, $submitted_tmp_file_name, $chunk, $form_id, $field_id, $chunks, $uploaded_filename ) ) {
 				GFCommon::log_debug( __METHOD__ . sprintf( '(): Invalid hash for chunk #%d.', $chunk ) );
 				self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
 			}
-			$tmp_file_name = $chunk_data['temp_filename'];
+
+			$tmp_file_name = $chunk_state['temp_filename'];
+			$write_offset  = (int) $chunk_state['offset'];
 		}
 
 		if ( empty( $tmp_file_name ) ) {
-			$tmp_file_name = $form_unique_id . '_input_' . $field_id . '_' . GFCommon::random_str( 16 ) . '_' . $file_name;
+			$tmp_file_name = 'gf_' . GFCommon::random_str( 32 ) . '.' . pathinfo( $file_name, PATHINFO_EXTENSION );
 		}
 
 		$tmp_file_name = sanitize_file_name( $tmp_file_name );
-		$file_path     = $target_dir . $tmp_file_name;
+		if ( ! self::is_valid_temp_filename( $tmp_file_name ) ) {
+			self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+		}
 
-		// Only validate if chunking is disabled, or if the final chunk has been uploaded.
-		$check_chunk = $chunks === 0 || $chunk === ( $chunks - 1 );
+		$file_path = $target_dir . $tmp_file_name;
+		if ( $chunks && $chunk && ( ! file_exists( "{$file_path}.part" ) || filesize( "{$file_path}.part" ) !== $write_offset ) ) {
+			self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+		}
 
-		if ( ! $field->is_check_type_and_ext_disabled() && $check_chunk ) {
+		self::die_if_exceeds_max_file_size( $write_offset + $incoming_size, $max_upload_size_in_bytes, $max_upload_size_in_mb, "{$file_path}.part" );
+
+		if ( ! $field->is_check_type_and_ext_disabled() && ! $chunks ) {
 
 			$file_array = $_FILES['file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
-
-			if ( $chunks ) {
-				$file_array['tmp_name'] = $file_path;
-			}
 
 			self::die_if_invalid_type_and_ext( $file_array, $uploaded_filename, 'original_filename' );
 			self::die_if_invalid_type_and_ext( $file_array, $file_name, 'name' );
 		}
 
 		$cleanup_target_dir = apply_filters( 'gform_cleanup_target_dir', true ); // Remove old files
-		$max_file_age = 5 * 3600; // Temp file age in seconds
+		$max_file_age       = 5 * 3600; // Temp file age in seconds
 
 		// Remove old temp files
 		if ( $cleanup_target_dir ) {
@@ -164,67 +188,35 @@ class GFAsyncUpload {
 			}
 		}
 
-		if ( isset( $_SERVER['HTTP_CONTENT_TYPE'] ) ) {
-			$contentType = $_SERVER['HTTP_CONTENT_TYPE']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		}
-
-		if ( isset( $_SERVER['CONTENT_TYPE'] ) ) {
-			$contentType = $_SERVER['CONTENT_TYPE']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		}
+		$content_type = self::get_content_type();
 
 		// Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
-		if ( strpos( $contentType, 'multipart' ) !== false ) {
+		if ( strpos( $content_type, 'multipart' ) !== false ) {
 			if ( isset( $_FILES['file']['tmp_name'] ) && is_uploaded_file( $_FILES['file']['tmp_name'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-				// Open temp file
-				$out = @fopen( "{$file_path}.part", $chunk == 0 ? 'wb' : 'ab' );
-				if ( $out ) {
-					// Read binary input stream and append it to temp file
-					$in = @fopen( $_FILES['file']['tmp_name'], 'rb' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-
-					if ( $in ) {
-						while ( $buff = fread( $in, 4096 ) ) {
-							fwrite( $out, $buff ); // nosemgrep audit.php.lang.security.file.read-write-delete
-						}
-					} else {
-						self::die_error( 101, __( 'Failed to open input stream.', 'gravityforms' ) );
-					}
-
-					@fclose( $in );
-					@fclose( $out );
-					@unlink( $_FILES['file']['tmp_name'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-				} else {
-					self::die_error( 102, __( 'Failed to open output stream.', 'gravityforms' ) );
-				}
+				$write_offset = self::write_upload_stream( $_FILES['file']['tmp_name'], "{$file_path}.part", $chunk, $write_offset, $max_upload_size_in_bytes, $max_upload_size_in_mb ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
+				@unlink( $_FILES['file']['tmp_name'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
 			} else {
 				self::die_error( 103, __( 'Failed to move uploaded file.', 'gravityforms' ) );
 			}
 		} else {
-			// Open temp file
-			$out = @fopen( "{$file_path}.part", $chunk == 0 ? 'wb' : 'ab' );
-			if ( $out ) {
-				// Read binary input stream and append it to temp file
-				$in = @fopen( 'php://input', 'rb' );
-
-				if ( $in ) {
-					while ( $buff = fread( $in, 4096 ) ) {
-						fwrite( $out, $buff ); // nosemgrep audit.php.lang.security.file.read-write-delete
-					}
-				} else {
-					self::die_error( 101, __( 'Failed to open input stream.', 'gravityforms' ) );
-				}
-
-				@fclose( $in );
-				@fclose( $out );
-			} else {
-				self::die_error( 102, __( 'Failed to open output stream.', 'gravityforms' ) );
-			}
+			$write_offset = self::write_upload_stream( 'php://input', "{$file_path}.part", $chunk, $write_offset, $max_upload_size_in_bytes, $max_upload_size_in_mb );
 		}
 
 		if ( ! $chunks || $chunk == $chunks - 1 ) {
 			// Upload is complete. Strip the temp .part suffix off
-			rename( "{$file_path}.part", $file_path );
+			if ( ! rename( "{$file_path}.part", $file_path ) ) {
+				self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+			}
 
 			if ( file_exists( $file_path ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
+				if ( $chunks && ! $field->is_check_type_and_ext_disabled() ) {
+					$file_array             = $_FILES['file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing
+					$file_array['tmp_name'] = $file_path;
+
+					self::die_if_invalid_type_and_ext( $file_array, $uploaded_filename, 'original_filename', $file_path );
+					self::die_if_invalid_type_and_ext( $file_array, $file_name, 'name', $file_path );
+				}
+
 				GFFormsModel::set_permissions( $file_path );
 			} else {
 				self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
@@ -245,21 +237,166 @@ class GFAsyncUpload {
 			GFCommon::log_debug( sprintf( 'GFAsyncUpload::upload(): Chunk upload complete. temp_filename: %s  uploaded_filename: %s chunk: %d', $tmp_file_name, $uploaded_filename, $chunk ) );
 		}
 
+		$decoded_uploaded_filename = str_replace( "\\'", "'", urldecode( $uploaded_filename ) ); //Decoding filename to prevent file name mismatch.
+
 		$output = array(
 			'status' => 'ok',
 			'data'   => array(
 				'temp_filename'     => $tmp_file_name,
-				'uploaded_filename' => str_replace( "\\'", "'", urldecode( $uploaded_filename ) ) //Decoding filename to prevent file name mismatch.
-			)
+				'uploaded_filename' => $decoded_uploaded_filename,
+			),
 		);
 
-		if ( $chunks && ( $chunk != $chunks - 1 ) ) {
-			$output['data']['hash'] = self::get_chunk_hash( $tmp_file_name, $chunk, $form_id, $field_id, $uploaded_filename );
+		if ( $chunks && ( $chunk !== $chunks - 1 ) ) {
+			$output['data']['hash'] = self::get_chunk_hash( $tmp_file_name, $chunk + 1, $form_id, $field_id, $uploaded_filename, $write_offset, $chunks );
+		} else {
+			$output['data']['hash'] = self::get_upload_hash( $tmp_file_name, $decoded_uploaded_filename );
 		}
 
 		$output = json_encode( $output );
 
 		die( $output ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	/**
+	 * Determines whether a sanitized upload filename is usable.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @param mixed $filename The sanitized filename.
+	 *
+	 * @return bool
+	 */
+	private static function is_valid_upload_filename( $filename ) {
+		return is_string( $filename ) && $filename !== '';
+	}
+
+	/**
+	 * Gets the normalized PHP upload error code.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @return int
+	 */
+	private static function get_upload_error_code() {
+		return isset( $_FILES['file']['error'] ) ? (int) $_FILES['file']['error'] : UPLOAD_ERR_NO_FILE; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	}
+
+	/**
+	 * Gets the request content type used to select the upload stream.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @return string
+	 */
+	private static function get_content_type() {
+		if ( isset( $_SERVER['CONTENT_TYPE'] ) ) {
+			return (string) $_SERVER['CONTENT_TYPE']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		}
+
+		if ( isset( $_SERVER['HTTP_CONTENT_TYPE'] ) ) {
+			return (string) $_SERVER['HTTP_CONTENT_TYPE']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		}
+
+		return '';
+	}
+
+	/**
+	 * Writes an upload stream to the temporary file without exceeding the maximum size.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @param string $input_path               Path to the input stream.
+	 * @param string $part_path                Path to the temporary file.
+	 * @param int    $chunk                    Current chunk number.
+	 * @param int    $write_offset             Bytes already written.
+	 * @param int    $max_upload_size_in_bytes The maximum allowed size in bytes.
+	 * @param float  $max_upload_size_in_mb    The maximum allowed size in MB.
+	 *
+	 * @return int The updated write offset.
+	 */
+	private static function write_upload_stream( $input_path, $part_path, $chunk, $write_offset, $max_upload_size_in_bytes, $max_upload_size_in_mb ) {
+		$out = @fopen( $part_path, $chunk === 0 ? 'wb' : 'c+b' );
+		if ( ! $out ) {
+			self::die_error( 102, __( 'Failed to open output stream.', 'gravityforms' ) );
+		}
+
+		if ( $chunk && fseek( $out, $write_offset ) !== 0 ) {
+			fclose( $out );
+			self::die_error( 102, __( 'Failed to seek output stream.', 'gravityforms' ) );
+		}
+
+		$in = @fopen( $input_path, 'rb' );
+		if ( ! $in ) {
+			fclose( $out );
+			self::die_error( 101, __( 'Failed to open input stream.', 'gravityforms' ) );
+		}
+
+		while ( true ) {
+			$remaining = $max_upload_size_in_bytes - $write_offset;
+			$read_size = $remaining > 0 ? min( 4096, $remaining ) : 1;
+			$buff      = fread( $in, $read_size );
+
+			if ( false === $buff ) {
+				fclose( $in );
+				fclose( $out );
+				self::die_error( 101, __( 'Failed to read input stream.', 'gravityforms' ) );
+			}
+
+			if ( '' === $buff ) {
+				break;
+			}
+
+			if ( strlen( $buff ) > $remaining ) {
+				fclose( $in );
+				fclose( $out );
+				self::die_if_exceeds_max_file_size( $write_offset + strlen( $buff ), $max_upload_size_in_bytes, $max_upload_size_in_mb, $part_path );
+			}
+
+			$buffer_offset = 0;
+			$buffer_length = strlen( $buff );
+			while ( $buffer_offset < $buffer_length ) {
+				$bytes_written = fwrite( $out, substr( $buff, $buffer_offset ) ); // nosemgrep audit.php.lang.security.file.read-write-delete
+				if ( false === $bytes_written || 0 === $bytes_written ) {
+					fclose( $in );
+					fclose( $out );
+					self::die_error( 102, __( 'Failed to write output stream.', 'gravityforms' ) );
+				}
+
+				$buffer_offset += $bytes_written;
+				$write_offset  += $bytes_written;
+			}
+		}
+
+		fclose( $in );
+		fclose( $out );
+
+		return $write_offset;
+	}
+
+	/**
+	 * Ends the request if the given size exceeds the resolved upload maximum.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @param int    $size                    The size in bytes to check.
+	 * @param int    $max_upload_size_in_bytes The maximum allowed size in bytes.
+	 * @param float  $max_upload_size_in_mb    The maximum allowed size in MB.
+	 * @param string $file_path_to_delete      Optional temporary file to delete.
+	 *
+	 * @return void
+	 */
+	private static function die_if_exceeds_max_file_size( $size, $max_upload_size_in_bytes, $max_upload_size_in_mb, $file_path_to_delete = '' ) {
+		if ( $size <= $max_upload_size_in_bytes ) {
+			return;
+		}
+
+		if ( $file_path_to_delete && file_exists( $file_path_to_delete ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
+			@unlink( $file_path_to_delete ); // nosemgrep audit.php.lang.security.file.read-write-delete
+		}
+
+		// translators: %d: Maximum file size in MB.
+		self::die_error( 104, sprintf( __( 'File exceeds size limit. Maximum file size: %dMB', 'gravityforms' ), $max_upload_size_in_mb ) );
 	}
 
 	/**
@@ -392,48 +529,171 @@ class GFAsyncUpload {
 	 *
 	 * @since 2.9.24
 	 *
-	 * @param array  $file       The file details from $_FILES.
-	 * @param string $file_name  The file name.
-	 * @param string $input_name The input name the file name is from.
+	 * @param array  $file                The file details from $_FILES.
+	 * @param string $file_name           The file name.
+	 * @param string $input_name          The input name the file name is from.
+	 * @param string $file_path_to_delete The file path to delete if validation fails.
 	 *
 	 * @return void
 	 */
-	private static function die_if_invalid_type_and_ext( $file, $file_name, $input_name ) {
+	private static function die_if_invalid_type_and_ext( $file, $file_name, $input_name, $file_path_to_delete = '' ) {
 		$result = GFCommon::check_type_and_ext( $file, $file_name );
 		if ( is_wp_error( $result ) ) {
 			GFCommon::log_debug( sprintf( '%s(): %s (input: %s); %s; %s', __METHOD__, $file_name, $input_name, $result->get_error_code(), $result->get_error_message() ) );
+			if ( ! empty( $file_path_to_delete ) && file_exists( $file_path_to_delete ) ) { // nosemgrep audit.php.lang.security.file.phar-deserialization
+				@unlink( $file_path_to_delete ); // nosemgrep audit.php.lang.security.file.read-write-delete
+			}
 			self::die_error( $result->get_error_code(), $result->get_error_message() );
 		}
+	}
+
+	/**
+	 * Returns a hash created from the temp filename and uploaded filename for a completed upload.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @param string $temp_filename     The temporary file name.
+	 * @param string $uploaded_filename The uploaded file name.
+	 *
+	 * @return string
+	 */
+	private static function get_upload_hash( $temp_filename, $uploaded_filename ) {
+		return hash_hmac( 'sha256', $temp_filename . '|' . $uploaded_filename, wp_salt( 'auth' ) );
 	}
 
 	/**
 	 * Returns a hash created using the given arguments.
 	 *
 	 * @since 2.9.24
+	 * @since 3.0.2.7 Added offset and chunks for better hash security.
 	 *
 	 * @param string $tmp_file_name     The temporary file name.
 	 * @param int    $chunk             The chunk number.
 	 * @param int    $form_id           The form ID.
 	 * @param int    $field_id          The field ID.
 	 * @param string $uploaded_filename The uploaded file name.
+	 * @param int    $offset            Bytes written so far.
+	 * @param int    $chunks            Total chunk count.
 	 *
-	 * @return false|string
+	 * @return string
 	 */
-	private static function get_chunk_hash( $tmp_file_name, $chunk, $form_id, $field_id, $uploaded_filename ) {
-		return wp_hash(
-			implode(
-				'|',
-				array(
-					$tmp_file_name,
-					$chunk,
-					$form_id,
-					$field_id,
-					$uploaded_filename,
-				)
+	private static function get_chunk_hash( $tmp_file_name, $chunk, $form_id, $field_id, $uploaded_filename, $offset, $chunks ) {
+		$payload = wp_json_encode(
+			array(
+				'temp_filename'     => (string) $tmp_file_name,
+				'next_chunk'        => (int) $chunk,
+				'form_id'           => (int) $form_id,
+				'field_id'          => (int) $field_id,
+				'uploaded_filename' => (string) $uploaded_filename,
+				'offset'            => (int) $offset,
+				'total_chunks'      => (int) $chunks,
 			)
 		);
+
+		$encoded_payload = rtrim( strtr( base64_encode( $payload ), '+/', '-_' ), '=' );
+
+		return $encoded_payload . '.' . hash_hmac( 'sha256', 'gravityforms-upload-chunk-v1|' . $encoded_payload, wp_salt( 'auth' ) );
 	}
 
+	/**
+	 * Decodes and verifies a signed chunk state token.
+	 *
+	 * @since 3.0.3
+	 *
+	 * @param mixed $token The signed chunk state token.
+	 *
+	 * @return array|false
+	 */
+	private static function decode_chunk_token( $token ) {
+		if ( ! is_string( $token ) || substr_count( $token, '.' ) !== 1 ) {
+			return false;
+		}
+
+		list( $encoded_payload, $signature ) = explode( '.', $token, 2 );
+		$expected_signature                  = hash_hmac( 'sha256', 'gravityforms-upload-chunk-v1|' . $encoded_payload, wp_salt( 'auth' ) );
+		if ( $encoded_payload === '' || ! hash_equals( $expected_signature, $signature ) ) {
+			return false;
+		}
+
+		// Restore stripped Base64 padding so the URL-safe token can be decoded, basically how many '=' to add to the end of the string.
+		$padding = ( 4 - strlen( $encoded_payload ) % 4 ) % 4;
+		$payload = base64_decode( strtr( $encoded_payload, '-_', '+/' ) . str_repeat( '=', $padding ), true );
+		$state   = is_string( $payload ) ? json_decode( $payload, true ) : null;
+
+		return is_array( $state ) ? $state : false;
+	}
+
+	/**
+	 * Determines whether a temporary filename is a safe server-side basename.
+	 *
+	 * @since 3.0.3
+	 *
+	 * @param mixed $tmp_file_name Temporary filename.
+	 *
+	 * @return bool
+	 */
+	private static function is_valid_temp_filename( $tmp_file_name ) {
+		if ( ! is_string( $tmp_file_name ) || $tmp_file_name === '' ) {
+			return false;
+		}
+
+		if ( sanitize_file_name( $tmp_file_name ) !== $tmp_file_name ) {
+			return false;
+		}
+
+		if ( wp_basename( $tmp_file_name ) !== $tmp_file_name ) {
+			return false;
+		}
+
+		if ( GFCommon::file_name_has_disallowed_extension( $tmp_file_name ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determines whether the supplied chunk state matches the signed token.
+	 *
+	 * @since 3.0.3
+	 *
+	 * @param mixed $chunk_state          Decoded chunk state token.
+	 * @param mixed $tmp_file_name        Client-supplied temporary filename.
+	 * @param int   $chunk                Current chunk number.
+	 * @param int   $form_id              Form ID.
+	 * @param int   $field_id             Field ID.
+	 * @param int   $chunks               Total chunk count.
+	 * @param string $uploaded_filename   Uploaded filename.
+	 *
+	 * @return bool
+	 */
+	private static function is_valid_chunk_state( $chunk_state, $tmp_file_name, $chunk, $form_id, $field_id, $chunks, $uploaded_filename ) {
+		if ( ! self::is_valid_temp_filename( $tmp_file_name ) || ! is_array( $chunk_state ) ) {
+			return false;
+		}
+
+		$state_form_id       = rgar( $chunk_state, 'form_id' );
+		$state_field_id      = rgar( $chunk_state, 'field_id' );
+		$state_filename      = rgar( $chunk_state, 'uploaded_filename' );
+		$state_temp_filename = rgar( $chunk_state, 'temp_filename' );
+		$state_total_chunks  = rgar( $chunk_state, 'total_chunks' );
+		$state_next_chunk    = rgar( $chunk_state, 'next_chunk' );
+		$state_offset        = rgar( $chunk_state, 'offset' );
+
+		if ( $state_form_id !== $form_id || $state_field_id !== $field_id ) {
+			return false;
+		}
+
+		if ( $state_filename !== $uploaded_filename || $state_temp_filename !== $tmp_file_name ) {
+			return false;
+		}
+
+		if ( $state_total_chunks !== $chunks || $state_next_chunk !== $chunk || $state_offset < 0 ) {
+			return false;
+		}
+
+		return true;
+	}
 }
 
 GFAsyncUpload::upload();

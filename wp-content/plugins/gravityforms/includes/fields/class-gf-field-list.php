@@ -86,6 +86,7 @@ class GF_Field_List extends GF_Field {
 			'visibility_setting',
 			'description_setting',
 			'css_class_setting',
+			'no_urls_setting',
 		);
 	}
 
@@ -660,7 +661,7 @@ class GF_Field_List extends GF_Field {
 			return '';
 		}
 
-		$value = maybe_unserialize( $value );
+		$value = GFCommon::maybe_unserialize( $value );
 
 		if( ! is_array( $value ) || ! isset( $value[0] ) ) {
 			return '';
@@ -672,7 +673,7 @@ class GF_Field_List extends GF_Field {
 			$items = '';
 			foreach ( $value as $key => $item ) {
 				if ( ! empty( $item ) ) {
-					$item = wp_kses_post( $item );
+					$item = wp_kses( $item, $this->get_entry_allowed_html() );
 					switch ( $format ) {
 						case 'text' :
 							$items .= $item . ', ';
@@ -715,7 +716,9 @@ class GF_Field_List extends GF_Field {
 							$list .= "\n\n" . $this->label . ': ';
 						}
 
-						$item = array_map( 'wp_kses_post', $item );
+						$item = array_map( function ( $value ) {
+							return wp_kses( $value, $this->get_entry_allowed_html() );
+						}, $item );
 
 						$list .= implode( ',', array_values( $item ) );
 
@@ -725,7 +728,9 @@ class GF_Field_List extends GF_Field {
 
 				case 'url' :
 					foreach ( $value as $item ) {
-						$item = array_map( 'wp_kses_post', $item );
+						$item = array_map( function ( $value ) {
+							return wp_kses( $value, $this->get_entry_allowed_html() );
+						}, $item );
 						$list .= implode( "|", array_values( $item ) ) . ',';
 					}
 					if ( ! empty( $list ) ) {
@@ -749,7 +754,7 @@ class GF_Field_List extends GF_Field {
 							$list .= '<tr>';
 							foreach ( $columns as $column ) {
 								$val = rgar( $item, $column );
-								$val = wp_kses_post( $val );
+								$val = wp_kses( $val, $this->get_entry_allowed_html() );
 								$list .= "<td style='padding: 6px 10px; border-right: 1px solid #DFDFDF; border-bottom: 1px solid #DFDFDF; border-top: 1px solid #FFF; font-family: sans-serif; font-size:12px;'>{$val}</td>\n";
 							}
 
@@ -771,7 +776,7 @@ class GF_Field_List extends GF_Field {
 							$list .= '<tr>';
 							foreach ( $columns as $column ) {
 								$val = rgar( $item, $column );
-								$val = wp_kses_post( $val );
+								$val = wp_kses( $val, $this->get_entry_allowed_html() );
 								$list .= "<td>{$val}</td>\n";
 							}
 
@@ -790,35 +795,64 @@ class GF_Field_List extends GF_Field {
 	}
 
 	/**
-	 * Gets the value of the field when the entry is saved.
+	 * Sanitize and format the value before it is saved to the Entry Object.
 	 *
-	 * @since  Unknown
-	 * @access public
+	 * @since 3.0.0
 	 *
-	 * @param string $value      The value to use.
-	 * @param array  $form       The form that the entry is associated with.
-	 * @param string $input_name The name of the input containing the value.
-	 * @param int    $lead_id    The entry ID.
-	 * @param array  $lead       The Entry Object.
+	 * @param string|array $value          The value to be saved.
+	 * @param array        $form           The Form object currently being processed.
+	 * @param string       $input_name     The input name used when accessing the $_POST.
+	 * @param int          $entry_id       The ID of the entry currently being processed.
+	 * @param array        $entry          The entry currently being processed.
+	 * @param string       $repeater_index The repeater index if the field is inside a repeater.
 	 *
-	 * @return string The entry value. Escaped.
+	 * @return array|string The sanitized and formatted input value to be saved.
 	 */
-	public function get_value_save_entry( $value, $form, $input_name, $lead_id, $lead ) {
+	public function get_value_save_input( $value, $form, $input_name, $entry_id, $entry, $repeater_index = '' ) {
 
-		if ( $this->is_administrative() && $this->allowsPrepopulate ) {
-			$value = json_decode( $value );
+		if ( $this->is_administrative() && $this->allowsPrepopulate && is_string( $value ) ) {
+			$value = json_decode( $value, true );
 		}
 
 		if ( GFCommon::is_empty_array( $value ) ) {
 			$value = '';
 		} else {
-			$value = $this->create_list_array( $value );
-			$value = serialize( $value );
+			// Convert Old Array Format (flat) values to the structured New Array Format; already-structured rows are used as-is.
+			$first_row     = is_array( $value ) ? reset( $value ) : null;
+			$is_structured = $this->is_administrative() && $this->allowsPrepopulate && is_array( $first_row );
+			$value         = $is_structured ? array_values( $value ) : $this->create_list_array( $value );
+			$value         = $this->sanitize_list_value( $value, $form['id'] );
+			$value         = serialize( $value );
 		}
 
 		$value_safe = $this->sanitize_entry_value( $value, $form['id'] );
 
 		return $value_safe;
+	}
+
+	/**
+	 * Sanitize each scalar List value before the rows are serialized.
+	 *
+	 * @since 3.1.3
+	 *
+	 * @param array $value   The List rows to sanitize.
+	 * @param int   $form_id The current form ID.
+	 *
+	 * @return array
+	 */
+	public function sanitize_list_value( $value, $form_id ) {
+		$allowed_html = $this->get_entry_allowed_html( $this->get_allowable_tags( $form_id ) );
+
+		array_walk_recursive(
+			$value,
+			function ( &$item ) use ( $allowed_html ) {
+				if ( is_string( $item ) ) {
+					$item = wp_kses( $item, $allowed_html );
+				}
+			}
+		);
+
+		return $value;
 	}
 
 	/**
@@ -934,10 +968,7 @@ class GF_Field_List extends GF_Field {
 
 			return $value;
 		} elseif ( is_serialized( $value ) ) {
-			$value = @unserialize(
-				trim( $value ),
-				array( 'allowed_classes' => false )
-			);
+			$value = GFCommon::maybe_unserialize( $value );
 			return is_array( $value ) ? $value : $default;
 		}
 
@@ -986,7 +1017,7 @@ class GF_Field_List extends GF_Field {
 		}
 
 		$value = rgar( $entry, $input_id );
-		$value = maybe_unserialize( $value );
+		$value = GFCommon::maybe_unserialize( $value );
 
 		if ( empty( $value ) || $is_csv ) {
 			return $value;
@@ -1006,6 +1037,23 @@ class GF_Field_List extends GF_Field {
 		}
 
 		return GFCommon::implode_non_blank( ', ', $column_values );
+	}
+
+	/**
+	 * Returns the string value to be used for URL detection.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param string|array $value The value to be prepared for validation.
+	 *
+	 * @return string
+	 */
+	public function prepare_value_for_url_detection( $value ) {
+		if ( $this->enableColumns && is_array( $value ) ) {
+			$value = array_merge( ...array_map( 'array_values', $value ) );
+		}
+
+		return parent::prepare_value_for_url_detection( $value );
 	}
 
 	// # FIELD FILTER UI HELPERS ---------------------------------------------------------------------------------------

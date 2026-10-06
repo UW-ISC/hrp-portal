@@ -256,10 +256,9 @@ class GF_Field_Time extends GF_Field {
 		$id       = intval( $this->id );
 		$field_id = $is_entry_detail || $is_form_editor || $form_id == 0 ? "input_$id" : 'input_' . $form_id . "_$id";
 
-		$form_sub_label_placement  = rgar( $form, 'subLabelPlacement' );
 		$field_sub_label_placement = $this->subLabelPlacement;
-		$colon_pmam_placement      = empty( $field_sub_label_placement ) || $field_sub_label_placement == 'hidden_label' ? 'below' : $field_sub_label_placement;
-		$is_sub_label_above        = $field_sub_label_placement == 'above' || ( empty( $field_sub_label_placement ) && $form_sub_label_placement == 'above' );
+		$colon_pmam_placement      = empty( $field_sub_label_placement ) || $field_sub_label_placement === 'hidden_label' ? 'above' : $field_sub_label_placement;
+		$is_sub_label_above        = $this->is_sub_label_above( $form );
 
 		$disabled_text = $is_form_editor ? "disabled='disabled'" : '';
 
@@ -310,8 +309,8 @@ class GF_Field_Time extends GF_Field {
                                 <select name='input_{$id}[]' id='{$field_id}_3' $ampm_tabindex {$disabled_text}>
                                     <option value='am' {$am_selected}>{$am_text}</option>
                                     <option value='pm' {$pm_selected}>{$pm_text}</option>
-                                </select> 
-                                <label class='gform-field-label gform-field-label--type-sub am_pm_label screen-reader-text' for='{$field_id}_3'>" . esc_html__( 'AM/PM', 'gravityforms' ) . "</label>                                
+                                </select>
+                                <label class='gform-field-label gform-field-label--type-sub am_pm_label screen-reader-text' for='{$field_id}_3'>" . esc_html__( 'AM/PM', 'gravityforms' ) . "</label>
                            </div>";
 		} else {
 			$ampm_field = '';
@@ -446,22 +445,20 @@ class GF_Field_Time extends GF_Field {
 	}
 
 	/**
-	 * Prepares the field value to be saved after an entry is submitted.
+	 * Sanitize and format the value before it is saved to the Entry Object.
 	 *
-	 * @since  Unknown
-	 * @access public
+	 * @since 3.0.0
 	 *
-	 * @used-by GFFormsModel::prepare_value()
+	 * @param string $value          The value to be saved.
+	 * @param array  $form           The Form object currently being processed.
+	 * @param string $input_name     The input name used when accessing the $_POST.
+	 * @param int    $entry_id        The ID of the entry currently being processed.
+	 * @param array  $entry           The entry currently being processed.
+	 * @param string $repeater_index The repeater index if the field is inside a repeater.
 	 *
-	 * @param string $value      The value to prepare.
-	 * @param array  $form       The Form Object. Not used.
-	 * @param string $input_name The name of the input. Not used.
-	 * @param int    $lead_id    The entry ID. Not used.
-	 * @param array  $lead       The Entry Object. Not used.
-	 *
-	 * @return array|string      The field value, prepared and stripped of tags.
+	 * @return array|string The sanitized and formatted input value to be saved.
 	 */
-	public function get_value_save_entry( $value, $form, $input_name, $lead_id, $lead ) {
+	public function get_value_save_input( $value, $form, $input_name, $entry_id, $entry, $repeater_index = '' ) {
 
 		if ( empty( $value ) && ! is_array( $value ) ) {
 			return '';
@@ -578,6 +575,45 @@ class GF_Field_Time extends GF_Field {
 		if ( ! $this->timeFormat || ! in_array( $this->timeFormat, array( 12, 24 ) ) ) {
 			$this->timeFormat = '12';
 		}
+	}
+
+	/**
+	 * Gets the merge tag value.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @param string       $value      The merge tag value to be filtered.
+	 * @param string       $input_id   The field or input ID from the merge tag.
+	 * @param array        $entry      The Entry Object.
+	 * @param array        $form       The Form Object.
+	 * @param string       $modifier   The merge tag modifier.
+	 * @param string|array $raw_value  The raw field value from before formatting.
+	 * @param bool         $url_encode Whether to encode the value for URLs.
+	 * @param bool         $esc_html   Whether to encode HTML entities.
+	 * @param string       $format     The format requested for the location the merge is being used.
+	 * @param bool         $nl2br      Whether to convert newlines to HTML line breaks.
+	 *
+	 * @return string
+	 */
+	public function get_value_merge_tag( $value, $input_id, $entry, $form, $modifier, $raw_value, $url_encode, $esc_html, $format, $nl2br ) {
+
+		if ( rgblank( $raw_value ) ) {
+			return GFCommon::format_variable_value( $raw_value, $url_encode, $esc_html, $format, $nl2br );
+		}
+
+		preg_match( '/^(\d*):(\d*) ?(.*)$/', $raw_value, $matches );
+
+		if ( in_array( 'hour', $this->get_modifiers() ) ) {
+			$value = (string) intval( rgar( $matches, 1 ) );
+		} else if ( in_array( 'minute', $this->get_modifiers() ) ) {
+			$value = sprintf( '%02d', intval( rgar( $matches, 2 ) ) );
+		} else if ( in_array( 'ampm', $this->get_modifiers() ) ) {
+			$value = strtolower( trim( rgar( $matches, 3 ) ) );
+		} else{
+			$value = $raw_value;
+		}
+
+		return GFCommon::format_variable_value( $value, $url_encode, $esc_html, $format, $nl2br );
 	}
 
 }

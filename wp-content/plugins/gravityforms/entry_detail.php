@@ -288,6 +288,7 @@ class GFEntryDetail {
 		if ( empty( $form_id ) ) {
 			GFCommon::add_error_message( esc_html__( "Oops! We couldn't find your form. Please try again.", 'gravityforms' ) );
 			GFForms::admin_header();
+			GFForms::admin_footer();
 
 			return;
 		}
@@ -296,6 +297,7 @@ class GFEntryDetail {
 		if ( is_wp_error( $lead ) || ! $lead ) {
 			GFCommon::add_error_message( esc_html__( "Oops! We couldn't find your entry. Please try again.", 'gravityforms' ) );
 			GFForms::admin_header();
+			GFForms::admin_footer();
 
 			return;
 		}
@@ -344,9 +346,16 @@ class GFEntryDetail {
 
 		GFFormsModel::update_entry_property( $lead['id'], 'is_read', 1 );
 
-		switch ( RGForms::post( 'action' ) ) {
+		switch ( GFForms::post( 'action' ) ) {
 			case 'update' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
+				if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entries' ) ) {
+					wp_die(
+						esc_html__( "You don't have adequate permission to edit entries.", 'gravityforms' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
 
 				$original_entry = $lead;
 
@@ -402,6 +411,13 @@ class GFEntryDetail {
 
 			case 'add_note' :
 				check_admin_referer( 'gforms_update_note', 'gforms_update_note' );
+				if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entry_notes' ) ) {
+					wp_die(
+						esc_html__( "You don't have adequate permission to add notes.", 'gravityforms' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
 				$user_data = get_userdata( $current_user->ID );
 				GFFormsModel::add_note( $lead['id'], $current_user->ID, $user_data->display_name, isset( $_POST['new_note'] ) ? wp_unslash( $_POST['new_note'] ) : '' ); //  phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -445,6 +461,13 @@ class GFEntryDetail {
 
 			case 'add_quick_note' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
+				if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entry_notes' ) ) {
+					wp_die(
+						esc_html__( "You don't have adequate permission to add notes.", 'gravityforms' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
 				$user_data = get_userdata( $current_user->ID );
 				GFFormsModel::add_note( $lead['id'], $current_user->ID, $user_data->display_name, isset( $_POST['quick_note'] ) ? wp_unslash( $_POST['quick_note'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				break;
@@ -485,6 +508,13 @@ class GFEntryDetail {
 
 			case 'unspam' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
+				if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entries' ) ) {
+					wp_die(
+						esc_html__( "You don't have adequate permission to edit entries.", 'gravityforms' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
 				GFFormsModel::update_entry_property( $lead['id'], 'status', 'active' );
 				$lead = GFFormsModel::get_entry( $lead['id'] );
 				self::set_current_entry( $lead );
@@ -492,6 +522,13 @@ class GFEntryDetail {
 
 			case 'spam' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
+				if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entries' ) ) {
+					wp_die(
+						esc_html__( "You don't have adequate permission to edit entries.", 'gravityforms' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
 				GFFormsModel::update_entry_property( $lead['id'], 'status', 'spam' );
 				$lead = GFFormsModel::get_entry( $lead['id'] );
 				self::set_current_entry( $lead );
@@ -516,6 +553,7 @@ class GFEntryDetail {
 
 		?>
 		<script type="text/javascript">
+			<?php GFCommon::gf_global(); ?>
 			var formId = <?php echo absint( $form_id ); ?>;
 
 			jQuery(document).ready(function () {
@@ -787,6 +825,7 @@ class GFEntryDetail {
 			</div>
 		</form>
 		<?php
+		GFForms::admin_footer();
 	}
 
 	public static function lead_detail_edit( $form, $lead ) {
@@ -842,7 +881,12 @@ class GFEntryDetail {
 									$field_label = "<label class='detail-label'>" . esc_html( GFCommon::get_label( $field ) ) . '</label>';
 								}
 
-								$content = "<tr valign='top'><td class='detail-view' id='{$td_id}'>" .
+								$field_class = 'detail-view gfield gfield--type-' . esc_attr( $field->type );
+								if ( ! empty( $field->inputType ) ) {
+									$field_class .= ' gfield--input-type-' . esc_attr( $field->inputType );
+								}
+
+								$content = "<tr valign='top'><td class='{$field_class}' id='{$td_id}'>" .
 								           $field_label .
 								           GFCommon::get_field_input( $field, $value, $lead['id'], $form_id, $form ) .
 								           '</td></tr>';
@@ -955,7 +999,7 @@ class GFEntryDetail {
                                  *
                                  * @param array $note The Note object that is being filtered when modifying the avatar
                                  */
-                                echo apply_filters( 'gform_notes_avatar', $avatar, $note );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+                                echo apply_filters( 'gform_notes_avatar', $avatar, $note );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								?>
                             </div>
                             <div class="text">
@@ -1090,11 +1134,29 @@ class GFEntryDetail {
 							break;
 						}
 
+						// Check if a repeater field contains product sub-fields.
+						if ( ! $has_product_fields && is_array( $field->fields ) ) {
+							foreach ( $field->fields as $sub_field ) {
+								if ( GFCommon::is_product_field( $sub_field->type ) ) {
+									$has_product_fields = true;
+									break 2;
+								}
+							}
+						}
+
+						// If the repeater only contains product/pricing fields (or child repeaters that only contain product fields), skip it entirely.
+						if ( $field instanceof GF_Field_Repeater && $field->has_only_product_fields() ) {
+							break;
+						}
+
 						$value = RGFormsModel::get_lead_field_value( $lead, $field );
 
 						if ( is_array( $field->fields ) ) {
 							// Ensure the top level repeater has the right nesting level so the label is not duplicated.
 							$field->nestingLevel = 0;
+
+							// Passing the display_empty_fields value to the repeater field so it can be used to hide/show empty fields based on the checkbox in the entry detail page.
+							$field->displayEmptyFields = $display_empty_fields;
 						}
 
 						$display_value = $field->get_value_entry_detail( $value, $lead, false, 'html', 'screen' );
@@ -1110,6 +1172,11 @@ class GFEntryDetail {
 						 * @param array    $form          The Form Object.
 						 */
 						$display_value = apply_filters( 'gform_entry_field_value', $display_value, $field, $lead, $form );
+
+						if ( is_array( $field->fields ) ) {
+							// apply the gform_entry_field_value filter recursively to Repeater sub-fields
+							$display_value = self::entry_field_value_recursive( $display_value, $field, $lead, $form );
+						}
 
 						if ( $display_empty_fields || ! empty( $display_value ) || $display_value === '0' ) {
 							$count ++;
@@ -1171,6 +1238,28 @@ class GFEntryDetail {
 			</tbody>
 		</table>
 		<?php
+	}
+
+	/**
+	 * Recursively applies the gform_entry_field_value filter to sub-fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string   $display_value The value to be displayed.
+	 * @param GF_Field $field         The Field Object.
+	 * @param array    $lead          The Entry Object.
+	 * @param array    $form          The Form Object.
+	 *
+	 * @return string The modified display value
+	 */
+	public static function entry_field_value_recursive( $display_value, $field, $lead, $form ) {
+		if ( is_array( $field->fields ) ) {
+			foreach ( $field->fields as $sub_field ) {
+				$display_value = apply_filters( 'gform_entry_field_value', $display_value, $sub_field, $lead, $form );
+				$display_value = self::entry_field_value_recursive( $display_value, $sub_field, $lead, $form );
+			}
+		}
+		return $display_value;
 	}
 
 	public static function entry_detail_pagination_link( $pos, $label = '', $class = '', $icon = '' ) {
@@ -1495,7 +1584,7 @@ class GFEntryDetail {
 		$form    = $args['form'];
 		$form_id = $form['id'];
 
-		if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entry_notes' ) ) {
+		if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entries' ) ) {
 			return;
 		}
 		?>

@@ -59,8 +59,6 @@ if ( ! class_exists( 'GFResults' ) ) {
 
 		public function enqueue_admin_scripts() {
 			wp_enqueue_script( 'jquery-ui-resizable' );
-			wp_enqueue_script( 'jquery-ui-datepicker' );
-
 			wp_enqueue_script( 'google_charts' );
 			wp_enqueue_style( 'gaddon_results_css' );
 			wp_enqueue_script( 'gaddon_results_js' );
@@ -181,6 +179,8 @@ if ( ! class_exists( 'GFResults' ) ) {
 		}
 
 		public function results_page($form_id, $page_title, $gf_page, $gf_view ) {
+			GFForms::admin_header( array(), true );
+
 			$form_id = absint( $form_id );
 			if ( empty( $form_id ) ) {
 				$forms = RGFormsModel::get_forms();
@@ -217,6 +217,7 @@ if ( ! class_exists( 'GFResults' ) ) {
 				$init_vars['filters'] = $filters;
 			}
 			?>
+
 			<script type="text/javascript">
 				var gresultsFields = <?php echo json_encode( $all_fields ); ?>;
 				var gresultsFilterSettings = <?php echo json_encode( $filter_settings ); ?>;
@@ -226,103 +227,100 @@ if ( ! class_exists( 'GFResults' ) ) {
 				<?php GFCommon::gf_vars() ?>
 			</script>
 
-			<div class="wrap gforms_edit_form <?php echo esc_attr( GFCommon::get_browser_class() ); ?>">
+			<?php if ( false === empty( $all_fields ) ) : ?>
+				<div id="poststuff" class="metabox-holder has-right-sidebar">
+					<div id="side-info-column" class="inner-sidebar">
+						<div id="gresults-results-filter" class="gform-settings-panel__content postbox">
+							<h2><?php echo esc_html( $this->_search_title ); ?></h2>
+							<div id="gresults-results-filter-content">
+								<form id="gresults-results-filter-form" action="" method="GET">
+									<?php wp_nonce_field( 'gf_results', '_gf_results_nonce' );  ?>
+									<input type="hidden" id="gresults-page-slug" name="page"
+											value="<?php echo esc_attr( $gf_page ); ?>">
+									<input type="hidden" id="gresults-view-slug" name="view"
+											value="<?php echo esc_attr( $gf_view ); ?>">
+									<input type="hidden" id="gresults-form-id" name="id"
+											value="<?php echo esc_attr( $form_id ); ?>">
 
-				<?php //GFCommon::form_page_title( $form ); ?>
-				<?php //GFCommon::display_dismissible_message(); ?>
-				<?php //GFForms::top_toolbar(); ?>
-				<?php GFForms::admin_header(array(), true ) ;?>
-				<?php if ( false === empty( $all_fields ) ) : ?>
+									<?php
+									$filter_ui = array(
+										'fields'     => array(
+											'label'   => esc_attr__( 'Include results if', 'gravityforms' ),
+											'tooltip' => 'gresults_filters',
+											'markup'  => '<div class="gform-settings-field__conditional-logic"><div id="gresults-results-field-filters-container">
+															<!-- placeholder populated by js -->
+															</div></div>',
+										),
+										'start_date' => array(
+											'label'   => esc_attr__( 'Start date', 'gravityforms' ),
+											'markup'  => '<div class="gform-settings-field gform-settings-field__date_time">
+																<span class="gform-settings-input__container"><input type="text" id="gresults-results-filter-date-start" class="gform-datepicker ymd_dash" name="start" value="' . esc_attr( $start_date ) . '"/>' . $this->get_button_markup( 'gresults-results-filter-date-start' ) . '</span>
+															</div>',
+										),
+										'end_date'   => array(
+											'label'   => esc_attr__( 'End date', 'gravityforms' ),
+											'markup'  => '<div class="gform-settings-field gform-settings-field__date_time" >
+																<span class="gform-settings-input__container"><input type="text" id="gresults-results-filter-date-end" class="gform-datepicker ymd_dash" name="end" value="' . esc_attr( $end_date ) . '"/>' . $this->get_button_markup( 'gresults-results-filter-date-end' ) . '</span>
+															</div>',
+										),
+									);
+									$filter_ui = apply_filters( 'gform_filter_ui', $filter_ui, $form_id, $page_title, $gf_page, $gf_view );
 
-					<div id="poststuff" class="metabox-holder has-right-sidebar">
-						<div id="side-info-column" class="inner-sidebar">
-							<div id="gresults-results-filter" class="gform-settings-panel__content postbox">
-								<h2><?php echo esc_html( $this->_search_title ); ?></h2>
-
-								<div id="gresults-results-filter-content">
-									<form id="gresults-results-filter-form" action="" method="GET">
-										<?php wp_nonce_field( 'gf_results', '_gf_results_nonce' );  ?>
-										<input type="hidden" id="gresults-page-slug" name="page"
-										       value="<?php echo esc_attr( $gf_page ); ?>">
-										<input type="hidden" id="gresults-view-slug" name="view"
-										       value="<?php echo esc_attr( $gf_view ); ?>">
-										<input type="hidden" id="gresults-form-id" name="id"
-										       value="<?php echo esc_attr( $form_id ); ?>">
-
-										<?php
-										$filter_ui = array(
-											'fields'     => array(
-												'label'   => esc_attr__( 'Include results if', 'gravityforms' ),
-												'tooltip' => 'gresults_filters',
-												'markup'  => '<div class="gform-settings-field__conditional-logic"><div id="gresults-results-field-filters-container">
-																<!-- placeholder populated by js -->
-															 </div></div>',
-											),
-											'start_date' => array(
-												'label'   => esc_attr__( 'Start date', 'gravityforms' ),
-												'markup'  => '<div class="gform-settings-field gform-settings-field__date_time">
-																	<span class="gform-settings-input__container"><input type="text" id="gresults-results-filter-date-start" name="start" value="' . esc_attr( $start_date ) . '"/><button type="button" class="ui-datepicker-trigger"><span class="screen-reader-text">'.esc_html__( 'Open Date Picker', 'gravityforms' ).'</span><svg width="18" height="18" role="presentation" focusable="false" fill="#9092B2" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.0909 1.6364V1.231C13.0909.5513 13.6357 0 14.3182 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h.8254c.8997 0 1.6291.7349 1.6291 1.6288v13.106C18 17.2707 17.2721 18 16.3709 18H1.6291C.7294 18 0 17.2651 0 16.3712V3.2652c0-.8996.728-1.6288 1.6291-1.6288h.8254V1.231C2.4545.5513 2.9993 0 3.6818 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h2.4545V1.231C7.3636.5513 7.9084 0 8.591 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h3.2727zM1.6364 7.3636v9h14.7272v-9H1.6364z"></path></svg></button></span>
-																</div>',
-											),
-											'end_date'   => array(
-												'label'   => esc_attr__( 'End date', 'gravityforms' ),
-												'markup'  => '<div class="gform-settings-field gform-settings-field__date_time" >
-																	<span class="gform-settings-input__container"><input type="text" id="gresults-results-filter-date-end" name="end" value="' . esc_attr( $end_date ) . '"/><button type="button" class="ui-datepicker-trigger"><span class="screen-reader-text">'.esc_html__( 'Open Date Picker', 'gravityforms' ).'</span><svg width="18" height="18" role="presentation" focusable="false"  fill="#9092B2" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.0909 1.6364V1.231C13.0909.5513 13.6357 0 14.3182 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h.8254c.8997 0 1.6291.7349 1.6291 1.6288v13.106C18 17.2707 17.2721 18 16.3709 18H1.6291C.7294 18 0 17.2651 0 16.3712V3.2652c0-.8996.728-1.6288 1.6291-1.6288h.8254V1.231C2.4545.5513 2.9993 0 3.6818 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h2.4545V1.231C7.3636.5513 7.9084 0 8.591 0c.6778 0 1.2273.5468 1.2273 1.2311v.4053h3.2727zM1.6364 7.3636v9h14.7272v-9H1.6364z"></path></svg></button></span>
-																</div>',
-											),
-										);
-										$filter_ui = apply_filters( 'gform_filter_ui', $filter_ui, $form_id, $page_title, $gf_page, $gf_view );
-
-										foreach ( $filter_ui as $name => $filter ) {
-											?>
-											<div class="gform-settings-field__header"><label class='gform-settings-label'><?php echo esc_html( $filter['label'] ); ?><?php gform_tooltip( rgar( $filter, 'tooltip' ), 'tooltip_bottomleft' ) ?></label></div>
-											<?php
-											echo $filter['markup']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-										}
-
+									foreach ( $filter_ui as $name => $filter ) {
 										?>
+										<div class="gform-settings-field__header"><label class='gform-settings-label'><?php echo esc_html( $filter['label'] ); ?><?php gform_tooltip( rgar( $filter, 'tooltip' ), 'tooltip_bottomleft' ) ?></label></div>
+										<?php
+										echo $filter['markup']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									}
+									?>
 
-
-										<div id="gresults-results-filter-buttons">
-											<input type="submit" id="gresults-results-filter-submit-button"
-											       class="button primary large"
-											       value="<?php esc_attr_e( 'Apply filters', 'gravityforms' ); ?>">
-											<input type="button" id="gresults-results-filter-clear-button"
-											       class="button large"
-											       value="<?php esc_attr_e( 'Clear', 'gravityforms' ); ?>"
-											       onclick="gresults.clearFilterForm();"
-											       onkeypress="gresults.clearFilterForm();">
-
-											<div class="gresults-filter-loading"
-											     style="display:none; float:right; margin-top:5px;">
-												<i class='gform-spinner'></i>
-											</div>
+									<div id="gresults-results-filter-buttons">
+										<input type="submit" id="gresults-results-filter-submit-button"
+												class="button primary large"
+												value="<?php esc_attr_e( 'Apply filters', 'gravityforms' ); ?>">
+										<input type="button" id="gresults-results-filter-clear-button"
+												class="button large"
+												value="<?php esc_attr_e( 'Clear', 'gravityforms' ); ?>"
+												onclick="gresults.clearFilterForm();"
+												onkeypress="gresults.clearFilterForm();">
+										<div class="gresults-filter-loading"
+												style="display:none; float:right; margin-top:5px;">
+											<i class='gform-spinner'></i>
 										</div>
-									</form>
-								</div>
+									</div>
+								</form>
 							</div>
 						</div>
 					</div>
-					<div class="gresults-filter-loading" style="display:none;margin:0 5px 10px 0;">
-						<i class='gform-spinner'></i>&nbsp;
-						<a href="javascript:void(0);" onclick="javascript:gresultsAjaxRequest.abort()" onkeypress="javascript:gresultsAjaxRequest.abort()"><?php esc_html_e( 'Cancel', 'gravityforms' ); ?></a>
+				</div>
+				<div class="gresults-filter-loading" style="display:none;margin:0 5px 10px 0;">
+					<i class='gform-spinner'></i>&nbsp;
+					<a href="javascript:void(0);" onclick="javascript:gresultsAjaxRequest.abort()" onkeypress="javascript:gresultsAjaxRequest.abort()"><?php esc_html_e( 'Cancel', 'gravityforms' ); ?></a>
+				</div>
+				<div id="gresults-results-wrapper">
+					<div id="gresults-results">&nbsp;
 					</div>
+				</div>
+			<?php
+			else :
+				esc_html_e( 'This form does not have any fields that can be used for results', 'gravityforms' );
+			endif ?>
 
-					<div id="gresults-results-wrapper">
-						<div id="gresults-results">&nbsp;
-						</div>
-					</div>
-
-				<?php
-				else :
-					esc_html_e( 'This form does not have any fields that can be used for results', 'gravityforms' );
-				endif ?>
-			</div>
-
-			<?php GFForms::admin_footer() ?>
-
-
+			<?php GFForms::admin_footer(); ?>
 		<?php
+		}
+
+		/*
+		 * Get the markup for the datepicker toggle button.
+		 *
+		 * @since 3.0
+		 *
+		 * @return string The HTML markup for the datepicker toggle button.
+		 */
+		public function get_button_markup( $field_id ) {
+			return "<button type='button' id='datepicker_toggle_{$field_id}' class='gform-datepicker-toggle gform-datepicker-toggle--default accCalendar aria-date-picker gform-button gform-button--simple' aria-expanded='false' aria-controls='_gform_setting_{$field_id}'>
+						<span class='gform-datepicker-toggle-icon gform-datepicker-toggle-icon--default gform-icon gform-icon--date' aria-hidden='true'></span>
+					</button>";
 		}
 
 		public static function add_tooltips( $tooltips ) {
@@ -894,14 +892,14 @@ if ( ! class_exists( 'GFResults' ) ) {
 		/**
 		 * Sets a unique page title to the results page based on the title
 		 * and the form the user is viewing.
-		 * 
+		 *
 		 * @since 2.8.16
-		 * 
+		 *
 		 * @filter admin_title
-		 * 
+		 *
 		 * @param string $admin_title The page title with extra context added.
-		 * @param string $title       The original page title. 
-		 * 
+		 * @param string $title       The original page title.
+		 *
 		 * @return string
 		 */
 		public function set_unique_page_title( $admin_title, $title ) {
@@ -914,8 +912,8 @@ if ( ! class_exists( 'GFResults' ) ) {
 			$form        = GFAPI::get_form( $form_id );
 			$form_title  = rgar( $form, 'title', esc_html__( 'Form Not Found', 'gravityforms' ) );
 			$admin_title = sprintf( '%1$s &lsaquo; %2$s &lsaquo; %3$s', esc_html( $this->_title ), esc_html( $form_title ), esc_html( $admin_title ) );
-			
-			return $admin_title; 
+
+			return $admin_title;
 		}
 
 		public static function get_default_field_results( $form_id, $field, $search_criteria, &$offset, $page_size, &$more_remaining = false ) {
