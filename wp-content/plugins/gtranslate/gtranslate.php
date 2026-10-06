@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 3.1.1
+Version: 5.0.1
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 License: GPLv2 or later
@@ -31,7 +31,7 @@ Text Domain: gtranslate
 if(!defined('ABSPATH'))
     exit;
 
-define('GTRANSLATE_VERSION', '3.1.1');
+define('GTRANSLATE_VERSION', '5.0.1');
 
 add_action('widgets_init', array('GTranslate', 'register'));
 register_activation_hook(__FILE__, array('GTranslate', 'activate'));
@@ -87,8 +87,7 @@ class GTranslate extends WP_Widget {
         $data = get_option('GTranslate');
         self::load_defaults($data);
 
-        if($data['enable_cdn'])
-            header('Link: <https://cdn.gtranslate.net/>; rel=dns-prefetch', false);
+        header('Link: <https://cdn.gtranslate.net/>; rel=dns-prefetch', false);
     }
 
     public static function enqueue_scripts() {
@@ -98,6 +97,7 @@ class GTranslate extends WP_Widget {
         if(is_admin())
             wp_enqueue_script('jquery');
 
+        // phpcs:disable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Writing configuration to a local file is intentional here to avoid repeated database I/O
         // make sure main_lang is set correctly in config.php file
         if($data['pro_version'] or $data['enterprise_version']) {
             include dirname(__FILE__) . '/url_addon/config.php';
@@ -114,6 +114,8 @@ class GTranslate extends WP_Widget {
                 }
             }
         }
+        // phpcs:enable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
+
     }
 
     public static function register_blocks() {
@@ -1635,6 +1637,7 @@ RefreshDoWidgetCode();
                 echo '<pre style="background-color:#eaeaea;">' . esc_html($rewrite_rules) . '</pre>';
             }
 
+            // phpcs:disable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Writing configuration to a local file is intentional here to avoid repeated database I/O
             // update main_lang in config.php
             $config_file = dirname(__FILE__) . '/url_addon/config.php';
             if(is_readable($config_file) and wp_is_writable($config_file)) {
@@ -1644,6 +1647,7 @@ RefreshDoWidgetCode();
             } else {
                 echo '<p style="color:red;">' . esc_html__('Cannot update gtranslate/url_addon/config.php file. Make sure to update it manually and set correct $main_lang.', 'gtranslate') . '</p>';
             }
+            // phpcs:enable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
 
         } else { // todo: remove rewrite rules
             // do nothing
@@ -2546,6 +2550,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                     if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) and !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
                         $headers[] = 'X-GT-Forwarded-For: ' . $_SERVER['HTTP_X_FORWARDED_FOR'];
 
+                    // phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen, PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Direct cURL usage is required here because the WP HTTP API does not provide the file-level debugging capabilities
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $protocol.'://'.$server.'.tdn.gtranslate.net'.wp_make_link_relative(plugins_url('gtranslate/url_addon/gtranslate-email.php').'?glang='.$_SERVER['HTTP_X_GT_LANG']));
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -2555,7 +2560,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                     if(defined('CURL_IPRESOLVE_V4')) curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
                     curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/url_addon/cacert.pem');
                     curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, array('body' => base64_encode(do_shortcode("<subject>$subject</subject><message>$message</message>")), 'access_key' => md5(substr(NONCE_SALT, 0, 10) . substr(NONCE_KEY, 0, 5))));
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, array('body' => base64_encode("<subject>$subject</subject><message>$message</message>"), 'access_key' => md5(substr(NONCE_SALT, 0, 10) . substr(NONCE_KEY, 0, 5))));
 
                     if($data['email_translation_debug']) {
                         $fh = fopen(dirname(__FILE__) . '/url_addon/debug.txt', 'a');
@@ -2571,6 +2576,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                         file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response: ' . $response . "\n", FILE_APPEND);
                         file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response_info: ' . print_r($response_info, true) . "\n", FILE_APPEND);
                     }
+                    // phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen, PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
 
                     if(isset($response_info['http_code']) and $response_info['http_code'] == 200) {
                         $response = json_decode($response, true);
@@ -2591,10 +2597,12 @@ if($data['pro_version'] or $data['enterprise_version']) {
                             $subject = $matches[1][0];
                             $message = $matches[2][0];
 
+                            // phpcs:disable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Writing debug info into a file
                             if($data['email_translation_debug']) {
                                 file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Translated Subject: ' . $subject . "\n", FILE_APPEND);
                                 file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Translated Message: ' . $message . "\n", FILE_APPEND);
                             }
+                            // phpcs:enable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
 
                             $args['subject'] = $subject;
                             $args['message'] = $message;
@@ -2645,6 +2653,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                 if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) and !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
                     $headers[] = 'X-GT-Forwarded-For: ' . $_SERVER['HTTP_X_FORWARDED_FOR'];
 
+                // phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen, PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Direct cURL usage is required here because the WP HTTP API does not provide the file-level debugging capabilities
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $protocol.'://'.$server.'.tdn.gtranslate.net'.wp_make_link_relative(plugins_url('gtranslate/url_addon/gtranslate-email.php').'?format=pdf_html&glang='.$_SERVER['HTTP_X_GT_LANG']));
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -2654,7 +2663,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                 if(defined('CURL_IPRESOLVE_V4')) curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
                 curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/url_addon/cacert.pem');
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, array('body' => base64_encode(do_shortcode("<subject>PDF Invoice</subject><message>$html</message>")), 'access_key' => md5(substr(NONCE_SALT, 0, 10) . substr(NONCE_KEY, 0, 5))));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, array('body' => base64_encode("<subject>PDF Invoice</subject><message>$html</message>"), 'access_key' => md5(substr(NONCE_SALT, 0, 10) . substr(NONCE_KEY, 0, 5))));
 
                 if($data['email_translation_debug']) {
                     $fh = fopen(dirname(__FILE__) . '/url_addon/debug.txt', 'a');
@@ -2670,6 +2679,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                     file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response PDF: ' . $response . "\n", FILE_APPEND);
                     file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response_info PDF: ' . print_r($response_info, true) . "\n", FILE_APPEND);
                 }
+                // phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen, PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
 
                 if(isset($response_info['http_code']) and $response_info['http_code'] == 200) {
                     $response = json_decode($response, true);
@@ -2692,9 +2702,11 @@ if($data['pro_version'] or $data['enterprise_version']) {
                         // fix image
                         $html = str_replace(' src="https://' . $_SERVER['HTTP_HOST'], ' src="', $html);
 
+                        // phpcs:disable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- Writing debug info into a file
                         if($data['email_translation_debug']) {
                             file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Translated PDF HTML: ' . $html . "\n", FILE_APPEND);
                         }
+                        // phpcs:disable PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite
                     }
                 }
             }
