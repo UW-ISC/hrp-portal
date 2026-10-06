@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Project: User Role Editor plugin
  * Author: Vladimir Garagulya
@@ -15,7 +17,7 @@ class URE_Assign_Role {
 
     private static $counter = 0;    
     
-    private $lib = null;
+    protected $lib = null;
     private $quick_count = true;
     
     
@@ -65,14 +67,17 @@ class URE_Assign_Role {
     private function get_thorougly_where_condition() {
         global $wpdb;
 
-        $usermeta = $wpdb->usermeta;
+        
         $id = get_current_blog_id();
         $blog_prefix = $wpdb->get_blog_prefix( $id );
-        $where = "WHERE NOT EXISTS (SELECT user_id from {$usermeta} ".
-                                      "WHERE user_id=users.ID AND meta_key='{$blog_prefix}capabilities') OR ".
-                        "EXISTS (SELECT user_id FROM {$usermeta} ".
-                                  "WHERE user_id=users.ID AND meta_key='{$blog_prefix}capabilities' AND ".
-                                        "(meta_value='a:0:{}' OR meta_value IS NULL))";
+        $meta_key = $blog_prefix .'capabilities';        
+        $where = $wpdb->prepare(
+            "WHERE NOT EXISTS (SELECT user_id FROM `". $wpdb->usermeta ."` ".
+                                "WHERE user_id=users.ID AND meta_key=%s) OR ".
+                                    "EXISTS (SELECT user_id FROM `". $wpdb->usermeta ."` ".
+                                              "WHERE user_id=users.ID AND meta_key=%s AND ".
+                                                "(meta_value='a:0:{}' OR meta_value IS NULL))",
+            $meta_key, $meta_key);
                                     
         return $where;                            
     }
@@ -82,13 +87,15 @@ class URE_Assign_Role {
     private function get_quick_query_part2() {
         global $wpdb;
 
-        $usermeta = $wpdb->usermeta;
         $id = get_current_blog_id();
         $blog_prefix = $wpdb->get_blog_prefix($id);
-        $query = "FROM {$usermeta} usermeta ".
-                        "INNER JOIN {$wpdb->users} users ON usermeta.user_id=users.ID ".
-                      "WHERE usermeta.meta_key='{$blog_prefix}capabilities' AND ".
-                            "(usermeta.meta_value = 'a:0:{}' OR usermeta.meta_value is NULL)";
+        $meta_key = $blog_prefix .'capabilities';
+        $query = $wpdb->prepare(
+                "FROM `". $wpdb->usermeta ."` usermeta ".
+                   "INNER JOIN `". $wpdb->users ."` users ON usermeta.user_id=users.ID ".
+                      "WHERE usermeta.meta_key=%s AND ".
+                            "(usermeta.meta_value = 'a:0:{}' OR usermeta.meta_value is NULL)",
+                    $meta_key);
                                     
         return $query;                            
     }
@@ -100,12 +107,13 @@ class URE_Assign_Role {
                 
         if ( $this->quick_count ) {
             $part2 = $this->get_quick_query_part2();
-            $query = "SELECT COUNT(DISTINCT usermeta.user_id) {$part2}";
-        } else {
+            $query = "SELECT COUNT(DISTINCT usermeta.user_id) ". $part2;
+        } else {            
             $where = $this->get_thorougly_where_condition();
-            $query = "SELECT count(ID) FROM {$wpdb->users} users {$where}";
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->users is the site's own table name (not user input); %i placeholder needs WP 6.2+ but plugin supports WP 4.4+.
+            $query = "SELECT count(ID) FROM {$wpdb->users} users" . ' ' . $where;
         }
-        
+
         return $query;
     }
     // end of get_users_count_query()
@@ -118,6 +126,7 @@ class URE_Assign_Role {
         $users_quant = get_transient('ure_users_without_role');
         if (empty($users_quant)) {
             $query = $this->get_users_count_query();
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is assembled from $wpdb->prepare()'d fragments and internal table names, see get_users_count_query(); no WP_User_Query equivalent exists for "users with zero roles / an empty roles array" (the thing this counts).
             $users_quant = $wpdb->get_var( $query );
             set_transient('ure_users_without_role', $users_quant, 15 );
         }
@@ -138,13 +147,15 @@ class URE_Assign_Role {
                         LIMIT 0, {$top_limit}";
         } else {
             $where = $this->get_thorougly_where_condition();
-            $query = "SELECT users.ID FROM {$wpdb->users} users
-                        {$where}
-                        LIMIT 0, {$top_limit}";
-        }        
-        $users0 = $wpdb->get_col( $query );        
-        
-        return $users0;        
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->users is the site's own table name (not user input); %i placeholder needs WP 6.2+ but plugin supports WP 4.4+.
+            $query = "SELECT users.ID FROM {$wpdb->users} users" .
+                        ' '. $where .
+                        'LIMIT 0, '. $top_limit;
+        }
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is assembled from $wpdb->prepare()'d fragments and internal table names, see above; no WP_User_Query equivalent exists for "users with zero roles / an empty roles array" (the thing this fetches).
+        $users0 = $wpdb->get_col( $query );
+
+        return $users0;
     }
     // end of get_users_without_role()
     
@@ -152,16 +163,16 @@ class URE_Assign_Role {
     public function show_html() {
         
       $users_quant = $this->count_users_without_role();
-      if ($users_quant==0) {
+      if ((int) $users_quant === 0) {
           return;
       }
       $button_number =  (self::$counter>0) ? '_2': '';
       
 ?>          
-        &nbsp;&nbsp;<input type="button" name="move_from_no_role<?php echo $button_number;?>" id="move_from_no_role<?php echo $button_number;?>" class="button"
-                        value="Without role (<?php echo $users_quant;?>)" onclick="ure_move_users_from_no_role_dialog()">
+        &nbsp;&nbsp;<input type="button" name="move_from_no_role<?php echo esc_attr( $button_number );?>" id="move_from_no_role<?php echo esc_attr( $button_number );?>" class="button"
+                        value="Without role (<?php echo esc_attr( $users_quant );?>)" onclick="URE_No_Role_Users.move_dialog()">
 <?php
-    if ( self::$counter==0 ) {
+    if ( self::$counter===0 ) {
 ?>
         <div id="move_from_no_role_dialog" class="ure-dialog">
             <div id="move_from_no_role_content" style="padding: 10px;"></div>                

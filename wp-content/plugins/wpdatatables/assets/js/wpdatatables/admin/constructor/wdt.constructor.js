@@ -224,7 +224,8 @@ var aceEditor = null;
         }
     }
 
-    $('.wdt-constructor-type-selecter-block .card:not(.wdt-premium-feature)').on('click', function () {
+    // Exclude the AI generator panel — it is not a constructor type card.
+    $('.wdt-constructor-type-selecter-block .card:not(.wdt-premium-feature):not(.wdt-ai-constructor-card)').on('click', function () {
         $('.wdt-constructor-type-selecter-block .card').removeClass('selected').addClass('not-selected');
         $(this).addClass('selected').removeClass('not-selected');
         nextStepButton.prop('disabled', false);

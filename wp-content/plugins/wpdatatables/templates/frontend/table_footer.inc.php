@@ -55,7 +55,6 @@ if (($this->advancedFilterEnabled() && (get_option('wdtRenderFilter') == 'footer
                 <td class="wdt-avg-cell" data-column_header="<?php echo esc_attr($dataColumnHeader); ?>"
                     style="<?php echo esc_attr($dataColumn->getCSSStyle()); ?>">
                     <?php if (in_array($dataColumnHeader, $this->getAvgFooterColumns())) {
-                        require_once(WDT_ROOT_PATH . 'source/class.float.wpdatacolumn.php');
                         $floatCol = new FloatWDTColumn();
                         $floatCol->setParentTable($this);
                         $floatCol->setDecimalPlaces($dataColumn->getDecimalPlaces());

@@ -21,7 +21,7 @@
         <?php do_action('wpdatatables_add_chart_stable_tag_option'); ?>
     </div>
 
-        <div class="row">
+    <div class="row">
             <div id="wdt-googlechart-mapkey-tag" class="col-sm-4 stable-tag googlechart-mapkey">
                 <h4 class="c-title-color m-b-2">
                     <?php esc_html_e('Google Maps API key', 'wpdatatables'); ?>

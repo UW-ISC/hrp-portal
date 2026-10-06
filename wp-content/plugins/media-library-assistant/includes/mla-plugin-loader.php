@@ -100,7 +100,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	}
 
 	if( defined('DOING_AJAX') && DOING_AJAX ) {
-		//error_log( __LINE__ . " mla-plugin-loader.php DOING_AJAX \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
+		//error_log( __LINE__ . " mla-plugin-loader.php DOING_AJAX encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), 0 );
 		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_peak_usage( true ) ' . number_format( memory_get_peak_usage( true ) ), 0);
 		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_peak_usage( false ) ' . number_format( memory_get_peak_usage( false ) ), 0);
 		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_usage( true ) ' . number_format( memory_get_usage( true ) ), 0);

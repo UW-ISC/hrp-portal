@@ -48,7 +48,7 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#custom_field_parameters">Simple Custom Field Parameters</a></li>
 <li><a href="#custom_field_queries">Custom Field Queries, the "meta_query"</a></li>
 <li><a href="#date_parameters">Simple Date Parameters</a></li>
-<li><a href="#date_queries">Date and Time Queries, the "date query"</a></li>
+<li><a href="#date_queries">Date and Time Queries, the "date_query"</a></li>
 <li><a href="#search_keywords">Keyword(s) Search</a></li>
 <li><a href="#author_author_name">Author, Author Name</a></li>
 <li><a href="#post_type_post_status">Post Type, Post Status</a></li>
@@ -346,9 +346,8 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 The <code>[mla_gallery]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The <a href="https://codex.wordpress.org/Shortcode_API" title="Shortcode API Documentation" target="_blank">WordPress Shortcode API</a> has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. If you have trouble with your shortcode, such as an "Invalid mla_gallery tax_query" message, try these rules to correct the problem:
 </p>
 <ul class="mla_settings">
-<li>Use the Text tab of the post/page editor, not the Visual tab.</li>
 <li>Enter the entire shortcode on one line; do not break it up - that confuses the WordPress shortcode parser.</li>
-<li>Put "&lt;code&gt;&lt;/code&gt;" tags around the entire shortcode. Recent versions of WordPress mangle special characters like "=>" in the query if you don't add the tags.</li>
+<li>Use an escape sequence like "=&amp;gt;" in your query; do not use <code>=></code> characters.</li>
 <li>Use the alternative "enclosing shortcode" syntax detailed below.</li>
 </ul>
 <p>
@@ -621,11 +620,11 @@ Four <code>[mla_gallery]</code> parameters provide control over the placement, s
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".gallery-item" style. The default value is "1.5%", a percent of the total gallery width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+<td>specifies the CSS margin property of the ".gallery-item" style. The default value is "1.5%", a percent of the total gallery width. You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".gallery-item" style. You can specify a percent of the total gallery width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the width property from the styles template altogether.
+<td>specifies the CSS width attribute of the ".gallery-item" style. You can specify a percent of the total gallery width, e.g., "33.3%". You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto", "inherit" or "initial" values. You can specify "none", which will remove the width property from the styles template altogether.
 <br />&nbsp;<br />
 Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
 <br />&nbsp;<br />
@@ -933,7 +932,7 @@ Note that the default tax_include_children value is true, matching the default W
 <p><a name="taxonomy_parameters_tax_input"></a></p>
 <h4>Compound Taxonomy Queries, "tax_input"</h4>
 <p>
-You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <a href="#term_list_display_content"><strong>Display Style and Content</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, <code>tax_input="animal.34,vegetable.carrot,vegetable.radish"</code>. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter the <code>tax_input</code> parameter will be ignored.</strong> 
+You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <code>[mla_term_list]</code><a href="#term_list_display_content"><strong>Display Style and Content</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, <code>tax_input="animal.34,vegetable.carrot,vegetable.radish"</code>. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter the <code>tax_input</code> parameter will be ignored.</strong> 
 </p>
 <p>
 This example has a simple form to pick a term from two taxonomies and display a gallery with the items assigned to the selected term:
@@ -981,7 +980,7 @@ post_mime_type=all<br />
 [/mla_gallery]
 </code></p>
 <p>
-The first example is equivalent to the simple query <code>attachment_tag=artisan</code>. The second example matches items of all MIME types, attached to the current post, having an attachment_category ID of 11 or 12. Both examples use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
+The first example is equivalent to the simple query <code>attachment_tag=artisan</code>. The second example matches items of all MIME types, attached to the current post, having an attachment_category ID of 11 or 12. Both examples use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>. <strong>If you do not use the enclosing shortcode syntax, use an escape sequence like "=&amp;gt;" in your query; do not use <code>=></code> characters</strong>.
 </p>
 <p>
 When embedding the shortcode in the body of a post, be very careful when coding the tax_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
@@ -1189,7 +1188,7 @@ Remember to use <code>post_parent=current</code> if you want to restrict your qu
 The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
 </p>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand. <strong>If you do not use the enclosing shortcode syntax, use an escape sequence like "=&amp;gt;" in your query; do not use <code>=></code> characters</strong>. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
@@ -1258,7 +1257,7 @@ You can use the <code>current_timestamp</code>, <code>current_datetime</code> an
 The <code>[mla_gallery]</code> also directly supports a more flexible alternative provided by one of the <code>[mla_archive_list]</code> parameters. You can use the <code>mla_archive_parameter</code> to activate the support ane name the parameter (default <code>mla_archive_current</code>) containing the date value. More information can be found in the "Archive List and MLA Gallery combinations" and "Filtering the MLA Gallery directly" subsections of the <a href="#archive_list_examples">MLA Archive List Examples</a> section.
 </p>
 <p><a name="date_queries"></a></p>
-<h4>Date and Time Queries, the "date query"</h4>
+<h4>Date and Time Queries, the "date_query"</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date' (default), 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
 </p>
@@ -1269,7 +1268,7 @@ You can add the <code>meta_date_key</code> parameter (described in the preceding
 As the <a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">Codex date_query documentation</a> suggests, "before" and "after" values can use any of the <a href="http://php.net/strtotime" title="PHP Date and Time Formats">PHP strtotime()-compatible string values</a>, which are quite powerful. For example, you can use relative values such as <code>'after' => 'second tuesday of last month'</code>. Careful study of the PHP documentation can be most rewarding. You can use <code>mla_debug=true</code> to see how PHP and WordPress translate your query to specific date-time values.
 </p>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand. <strong>If you do not use the enclosing shortcode syntax, use an escape sequence like "=&amp;gt;" in your query; do not use <code>=></code> characters</strong>. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
 You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items uploaded in the current month. Code something like:
@@ -3857,11 +3856,11 @@ Four parameters provide control over the placement, size and spacing of terms in
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".tag-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+<td>specifies the CSS margin property of the ".tag-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".tag-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
+<td>specifies the CSS width attribute of the ".tag-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto", "inherit" or "initial" values. You can specify "none", which will remove the width property from the styles template altogether.
 <br />&nbsp;<br />
 Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
 <br />&nbsp;<br />
@@ -6067,11 +6066,11 @@ Four parameters provide control over the placement, size and spacing of values i
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_margin</td>
-<td>specifies the CSS margin property of the ".cf-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
+<td>specifies the CSS margin property of the ".cf-cloud-item" style. The default value is "1.5%", a percent of the total grid width. You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto" or "inherit" values. Finally, you can specify "none", which will remove the margin property from the styles template altogether.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_itemwidth</td>
-<td>specifies the CSS width attribute of the ".cf-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify any dimension value, e.g., "10px" or "2em", as well as the "auto" or "inherit" values. You can specify "none", which will remove the margin property from the styles template altogether.
+<td>specifies the CSS width attribute of the ".cf-cloud-item" style. You can specify a percent of the total grid width, e.g., "33.3%". You can also specify a dimension value (px, em, rem, or pt), e.g., "10px" or "2em", as well as the "auto", "inherit" or "initial" values. You can specify "none", which will remove the width property from the styles template altogether.
 <br />&nbsp;<br />
 Two additional values, "calculate" (the default) and "exact",  calculate the width automatically, based on the "columns" and "mla_margin" values. For "calculate", the width is calculated by dividing 100% by the number of columns, then subtracting twice the margin. For example, the default value is (floor(1000/3)/10) - ( 2.0 * 1.5 ) = 30.3%. Adding in the left and right margins makes each column 33.3% and the total width will be 99.9%
 <br />&nbsp;<br />

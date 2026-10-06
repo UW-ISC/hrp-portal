@@ -1448,7 +1448,7 @@ class Html extends BaseWriter
             $color = \strtolower($color);
         }
         // convert to PCDATA
-        $result = \htmlspecialchars($value, Settings::htmlEntityFlags());
+        $result = \htmlspecialchars($value, \ENT_NOQUOTES);
         // color span tag
         if ($color !== null) {
             $result = '<span style="color:' . $color . '">' . $result . '</span>';

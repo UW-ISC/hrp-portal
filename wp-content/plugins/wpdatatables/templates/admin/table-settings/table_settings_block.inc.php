@@ -1208,18 +1208,18 @@ defined('ABSPATH') or die('Access denied.');
                         <div class="col-sm-4 m-b-16 advanced-filtering-option-block">
 
                             <h4 class="c-title-color m-b-2 wdt-advanced-filters-option">
-                                <?php esc_html_e( 'Advanced Filter Option', 'wpdatatables' ); ?>
+                                <?php esc_html_e('Advanced Filter Option', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#advanced-filter-option-hint"
                                    data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
-                                <p class="m-b-2 wdt-advanced-filters wdt-beta-feature"><?php esc_html_e( 'BETA', 'wpdatatables' ); ?></p>
+                                <p class="m-b-2 wdt-advanced-filters wdt-beta-feature"><?php esc_html_e('BETA', 'wpdatatables'); ?></p>
                             </h4>
                             <!-- Hidden popover with image hint -->
                             <div class="hidden" id="advanced-filter-option-hint">
                                 <div class="popover-heading">
-                                    <?php esc_html_e( 'Advanced Filter Option', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Advanced Filter Option', 'wpdatatables'); ?>
                                 </div>
                                 <div class="popover-body">
-                                    <?php esc_html_e( 'Enable to allow advanced filtering of special characters in selectbox and multi-selectbox filters.', 'wpdatatables' ); ?>
+                                    <?php esc_html_e('Enable to allow advanced filtering of special characters in selectbox and multi-selectbox filters.', 'wpdatatables'); ?>
                                 </div>
                             </div>
                             <!-- /Hidden popover with image hint -->
@@ -1227,10 +1227,16 @@ defined('ABSPATH') or die('Access denied.');
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input id="wdt-advanced-filter-option" type="checkbox">
                                 <label for="wdt-advanced-filter-option"
-                                       class="ts-label"><?php esc_html_e( 'Enable advanced special character filtering', 'wpdatatables' ); ?></label>
+                                       class="ts-label"><?php esc_html_e('Enable advanced special character filtering', 'wpdatatables'); ?></label>
                             </div>
 
                         </div>
+
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- row: add-on sorting & filtering elements (e.g. Powerful Filters) -->
+                    <div class="row">
 
                         <?php do_action_deprecated('wdt_add_sorting_and_filtering_element', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_add_sorting_and_filtering_element'); ?>
                         <?php do_action('wpdatatables_add_sorting_and_filtering_element'); ?>
@@ -2218,26 +2224,24 @@ defined('ABSPATH') or die('Access denied.');
                             <div role="tabpanel" class="tab-pane fade" id="custom-strings">
                                 <div class="col-sm-4 m-b-16 custom-strings-empty-filtering-block">
                                     <h4 class="c-title-color m-b-2">
-                                        <?php esc_html_e( 'Custom No Entries Message', 'wpdatatables' ); ?>
+                                        <?php esc_html_e('Custom No Entries Message', 'wpdatatables'); ?>
                                         <i class=" wpdt-icon-info-circle-thin" data-popover-content="#custom-strings-empty-filtering-hint"
                                            data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                                     </h4>
 
-                                    <!-- Hidden popover hint -->
                                     <div class="hidden" id="custom-strings-empty-filtering-hint">
                                         <div class="popover-heading">
-                                            <?php esc_html_e( 'Custom No Entries Message', 'wpdatatables' ); ?>
+                                            <?php esc_html_e('Custom No Entries Message', 'wpdatatables'); ?>
                                         </div>
 
                                         <div class="popover-body">
-                                            <?php esc_html_e( 'Define a custom message to be displayed when no matching records are found in the table after filtering. If left blank, the default message \'No matching records found\' will be used. ' , 'wpdatatables' ); ?>
+                                            <?php esc_html_e('Define a custom message to be displayed when no matching records are found in the table after filtering. If left blank, the default message \'No matching records found\' will be used. ', 'wpdatatables'); ?>
                                         </div>
                                     </div>
-                                    <!-- /Hidden popover hint -->
 
                                     <div class="fg-line form-group m-b-0">
                                         <input id="wdt-custom-strings-empty-filtering" type="text" class="form-control input-sm"
-                                               placeholder="<?php esc_attr_e( 'No matching records found', 'wpdatatables' ); ?>">
+                                               placeholder="<?php esc_attr_e('No matching records found', 'wpdatatables'); ?>">
                                     </div>
 
                                 </div>

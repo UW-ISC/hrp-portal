@@ -73,6 +73,8 @@ class OLERead
      * @var array
      */
     private $props = [];
+    /** @var int[] */
+    private array $possibleLoop = [];
     /**
      * Read the file.
      */
@@ -131,7 +133,9 @@ class OLERead
         }
         $sbdBlock = $this->sbdStartBlock;
         $this->smallBlockChain = '';
+        $this->possibleLoop = [];
         while ($sbdBlock != -2) {
+            $this->catchLoop($sbdBlock);
             $pos = ($sbdBlock + 1) * self::BIG_BLOCK_SIZE;
             $this->smallBlockChain .= \substr($this->data, $pos, 4 * $bbs);
             $pos += 4 * $bbs;
@@ -141,6 +145,13 @@ class OLERead
         $block = $this->rootStartBlock;
         $this->entry = $this->readData($block);
         $this->readPropertySets();
+    }
+    private function catchLoop(int $sbdBlock) : void
+    {
+        if (\in_array($sbdBlock, $this->possibleLoop, \true)) {
+            throw new ReaderException('Detected loop while iterating blocks');
+        }
+        $this->possibleLoop[] = $sbdBlock;
     }
     /**
      * Extract binary stream data.
@@ -158,7 +169,9 @@ class OLERead
         if ($this->props[$stream]['size'] < self::SMALL_BLOCK_THRESHOLD) {
             $rootdata = $this->readData($this->props[$this->rootentry]['startBlock']);
             $block = $this->props[$stream]['startBlock'];
+            $this->possibleLoop = [];
             while ($block != -2) {
+                $this->catchLoop($block);
                 $pos = $block * self::SMALL_BLOCK_SIZE;
                 $streamData .= \substr($rootdata, $pos, self::SMALL_BLOCK_SIZE);
                 $block = self::getInt4d($this->smallBlockChain, $block * 4);
@@ -173,7 +186,9 @@ class OLERead
             return '';
         }
         $block = $this->props[$stream]['startBlock'];
+        $this->possibleLoop = [];
         while ($block != -2) {
+            $this->catchLoop($block);
             $pos = ($block + 1) * self::BIG_BLOCK_SIZE;
             $streamData .= \substr($this->data, $pos, self::BIG_BLOCK_SIZE);
             $block = self::getInt4d($this->bigBlockChain, $block * 4);
@@ -190,7 +205,9 @@ class OLERead
     private function readData($block)
     {
         $data = '';
+        $this->possibleLoop = [];
         while ($block != -2) {
+            $this->catchLoop($block);
             $pos = ($block + 1) * self::BIG_BLOCK_SIZE;
             $data .= \substr($this->data, $pos, self::BIG_BLOCK_SIZE);
             $block = self::getInt4d($this->bigBlockChain, $block * 4);

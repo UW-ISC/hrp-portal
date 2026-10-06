@@ -14,7 +14,7 @@
 ?>
 <?php
 if ($this->getFilteringForm()) {
-    include WDT_TEMPLATE_PATH . 'frontend/filter_form.inc.php';
+    echo $this->renderFilterForm();
 }
 ?>
 <?php $customClasses = apply_filters_deprecated(
@@ -60,5 +60,5 @@ if ($this->getFilteringForm()) {
 
 <?php do_action('wpdatatables_after_table', $this->getWpId()); ?>
 <?php if ($this->isEditable()) {
-    include WDT_TEMPLATE_PATH . 'frontend/edit_dialog.inc.php';
+    echo $this->renderEditDialog();
 }

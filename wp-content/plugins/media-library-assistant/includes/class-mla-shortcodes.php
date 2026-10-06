@@ -61,10 +61,11 @@ class MLAShortcodes {
 	 */
 	public static function mla_no_texturize_shortcodes_filter( $no_texturize_shortcodes ) {
 		if ( ! in_array( 'mla_gallery', $no_texturize_shortcodes, true ) ) {
+			$no_texturize_shortcodes[] = 'mla_archive_list';
+			$no_texturize_shortcodes[] = 'mla_custom_list';
 			$no_texturize_shortcodes[] = 'mla_gallery';
 			$no_texturize_shortcodes[] = 'mla_tag_cloud';
 			$no_texturize_shortcodes[] = 'mla_term_list';
-			$no_texturize_shortcodes[] = 'mla_custom_list';
 		}
 
 		return $no_texturize_shortcodes;

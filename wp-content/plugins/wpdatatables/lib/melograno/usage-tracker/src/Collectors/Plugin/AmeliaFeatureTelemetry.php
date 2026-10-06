@@ -34,7 +34,11 @@ final class AmeliaFeatureTelemetry
     private const FEATURE_CODES = ['customFields', 'customNotifications', 'tax', 'invoices', 'coupons', 'depositPayment', 'timezones', 'extras', 'recurringAppointments', 'recurringEvents', 'packages', 'cart', 'waitingListAppointments', 'waitingList', 'tickets', 'eTickets', 'resources', 'employeeBadge', 'eventTags', 'noShowTag', 'webhooks', 'apis'];
     /** @var list<string> */
     private const INTEGRATION_CODES = ['googleCalendar', 'appleCalendar', 'outlookCalendar', 'ivy', 'zoom', 'facebookPixel', 'googleAnalytics', 'lessonSpace', 'recaptcha', 'whatsapp', 'googleSocialLogin', 'facebookSocialLogin', 'mailchimp', 'buddyboss'];
-    /** @var list<string> */
+    /**
+     * Amelia settings / PaymentsTable gateway codes (same keys as BI allowlist).
+     *
+     * @var list<string>
+     */
     private const PAYMENT_GATEWAY_CODES = ['stripe', 'payPal', 'mollie', 'square', 'razorpay', 'barion', 'wc'];
     /**
      * @return array{
@@ -78,15 +82,26 @@ final class AmeliaFeatureTelemetry
                 $features[$code] = self::isFeatureInUse($code, $settingsService, $container);
             }
         }
+        $paymentGatewayUsageCounts = self::paymentGatewayTransactionCounts($container, \array_merge(self::PAYMENT_GATEWAY_CODES, ['onSite']));
         foreach (self::PAYMENT_GATEWAY_CODES as $code) {
-            if ($settingsService->isFeatureEnabled($code)) {
-                $features[$code] = self::paymentGatewayHasCredentials($settingsService, $code);
-                $featureMetrics[$code] = ['usage_count' => self::paymentGatewayTransactionCount($container, $code)];
+            $usageCount = $paymentGatewayUsageCounts[$code] ?? 0;
+            $featureEnabled = $settingsService->isFeatureEnabled($code);
+            // Disabled with no history: omit entirely. Disabled with history: metrics only.
+            if (!$featureEnabled && $usageCount === 0) {
+                continue;
             }
+            if ($featureEnabled) {
+                $features[$code] = self::paymentGatewayHasCredentials($settingsService, $code);
+            }
+            $featureMetrics[$code] = ['usage_count' => $usageCount];
         }
-        if (self::shouldReportOnSite($settingsService)) {
-            $features['onSite'] = self::isFeatureInUse('onSite', $settingsService, $container);
-            $featureMetrics['onSite'] = ['usage_count' => self::paymentGatewayTransactionCount($container, 'onSite')];
+        $onSiteUsageCount = $paymentGatewayUsageCounts['onSite'] ?? 0;
+        $onSiteEnabled = self::shouldReportOnSite($settingsService);
+        if ($onSiteEnabled || $onSiteUsageCount > 0) {
+            if ($onSiteEnabled) {
+                $features['onSite'] = $onSiteUsageCount > 0;
+            }
+            $featureMetrics['onSite'] = ['usage_count' => $onSiteUsageCount];
         }
         return ['features' => $features, 'feature_metrics' => $featureMetrics];
     }
@@ -134,8 +149,6 @@ final class AmeliaFeatureTelemetry
                     return self::webhooksInUse($settingsService);
                 case 'apis':
                     return self::apisInUse($settingsService);
-                case 'onSite':
-                    return self::tableHasRecords($container->getDatabaseConnection(), PaymentsTable::getTableName(), "gateway = 'onSite'");
                 case 'cart':
                     return self::cartInUse($container);
                 case 'timezones':
@@ -336,10 +349,7 @@ final class AmeliaFeatureTelemetry
     private static function recaptchaConfigured(SettingsService $settingsService) : bool
     {
         $recaptcha = $settingsService->getSetting('general', 'googleRecaptcha');
-        if (!\is_array($recaptcha)) {
-            return \false;
-        }
-        return !empty($recaptcha['enabled']) && self::nonEmpty($recaptcha['siteKey'] ?? null) && self::nonEmpty($recaptcha['secret'] ?? null);
+        return self::nonEmpty($recaptcha['siteKey'] ?? null) && self::nonEmpty($recaptcha['secret'] ?? null);
     }
     private static function whatsappInUse(Container $container) : bool
     {
@@ -451,26 +461,32 @@ final class AmeliaFeatureTelemetry
         return $row !== \false && !empty($row['found']);
     }
     /**
-     * @param object $connection
+     * @param list<string> $gateways
+     * @return array<string, int>
      */
-    private static function tableRecordCount($connection, string $table, string $where = '1=1') : int
+    private static function paymentGatewayTransactionCounts(Container $container, array $gateways) : array
     {
-        try {
-            $row = self::fetchRow($connection, "SELECT COUNT(*) AS cnt FROM {$table} WHERE {$where}");
-            return $row !== \false ? (int) ($row['cnt'] ?? 0) : 0;
-        } catch (\Throwable $e) {
-            self::logDebugException('Amelia table record count failed', $e);
-            return 0;
+        $counts = \array_fill_keys($gateways, 0);
+        if ($gateways === []) {
+            return $counts;
         }
-    }
-    private static function paymentGatewayTransactionCount(Container $container, string $gateway) : int
-    {
         try {
-            return self::tableRecordCount($container->getDatabaseConnection(), PaymentsTable::getTableName(), "gateway = '{$gateway}'");
+            $table = PaymentsTable::getTableName();
+            $quotedGateways = \array_map(static function (string $gateway) : string {
+                return "'" . \str_replace("'", "''", $gateway) . "'";
+            }, $gateways);
+            $inList = \implode(', ', $quotedGateways);
+            $rows = self::fetchAllRows($container->getDatabaseConnection(), "SELECT gateway, COUNT(*) AS cnt FROM {$table} WHERE gateway IN ({$inList}) GROUP BY gateway");
+            foreach ($rows as $row) {
+                $gateway = (string) ($row['gateway'] ?? '');
+                if (\array_key_exists($gateway, $counts)) {
+                    $counts[$gateway] = (int) ($row['cnt'] ?? 0);
+                }
+            }
         } catch (\Throwable $e) {
-            self::logDebugException("Amelia payment gateway transaction count failed ({$gateway})", $e);
-            return 0;
+            self::logDebugException('Amelia payment gateway transaction counts failed', $e);
         }
+        return $counts;
     }
     private static function paymentGatewayHasCredentials(SettingsService $settingsService, string $code) : bool
     {

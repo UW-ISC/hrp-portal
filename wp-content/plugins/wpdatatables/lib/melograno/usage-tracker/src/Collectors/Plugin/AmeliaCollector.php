@@ -101,7 +101,9 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
         $data = \array_merge($data, $this->resolveBookingMetrics());
         $featureTelemetry = $this->resolveFeatures();
         if ($featureTelemetry !== null) {
-            $data['features'] = $featureTelemetry['features'];
+            // Empty PHP arrays become JSON [] and fail BI object validation;
+            // always emit a JSON object for features.
+            $data['features'] = $featureTelemetry['features'] === [] ? new \stdClass() : $featureTelemetry['features'];
             if ($featureTelemetry['feature_metrics'] !== []) {
                 $data['feature_metrics'] = $featureTelemetry['feature_metrics'];
             }

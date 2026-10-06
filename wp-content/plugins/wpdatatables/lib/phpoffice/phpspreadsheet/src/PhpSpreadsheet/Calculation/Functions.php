@@ -21,6 +21,7 @@ class Functions
     const RETURNDATE_PHP_OBJECT = 'O';
     const RETURNDATE_PHP_DATETIME_OBJECT = 'O';
     const RETURNDATE_EXCEL = 'E';
+    public const NOT_YET_IMPLEMENTED = '#Not Yet Implemented';
     /**
      * Compatibility mode to use for error checking and responses.
      *

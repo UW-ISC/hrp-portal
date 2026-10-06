@@ -1,8 +1,10 @@
 <?php
 
 require_once __DIR__ . '/models/monitor.php';
-require_once __DIR__ . '/database/database.php';
 require_once __DIR__ . '/redirection-capabilities.php';
+
+use Redirection\Database\Database;
+use Redirection\Database\Status;
 
 class Redirection_Admin {
 	/**
@@ -68,7 +70,6 @@ class Redirection_Admin {
 		register_uninstall_hook( REDIRECTION_FILE, [ 'Redirection_Admin', 'plugin_uninstall' ] );
 
 		$this->monitor = new Red_Monitor( Red_Options::get() );
-		$this->run_hacks();
 	}
 
 	/**
@@ -76,7 +77,7 @@ class Redirection_Admin {
 	 * @return void
 	 */
 	public static function plugin_activated() {
-		Red_Database::apply_to_sites(
+		Database::apply_to_sites(
 			function () {
 				Red_Flusher::clear();
 				red_set_options();
@@ -89,7 +90,7 @@ class Redirection_Admin {
 	 * @return void
 	 */
 	public static function plugin_deactivated() {
-		Red_Database::apply_to_sites(
+		Database::apply_to_sites(
 			function () {
 				Red_Flusher::clear();
 			}
@@ -101,9 +102,9 @@ class Redirection_Admin {
 	 * @return void
 	 */
 	public static function plugin_uninstall() {
-		$database = Red_Database::get_latest_database();
+		$database = Database::get_latest_database();
 
-		Red_Database::apply_to_sites(
+		Database::apply_to_sites(
 			function () use ( $database ) {
 				$database->remove();
 			}
@@ -130,7 +131,7 @@ class Redirection_Admin {
 		}
 
 		// Default manual update, with nag
-		$status = new Red_Database_Status();
+		$status = new Status();
 
 		$message = false;
 		if ( $status->needs_installing() ) {
@@ -178,8 +179,8 @@ class Redirection_Admin {
 	 */
 	private function automatic_upgrade() {
 		$loop = 0;
-		$status = new Red_Database_Status();
-		$database = new Red_Database();
+		$status = new Status();
+		$database = new Database();
 
 		// Loop until the DB is upgraded, or until a max is exceeded (just in case)
 		while ( $loop < 20 ) {
@@ -273,7 +274,7 @@ class Redirection_Admin {
 	 * @return array<int|string, string>
 	 */
 	public function plugin_settings( array $links ): array {
-		$status = new Red_Database_Status();
+		$status = new Status();
 		if ( $status->needs_updating() ) {
 			array_unshift( $links, '<a style="color: red" href="' . esc_url( $this->get_plugin_url() ) . '&amp;sub=support">' . __( 'Upgrade Database', 'redirection' ) . '</a>' );
 		}
@@ -351,7 +352,7 @@ class Redirection_Admin {
 
 			if ( $action === 'fixit' ) {
 				$this->run_fixit();
-			} elseif ( $action === 'rest_api' && isset( $_REQUEST['rest_api'] ) && is_string( $_REQUEST['rest_api'] ) ) {
+			} elseif ( $action === 'rest_api' && isset( $_REQUEST['rest_api'] ) && is_string( $_REQUEST['rest_api'] ) && Redirection_Capabilities::has_access( Redirection_Capabilities::CAP_OPTION_MANAGE ) ) {
 				$this->set_rest_api( intval( $_REQUEST['rest_api'], 10 ) );
 			}
 		}
@@ -397,7 +398,7 @@ class Redirection_Admin {
 			$is_new = version_compare( (string) $options['update_notice'], $major_version ) < 0;
 		}
 
-		$status = new Red_Database_Status();
+		$status = new Status();
 		$status->check_tables_exist();
 
 		// Fix some sites having a version set to +OK - not sure why
@@ -429,7 +430,7 @@ class Redirection_Admin {
 				'preload' => $preload,
 				'versions' => implode( "\n", $versions ),
 				'version' => REDIRECTION_VERSION,
-				'build' => REDIRECTION_BUILD,
+				'build' => REDIRECTION_VERSION,
 				'database' => $status->get_json(),
 				'caps' => [
 					'pages' => Redirection_Capabilities::get_available_pages(),
@@ -442,42 +443,6 @@ class Redirection_Admin {
 		wp_set_script_translations( 'redirection', 'redirection' );
 
 		$this->add_help_tab();
-	}
-
-	/**
-	 * Some plugins misbehave, so this attempts to 'fix' them so Redirection can get on with it's work
-	 * @return void
-	 */
-	private function run_hacks() {
-		add_filter( 'ip-geo-block-admin', array( $this, 'ip_geo_block' ) );
-	}
-
-	/**
-	 * This works around the IP Geo Block plugin being very aggressive and breaking Redirection
-	 *
-	 * @param array<string, mixed> $validate
-	 * @return array<string, mixed>
-	 */
-	public function ip_geo_block( array $validate ): array {
-		$url = Redirection_Request::get_request_url();
-		$override = array(
-			'tools.php?page=redirection.php',
-			'action=red_proxy&rest_path=redirection',
-		);
-
-		foreach ( $override as $path ) {
-			if ( strpos( $url, $path ) !== false ) {
-				return array(
-					'result' => 'passed',
-					'auth' => false,
-					'asn' => false,
-					'code' => false,
-					'ip' => false,
-				);
-			}
-		}
-
-		return $validate;
 	}
 
 	/**
@@ -670,7 +635,7 @@ class Redirection_Admin {
 				);
 				?>
 			</p>
-			<p><code><?php echo esc_html( plugin_dir_url( REDIRECTION_FILE ) . 'redirection.js?ver=' . rawurlencode( REDIRECTION_VERSION ) . '-' . rawurlencode( REDIRECTION_BUILD ) ); ?></code></p>
+			<p><code><?php echo esc_html( plugin_dir_url( REDIRECTION_FILE ) . 'redirection.js?ver=' . rawurlencode( REDIRECTION_VERSION ) ); ?></code></p>
 			<p><?php esc_html_e( 'Please note that Redirection requires the WordPress REST API to be enabled. If you have disabled this then you won\'t be able to use Redirection', 'redirection' ); ?></p>
 			<p>
 				<?php
@@ -835,6 +800,30 @@ register_activation_hook( REDIRECTION_FILE, array( 'Redirection_Admin', 'plugin_
 
 // @phpstan-ignore return.void
 add_action( 'init', array( 'Redirection_Admin', 'init' ) );
+
+// Really wish this wasn't necessary, but some plugins aggressively mis-represent a problem and add a notice to every admin page. Here we remove
+// that notice so people don't contact Redirection support for a problem caused by another plugin.
+add_filter(
+	'option_rank_math_notifications',
+	function ( $notifications ) {
+		if ( ! is_admin() || ! is_array( $notifications ) ) {
+			return $notifications;
+		}
+
+		return array_values(
+			array_filter(
+				$notifications,
+				static function ( $notification ) {
+					if ( ! is_array( $notification ) || ! isset( $notification['options'] ) || ! is_array( $notification['options'] ) ) {
+						return true;
+					}
+
+					return ! isset( $notification['options']['id'] ) || $notification['options']['id'] !== 'conflicting_redirections_plugins';
+				}
+			)
+		);
+	}
+);
 
 // This is causing a lot of problems with the REST API - disable qTranslate
 add_filter(

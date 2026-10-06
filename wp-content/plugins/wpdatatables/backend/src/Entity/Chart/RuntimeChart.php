@@ -1,0 +1,1459 @@
+<?php
+
+/**
+ * @copyright © Melograno Venture Studio. All rights reserved.
+ * @licence   See LICENCE.md for license details.
+ */
+
+namespace WPDataTables\Entity\Chart;
+
+use WPDataTables\Plugin\Plugin;
+use WPDataTables\Repository\Chart\ChartRepositoryInterface;
+use WDTException;
+use WPDataTables\Services\Tools\ToolsService;
+use WPDataTable;
+
+/**
+ * Base runtime chart engine — data binding + render pipeline.
+ *
+ * Migrated from legacy {@see \WPDataChart}. Engine-specific behaviour lives in
+ * {@see GoogleRuntimeChart} and {@see ChartJsRuntimeChart}; tier engines
+ * (Highcharts, Apexcharts, Highstock) extend {@see \WPDataChart} in tier folders.
+ *
+ * @package WPDataTables\Entity\Chart
+ */
+class RuntimeChart
+{
+    /**
+     * Resolve the chart repository from the DI container. The chart's raw
+     * `wpdatacharts` reads/writes flow through it; render-data preparation and
+     * hooks stay in this class.
+     *
+     * @return ChartRepositoryInterface
+     */
+    private static function chartRepository()
+    {
+        return Plugin::container()->get(ChartRepositoryInterface::class);
+    }
+
+    /**
+     * Load persisted chart row by id (used by {@see loadFromDB()}).
+     *
+     * Named separately from {@see \WPDataChart::getChartDataById()} so the
+     * facade can keep a static BC entry point without a static/instance clash.
+     *
+     * @param int $chartId
+     *
+     * @return object|false
+     */
+    protected function fetchChartRowById($chartId)
+    {
+        $chartId = (int) $chartId;
+
+        if ($chartId === 0) {
+            return false;
+        }
+
+        $chartData = self::chartRepository()->findRowById($chartId);
+
+        return $chartData ?? false;
+    }
+
+    protected $_id = NULL;
+    protected $_wpdatatable_id = NULL;
+    protected $_engine = '';
+    protected $_type = '';
+    protected $_range_type = 'all';
+    protected $_selected_columns = array();
+    protected $_row_range = array();
+    protected $_follow_filtering = false;
+    protected $_wpdatatable = NULL;
+    protected $_user_defined_series_data = array();
+    protected $_render_data = NULL;
+    protected $_type_counters;
+    // Chart
+    protected $_width = 400;
+    protected $_responsiveWidth = false;
+    protected $_height = 400;
+    protected $_group_chart = false;
+    protected $_background_color = '#FFFFFF';
+    // Series
+    protected $_series = array();
+    protected $_series_type = '';
+    // Axes
+    protected $_show_grid = true;
+    protected $_vertical_axis_min;
+    protected $_vertical_axis_max;
+    protected $_axes = array(
+        'major' => array(
+            'label' => ''
+        ),
+        'minor' => array(
+            'label' => ''
+        )
+    );
+    // Title
+    protected $_title = '';
+    protected $_show_title = true;
+    // Tooltip
+    protected $_tooltip_enabled = true;
+    // Render data
+    protected $_json_chart_render_data = null;
+    protected $_loader;
+    protected $_chartLoaderColorSettings = '';
+    protected $_chartLoaderAnimationColorSettings = '';
+
+    public function setId($id)
+    {
+        $this->_id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    // Chart
+
+    public function setWidth($width)
+    {
+        $this->_width = $width;
+    }
+
+    public function getWidth()
+    {
+        return $this->_width;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResponsiveWidth()
+    {
+        return $this->_responsiveWidth;
+    }
+
+    /**
+     * @param bool $responsiveWidth
+     */
+    public function setResponsiveWidth($responsiveWidth)
+    {
+        $this->_responsiveWidth = $responsiveWidth;
+    }
+
+    public function setHeight($height)
+    {
+        $this->_height = $height;
+    }
+
+    public function getHeight()
+    {
+        return $this->_height;
+    }
+
+    /**
+     * @param bool $group_chart
+     */
+    public function setGroupChart($group_chart)
+    {
+        $this->_group_chart = $group_chart;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGroupChart()
+    {
+        return $this->_group_chart;
+    }
+
+    /**
+     * @param $background_color
+     */
+    public function setBackgroundColor($background_color)
+    {
+        $this->_background_color = $background_color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackgroundColor()
+    {
+        return $this->_background_color;
+    }
+
+    // Axes
+
+    /**
+     * @param $show_grid
+     */
+    public function setShowGrid($show_grid)
+    {
+        $this->_show_grid = (bool)$show_grid;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowGrid()
+    {
+        return $this->_show_grid;
+    }
+
+    /**
+     * @param $label
+     */
+    public function setMajorAxisLabel($label)
+    {
+        $this->_axes['major']['label'] = $label;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMajorAxisLabel()
+    {
+        return $this->_axes['major']['label'];
+    }
+
+    /**
+     * @param $label
+     */
+    public function setMinorAxisLabel($label)
+    {
+        $this->_axes['minor']['label'] = $label;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinorAxisLabel()
+    {
+        return $this->_axes['minor']['label'];
+    }
+
+    /**
+     * @param mixed $vertical_axis_min
+     */
+    public function setVerticalAxisMin($vertical_axis_min)
+    {
+        $this->_vertical_axis_min = $vertical_axis_min;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVerticalAxisMin()
+    {
+        return $this->_vertical_axis_min;
+    }
+
+    /**
+     * @param mixed $vertical_axis_max
+     */
+    public function setVerticalAxisMax($vertical_axis_max)
+    {
+        $this->_vertical_axis_max = $vertical_axis_max;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVerticalAxisMax()
+    {
+        return $this->_vertical_axis_max;
+    }
+
+    // Title
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->_title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
+
+
+    /**
+     * @param bool $show_title
+     */
+    public function setShowTitle($show_title)
+    {
+        $this->_show_title = $show_title;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowTitle()
+    {
+        return $this->_show_title;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTooltipEnabled()
+    {
+        return $this->_tooltip_enabled;
+    }
+
+    /**
+     * @param bool $tooltip_enabled
+     */
+    public function setTooltipEnabled($tooltip_enabled)
+    {
+        $this->_tooltip_enabled = (bool)$tooltip_enabled;
+    }
+
+
+    /**
+     * @param $series_data
+     */
+    public function setUserDefinedSeriesData($series_data)
+    {
+        if (is_array($series_data)) {
+            $this->_user_defined_series_data = $series_data;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserDefinedSeriesData()
+    {
+        return $this->_user_defined_series_data;
+    }
+
+    /**
+     * @param $follow_filtering
+     */
+    public function setFollowFiltering($follow_filtering)
+    {
+        $this->_follow_filtering = (bool)$follow_filtering;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFollowFiltering()
+    {
+        return $this->_follow_filtering;
+    }
+
+    /**
+     * @param $engine
+     */
+    public function setEngine($engine)
+    {
+        $this->_engine = $engine;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEngine()
+    {
+        return $this->_engine;
+    }
+
+    /**
+     * @param $type
+     */
+    public function setType($type)
+    {
+        $this->_type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSeriesType()
+    {
+        return $this->_series_type;
+    }
+
+    /**
+     * @param string $series_type
+     */
+    public function setSeriesType($series_type)
+    {
+        $this->_series_type = $series_type;
+    }
+
+    /**
+     * @param $row_range
+     */
+    public function setRowRange($row_range)
+    {
+        $this->_row_range = $row_range;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowRange()
+    {
+        return $this->_row_range;
+    }
+
+    /**
+     * @param $selected_columns
+     */
+    public function setSelectedColumns($selected_columns)
+    {
+        $this->_selected_columns = $selected_columns;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectedColumns()
+    {
+        return $this->_selected_columns;
+    }
+
+    /**
+     * @param $wdt_id
+     */
+    public function setwpDataTableId($wdt_id)
+    {
+        $this->_wpdatatable_id = $wdt_id;
+    }
+
+    /**
+     * @return null
+     */
+    public function getwpDataTableId()
+    {
+        return $this->_wpdatatable_id;
+    }
+
+    /**
+     * @param $range_type
+     */
+    public function setRangeType($range_type)
+    {
+        $this->_range_type = $range_type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRangeType()
+    {
+        return $this->_range_type;
+    }
+
+    /**
+     * @return null
+     */
+    public function getJsonChartRenderData()
+    {
+        return $this->_json_chart_render_data;
+    }
+
+    /**
+     * @param null $json_chart_render_data
+     */
+    public function setJsonChartRenderData($json_chart_render_data)
+    {
+        $this->_json_chart_render_data = $json_chart_render_data;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoaderVisible()
+    {
+        return $this->_loader;
+    }
+
+    /**
+     * @param bool $loader
+     */
+    public function setLoaderChart($loader)
+    {
+        $this->_loader = (bool)$loader;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChartLoaderColorSettings()
+    {
+        return $this->_chartLoaderColorSettings;
+    }
+
+    /**
+     * @param mixed $chartFontColorSettings
+     */
+    public function setChartLoaderColorSettings($chartFontColorSettings)
+    {
+        $this->_chartLoaderColorSettings = $chartFontColorSettings;
+    }
+    /**
+     * @return mixed
+     */
+    public function getChartLoaderAnimationColorSettings()
+    {
+        return $this->_chartLoaderAnimationColorSettings;
+    }
+
+    /**
+     * @param mixed $chartFontColorSettings
+     */
+    public function setChartLoaderAnimationColorSettings($chartFontColorSettings)
+    {
+        $this->_chartLoaderAnimationColorSettings = $chartFontColorSettings;
+    }
+    /**
+     * @param $constructedChartData
+     * @param bool $loadFromDB
+     *
+     * @throws WDTException
+     */
+    public function __construct($constructedChartData, $loadFromDB)
+    {
+        if (isset($constructedChartData['id'])) {
+            $this->setId((int)$constructedChartData['id']);
+        }
+        $this->setwpDataTableId((int)$constructedChartData['wpdatatable_id']);
+        $this->loadChildWPDataTable();
+        $this->setTitle(sanitize_text_field($constructedChartData['title']));
+        $this->setType(sanitize_text_field($constructedChartData['type']));
+        if (isset($constructedChartData['series_type'])) {
+            $this->setSeriesType(sanitize_text_field($constructedChartData['series_type']));
+        }
+        $this->setSelectedColumns(array_map('sanitize_text_field', (array)$constructedChartData['selected_columns']));
+        $this->setRangeType(sanitize_text_field($constructedChartData['range_type']));
+        if (isset($constructedChartData['range_data'])) {
+            $this->setRowRange(array_map('intval', $constructedChartData['range_data']));
+        }
+
+        // Series
+        if (!empty($constructedChartData['series_data'])) {
+            array_walk_recursive(
+                $constructedChartData['series_data'],
+                function ($value) {
+                    sanitize_text_field($value);
+                }
+            );
+            $this->setUserDefinedSeriesData($constructedChartData['series_data']);
+        }
+
+        $this->setFollowFiltering((bool)$constructedChartData['follow_filtering']);
+        $this->setWidth((int)ToolsService::defineDefaultValue($constructedChartData, 'width', 0));
+        $this->setResponsiveWidth((bool)ToolsService::defineDefaultValue($constructedChartData, 'responsive_width', 0));
+        $this->setHeight((int)ToolsService::defineDefaultValue($constructedChartData, 'height', 400));
+        $this->setGroupChart((bool)(ToolsService::defineDefaultValue($constructedChartData, 'group_chart', false)));
+        $this->setBackgroundColor(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'background_color', '#FFFFFF')));
+        $this->setShowGrid((bool)(ToolsService::defineDefaultValue($constructedChartData, 'show_grid', true)));
+        $this->setMajorAxisLabel(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'horizontal_axis_label')));
+        $this->setMinorAxisLabel(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'vertical_axis_label')));
+        $this->setVerticalAxisMin(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'vertical_axis_min')));
+        $this->setVerticalAxisMax(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'vertical_axis_max')));
+        $this->setTooltipEnabled((bool)(ToolsService::defineDefaultValue($constructedChartData, 'tooltip_enabled', true)));
+        $this->setLoaderChart((bool)(ToolsService::defineDefaultValue($constructedChartData, 'loader', (bool)get_option('wdtGlobalChartLoader'))));
+        $this->setChartLoaderColorSettings(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'chartLoaderColorSettings', '')));
+        $this->setChartLoaderAnimationColorSettings(sanitize_text_field(ToolsService::defineDefaultValue($constructedChartData, 'chartLoaderAnimationColorSettings', '')));
+    }
+
+    /**
+     * Maps supported chart engine keys to class names.
+     *
+     * @return array
+     */
+    protected static function getChartEngineMap()
+    {
+        return array(
+            'google' => 'WdtGoogleChart\\WdtGoogleChart',
+            'chartjs' => 'WdtChartjsChart\\WdtChartjsChart',
+            'highcharts' => 'WdtHighchartsChart\\WdtHighchartsChart',
+            'apexcharts' => 'WdtApexchartsChart\\WdtApexchartsChart',
+            'highstock' => 'WdtHighStockChart\\WdtHighstockChart',
+        );
+    }
+
+    /**
+     * Registers a class-map based autoloader for supported chart engines.
+     *
+     * @return void
+     */
+    protected static function registerChartAutoloader()
+    {
+        if (self::$_chartAutoloaderRegistered) {
+            return;
+        }
+
+        spl_autoload_register(function ($className) {
+            static $classMap = null;
+
+            if (null === $classMap) {
+                $classMap = array(
+                    'WdtGoogleChart\\WdtGoogleChart' => WDT_LEGACY_FACADES_PATH . 'class.google.wpdatachart.php',
+                    'WdtChartjsChart\\WdtChartjsChart' => WDT_LEGACY_FACADES_PATH . 'class.chartjs.wpdatachart.php',
+                );
+
+                if (defined('WDT_HC_ROOT_PATH')) {
+                    $classMap['WdtHighchartsChart\\WdtHighchartsChart'] = WDT_HC_ROOT_PATH . 'source/class.highcharts.wpdatachart.php';
+                }
+
+                if (defined('WDT_AC_ROOT_PATH')) {
+                    $classMap['WdtApexchartsChart\\WdtApexchartsChart'] = WDT_AC_ROOT_PATH . 'source/class.apexcharts.wpdatachart.php';
+                }
+
+                if (defined('WDT_HS_ROOT_PATH')) {
+                    $classMap['WdtHighStockChart\\WdtHighstockChart'] = WDT_HS_ROOT_PATH . 'source/class.highstock.wpdatachart.php';
+                }
+            }
+
+            if (isset($classMap[$className]) && file_exists($classMap[$className])) {
+                require_once $classMap[$className];
+            }
+        });
+
+        self::$_chartAutoloaderRegistered = true;
+    }
+
+    /**
+     *
+     * Sets the corresponding wpDataTable
+     *
+     * @throws WDTException
+     */
+    public function loadChildWPDataTable()
+    {
+        if (empty($this->getwpDataTableId())) {
+            return false;
+        }
+        $this->_wpdatatable = WPDataTable::loadWpDataTable($this->_wpdatatable_id, null, empty($this->_follow_filtering));
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    public function shiftXAxisColumnUp()
+    {
+        /**
+         * Check if the string column is not in the beginning and move it up
+         */
+        if (count($this->_render_data['columns']) > 1) {
+            $shiftNeeded = false;
+            $shiftIndex = 0;
+            for ($i = 1; $i < count($this->_render_data['columns']); $i++) {
+                if ($this->_render_data['columns'][$i]['type'] == 'string') {
+                    $shiftNeeded = true;
+                    $shiftIndex = $i;
+                    break;
+                }
+            }
+
+            if ($shiftNeeded) {
+                $this->shiftColumns($shiftIndex);
+            }
+        }
+
+        $this->formatShiftedAxes();
+    }
+
+    public function shiftColumns($shiftIndex)
+    {
+        // Shift columns
+        $strColumn = $this->_render_data['columns'][$shiftIndex];
+        unset($this->_render_data['columns'][$shiftIndex]);
+        array_unshift($this->_render_data['columns'], $strColumn);
+        // Shift rows
+        for ($j = 0; $j < count($this->_render_data['rows']); $j++) {
+            $strCell = $this->_render_data['rows'][$j][$shiftIndex];
+            unset($this->_render_data['rows'][$j][$shiftIndex]);
+            array_unshift($this->_render_data['rows'][$j], $strCell);
+        }
+        // Shift column indexes
+        if (isset($this->_render_data['column_indexes'])) {
+            $shiftedIndex = $this->_render_data['column_indexes'][$shiftIndex];
+            unset($this->_render_data['column_indexes'][$shiftIndex]);
+            array_unshift($this->_render_data['column_indexes'], $shiftedIndex);
+        }
+    }
+
+    public function formatShiftedAxes()
+    {
+        // Format axes
+        $this->_render_data['axes']['major'] = array(
+            'type' => $this->_render_data['columns'][0]['type'],
+            'label' => !empty($this->_render_data['hAxis']['title']) ?
+                $this->_render_data['hAxis']['title'] : $this->_render_data['columns'][0]['label']
+        );
+        $this->_render_data['axes']['minor'] = array(
+            'type' => $this->_render_data['columns'][1]['type'],
+            'label' => !empty($this->_render_data['vAxis']['title']) ?
+                $this->_render_data['vAxis']['title'] : ''
+        );
+
+        // Get all series names
+        if (empty($this->_render_data['series'])) {
+            for ($i = 1; $i < count($this->_render_data['columns']); $i++) {
+                $this->_render_data['series'][] = array(
+                    'label' => $this->_render_data['columns'][$i]['label'],
+                    'color' => '',
+                    'orig_header' => $this->_render_data['columns'][$i]['orig_header']
+                );
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function prepareSeriesData()
+    {
+        // Init render data if it is empty
+        if (empty($this->_render_data)) {
+            $this->_render_data = array(
+                'columns' => array(),
+                'rows' => array(),
+                'axes' => array(),
+                'options' => array(
+                    'title' => $this->_show_title ? $this->_title : '',
+                    'series' => array(),
+                    'width' => $this->_width,
+                    'height' => $this->_height
+                ),
+                'vAxis' => array(),
+                'hAxis' => array(),
+                'errors' => array(),
+                'series' => array()
+            );
+        }
+
+        if ($this->isResponsiveWidth()) {
+            unset($this->_render_data['options']['width']);
+            $this->_render_data['options']['responsive_width'] = 1;
+        }
+
+        $this->_type_counters = array(
+            'date' => 0,
+            'datetime' => 0,
+            'string' => 0,
+            'number' => 0
+        );
+
+        // Define columns
+        foreach ($this->getSelectedColumns() as $columnKey) {
+            $columnType = $this->_wpdatatable->getColumn($columnKey)->getGoogleChartColumnType();
+            $this->_render_data['columns'][] = array(
+                'type' => $columnType,
+                'label' => isset($this->_user_defined_series_data[$columnKey]['label']) ?
+                    $this->_user_defined_series_data[$columnKey]['label'] : $this->_wpdatatable->getColumn($columnKey)->getTitle(),
+                'orig_header' => $columnKey
+            );
+            $this->_type_counters[$columnType]++;
+        }
+
+        // Define axes titles
+        if (isset($this->_axes['major']['label'])) {
+            $this->_render_data['options']['hAxis']['title'] = $this->_axes['major']['label'];
+        }
+        if (isset($this->_axes['minor']['label'])) {
+            $this->_render_data['options']['vAxis']['title'] = $this->_axes['minor']['label'];
+        }
+
+        $this->defineSeries();
+
+        // Group chart data
+        if ($this->isGroupChart()) {
+            $this->_render_data['group_chart'] = true;
+        } else {
+            $this->_render_data['group_chart'] = false;
+        }
+
+        if ($this->isLoaderVisible()) {
+            $this->_render_data['loader'] = true;
+        } else {
+            $this->_render_data['loader'] = false;
+        }
+        if ($this->getChartLoaderColorSettings()) {
+            $this->_render_data['chartLoaderColorSettings'] = $this->getChartLoaderColorSettings();
+        } else {
+            $this->_render_data['chartLoaderColorSettings'] = '';
+        }
+        if ($this->getChartLoaderAnimationColorSettings()) {
+            $this->_render_data['chartLoaderAnimationColorSettings'] = $this->getChartLoaderAnimationColorSettings();
+        } else {
+            $this->_render_data['chartLoaderAnimationColorSettings'] = '';
+        }
+        // Define grid settings
+        if (!$this->isShowGrid()) {
+            if (!isset($this->_render_data['options']['hAxis'])) {
+                $this->_render_data['options']['hAxis'] = array();
+            }
+            $this->_render_data['options']['hAxis']['gridlines'] = array(
+                'color' => 'transparent'
+            );
+            if (!isset($this->_render_data['options']['vAxis'])) {
+                $this->_render_data['options']['vAxis'] = array();
+            }
+            $this->_render_data['options']['vAxis']['gridlines'] = array(
+                'color' => 'transparent'
+            );
+            $this->_render_data['show_grid'] = false;
+        } else {
+            $this->_render_data['show_grid'] = true;
+        }
+
+        // Detect errors
+        if ($this->_type_counters['string'] > 1) {
+            $this->_render_data['errors'][] = __('Only one column can be of type String', 'wpdatatables');
+        }
+        if (($this->_type_counters['number'] > 1) && ($this->_type_counters['date'] > 1)) {
+            $this->_render_data['errors'][] = __('You are mixing data types (several date axes and several number)', 'wpdatatables');
+        }
+        if (empty($this->_render_data)) {
+            $this->_render_data = array();
+        }
+
+    }
+
+    /**
+     * @return mixed|null
+     * @throws WDTException
+     */
+    public function prepareData()
+    {
+
+        // Prepare series and columns
+        if (empty($this->_render_data['columns'])) {
+            $this->prepareSeriesData();
+        }
+
+        $dateFormat = $this->getDateFormat();
+        $timeFormat = $this->getDateTimeFormat();
+
+        // The data itself
+        if (empty($this->_render_data['rows'])) {
+            if ($this->getRangeType() == 'all_rows') {
+                foreach ($this->_wpdatatable->getDataRows() as $row) {
+                    $return_data_row = array();
+                    foreach ($this->getSelectedColumns() as $columnKey) {
+                        if (!$this->_wpdatatable->getColumn($columnKey))
+                            throw new WDTException('In chart, selected column "' . $columnKey . '" does not exist anymore in source table with ID =' . $this->_wpdatatable->getWpId() . '.<br> Please check your source that you use for creating this table or create new chart from that table and replace new chart shortcode with old one on the front page.');
+                        $dataType = $this->_wpdatatable->getColumn($columnKey)->getDataType();
+                        $decimalPlaces = $this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
+                        $thousandsSeparator = $this->_wpdatatable->getColumn($columnKey)->isShowThousandsSeparator();
+                        switch ($dataType) {
+                            case 'date':
+                                $timestamp = is_numeric($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
+                                $return_data_row[] = date(
+                                    $dateFormat,
+                                    $timestamp
+                                );
+                                break;
+                            case 'datetime':
+                                $timestamp = is_numeric($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
+                                if ($this->getEngine() == 'google') {
+                                    $return_data_row[] = date(
+                                        $dateFormat,
+                                        $timestamp
+                                    );
+                                } else {
+                                    $return_data_row[] = date(
+                                        $dateFormat . ' ' . $timeFormat,
+                                        $timestamp
+                                    );
+                                }
+                                break;
+                            case 'time':
+                                $timestamp = $row[$columnKey];
+                                $return_data_row[] = date(
+                                    $timeFormat,
+                                    $timestamp
+                                );
+                                break;
+                            case 'int':
+                                if (has_filter('wpdatatables_filter_int_cell_data_in_charts')) {
+                                    $row[$columnKey] = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $row[$columnKey], $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($row[$columnKey])) {
+                                        $return_data_row[] = (float)$row[$columnKey];
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
+                                } else {
+                                    $return_data_row[] = (float)$row[$columnKey];
+                                }
+                                break;
+                            case 'float':
+                                if (has_filter('wpdatatables_filter_float_cell_data_in_charts')) {
+                                    $row[$columnKey] = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $row[$columnKey], $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($row[$columnKey])) {
+                                        if ($decimalPlaces != -1) {
+                                            $return_data_row[] = (float)number_format(
+                                                (float)($row[$columnKey]),
+                                                $decimalPlaces,
+                                                '.',
+                                                $thousandsSeparator ? '' : '.');
+                                        } else {
+                                            $return_data_row[] = (float)$row[$columnKey];
+                                        }
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
+                                } else {
+                                    if ($decimalPlaces != -1) {
+                                        $return_data_row[] = (float)number_format(
+                                            (float)($row[$columnKey]),
+                                            $decimalPlaces,
+                                            '.',
+                                            $thousandsSeparator ? '' : '.');
+                                    } else {
+                                        $return_data_row[] = (float)$row[$columnKey];
+                                    }
+                                }
+                                break;
+                            case 'link':
+                                if (!in_array($this->getEngine(), ['google', 'chartjs', 'apexcharts'])) {
+                                    if (strpos($row[$columnKey], '||') !== false) {
+                                        list($link, $row[$columnKey]) = explode('||', $row[$columnKey]);
+                                        $return_data_row[] = '<a href="' . $link . '">' . $row[$columnKey] . '</a>';
+                                    } else {
+                                        $return_data_row[] = '<a href="' . $row[$columnKey] . '">' . $row[$columnKey] . '</a>';
+                                    }
+                                } else {
+                                    $return_data_row[] = $row[$columnKey];
+                                }
+                                break;
+                            case 'string':
+                            default:
+                                if ($this->getEngine() == 'apexcharts') {
+                                    $return_data_row[] = $row[$columnKey] === null ? '' : $row[$columnKey];
+                                } else {
+                                    $return_data_row[] = $row[$columnKey];
+                                }
+                                break;
+                        }
+                    }
+                    $this->_render_data['rows'][] = $return_data_row;
+                }
+            } else {
+                foreach ($this->getRowRange() as $rowIndex) {
+                    $return_data_row = array();
+                    foreach ($this->getSelectedColumns() as $columnKey) {
+
+                        $dataType = $this->_wpdatatable->getColumn($columnKey)->getDataType();
+                        $decimalPlaces = $this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
+                        switch ($dataType) {
+                            case 'date':
+                                $timestamp = is_numeric($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
+                                    (int)$this->_wpdatatable->getCell($columnKey, $rowIndex)
+                                    : strtotime(str_replace('/', '-', $this->_wpdatatable->getCell($columnKey, $rowIndex)));
+                                $return_data_row[] = date(
+                                    $dateFormat,
+                                    $timestamp
+                                );
+                                break;
+                            case 'datetime':
+                                $timestamp = is_numeric($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
+                                    (int)$this->_wpdatatable->getCell($columnKey, $rowIndex) : strtotime(str_replace('/', '-', $this->_wpdatatable->getCell($columnKey, $rowIndex)));
+                                if ($this->getEngine() == 'google') {
+                                    $return_data_row[] = date(
+                                        $dateFormat,
+                                        $timestamp
+                                    );
+                                } else {
+                                    $return_data_row[] = date(
+                                        $dateFormat . ' ' . $timeFormat,
+                                        $timestamp
+                                    );
+                                }
+                                break;
+                            case 'time':
+                                $timestamp = $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                $return_data_row[] = date(
+                                    $timeFormat,
+                                    $timestamp
+                                );
+                                break;
+                            case 'int':
+                                if (has_filter('wpdatatables_filter_int_cell_data_in_charts')) {
+                                    $cellData = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($cellData)) {
+                                        $return_data_row[] = (float)$cellData;
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
+                                } else {
+                                    $return_data_row[] = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                }
+                                break;
+                            case 'float':
+                                if (has_filter('wpdatatables_filter_float_cell_data_in_charts')) {
+                                    $floatNumber = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($floatNumber)) {
+                                        if ($decimalPlaces != -1) {
+                                            $return_data_row[] = (float)number_format($floatNumber, $decimalPlaces);
+                                        } else {
+                                            $return_data_row[] = $floatNumber;
+                                        }
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
+                                } else {
+                                    $floatNumber = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                    if ($decimalPlaces != -1) {
+                                        $return_data_row[] = (float)number_format($floatNumber, $decimalPlaces);
+                                    } else {
+                                        $return_data_row[] = $floatNumber;
+                                    }
+                                }
+                                break;
+                            case 'link':
+                                $cellData = $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                if (!in_array($this->getEngine(), ['google', 'chartjs'])) {
+                                    if (strpos($cellData, '||') !== false) {
+                                        list($link, $cellData) = explode('||', $cellData);
+                                        $return_data_row[] = '<a href="' . $link . '">' . $cellData . '</a>';
+                                    } else {
+                                        $return_data_row[] = '<a href="' . $cellData . '">' . $cellData . '</a>';
+                                    }
+                                } else {
+                                    $return_data_row[] = $cellData;
+                                }
+                                break;
+                            case 'string':
+                            default:
+                                if ($this->getEngine() == 'apexcharts') {
+                                    $return_data_row[] = $this->_wpdatatable->getCell($columnKey, $rowIndex) === null ? '' : $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                } else {
+                                    $return_data_row[] = $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                }
+                                break;
+                        }
+
+                    }
+                    $this->_render_data['rows'][] = $return_data_row;
+                }
+            }
+
+        }
+        $this->_render_data['type'] = $this->_type;
+        return $this->_render_data;
+    }
+
+    /**
+     * @return void
+     */
+    public function groupData()
+    {
+        if (isset($this->_render_data['group_chart'])) {
+            if ($this->isGroupChart() || $this->_render_data['group_chart']) {
+                $output = array();
+                foreach ($this->_render_data['rows'] as $row) {
+                    if (!empty($output)) {
+                        $value_key = 'none';
+                        foreach ($output as $key => $value) {
+                            if ($value_key === 'none') {
+                                if ($value[0] == $row[0]) {
+                                    $value_key = $key;
+                                }
+                            }
+                        }
+                        if ($value_key === 'none') {
+                            $output[] = $row;
+                        } else {
+                            for ($n = 1; $n <= count($row) - 1; $n++) {
+                                $output[$value_key][$n] += $row[$n];
+                            }
+                        }
+                    } else {
+                        $output[] = $row;
+                    }
+                }
+                $this->_group_chart = 1;
+                $precision = $this->findPrecision($output);
+                $this->_render_data['rows'] = $this->roundFloatsInArray($output, $precision);
+            } else {
+                $this->_group_chart = 0;
+            }
+        } else {
+            $this->_group_chart = 0;
+        }
+    }
+
+    public function roundFloatsInArray($data, $precision)
+    {
+        array_walk_recursive($data, function (&$value) use ($precision) {
+            if (is_float($value)) {
+                $value = round($value, $precision);
+            }
+        });
+        return $data;
+    }
+
+    public function findPrecision($data)
+    {
+        $max_precision = get_option('wdtDecimalPlaces');
+        $number_format = get_option('wdtNumberFormat');
+
+        array_walk_recursive($data, function ($value) use ($number_format, &$max_precision) {
+            if (is_float($value)) {
+                if ($number_format == 1) {
+                    $decimal_part = explode('.', (string)$value);
+                } else {
+                    $value_string = str_replace('.', ',', (string)$value);
+                    $decimal_part = explode(',', $value_string);
+                }
+
+                $precision = isset($decimal_part[1]) ? strlen($decimal_part[1]) : 0;
+                if ($precision > $max_precision) {
+                    $max_precision = $precision;
+                }
+            }
+        });
+        return $max_precision;
+    }
+
+    /**
+     * @return void
+     */
+    public function prepareRender()
+    {
+
+    }
+
+    /**
+     * @return mixed|null
+     * @throws WDTException
+     */
+    public function returnData()
+    {
+        $this->prepareData();
+        $this->groupData();
+        $this->shiftXAxisColumnUp();
+        $this->prepareRender();
+        return $this->returnRenderData();
+    }
+
+    /**
+     * Saves the chart data to DB
+     * @global WPDB $wpdb
+     */
+    public function save()
+    {
+        global $wpdb;
+
+        $this->prepareSeriesData();
+        $this->shiftXAxisColumnUp();
+        $this->prepareRender();
+
+        $render_data = $this->formRenderDataForDb();
+
+        $chartRow = array(
+            'wpdatatable_id' => $this->getwpDataTableId(),
+            'title' => $this->getTitle(),
+            'engine' => $this->getEngine(),
+            'type' => $this->getType(),
+            'json_render_data' => json_encode($render_data)
+        );
+
+        if (empty($this->getId())) {
+            // This is a new chart
+            $this->_id = self::chartRepository()->insert($chartRow);
+        } else {
+            // Updating the chart
+            self::chartRepository()->updateById((int)$this->_id, $chartRow);
+        }
+
+    }
+
+    /**
+     * @return void
+     */
+    public function getColumnIndexes()
+    {
+        foreach ($this->getSelectedColumns() as $columnKey) {
+            $this->_render_data['column_indexes'][] = $this->_wpdatatable->getColumnHeaderOffset($columnKey);
+        }
+    }
+
+    /**
+     * Return the shortcode
+     */
+    public function getShortCode()
+    {
+        if (!empty($this->_id)) {
+            return '[wpdatachart id=' . $this->_id . ']';
+        }
+        return '';
+    }
+
+    /**
+     * Load chart from the database
+     * @return bool
+     * @throws WDTException
+     */
+    public function loadFromDB()
+    {
+        $chartData = $this->fetchChartRowById($this->getId());
+
+        $renderData = $this->setChartRenderData($chartData);
+
+        $this->setGeneralChartProperties($chartData, $renderData);
+
+        $this->setSpecificChartProperties($renderData);
+
+        $this->loadChildWPDataTable();
+
+        return true;
+    }
+
+    /**
+     * Render Chart
+     * @throws WDTException
+     */
+    public function render()
+    {
+        $minified_js = get_option('wdtMinifiedJs');
+
+        $this->prepareData();
+        if ($this->_follow_filtering) {
+            $this->getColumnIndexes();
+        }
+
+        $this->groupData();
+
+        $this->shiftXAxisColumnUp();
+
+        $js_ext = $minified_js ? '.min.js' : '.js';
+
+        if ($this->getFollowFiltering()) {
+            wp_enqueue_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array('jquery'), WDT_CURRENT_VERSION, true);
+            if ($minified_js) {
+                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wdt.frontend.min.js', array('wdt-common'), WDT_CURRENT_VERSION, true);
+                wp_localize_script('wdt-wpdatatables', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+            } else {
+                wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery',
+                    'wdt-datatables',
+                    'wdt-common'), WDT_CURRENT_VERSION, true);
+                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery',
+                    'wdt-datatables'), WDT_CURRENT_VERSION, true);
+            }
+
+            if (get_option('wdtIncludeBootstrap') == 1) {
+                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
+            } else {
+                wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
+            }
+            wp_enqueue_script('underscore');
+            wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array('jquery', 'wdt-bootstrap'), WDT_CURRENT_VERSION, true);
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', ToolsService::getDateTimeSettings());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', ToolsService::getTranslationStringsWpDataTables());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_filter_strings', ToolsService::getTranslationStringsColumnFilter());
+        }
+        wp_enqueue_script('wpdatatables-render-chart', WDT_JS_PATH . 'wdtcharts/wdt.chartsRender' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wpdatatables-loader-chart', WDT_CSS_PATH . 'loaderChart.min.css', array(), WDT_CURRENT_VERSION);
+        wp_localize_script('wpdatatables-render-chart', 'wpdatatables_mapsapikey', ToolsService::getGoogleApiMapsKey());
+        $this->setJsonChartRenderData($this->enqueueChartSpecificScripts($js_ext));
+        return $this->enqueueScriptsAfterChartRender();
+    }
+
+    /**
+     * @param $js_ext
+     *
+     * @return false|string
+     */
+    public function enqueueChartSpecificScripts($js_ext)
+    {
+        return json_encode($this->_render_data);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function enqueueScriptsAfterChartRender()
+    {
+        do_action_deprecated(
+            'wdt-enqueue-scripts-after-chart-render',
+            array(),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_enqueue_scripts_after_chart_render'
+        );
+        do_action('wpdatatables_enqueue_scripts_after_chart_render');
+
+        $id = $this->_id;
+        ob_start();
+        include(WDT_TEMPLATE_PATH . 'wpdatachart.inc.php');
+        $chart_html = ob_get_contents();
+        ob_end_clean();
+        return $chart_html;
+    }
+
+    /**
+     * @param $renderData
+     *
+     * @return void
+     */
+    public function setSpecificChartProperties($renderData)
+    {
+
+    }
+
+    /**
+     * @param $chartData
+     * @param $renderData
+     *
+     * @return void
+     */
+    public function setGeneralChartProperties($chartData, $renderData)
+    {
+        $this->setEngine($chartData->engine);
+        $this->setId($chartData->id);
+        $this->setwpDataTableId($chartData->wpdatatable_id);
+        $this->setTitle($chartData->title);
+        $this->setType($chartData->type);
+        if (!empty($renderData['series_type'])) {
+            $this->setSeriesType($renderData['series_type']);
+        }
+        $renderData['loader'] = isset($renderData['loader']) ? $renderData['loader'] : get_option('wdtGlobalChartLoader');
+        $renderData['chartLoaderColorSettings'] = !empty($renderData['render_data']['chartLoaderColorSettings'])
+            ? $renderData['render_data']['chartLoaderColorSettings']
+            : (!empty($renderData['chartLoaderColorSettings'])
+                ? $renderData['chartLoaderColorSettings']
+                : '');
+        $renderData['chartLoaderAnimationColorSettings'] = !empty($renderData['render_data']['chartLoaderAnimationColorSettings'])
+            ? $renderData['render_data']['chartLoaderAnimationColorSettings']
+            : (!empty($renderData['chartLoaderAnimationColorSettings'])
+                ? $renderData['chartLoaderAnimationColorSettings']
+                : '');
+        $this->setSelectedColumns($renderData['selected_columns'] ?? []);
+        $this->setFollowFiltering((bool) ($renderData['follow_filtering'] ?? false));
+        $this->setRangeType($renderData['range_type'] ?? 'all');
+        $this->setRowRange($renderData['row_range'] ?? []);
+        $this->setShowGrid((bool) ($renderData['show_grid'] ?? false));
+        $this->setLoaderChart($renderData['loader'] ?: get_option('wdtGlobalChartLoader'));
+        $this->setShowTitle((bool) ($renderData['show_title'] ?? false));
+        $this->setChartLoaderColorSettings($renderData['chartLoaderColorSettings'] ?? '');
+        $this->setChartLoaderAnimationColorSettings($renderData['chartLoaderAnimationColorSettings'] ?? '');
+        $this->setResponsiveWidth((bool) ($renderData['render_data']['options']['responsive_width'] ?? false));
+        if (!empty($renderData['render_data']['options']['width'])) {
+            $this->setWidth($renderData['render_data']['options']['width']);
+        }
+        $this->setHeight($renderData['render_data']['options']['height'] ?? 400);
+    }
+
+    /**
+     * @return void
+     */
+    public function defineSeries()
+    {
+        if (!empty($this->getUserDefinedSeriesData())) {
+            $seriesIndex = 0;
+            foreach ($this->_user_defined_series_data as $series_data) {
+                if (!empty($series_data['color']) || !empty($series_data['type']) || !empty($series_data['label'])) {
+
+                    if (!empty($series_data['color'])) {
+                        $this->_render_data['options']['series'][$seriesIndex]['color'] = $series_data['color'];
+                    }
+                    if (!empty($series_data['label'])) {
+                        $this->_render_data['options']['series'][$seriesIndex]['label'] = $series_data['label'];
+                    }
+                }
+                $seriesIndex++;
+            }
+        }
+    }
+
+    /**
+     * @return false|mixed|null
+     */
+    public function getDateFormat()
+    {
+        return get_option('wdtDateFormat');
+    }
+
+    public function getGoogleMapsApiKey()
+    {
+        return get_option('wdtGoogleApiMaps');
+    }
+
+    /**
+     * @return false|mixed|null
+     */
+    public function getDateTimeFormat()
+    {
+        return get_option('wdtTimeFormat');
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function returnRenderData()
+    {
+        return $this->_render_data;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getRenderData()
+    {
+        return $this->_render_data;
+    }
+
+    /**
+     * @return array
+     */
+    public function formRenderDataForDb()
+    {
+        return array(
+            'selected_columns' => $this->getSelectedColumns(),
+            'range_type' => $this->getRangeType(),
+            'row_range' => $this->getRowRange(),
+            'follow_filtering' => $this->getFollowFiltering(),
+            'render_data' => $this->_render_data,
+            'show_grid' => $this->_show_grid,
+            'show_title' => $this->_show_title,
+            'series_type' => $this->getSeriesType(),
+            'loader' => $this->isLoaderVisible(),
+            'chartLoaderColorSettings' => $this->getChartLoaderColorSettings(),
+            'chartLoaderAnimationColorSettings' => $this->getChartLoaderAnimationColorSettings()
+        );
+    }
+
+    /**
+     * @param $chartData
+     *
+     * @return mixed|null
+     */
+    public function setChartRenderData($chartData)
+    {
+        $renderData = json_decode($chartData->json_render_data, true);
+        if (!is_array($renderData)) {
+            $renderData = [];
+        }
+        if (!empty($renderData['render_data'])) {
+            $this->_render_data = $renderData['render_data'];
+        }
+        return $renderData;
+    }
+
+}

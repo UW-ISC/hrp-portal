@@ -290,12 +290,14 @@
         $('#wdt-global-sorting').change(function (e) {
             wpdatatable_config.setSorting($(this).is(':checked') ? 1 : 0);
         });
+
         /**
          * Toggle Advanced Filter Option
          */
         $('#wdt-advanced-filter-option').change(function (e) {
             wpdatatable_config.setAdvancedFilteringOption($(this).is(':checked') ? 1 : 0);
         });
+
         /**
          * Toggle Global Search
          */
@@ -390,7 +392,7 @@
          * Toggle edit only own rows
          */
         $('#wdt-edit-only-own-rows').change(function (e) {
-            wpdatatable_config.setEditOwnRows($(this).is(':checked') ? 1 : 0);
+            wpdatatable_config.setEditOwnRows($(this).is(':checked') ? 1 : 0, true);
         });
 
         /**
@@ -398,6 +400,22 @@
          */
         $('#wdt-user-id-column').change(function (e) {
             wpdatatable_config.setUserIdColumn($(this).val());
+        });
+
+        /**
+         * Clear the User ID Column when its already selected option is clicked again.
+         * Selectpicker keeps the value on such a click, so it is compared before and after it.
+         */
+        var userIdColumnValueBeforeClick = null;
+
+        $(document).on('mousedown', '.own-rows-editing-settings-block .dropdown-menu li', function () {
+            userIdColumnValueBeforeClick = $('#wdt-user-id-column').val();
+        });
+
+        $(document).on('click', '.own-rows-editing-settings-block .dropdown-menu li', function () {
+            if (userIdColumnValueBeforeClick && $('#wdt-user-id-column').val() === userIdColumnValueBeforeClick) {
+                wpdatatable_config.setUserIdColumn('');
+            }
         });
 
         /**
@@ -447,9 +465,11 @@
         $('#wdt-pdf-page-orientation').change(function (e) {
             wpdatatable_config.setPdfPageOrientation($(this).val());
         });
+
         $('#wdt-custom-strings-empty-filtering').change(function (e) {
             wpdatatable_config.setCustomStringEmptyFiltering($(this).val());
         });
+
         $('#wdt-custom-rows-per-page').change(function (e) {
             var isValidFormat = /^(-1|0|[1-9]\d*)(,(?!$)|,(?:-1|0|[1-9]\d*(?<!0))(?:(?!,,)(?<!0)\d*)*)*$/.test($(this).val());
             if (isValidFormat || $(this).val() === "") {
@@ -1700,7 +1720,7 @@
                     }
                 }
             }
-            if (wpdatatable_config.editable) {
+            if (wpdatatable_config.editable && wpdatatable_config.table_type !== 'ivyforms') {
                 if ($('#wdt-mysql-table-name').val() == '') {
                     $('#wdt-error-modal .modal-body').html('MySQL table name for front-end editing is not set!');
                     $('#wdt-error-modal').modal('show');
@@ -1758,6 +1778,12 @@
                         return;
                     }
                 }
+            }
+
+            if (wpdatatable_config.table_type === 'ivyforms'
+                && typeof window.saveIvyFormsTableConfig === 'function') {
+                window.saveIvyFormsTableConfig();
+                return;
             }
 
             $('.wdt-preload-layer').animateFadeIn();

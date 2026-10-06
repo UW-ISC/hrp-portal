@@ -2,6 +2,7 @@
 
 namespace WPDT\PhpOffice\PhpSpreadsheet\Reader;
 
+use Closure;
 use WPDT\PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use WPDT\PhpOffice\PhpSpreadsheet\Reader\Exception as ReaderException;
 use WPDT\PhpOffice\PhpSpreadsheet\Reader\Security\XmlScanner;
@@ -59,6 +60,8 @@ abstract class BaseReader implements IReader
      * @var ?XmlScanner
      */
     protected $securityScanner;
+    /** @var null|Closure(string):bool function to return whether image path is okay */
+    protected ?Closure $isWhitelisted = null;
     public function __construct()
     {
         $this->readFilter = new DefaultReadFilter();
@@ -182,9 +185,10 @@ abstract class BaseReader implements IReader
         $this->fileHandle = $fileHandle;
     }
     /**
-     * Allow external images. Use with caution.
-     * Improper specification of these within a spreadsheet
-     * can subject the caller to security exploits.
+     * USE WITH CAUTION (and in conjunction with setIsWhiteListed)!
+     * Allow external images;
+     * these can be specified within a spreadsheet
+     * in a way that can subject the caller to security exploits.
      */
     public function setAllowExternalImages(bool $allowExternalImages)
     {
@@ -194,5 +198,19 @@ abstract class BaseReader implements IReader
     public function getAllowExternalImages()
     {
         return $this->allowExternalImages;
+    }
+    /**
+     * USE WITH CAUTION!
+     * Supply a callback to determine whether a path should be whitelisted,
+     * used in conjunction with setAllowExternalImages;
+     * supplying a method which might return true
+     * can subject the caller to security exploits.
+     *
+     * @param Closure(string):bool $isWhitelisted
+     */
+    public function setIsWhitelisted(Closure $isWhitelisted) : self
+    {
+        $this->isWhitelisted = $isWhitelisted;
+        return $this;
     }
 }

@@ -196,6 +196,13 @@ var wpdatatable_plugin_config = {
         }
     },
 
+    setMcpEnabled: function (wdtMcpEnabled) {
+        wdt_current_config.wdtMcpEnabled = wdtMcpEnabled;
+        if (jQuery('#wdt-mcp-enabled').val() != wdtMcpEnabled) {
+            jQuery('#wdt-mcp-enabled').prop('checked', wdtMcpEnabled);
+        }
+    },
+
     setAlignNumber: function (alignNumber) {
         wdt_current_config.wdtNumbersAlign = alignNumber;
         if (jQuery('#wdt-numbers-align').val() != alignNumber) {

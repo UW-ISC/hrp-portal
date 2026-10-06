@@ -34,7 +34,7 @@ class MLA_Ajax {
 	public static function initialize() {
 		if ( ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
 			$ajax_only = var_export( self::$ajax_only, true );
-			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), ( MLACore::MLA_DEBUG_CATEGORY_AJAX | MLACore::MLA_DEBUG_CATEGORY_MMMW ) );
+			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), ( MLACore::MLA_DEBUG_CATEGORY_AJAX | MLACore::MLA_DEBUG_CATEGORY_MMMW ) );
 		}
 		
 		// If there's no action variable, we have nothing more to do
@@ -313,7 +313,7 @@ class MLA_Ajax {
 		MLAFileDownloader::$mla_debug = 'log' === sanitize_text_field( isset( $_REQUEST['mla_debug'] ) ? wp_unslash( $_REQUEST['mla_debug'] ) : 'false' );
 		MLAFileDownloader::mla_process_download_file( $download_args );
 
-		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_named_transfer_ajax_action failed. \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_named_transfer_ajax_action failed. encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		echo "MLA_Ajax::mla_named_transfer_ajax_action failed.";
 		die();
 	} // mla_named_transfer_ajax_action
@@ -377,7 +377,6 @@ class MLA_Ajax {
 	 * @return	void	passes results to wp_send_json_success() for JSON encoding and transmission
 	 */
 	public static function mla_bulk_edit_form_presets_action() {
-//error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		check_ajax_referer( MLACore::JAVASCRIPT_EXPORT_PRESETS_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['mla_preset_values'] ) ) {

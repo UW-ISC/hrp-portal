@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.41';
+	const CURRENT_MLA_VERSION = '3.42';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -444,9 +444,6 @@ class MLACore {
 	 * @return	void
 	 */
 	public static function initialize( ) {
-		// error_log( __LINE__ . ' DEBUG: MLACore::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
-		// if ( isset( $_SERVER['REQUEST_URI'] ) ) error_log( __LINE__ . ' DEBUG: MLACore::initialize $_SERVER[REQUEST_URI] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
-
 		$text_domain = 'media-library-assistant';
 		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
@@ -746,7 +743,7 @@ class MLACore {
 			if( !( defined('WP_ADMIN') && WP_ADMIN ) ) {
 				// XMLRPC requests need everything loaded to process uploads
 				if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
-					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() XMLRPC_REQUEST \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() XMLRPC_REQUEST encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				}
 
 				// WP REST API calls need everything loaded to process uploads
@@ -754,10 +751,10 @@ class MLACore {
 					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json REQUEST_URI = " . var_export( $_SERVER['REQUEST_URI'], true ), MLACore::MLA_DEBUG_CATEGORY_REST );  // phpcs:ignore
 					//MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _GET = " . var_export( $_GET, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 					//MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _POST = " . var_export( $_POST, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
-					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
-					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _COOKIE = " . var_export( $_COOKIE, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
+					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_REST );
+					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json encoded _COOKIE = " . var_export( wp_json_encode( $_COOKIE ), true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 					if ( function_exists( 'apache_request_headers' ) ) {
-						MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json MLAOptions apache_request_headers = " . var_export( apache_request_headers(), true ), MLACore::MLA_DEBUG_CATEGORY_REST );
+						MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json MLAOptions encoded apache_request_headers = " . var_export( wp_json_encode( apache_request_headers() ), true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 					}
 					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json MLAOptions exists = " . var_export( class_exists( 'MLAOptions' ), true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 				}
@@ -1243,13 +1240,15 @@ class MLACore {
 
 				return isset( $tax_options['tax_metakey'] ) ? $tax_options['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 			case 'metakey_sort':
+				$tax_metakey_sort =  isset( $tax_options['tax_metakey_sort'] ) ? $tax_options['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+
 				if ( ! empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_metakey_sort'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey_sort'] ) ) : '';
+					$tax_metakey_sort = isset( $_REQUEST['tax_metakey_sort'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey_sort'] ) ) : '';
 				} elseif ( ! empty( $_REQUEST['mla-general-options-reset'] ) ) {
-					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+					$tax_metakey_sort = MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 				}
 
-				return isset( $tax_options['tax_metakey_sort'] ) ? $tax_options['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+				return ( 'DESC' === $tax_metakey_sort ) ? 'DESC' : 'ASC';
 			default:
 				return false;
 		} // $support_type

@@ -1,0 +1,88 @@
+{
+  "name": "divi-wpdt/wpdatachart",
+  "d4Shortcode": "et_pb_DIVI_wpDataChart",
+  "title": "wpDataChart",
+  "titles": "wpDataCharts",
+  "category": "module",
+  "moduleClassName": "divi_wpdt_wpdatachart",
+  "moduleOrderClassName": "divi_wpdt_wpdatachart",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "default": {
+        "meta": {
+          "adminLabel": {
+            "desktop": {
+              "value": "wpDataChart"
+            }
+          }
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "decoration": {
+          "layout": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "id": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "id.innerContent",
+            "label": "Choose a wpDataChart",
+            "description": "Select a wpDataChart from the list",
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": {
+                  "0": {
+                    "label": "Select a chart"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "decoration": {
+          "layout": {}
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  },
+  "mousetrap": {
+    "inner": {
+      "edited": true
+    }
+  }
+}

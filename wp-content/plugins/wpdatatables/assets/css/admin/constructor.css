@@ -1157,3 +1157,353 @@
     box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
     border-radius: 3px;
 }
+
+/*
+ * Shared AI assistant panel (Feature 2 Query Constructor + Feature 3 SQL Assistant).
+ * Mirrors Feature 1 Generate-with-AI control row: labeled selectpickers + action button.
+ */
+.wpdt-c .wdt-ai-assistant-panel {
+    width: 100%;
+    overflow: visible;
+    position: relative;
+    z-index: 2;
+}
+
+.wpdt-c .wdt-ai-assistant-panel .form-control,
+.wpdt-c .wdt-ai-assistant-panel .fg-line,
+.wpdt-c .wdt-ai-assistant-panel .form-group,
+.wpdt-c .wdt-ai-assistant-panel .bootstrap-select {
+    overflow: visible;
+}
+
+.wpdt-c .wdt-ai-assistant-panel .form-control,
+.wpdt-c .wdt-ai-assistant-panel .fg-line {
+    width: 100%;
+}
+
+.wpdt-c .wdt-ai-assistant-panel h4 .wpdt-icon-info-circle-thin {
+    font-size: 14px;
+    color: #5A6C89;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.wpdt-c .wdt-ai-assistant-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px 24px;
+    width: 100%;
+}
+
+.wpdt-c .wdt-ai-assistant-control {
+    min-width: 0;
+}
+
+.wpdt-c .wdt-ai-assistant-control--mode {
+    flex: 0 0 200px;
+    max-width: 100%;
+}
+
+.wpdt-c .wdt-ai-assistant-control--model {
+    flex: 1 1 280px;
+}
+
+.wpdt-c .wdt-ai-assistant-control--actions {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    align-self: flex-end;
+    gap: 10px;
+    flex: 0 0 auto;
+    margin-left: auto;
+    height: 40px;
+    white-space: nowrap;
+}
+
+.wpdt-c .wdt-ai-assistant-control--actions .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center;
+    height: 40px !important;
+    line-height: 1 !important;
+    padding: 0 18px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
+
+.wpdt-c .wdt-ai-assistant-control--actions .wdt-ai-qa-status,
+.wpdt-c .wdt-ai-assistant-control--actions .wdt-ai-qc-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 40px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px;
+    line-height: 1.2 !important;
+    vertical-align: middle;
+}
+
+.wpdt-c .wdt-ai-assistant-controls h4 {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.wpdt-c .wdt-ai-assistant-controls .bootstrap-select {
+    width: 100% !important;
+}
+
+.wpdt-c .wdt-ai-assistant-controls .bootstrap-select > .dropdown-toggle,
+.wpdt-c .wdt-ai-assistant-controls .bootstrap-select > .btn {
+    border: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+}
+
+/* Side-by-side with Ace editor (Data source → SQL query). */
+.wpdt-c .mysql-settings-block > .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.wpdt-c .wdt-ai-sql-assistant-col {
+    overflow: visible;
+    position: relative;
+    z-index: 3;
+}
+
+.wpdt-c .wdt-ai-assistant-panel--side .wdt-ai-assistant-controls--stacked {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.wpdt-c .wdt-ai-assistant-panel--side .wdt-ai-assistant-control--mode,
+.wpdt-c .wdt-ai-assistant-panel--side .wdt-ai-assistant-control--model {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+}
+
+.wpdt-c .wdt-ai-assistant-panel--side .wdt-ai-assistant-control--actions {
+    margin-left: 0;
+    align-self: flex-start;
+}
+
+.wpdt-c .wdt-ai-assistant-panel--side .wdt-ai-qa-result {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+/* Feature 2 — Query Constructor result (full-width panel above picker cards). */
+.wpdt-c .wdt-ai-query-constructor .wdt-ai-qc-result {
+    max-width: 100%;
+}
+
+.wpdt-c .wdt-ai-query-constructor .wdt-ai-qc-summary,
+.wpdt-c .wdt-ai-query-constructor .wdt-ai-qc-sql {
+    resize: vertical;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-table-generator-section {
+    margin-bottom: 10px;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card {
+    cursor: default;
+    align-items: flex-start;
+    min-height: 107px;
+    width: 100%;
+    overflow: visible;
+    position: relative;
+    z-index: 2;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls,
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-control,
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .form-group,
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .bootstrap-select {
+    overflow: visible;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card:hover {
+    cursor: default;
+    border: 1px solid #EBECF0;
+    box-shadow: 0 2px 4px rgba(23, 43, 77, 0.04), 0 0 2px rgba(23, 43, 77, 0.04);
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .card-header {
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .card-body {
+    flex: 1 1 0;
+    align-self: stretch;
+    min-width: 0;
+    width: auto;
+    max-width: none;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .card-body .form-control,
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .card-body .fg-line {
+    width: 100%;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .card-body h4 .wpdt-icon-info-circle-thin {
+    font-size: 14px;
+    color: #5A6C89;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px 24px;
+    width: 100%;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-control {
+    min-width: 0;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-control--type {
+    flex: 0 0 220px;
+    max-width: 100%;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-control--model {
+    flex: 1 1 280px;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-control--actions {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    align-self: flex-end;
+    gap: 10px;
+    flex: 0 0 auto;
+    margin-left: auto;
+    height: 40px;
+    white-space: nowrap;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-generate.btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center;
+    height: 40px !important;
+    line-height: 1 !important;
+    padding: 0 18px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 40px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px;
+    line-height: 1.2 !important;
+    vertical-align: middle;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls h4 {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+/* Match shared constructor selectpicker chrome: border/shadow on wrapper only. */
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls .bootstrap-select {
+    width: 100% !important;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls .bootstrap-select > .dropdown-toggle,
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-controls .bootstrap-select > .btn {
+    border: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+}
+
+/*
+ * Compact AI dropdown menu items to match other constructor dropdowns.
+ * Note: do not use a class name containing "selectpicker" — bootstrap-select's
+ * setStyle() strips that substring when copying classes onto the wrapper.
+ */
+.wpdt-c .wdt-table-constructor .wdt-ai-tg-controls .bootstrap-select .dropdown-menu,
+.wpdt-c .wdt-table-constructor .bootstrap-select.wdt-ai-dropdown .dropdown-menu,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu {
+    padding: 4px 0 !important;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-tg-controls .bootstrap-select .dropdown-menu li,
+.wpdt-c .wdt-table-constructor .bootstrap-select.wdt-ai-dropdown .dropdown-menu li,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu li,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu li {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 20px !important;
+    border: 0 !important;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-tg-controls .bootstrap-select .dropdown-menu li a,
+.wpdt-c .wdt-table-constructor .bootstrap-select.wdt-ai-dropdown .dropdown-menu li a,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu li a,
+.bootstrap-select.wdt-ai-dropdown.bs-container .dropdown-menu li a,
+.wpdt-c .wdt-table-constructor .wdt-ai-tg-controls .bootstrap-select .dropdown-menu > li > a,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu > li > a {
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 20px !important;
+    font-size: 13px !important;
+    border: 0 !important;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-tg-controls .bootstrap-select .dropdown-menu li a span.text,
+.bootstrap-select.wdt-ai-dropdown .dropdown-menu li a span.text {
+    display: inline !important;
+    line-height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-constructor-card .wdt-ai-tg-result {
+    width: 100%;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-ai-unavailable-card.wdt-premium-feature:hover {
+    cursor: default;
+    border: 1px solid #091D70;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-constructor-section-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #5A6C89;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-constructor-section-divider::before,
+.wpdt-c .wdt-table-constructor .wdt-constructor-section-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #EBECF0;
+}
+
+.wpdt-c .wdt-table-constructor .wdt-constructor-section-divider span {
+    padding: 0 16px;
+}

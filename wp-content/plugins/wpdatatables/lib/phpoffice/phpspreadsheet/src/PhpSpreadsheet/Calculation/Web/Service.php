@@ -2,9 +2,9 @@
 
 namespace WPDT\PhpOffice\PhpSpreadsheet\Calculation\Web;
 
+use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use WPDT\PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
-use WPDT\PhpOffice\PhpSpreadsheet\Settings;
-use WPDT\Psr\Http\Client\ClientExceptionInterface;
+use WPDT\PhpOffice\PhpSpreadsheet\Cell\Cell;
 class Service
 {
     /**
@@ -15,39 +15,54 @@ class Service
      * Excel Function:
      *        Webservice(url)
      *
-     * @return string the output resulting from a call to the webservice
+     * @param mixed $url
+     *
+     * @return ?string the output resulting from a call to the webservice
      */
-    public static function webService(string $url)
+    public static function webService($url, ?Cell $cell = null)
     {
-        $url = \trim($url);
-        if (\strlen($url) > 2048) {
+        if (\is_array($url)) {
+            $url = Functions::flattenSingleValue($url);
+        }
+        if (!\is_string($url)) {
             return ExcelError::VALUE();
             // Invalid URL length
         }
-        if (!\preg_match('/^http[s]?:\\/\\//', $url)) {
+        $url = \trim($url);
+        if (\mb_strlen($url) > 2048) {
+            return ExcelError::VALUE();
+            // Invalid URL length
+        }
+        $parsed = \parse_url($url);
+        $scheme = $parsed['scheme'] ?? '';
+        if ($scheme !== 'http' && $scheme !== 'https') {
             return ExcelError::VALUE();
             // Invalid protocol
         }
-        // Get results from the the webservice
-        $client = Settings::getHttpClient();
-        $requestFactory = Settings::getRequestFactory();
-        $request = $requestFactory->createRequest('GET', $url);
-        try {
-            $response = $client->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
-            return ExcelError::VALUE();
-            // cURL error
+        $domainWhiteList = [];
+        if ($cell !== null) {
+            $parent = $cell->getWorksheet()->getParent();
+            if ($parent !== null) {
+                $domainWhiteList = $parent->getDomainWhiteList();
+            }
         }
-        if ($response->getStatusCode() != 200) {
-            return ExcelError::VALUE();
-            // cURL error
+        $host = $parsed['host'] ?? '';
+        if (!\in_array($host, $domainWhiteList, \true)) {
+            return $cell === null ? null : Functions::NOT_YET_IMPLEMENTED;
+            // will be converted to oldCalculatedValue or null
         }
-        $output = $response->getBody()->getContents();
-        if (\strlen($output) > 32767) {
+        // Get results from the webservice
+        $ctxArray = ['http' => ['follow_location' => 0, 'user_agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36']];
+        if ($scheme === 'https') {
+            $ctxArray['ssl'] = ['crypto_method' => \STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT];
+        }
+        $ctx = \stream_context_create($ctxArray);
+        $output = @\file_get_contents($url, \false, $ctx);
+        if ($output === \false || \mb_strlen($output) > 32767) {
             return ExcelError::VALUE();
             // Output not a string or too long
         }
-        return $output;
+        return $output === '' ? Functions::NOT_YET_IMPLEMENTED : $output;
     }
     /**
      * URLENCODE.

@@ -159,6 +159,7 @@ class MLA_List_Table extends WP_List_Table {
 		foreach ( (array) $count as $row ) {
 			$counts[ $row['post_mime_type'] ] = $row['num_posts'];
 		}
+
 		$counts['mine'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and AND post_author = " . get_current_user_id() ); // phpcs:ignore
 		$counts['trash'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'trash' $and $author" ); // phpcs:ignore
 
@@ -1881,7 +1882,7 @@ class MLA_List_Table extends WP_List_Table {
 			} // found rml_folder
 		}
 
-		// Handle the special cases: all, detached, attached and trash
+		// Handle the special cases: all, detached, attached, mine and trash
 		switch( $view_slug ) {
 			case 'all':
 				$total_items = array_sum( $posts_per_type ) - ( $posts_per_type['trash'] +  $posts_per_type['mine'] );

@@ -142,7 +142,7 @@ class MLA {
 		//static $count = 0;
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $count = ' . var_export( $count++, true ), 0 );
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action referer = ' . var_export( wp_get_referer(), true ), 0 );
-		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_REQUEST = ' . var_export( wp_json_encode( $_REQUEST ), true ), 0 );
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_POST = ' . var_export( $_POST, true ), 0 );
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_GET = ' . var_export( $_GET, true ), 0 );
 
@@ -197,7 +197,7 @@ class MLA {
 
 		$bulk_action = self::_current_bulk_action();
 		if ( ( 'download-zip' === $bulk_action ) || ( 'download-original' === $bulk_action ) ) {
-			check_admin_referer( 'bulk-attachments' );
+			check_admin_referer( 'bulk-attachments' ); // set in class-mla-list-table.php function display_tablenav()
 			// Exits after redirect unless it returns an error
 			$_REQUEST['mla_zip_archive_error_message'] =  self::_process_zip_archive_download( $_REQUEST );
 			MLACore::mla_debug_add( __LINE__ . " MLA::_process_zip_archive_download message = " . var_export( $_REQUEST['mla_zip_archive_error_message'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY ); // phpcs:ignore
@@ -641,11 +641,15 @@ class MLA {
 		$screen = get_current_screen();
 		// Is this Media/Assistant?
 		if ( !array_key_exists( $screen->id, self::$page_hooks ) ) {
-			return;
+			return $html;
 		}
 
 		if ( 'edit-tags' === $screen->base && 'attachment' !== $screen->post_type ) {
-			return;
+			return $html;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $html;
 		}
 
 		$html .= '
@@ -791,7 +795,7 @@ class MLA {
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) wp_filter = " . MLACore::mla_display_wp_filter('set-screen-option'), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		if ( ( MLA_OPTION_PREFIX . 'entries_per_page' ) === $option ) {
-			if ( isset( $_REQUEST['mla_so_filter_taxonomy'] ) ) {
+			if ( isset( $_REQUEST['mla_so_filter_taxonomy'] ) && current_user_can( 'manage_options' ) ) {
 				$old_filter =  MLACore::mla_taxonomy_support('', 'filter');
 				$new_filter = sanitize_text_field( wp_unslash( $_REQUEST['mla_so_filter_taxonomy'] ) );
 
@@ -1377,7 +1381,7 @@ class MLA {
 	 *
 	 * @since 2.00
 	 *
-	 * @param	string	Bulk action slug: delete, edit, restore, trash, custom action
+	 * @param	string	Bulk action slug: edit, delete/trash/restore, download-zip, download-original, custom action
 	 * @param	array	Form elements, e.g., from $_REQUEST
 	 *
 	 * @return	array	messages and page content: ( 'message', 'body', 'unchanged', 'success', 'failure', 'item_results' )
@@ -1396,10 +1400,10 @@ class MLA {
 		 * do_cleanup will remove the bulk edit elements from the $_REQUEST super array.
 		 * It is passed in the $request so it can be filtered.
 		 */
-		if ( NULL == $request ) {
+		if ( NULL === $request ) {
 			// Bulk Edit actions have their own NONCE check
-			if ( isset( $_REQUEST['_wpnonce'] ) ) {
-				check_admin_referer( 'bulk-attachments' );
+			if ( 'edit' !== $bulk_action ) {
+				check_admin_referer( 'bulk-attachments' ); // set in class-mla-list-table.php function display_tablenav()
 			}
 
 			$request = $_REQUEST;
@@ -1446,7 +1450,6 @@ class MLA {
 			} elseif ( !empty( $request['bulk_map'] ) ) {
 				do_action( 'mla_begin_mapping', 'bulk_iptc_exif', NULL );
 			}
-
 
 			foreach ( $request['cb_attachment'] as $index => $post_id ) {
 				self::$bulk_edit_data_source['cb_index']++;
@@ -1702,7 +1705,7 @@ class MLA {
 		}
 
 		// Process bulk actions that affect an array of items
-		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
+		if ( $bulk_action && ( $bulk_action !== 'none' ) ) {
 			// bulk_refresh simply refreshes the page, ignoring other bulk actions
 			if ( empty( $_REQUEST['bulk_refresh'] ) ) {
 				$item_content = self::mla_process_bulk_action( $bulk_action );
@@ -1717,6 +1720,8 @@ class MLA {
 		// Empty the Trash?
 		if ( isset( $_REQUEST['delete_all'] ) ) {
 			global $wpdb;
+
+			check_admin_referer( 'bulk-attachments' ); // set in class-mla-list-table.php function display_tablenav()
 
 			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type=%s AND post_status = %s", 'attachment', 'trash' ) ); // phpcs:ignore
 			$delete_count = 0;
@@ -1982,11 +1987,14 @@ class MLA {
 	 * @return	void	echo json results or error message, then die()
 	 */
 	private static function _bulk_edit_ajax_handler() {
+
+		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 		/*
 		 * The category taxonomy (edit screens) is a special case because 
 		 * post_categories_meta_box() changes the input name
 		 */
-		if ( !isset( $_REQUEST['tax_input'] ) ) {
+		if ( ! isset( $_REQUEST['tax_input'] ) ) {
 			$_REQUEST['tax_input'] = array();
 		}
 
@@ -2135,7 +2143,7 @@ class MLA {
 		}
 
 		if ( ! $prevent_default ) {
-			MLACore::mla_debug_add( __LINE__ . " MLA::mla_inline_edit_ajax_action( {$post_id} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+			MLACore::mla_debug_add( __LINE__ . " MLA::mla_inline_edit_ajax_action( {$post_id} ) encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 
 			$date = array();
 			foreach( array( 'aa', 'mm', 'jj', 'hh', 'mn', 'ss' ) as $index ) {
@@ -2694,14 +2702,14 @@ class MLA {
 	 * @return	array success/failure message and NULL content
 	 */
 	private static function _delete_single_item( $post_id ) {
-		if ( !current_user_can( 'delete_post', $post_id ) ) {
+		if ( ! current_user_can( 'delete_post', $post_id ) ) {
 			return array(
 				'message' => __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'You are not allowed to delete this item.', 'media-library-assistant' ),
 				'body' => '' 
 			);
 		}
 
-		if ( !wp_delete_attachment( $post_id, true ) ) {
+		if ( ! wp_delete_attachment( $post_id, true ) ) {
 			return array(
 				/* translators: 1: ERROR tag 2: post ID */
 				'message' => sprintf( __( '%1$s: Item %2$d could NOT be deleted.', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $post_id ),
@@ -2726,14 +2734,14 @@ class MLA {
 	 * @return	array	success/failure message and NULL content
 	 */
 	private static function _restore_single_item( $post_id ) {
-		if ( !current_user_can( 'delete_post', $post_id ) ) {
+		if ( ! current_user_can( 'delete_post', $post_id ) ) {
 			return array(
 				'message' => __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'You are not allowed to move this item out of the Trash.', 'media-library-assistant' ),
 				'body' => '' 
 			);
 		}
 
-		if ( !wp_untrash_post( $post_id ) ) {
+		if ( ! wp_untrash_post( $post_id ) ) {
 			return array(
 				/* translators: 1: ERROR tag 2: post ID */
 				'message' => sprintf( __( '%1$s: Item %2$d could NOT be restored from Trash.', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $post_id ),
@@ -2741,9 +2749,7 @@ class MLA {
 			);
 		}
 
-		/*
-		 * Posts are restored to "draft" status, so this must be updated.
-		 */
+		// Posts are restored to "draft" status, so this must be updated.
 		$update_post = array();
 		$update_post['ID'] = $post_id;
 		$update_post['post_status'] = 'inherit';
