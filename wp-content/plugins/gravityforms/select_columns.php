@@ -2,7 +2,7 @@
 
 // For backwards compatibility, load WordPress if it hasn't been loaded yet
 // Will be used if this file is being called directly
-if ( ! class_exists( 'RGForms' ) ) {
+if ( ! class_exists( 'GFForms' ) ) {
 	for ( $i = 0; $i < $depth = 10; $i ++ ) {
 		$wp_root_path = str_repeat( '../', $i );
 
@@ -42,6 +42,14 @@ class GFSelectColumns {
 	 * @return void
 	 */
 	public static function select_columns_page() {
+
+		if ( ! GFCommon::current_user_can_select_columns() ) {
+			wp_die(
+				esc_html__( 'You do not have permission to select columns.', 'gravityforms' ),
+				'',
+				array( 'response' => 403 )
+			);
+		}
 
 		$form_id = absint( rgget( 'id' ) );
 		if ( empty( $form_id ) ) {

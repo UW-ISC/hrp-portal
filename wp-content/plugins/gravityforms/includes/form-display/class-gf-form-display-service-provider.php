@@ -5,13 +5,14 @@ namespace Gravity_Forms\Gravity_Forms\Form_Display;
 use Gravity_Forms\Gravity_Forms\Config\GF_Config_Service_Provider;
 use Gravity_Forms\Gravity_Forms\Form_Display\Config\GF_Product_Meta_Config;
 use Gravity_Forms\Gravity_Forms\Form_Display\Config\GF_Pagination_Config;
+use Gravity_Forms\Gravity_Forms\Fields\Config\GF_Field_Address_Frontend_Config;
+use Gravity_Forms\Gravity_Forms\Fields\Config\GF_Field_Phone_Frontend_Config;
 use Gravity_Forms\Gravity_Forms\Form_Display\Full_Screen\Full_Screen_Handler;
 use Gravity_Forms\Gravity_Forms\Form_Display\Block_Styles\Block_Styles_Handler;
+use Gravity_Forms\Gravity_Forms\Form_Display\State\State_Handler;
 use Gravity_Forms\Gravity_Forms\GF_Service_Container;
 use Gravity_Forms\Gravity_Forms\GF_Service_Provider;
 use Gravity_Forms\Gravity_Forms\Query\GF_Query_Service_Provider;
-use Gravity_Forms\Gravity_Forms\Query\JSON_Handlers\GF_Query_JSON_Handler;
-use Gravity_Forms\Gravity_Forms\Query\JSON_Handlers\GF_String_JSON_Handler;
 use \GFCommon;
 use \GFForms;
 use \GFFormDisplay;
@@ -25,11 +26,14 @@ use \GFFormDisplay;
  */
 class GF_Form_Display_Service_Provider extends GF_Service_Provider {
 
-	const FULL_SCREEN_HANDLER   = 'full_screen_handler';
-	const BLOCK_STYLES_HANDLER  = 'block_styles_handler';
-	const BLOCK_STYLES_DEFAULTS = 'block_styles_defaults';
-	const PRODUCT_META_CONFIG   = 'products_meta_config';
-	const PAGINATION_CONFIG     = 'pagination_config';
+	const FULL_SCREEN_HANDLER           = 'full_screen_handler';
+	const BLOCK_STYLES_HANDLER          = 'block_styles_handler';
+	const STATE_HANDLER                 = 'state_handler';
+	const BLOCK_STYLES_DEFAULTS         = 'block_styles_defaults';
+	const PRODUCT_META_CONFIG           = 'products_meta_config';
+	const PAGINATION_CONFIG             = 'pagination_config';
+	const ADDRESS_FIELD_FRONTEND_CONFIG = 'address_field_frontend_config';
+	const PHONE_FIELD_FRONTEND_CONFIG   = 'phone_field_frontend_config';
 
 	/**
 	 * Register services to the container.
@@ -39,12 +43,16 @@ class GF_Form_Display_Service_Provider extends GF_Service_Provider {
 	 * @param GF_Service_Container $container
 	 */
 	public function register( GF_Service_Container $container ) {
-		require_once( plugin_dir_path( __FILE__ ) . '/full-screen/class-full-screen-handler.php' );
-		require_once( plugin_dir_path( __FILE__ ) . '/block-styles/views/class-form-view.php' );
-		require_once( plugin_dir_path( __FILE__ ) . '/block-styles/views/class-confirmation-view.php' );
-		require_once( plugin_dir_path( __FILE__ ) . '/block-styles/block-styles-handler.php' );
-		require_once( plugin_dir_path( __FILE__ ) . '/config/class-gf-product-meta-config.php' );
-		require_once( plugin_dir_path( __FILE__ ) . '/config/class-gf-pagination-config.php' );
+		$base_path = plugin_dir_path( __FILE__ );
+		require_once $base_path . '/full-screen/class-full-screen-handler.php';
+		require_once $base_path . '/block-styles/views/class-form-view.php';
+		require_once $base_path . '/block-styles/views/class-confirmation-view.php';
+		require_once $base_path . '/block-styles/block-styles-handler.php';
+		require_once $base_path . '/config/class-gf-product-meta-config.php';
+		require_once $base_path . '/config/class-gf-pagination-config.php';
+		require_once $base_path . '/state/class-state-handler.php';
+		require_once $base_path . '/../fields/config/class-gf-field-address-frontend-config.php';
+		require_once $base_path . '/../fields/config/class-gf-field-phone-frontend-config.php';
 
 		$container->add( self::FULL_SCREEN_HANDLER, function() use ( $container ) {
 			// Use string handler for now to avoid JSON query issues on old platforms.
@@ -87,6 +95,10 @@ class GF_Form_Display_Service_Provider extends GF_Service_Provider {
 			return new Block_Styles_Handler( $container->get( self::BLOCK_STYLES_DEFAULTS ) );
 		});
 
+		$container->add( self::STATE_HANDLER, function () {
+			return new State_Handler();
+		} );
+
 		// Product meta config.
 		$container->add( self::PRODUCT_META_CONFIG, function () use ( $container ) {
 			return new GF_Product_Meta_Config( $container->get( GF_Config_Service_Provider::DATA_PARSER ) );
@@ -98,6 +110,21 @@ class GF_Form_Display_Service_Provider extends GF_Service_Provider {
 			return new GF_Pagination_Config( $container->get( GF_Config_Service_Provider::DATA_PARSER ) );
 		});
 		$container->get( GF_Config_Service_Provider::CONFIG_COLLECTION )->add_config( $container->get( self::PAGINATION_CONFIG ) );
+
+		// Address Field Frontend config.
+		$container->add(
+			self::ADDRESS_FIELD_FRONTEND_CONFIG,
+			function () use ( $container ) {
+				return new GF_Field_Address_Frontend_Config( $container->get( GF_Config_Service_Provider::DATA_PARSER ) );
+			}
+		);
+		$container->get( GF_Config_Service_Provider::CONFIG_COLLECTION )->add_config( $container->get( self::ADDRESS_FIELD_FRONTEND_CONFIG ) );
+
+		// Phone Field Frontend config.
+		$container->add( self::PHONE_FIELD_FRONTEND_CONFIG, function () use ( $container ) {
+			return new GF_Field_Phone_Frontend_Config( $container->get( GF_Config_Service_Provider::DATA_PARSER ) );
+		} );
+		$container->get( GF_Config_Service_Provider::CONFIG_COLLECTION )->add_config( $container->get( self::PHONE_FIELD_FRONTEND_CONFIG ) );
 
 	}
 
