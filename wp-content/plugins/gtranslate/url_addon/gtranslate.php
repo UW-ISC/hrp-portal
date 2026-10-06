@@ -1,4 +1,10 @@
 <?php
+// direct file access is intentional here because this file acts as an entry point for the reverse proxy system
+if(!defined('ABSPATH'))
+    define('ABSPATH', dirname(__DIR__, 4) . '/');
+if(!defined('ABSPATH'))
+    exit;
+
 error_reporting(0);
 
 include 'config.php';
@@ -138,6 +144,7 @@ if(!function_exists('curl_init')) {
     exit;
 }
 
+// phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct cURL usage is required here because we do not include WP Core
 // proxy request
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $page_url);
@@ -192,6 +199,7 @@ if($debug) {
 $response = curl_exec($ch);
 $response_info = curl_getinfo($ch);
 curl_close($ch);
+// phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 
 //print_r($response_info);
 
@@ -262,12 +270,14 @@ if(isset($_GET['language_edit'])) {
     $html = str_replace('/tdn-bin/', $protocol . '://' . $_SERVER['HTTP_HOST'] . '/' . $glang . '/tdn-bin/', $html);
 }
 
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Raw output is required here because this response is emitted as part of the reverse proxy system
 if(function_exists('gzencode') and isset($return_gz) and $return_gz and zlib_get_coding_type() == false)
     echo gzencode($html);
 else
     echo $html;
+// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-function http_build_query_for_curl_multipart($arrays, &$new, $prefix = null, $multipart_boundary) {
+function http_build_query_for_curl_multipart($arrays, &$new, $prefix, $multipart_boundary) {
     if(is_object($arrays))
         $arrays = get_object_vars($arrays);
 
@@ -286,7 +296,7 @@ function http_build_query_for_curl_multipart($arrays, &$new, $prefix = null, $mu
     }
 }
 
-function http_build_files_for_curl_multipart($arrays, &$new, $prefix = null, $multipart_boundary) {
+function http_build_files_for_curl_multipart($arrays, &$new, $prefix, $multipart_boundary) {
     if(is_object($arrays))
         $arrays = get_object_vars($arrays);
 
