@@ -1,0 +1,353 @@
+<?php
+
+/**
+ * @copyright © Melograno Venture Studio. All rights reserved.
+ * @licence   See LICENCE.md for license details.
+ */
+
+namespace WPDataTables\Services\Settings;
+
+use stdClass;
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Core\UsageTracker;
+
+/**
+ * Plugin settings/options service.
+ *
+ * Owns the wpDataTables option surface. The legacy global
+ * `WDTSettingsController` is now a thin shim delegating to this service. This is
+ * the only place that should read/write the `wdt*` options going forward.
+ *
+ * @package WPDataTables\Services\Settings
+ */
+class SettingsService
+{
+    /** WordPress option key for Developer-tier settings (API keys, public API toggle). */
+    const DEVELOPER_SETTINGS_OPTION = 'wdtDeveloperSettings';
+
+    /**
+     * @param string $settingCategoryKey
+     * @return array<string, mixed>
+     */
+    public function getCategorySettings(string $settingCategoryKey)
+    {
+        if ($settingCategoryKey !== 'developer') {
+            return [];
+        }
+
+        $settings = get_option(self::DEVELOPER_SETTINGS_OPTION, []);
+
+        return is_array($settings) ? $settings : [];
+    }
+
+    /**
+     * @param string               $settingCategoryKey
+     * @param array<string, mixed> $settingValue
+     * @return void
+     */
+    public function setCategorySettings(string $settingCategoryKey, $settingValue)
+    {
+        if ($settingCategoryKey !== 'developer') {
+            return;
+        }
+
+        update_option(self::DEVELOPER_SETTINGS_OPTION, is_array($settingValue) ? $settingValue : []);
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     * @return array<string, mixed>
+     */
+    public function sanitizeSettings($settings)
+    {
+        foreach ($settings as $key => &$setting) {
+            if (is_array($setting)) {
+                foreach ($setting as &$childSetting) {
+                    $childSetting = sanitize_text_field($childSetting);
+                }
+            } elseif (function_exists('sanitize_textarea_field') && ($key === 'wdtCustomJs' || $key === 'wdtCustomCss')) {
+                if ($key === 'wdtCustomJs' && !current_user_can('unfiltered_html')) {
+                    $setting = '';
+                } else {
+                    $setting = sanitize_textarea_field($setting);
+                }
+            } elseif ($key !== 'wdtSeparateCon') {
+                $setting = sanitize_text_field($setting);
+            } elseif ($key === 'wdtInterfaceLanguage') {
+                // Security Fix: Prevent Path Traversal / LFI for language file (CVE-2026-28039)
+                if (!empty($setting)) {
+                    // Only allow basename (no directory traversal)
+                    $setting = basename(sanitize_text_field($setting));
+
+                    // Verify it's a valid language file
+                    if (substr($setting, -8) !== '.inc.php') {
+                        $setting = ''; // Invalid format, reject it
+                    } else {
+                        // Double-check the file exists in the lang directory
+                        $langPath = WDT_LEGACY_LANG_PATH . $setting;
+                        if (!file_exists($langPath) || !is_file($langPath)) {
+                            $setting = ''; // File doesn't exist, reject it
+                        }
+                    }
+                }
+            }
+        }
+        return $settings;
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    public function saveGoogleSettings($settings)
+    {
+        $result = [];
+        if (isset($settings['private_key_id'], $settings['private_key'], $settings['client_email'], $settings['client_id'])) {
+            $googleSheet = new \WPDataTable_Google_Sheet();
+            try {
+                $token = $googleSheet->getToken($settings);
+            } catch (\WDTException $e) {
+                $result['error'] = '<br>' . $e->getMessage();
+                echo json_encode($result);
+                exit();
+            }
+            if ($token[0]) {
+                $token[1]['expires_in'] = time() + $token[1]['expires_in'];
+                update_option('wdtGoogleSettings', $settings);
+                update_option('wdtGoogleToken', $token[1]);
+            }
+        } else {
+            $result['error'] = '<br>Private data for your Google service account are not set.';
+            echo json_encode($result);
+            exit();
+        }
+    }
+
+    /**
+     * @param string $settings
+     */
+    public function saveGoogleApiMaps($settings)
+    {
+        $settings = sanitize_text_field($settings);
+        update_option('wdtGoogleApiMaps', $settings);
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    public function saveSettings($settings)
+    {
+        $settings = $this->sanitizeSettings(stripslashes_deep($settings));
+        $autoUpdateOption = (int)$settings['wdtAutoUpdateOption'];
+        $globalTableLoader = (int)$settings['wdtGlobalTableLoader'];
+        $globalChartLoader = (int)$settings['wdtGlobalChartLoader'];
+
+        if (!$autoUpdateOption) {
+            global $wpdb;
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . $wpdb->prefix . "wpdatatables_cache
+                           SET auto_update = %d",
+                    $autoUpdateOption
+                )
+            );
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . $wpdb->prefix . "wpdatatables
+                           SET auto_update_cache = %d",
+                    $autoUpdateOption
+                )
+            );
+        }
+
+        foreach ($settings as $key => $value) {
+            if ($key == 'wdtGlobalChartLoader') {
+                $updatedValueChart = get_option($key);
+            }
+            if ($key == 'wdtGlobalTableLoader') {
+                $updatedValueTable = get_option($key);
+            }
+            update_option($key, $value);
+            if ($key == 'wdtGlobalChartLoader') {
+                if ($globalChartLoader == $updatedValueChart) $checkValueChart = false;
+                else $checkValueChart = true;
+            }
+            if ($key == 'wdtGlobalTableLoader') {
+                if ($globalTableLoader == $updatedValueTable) $checkValueTable = false;
+                else $checkValueTable = true;
+            }
+        }
+
+        if ($checkValueChart) {
+            global $wpdb;
+            $charts = $wpdb->get_results("SELECT id, json_render_data FROM " . $wpdb->prefix . "wpdatacharts");
+            foreach ($charts as $chart) {
+                $settings = json_decode($chart->json_render_data, true);
+
+                $settings['render_data']['loader'] = $globalChartLoader;
+
+                $updated_settings = json_encode($settings);
+
+                $wpdb->update(
+                    $wpdb->prefix . "wpdatacharts",
+                    ['json_render_data' => $updated_settings],
+                    ['id' => $chart->id]
+                );
+            }
+        }
+
+        if ($checkValueTable) {
+            global $wpdb;
+            $tables = $wpdb->get_results("SELECT id, advanced_settings FROM " . $wpdb->prefix . "wpdatatables");
+            foreach ($tables as $table) {
+                $settings = json_decode($table->advanced_settings, true);
+
+                $settings['loader'] = $globalTableLoader;
+
+                $updated_settings = json_encode($settings);
+
+                $wpdb->update(
+                    $wpdb->prefix . "wpdatatables",
+                    ['advanced_settings' => $updated_settings],
+                    ['id' => $table->id]
+                );
+            }
+        }
+
+        do_action('wpdatatables_after_save_settings');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getCurrentPluginConfig()
+    {
+        $settings = array(
+            'wdtInterfaceLanguage' => get_option('wdtInterfaceLanguage'),
+            'wdtTablesPerPage' => get_option('wdtTablesPerPage'),
+            'wdtDateFormat' => get_option('wdtDateFormat'),
+            'wdtTimeFormat' => get_option('wdtTimeFormat'),
+            'wdtBaseSkin' => get_option('wdtBaseSkin'),
+            'wdtNumberFormat' => get_option('wdtNumberFormat'),
+            'wdtRenderFilter' => get_option('wdtRenderFilter'),
+            'wdtDecimalPlaces' => get_option('wdtDecimalPlaces'),
+            'wdtCSVDelimiter' => get_option('wdtCSVDelimiter'),
+            'wdtSortingOrderBrowseTables' => get_option('wdtSortingOrderBrowseTables'),
+            'wdtTabletWidth' => get_option('wdtTabletWidth'),
+            'wdtMobileWidth' => get_option('wdtMobileWidth'),
+            'wdtGettingStartedPageStatus' => get_option('wdtGettingStartedPageStatus'),
+            'wdtLiteVSPremiumPageStatus' => get_option('wdtLiteVSPremiumPageStatus'),
+            'wdtIncludeGoogleFonts' => get_option('wdtIncludeGoogleFonts'),
+            'wdtIncludeBootstrap' => get_option('wdtIncludeBootstrap'),
+            'wdtIncludeBootstrapBackEnd' => get_option('wdtIncludeBootstrapBackEnd'),
+            'wdtPreventDeletingTables' => get_option('wdtPreventDeletingTables'),
+            'wdtParseShortcodes' => get_option('wdtParseShortcodes'),
+            // Default ON when unset (MCP / Angie AI assistants).
+            'wdtMcpEnabled' => (int) (get_option('wdtMcpEnabled', 1) ? 1 : 0),
+            'wdtNumbersAlign' => get_option('wdtNumbersAlign'),
+            'wdtGlobalTableLoader' => get_option('wdtGlobalTableLoader'),
+            'wdtGlobalChartLoader' => get_option('wdtGlobalChartLoader'),
+            'wdtBorderRemoval' => get_option('wdtBorderRemoval'),
+            'wdtBorderRemovalHeader' => get_option('wdtBorderRemovalHeader'),
+            'wdtUseSeparateCon' => get_option('wdtUseSeparateCon'),
+            'wdtSeparateCon' => get_option('wdtSeparateCon'),
+            'wdtCustomCss' => get_option('wdtCustomCss'),
+            'wdtCustomJs' => get_option('wdtCustomJs'),
+            'wdtMinifiedJs' => get_option('wdtMinifiedJs'),
+            'wdtGoogleSettings' => get_option('wdtGoogleSettings'),
+            'wdtGoogleToken' => get_option('wdtGoogleToken'),
+            'wdtSumFunctionsLabel' => get_option('wdtSumFunctionsLabel'),
+            'wdtAvgFunctionsLabel' => get_option('wdtAvgFunctionsLabel'),
+            'wdtMinFunctionsLabel' => get_option('wdtMinFunctionsLabel'),
+            'wdtMaxFunctionsLabel' => get_option('wdtMaxFunctionsLabel'),
+            'wdtFontColorSettings' => get_option('wdtFontColorSettings') ? get_option('wdtFontColorSettings') : new stdClass(),
+            'wdtActivated' => get_option('wdtActivated'),
+            'wdtPurchaseCodeStore' => get_option('wdtPurchaseCodeStore') != '' ? 1 : 0,
+            'wdtEnvatoTokenEmail' => get_option('wdtEnvatoTokenEmail'),
+            'wdtActivatedPowerful' => get_option('wdtActivatedPowerful'),
+            'wdtPurchaseCodeStorePowerful' => get_option('wdtPurchaseCodeStorePowerful') != '' ? 1 : 0,
+            'wdtEnvatoTokenEmailPowerful' => get_option('wdtEnvatoTokenEmailPowerful'),
+            'wdtActivatedReport' => get_option('wdtActivatedReport'),
+            'wdtPurchaseCodeStoreReport' => get_option('wdtPurchaseCodeStoreReport') != '' ? 1 : 0,
+            'wdtEnvatoTokenEmailReport' => get_option('wdtEnvatoTokenEmailReport'),
+            'wdtActivatedGravity' => get_option('wdtActivatedGravity'),
+            'wdtPurchaseCodeStoreGravity' => get_option('wdtPurchaseCodeStoreGravity') != '' ? 1 : 0,
+            'wdtEnvatoTokenEmailGravity' => get_option('wdtEnvatoTokenEmailGravity'),
+            'wdtActivatedFormidable' => get_option('wdtActivatedFormidable'),
+            'wdtPurchaseCodeStoreFormidable' => get_option('wdtPurchaseCodeStoreFormidable') != '' ? 1 : 0,
+            'wdtEnvatoTokenEmailFormidable' => get_option('wdtEnvatoTokenEmailFormidable'),
+            'wdtActivatedMasterDetail' => get_option('wdtActivatedMasterDetail'),
+            'wdtPurchaseCodeStoreMasterDetail' => get_option('wdtPurchaseCodeStoreMasterDetail') != '' ? 1 : 0,
+            'wdtAutoUpdateOption' => get_option('wdtAutoUpdateOption'),
+            'wdtGoogleStableVersion' => get_option('wdtGoogleStableVersion'),
+            'wdtApexStableVersion' => get_option('wdtApexStableVersion'),
+            'wdtGoogleApiMaps' => get_option('wdtGoogleApiMaps'),
+            'wdtGoogleApiMapsValidated' => get_option('wdtGoogleApiMapsValidated'),
+        );
+
+        $usageSettings = UsageTracker::getSettings(new WpDataTablesCollector());
+        $settings['wdtUsageTrackingEnabled'] = ! empty($usageSettings['usageTrackingEnabled']) ? 1 : 0;
+
+        return $settings;
+    }
+
+    /**
+     * Returns available interface languages.
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getInterfaceLanguages()
+    {
+        $languages = array();
+
+        foreach (glob(WDT_LEGACY_LANG_PATH . '*.inc.php') as $lang_filename) {
+            $lang_filename = str_replace(WDT_LEGACY_LANG_PATH, '', $lang_filename);
+            $name = ucwords(str_replace('_', ' ', $lang_filename));
+            $name = str_replace('.inc.php', '', $name);
+            $languages[] = array('file' => $lang_filename, 'name' => $name);
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Returns interface languages as an associative array.
+     *
+     * @return array<string, string>
+     */
+    public function getArrInterfaceLanguages()
+    {
+        $newArrLang = [];
+        $languages = $this->getInterfaceLanguages();
+
+        foreach ($languages as $language) {
+            $newArrLang[$language['name']] = $language['file'];
+        }
+
+        return $newArrLang;
+    }
+
+    /**
+     * Returns system fonts.
+     *
+     * @return array<int, string>
+     */
+    public function getSystemFonts()
+    {
+        $systemFonts = array(
+            'Georgia, serif',
+            'Palatino Linotype, Book Antiqua, Palatino, serif',
+            'Times New Roman, Times, serif',
+            'Arial, Helvetica, sans-serif',
+            'Impact, Charcoal, sans-serif',
+            'Lucida Sans Unicode, Lucida Grande, sans-serif',
+            'Tahoma, Geneva, sans-serif',
+            'Verdana, Geneva, sans-serif',
+            'Courier New, Courier, monospace',
+            'Lucida Console, Monaco, monospace'
+        );
+
+        $systemFonts = apply_filters('wpdatatables_get_system_fonts', $systemFonts);
+
+        return $systemFonts;
+    }
+}

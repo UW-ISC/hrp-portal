@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /*
  * Stuff specific for User Role Editor WordPress plugin
  * Author: Vladimir Garagulya
@@ -18,14 +20,8 @@ class URE_Lib extends URE_Base_Lib {
     protected $wp_default_role = '';
     protected $advert = null;
     protected $bbpress = null; // reference to the URE_bbPress class instance
-    protected $key_capability = ''; // Key user capability for get full access to the User Role Editor
     protected $settings_capability = ''; // User capability for access to User Role Editor Settings
-    
-    // when allow_edit_users_to_not_super_admin option is turned ON, we set this property to true 
-    // when we raise single site admin permissions up to the superadmin for the 'Add new user' new-user.php page
-    // User_Role_Editor::allow_add_user_as_superadmin()
-    protected $raised_permissions = false; 
-    
+
     // roles sorting order: false - do not sort, 'id' - by role ID, 'name' - by role name
     protected $roles_sorting_order = false;
  
@@ -42,6 +38,7 @@ class URE_Lib extends URE_Base_Lib {
                                            
         parent::__construct($options_id); 
         
+        // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- URE_DEBUG is admin-defined in wp-config.php and may reasonably be 1, '1', or true; loose comparison is intentional.
         $this->debug = defined('URE_DEBUG') && (URE_DEBUG==1 || URE_DEBUG==true);
         $this->get_bbpress();        
         $this->upgrade();
@@ -84,10 +81,10 @@ class URE_Lib extends URE_Base_Lib {
         }
         
         $ure_version = $this->get_option('ure_version', '0');
-        if (version_compare( $ure_version, URE_VERSION, '<' ) ) {
+        if ( version_compare( $ure_version, URE_Core::PLUGIN_VERSION, '<' ) ) {
             // put version upgrade stuff here
             
-            $this->put_option('ure_version', URE_VERSION, true);
+            $this->put_option('ure_version', URE_Core::PLUGIN_VERSION, true);
         }
         
     }
@@ -105,14 +102,6 @@ class URE_Lib extends URE_Base_Lib {
     // end of is_pro()    
                 
     
-    public function set_raised_permissions($value) {
-        
-        $this->raised_permissions = !empty($value) ? true : false;
-        
-    }
-    // end of set_raised_permissions()
-        
-        
     /**
      * get options for User Role Editor plugin
      * User Role Editor stores its options at the main blog/site only and applies them to the all network
@@ -125,10 +114,10 @@ class URE_Lib extends URE_Base_Lib {
             if ( ! function_exists( 'is_plugin_active_for_network' ) ) {    // Be sure the function is defined before trying to use it
                 require_once( ABSPATH . '/wp-admin/includes/plugin.php' );                
             }
-            $this->active_for_network = is_plugin_active_for_network(URE_PLUGIN_BASE_NAME);
+            $this->active_for_network = is_plugin_active_for_network( URE_Core::get_plugin_base_name() );
         }
         $current_blog = $wpdb->blogid;
-        if ($this->multisite && $current_blog!=$this->main_blog_id) {   
+        if ($this->multisite && $current_blog!==$this->main_blog_id) {   
             if ($this->active_for_network) {   // plugin is active for whole network, so get URE options from the main blog
                 switch_to_blog($this->main_blog_id);  
             }
@@ -137,7 +126,7 @@ class URE_Lib extends URE_Base_Lib {
         $this->options_id = $options_id;
         $this->options = get_option($options_id);
         
-        if ($this->multisite && $current_blog!=$this->main_blog_id) {
+        if ($this->multisite && $current_blog!==$this->main_blog_id) {
             if ($this->active_for_network) {   // plugin is active for whole network, so return back to the current blog
                 restore_current_blog();
             }
@@ -238,6 +227,7 @@ class URE_Lib extends URE_Base_Lib {
         if ($bbpress->is_active()) {
             remove_filter('editable_roles', 'bbp_filter_blog_editable_roles');
         }
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- 'editable_roles' is WordPress core's own filter hook, not a custom one; name must match exactly.
         $roles = apply_filters('editable_roles', $roles );
         if ( $bbpress->is_active() ) {
             add_filter('editable_roles', 'bbp_filter_blog_editable_roles');
@@ -315,8 +305,10 @@ class URE_Lib extends URE_Base_Lib {
             switch_to_blog($blog_id);
         }
         // cleanup blog switching data
+        // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- $_wp_switched_stack/$switched are WP core's own globals (switch_to_blog() internals), not new ones defined by this plugin.
         $GLOBALS['_wp_switched_stack'] = array();
         $GLOBALS['switched'] = ! empty( $GLOBALS['_wp_switched_stack'] );
+        // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
     }
     // end of restore_after_blog_switching()
     
@@ -385,12 +377,12 @@ class URE_Lib extends URE_Base_Lib {
 ?>		  
             <h2>User Role Editor</h2>         
             
-            <strong><?php esc_html_e('Version:', 'user-role-editor');?></strong> <?php echo URE_VERSION; ?><br/><br/>
-            <a class="ure_rsb_link" style="background-image:url(<?php echo URE_PLUGIN_URL . 'images/vladimir.png'; ?>);" target="_blank" href="http://www.shinephp.com/"><?php esc_html_e("Author's website", 'user-role-editor'); ?></a><br/>
-            <a class="ure_rsb_link" style="background-image:url(<?php echo URE_PLUGIN_URL . 'images/user-role-editor-icon.png'; ?>);" target="_blank" href="https://www.role-editor.com"><?php esc_html_e('Plugin webpage', 'user-role-editor'); ?></a><br/>
-            <a class="ure_rsb_link" style="background-image:url(<?php echo URE_PLUGIN_URL . 'images/user-role-editor-icon.png'; ?>);" target="_blank" href="https://www.role-editor.com/download-plugin"><?php esc_html_e('Plugin download', 'user-role-editor'); ?></a><br/>
-            <a class="ure_rsb_link" style="background-image:url(<?php echo URE_PLUGIN_URL . 'images/changelog-icon.png'; ?>);" target="_blank" href="https://www.role-editor.com/changelog"><?php esc_html_e('Changelog', 'user-role-editor'); ?></a><br/>
-            <a class="ure_rsb_link" style="background-image:url(<?php echo URE_PLUGIN_URL . 'images/faq-icon.png'; ?>);" target="_blank" href="http://www.shinephp.com/user-role-editor-wordpress-plugin/#faq"><?php esc_html_e('FAQ', 'user-role-editor'); ?></a><br/>            
+            <strong><?php esc_html_e('Version:', 'user-role-editor');?></strong> <?php echo esc_html( URE_Core::PLUGIN_VERSION ); ?><br/><br/>
+            <a class="ure_rsb_link" style="background-image:url(<?php echo esc_url( URE_Core::get_plugin_url() . 'images/vladimir.png' ); ?>);" target="_blank" href="http://www.shinephp.com/"><?php esc_html_e("Author's website", 'user-role-editor'); ?></a><br/>
+            <a class="ure_rsb_link" style="background-image:url(<?php echo esc_url( URE_Core::get_plugin_url() . 'images/user-role-editor-icon.png' ); ?>);" target="_blank" href="https://www.role-editor.com"><?php esc_html_e('Plugin webpage', 'user-role-editor'); ?></a><br/>
+            <a class="ure_rsb_link" style="background-image:url(<?php echo esc_url( URE_Core::get_plugin_url() . 'images/user-role-editor-icon.png' ); ?>);" target="_blank" href="https://www.role-editor.com/download-plugin"><?php esc_html_e('Plugin download', 'user-role-editor'); ?></a><br/>
+            <a class="ure_rsb_link" style="background-image:url(<?php echo esc_url( URE_Core::get_plugin_url() . 'images/changelog-icon.png' ); ?>);" target="_blank" href="https://www.role-editor.com/changelog"><?php esc_html_e('Changelog', 'user-role-editor'); ?></a><br/>
+            <a class="ure_rsb_link" style="background-image:url(<?php echo esc_url( URE_Core::get_plugin_url() . 'images/faq-icon.png' ); ?>);" target="_blank" href="http://www.shinephp.com/user-role-editor-wordpress-plugin/#faq"><?php esc_html_e('FAQ', 'user-role-editor'); ?></a><br/>
 <?php         
     }
     // end of about()
@@ -398,6 +390,7 @@ class URE_Lib extends URE_Base_Lib {
     
     public function show_admin_role_allowed() {
         $show_admin_role = $this->get_option('show_admin_role', 0);
+        // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- URE_SHOW_ADMIN_ROLE is admin-defined in wp-config.php and may reasonably be 1, '1', or true; loose comparison is intentional.
         $show_admin_role = ((defined('URE_SHOW_ADMIN_ROLE') && URE_SHOW_ADMIN_ROLE==1) || $show_admin_role==1) && $this->user_is_admin();
         
         return $show_admin_role;
@@ -407,16 +400,14 @@ class URE_Lib extends URE_Base_Lib {
     
     /**
      * Returns true if user has a real super administrator permissions
-     * It takes into account $this->raised_permissions value, in order do not count a user with temporally raised permissions 
-     * of a real superadmin under WP Multisite
      * For WP Singlesite superadmin is a user with 'administrator' role only in opposite the WordPress's is_super_admin(),
      * which counts as superadmin any user with 'delete_users' capability
-     * 
+     *
      * @param int $user_id
      * @return boolean
      */
     public function is_super_admin( $user_id = false ) {
-                
+
         if (empty($user_id)) {
             $user = wp_get_current_user();
             $user_id = $user->ID;
@@ -426,8 +417,8 @@ class URE_Lib extends URE_Base_Lib {
         if (!$user || !$user->exists()) {
             return false;
         }
-        
-        if ( $this->multisite && !$this->raised_permissions && is_super_admin( $user_id ) ) {
+
+        if ( $this->multisite && is_super_admin( $user_id ) ) {
             return true;
         }
         
@@ -474,7 +465,7 @@ class URE_Lib extends URE_Base_Lib {
         }
         
         // Do not replace with $this->is_super_admin() to exclude recursion
-        if ($this->multisite && !$this->raised_permissions && is_super_admin($user->ID)) {  
+        if ($this->multisite && is_super_admin($user->ID)) {
             return true;
         }
 
@@ -512,11 +503,17 @@ class URE_Lib extends URE_Base_Lib {
      * @return boolean
      */
     public function is_right_admin_path( $path='' ) {
-        $result = true;
+
+	$result = true;
         $admin_url = admin_url( $path );   
         $parsed = wp_parse_url( $admin_url );
         $full_path = $parsed['path'];
-        if ( stripos( $_SERVER['REQUEST_URI'], $full_path )===false ) {
+	if ( isset( $_SERVER['REQUEST_URI'] ) && !empty( $_SERVER['REQUEST_URI'] ) ) {
+	    $request_uri = sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+	} else {
+	    return false;
+	}    
+        if ( stripos( $request_uri, $full_path )===false ) {
             $result = false;
         }
         
@@ -570,6 +567,17 @@ class URE_Lib extends URE_Base_Lib {
         return $taxonomies;
     }
     // end of get_custom_taxonomies()        
+
+    
+    public static function check_nonce() {
+        if ( !isset( $_POST['wp_nonce'] ) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wp_nonce'] ) ), 'user-role-editor' ) ) {
+            $error_message = esc_html__('URE: Wrong or expired request', 'user-role-editor');
+            return array('result'=>'error', 'message'=> $error_message);
+        } else {
+            return TRUE;
+        }
+    }
+    // end of check_nonce()
     
 }
 // end of URE_Lib class

@@ -1,0 +1,18 @@
+{
+  "name": "wpdatatables-angie",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "@elementor/angie-sdk": "^1.4.5",
+    "@modelcontextprotocol/sdk": "^1.27.1"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3",
+    "vite": "^7.3.0"
+  }
+}

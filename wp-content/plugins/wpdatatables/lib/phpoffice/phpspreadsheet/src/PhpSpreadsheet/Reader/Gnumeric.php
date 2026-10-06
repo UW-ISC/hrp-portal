@@ -51,6 +51,8 @@ class Gnumeric extends BaseReader
         '50' => DataType::TYPE_ERROR,
         '60' => DataType::TYPE_STRING,
     ]];
+    protected int $maxLength;
+    private const LENGTH_MULTIPLIER = ['G' => 1024 * 1024 * 1024, 'M' => 1024 * 1024, 'K' => 1024];
     /**
      * Create a new Gnumeric.
      */
@@ -59,6 +61,18 @@ class Gnumeric extends BaseReader
         parent::__construct();
         $this->referenceHelper = ReferenceHelper::getInstance();
         $this->securityScanner = XmlScanner::getInstance($this);
+        $limit = \ini_get('memory_limit') ?: '128M';
+        $limit = \trim(\str_replace('-1', '128M', $limit));
+        $unit = \strtoupper(\substr($limit, -1));
+        $limit = (int) $limit;
+        $multiplier = self::LENGTH_MULTIPLIER[$unit] ?? 1;
+        $limit *= $multiplier;
+        $this->maxLength = \intdiv($limit, 4);
+    }
+    public function setMaxLength(int $maxLength) : self
+    {
+        $this->maxLength = $maxLength;
+        return $this;
     }
     /**
      * Can the current IReader read the file?
@@ -165,7 +179,7 @@ class Gnumeric extends BaseReader
             if (\substr($contents, 0, 2) === "\x1f\x8b") {
                 // Check if gzlib functions are available
                 if (\function_exists('gzdecode')) {
-                    $contents = @\gzdecode($contents);
+                    $contents = @\gzdecode($contents, $this->maxLength);
                     if ($contents !== \false) {
                         $data = $contents;
                     }

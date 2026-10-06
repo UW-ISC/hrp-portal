@@ -1450,4 +1450,21 @@ class Spreadsheet implements JsonSerializable
             }
         }
     }
+    /** @var string[] */
+    private $domainWhiteList = [];
+    /**
+     * Currently used only by WEBSERVICE function.
+     *
+     * @param string[] $domainWhiteList
+     */
+    public function setDomainWhiteList(array $domainWhiteList) : self
+    {
+        $this->domainWhiteList = $domainWhiteList;
+        return $this;
+    }
+    /** @return string[] */
+    public function getDomainWhiteList() : array
+    {
+        return $this->domainWhiteList;
+    }
 }

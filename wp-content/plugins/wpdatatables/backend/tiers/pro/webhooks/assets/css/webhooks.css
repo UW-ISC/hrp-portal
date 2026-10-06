@@ -1,0 +1,71 @@
+.wdt-webhooks-table .wdt-function-flex {
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	justify-content: center;
+}
+
+.wdt-webhooks-table .column-actions {
+	width: 140px;
+	text-align: center;
+}
+
+.wdt-webhooks-table .wdt-function-flex a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	line-height: 1;
+}
+
+.wdt-webhooks-table .wdt-function-flex a i {
+	position: static !important;
+	line-height: 1;
+}
+
+.wdt-webhooks-table .wdt-webhook-url {
+	word-break: break-all;
+}
+
+.wdt-webhooks-table .toggle-switch {
+	margin: 0;
+	position: relative;
+	width: 40px !important;
+	height: 40px;
+}
+
+.wdt-webhooks-table .toggle-switch .ts-label {
+	margin: 0;
+	padding: 0 !important;
+	width: 40px !important;
+	height: 40px;
+	min-height: 40px !important;
+}
+
+#wdt-webhook-headers-list .wdt-webhook-header-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+#wdt-webhook-headers-list .wdt-webhook-remove-header {
+	width: 32px;
+	height: 32px;
+	padding: 0;
+}
+
+#wdt-webhook-modal .toggle-switch {
+	position: relative;
+	width: 120px !important;
+}
+
+#wdt-webhook-modal .toggle-switch .ts-label {
+	width: 120px !important;
+	margin: 0;
+}
+
+#webhooks-settings .wdt-webhooks-toolbar {
+	margin-bottom: 10px;
+}

@@ -8,14 +8,14 @@ defined('ABSPATH') or die('Access denied.');
  **/
 
 // Current version
-define('WDT_CURRENT_VERSION', '7.5.2.3');
+define('WDT_CURRENT_VERSION', '8.0.2');
 
 // Version of plugin where all our hooks are modified to start with wpdatatables_
 // and version when we prepare files in plugin for starter version
 define('WDT_INITIAL_STARTER_VERSION', '6.5');
 
 // Number of active plugin installs for Amelia
-define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '90,000+');
+define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '80,000+');
 // Number of appointments for Amelia
 define('AMELIA_NUMBER_OF_APPOINTMENTS', '900,000+');
 /**
@@ -33,19 +33,27 @@ define('WDT_TIME_WITH_SECONDS_REGEX', '/^([01]?[0-9]|2[0-3])\:([0-5][0-9]):([0-5
  * Path settings.
  * Paths are relative by default, but you may change it as you wish
  */
+define('WDT_LEGACY_PATH', WDT_ROOT_PATH . 'backend/src/Legacy/');
+define('WDT_LEGACY_FACADES_PATH', WDT_LEGACY_PATH . 'Facades/');
+define('WDT_LEGACY_LANG_PATH', WDT_LEGACY_PATH . 'lang/');
+
 define('WDT_TEMPLATE_PATH', WDT_ROOT_PATH . 'templates/'); // path to wpDataTables templates. You should not change this setting if you use default templates
 define('WDT_ASSETS_PATH', WDT_ROOT_URL . 'assets/'); // path to wpDataTables assets directory. You should not change this setting if you don't change default CSS/JS
-define('WDT_INTEGRATIONS_URL', WDT_ROOT_URL . 'integrations/'); // url to wpDataTables integrations directory.
-define('WDT_INTEGRATIONS_PATH', WDT_ROOT_PATH . 'integrations/'); // path to wpDataTables integrations directory.
+define('WDT_TIERS_PATH', WDT_ROOT_PATH . 'backend/tiers/');
+define('WDT_TIERS_URL', WDT_ROOT_URL . 'backend/tiers/');
 
-define('WDT_STARTER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'starter/'); // url to wpDataTables  starter integrations directory.
-define('WDT_STARTER_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'starter/'); // path to wpDataTables starter integrations directory.
-define('WDT_STANDARD_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'standard/'); // url to wpDataTables  standard integrations' directory.
-define('WDT_STANDARD_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'standard/'); // path to wpDataTables standard integrations' directory.
-define('WDT_PRO_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'pro/'); // url to wpDataTables  pro integrations' directory.
-define('WDT_PRO_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'pro/'); // path to wpDataTables pro integrations' directory.
-define('WDT_DEVELOPER_INTEGRATIONS_URL', WDT_INTEGRATIONS_URL . 'developer/'); // url to wpDataTables  developer integrations directory.
-define('WDT_DEVELOPER_INTEGRATIONS_PATH', WDT_INTEGRATIONS_PATH . 'developer/'); // path to wpDataTables developer integrations directory.
+// Deprecated aliases — remove in a later release.
+define('WDT_INTEGRATIONS_PATH', WDT_TIERS_PATH);
+define('WDT_INTEGRATIONS_URL', WDT_TIERS_URL);
+
+define('WDT_STARTER_INTEGRATIONS_URL', WDT_TIERS_URL . 'starter/');
+define('WDT_STARTER_INTEGRATIONS_PATH', WDT_TIERS_PATH . 'starter/');
+define('WDT_STANDARD_INTEGRATIONS_URL', WDT_TIERS_URL . 'standard/');
+define('WDT_STANDARD_INTEGRATIONS_PATH', WDT_TIERS_PATH . 'standard/');
+define('WDT_PRO_INTEGRATIONS_URL', WDT_TIERS_URL . 'pro/');
+define('WDT_PRO_INTEGRATIONS_PATH', WDT_TIERS_PATH . 'pro/');
+define('WDT_DEVELOPER_INTEGRATIONS_URL', WDT_TIERS_URL . 'developer/');
+define('WDT_DEVELOPER_INTEGRATIONS_PATH', WDT_TIERS_PATH . 'developer/');
 
 define('WDT_CSS_PATH', WDT_ROOT_URL . 'assets/css/'); // path to wpDataTables CSS styles. You should not change this setting if you use default CSS
 define('WDT_JS_PATH', WDT_ROOT_URL . 'assets/js/'); // path to wpDataTables javascript. You should not change this setting if you use default javascripts.

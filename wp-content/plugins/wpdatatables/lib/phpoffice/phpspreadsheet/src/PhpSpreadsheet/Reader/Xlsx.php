@@ -1177,7 +1177,7 @@ class Xlsx extends BaseReader
                                                         $linkImageKey = (string) self::getArrayItem($blip->attributes('http://schemas.openxmlformats.org/officeDocument/2006/relationships'), 'link');
                                                         if (isset($images[$linkImageKey])) {
                                                             $url = \str_replace('xl/drawings/', '', $images[$linkImageKey]);
-                                                            $objDrawing->setPath($url, \false, null, $this->allowExternalImages);
+                                                            $objDrawing->setPath($url, \false, null, $this->allowExternalImages, $this->isWhitelisted);
                                                         }
                                                         if ($objDrawing->getPath() === '') {
                                                             continue;
@@ -1242,7 +1242,7 @@ class Xlsx extends BaseReader
                                                         $linkImageKey = (string) self::getArrayItem($blip->attributes('http://schemas.openxmlformats.org/officeDocument/2006/relationships'), 'link');
                                                         if (isset($images[$linkImageKey])) {
                                                             $url = \str_replace('xl/drawings/', '', $images[$linkImageKey]);
-                                                            $objDrawing->setPath($url, \false, null, $this->allowExternalImages);
+                                                            $objDrawing->setPath($url, \false, null, $this->allowExternalImages, $this->isWhitelisted);
                                                         }
                                                         if ($objDrawing->getPath() === '') {
                                                             continue;

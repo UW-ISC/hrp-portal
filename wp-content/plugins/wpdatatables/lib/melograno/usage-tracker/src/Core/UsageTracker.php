@@ -4,6 +4,8 @@ declare (strict_types=1);
 namespace WPDT\Melograno\UsageTracker\Core;
 
 use WPDT\Melograno\UsageTracker\Collectors\ConsentNoticeCollectorInterface;
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesCollector;
+use WPDT\Melograno\UsageTracker\Collectors\Plugin\WpDataTablesFeatureTelemetry;
 use WPDT\Melograno\UsageTracker\Collectors\PluginCollectorInterface;
 /**
  * Entry point and orchestrator for plugin usage telemetry.
@@ -241,6 +243,9 @@ class UsageTracker
         $this->consentManager->delete();
         if ($this->collector instanceof ConsentNoticeCollectorInterface) {
             (new NoticeManager($this->collector->getNoticeOptionName()))->delete();
+        }
+        if ($this->collector instanceof WpDataTablesCollector) {
+            WpDataTablesFeatureTelemetry::deleteStoredCounters();
         }
     }
     private function unschedule() : void

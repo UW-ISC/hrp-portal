@@ -699,7 +699,7 @@ class MLATermList {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug encoded _REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
@@ -1343,7 +1343,7 @@ class MLATermList {
 	 * @return string HTML content to display the term list.
 	 */
 	public static function mla_term_list_shortcode( $attr, $content = NULL ) {
-//error_log( __LINE__ . " mla_term_list_shortcode() _REQUEST = " . var_export( $_REQUEST, true ), 0 );
+//error_log( __LINE__ . " mla_term_list_shortcode() encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), 0 );
 //error_log( __LINE__ . " mla_term_list_shortcode() attr = " . var_export( $attr, true ), 0 );
 //error_log( __LINE__ . " mla_term_list_shortcode() content = " . var_export( $content, true ), 0 );
 		/*

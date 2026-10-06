@@ -1511,7 +1511,7 @@ class MLA_Polylang {
 	public static function edit_attachment( $post_id ) {
 		static $already_updating = 0;
 
-		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::edit_attachment( {$post_id} ) _REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::edit_attachment( {$post_id} ) encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
 		// mla_update_single_item may call this action again
 		if ( $already_updating === $post_id ) {

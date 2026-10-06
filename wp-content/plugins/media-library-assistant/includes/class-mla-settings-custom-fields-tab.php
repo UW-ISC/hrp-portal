@@ -935,7 +935,7 @@ class MLASettings_CustomFields {
 	 * @return	void	echo json response object, then die()
 	 */
 	public static function mla_inline_mapping_custom_action() {
-		MLACore::mla_debug_add( 'MLASettings_CustomFields::mla_inline_mapping_custom_action $_REQUEST = ' . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		MLACore::mla_debug_add( 'MLASettings_CustomFields::mla_inline_mapping_custom_action encoded _REQUEST = ' . var_export( wp_json_encode( $_REQUEST ), true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		if ( isset( $_REQUEST['screen'] ) ) {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}

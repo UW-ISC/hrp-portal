@@ -123,10 +123,34 @@ class WpDataTablesCollector extends BaseCollector implements ConsentNoticeCollec
             $data['chart_types'] = $chartTypes;
         }
         $data['first_content_created_at'] = $this->resolveFirstContentCreatedAt();
+        $featureTelemetry = $this->resolveFeatures();
+        if ($featureTelemetry !== null) {
+            if ($featureTelemetry['skins'] !== []) {
+                $data['skins'] = $featureTelemetry['skins'];
+            }
+            if (($featureTelemetry['file_source_actions'] ?? []) !== []) {
+                $data['file_source_actions'] = $featureTelemetry['file_source_actions'];
+            }
+            // Empty PHP arrays become JSON [] and fail BI object validation.
+            $data['features'] = $featureTelemetry['features'] === [] ? new \stdClass() : $featureTelemetry['features'];
+            $data['feature_metrics'] = $featureTelemetry['feature_metrics'];
+        }
         $data = \array_filter($data, static function ($value) {
             return $value !== null;
         });
         return $data;
+    }
+    /**
+     * @return array{
+     *     skins: array<string, int>,
+     *     file_source_actions?: array<string, int>,
+     *     features: array<string, bool>,
+     *     feature_metrics: array<string, array{usage_count: int}>
+     * }|null
+     */
+    protected function resolveFeatures() : ?array
+    {
+        return WpDataTablesFeatureTelemetry::collect();
     }
     protected function resolveContentCount(string $contentType) : ?int
     {

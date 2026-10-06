@@ -36,9 +36,9 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string	Non-standard location to override default search, e.g.,
+	 * @param	string	$explicit_path	Non-standard location to override default search, e.g.,
 	 *					'C:\Program Files (x86)\gs\gs9.15\bin\gswin32c.exe'
-	 * @param	boolean	Force ghostscript-only tests, used by 
+	 * @param	boolean	$ghostscript_only	Force ghostscript-only tests, used by 
 	 *                  MLASettings_Shortcodes::mla_compose_shortcodes_tab()
 	 *
 	 * @return	boolean	true if Ghostscript available else false
@@ -311,6 +311,123 @@ class MLAShortcode_Support {
 	}
 
 	/**
+	 * Validate the mla_margin parameter for [mla_custom_list], [mla_gallery], and [mla_tag_cloud] shortcodes
+	 *
+	 * @since 3.42
+	 *
+	 * @param	string	$margin_string Margin value to be validated
+	 * @param	string	$default Default margin value
+	 *
+	 * @return	string	validated margin value
+	 */
+	public static function mla_validate_margin( $margin_string, $default ) {
+		switch ( $margin_string ) {
+			case 'auto':
+			case 'inherit':
+			case 'none':
+				break;
+			default:
+				if ( is_numeric( $margin_string ) && ( 0 !== (int) $margin_string) ) {
+					$margin_string .= '%'; // Legacy values are always in percent
+				}
+
+				if ( empty( preg_match( '/^([0-9]+(\.[0-9]+)?)(px|em|rem|%|pt)?$/', $margin_string ) ) ) {
+					$margin_string = NULL;
+				}
+		}
+
+		if ( NULL === $margin_string ) {
+			$margin_string = strtolower( trim( $default ) );
+
+			// Validate the option value
+			switch ( $margin_string ) {
+				case 'auto':
+				case 'inherit':
+				case 'none':
+					break;
+				default:
+					if ( is_numeric( $margin_string ) && ( 0 !== (int) $margin_string) ) {
+						$margin_string .= '%'; // Legacy values are always in percent
+					}
+
+					if ( empty( preg_match( '/^([0-9]+(\.[0-9]+)?)(px|em|rem|%|pt)?$/', $margin_string ) ) ) {
+						$margin_string = '1.5%';
+					}
+			}
+		}
+
+		return $margin_string;
+	}
+
+	/**
+	 * Validate the mla_itemwidth parameter for [mla_custom_list], [mla_gallery], and [mla_tag_cloud] shortcodes
+	 *
+	 * @since 3.42
+	 *
+	 * @param	string	$width_string Item width value to be validated
+	 * @param	integer	$columns Number of columns to be used in "calculate" and "exact" calculations
+	 * @param	integer	$margin_percent Margin value to be used in "calculate" and "exact" calculations
+	 * @param	string	$default Default item width value
+	 *
+	 * @return	string	validated item width value
+	 */
+	public static function mla_validate_itemwidth( $width_string, $columns, $margin_percent, $default ) {
+		$width_string = strtolower( trim( $width_string ) );
+		switch ( $width_string ) {
+			case 'auto':
+			case 'initial':
+			case 'inherit':
+			case 'none':
+				break;
+			case 'exact':
+				$margin_percent = 0;
+				// fallthru
+			case 'calculate':
+				$width_string = (string) $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
+				// fallthru
+			default:
+				if ( is_numeric( $width_string ) && ( 0 !== (int) $width_string) ) {
+					$width_string .= '%'; // Legacy values are always in percent
+				}
+
+				if ( empty( preg_match( '/^([0-9]+(\.[0-9]+)?)(px|em|rem|%|pt)?$/', $width_string ) ) ) {
+					$width_string = NULL;
+				}
+		}
+
+		if ( NULL === $width_string ) {
+			$width_string = strtolower( trim( $default ) );
+
+			// Validate the option value
+			switch ( $width_string ) {
+				case 'auto':
+				case 'initial':
+				case 'inherit':
+				case 'none':
+					break;
+				case 'exact':
+					$margin_percent = 0;
+					// fallthru
+				case 'calculate':
+					$width_string = (string) $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
+					// fallthru
+				default:
+					if ( is_numeric( $width_string ) && ( 0 !== (int) $width_string) ) {
+						$width_string .= '%'; // Legacy/calculate values are always in percent
+					}
+
+					if ( empty( preg_match( '/^([0-9]+(\.[0-9]+)?)(px|em|rem|%|pt)?$/', $width_string ) ) ) {
+						// Default value is "calculate"
+						$width_string = (string) $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
+						$width_string .= '%'; // Calculate values are always in percent
+					}
+			}
+		}
+
+		return $width_string;
+		}
+
+	/**
 	 * Make sure $attr is an array, repair line-break damage, merge with $content
 	 *
 	 * @since 2.20
@@ -331,70 +448,44 @@ class MLAShortcode_Support {
 		if ( empty( $attr ) ) {
 			$attr = array();
 		}
-//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
-
-		// Numeric keys indicate parse errors
-		$not_valid = false;
+		
+		$new_attr = '';
 		foreach ( $attr as $key => $value ) {
-			// Clean up damage caused by the Visual Editor 
-			$attr[ $key ] = wp_specialchars_decode( $value );
+			// Specifically deals with: &, <, and >. Skips " and '.
+			$value = wp_specialchars_decode( $value, ENT_NOQUOTES );
+			$value = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
+	 	                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $value );
 
 			if ( is_numeric( $key ) ) {
-				$not_valid = true;
-				break;
+				$new_attr .= $value . ' ';
+			} else {
+				// If the value starts with a delimiter, leave it alone, otherwise enclose the value
+				if ( ( 0 === strpos( $value, '"' ) ) || ( 0 === strpos( $value, '\'' ) ) ) {
+					$new_attr .= $key . '=' . $value . ' ';
+				} else {
+					$delimiter = ( false === strpos( $value, '"' ) ) ? '"' : "'";
+					$new_attr .= $key . '=' . $delimiter . $value . $delimiter . ' ';
+				}
 			}
 		}
-//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
-
-		if ( $not_valid ) {
-			/*
-			 * Found an error, e.g., line break(s) among the atttributes.
-			 * Try to reconstruct the input string without them.
-			 */
-			$new_attr = '';
-			foreach ( $attr as $key => $value ) {
-//error_log( __LINE__ . " mla_validate_attributes() [{$key}] value = " . var_export( $value, true ), 0 );
-				$value = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
-		 	                            array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $value );
-//error_log( __LINE__ . " mla_validate_attributes() [{$key}] value = " . var_export( $value, true ), 0 );
-				$break_tag = strpos( $value, '<br' );
-				if ( ( false !== $break_tag ) && ( ($break_tag + 3) == strlen( $value ) ) ) {
-					$value = substr( $value, 0, ( strlen( $value ) - 3) );
-				}
-
-				if ( is_numeric( $key ) ) {
-					if ( '/>' !== $value ) {
-						$new_attr .= $value . ' ';
-					}
-				} else {
-					// If the value starts with a delimiter, leave it alone, otherwise enclose the value
-					if ( ( 0 === strpos( $value, '"' ) ) || ( 0 === strpos( $value, '\'' ) ) ) {
-						$new_attr .= $key . '=' . $value . ' ';
-					} else {
-						$delimiter = ( false === strpos( $value, '"' ) ) ? '"' : "'";
-						$new_attr .= $key . '=' . $delimiter . $value . $delimiter . ' ';
-					}
-				}
-			}
 //error_log( __LINE__ . " mla_validate_attributes() new_attr = " . var_export( $new_attr, true ), 0 );
 
-			$attr = shortcode_parse_atts( $new_attr );
+		$attr = shortcode_parse_atts( $new_attr );
 //error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
-			// Remove empty values and still-invalid parameters
-			$new_attr = array();
-			foreach ( $attr as $key => $value ) {
-				if ( is_numeric( $key ) || empty( $value ) ) {
-					self::$attributes_errors['raw'][] = '[' . $key . '] => ' . $value;
-					self::$attributes_errors['escaped'][] = '[' . $key . '] => ' . esc_html( $value );
-					continue;
-				}
-
-				$new_attr[ $key ] = $value;
+		// Remove empty values and still-invalid parameters
+		$new_attr = array();
+		foreach ( $attr as $key => $value ) {
+			if ( is_numeric( $key ) || empty( $value ) ) {
+				self::$attributes_errors['raw'][] = '[' . $key . '] => ' . $value;
+				self::$attributes_errors['escaped'][] = '[' . $key . '] => ' . esc_html( $value );
+				continue;
 			}
 
-			$attr = $new_attr;
-		} // not_valid
+			$new_attr[ $key ] = $value;
+		}
+
+		$attr = $new_attr;
 //error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
 		// Look for parameters in an enclosing shortcode
@@ -519,8 +610,8 @@ class MLAShortcode_Support {
 	 *
 	 * @since 3.31
 	 *
-	 * @param array  raw shortcode attributes
-	 * @param string current parameter name, e.g., mla_archive_current
+	 * @param array  $shortcode_attributes	raw shortcode attributes
+	 * @param string $mla_archive_parameter	current parameter name, e.g., mla_archive_current
 	 *
 	 * @return array updated shortcode attributes
 	 */
@@ -663,7 +754,7 @@ class MLAShortcode_Support {
 	 */
 	public static function mla_gallery_shortcode( $attr, $content = NULL ) {
 		global $post;
-//error_log( __LINE__ . " mla_gallery_shortcode() _REQUEST = " . var_export( $_REQUEST, true ), 0 );
+//error_log( __LINE__ . " mla_gallery_shortcode() encoded _REQUEST = " . var_export( wp_json_encode( $_REQUEST ), true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() content = " . var_export( $content, true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() post = " . var_export( $post, true ), 0 );
@@ -706,10 +797,11 @@ class MLAShortcode_Support {
 		 * Make sure $attr is an array, even if it's empty,
 		 * and repair damage caused by link-breaks in the source text
 		 */
+		$raw_attr = $attr;
 		$attr = self::mla_validate_attributes( $attr, $content );
 
 		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
-		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr );
+		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr, $raw_attr, $content, $page_values );
 
 		/*
 		 * The mla_paginate_current parameter can be changed to support
@@ -936,7 +1028,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug encoded _REQUEST', 'media-library-assistant' ) . '</strong> = ' . var_export( wp_json_encode( $_REQUEST ), true ) );
 
 			if ( ! empty( self::$attributes_errors ) ) {
 				if ( 'log' === self::$mla_debug ) {
@@ -948,7 +1040,9 @@ class MLAShortcode_Support {
 				self::$attributes_errors = array();
 			}
 
-			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug raw attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $raw_attr, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug raw content', 'media-library-assistant' ) . '</strong> = ' . var_export( $content, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug validated attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
 
@@ -1326,11 +1420,8 @@ class MLAShortcode_Support {
 		 */
 		 
 		$columns = absint( $arguments['columns'] );
-		$margin_string = strtolower( trim( $arguments['mla_margin'] ) );
 
-		if ( is_numeric( $margin_string ) && ( 0 != $margin_string) ) {
-			$margin_string .= '%'; // Legacy values are always in percent
-		}
+		$margin_string = self::mla_validate_margin( $arguments['mla_margin'], MLACore::mla_get_option('mla_gallery_margin') );
 
 		if ( '%' === substr( $margin_string, -1 ) ) {
 			$margin_percent = (float) substr( $margin_string, 0, strlen( $margin_string ) - 1 );
@@ -1338,21 +1429,7 @@ class MLAShortcode_Support {
 			$margin_percent = 0;
 		}
 
-		$width_string = strtolower( trim( $arguments['mla_itemwidth'] ) );
-		if ( 'none' != $width_string ) {
-			switch ( $width_string ) {
-				case 'exact':
-					$margin_percent = 0;
-					// fallthru
-				case 'calculate':
-					$width_string = $columns > 0 ? (floor(1000/$columns)/10) - ( 2.0 * $margin_percent ) : 100 - ( 2.0 * $margin_percent );
-					// fallthru
-				default:
-					if ( is_numeric( $width_string ) && ( 0 != $width_string) ) {
-						$width_string .= '%'; // Legacy values are always in percent
-					}
-			}
-		} // $use_width
+		$width_string = self::mla_validate_itemwidth( $arguments['mla_itemwidth'], $columns, $margin_percent, MLACore::mla_get_option('mla_gallery_itemwidth') );
 
 		$float = strtolower( $arguments['mla_float'] );
 		if ( ! in_array( $float, array( 'left', 'none', 'right' ) ) ) {
@@ -2300,8 +2377,8 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param string raw shortcode parameter, e.g., "text {+field+} {brackets} \\{braces\\}"
-	 * @param string template substitution values, e.g., ('instance' => '1', ...  )
+	 * @param string $text	raw shortcode parameter, e.g., "text {+field+} {brackets} \\{braces\\}"
+	 * @param array  $markup_values	template substitution values, e.g., ('instance' => '1', ...  )
 	 *
 	 * @return string parameter with brackets, braces, substitution parameters and templates processed
 	 */
@@ -2317,7 +2394,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 3.39
 	 *
-	 * @param array query elements
+	 * @param array $test_query query elements
 	 *
 	 * @return string URL-encoded valid query elements
 	 */
@@ -2352,7 +2429,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 3.31
 	 *
-	 * @param string link
+	 * @param string $link link
 	 *
 	 * @return string link with $_REQUEST elements
 	 */
@@ -2424,9 +2501,9 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.84
 	 *
-	 * @param string argument name
-	 * @param mixed argument value (string) or false to remove argument
-	 * @param string url
+	 * @param string $key argument name
+	 * @param mixed $value argument value (string) or false to remove argument
+	 * @param string $url url
 	 *
 	 * @return string url with argument replaced
 	 */
@@ -2504,11 +2581,11 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param array	value(s) for mla_output_type parameter
-	 * @param array template substitution values, e.g., ('instance' => '1', ...  )
-	 * @param array merged default and passed shortcode parameter values
-	 * @param integer number of attachments in the gallery, without pagination
-	 * @param string output text so far, may include debug values
+	 * @param array	$output_parameters value(s) for mla_output_type parameter
+	 * @param array $markup_values template substitution values, e.g., ('instance' => '1', ...  )
+	 * @param array $arguments merged default and passed shortcode parameter values
+	 * @param integer $found_rows number of attachments in the gallery, without pagination
+	 * @param string $output output text so far, may include debug values
 	 *
 	 * @return string empty string, mla_nolink_text or string with HTML for pagination output types
 	 */
@@ -2637,12 +2714,12 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param array	value(s) for mla_output_type parameter
-	 * @param array template substitution values, e.g., ('instance' => '1', ...  )
-	 * @param array merged default and passed shortcode parameter values
-	 * @param array raw passed shortcode parameter values
-	 * @param integer number of attachments in the gallery, without pagination
-	 * @param string output text so far, may include debug values
+	 * @param array	$output_parameters value(s) for mla_output_type parameter
+	 * @param array $markup_values template substitution values, e.g., ('instance' => '1', ...  )
+	 * @param array $arguments merged default and passed shortcode parameter values
+	 * @param array $attr raw passed shortcode parameter values
+	 * @param integer $found_rows number of attachments in the gallery, without pagination
+	 * @param string $output output text so far, may include debug values
 	 *
 	 * @return mixed	false or string with HTML for pagination output types
 	 */
@@ -3083,7 +3160,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param string query specification; PHP nested arrays
+	 * @param string $specification query specification; PHP nested arrays
 	 *
 	 * @return string query specification with HTML escape sequences and line breaks removed
 	 */
@@ -3116,10 +3193,11 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param array Validated query parameters; 'order', 'orderby', 'meta_key', 'post__in'.
-	 * @param string Optional. Database table prefix; can be empty. Default taken from $wpdb->posts.
-	 * @param array Optional. Field names (keys) and database column equivalents (values). Defaults from [mla_gallery].
-	 * @param array Optional. Field names (values) that require a BINARY prefix to preserve case order. Default array()
+	 * @param array $query_parameters Validated query parameters; 'order', 'orderby', 'meta_key', 'post__in'.
+	 * @param string $table_prefix Optional. Database table prefix; can be empty. Default taken from $wpdb->posts.
+	 * @param array $allowed_keys Optional. Field names (keys) and database column equivalents (values). Defaults from [mla_gallery].
+	 * @param array $binary_keys Optional. Field names (values) that require a BINARY prefix to preserve case order. Default array()
+	 * 
 	 * @return string|bool Returns the orderby clause if present, false otherwise.
 	 */
 	public static function mla_validate_sql_orderby( $query_parameters, $table_prefix = NULL, $allowed_keys = NULL, $binary_keys = array() ){
@@ -3359,7 +3437,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.84
 	 *
-	 * @param array Post types to be screened for membership
+	 * @param array $post_types Post types to be screened for membership
 	 */
 
 	public static function mla_pmp_hide_attachments_filter( $post_types ) {
@@ -3500,10 +3578,10 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param int ID of the post/page in which the shortcode appears; zero (0) if none
-	 * @param array Attributes of the shortcode
-	 * @param boolean Optional; true to calculate and return ['found_rows', 'max_num_pages'] as array elements
-	 * @param boolean Optional; true activate debug logging, false to suppress it.
+	 * @param int $post_parent ID of the post/page in which the shortcode appears; zero (0) if none
+	 * @param array $attr Attributes of the shortcode
+	 * @param boolean $return_found_rows Optional; true to calculate and return ['found_rows', 'max_num_pages'] as array elements
+	 * @param boolean $overide_debug Optional; true activate debug logging, false to suppress it.
 	 *
 	 * @return array List of attachments returned from WP_Query
 	 */
@@ -3706,13 +3784,13 @@ class MLAShortcode_Support {
 						} // foreach compound_value
 					} // string value
 
-					foreach ( $tax_queries as $key => $value ) {
-						if ( is_string( $value ) ) {
-							$value = explode( ',', $value );
+					foreach ( $tax_queries as $tax_key => $tax_value ) {
+						if ( is_string( $tax_value ) ) {
+							$tax_value = explode( ',', $tax_value );
 						}
 
-						$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', $value ) ) );
-						if ( in_array( $simple_tax_queries[ $key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
+						$simple_tax_queries[ $tax_key ] = implode(',', array_filter( array_map( 'trim', $tax_value ) ) );
+						if ( in_array( $simple_tax_queries[ $tax_key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
 							$terms_assigned_query = true;
 						}
 					}
@@ -4653,15 +4731,16 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$join_clause query clause before modification
 	 *
 	 * @return	string	query clause after item modification
 	 */
 	public static function mla_shortcode_query_posts_join_filter( $join_clause ) {
 		global $wpdb;
 
+		$old_clause = $join_clause;
+
 		if ( self::$mla_debug ) {
-			$old_clause = $join_clause;
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
@@ -4718,15 +4797,16 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$where_clause query clause before modification
 	 *
 	 * @return	string	query clause after modification
 	 */
 	public static function mla_shortcode_query_posts_where_filter( $where_clause ) {
 		global $table_prefix;
 
+		$old_clause = $where_clause;
+
 		if ( self::$mla_debug ) {
-			$old_clause = $where_clause;
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
 		}
 
@@ -4798,7 +4878,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	string	query clause before modification
+	 * @param	string	$orderby_clause query clause before modification
 	 *
 	 * @return	string	query clause after modification
 	 */
@@ -4822,8 +4902,10 @@ class MLAShortcode_Support {
 	 * 
 	 * @since 2.95
 	 *
-	 * @param	array	query clauses before modification
-	 * @param	WP_Query query object
+	 * @param	array    $pieces query clauses before modification
+	 * @param	WP_Query $query query object
+	 * 
+	 * @return	array	query clauses after modification
 	 */
 	public static function mla_shortcode_query_posts_clauses_rml_filter( $pieces, $query ) {
 		remove_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9 );
@@ -4843,7 +4925,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 *
 	 * @return	array	query clauses after modification (none)
 	 */
@@ -4861,7 +4943,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	array	query clauses before modification
+	 * @param	array	$pieces query clauses before modification
 	 *
 	 * @return	array	query clauses after modification (none)
 	 */
@@ -4901,7 +4983,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.96
 	 *
-	 * @param	array	taxonomy to search and query parameters
+	 * @param	array	$attr taxonomy to search and query parameters
 	 *
 	 * @return	array	( 'ignore.terms.assigned' => count, 'no.terms.assigned' => count, 'any.terms.assigned' => count )
 	 */
@@ -5041,7 +5123,7 @@ class MLAShortcode_Support {
 	 * 
 	 * @since 3.33
 	 *
-	 * @param	string	comma-separated string of qualified field names, e.g., tt.taxonomy
+	 * @param	string	$fields comma-separated string of qualified field names, e.g., tt.taxonomy
 	 *
 	 * @return	array	exploded array of validated field names, or false if validation fails
 	 */
@@ -5139,7 +5221,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param	array	taxonomies to search and query parameters
+	 * @param	array	$attr taxonomies to search and query parameters
 	 *
 	 * @return	array	array of term objects, empty if none found
 	 */
@@ -5518,11 +5600,12 @@ class MLAShortcode_Support {
 	 *
 	 * @since 3.13
 	 *
-	 * @param	array	Array of Term objects, by reference
-	 * @param	string	Term Context
-	 * @param	array	Qualifying post type value(s)
-	 * @param	array	Qualifying post status value(s)
-	 * @param	string	Qualifying post MIME type clause
+	 * @param	array	$terms Array of Term objects, by reference
+	 * @param	string	$taxonomy Term Context
+	 * @param	array	$post_types Qualifying post type value(s)
+	 * @param	array	$post_stati Qualifying post status value(s)
+	 * @param	string	$post_mimes Qualifying post MIME type clause
+	 * 
 	 * @return	null	Will break from function if conditions are not met.
 	 */
 	private static function _pad_term_counts( &$terms, $taxonomy, $post_types = NULL, $post_stati = NULL, $post_mimes = '' ) {

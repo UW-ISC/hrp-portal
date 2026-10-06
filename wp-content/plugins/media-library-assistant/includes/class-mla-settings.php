@@ -476,7 +476,7 @@ class MLASettings {
 
 		error_log( 'DEBUG: mla_admin_page_access_denied_action xdebug_get_function_stack = ' . var_export( xdebug_get_function_stack(), true), 0 );		
 		error_log( 'DEBUG: mla_admin_page_access_denied_action $_SERVER[REQUEST_URI] = ' .  var_export( $_SERVER['REQUEST_URI'], true), 0 );
-		error_log( 'DEBUG: mla_admin_page_access_denied_action $_REQUEST = ' .  var_export( $_REQUEST, true), 0 );
+		error_log( 'DEBUG: mla_admin_page_access_denied_action encoded _REQUEST = ' .  var_export( wp_json_encode( $_REQUEST ), true), 0 );
 		error_log( 'DEBUG: mla_admin_page_access_denied_action $pagenow = ' .  var_export( $pagenow, true), 0 );
 		error_log( 'DEBUG: mla_admin_page_access_denied_action $parent = ' .  var_export( get_admin_page_parent(), true), 0 );
 		error_log( 'DEBUG: mla_admin_page_access_denied_action $menu = ' .  var_export( $menu, true), 0 );
@@ -1572,7 +1572,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		$replace_php = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_LOG );
 		$php_reporting = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_REPORTING );
 		$mla_reporting = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_LEVEL );
-		$taxonomy_columns = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_ADD_TAXONOMY_COLUMNS );
 
 		if ( $error_log_exists ) {
 			// Add debug content
@@ -1661,7 +1660,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			'settingsURL' => admin_url('options-general.php'),
 			'Error Log Name' => $error_log_name,
 			'Error Log Size' => number_format( (float) $error_log_size ),
-			'error_log_text' => $error_log_contents,
+			'error_log_text' => esc_textarea( $error_log_contents ),
 			'download_link' => $download_link,
 			'reset_link' => $reset_link,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),

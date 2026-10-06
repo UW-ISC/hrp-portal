@@ -152,6 +152,14 @@ input.warning:hover, a.warning:hover {
   margin-bottom: 5px;
 }
 
+#ure_delete_capability_dialog .ure-input {
+  width: auto;
+}
+
+#ure_remove_caps_quick_filter_label {
+  font-weight: normal;
+}
+
 #ure_user_roles {
     vertical-align: text-top; 
     padding-right: 10px; 
@@ -220,7 +228,13 @@ input.warning:hover, a.warning:hover {
 #ure_caps_groups_td {
     padding:0 10px 0 10px;
     min-width:25%;
-    border-right: 1px solid #cccccc; 
+    border-right: 1px solid #cccccc;
+}
+
+#ure_delete_role_table th:nth-child(2),
+#ure_delete_role_table td:nth-child(2) {
+    border-right: 1px solid #cccccc;
+    padding-right: 10px;
 }
 
 #ure_caps_td {
@@ -282,6 +296,7 @@ input.warning:hover, a.warning:hover {
     overflow: auto;
     min-height: 600px;
     max-height: 720px;
+    padding-left: 5px;
 }
 
 #ure_caps_list {

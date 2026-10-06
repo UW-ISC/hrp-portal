@@ -483,6 +483,18 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-sm-4 wdt-mcp-enabled">
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e('Enable MCP for AI assistants', 'wpdatatables'); ?>
+                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php esc_attr_e('When enabled, wpDataTables exposes MCP tools for AI assistants such as Angie AI (WordPress 6.9+). Disable to hide the MCP server and stop Angie registration. Developers can force this off with the wpdatatables/mcp/enabled filter.', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="toggle-switch" data-ts-color="blue">
+                <input type="checkbox" name="wdt-mcp-enabled" id="wdt-mcp-enabled"/>
+                <label for="wdt-mcp-enabled"
+                       class="ts-label"><?php esc_html_e('Enable MCP for AI assistants', 'wpdatatables'); ?></label>
+            </div>
+        </div>
         <div class="col-sm-4 wdt-usage-tracking-block">
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Improve WPDataTables', 'wpdatatables'); ?>

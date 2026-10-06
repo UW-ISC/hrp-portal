@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /* 
  * User Role Editor Settings page on Screen Help class
@@ -81,9 +82,11 @@ class URE_Screen_Help {
         $text = '<h2>'. esc_html__( 'User Role Editor Options page help', 'user-role-editor' ) .'</h2>
             <p>
             <ul>
-                <li><strong>' . esc_html__( 'Allow non super-administrators to create, edit and delete users', 'user-role-editor' ) .'</strong> - '.
-                esc_html__( 'Super administrator only may create, edit and delete users under WordPress multi-site by default.', 'user-role-editor' ) .' '. 
-                esc_html__('Turn this option on in order to remove this limitation.','user-role-editor' ) .'</li>';
+                <li><strong>' . esc_html__( 'Allow non super-administrators to edit users', 'user-role-editor' ) .'</strong> - '.
+                esc_html__( 'Super administrator only may edit users under WordPress multi-site by default.', 'user-role-editor' ) .' '.
+                esc_html__('Turn this option on in order to remove this limitation.','user-role-editor' ) .' '.
+                esc_html__('To let site administrators add new users too, use the "Allow site administrators to add new users to their site" via the \'Users -> Add User\' page setting under Network Admin -> Settings instead.','user-role-editor' ) .' '.
+                esc_html__('Deleting a user account is a network-wide operation under WordPress multi-site and can only be done from Network Admin by a super administrator (or a user granted the \'manage_network_users\' capability); it cannot be delegated to a single site administrator.','user-role-editor' ) .'</li>';
         
         $text = apply_filters('ure_get_settings_multisite_tab_help', $text);
         $text .='

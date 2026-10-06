@@ -184,7 +184,7 @@ class ExportService {
 	/**
 	 * @param string $format
 	 * @param array<string, mixed> $params
-	 * @return array{data: string, total: int}|false
+	 * @return array{data: string, total: int, exporter: FormatHandler}|false
 	 */
 	public function export_redirects( $format, array $params = [] ) {
 		$exporter = $this->formats->create( $format );
@@ -198,6 +198,7 @@ class ExportService {
 		return [
 			'data' => $exporter->get_data( $items, $this->get_export_groups_for_format( $format, $groups ) ),
 			'total' => count( $items ),
+			'exporter' => $exporter,
 		];
 	}
 
@@ -538,7 +539,7 @@ class ExportService {
 			return;
 		}
 
-		$data['settings'] = \Red_Options::get_import_export_options();
+		$data['settings'] = \Red_Options::filter_by_capability( \Red_Options::get_import_export_options() );
 		$total += count( $data['settings'] );
 	}
 
@@ -556,10 +557,10 @@ class ExportService {
 			return '';
 		}
 
-		fputcsv( $stdout, $header );
+		CsvSanitizer::put_row( $stdout, $header );
 
 		foreach ( $rows as $row ) {
-			fputcsv( $stdout, array_map( [ $sanitizer, 'escape' ], $row ) );
+			CsvSanitizer::put_row( $stdout, array_map( [ $sanitizer, 'escape' ], $row ) );
 		}
 
 			rewind( $stdout );

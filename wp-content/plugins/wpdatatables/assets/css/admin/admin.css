@@ -874,6 +874,8 @@ div.mce-widget button i.mce-i-wpdatachart {
 .wpdt-c #wdt-delete-chart-manager-modal .modal-content .modal-footer,
 .wpdt-c #wdt-chart-manager-modal .modal-content .modal-footer,
 .wpdt-c #wdt-delete-permission-modal .modal-content .modal-footer,
+.wpdt-c #wdt-permission-modal .modal-content .modal-footer,
+.wpdt-c #wdt-webhook-modal .modal-content .modal-footer,
 .wpdt-c #wdt-delete-table-manager-modal .modal-content .modal-footer,
 .wpdt-c #wdt-add-chart-manager-modal .modal-content .modal-footer,
 .wpdt-c #wdt-delete-chart-manager-modal .modal-content .modal-footer,
@@ -901,6 +903,8 @@ div.mce-widget button i.mce-i-wpdatachart {
 .wpdt-c #wdt-delete-chart-manager-modal .modal-content .modal-footer .btn,
 .wpdt-c #wdt-chart-manager-modal .modal-content .modal-footer .btn,
 .wpdt-c #wdt-delete-permission-modal .modal-content .modal-footer .btn,
+.wpdt-c #wdt-permission-modal .modal-content .modal-footer .btn,
+.wpdt-c #wdt-webhook-modal .modal-content .modal-footer .btn,
 .wpdt-c #wdt-delete-table-manager-modal .modal-content .modal-footer .btn,
 .wpdt-c #wdt-add-chart-manager-modal .modal-content .modal-footer .btn,
 .wpdt-c #wdt-delete-chart-manager-modal .modal-content .modal-footer .btn,
@@ -2078,6 +2082,15 @@ wpdt-c button#wdt-add-data-browse-button {
     margin-left: 10px;
     font-size: 15px;
     margin-bottom: 10px;
+}
+
+/* Fixed-height scroll area, so the modal keeps the same size on every slide */
+#wdt-update-modal > ul {
+    height: 320px;
+    max-height: 60vh;
+    margin: 0;
+    overflow-y: auto;
+    padding-right: 24px;
 }
 
 .wdt-update-modal-next, .wdt-update-modal-prev {
