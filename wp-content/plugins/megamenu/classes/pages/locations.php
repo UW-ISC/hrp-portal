@@ -717,15 +717,6 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 				true
 			);
 
-			if ( ! wp_style_is( 'mega-colorpicker', 'enqueued' ) ) {
-				wp_enqueue_style(
-					'mega-colorpicker',
-					MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.css',
-					[],
-					MEGAMENU_VERSION
-				);
-			}
-
 			global $pagenow;
 
 			wp_localize_script(

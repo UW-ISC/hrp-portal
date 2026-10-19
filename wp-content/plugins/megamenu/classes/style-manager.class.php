@@ -102,11 +102,21 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * When menu-location assignments change, invalidate CSS if Max Mega Menu is enabled for an affected location.
 		 * Defer to `shutdown` so `nav_menu_locations` is saved before regeneration (see `set_theme_mod`).
 		 *
+		 * Only acts on `set_theme_mod()` calls made from a genuine admin/API save context (Customizer,
+		 * nav-menus.php, REST). Multilingual plugins such as Polylang/WPML can end up calling
+		 * `set_theme_mod( 'nav_menu_locations', ... )` on plain front-end requests to swap in the
+		 * current language's menu; treating that as a real reassignment would wipe and regenerate the
+		 * entire CSS cache (all languages) on almost every request. See `Mega_Menu_Integration_Polylang`.
+		 *
 		 * @param array|false $new_value New location => menu ID map.
 		 * @param array|false $old_value Previous map or false.
 		 * @return array Map passed through unchanged.
 		 */
 		public function schedule_delete_cache_on_nav_menu_locations_change( $new_value, $old_value ) {
+			if ( ! $this->is_genuine_nav_menu_locations_save() ) {
+				return is_array( $new_value ) ? $new_value : [];
+			}
+
 			if ( ! is_array( $new_value ) ) {
 				$new_value = [];
 			}
@@ -136,6 +146,31 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			}
 
 			return $new_value;
+		}
+
+
+		/**
+		 * Whether the current request is a context where a user (or the REST API on their behalf)
+		 * could genuinely be saving menu-location assignments, as opposed to a plain front-end
+		 * request where a multilingual plugin may be swapping the theme mod value transiently.
+		 *
+		 * @since 3.11.0
+		 * @return bool
+		 */
+		private function is_genuine_nav_menu_locations_save() {
+			if ( is_admin() ) {
+				return true;
+			}
+
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				return true;
+			}
+
+			if ( wp_doing_ajax() ) {
+				return true;
+			}
+
+			return apply_filters( 'megamenu_is_genuine_nav_menu_locations_save', false );
 		}
 
 
@@ -442,7 +477,8 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @return void
 		 */
 		public function enqueue_scripts() {
-			$js_path = MEGAMENU_BASE_URL . 'js/maxmegamenu.js';
+			$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$js_path = MEGAMENU_BASE_URL . 'js/maxmegamenu' . $suffix . '.js';
 
 			$dependencies = apply_filters( 'megamenu_javascript_dependencies', [ 'jquery', 'hoverIntent' ] );
 

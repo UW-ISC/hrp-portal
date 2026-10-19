@@ -49,6 +49,25 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 
 		}
 
+		/**
+		 * When called as a wp_ajax_ handler (no $block_id/$settings supplied
+		 * by an internal action hook), verify the request is authorized.
+		 *
+		 * @since 2.5.5
+		 * @return void
+		 */
+		private function verify_toggle_block_ajax_request() {
+			if ( ! wp_doing_ajax() ) {
+				return;
+			}
+
+			check_ajax_referer( 'megamenu_edit' );
+
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die();
+			}
+		}
+
 
 		/**
 		 * Output the standard menu toggle block HTML on the front end.
@@ -60,10 +79,10 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @return string Modified toggle HTML.
 		 */
 		public function output_menu_public_toggle_block_html( $html, $settings, $args ) {
-			$closed_text = isset( $settings['closed_text'] ) ? do_shortcode( stripslashes( $settings['closed_text'] ) ) : 'MENU';
-			$open_text   = isset( $settings['open_text'] ) ? do_shortcode( stripslashes( $settings['open_text'] ) ) : 'MENU';
+			$closed_text = isset( $settings['closed_text'] ) ? do_shortcode( esc_html( stripslashes( $settings['closed_text'] ) ) ) : 'MENU';
+			$open_text   = isset( $settings['open_text'] ) ? do_shortcode( esc_html( stripslashes( $settings['open_text'] ) ) ) : 'MENU';
 			$icon_only   = isset( $settings['icon_only'] ) && $settings['icon_only'] === 'on';
-			$aria_label  = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : '';
+			$aria_label  = isset( $settings['aria_label'] ) ? do_shortcode( esc_html( stripslashes( $settings['aria_label'] ) ) ) : '';
 
 		    // Retrieve CSS version
 		    $css_version = Mega_Menu_Style_Manager::get_css_version();
@@ -300,12 +319,32 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 				unset( $saved_blocks[ $theme ] );
 			}
 
-			$submitted_settings = $_POST['toggle_blocks'];
+			$submitted_settings = isset( $_POST['toggle_blocks'] ) && is_array( $_POST['toggle_blocks'] ) ? $_POST['toggle_blocks'] : [];
 
-			$saved_blocks[ $theme ] = $submitted_settings;
+			$saved_blocks[ $theme ] = $this->sanitize_toggle_block_settings( $submitted_settings );
 
 			max_mega_menu_save_toggle_blocks( $saved_blocks );
 
+		}
+
+		/**
+		 * Recursively sanitize submitted toggle block settings before saving.
+		 *
+		 * @since 2.5.5
+		 * @param array $settings Raw submitted toggle block settings.
+		 * @return array Sanitized settings.
+		 */
+		private function sanitize_toggle_block_settings( $settings ) {
+			foreach ( $settings as $key => &$value ) {
+				if ( is_array( $value ) ) {
+					$value = $this->sanitize_toggle_block_settings( $value );
+				} elseif ( 'html' === $key ) {
+					$value = current_user_can( 'unfiltered_html' ) ? wp_unslash( $value ) : wp_kses_post( wp_unslash( $value ) );
+				} else {
+					$value = sanitize_text_field( wp_unslash( $value ) );
+				}
+			}
+			return $settings;
 		}
 
 
@@ -712,6 +751,8 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 */
 		public function output_spacer_block_html( $block_id, $settings = [] ) {
 
+			$this->verify_toggle_block_ajax_request();
+
 			if ( empty( $settings ) ) {
 				$block_id = '0';
 			}
@@ -758,6 +799,8 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @return void
 		 */
 		public function output_menu_toggle_block_html( $block_id, $settings = [] ) {
+
+			$this->verify_toggle_block_ajax_request();
 
 			if ( empty( $settings ) ) {
 				$block_id = '0';
@@ -841,7 +884,7 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 */
 		public function output_menu_public_toggle_block_animated_html( $html, $settings, $args ) {
 			$style = isset( $settings['style'] ) ? $settings['style'] : 'slider';
-			$label = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : 'Toggle Menu';
+			$label = isset( $settings['aria_label'] ) ? do_shortcode( esc_html( stripslashes( $settings['aria_label'] ) ) ) : 'Toggle Menu';
 
 			$html = '<button class="mega-toggle-animated mega-toggle-animated-' . esc_attr( $style ) . '" type="button">
                   <span class="mega-toggle-animated-box">
@@ -871,6 +914,8 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @return void
 		 */
 		public function output_menu_toggle_block_animated_html( $block_id, $settings = [] ) {
+
+			$this->verify_toggle_block_ajax_request();
 
 			if ( empty( $settings ) ) {
 				$block_id = '0';

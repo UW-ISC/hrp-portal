@@ -400,7 +400,7 @@
 
         plugin.bindClickEvents = function() {
 
-            plugin.unbindClickEvents();
+            plugin.unbindClickEvents(true);
 
             let dragging = false;
 
@@ -798,8 +798,8 @@
             $("ul.mega-sub-menu, li.mega-menu-item, li.mega-menu-row, li.mega-menu-column, a.mega-menu-link, .mega-indicator", $menu).off();
         };
 
-        plugin.unbindClickEvents = function() {
-            if ( $wrap.hasClass('mega-keyboard-navigation') ) {
+        plugin.unbindClickEvents = function(force) {
+            if ( !force && $wrap.hasClass('mega-keyboard-navigation') ) {
                 return;
             }
 
