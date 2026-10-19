@@ -313,6 +313,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			check_admin_referer( 'megamenu_duplicate_theme' );
 
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
+
 			$this->init();
 
 			$theme = esc_attr( $_GET['theme_id'] );
@@ -348,6 +352,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			check_admin_referer( 'megamenu_delete_theme' );
 
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
+
 			$theme = esc_attr( $_GET['theme_id'] );
 
 			if ( $this->theme_is_being_used_by_location( $theme ) ) {
@@ -382,6 +390,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 
 			check_admin_referer( 'megamenu_revert_theme' );
 
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
+
 			$theme = esc_attr( $_GET['theme_id'] );
 
 			$saved_themes = max_mega_menu_get_themes();
@@ -409,6 +421,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		public function create_theme() {
 
 			check_admin_referer( 'megamenu_create_theme' );
+
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
 
 			$this->init();
 
@@ -440,6 +456,10 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		*/
 		public function import_theme() {
 			check_admin_referer( 'megamenu_import_theme' );
+
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
 
 			$import = json_decode( stripslashes( $_POST['data'] ), true );
 

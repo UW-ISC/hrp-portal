@@ -340,7 +340,6 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 
 			wp_enqueue_style( 'mega-menu-settings', MEGAMENU_BASE_URL . 'css/admin/admin.css', array( 'wp-components' ), MEGAMENU_VERSION );
 
-			wp_enqueue_style( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.css', false, MEGAMENU_VERSION );
 			wp_enqueue_script( 'mega-colorpicker', MEGAMENU_BASE_URL . 'js/colorpicker/colorpicker.js', [ 'jquery' ], MEGAMENU_VERSION );
 
 

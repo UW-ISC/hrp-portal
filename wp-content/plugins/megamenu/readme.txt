@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 6.2
-Tested up to: 7.0
-Stable tag: 3.10.5
+Tested up to: 7.1
+Stable tag: 3.10.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,20 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.10.8 =
+
+* Improvement: Serve minified frontend JS (maxmegamenu.min.js) for a smaller page-load footprint
+* Fix: Reactivate save buttons when toggle bar blocks are dragged/reordered
+* Fix: HTML mobile toggle block was stripping all HTML tags on save
+* Fix: Guard nav_menu_locations cache invalidation to genuine save contexts
+
+= 3.10.7 =
+
+* Fix: Material Symbols icon picker: load font-face styles in wp-admin
+* Fix: WPML compatibility - menu item depth detection could fail on PHP 8 when a synced translation's parent ID was missing, breaking Mega Menu grid layouts for affected items
+* Fix: Menu item modal - lower z-index so third-party builders opened from within it (e.g. SiteOrigin Page Builder's "Layout Builder" widget) render above it instead of hidden underneath
+* Fix: Theme editor - saving could submit stale/empty content for CodeMirror-backed fields (e.g. Pro's toggle bar HTML block) if saved before the field's own change handler had run
 
 = 3.10.6 =
 

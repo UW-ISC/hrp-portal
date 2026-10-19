@@ -18,7 +18,7 @@ $-shadow-source: #1e1e1e;
 
 $success: #46b450;
 
-$error: #d0011b;
+$error: #d63638; // current WP destructive/error red (matches core .notice-error, delete actions)
 $error-link: #b32d2e;
 $error-link-hover: #8a2424;
 $error-surface: #ffdddd;
@@ -3078,7 +3078,7 @@ body.maxmegamenu-admin.nav-menus-php {
 					box-shadow:
 						$shadow-large-hover,
 						0 0 0 1px $shadow-a07,
-						0 0 0 9999px rgba(0, 0, 0, 0.4);
+						0 0 0 9999px $shadow-a45;
 					border-radius: 4px;
 
 					&.mmm-widget-inner--preparing {
@@ -4021,7 +4021,11 @@ body.maxmegamenu-admin {
 	.megamenu-admin-modal {
 		display: none;
 		position: fixed;
-		z-index: 100050;
+		// Kept below the z-index range third-party admin dialogs commonly use (e.g. SiteOrigin
+		// Page Builder's own overlay sits around 100001-100002) so a builder opened from inside
+		// this modal (via a widget's own "edit"/"open builder" control) renders above it, not hidden
+		// underneath. Still well above ordinary wp-admin page chrome (#adminmenuwrap is 9990).
+		z-index: 99900;
 		top: var(--wp-admin--admin-bar--height, 32px);
 		right: 0;
 		bottom: 0;
@@ -5264,7 +5268,7 @@ body.maxmegamenu-admin {
 	}
 
 	*:focus {
-		box-shadow: 0 0 0;
+		box-shadow: none;
 	}
 
 	.icon_dropdown {
@@ -5294,7 +5298,7 @@ body.maxmegamenu-admin {
 	}
 
 	.tpx-select2-drop {
-	    box-shadow: 0 0 0;
+	    box-shadow: none;
 	    min-width: 150px;
 	}
 
@@ -5320,10 +5324,10 @@ body.maxmegamenu-admin {
 				font-size: 11px !important;
 				font-weight: 600 !important;
 				text-transform: uppercase !important;
-				color: #646970 !important;
+				color: var(--gray) !important;
 				letter-spacing: 0.5px !important;
 				padding: 8px 6px 4px !important;
-				border-bottom: 1px solid #f0f0f1 !important;
+				border-bottom: 1px solid var(--light-gray) !important;
 				margin-bottom: 8px !important;
 				background: transparent !important;
 			}
@@ -5352,14 +5356,14 @@ body.maxmegamenu-admin {
 					flex: none !important;
 
 					&:hover, &.select2-highlighted {
-						background: #f0f0f1 !important;
-						border-color: #dcdcde !important;
+						background: var(--light-gray) !important;
+						border-color: var(--light-gray) !important;
 					}
 
 					&.select2-selected {
-						background: #e5f5fa !important;
-						border-color: #00a0d2 !important;
-						color: #0073aa !important;
+						background: var(--feather-gray) !important;
+						border-color: var(--wp-admin-theme-color) !important;
+						color: var(--wp-admin-theme-color) !important;
 					}
 
 					.select2-result-label {
@@ -5408,8 +5412,8 @@ body.maxmegamenu-admin {
 			}
 
 			&:hover, &.select2-highlighted {
-				background: #f0f0f1 !important;
-				border-color: #dcdcde !important;
+				background: var(--light-gray) !important;
+				border-color: var(--light-gray) !important;
 			}
 
 			.select2-result-label {
@@ -5470,21 +5474,21 @@ body.maxmegamenu-admin {
 		height: 28px;
 		padding: 0;
 		background: #fff;
-		border: 1px solid var(--megamenu-form-control-border, var(--gray));
+		border: 1px solid var(--gray);
 		border-radius: 4px;
 		cursor: pointer;
-		color: #2c3338;
+		color: var(--semidark-gray);
 		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 		position: relative;
 
 		&:hover {
-			border-color: #8c8f94;
-			color: #1d2327;
+			border-color: var(--gray);
+			color: var(--black);
 		}
 
 		&:focus {
-			border-color: #2271b1;
-			box-shadow: 0 0 0 1px #2271b1;
+			border-color: var(--wp-admin-theme-color);
+			box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
 			outline: none;
 		}
 	}
@@ -5496,7 +5500,7 @@ body.maxmegamenu-admin {
 		width: 20px;
 		height: 20px;
 		flex-shrink: 0;
-		color: #2c3338;
+		color: var(--semidark-gray);
 
 		svg {
 			width: 18px;
@@ -5541,16 +5545,16 @@ body.maxmegamenu-admin {
 		z-index: 9999;
 		margin-top: 4px;
 		background: #fff;
-		border: 1px solid #ccd0d4;
+		border: 1px solid var(--gray);
 		border-radius: 4px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		box-shadow: 0 4px 12px $shadow-a12; // closest existing shadow token to color picker popup shadow (alpha .15)
 		width: 200px;
 	}
 
 	.mmm-icon-selector-search-wrap {
 		padding: 8px;
-		border-bottom: 1px solid #f0f0f1;
-		background: #f6f7f7;
+		border-bottom: 1px solid var(--light-gray);
+		background: var(--feather-gray);
 		border-top-left-radius: 4px;
 		border-top-right-radius: 4px;
 	}
@@ -5558,20 +5562,10 @@ body.maxmegamenu-admin {
 	.mmm-icon-selector-search {
 		width: 100% !important;
 		height: 30px !important;
-		padding: 4px 8px !important;
-		border: 1px solid #8c8f94 !important;
-		border-radius: 4px !important;
-		background: #fff !important;
-		font-size: 13px !important;
-
-		&:focus {
-			border-color: #2271b1 !important;
-			box-shadow: 0 0 0 1px #2271b1 !important;
-			outline: none !important;
-		}
 	}
 
 	.mmm-icon-selector-list {
+		max-height: 280px;
 		overflow-y: auto;
 		padding: 4px;
 	}
@@ -5581,9 +5575,9 @@ body.maxmegamenu-admin {
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
 		font-weight: 600;
-		color: #646970;
+		color: var(--gray);
 		padding: 8px 8px 4px 8px;
-		border-bottom: 1px solid #f0f0f1;
+		border-bottom: 1px solid var(--light-gray);
 		margin-bottom: 6px;
 	}
 
@@ -5630,11 +5624,11 @@ body.maxmegamenu-admin {
 			justify-content: flex-start;
 			padding: 0 8px;
 			font-size: 13px;
-			color: #646970;
+			color: var(--gray);
 
 			.mmm-icon-selector-item-preview {
-				border: 1px dashed #ccd0d4;
-				background: #f6f7f7;
+				border: 1px dashed var(--light-gray);
+				background: var(--feather-gray);
 				position: relative;
 
 				&::after {
@@ -5645,7 +5639,7 @@ body.maxmegamenu-admin {
 					transform: translate(-50%, -50%) rotate(-45deg);
 					width: 12px;
 					height: 1px;
-					background: #d63638;
+					background: $error;
 				}
 			}
 		}
@@ -5763,9 +5757,9 @@ body.maxmegamenu-admin {
 	}
 
 	.mmm-disabled-preview {
-		border: 1px dashed #ccd0d4;
+		border: 1px dashed var(--light-gray);
 		border-radius: 2px;
-		background: #f6f7f7;
+		background: var(--feather-gray);
 		position: relative;
 		width: 16px;
 		height: 16px;
@@ -5779,7 +5773,7 @@ body.maxmegamenu-admin {
 			transform: translate(-50%, -50%) rotate(-45deg);
 			width: 12px;
 			height: 1px;
-			background: #d63638;
+			background: $error;
 		}
 	}
 
@@ -6041,7 +6035,7 @@ body.maxmegamenu-admin {
 			border: 0;
 			box-sizing: border-box;
 			background: white;
-			box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+			box-shadow: 0 1px 0 $shadow-a07;
 
 			@include tablet {
 				gap: 16px;
@@ -6115,10 +6109,10 @@ body.maxmegamenu-admin {
 							min-height: 28px;
 							margin: 0;
 							padding: 0;
-							border: 1px solid #949494;
+							border: 1px solid var(--megamenu-form-control-border, var(--gray));
 							border-radius: 2px;
 							background: #fff;
-							box-shadow: 0 0 0 transparent;
+							box-shadow: none;
 							color: var(--semidark-gray);
 							cursor: pointer;
 							line-height: 1;
@@ -6131,8 +6125,8 @@ body.maxmegamenu-admin {
 							}
 
 							&:focus {
-								border-color: var(--wp-admin-theme-color, #2271b1);
-								box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
+								border-color: var(--wp-admin-theme-color);
+								box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
 								outline: 2px solid transparent;
 								outline-offset: 0;
 							}
@@ -6473,5 +6467,253 @@ body.maxmegamenu-admin:has(.toggle-bar-designer .mega-open)::before {
 	inset: 0;
 	z-index: 30;
 	pointer-events: auto;
-	background: rgba(0, 0, 0, 0.4);
+	background: $shadow-a45;
+}
+
+// Custom color picker (formerly js/colorpicker/colorpicker.css — merged in so it shares this
+// file's CSS variables/Sass tokens instead of its own hardcoded literals).
+body.maxmegamenu-admin {
+
+	.mega-custom-color-input-wrapper {
+		display: inline-flex;
+		align-items: center;
+		border: 1px solid var(--gray);
+		border-radius: 4px;
+		background-color: white;
+		cursor: pointer;
+		height: 28px;
+		overflow: hidden;
+		width: auto;
+		box-sizing: border-box;
+	}
+
+	.mega-custom-color-input-swatch {
+		width: 30px;
+		height: 100%;
+		flex-shrink: 0;
+		border-radius: 0;
+		background-image:
+			linear-gradient(45deg, var(--light-gray) 25%, transparent 25%),
+			linear-gradient(-45deg, var(--light-gray) 25%, transparent 25%),
+			linear-gradient(45deg, transparent 75%, var(--light-gray) 75%),
+			linear-gradient(-45deg, transparent 75%, var(--light-gray) 75%);
+		background-size: 10px 10px;
+		background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+		position: relative;
+	}
+
+	.mega-custom-color-input-swatch-color {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-right: 1px solid var(--gray);
+		align-content: center;
+		text-align: center;
+		font-size: 10px;
+	}
+
+	.mega-color-picker-input-text[type=text] {
+		flex-grow: 1;
+		border: none;
+		outline: none;
+		padding: 8px 12px 8px 8px;
+		font-size: 14px;
+		background-color: transparent;
+		height: 100%;
+		color: var(--dark-gray);
+		box-sizing: border-box;
+		min-width: 100px;
+		margin-right: 0;
+	}
+
+	.mega-color-picker-input.mega-plugin-enhanced {
+		display: none !important;
+	}
+
+	// Picker popup
+	.mega-color-picker-container {
+		position: absolute;
+		z-index: 9999999999;
+		border: 1px solid var(--gray);
+		box-shadow: 0 4px 12px $shadow-a12;
+		border-radius: 8px;
+		padding: 15px;
+		background-color: white;
+		width: 280px;
+		box-sizing: border-box;
+		display: none;
+	}
+
+	.mega-picker-palette {
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--feather-gray);
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		min-height: 22px;
+	}
+
+	.mega-picker-palette--vars {
+		margin-top: 5px;
+		border-top: 1px solid var(--feather-gray);
+		padding-top: 10px;
+	}
+
+	.mega-picker-swatch {
+		width: 20px;
+		height: 20px;
+		border-radius: 4px;
+		cursor: pointer;
+		border: 1px solid var(--light-gray);
+		box-shadow: inset 0 0 0 1px $shadow-a12;
+		flex-shrink: 0;
+		box-sizing: border-box;
+	}
+
+	.mega-picker-swatch--transparent {
+		background-color: #fff;
+		background-image: linear-gradient(
+			135deg,
+			#fff 44%,
+			var(--light-gray) 44%,
+			var(--light-gray) 56%,
+			#fff 56%
+		);
+		background-size: 100% 100%;
+	}
+
+	.mega-color-picker-main {
+		width: 100%;
+		height: 150px;
+		cursor: crosshair;
+		border-radius: 4px;
+		position: relative;
+		border: 1px solid var(--light-gray);
+		background-color: #fff;
+	}
+
+	.mega-color-picker-hue-slider {
+		width: 100%;
+		height: 20px;
+		cursor: pointer;
+		border-radius: 4px;
+		border: 1px solid var(--light-gray);
+		margin-top: 10px;
+	}
+
+	.mega-color-picker-opacity-slider-container {
+		margin-top: 10px;
+		padding: 5px 0;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+	}
+
+	.mega-color-picker-opacity-slider {
+		flex-grow: 1;
+		height: 10px;
+		cursor: pointer;
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: var(--feather-gray);
+		border-radius: 5px;
+		outline: none;
+		margin-right: 8px;
+		border: 1px solid var(--light-gray);
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 18px;
+			height: 18px;
+			background: var(--wp-admin-theme-color);
+			cursor: pointer;
+			border-radius: 50%;
+			border: 2px solid white;
+			box-shadow: 0 0 2px $shadow-a22;
+		}
+
+		&::-moz-range-thumb {
+			width: 18px;
+			height: 18px;
+			background: var(--wp-admin-theme-color);
+			cursor: pointer;
+			border-radius: 50%;
+			border: 2px solid white;
+			box-shadow: 0 0 2px $shadow-a22;
+		}
+	}
+
+	.mega-color-picker-value-input-wrapper {
+		padding: 0;
+		display: flex;
+		align-items: center;
+		margin-top: 12px;
+	}
+
+	.mega-color-picker-preview {
+		width: 50px;
+		height: 50px;
+		border-radius: 4px;
+		border: 1px solid var(--light-gray);
+		background-image:
+			linear-gradient(45deg, var(--light-gray) 25%, transparent 25%),
+			linear-gradient(-45deg, var(--light-gray) 25%, transparent 25%),
+			linear-gradient(45deg, transparent 75%, var(--light-gray) 75%),
+			linear-gradient(-45deg, transparent 75%, var(--light-gray) 75%);
+		background-size: 16px 16px;
+		background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+		margin-right: 10px;
+	}
+
+	.mega-color-picker-preview-color {
+		width: 100%;
+		height: 100%;
+		border-radius: 4px;
+	}
+
+	.mega-color-picker-value-input {
+		padding: 8px;
+		border: 1px solid var(--light-gray);
+		border-radius: 4px;
+		flex-grow: 1;
+		font-size: 14px;
+		height: 38px;
+		box-sizing: border-box;
+	}
+
+	.mega-color-picker-opacity-display {
+		font-size: 12px;
+		color: var(--semidark-gray);
+		width: 40px;
+		text-align: right;
+		flex-shrink: 0;
+	}
+
+	.mega-color-picker-selector-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		border: 2px solid white;
+		box-shadow: 0 0 0 1px $shadow-a45;
+		position: absolute;
+		pointer-events: none;
+		transform: translate(-50%, -50%);
+	}
+
+	.mega-hue-slider-indicator {
+		width: 3px;
+		height: 100%;
+		background-color: white;
+		border: 1px solid var(--semidark-gray);
+		box-shadow: 0 0 1px $shadow-a45;
+		position: absolute;
+		pointer-events: none;
+		transform: translateX(-50%);
+		top: 0;
+		box-sizing: border-box;
+	}
 }

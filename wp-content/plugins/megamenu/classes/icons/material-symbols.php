@@ -44,6 +44,7 @@ if ( ! class_exists( 'Mega_Menu_Material_Symbols' ) ) :
 			// Defer the is_installed() check to init so wp_theme taxonomy and
 			// wp_global_styles post type are registered before we query them.
 			add_action( 'init', [ $this, 'register_link_atts_filter' ], 20 );
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_font' ] );
 add_filter( 'megamenu_theme_arrow_icons', [ $this, 'add_arrow_icons' ] );
 			add_filter( 'megamenu_theme_close_icons', [ $this, 'add_close_icons' ] );
 			add_filter( 'megamenu_theme_toggle_icons', [ $this, 'add_toggle_icons' ] );
@@ -147,13 +148,25 @@ add_filter( 'megamenu_theme_arrow_icons', [ $this, 'add_arrow_icons' ] );
 		}
 
 		/**
-		 * Load global styles on the nav-menus page so the Material Symbols font is available.
+		 * Print the @font-face rule for Material Symbols on admin screens with an icon
+		 * picker (nav-menus.php, and the theme editor's arrow/close/toggle pickers) so
+		 * the glyphs can render.
+		 *
+		 * wp_print_font_faces() is what WordPress core uses to print this on the front
+		 * end (hooked to wp_head), but core never fires it on plain wp-admin screens,
+		 * so the icon picker has to trigger it itself.
 		 *
 		 * @param string $hook Current admin page hook.
 		 * @return void
 		 */
 		public function enqueue_admin_font( $hook ) {
-			wp_enqueue_global_styles();
+			$has_icon_picker = 'nav-menus.php' === $hook || false !== strpos( $hook, 'maxmegamenu_theme_editor' );
+
+			if ( ! $has_icon_picker || ! $this->is_installed() ) {
+				return;
+			}
+
+			wp_print_font_faces();
 		}
 
 		/**
