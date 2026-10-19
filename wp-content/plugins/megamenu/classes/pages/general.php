@@ -68,6 +68,10 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		public function save_settings() {
 			check_admin_referer( 'megamenu_save_settings' );
 
+			if ( ! current_user_can( apply_filters( 'megamenu_options_capability', 'edit_theme_options' ) ) ) {
+				wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'megamenu' ) );
+			}
+
 			if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
 				$settings           = $this->sanitize_array( $_POST['settings'] );
 				$submitted_settings = apply_filters( 'megamenu_submitted_settings', $settings );
@@ -82,7 +86,7 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 			do_action( 'megamenu_after_save_general_settings' );
 			do_action( 'megamenu_delete_cache' );
 
-			$url = isset( $_POST['_wp_http_referer'] ) ? $_POST['_wp_http_referer'] : admin_url( 'admin.php?page=maxmegamenu&saved=true' );
+			$url = isset( $_POST['_wp_http_referer'] ) ? wp_unslash( $_POST['_wp_http_referer'] ) : admin_url( 'admin.php?page=maxmegamenu&saved=true' );
 
 			$this->redirect( $url );
 		}
@@ -96,7 +100,7 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		 * @return void
 		 */
 		public function redirect( $url ) {
-			wp_redirect( $url );
+			wp_safe_redirect( $url );
 			exit;
 		}
 

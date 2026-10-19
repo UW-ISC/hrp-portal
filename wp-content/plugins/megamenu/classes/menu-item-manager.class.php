@@ -107,7 +107,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$parents = [];
 
 			foreach ( $menu_item_objects as $key => $item ) {
-				if ( $item->menu_item_parent == 0 ) {
+				if ( (int) $item->menu_item_parent === 0 ) {
 
 					if ( $item->ID == $menu_item_id ) {
 						return 0; // top level item

@@ -598,10 +598,22 @@ jQuery(function ($) {
             });
         }
 
+        function reactivateBlockSaveButton($btn) {
+            const origLabel = $btn.data("mmm-save-label");
+            if (origLabel) $btn.text(origLabel);
+            $btn.prop("disabled", false);
+        }
+
         const sortableBase = {
             forcePlaceholderSize: false,
             items: ".block",
-            stop: reindexToggleBarBlocks,
+            stop: function () {
+                reindexToggleBarBlocks();
+                markThemeEditorDirty();
+                $toggleRoot.find(".mega-block-save").each(function () {
+                    reactivateBlockSaveButton($(this));
+                });
+            },
         };
 
         $(".mega-blocks .mega-left").sortable(
@@ -654,10 +666,7 @@ jQuery(function ($) {
         });
 
         $toggleRoot.on("change input", ".block-settings :input", function () {
-            const $btn = $(this).closest(".block").find(".mega-block-save");
-            const origLabel = $btn.data("mmm-save-label");
-            if (origLabel) $btn.text(origLabel);
-            $btn.prop("disabled", false);
+            reactivateBlockSaveButton($(this).closest(".block").find(".mega-block-save"));
         });
 
         $toggleRoot.on("click", ".block-title", function (e) {
@@ -676,6 +685,7 @@ jQuery(function ($) {
                 $toggleRoot.find(".block-settings").hide();
                 $block.addClass("mega-open");
                 $settings.show();
+                reactivateBlockSaveButton($block.find(".mega-block-save"));
                 $(document).trigger("megamenu_toggle_block_opened", [$block[0]]);
             }
         });
@@ -733,6 +743,16 @@ jQuery(function ($) {
         }
 
         $(".theme_result_message").remove();
+
+        // Flush every CodeMirror instance in the form (custom CSS, and any
+        // companion-plugin textareas such as Pro's toggle bar HTML block) back
+        // into its textarea before serializing — CodeMirror doesn't keep the
+        // underlying textarea's value in sync on every keystroke, so without
+        // this a save triggered before an individual field's own blur/change
+        // handler runs submits stale (often empty) content for that field.
+        $form.find("textarea").each(function () {
+            window.megamenuCodeEditor.save(this);
+        });
 
         $.ajax({
             url:  ajaxurl,

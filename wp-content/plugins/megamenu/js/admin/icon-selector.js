@@ -397,6 +397,7 @@
             }
             this.filterOptions();
             this.updateSelectionHighlight();
+            this.scrollSelectedIntoView();
         }
 
         close() {
@@ -531,18 +532,29 @@
             if (this.focusedIndex >= 0 && this.focusedIndex < visibleItems.length) {
                 const item = visibleItems[this.focusedIndex];
                 item.$el.addClass('mmm-focused');
-                
-                // Scroll into view inside listbox
-                const listEl = this.$optionsList[0];
-                const itemEl = item.$el[0];
-                const scrollBottom = listEl.clientHeight + listEl.scrollTop;
-                const itemBottom = itemEl.offsetTop + itemEl.clientHeight;
+                this.scrollItemIntoView(item.$el[0]);
+            }
+        }
 
-                if (itemEl.offsetTop < listEl.scrollTop) {
-                    listEl.scrollTop = itemEl.offsetTop;
-                } else if (itemBottom > scrollBottom) {
-                    listEl.scrollTop = itemBottom - listEl.clientHeight;
-                }
+        // Scroll an item into view inside the (possibly grouped) listbox.
+        scrollItemIntoView(itemEl) {
+            const listEl = this.$optionsList[0];
+            const scrollBottom = listEl.clientHeight + listEl.scrollTop;
+            const itemBottom = itemEl.offsetTop + itemEl.clientHeight;
+
+            if (itemEl.offsetTop < listEl.scrollTop) {
+                listEl.scrollTop = itemEl.offsetTop;
+            } else if (itemBottom > scrollBottom) {
+                listEl.scrollTop = itemBottom - listEl.clientHeight;
+            }
+        }
+
+        // Jump straight to the selected icon (no smooth animation) when the dropdown opens.
+        scrollSelectedIntoView() {
+            const currentVal = this.$select.val();
+            const selectedItem = this.optionItems.find(item => item.value === currentVal && item.$el.is(':visible'));
+            if (selectedItem) {
+                this.scrollItemIntoView(selectedItem.$el[0]);
             }
         }
 
