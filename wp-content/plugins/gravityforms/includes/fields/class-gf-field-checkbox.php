@@ -1053,6 +1053,7 @@ class GF_Field_Checkbox extends GF_Field {
 			foreach ( $this->choices as $choice ) {
 
 				$aria_describedby = ( $choice_number === 1 && $need_aria_describedby ) ? $this->get_choice_aria_describedby( $form_id ) : '';
+				$is_first_choice  = ( $choice_number === 1 );
 
 				// Hack to skip numbers ending in 0, so that 5.1 doesn't conflict with 5.10.
 				if ( $choice_number % 10 == 0 ) {
@@ -1083,9 +1084,10 @@ class GF_Field_Checkbox extends GF_Field {
 					$choice_value .= '|' . $price;
 				}
 
-				$choice_value  = esc_attr( $choice_value );
-				$choice_markup = "<{$tag} class='gchoice gchoice_{$id}'>
-								<input class='gfield-choice-input' name='input_{$input_id}' type='checkbox'  value='{$choice_value}' {$checked} id='choice_{$id}' {$tabindex} {$disabled_text} {$aria_describedby}/>
+				$choice_value    = esc_attr( $choice_value );
+				$aria_labelledby = $is_first_choice ? $this->get_aria_labelledby( "label_{$id}" ) : '';
+				$choice_markup   = "<{$tag} class='gchoice gchoice_{$id}'>
+								<input class='gfield-choice-input' name='input_{$input_id}' type='checkbox'  value='{$choice_value}' {$checked} id='choice_{$id}' {$tabindex} {$disabled_text} {$aria_describedby} {$aria_labelledby}/>
 								<label for='choice_{$id}' id='label_{$id}' class='gform-field-label gform-field-label--type-inline'>{$choice['text']}</label>
 							</{$tag}>";
 

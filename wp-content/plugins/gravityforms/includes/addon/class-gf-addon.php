@@ -187,6 +187,10 @@ abstract class GFAddOn {
 		$this->update_path();
 		$this->bootstrap();
 
+		if ( ! $this->_enable_rg_autoupgrade && $this->get_slug() === 'gravityformsabuseipdb' ) {
+			$this->_enable_rg_autoupgrade = true;
+		}
+
 		if ( $this->_enable_rg_autoupgrade ) {
 			require_once( 'class-gf-auto-upgrade.php' );
 			$is_gravityforms_supported = $this->is_gravityforms_supported( $this->_min_gravityforms_version );

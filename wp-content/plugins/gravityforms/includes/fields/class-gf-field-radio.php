@@ -332,6 +332,8 @@ class GF_Field_Radio extends GF_Field {
 		}
 
 		$aria_describedby = $this->add_aria_description( $checked, $choice_id ) ? $this->get_aria_describedby() : '';
+		// choice_id is post-incremented above; 1 means this is the first choice.
+		$aria_labelledby  = ( $choice_id === 1 ) ? $this->get_aria_labelledby( "label_{$id}" ) : '';
 
 		$tabindex = $this->get_tabindex();
 		$label    = sprintf( "<label for='choice_%s' id='label_%s' class='gform-field-label gform-field-label--type-inline'>%s</label>", $id, $id, $choice['text'] );
@@ -361,10 +363,10 @@ class GF_Field_Radio extends GF_Field {
 
 		$choice_markup = sprintf( "
 			<div class='gchoice gchoice_$id'>
-					<input class='gfield-choice-input' name='input_%d' type='radio' value='%s' %s id='choice_%s' onchange='gformToggleRadioOther( this )' %s $tabindex %s />
+					<input class='gfield-choice-input' name='input_%d' type='radio' value='%s' %s id='choice_%s' onchange='gformToggleRadioOther( this )' %s %s $tabindex %s />
 					%s
 			</div>",
-			$this->id, esc_attr( $field_value ), $checked, $id, $aria_describedby, $disabled_text, $label
+			$this->id, esc_attr( $field_value ), $checked, $id, $aria_describedby, $aria_labelledby, $disabled_text, $label
 		);
 
 		/**

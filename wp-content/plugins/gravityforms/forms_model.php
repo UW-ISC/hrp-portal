@@ -3995,6 +3995,10 @@ class GFFormsModel {
 	 * @return bool Returns true if the two values match the specified operation. Otherwise, it will return false.
 	 */
 	public static function matches_conditional_operation( $val1, $val2, $operation ) {
+		// Choice text can be KSES-encoded while conditional logic values are sanitized without encoding.
+		// Decode entities before comparing so equivalent values (e.g. "Red & Blue" and "Red &amp; Blue") match.
+		$val1 = is_string( $val1 ) ? wp_specialchars_decode( $val1, ENT_QUOTES ) : $val1;
+		$val2 = is_string( $val2 ) ? wp_specialchars_decode( $val2, ENT_QUOTES ) : $val2;
 		$val1 = ! rgblank( $val1 ) ? strtolower( $val1 ) : '';
 		$val2 = ! rgblank( $val2 ) ? strtolower( $val2 ) : '';
 
@@ -5011,6 +5015,9 @@ class GFFormsModel {
 
 		$allowed_html    = wp_kses_allowed_html( 'post' );
 		$sanitized_value = wp_kses( (string) $value, $allowed_html );
+		$choice_value    = wp_specialchars_decode( (string) $choice_value, ENT_QUOTES );
+		$value           = wp_specialchars_decode( (string) $value, ENT_QUOTES );
+		$sanitized_value = wp_specialchars_decode( $sanitized_value, ENT_QUOTES );
 
 		if ( $choice_value == $value || $choice_value == $sanitized_value ) {
 			return true;
@@ -5018,8 +5025,11 @@ class GFFormsModel {
 			list( $val, $price ) = rgexplode( '|', $value, 2, true );
 
 			$sanitized_val = wp_kses( $val, $allowed_html );
+			$choice_value  = wp_specialchars_decode( (string) $choice['value'], ENT_QUOTES );
+			$val           = wp_specialchars_decode( $val, ENT_QUOTES );
+			$sanitized_val = wp_specialchars_decode( $sanitized_val, ENT_QUOTES );
 
-			if ( $choice['value'] == $val || $choice['value'] == $sanitized_val ) {
+			if ( $choice_value == $val || $choice_value == $sanitized_val ) {
 				return true;
 			}
 		} // add support for prepopulating multiselects @alex
@@ -5338,7 +5348,7 @@ class GFFormsModel {
 		$index = 0;
 		foreach ( $custom_fields as $field ) {
 			if ( $field->postCustomFieldName == $meta_name ) {
-				if ( $meta_index == $index ) {
+				if ( $meta_index == $index || $field instanceof GF_Field_FileUpload && $field->multipleFiles ) {
 					return $field;
 				}
 				++$index;

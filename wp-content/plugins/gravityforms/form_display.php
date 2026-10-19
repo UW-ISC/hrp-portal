@@ -748,6 +748,100 @@ class GFFormDisplay {
 		self::$submission[ $form_id ]['page_number'] = $page_number;
 	}
 
+	/**
+	 * Returns the query argument used to link to a page within a form.
+	 *
+	 * @since next
+	 *
+	 * @param int $form_id The form ID.
+	 *
+	 * @return string
+	 */
+	public static function get_page_query_arg( $form_id ) {
+		return 'gf_page_' . absint( $form_id );
+	}
+
+	/**
+	 * Returns the page number requested by the gf_page_{form_id} query argument.
+	 *
+	 * Save and Continue links restore the page stored with the draft, so the page argument is ignored when gf_token is present.
+	 *
+	 * @since next
+	 *
+	 * @param int $form_id The form ID.
+	 *
+	 * @return int The requested page number, or 0 when the argument is missing, invalid, or ignored.
+	 */
+	public static function get_linked_page_number_from_query( $form_id ) {
+		if ( isset( $_GET['gf_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return 0;
+		}
+
+		$requested_page = rgget( self::get_page_query_arg( $form_id ) );
+		if ( ! is_numeric( $requested_page ) ) {
+			return 0;
+		}
+
+		$requested_page = (int) $requested_page;
+
+		return $requested_page > 0 ? $requested_page : 0;
+	}
+
+	/**
+	 * Maps a requested page number to a page that can be displayed.
+	 *
+	 * If a link goes to a page hidden by conditional logic, the first page of the form is displayed instead.
+	 *
+	 * @since next
+	 *
+	 * @param array      $form           The current form.
+	 * @param int        $requested_page The page number from the page link.
+	 * @param array      $field_values   Dynamic population values.
+	 * @param array|null $lead           The entry to evaluate conditional logic against, when one is available.
+	 *
+	 * @return int
+	 */
+	public static function resolve_linked_page_number( $form, $requested_page, $field_values = array(), $lead = null ) {
+		$max_page = self::get_max_page_number( $form );
+		if ( $max_page < 1 ) {
+			return 1;
+		}
+
+		$requested_page = absint( $requested_page );
+		if ( $requested_page < 1 ) {
+			$requested_page = 1;
+		} elseif ( $requested_page > $max_page ) {
+			$requested_page = $max_page;
+		}
+
+		if ( ! is_array( $field_values ) ) {
+			$field_values = array();
+		}
+
+		return GFFormsModel::is_page_hidden( $form, $requested_page, $field_values, $lead ) ? 1 : $requested_page;
+	}
+
+	/**
+	 * Sets the current page from the gf_page_{form_id} query argument when one is present.
+	 *
+	 * @since next
+	 *
+	 * @param array      $form         The current form.
+	 * @param array      $field_values Dynamic population values.
+	 * @param array|null $lead         The entry to evaluate conditional logic against, when one is available.
+	 *
+	 * @return void
+	 */
+	public static function maybe_set_current_page_from_query_arg( $form, $field_values = array(), $lead = null ) {
+		$form_id        = absint( rgar( $form, 'id' ) );
+		$requested_page = self::get_linked_page_number_from_query( $form_id );
+		if ( ! $requested_page ) {
+			return;
+		}
+
+		self::set_current_page( $form_id, self::resolve_linked_page_number( $form, $requested_page, $field_values, $lead ) );
+	}
+
 	public static function get_current_page( $form_id ) {
 		$page_number = isset( self::$submission[ $form_id ] ) ? intval( self::$submission[ $form_id ]['page_number'] ) : 1;
 
@@ -1074,7 +1168,8 @@ class GFFormDisplay {
 		// Setting form style and theme
 		$form = self::set_form_styles( $form, $style_settings, $form_theme );
 
-		$action = wp_doing_ajax() ? remove_query_arg( 'gf_token', wp_get_referer() ) : remove_query_arg( 'gf_token' );
+		$action_args = array( 'gf_token', self::get_page_query_arg( $form_id ) );
+		$action      = wp_doing_ajax() ? remove_query_arg( $action_args, wp_get_referer() ) : remove_query_arg( $action_args );
 
 		if ( rgpost( 'gform_send_resume_link' ) == $form_id ) {
 			$save_email_confirmation = self::handle_save_email_confirmation( $form, $ajax );
@@ -1357,8 +1452,25 @@ class GFFormDisplay {
                         </div>';
 			}
 
-			$action       = esc_url( $action );
-			$form_string .= gf_apply_filters( array( 'gform_form_tag', $form_id ), "<form method='post' enctype='multipart/form-data' {$target} id='gform_{$form_id}' {$form_css_class} action='{$action}' data-formid='{$form_id}' novalidate>", $form );
+			$action              = esc_url( $action );
+			$requested_page_attr = '';
+			if ( $has_pages && ! $is_postback && ! $is_admin ) {
+				$linked_page = self::get_linked_page_number_from_query( $form_id );
+				if ( $linked_page ) {
+					$requested_page_attr = " data-gf-requested-page='" . (int) $linked_page . "'";
+				}
+			}
+			/**
+			 * Modify the form tag markup.
+			 *
+			 * @since unknown
+			 *
+			 * @param string $form_tag The form tag markup.
+			 * @param array  $form     The form object.
+			 *
+			 * @return string The modified form tag markup.
+			 */
+			$form_string .= gf_apply_filters( array( 'gform_form_tag', $form_id ), "<form method='post' enctype='multipart/form-data' {$target} id='gform_{$form_id}' {$form_css_class} action='{$action}' data-formid='{$form_id}'{$requested_page_attr} novalidate>", $form );
 
 			// If Save and Continue token was provided but expired/invalid, display error message.
 			if ( isset( $_GET['gf_token'] ) && ! is_array( $incomplete_submission_info ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -1389,6 +1501,12 @@ class GFFormDisplay {
 			/* If the form was submitted, has multiple pages and is invalid, set the current page to the first page with an invalid field. */
 			if ( $has_pages && $is_postback && ! $is_valid ) {
 				self::set_current_page( $form_id, GFFormDisplay::get_first_page_with_error( $form ) );
+			}
+
+			// Open a specific page when the URL includes gf_page_{form_id}. Postbacks and Save and Continue links keep their own page.
+			if ( $has_pages && ! $is_postback && ! $is_admin ) {
+				$lead = is_array( $partial_entry ) ? $partial_entry : null;
+				self::maybe_set_current_page_from_query_arg( $form, $field_values, $lead );
 			}
 
 			$current_page = self::get_current_page( $form_id );
@@ -1493,6 +1611,7 @@ class GFFormDisplay {
 						"jQuery('#gform_wrapper_{$form_id}').replaceWith(confirmation_content);" .
 						"{$scroll_position['confirmation']}" .
 						"jQuery(document).trigger('gform_confirmation_loaded', [{$form_id}]);" .
+						"if(window.gform && gform.pagination && gform.pagination.removePageQueryArg){gform.pagination.removePageQueryArg({$form_id});}" .
 						"window['gf_submitting_{$form_id}'] = false;" .
 						"wp.a11y.speak(jQuery('#gform_confirmation_message_{$form_id}').text());" .
 						'}' .
@@ -5607,8 +5726,19 @@ class GFFormDisplay {
 				$errors = self::get_validation_errors( $form, $values );
 				$error_messages_list = '<ol>';
 				foreach ( $errors as $error ) {
-					$separator = $error['field_label'] ? ': ' : '';
-					$error_messages_list .= '<li><a class="gform_validation_error_link" href="' . $error['field_selector'] . '">' . $error['field_label'] . $separator . $error['message'] . '</a></li>';
+					$separator      = $error['field_label'] ? ': ' : '';
+					$page_attribute = '';
+					if ( ! empty( $error['page_number'] ) ) {
+						$page_attribute = sprintf( ' data-gf-page="%d"', (int) $error['page_number'] );
+					}
+					$error_messages_list .= sprintf(
+						'<li><a class="gform_validation_error_link" href="%1$s"%2$s>%3$s%4$s%5$s</a></li>',
+						esc_attr( $error['field_selector'] ),
+						$page_attribute,
+						$error['field_label'],
+						$separator,
+						$error['message']
+					);
 				}
 				$error_messages_list .= '</ol>';
 			}
@@ -5654,7 +5784,7 @@ class GFFormDisplay {
 	 * @param array $form   Current form being displayed.
 	 * @param array $values Submitted values.
 	 *
-	 * @return array        List of validation errors for each field, each item contains the error message and its corresponding field label and selector.
+	 * @return array        List of validation errors for each field. Each item contains the error message, field label, field selector, and page number.
 	 */
 	public static function get_validation_errors( $form, $values ) {
 		$form_id = absint( rgar( $form, 'id' ) );
@@ -5669,7 +5799,12 @@ class GFFormDisplay {
 			if ( $field instanceof GF_Field_Repeater ) {
 				$repeater_summary_errors = $field->get_context_property( 'validation_summary_errors' );
 				if ( ! empty( $repeater_summary_errors ) ) {
-					$errors = array_merge( $errors, $repeater_summary_errors );
+					foreach ( $repeater_summary_errors as $repeater_error ) {
+						if ( empty( $repeater_error['page_number'] ) ) {
+							$repeater_error['page_number'] = (int) $field->pageNumber;
+						}
+						$errors[] = $repeater_error;
+					}
 				}
 				continue;
 			}
@@ -5683,6 +5818,7 @@ class GFFormDisplay {
 			$errors[] = array(
 				'field_label'    => $field->get_field_label( true, GFFormsModel::get_field_value( $field, $values ) ),
 				'field_selector' => '#field_' . $form_id . '_' . $field->id,
+				'page_number'    => (int) $field->pageNumber,
 				'message'        => $message,
 			);
 		}
