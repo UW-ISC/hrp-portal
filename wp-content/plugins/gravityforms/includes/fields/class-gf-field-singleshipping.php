@@ -64,8 +64,9 @@ class GF_Field_SingleShipping extends GF_Field {
 		$is_entry_detail = $this->is_entry_detail();
 		$is_form_editor  = $this->is_form_editor();
 
-		$id       = (int) $this->id;
-		$field_id = $is_entry_detail || $is_form_editor || $form_id == 0 ? "input_$id" : 'input_' . $form_id . "_$id";
+		$id               = (int) $this->id;
+		$field_id         = $is_entry_detail || $is_form_editor || $form_id == 0 ? "input_$id" : 'input_' . $form_id . "_$id";
+		$aria_describedby = $this->get_aria_describedby();
 
 		$currency = $is_entry_detail && ! empty( $entry ) ? $entry['currency'] : '';
 
@@ -76,7 +77,7 @@ class GF_Field_SingleShipping extends GF_Field {
 		$price = esc_attr( GFCommon::to_money( $price ) );
 
 		return "<div class='ginput_container ginput_container_singleshipping'>
-					<input type='text' readonly class='ginput_shipping_price gform-text-input-reset' id='{$field_id}' name='input_{$id}' value='{$price}' />
+					<input type='text' readonly class='ginput_shipping_price gform-text-input-reset' id='{$field_id}' name='input_{$id}' value='{$price}' {$aria_describedby} />
 				</div>";
 	}
 

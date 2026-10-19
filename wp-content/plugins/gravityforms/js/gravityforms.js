@@ -1555,6 +1555,11 @@ function gformAddListItem( addButton, max ) {
         .not( ':checkbox, :radio' ).val( '' ).attr( 'value', '' );
     $clone.find( ':checkbox, :radio' ).prop( 'checked', false );
 
+    // Only the first input of the first column describes the field. Cloned rows must not keep that attribute.
+    if ( $clone.find( '.gfield_list_cell[data-label]' ).length ) {
+        $clone.find( 'input, select, textarea' ).removeAttr( 'aria-describedby' );
+    }
+
     $clone = gform.applyFilters( 'gform_list_item_pre_add', $clone, $group );
 
     $group.after( $clone );

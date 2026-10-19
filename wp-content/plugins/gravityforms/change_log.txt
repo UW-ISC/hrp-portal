@@ -1,3 +1,23 @@
+### 3.1.3.4
+- Added support for linking to a page within a multi-page form, and improved accessibility by making links in the validation summary go to the correct page.
+- Added aria attributes to the first inputs in fieldsets to ensure screen readers read the labels and descriptions correctly.
+- Fixed an issue that prevented Multi-File Upload from working on the Post Custom Field type.
+- Fixed an issue where ampersands in Radio and Checkbox field values could prevent matching entries from appearing in search results and cause `GFAPI::get_entries()` to return encoded values.
+- Fixed an issue where embedding a form in an existing page or post when the Gravity Forms block is not registered in the site causes the block editor to hide all other blocks.
+- Fixed an issue where conditional logic comparisons could fail when field values contained an ampersand, preventing those values from appearing in confirmations and notifications.
+- Fixed an issue that caused the field id to not change in the form editor when switching between fields in Firefox.
+- Fixed an issue where the Month and Year dropdown selections in the Datepicker don't stick on the first try on mobile.
+- Fixed an issue where the side arrows for the Month and Year dropdowns in the Datepicker are not in the correct position on mobile.
+
+### 3.1.3.3
+- Fixed an issue that prevented the value for Text fields from being saved when the field uses conditional logic and is set to Hidden visibility.
+
+### 3.1.3.2
+- AF: Fixed an issue where updates aren't offered for the AbuseIPDB Add-On.
+- Update about page link to point to the general release tag instead of the security release tag.
+- Added meta tag to the default HTML template for notifications to define the content type and charset.
+- AF: Fixed an issue where `GFFeedAddOn::delay_feed()` is not called when a conditional logic rule based on the payment status is being used to delay feed processing.
+
 ### 3.1.3.1
 - Fixed a bug that prevented the "Reset Defaults" button in the block editor from working.
 - Added a "copy" button next to the endpoint URL in the MCP settings.

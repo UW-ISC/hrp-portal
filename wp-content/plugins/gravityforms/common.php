@@ -6901,7 +6901,8 @@ Content-Type: text/html;
 		}
 
 		foreach ( $fields_to_check as $field ) {
-			if ( $field->type === 'fileupload' && $field->multipleFiles ) {
+
+			if ( $field instanceof GF_Field_FileUpload && $field->multipleFiles ) {
 				return true;
 			}
 
@@ -7649,6 +7650,7 @@ Content-Type: text/html;
 			$template =
 				"<html>
 	<head>
+		<meta http-equiv='Content-type' content='text/html; charset={charset}' />
 		<title>{subject}</title>
 	</head>
 	<body>
@@ -7667,6 +7669,7 @@ Content-Type: text/html;
 
 			$message = str_replace( '{message}', $message, $template );
 			$message = str_replace( '{subject}', $subject, $message );
+			$message = str_replace( '{charset}', esc_attr( get_option( 'blog_charset' ) ), $message );
 		}
 
 		return $message;
