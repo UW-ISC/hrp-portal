@@ -309,7 +309,7 @@ class GF_Field_Phone extends GF_Field {
 		$placeholder_attribute  = $this->phoneFormat !== 'formatted' ? $this->get_field_placeholder_attribute() : '';
 		$required_attribute     = $this->isRequired ? 'aria-required="true"' : '';
 		$invalid_attribute      = $this->failed_validation ? 'aria-invalid="true"' : 'aria-invalid="false"';
-		$aria_describedby       = $this->get_aria_describedby();
+		$aria_describedby       = $this->phoneFormat === 'formatted' ? '' : $this->get_aria_describedby();
 		$autocomplete_attribute = $this->enableAutocomplete ? $this->get_field_autocomplete_attribute() : '';
 
 		$tabindex = $this->get_tabindex();
@@ -491,7 +491,7 @@ class GF_Field_Phone extends GF_Field {
 		$phone_sublabel_text   = esc_html( $this->phoneSublabel ?: __( 'Phone Number', 'gravityforms' ) );
 		$country_sublabel      = "<label for='" . esc_attr( $button_id ) . "' id='" . esc_attr( $button_id . '_label' ) . "' class='gform-field-label gform-field-label--type-sub {$hidden_sublabel_class}'>{$country_sublabel_text}</label>";
 		$phone_sublabel        = "<label for='" . esc_attr( $visible_input_id ) . "' id='" . esc_attr( $visible_input_id . '_label' ) . "' class='gform-field-label gform-field-label--type-sub {$hidden_sublabel_class}'>{$phone_sublabel_text}</label>";
-
+	
 		$is_sublabel_above = $this->is_sub_label_above( $form );
 
 		$country_sublabel_above = $is_sublabel_above ? $country_sublabel : '';
@@ -572,7 +572,7 @@ class GF_Field_Phone extends GF_Field {
 			esc_attr( $i18n['searchCountriesAriaLabel'] ),      // 22
 			esc_attr( $dropdown_id ),                           // 23: list id prefix
 			esc_attr( $dropdown_id ),                           // 24: list id
-			esc_attr( $i18n['countryListAriaLabel'] )           // 25
+			esc_attr( $i18n['countryListAriaLabel'] ),          // 25
 		);
 
 		return $html;

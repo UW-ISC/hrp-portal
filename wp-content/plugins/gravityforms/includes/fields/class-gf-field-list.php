@@ -171,8 +171,11 @@ class GF_Field_List extends GF_Field {
 		if ( $has_columns ) {
 
 			$list .= '<div class="gfield_list_header gform-grid-row">';
+			$header_index = 1;
 			foreach ( $columns as $column ) {
-				$list .= '<div class="gform-field-label gfield_header_item gform-grid-col">' . esc_html( $column['text'] ) . '</div>';
+				$header_id = "gfield_list_{$this->formId}_{$this->id}_header_{$header_index}";
+				$list .= '<div class="gform-field-label gfield_header_item gform-grid-col" id="' . esc_attr( $header_id ) . '">' . esc_html( $column['text'] ) . '</div>';
+				$header_index++;
 			}
 
 			if ( $this->maxRows != 1 ) {
@@ -355,9 +358,12 @@ class GF_Field_List extends GF_Field {
 			$list .= '</colgroup>';
 
 			$list .= '<thead><tr>';
+			$header_index = 1;
 			foreach ( $columns as $column ) {
 				// a11y: scope="col"
-				$list .= '<th scope="col">' . esc_html( $column['text'] ) . '</th>';
+				$header_id = "gfield_list_{$this->formId}_{$this->id}_header_{$header_index}";
+				$list .= '<th scope="col" id="' . esc_attr( $header_id ) . '">' . esc_html( $column['text'] ) . '</th>';
+				$header_index++;
 			}
 
 			if ( $this->maxRows != 1 ) {
@@ -459,7 +465,6 @@ class GF_Field_List extends GF_Field {
 		$disabled = $this->is_form_editor() ? 'disabled' : '';
 		$required_attribute    = $this->isRequired ? 'aria-required="true"' : '';
 		$invalid_attribute     = $this->failed_validation ? "aria-invalid='true'" : "aria-invalid='false'";
-		$aria_describedby      = $this->get_aria_describedby();
 
 		$column_index = 1;
 		if ( $has_columns && is_array( $this->choices ) ) {
@@ -476,6 +481,15 @@ class GF_Field_List extends GF_Field {
 
 		$aria_label_template = isset( $column['text'] ) ? $column_text : $this->label;
 		$aria_label_template .= __( ', Row {0}', 'gravityforms' );
+
+		$is_first_input   = (int) $row === 1 && (int) $column_index === 1;
+		$aria_describedby = ( ! $has_columns || $is_first_input ) ? $this->get_aria_describedby() : '';
+		$aria_name_attrs = "aria-label='" . esc_attr( str_replace( '{0}', $row, $aria_label_template ) ) . "'";
+		if ( $is_first_input ) {
+			$header_label_id = $has_columns ? "gfield_list_{$this->formId}_{$this->id}_header_{$column_index}" : '';
+			// aria-labelledby takes precedence; drop aria-label on the first input to avoid conflicting names.
+			$aria_name_attrs = $this->get_aria_labelledby( $header_label_id );
+		}
 
 		/**
 		 * Filters the column input.
@@ -497,7 +511,7 @@ class GF_Field_List extends GF_Field {
 		switch ( $input_info['type'] ) {
 
 			case 'select' :
-				$input = "<select name='input_{$this->id}[]' {$tabindex} {$disabled} {$invalid_attribute} {$required_attribute} {$aria_describedby} aria-label='" . esc_attr( str_replace( '{0}', $row, $aria_label_template ) ) . "' data-aria-label-template='" . esc_attr( $aria_label_template ) . "'>";
+				$input = "<select name='input_{$this->id}[]' {$tabindex} {$disabled} {$invalid_attribute} {$required_attribute} {$aria_describedby} {$aria_name_attrs} data-aria-label-template='" . esc_attr( $aria_label_template ) . "'>";
 				if ( ! is_array( $input_info['choices'] ) ) {
 					$input_info['choices'] = array_map( 'trim', explode( ',', $input_info['choices'] ) );
 				}
@@ -521,8 +535,8 @@ class GF_Field_List extends GF_Field {
 				break;
 
 			default :
-				// a11y: inputs without a label must have the aria-label attribute set.
-				$input = "<input {$invalid_attribute} {$required_attribute} {$aria_describedby} aria-label='" . esc_attr( str_replace( '{0}', $row, $aria_label_template ) ) . "' data-aria-label-template='" . esc_attr( $aria_label_template ) . "' type='text' name='input_{$this->id}[]' value='" . esc_attr( $value ) . "' {$tabindex} {$disabled} />";
+				// a11y: inputs without a label must have the aria-label attribute set (except the first fieldset input, which uses aria-labelledby).
+				$input = "<input {$invalid_attribute} {$required_attribute} {$aria_describedby} {$aria_name_attrs} data-aria-label-template='" . esc_attr( $aria_label_template ) . "' type='text' name='input_{$this->id}[]' value='" . esc_attr( $value ) . "' {$tabindex} {$disabled} />";
 				break;
 		}
 

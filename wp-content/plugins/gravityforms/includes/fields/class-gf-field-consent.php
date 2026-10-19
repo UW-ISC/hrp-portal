@@ -249,8 +249,10 @@ class GF_Field_Consent extends GF_Field {
 		$description           = $is_entry_detail ? $this->get_field_description_from_revision( $revision_id ) : $this->description;
 		$extra_describedby_ids = empty( $description ) ? array() : array( "gfield_consent_description_{$form['id']}_{$this->id}" );
 		$aria_describedby      = $this->get_aria_describedby( $extra_describedby_ids );
+		$consent_label_id      = "{$target_input_id}_label";
+		$aria_labelledby       = $this->get_aria_labelledby( $consent_label_id );
 
-		$input  = "<input name='input_{$id}.1' id='{$target_input_id}' type='{$html_input_type}' value='1' {$tabindex} {$aria_describedby} {$required_attribute} {$invalid_attribute} {$disabled_text} {$checked} /> <label {$label_class_attribute} {$for_attribute} ><span class='gform-field-label__text'>{$checkbox_label}</span>{$required_div}</label>";
+		$input  = "<input name='input_{$id}.1' id='{$target_input_id}' type='{$html_input_type}' value='1' {$tabindex} {$aria_describedby} {$aria_labelledby} {$required_attribute} {$invalid_attribute} {$disabled_text} {$checked} /> <label id='{$consent_label_id}' {$label_class_attribute} {$for_attribute} ><span class='gform-field-label__text'>{$checkbox_label}</span>{$required_div}</label>";
 		$input .= "<input type='hidden' name='input_{$id}.2' value='" . esc_attr( $checkbox_label ) . "' class='gform_hidden' />";
 		$input .= "<input type='hidden' name='input_{$id}.3' value='" . esc_attr( $revision_id ) . "' class='gform_hidden' />";
 

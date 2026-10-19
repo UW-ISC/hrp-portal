@@ -3349,13 +3349,17 @@ function ShowSettings( element ) {
 
 	// Show field icon and description in sidebar
 	jQuery( '#nothing_selected' ).hide();
-	jQuery( '#sidebar_field_label' )
+	var $sidebarFieldLabel = jQuery( '#sidebar_field_label' )
 		.removeClass( 'no-id' )
 		.text( label )
 		.attr( 'data-fieldId-label', gf_vars.idString )
 		.attr( 'data-fieldId', fieldObject.id );
-	if( 'submit' === fieldObject.type ) {
-		jQuery( '#sidebar_field_label' ).addClass( 'no-id' );
+	if ( 'submit' === fieldObject.type ) {
+		$sidebarFieldLabel.addClass( 'no-id' );
+	} else {
+		jQuery( '<span class="sidebar_field_id"></span>' )
+			.text( gf_vars.idString + fieldObject.id )
+			.appendTo( $sidebarFieldLabel );
 	}
 	jQuery( '#sidebar_field_text' ).text( description );
 	// Reset icon classes

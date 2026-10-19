@@ -646,9 +646,10 @@ class GF_Field extends stdClass implements ArrayAccess {
 		}
 
 		$field_content = sprintf(
-			"%s%s<$label_tag class='%s' $for_attribute>$legend_wrapper<span class='gform-field-label__text'>%s</span>%s$legend_wrapper_close</$label_tag>%s%s{FIELD}%s%s$clear",
+			"%s%s<$label_tag id='%s' class='%s' $for_attribute>$legend_wrapper<span class='gform-field-label__text'>%s</span>%s$legend_wrapper_close</$label_tag>%s%s{FIELD}%s%s$clear",
 			$admin_buttons,
 			$admin_hidden_markup,
+			esc_attr( $this->get_field_label_id() ),
 			esc_attr( $this->get_field_label_class() ),
 			$field_label,
 			$required_div,
@@ -805,6 +806,17 @@ class GF_Field extends stdClass implements ArrayAccess {
 		$class .= is_array( $this->inputs ) ? ' gfield_label_before_complex' : '';
 
 		return $class;
+	}
+
+	/**
+	 * Get field label ID.
+	 *
+	 * @since next
+	 *
+	 * @return string
+	 */
+	public function get_field_label_id() {
+		return 'gfield_label_' . $this->formId . '_' . $this->id;
 	}
 
 	/**
@@ -2377,16 +2389,108 @@ class GF_Field extends stdClass implements ArrayAccess {
 	 * @return string The aria-describedby text or a blank string.
 	 */
 	public function maybe_add_aria_describedby( $input, $field_id, $form_id ) {
-		$first_input_for_field = $this->get_first_input_id( GFFormsModel::get_form_meta( $form_id ) );
-		$field_id_as_array     = explode( '_', $field_id );
-		$first_input_as_array  = explode( '_', $first_input_for_field );
-		$subelement_id         = end( $field_id_as_array ) . '.' . end( $first_input_as_array );
-
-		if ( $input['id'] === $subelement_id ) {
+		if ( $this->is_first_input( $input ) ) {
 			return $this->get_aria_describedby();
 		}
 
 		return '';
+	}
+
+	/**
+	 * Returns the aria-labelledby attribute linking an input label and the fieldset legend.
+	 *
+	 * @since next
+	 *
+	 * @param string $input_label_id The ID of the input's label element.
+	 *
+	 * @return string
+	 */
+	public function get_aria_labelledby( $input_label_id = '' ) {
+		$ids = array();
+
+		if ( ! empty( $input_label_id ) ) {
+			$ids[] = $input_label_id;
+		}
+
+		$ids[] = $this->get_field_label_id();
+
+		return 'aria-labelledby="' . esc_attr( implode( ' ', $ids ) ) . '"';
+	}
+
+	/**
+	 * Set the aria-labelledby attribute for an input if it is the first input in a fieldset.
+	 *
+	 * @since next
+	 *
+	 * @param array  $input          The current input.
+	 * @param string $field_id       The ID of the field we're working with.
+	 * @param int    $form_id        The ID of the form object.
+	 * @param string $input_label_id The ID of the input's label element.
+	 *
+	 * @return string The aria-labelledby attribute or a blank string.
+	 */
+	public function maybe_add_aria_labelledby( $input, $field_id, $form_id, $input_label_id = '' ) {
+		if ( $this->is_first_input( $input ) ) {
+			return $this->get_aria_labelledby( $input_label_id );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Returns aria-describedby and aria-labelledby for the first input in a fieldset.
+	 *
+	 * @since next
+	 *
+	 * @param array  $input    The current input.
+	 * @param string $field_id The HTML field id prefix (e.g. input_1_6).
+	 *
+	 * @return string
+	 */
+	public function get_first_input_aria_labels( $input, $field_id = '' ) {
+		$input_label_id = '';
+		$input_id       = (string) rgar( $input, 'id' );
+
+		if ( $field_id && $input_id && false !== strpos( $input_id, '.' ) ) {
+			$sub_input_id   = substr( $input_id, strpos( $input_id, '.' ) + 1 );
+			$input_label_id = "{$field_id}_{$sub_input_id}_label";
+		}
+
+		$form_id = $this->formId;
+
+		return trim(
+			$this->maybe_add_aria_describedby( $input, $field_id, $form_id ) . ' ' .
+			$this->maybe_add_aria_labelledby( $input, $field_id, $form_id, $input_label_id )
+		);
+	}
+
+	/**
+	 * Determines whether the given input is the first visible input for this field.
+	 *
+	 * @since next
+	 *
+	 * @param array $input The input currently being processed.
+	 *
+	 * @return bool
+	 */
+	public function is_first_input( $input ) {
+		if ( empty( $input['id'] ) ) {
+			return false;
+		}
+
+		if ( ! is_array( $this->inputs ) ) {
+			return true;
+		}
+
+		foreach ( $this->inputs as $field_input ) {
+			if ( ! empty( $field_input['isHidden'] ) ) {
+				continue;
+			}
+
+			return (string) $input['id'] === (string) rgar( $field_input, 'id' );
+		}
+
+		return false;
 	}
 
 	/**
