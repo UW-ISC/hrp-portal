@@ -1747,6 +1747,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 				// json: true,
 				id: data.id,
 				query: query,
+				mla_admin_nonce: mlaModal.settings.ajaxNonce,
 			}).done( function( results ) {
 				var taxonomy, fieldClass;
 

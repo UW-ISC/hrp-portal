@@ -4,9 +4,9 @@
  *
  * The example plugin contains two custom shortcodes:
  *
- * 1.[az-cloud] – provides an "A-Z cloud" that tabulates the items starting with each letter of the
+ * 1.[az_cloud] - provides an "A-Z cloud" that tabulates the items starting with each letter of the
  * alphabet and generates links that include a query argument with the selected letter.
- * 2.[az_gallery] – formats a "gallery" list of the items starting with the selected letter. It uses a
+ * 2.[az_gallery] - formats a "gallery" list of the items starting with the selected letter. It uses a
  * file naming convention to collect all the "parts" of a particular "item set" and display them as
  * a second-level list. Uses Collapse-o-matic (optionally) to control the display of items.
  *
@@ -20,8 +20,12 @@
  * opened on 5/16/2015 by "kevincowart111".
  * https://wordpress.org/support/topic/alphabetical-pagination-2
  *
+ * Enhanced for support topic "PHP Compatibility Errors"
+ * opened on 10/27/2026 by "waradi42".
+ * https://wordpress.org/support/topic/php-compatibility-errors-3/
+ *
  * @package MLA A-Z Cloud and Collapse-o-Matic Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -29,10 +33,10 @@ Plugin Name: MLA A-Z Cloud and Collapse-o-Matic Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an "A-Z cloud/pagination" and expandable gallery example
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
-Copyright 2015 David Lingren
+Copyright 2015, 2026 David Lingren
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -78,7 +82,7 @@ class MLAAtoZCloudExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	shortcode parameters
+	 * @param	array	$attr shortcode parameters
 	 *
 	 * @return	string	shortcode results
 	 */
@@ -140,10 +144,8 @@ class MLAAtoZCloudExample {
 		$query =  join(' ', $query);
 		$results = $wpdb->get_results( $query );
 
-		/*
-		 * Make the current item distinctive
-		 */
-		if ( 'inline' == $arguments['css_styles'] ) {
+		// Make the current item distinctive
+		if ( 'inline' === $arguments['css_styles'] ) {
 			$output  = "<style type='text/css'>\n";
 			$output .= "    ." . $arguments['selected_class'] . " {\n";
 			$output .= "        font-weight:bold;\n";
@@ -154,7 +156,7 @@ class MLAAtoZCloudExample {
 			$output = '';
 		}
 
-		$is_list = 'list' == $arguments['output'];
+		$is_list = 'list' === $arguments['output'];
 
 		if ( $is_list ) {
 			$output .= '<' . $arguments['listtag'] . '>' . $arguments['separator'];
@@ -167,7 +169,7 @@ class MLAAtoZCloudExample {
 		}
 
 		foreach( $results as $result ) {
-			if ( $current_item == $result->first_letter ) {
+			if ( $current_item === $result->first_letter ) {
 				$class = $arguments['selected_class'];
 			} else {
 				$class = '';
@@ -176,7 +178,7 @@ class MLAAtoZCloudExample {
 			$href = sprintf( '%1$s?%2$s=%3$s',
 				$arguments['link_href'], $arguments['selected_attribute'], $result->first_letter );
 
-			if ( 1 == $result->count ) {
+			if ( 1 === $result->count ) {
 				$title = sprintf( $arguments['single_text'], $result->count );
 			} else {
 				$title = sprintf( $arguments['multiple_text'], $result->count );
@@ -204,7 +206,7 @@ class MLAAtoZCloudExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	shortcode parameters
+	 * @param	array	$attr shortcode parameters
 	 *
 	 * @return	string	shortcode results
 	 */
@@ -297,7 +299,6 @@ class MLAAtoZCloudExample {
 		}
 
 		$is_list = 'list' == strtolower( trim( $arguments['az_output'] ) );
-		$is_collapse = 'true' == strtolower( trim( $arguments['collapse_o_matic'] ) );
 
 		$output = '';
 		$old_song = NULL;
@@ -353,16 +354,16 @@ class MLAAtoZCloudExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	string	item title
-	 * @param	array	part ID values
-	 * @param	array	[mla_gallery] parameters
-	 * @param	array	formating parameters
+	 * @param	string	$title item title
+	 * @param	array	$ids part ID values
+	 * @param	string	$mla_arguments [mla_gallery] parameters
+	 * @param	array	$arguments formating parameters
 	 *
 	 * @return	string	markup for title and gallery
 	 */
 	private static function format_title_and_gallery( $title, $ids, $mla_arguments, $arguments ) {
-		$is_list = 'list' == strtolower( trim( $arguments['az_output'] ) );
-		$is_collapse = 'true' == strtolower( trim( $arguments['collapse_o_matic'] ) );
+		$is_list = 'list' === strtolower( trim( $arguments['az_output'] ) );
+		$is_collapse = 'true' === strtolower( trim( $arguments['collapse_o_matic'] ) );
 		$output = '';
 
 		if ( $is_list ) {
@@ -394,7 +395,7 @@ class MLAAtoZCloudExample {
 	 *
 	 * @since 1.00
 	 *
-	 * @param	array	shortcode parameters
+	 * @param	array	$attr shortcode parameters
 	 *
 	 * @return	array	ID values of objects assigned to the term(s), if any
 	 */
@@ -412,14 +413,14 @@ class MLAAtoZCloudExample {
 			}
 
 			// Found the taxonomy; collect the terms
-			$include_children =  isset( $attr['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) );
+			$include_children =  isset( $attr['include_children'] ) && 'true' == strtolower( trim( $attr['include_children'] ) );
 
 			// Allow for multiple term slug values
 			$terms = array();
 			$slugs = explode( ',', $attr[ $taxonomy ] );
 			foreach ( $slugs as $slug ) {
-				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
+				$args = array( 'taxonomy' => $taxonomy, 'slug' => $slug, 'hide_empty' => false );
+				$terms = array_merge( $terms, get_terms( $args ) );
 			}
 
 			foreach( $terms as $term ) {
@@ -427,8 +428,8 @@ class MLAAtoZCloudExample {
 				$ttids[ $term->term_taxonomy_id ] = $term->term_taxonomy_id;
 
 				if ( $include_children ) {
-					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
+					$args = array( 'taxonomy' => $taxonomy, 'child_of' => $term->term_id, 'hide_empty' => false );
+					$children =get_terms( $args );
 					foreach( $children as $child ) {
 						$ttids[] = $child->term_taxonomy_id;
 					}
@@ -473,12 +474,20 @@ class MLAAtoZCloudExample {
 
     /**
      * Save the shortcode attributes
+	 *
+	 * @since 1.00
+	 *
+	 * @var	array
      */
     private static $shortcode_attributes = array();
     
-	/*
+	/**
 	 * $mla_fixed_values stores the parameter(s) and values. If none are found, the
 	 * initialization code sets it to false so the logic is quickly bypassed.
+	 *
+	 * @since 1.00
+	 *
+	 * @var	mixed
 	 */
 	private static $mla_fixed_values = NULL;
 
@@ -491,6 +500,12 @@ class MLAAtoZCloudExample {
      * The $shortcode_attributes array is where you will find your own parameters that
 	 * are coded in the shortcode, e.g.:
 	 * [mla_gallery mla_fixed_caption="array('test1','test2')" mla_caption="{+mla_fixed_caption+}"].
+     *
+     * @since 1.00
+     *
+     * @param    array    $shortcode_attributes parameter_name => parameter_value pairs
+     *
+     * @return    array    updated substitution parameter name => value pairs
      */
     public static function mla_gallery_attributes_filter( $shortcode_attributes ) {
         /*
@@ -506,7 +521,7 @@ class MLAAtoZCloudExample {
      *
      * @since 1.00
      *
-     * @param    array    parameter_name => parameter_value pairs
+     * @param    array    $item_values parameter_name => parameter_value pairs
      *
      * @return    array    updated substitution parameter name => value pairs
      */
@@ -526,24 +541,17 @@ class MLAAtoZCloudExample {
             return $item_values; // leave them unchanged
         }
 
-        /*
-         * Evaluate the parameter value(s) once per page load.
-         */
+        // Evaluate the parameter value(s) once per page load.
         if ( NULL === self::$mla_fixed_values ) {
 			self::$mla_fixed_values = array();
 			foreach ( self::$shortcode_attributes as $parmkey => $parmvalue ) {
                 if ( 'mla_fixed_' == substr( $parmkey, 0, 10 ) ) {
 					if ( 'array(' == substr( $parmvalue, 0, 6 ) ) {
-	                    $function = @create_function( '', 'return ' . self::$shortcode_attributes[ $parmkey ] . ';' );
-    	                if ( is_callable( $function ) ) {
-        	                self::$mla_fixed_values[ $parmkey ] = $function();
+       	                self::$mla_fixed_values[ $parmkey ] = MLAShortcodes::mla_convert_array_parameter( 'mla_fixed_values', self::$shortcode_attributes[ $parmkey ], '' );;
 
-		                    if ( ! is_array( self::$mla_fixed_values[ $parmkey ] ) ) {
-    	                        self::$mla_fixed_values[ $parmkey ] = array();
-        	                }
-						} else {
-                            self::$mla_fixed_values[ $parmkey ] = array();
-						}
+                        if ( ! is_array( self::$mla_fixed_values[ $parmkey ] ) ) {
+   	                        self::$mla_fixed_values[ $parmkey ] = array();
+       	                }
 					} else {
                         self::$mla_fixed_values[ $parmkey ] = explode( ",", $parmvalue );
                         if ( false === self::$mla_fixed_values[ $parmkey ] ) {
@@ -559,13 +567,8 @@ class MLAAtoZCloudExample {
 			}
         } // initialization code
 
-        /*
-         * Apply the appropriate value to the current item.
-         */
+        // Apply the appropriate value to the current item.
         foreach ( self::$mla_fixed_values as $mla_fixed_key => $mla_fixed_value ) {
-           /*
-            * Apply the appropriate value to the current item.
-            */
             if ( isset( $mla_fixed_value[ $item_values['index'] - 1 ] ) ) {
                 $item_values[ $mla_fixed_key ] = $mla_fixed_value[ $item_values['index'] - 1 ];
             }
@@ -579,7 +582,7 @@ class MLAAtoZCloudExample {
 	 *
 	 * @since 1.02
 	 *
-	 * @param	array	parameter_name => parameter_value pairs
+	 * @param	array	$markup_values parameter_name => parameter_value pairs
 	 *
 	 * @return	array	updated substitution parameter name => value pairs
 	 */

@@ -353,7 +353,7 @@ class MLATermList {
 				$link_href = '';
 			}
 
-			$item_values['link_text'] = $item_values['name'];
+			$item_values['link_text'] = esc_html( $item_values['name'] );
 			if ( ! empty( $arguments['mla_link_text'] ) ) {
 				$item_values['link_text'] = wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_text'], $item_values ), 'post' );
 			}
@@ -372,7 +372,7 @@ class MLATermList {
 			}
 
 			// Currentlink, editlink, termlink and thelink  TODO - link style
-			$item_values['currentlink'] = sprintf( '<a %1$shref="%2$s%3$s%4$s=%5$s" title="%6$s" style="%7$s">%8$s</a>', $link_attributes, $item_values['page_url'], $current_item_delimiter, $mla_item_parameter, $item_values['thevalue'], $item_values['rollover_text'], '', $item_values['link_text'] );
+			$item_values['currentlink'] = sprintf( '<a %1$shref="%2$s%3$s%4$s=%5$s" title="%6$s" style="%7$s">%8$s</a>', $link_attributes, $item_values['page_url'], $current_item_delimiter, $mla_item_parameter, esc_attr( $item_values['thevalue'] ), $item_values['rollover_text'], '', $item_values['link_text'] );
 			$item_values['editlink'] = sprintf( '<a %1$shref="%2$s" title="%3$s" style="%4$s">%5$s</a>', $link_attributes, $item_values['editlink_url'], $item_values['rollover_text'], '', $item_values['link_text'] );
 			$item_values['termlink'] = sprintf( '<a %1$shref="%2$s" title="%3$s" style="%4$s">%5$s</a>', $link_attributes, $item_values['termlink_url'], $item_values['rollover_text'], '', $item_values['link_text'] );
 
@@ -562,7 +562,7 @@ class MLATermList {
 		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
+		$attr['mla_item_parameter'] = $mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
 
 		/*
 		 * Special handling of mla_item_parameter to make multiple lists per page easier.

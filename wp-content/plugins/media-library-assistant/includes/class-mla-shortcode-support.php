@@ -442,8 +442,11 @@ class MLAShortcode_Support {
 //error_log( __LINE__ . " mla_validate_attributes() content = " . var_export( $content, true ), 0 );
 
 		if ( is_string( $attr ) ) {
+			// shortcode_parse_atts() replaces escaped braces, so we have to temporarily replace them with HTML entities
+			$attr = str_replace( '\\{', '&#92;&#92;&#123;', str_replace( '\\}', '&#92;&#92;&#125;', $attr ) );
 			$attr = shortcode_parse_atts( $attr );
 		}
+//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
 		if ( empty( $attr ) ) {
 			$attr = array();
@@ -451,16 +454,21 @@ class MLAShortcode_Support {
 		
 		$new_attr = '';
 		foreach ( $attr as $key => $value ) {
+//error_log( __LINE__ . " mla_validate_attributes() $key = " . var_export( $value, true ), 0 );
 			// Specifically deals with: &, <, and >. Skips " and '.
 			$value = wp_specialchars_decode( $value, ENT_NOQUOTES );
 			$value = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
 	 	                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $value );
 
+			// shortcode_parse_atts() replaces escaped braces, so we have to temporarily replace them with HTML entities
+			$value = str_replace( '\\{', '&#92;&#92;&#123;', str_replace( '\\}', '&#92;&#92;&#125;', $value ) );
+
 			if ( is_numeric( $key ) ) {
 				$new_attr .= $value . ' ';
 			} else {
 				// If the value starts with a delimiter, leave it alone, otherwise enclose the value
-				if ( ( 0 === strpos( $value, '"' ) ) || ( 0 === strpos( $value, '\'' ) ) ) {
+				// This doesn't work because delimiters are stripped by shortcode_parse_atts()
+				if ( false && ( ( 0 === strpos( $value, '"' ) ) || ( 0 === strpos( $value, '\'' ) ) ) ) {
 					$new_attr .= $key . '=' . $value . ' ';
 				} else {
 					$delimiter = ( false === strpos( $value, '"' ) ) ? '"' : "'";
@@ -470,6 +478,7 @@ class MLAShortcode_Support {
 		}
 //error_log( __LINE__ . " mla_validate_attributes() new_attr = " . var_export( $new_attr, true ), 0 );
 
+		// shortcode_parse_atts() replaces escaped braces, so we have to temporarily replace them with HTML entities
 		$attr = shortcode_parse_atts( $new_attr );
 //error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
@@ -492,6 +501,9 @@ class MLAShortcode_Support {
 		if ( ! ( empty( $content ) || isset( $attr['mla_alt_shortcode'] ) ) ) {
 			$content = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
 			                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $content );
+
+			// shortcode_parse_atts() replaces escaped braces, so we have to temporarily replace them with HTML entities
+			$content = str_replace( '\\\\{', '&#92;&#92;&#123;', str_replace( '\\\\}', '&#92;&#92;&#125;', $content ) );
 			$content_attr = shortcode_parse_atts( $content );
 //error_log( __LINE__ . " mla_validate_attributes() content_attr = " . var_export( $content_attr, true ), 0 );
 			if ( is_array( $content_attr ) ) {
@@ -510,6 +522,9 @@ class MLAShortcode_Support {
 				$attr = array_merge( $attr, $new_attr );
 			}
 		}
+
+		// Restore escaped braces
+		$attr = str_replace( '&#92;&#92;&#123;', '\\\\{', str_replace( '&#92;&#92;&#125;', '\\\\}', $attr ) );
 
 //error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 		return $attr;
@@ -799,6 +814,7 @@ class MLAShortcode_Support {
 		 */
 		$raw_attr = $attr;
 		$attr = self::mla_validate_attributes( $attr, $content );
+//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr, $raw_attr, $content, $page_values );
@@ -816,7 +832,7 @@ class MLAShortcode_Support {
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_page_parameter = sanitize_title( $mla_page_parameter, self::$mla_get_shortcode_attachments_parameters['mla_page_parameter'] );
+		$attr['mla_page_parameter'] = $mla_page_parameter = sanitize_title( $mla_page_parameter, self::$mla_get_shortcode_attachments_parameters['mla_page_parameter'] );
 
 		/*
 		 * Special handling of the mla_paginate_current parameter to make
@@ -850,7 +866,7 @@ class MLAShortcode_Support {
 		}
 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_archive_parameter );
+		$attr['mla_archive_parameter'] = $mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_archive_parameter );
 
 		/*
 		 * Special handling of the mla_archive_current parameter to make
@@ -950,6 +966,7 @@ class MLAShortcode_Support {
 		if ( ! empty( $arguments ) ) {
 			$attr = wp_parse_args( $attr, self::mla_validate_attributes( array(), $arguments ) );
 		}
+//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		/*
 		 * Look for page-level, 'request:' and 'query:' substitution parameters,
@@ -987,6 +1004,7 @@ class MLAShortcode_Support {
 		$content = apply_filters( 'mla_gallery_initial_content', $content, $attr );
 		$arguments = shortcode_atts( $default_arguments, $attr );
 		$arguments = apply_filters( 'mla_gallery_arguments', $arguments );
+//error_log( __LINE__ . " mla_gallery_shortcode() arguments = " . var_export( $arguments, true ), 0 );
 
 		// Decide which templates to use
 		if ( ( 'none' !== $arguments['mla_style'] ) && ( 'theme' !== $arguments['mla_style'] ) ) {
@@ -1167,8 +1185,7 @@ class MLAShortcode_Support {
 			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
 				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments['mla_nolink_text'] ) );
 				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
-				$attr_value = wp_kses( $attr_value, 'post' );
-				$output .= MLAData::mla_parse_template( $attr_value, $replacement_values );
+				$output .= wp_kses( MLAData::mla_parse_template( $attr_value, $replacement_values ), 'post' );
 			}
 
 			return $output;
@@ -1864,10 +1881,11 @@ class MLAShortcode_Support {
 					$link_attributes .= 'title="' . $rollover_text . '" ';
 				}else {
 					// Replace single- and double-quote delimited values
-					$item_values['pagelink'] = preg_replace('# title=\'([^\']*)\'#', " title='{$rollover_text}'", $item_values['pagelink'] );
-					$item_values['pagelink'] = preg_replace('# title=\"([^\"]*)\"#', " title=\"{$rollover_text}\"", $item_values['pagelink'] );
-					$item_values['filelink'] = preg_replace('# title=\'([^\']*)\'#', " title='{$rollover_text}'", $item_values['filelink'] );
-					$item_values['filelink'] = preg_replace('# title=\"([^\"]*)\"#', " title=\"{$rollover_text}\"", $item_values['filelink'] );
+					$safe_text = addcslashes( $rollover_text, '\\$' );
+					$item_values['pagelink'] = preg_replace('# title=\'([^\']*)\'#', " title='{$safe_text}'", $item_values['pagelink'] );
+					$item_values['pagelink'] = preg_replace('# title=\"([^\"]*)\"#', " title=\"{$safe_text}\"", $item_values['pagelink'] );
+					$item_values['filelink'] = preg_replace('# title=\'([^\']*)\'#', " title='{$safe_text}'", $item_values['filelink'] );
+					$item_values['filelink'] = preg_replace('# title=\"([^\"]*)\"#', " title=\"{$safe_text}\"", $item_values['filelink'] );
 				}
 			} else {
 				$rollover_text = esc_attr( $item_values['title'] );
@@ -1886,8 +1904,9 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $link_attributes ) ) {
-				$item_values['pagelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['pagelink'] );
-				$item_values['filelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['filelink'] );
+				$safe_attributes = addcslashes( $link_attributes, '\\$' );
+				$item_values['pagelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $safe_attributes . 'href=', $item_values['pagelink'] );
+				$item_values['filelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $safe_attributes . 'href=', $item_values['filelink'] );
 			}
 
 			/*
@@ -1966,18 +1985,21 @@ class MLAShortcode_Support {
 						$class = $image_class;
 					}
 
-					$img_tag = preg_replace( '# class=\"([^\"]*)\"#', " class=\"{$class}\"", $img_tag );
+					$safe_class = addcslashes( $class, '\\$' );
+					$img_tag = preg_replace( '# class=\"([^\"]*)\"#', " class=\"{$safe_class}\"", $img_tag );
 					$img_changed = true;
 				}
 
 				if ( ! empty( $image_alt ) ) {
-					$img_tag = preg_replace( '# alt=\"([^\"]*)\"#', " alt=\"{$image_alt}\"", $img_tag );
+					$safe_alt = addcslashes( $image_alt, '\\$' );
+					$img_tag = preg_replace( '# alt=\"([^\"]*)\"#', " alt=\"{$safe_alt}\"", $img_tag );
 					$img_changed = true;
 				}
 
 				if ( $img_changed ) {
-					$item_values['pagelink'] = preg_replace( '#<img[^\>]+\>#', $img_tag, $item_values['pagelink'] );
-					$item_values['filelink'] = preg_replace( '#<img[^\>]+\>#', $img_tag, $item_values['filelink'] );
+					$safe_tag = addcslashes( $img_tag, '\\$' );
+					$item_values['pagelink'] = preg_replace( '#<img[^\>]+\>#', $safe_tag, $item_values['pagelink'] );
+					$item_values['filelink'] = preg_replace( '#<img[^\>]+\>#', $safe_tag, $item_values['filelink'] );
 				}
 			} // process <img> tag
 
@@ -2077,7 +2099,8 @@ class MLAShortcode_Support {
 			 * Note that $link_href is used in the Google Viewer code below
 			 */
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
-				$link_href = sanitize_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $item_values ) );
+				$link_href = esc_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $item_values ) );
+				$link_href = addcslashes( $link_href, '\\$' );
 
 				// Replace single- and double-quote delimited values
 				$item_values['link'] = preg_replace('# href=\'([^\']*)\'#', " href='{$link_href}'", $item_values['link'] );
@@ -2385,7 +2408,7 @@ class MLAShortcode_Support {
 	public static function mla_process_shortcode_parameter( $text, $markup_values ) {
 		$new_text = str_replace( '{\+', '\[\+', str_replace( '+\}', '+\\\\]', $text ) );
 		$new_text = str_replace( '{', '[', str_replace( '}', ']', $new_text ) );
-		$new_text = str_replace( '\[', '{', str_replace( '\]', '}', $new_text ) );
+		$new_text = str_replace( '\\\\[', '{', str_replace( '\\\\]', '}', $new_text ) );
 		return MLAData::mla_parse_template( $new_text, $markup_values );
 	}
 
@@ -2485,6 +2508,7 @@ class MLAShortcode_Support {
 		}
 
 		$link_href = set_url_scheme( $parts['scheme'] . '://' . $parts['host'] . $uri_path . $parts['fragment'] );
+		$link_href = addcslashes( $link_href, '\\$' );
 
 		// Replace single- and double-quote delimited values
 		if ( '"' === $delimiter ) {
@@ -2624,7 +2648,7 @@ class MLAShortcode_Support {
 
 		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ' : '';
 
-		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) : $markup_values['new_url'];
+		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? esc_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) : $markup_values['new_url'];
 
 		// Build the array of page links
 		$page_links = array();
@@ -2941,7 +2965,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( ! empty( $arguments['mla_link_href'] ) ) {
-			$new_link .= 'href="' . sanitize_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) . '" >';
+			$new_link .= 'href="' . esc_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) . '" >';
 		} else {
 			$new_link .= 'href="' . $markup_values['new_url'] . '" >';
 		}
@@ -3570,7 +3594,7 @@ class MLAShortcode_Support {
 			return $converted_result;
 		}
 		
-		return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . " {$query_type} = " . var_export( $candidate, true ) . '</p>';
+		return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . " {$query_type} = " . esc_html( var_export( $candidate, true ) ) . '</p>';
 	}
 
 	/**
@@ -3910,9 +3934,11 @@ class MLAShortcode_Support {
 		}
 
 		if ( isset( $arguments['post_status'] ) && is_string( $arguments['post_status'] ) ) {
-			$value = explode( ',', $arguments['post_status'] );
-			if ( 1 < count( $value ) ) {
-				$arguments['post_status'] = $value;
+			$arguments['post_status'] = explode( ',', $arguments['post_status'] );
+			foreach ( $arguments['post_status'] as $key => $value ) {
+				if( in_array( $value, array( 'draft', 'future', 'pending', 'private', 'trash' ) ) ) {
+					unset( $arguments['post_status'][ $key ] );
+				}
 			}
 		}
 

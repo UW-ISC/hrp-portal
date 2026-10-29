@@ -332,8 +332,8 @@ class MLACustomList {
 			$item_values['last_in_row'] = '';
 		}
 
-		$item_values['meta_value'] = wptexturize( $value->meta_value );
-		$item_values['meta_text'] = wptexturize( $value->meta_value );
+		$item_values['meta_value'] = esc_html( wptexturize( $value->meta_value ) );
+		$item_values['meta_text'] = esc_html( wptexturize( $value->meta_value ) );
 		$item_values['count'] = isset ( $value->count ) ? (int) $value->count : 0; 
 		$item_values['scaled_count'] = isset ( $value->scaled_count ) ? (int) $value->scaled_count : 0; 
 
@@ -369,7 +369,7 @@ class MLACustomList {
 		$item_values['thelink'] = '';
 
 		if ( isset( $value->meta_text ) ) {
-			$item_values['meta_text'] = wptexturize( $value->meta_text );
+			$item_values['meta_text'] = esc_html( wptexturize( $value->meta_text ) );
 		}
 			
 		if ( ! empty( $arguments[ $mla_item_parameter ] ) ) {
@@ -953,7 +953,7 @@ class MLACustomList {
 		$mla_item_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
+		$attr['mla_item_parameter'] = $mla_item_parameter = sanitize_title( $mla_item_parameter, $defaults['mla_item_parameter'] );
 
 		/*
 		 * Special handling of mla_item_parameter to make multiple lists per page easier.
@@ -981,7 +981,7 @@ class MLACustomList {
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_page_parameter = sanitize_title( $mla_page_parameter, $defaults['mla_page_parameter'] );
+		$attr['mla_page_parameter'] = $mla_page_parameter = sanitize_title( $mla_page_parameter, $defaults['mla_page_parameter'] );
 
 		/*
 		 * Special handling of the mla_custom_list_current parameter to make "MLA pagination"
@@ -1216,7 +1216,6 @@ class MLACustomList {
 			switch ( $mla_output ) {
 				case 'dlist':
 					if ( $is_list_div ) {
-//						$default_style = 'custom-list-dl-div';
 						$default_markup = 'custom-list-dl-div';
 					} else {
 						$default_markup = 'custom-list-dl';
@@ -1491,6 +1490,10 @@ class MLACustomList {
 					$option_no_values_value = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['option_no_values_value'], $page_values ) );
 				}
 			}
+		}
+
+		if ( ! in_array( $arguments['unit'], array( 'pt', 'px', 'em', '%' ) ) ) {
+			$arguments['unit'] = 'pt';
 		}
 
 		/*

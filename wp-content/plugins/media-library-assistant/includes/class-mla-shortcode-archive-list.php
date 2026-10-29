@@ -1009,7 +1009,7 @@ class MLAArchiveList {
 				$attributes[] = 'title="' . $item_values['item_link_rollover'] . '"';
 			}
 
-			$item_values['item_link_style'] = 'font-size: ' . $item_values['font_size'] . $item_values['unit'];
+			$item_values['item_link_style'] = 'font-size: ' . esc_attr( $item_values['font_size'] . $item_values['unit'] );
 			if ( ! empty( $arguments['mla_link_style'] ) ) {
 				$item_values['item_link_style'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_style'], $item_values ) );
 			}
@@ -1024,7 +1024,7 @@ class MLAArchiveList {
 				$item_values['item_link_attributes'] = implode( ' ', $attributes ) . ' ';
 			}
 
-			$item_values['item_link_text'] = $item_values['current_label'];
+			$item_values['item_link_text'] = esc_attr( $item_values['current_label'] );
 			if ( ! empty( $item_values['mla_link_text'] ) ) {
 				$item_values['item_link_text'] = esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $item_values['mla_link_text'], $item_values ) );
 			}
@@ -1056,7 +1056,7 @@ class MLAArchiveList {
 			} elseif ( 'span' === $item_values['link'] ) {
 				$item_values['thelink'] = sprintf( '<span %1$s>%2$s</span>', $item_values['item_link_attributes'], $item_values['item_link_text'] );
 			} else {
-				$item_values['thelink'] = $item_values['mla_link_text'];
+				$item_values['thelink'] = $item_values['item_link_text'];
 			}
 
 			// Page content has already been logged and cached
@@ -1452,7 +1452,7 @@ class MLAArchiveList {
 			self::$item_specific_arguments
 		);
 
-		// Filter the attributes before $mla_item_parameter and "request:" prefix processing.
+		// Filter the attributes before $mla_archive_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_archive_list_raw_attributes', $attr );
 
 		// The current_archive parameter can be changed to support multiple lists per page
@@ -1465,7 +1465,7 @@ class MLAArchiveList {
 		$mla_archive_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 		 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_arguments['mla_archive_parameter'] );
+		$attr['mla_archive_parameter'] = $mla_archive_parameter = sanitize_title( $mla_archive_parameter, $default_arguments['mla_archive_parameter'] );
 
 		/*
 		 * Special handling of mla_archive_parameter to make multiple lists per page easier.
@@ -1487,7 +1487,7 @@ class MLAArchiveList {
 		$mla_page_parameter = MLAData::mla_parse_template( $attr_value, $page_values );
 
 		// At this point we limit the parameter name to legal values, i.e., letters, numbers and underscores
-		$mla_page_parameter = sanitize_title( $mla_page_parameter, $default_arguments['mla_page_parameter'] );
+		$attr['mla_page_parameter'] = $mla_page_parameter = sanitize_title( $mla_page_parameter, $default_arguments['mla_page_parameter'] );
 
 		/*
 		 * Special handling of the mla_archive_list_current parameter to make "MLA pagination"
@@ -1756,6 +1756,9 @@ class MLAArchiveList {
 			$arguments['largest'] = $arguments['default_size'];
 		}
 
+		if ( ! in_array( $arguments['unit'], array( 'pt', 'px', 'em', '%' ) ) ) {
+			$arguments['unit'] = 'pt';
+		}
 
 		// mla_debug controls output from this shortcode
 		self::$mla_debug = ( ! empty( $arguments['mla_debug'] ) ) ? trim( strtolower( $arguments['mla_debug'] ) ) : false;
