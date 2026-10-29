@@ -960,7 +960,7 @@ class MLAOptions {
 					$meta_key = substr( $setting_value['name'], 5 );
 
 					if ( NULL === $attachment_metadata ) {
-						$attachment_metadata = maybe_unserialize( get_metadata( 'post', $post_id, '_wp_attachment_metadata', true ) );
+						$attachment_metadata = get_metadata( 'post', $post_id, '_wp_attachment_metadata', true );
 					}
 
 					if ( array( $attachment_metadata ) ) {
@@ -1658,7 +1658,7 @@ class MLAOptions {
 						$meta_key = substr( $setting_name, 5 );
 
 						if ( NULL === $attachment_metadata ) {
-							$attachment_metadata = maybe_unserialize( get_metadata( 'post', $post->ID, '_wp_attachment_metadata', true ) );
+							$attachment_metadata = get_metadata( 'post', $post->ID, '_wp_attachment_metadata', true );
 						}
 
 						if ( array( $attachment_metadata ) ) {

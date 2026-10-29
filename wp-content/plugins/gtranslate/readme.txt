@@ -4,7 +4,7 @@ Author: Translate AI Multilingual Solutions
 Tags: translate, translator, multilingual, translation, language
 Requires at least: 6.0.1
 Tested up to: 7.1
-Stable tag: 5.0.1
+Stable tag: 5.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -290,6 +290,13 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard (paid)
 
 == Changelog ==
+= 5.0.2 =
+* Security: Fixed unauthorized admin notice updates by adding permission checks, nonce verification, and notice-key validation
+* Fixed automatic language redirects to preserve query parameters
+* Added wp_unslash() for custom CSS and other settings to prevent unwanted backslashes
+* Added request timeouts and error-code reporting for failed requests
+* Added checks for upload errors and valid HTTP uploads before reading file contents
+
 = 5.0.1 =
 * Replace the legacy Google Website Translator widget with the GTranslate website translation widget
 * Document the replacement widget's external services and free-service permitted-use conditions

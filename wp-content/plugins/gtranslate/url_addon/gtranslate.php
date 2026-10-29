@@ -137,14 +137,12 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) and !empty($_SERVER['HTTP_X_FORWARDED
 //exit;
 
 if(!function_exists('curl_init')) {
-    if(function_exists('http_response_code'))
-        http_response_code(500);
-
+    http_response_code(500);
     echo 'PHP Curl library is required';
     exit;
 }
 
-// phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct cURL usage is required here because we do not include WP Core
+// phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.curl_curl_errno, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct cURL usage is required here because we do not include WP Core
 // proxy request
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $page_url);
@@ -155,6 +153,8 @@ if(defined('CURL_IPRESOLVE_V4')) curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESO
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 
 switch($_SERVER['REQUEST_METHOD']) {
     case 'POST': {
@@ -197,11 +197,30 @@ if($debug) {
 }
 
 $response = curl_exec($ch);
+$curl_errno = curl_errno($ch);
 $response_info = curl_getinfo($ch);
 curl_close($ch);
-// phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_close, WordPress.WP.AlternativeFunctions.curl_curl_errno, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 
 //print_r($response_info);
+
+if($response === false or $curl_errno !== 0) {
+    if($curl_errno === CURLE_OPERATION_TIMEDOUT) {
+        http_response_code(504);
+        header('Content-Type: text/html; charset=UTF-8');
+        header('Cache-Control: no-cache, no-store');
+        if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] !== 'HEAD')
+            echo '<h1>Gateway Timeout:</h1><p>The translation server did not respond in time.</p>';
+    } else {
+        http_response_code(502);
+        header('Content-Type: text/html; charset=UTF-8');
+        header('Cache-Control: no-cache, no-store');
+        if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] !== 'HEAD')
+            echo '<h1>Bad Gateway:</h1><p>Unable to retrieve a complete response from the translation server.</p>';
+    }
+
+    exit;
+}
 
 $header_size = $response_info['header_size'];
 $header = substr($response, 0, $header_size);
@@ -305,6 +324,9 @@ function http_build_files_for_curl_multipart($arrays, &$new, $prefix, $multipart
         if(isset($value['name'], $value['tmp_name'], $value['error']) and (is_array($value['name']) or is_object($value['name']))) {
             // multiple files, one level array case, todo: multidimensional case e.g. documents[page][front] documents[page][back]
             foreach($value['name'] as $i => $name) {
+                if(empty($value['tmp_name'][$i]) or $value['error'][$i] !== UPLOAD_ERR_OK or !is_uploaded_file($value['tmp_name'][$i]))
+                    continue;
+
                 $v = str_replace(array("\0", "\"", "\r", "\n"), '_', $name);
                 $data = file_get_contents($value['tmp_name'][$i]);
                 $kk = $k.'['.$i.']';
@@ -317,6 +339,9 @@ function http_build_files_for_curl_multipart($arrays, &$new, $prefix, $multipart
                 ));
             }
         } elseif(isset($value['name'], $value['tmp_name'], $value['error'])) {
+            if(empty($value['tmp_name']) or $value['error'] !== UPLOAD_ERR_OK or !is_uploaded_file($value['tmp_name']))
+                continue;
+
             $v = str_replace(array("\0", "\"", "\r", "\n"), '_', $value['name']);
             $data = file_get_contents($value['tmp_name']);
             $new[$k] = implode("\r\n", array(

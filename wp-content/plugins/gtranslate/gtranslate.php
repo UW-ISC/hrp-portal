@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 5.0.1
+Version: 5.0.2
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 License: GPLv2 or later
@@ -31,7 +31,7 @@ Text Domain: gtranslate
 if(!defined('ABSPATH'))
     exit;
 
-define('GTRANSLATE_VERSION', '5.0.1');
+define('GTRANSLATE_VERSION', '5.0.2');
 
 add_action('widgets_init', array('GTranslate', 'register'));
 register_activation_hook(__FILE__, array('GTranslate', 'activate'));
@@ -78,7 +78,7 @@ class GTranslate extends WP_Widget {
         <p><?php printf(/* translators: %s: Link to the GTranslate Settings page. */ esc_html__('Please go to %s for configuration.', 'gtranslate'), '<a href="' . esc_url(admin_url('options-general.php?page=gtranslate_options')) . '">'.esc_html__('GTranslate Settings', 'gtranslate').'</a>'); ?></p>
         <?php
         if (isset($_POST['gtranslate_title'])){
-            $data['gtranslate_title'] = esc_attr($_POST['gtranslate_title']);
+            $data['gtranslate_title'] = esc_attr(wp_unslash($_POST['gtranslate_title']));
             update_option('GTranslate', $data);
         }
     }
@@ -1557,11 +1557,11 @@ RefreshDoWidgetCode();
         $data['dropdown_hover_color'] = isset($_POST['dropdown_hover_color']) ? sanitize_hex_color($_POST['dropdown_hover_color']) : '#fff';
         $data['dropdown_background_color'] = isset($_POST['dropdown_background_color']) ? sanitize_hex_color($_POST['dropdown_background_color']) : '#eee';
 
-        $data['custom_css'] = isset($_POST['custom_css']) ? wp_kses_post($_POST['custom_css']) : '';
+        $data['custom_css'] = isset($_POST['custom_css']) ? wp_kses_post(wp_unslash($_POST['custom_css'])) : '';
 
-        $data['wrapper_selector'] = isset($_POST['wrapper_selector']) ? sanitize_text_field($_POST['wrapper_selector']) : '.gtranslate_wrapper';
+        $data['wrapper_selector'] = isset($_POST['wrapper_selector']) ? sanitize_text_field(wp_unslash($_POST['wrapper_selector'])) : '.gtranslate_wrapper';
         $data['custom_domains_data'] = isset($_POST['custom_domains_data']) ? sanitize_text_field($_POST['custom_domains_data']) : '';
-        $data['select_language_label'] = isset($_POST['select_language_label']) ? sanitize_text_field($_POST['select_language_label']) : 'Select Language';
+        $data['select_language_label'] = isset($_POST['select_language_label']) ? sanitize_text_field(wp_unslash($_POST['select_language_label'])) : 'Select Language';
 
         $data['show_in_menu'] = isset($_POST['show_in_menu']) ? sanitize_text_field($_POST['show_in_menu']) : '';
         if(!in_array($data['show_in_menu'], array_keys(get_registered_nav_menus())))
@@ -1907,6 +1907,7 @@ class GTranslate_Notices {
                 if ($admin_display_check == 0 and strtotime($admin_display_start) <= strtotime($current_date)) {
                     // Get remaining query string
                     $query_str = add_query_arg($this->prefix . '_admin_notice_ignore', $slug);
+                    $query_str = wp_nonce_url($query_str, 'gtranslate-dismiss-notice');
 
                     // Admin notice display output
                     echo '<div class="update-nag gt-admin-notice">';
@@ -1945,7 +1946,7 @@ class GTranslate_Notices {
     // Ignore function that gets ran at admin init to ensure any messages that were dismissed get marked
     public function admin_notice_ignore() {
         // If user clicks to ignore the notice, update the option to not show it again
-        if (isset($_GET[$this->prefix . '_admin_notice_ignore'])) {
+        if(isset($_GET[$this->prefix . '_admin_notice_ignore']) and $this->can_dismiss_notice($_GET[$this->prefix . '_admin_notice_ignore'])) {
             $admin_notices_option = get_option($this->prefix . '_admin_notice', array());
 
             $key = $_GET[$this->prefix . '_admin_notice_ignore'];
@@ -1954,7 +1955,7 @@ class GTranslate_Notices {
 
             $admin_notices_option[$key]['dismissed'] = 1;
             update_option($this->prefix . '_admin_notice', $admin_notices_option);
-            $query_str = remove_query_arg($this->prefix . '_admin_notice_ignore');
+            $query_str = remove_query_arg(array($this->prefix . '_admin_notice_ignore', '_wpnonce'));
             wp_safe_redirect($query_str);
             exit;
         }
@@ -1963,7 +1964,7 @@ class GTranslate_Notices {
     // Temp Ignore function that gets ran at admin init to ensure any messages that were temp dismissed get their start date changed
     public function admin_notice_temp_ignore() {
         // If user clicks to temp ignore the notice, update the option to change the start date - default interval of 14 days
-        if (isset($_GET[$this->prefix . '_admin_notice_temp_ignore'])) {
+        if(isset($_GET[$this->prefix . '_admin_notice_temp_ignore']) and $this->can_dismiss_notice($_GET[$this->prefix . '_admin_notice_temp_ignore'])) {
             $admin_notices_option = get_option($this->prefix . '_admin_notice', array());
             $current_date = current_time("n/j/Y");
             $date_array   = explode('/', $current_date);
@@ -1978,7 +1979,7 @@ class GTranslate_Notices {
             $admin_notices_option[$key]['start'] = $new_start;
             $admin_notices_option[$key]['dismissed'] = 0;
             update_option($this->prefix . '_admin_notice', $admin_notices_option);
-            $query_str = remove_query_arg(array($this->prefix . '_admin_notice_temp_ignore', 'gt_int'));
+            $query_str = remove_query_arg(array($this->prefix . '_admin_notice_temp_ignore', 'gt_int', '_wpnonce'));
             wp_safe_redirect( $query_str );
             exit;
         }
@@ -2023,6 +2024,13 @@ class GTranslate_Notices {
         // Intentionally left blank
     }
 
+    private function can_dismiss_notice($key) {
+        if(!current_user_can('manage_options') or !is_string($key) or !in_array($key, array('two_week_review', 'upgrade_tips'), true) or !isset($_GET['_wpnonce']) or !is_string($_GET['_wpnonce']))
+            return false;
+
+        return (bool) wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'gtranslate-dismiss-notice');
+    }
+
     public function gt_admin_notices() {
 
         $deactivate_plugins= array('WP Translator' => 'wptranslator/WPTranslator.php', 'TranslatePress' => 'translatepress-multilingual/index.php', 'Google Language Translator' => 'google-language-translator/google-language-translator.php', 'Google Website Translator' => 'google-website-translator/google-website-translator.php', 'Weglot' => 'weglot/weglot.php', 'TransPosh' => 'transposh-translation-filter-for-wordpress/transposh.php', 'Advanced Google Translate' => 'advanced-google-translate/advanced-google-translate.php', 'My WP Translate' => 'my-wp-translate/my-wp-translate.php', 'WPML Multilingual CMS' => 'sitepress-multilingual-cms/sitepress.php', 'wpLingua' => 'wplingua/wplingua.php');
@@ -2040,7 +2048,9 @@ class GTranslate_Notices {
         }
 
         $two_week_review_ignore = add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'two_week_review'));
+        $two_week_review_ignore = wp_nonce_url($two_week_review_ignore, 'gtranslate-dismiss-notice');
         $two_week_review_temp = add_query_arg(array($this->prefix . '_admin_notice_temp_ignore' => 'two_week_review', 'gt_int' => 6));
+        $two_week_review_temp = wp_nonce_url($two_week_review_temp, 'gtranslate-dismiss-notice');
 
         $notices['two_week_review'] = array(
             'title' => esc_html__('Please Leave a Review', 'gtranslate'),
@@ -2086,7 +2096,9 @@ class GTranslate_Notices {
         }
 
         $upgrade_tips_ignore = add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'upgrade_tips'));
+        $upgrade_tips_ignore = wp_nonce_url($upgrade_tips_ignore, 'gtranslate-dismiss-notice');
         $upgrade_tips_temp = add_query_arg(array($this->prefix . '_admin_notice_temp_ignore' => 'upgrade_tips', 'gt_int' => 7));
+        $upgrade_tips_temp = wp_nonce_url($upgrade_tips_temp, 'gtranslate-dismiss-notice');
 
         if($data['pro_version'] != '1' and $data['enterprise_version'] != '1') {
             $notices['upgrade_tips'][] = array(
@@ -2384,8 +2396,16 @@ if(($data['pro_version'] or $data['enterprise_version']) and $data['detect_brows
         // set cookie for 30 days and redirect
         setcookie('gt_auto_switch', 1, time() + 2592000);
 
-        if($data['pro_version'])
-            header('Location: ' . home_url() . '/' . $accept_language . '/');
+        header('Vary: Accept-Language');
+
+        $query_string = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+        $query_string = str_replace('#', '%23', $query_string);
+        $query_suffix = $query_string !== '' ? '?' . $query_string : '';
+
+        if($data['pro_version']) {
+            $url = rtrim(home_url(), '/') . '/' . $accept_language . '/' . $query_suffix;
+            header('Location: ' . esc_url_raw($url, array('http', 'https')), true, 302);
+        }
 
         if($data['enterprise_version'] and isset($_SERVER['HTTP_HOST'])) {
             if($data['custom_domains'] and !empty($data['custom_domains_data'])) {
@@ -2394,12 +2414,12 @@ if(($data['pro_version'] or $data['enterprise_version']) and $data['detect_brows
                     $href = str_ireplace('://' . $_SERVER['HTTP_HOST'], '://' . $custom_domains_data[$accept_language], site_url());
                 else
                     $href = str_ireplace('://' . $_SERVER['HTTP_HOST'], '://' . $accept_language . '.' . preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']), site_url());
-            } else
+            } else {
                 $href = str_ireplace('://' . $_SERVER['HTTP_HOST'], '://' . $accept_language . '.' . preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']), site_url());
-            header('Location: ' . $href);
-        }
+            }
 
-        header('Vary: Accept-Language');
+            header('Location: ' . esc_url_raw($href . $query_suffix, array('http', 'https')), true, 302);
+        }
 
         exit;
     }

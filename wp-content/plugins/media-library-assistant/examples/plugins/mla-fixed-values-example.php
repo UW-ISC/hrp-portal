@@ -1,13 +1,31 @@
 <?php
+/**
+ * Provides an example of hooking the filters provided by the [mla_gallery] shortcode
+ *
+ * This example adds a Media/Assistant submenu table view for items attached to
+ * non-published parent posts/pages.
+ *
+ * Created for support topic "Fixed href link or caption text per id?"
+ * opened on 1/25/2015 by "Harm10".
+ * https://wordpress.org/support/topic/fixed-href-link-or-caption-text-per-id/
+ *
+ * Enhanced for support topic "PHP Compatibility Errors"
+ * opened on 10/27/2026 by "waradi42".
+ * https://wordpress.org/support/topic/php-compatibility-errors-3/
+ *
+ * @package MLA Fixed Values Example
+ * @version 1.04
+ */
+
 /*
 Plugin Name: MLA Fixed Values Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
-Copyright 2014, 2015 David Lingren
+Copyright 2014, 2015, 2026 David Lingren
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,26 +44,22 @@ Copyright 2014, 2015 David Lingren
 /**
  * Class MLA Fixed Values Example hooks a few of the filters provided by the [mla_gallery] shortcode
  *
- * Thanks to "Harm10" for some improvements as part of this Support Topic:
- * https://wordpress.org/support/topic/fixed-href-link-or-caption-text-per-id
- *
  * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
  * else inside a class means this is the only name you have to worry about.
+ *
+ * @package MLA Fixed Values Example
+ * @since 1.00
  */
 class MLAFixedValuesExample {
     /**
      * Initialization function, similar to __construct()
      */
     public static function initialize() {
-        /*
-         * The filters are only useful for front-end posts/pages; exit if in the admin section
-         */
+        // The filters are only useful for front-end posts/pages; exit if in the admin section
         if ( is_admin() )
             return;
 
-        /*
-         * add_filter parameters:
-         */
+        // add_filter parameters:
         add_filter( 'mla_gallery_attributes', 'MLAFixedValuesExample::mla_gallery_attributes_filter', 10, 1 );
         add_filter( 'mla_gallery_item_values', 'MLAFixedValuesExample::mla_gallery_item_values_filter', 10, 1 );
 		add_filter( 'mla_gallery_close_values', 'MLAFixedValuesExample::mla_gallery_close_values_filter', 10, 1 );
@@ -53,12 +67,20 @@ class MLAFixedValuesExample {
 
     /**
      * Save the shortcode attributes
+	 *
+	 * @since 1.00
+	 *
+	 * @var	array
      */
     private static $shortcode_attributes = array();
     
-	/*
-	 * $mla_fixed_values stores the parameter(s) and values. If none are found, the
-	 * initialization code sets it to false so the logic is quickly bypassed.
+	/**
+	 * $mla_fixed_values stores the parameter(s) and values. If none are found, the initialization
+	 * code in mla_gallery_item_values_filter() sets it to false so the logic is quickly bypassed.
+	 *
+	 * @since 1.00
+	 *
+	 * @var	mixed
 	 */
 	private static $mla_fixed_values = NULL;
 
@@ -71,11 +93,15 @@ class MLAFixedValuesExample {
      * The $shortcode_attributes array is where you will find your own parameters that
 	 * are coded in the shortcode, e.g.:
 	 * [mla_gallery mla_fixed_caption="array('test1','test2')" mla_caption="{+mla_fixed_caption+}"].
+     *
+     * @since 1.00
+     *
+     * @param    array    $shortcode_attributes parameter_name => parameter_value pairs
+     *
+     * @return    array    updated substitution parameter name => value pairs
      */
     public static function mla_gallery_attributes_filter( $shortcode_attributes ) {
-        /*
-         * Save the attributes for use in the later filter
-         */
+        // Save the attributes for use in the later filter
         self::$shortcode_attributes = $shortcode_attributes;
 
         return $shortcode_attributes;
@@ -86,7 +112,7 @@ class MLAFixedValuesExample {
      *
      * @since 1.00
      *
-     * @param    array    parameter_name => parameter_value pairs
+     * @param    array    $item_values parameter_name => parameter_value pairs
      *
      * @return    array    updated substitution parameter name => value pairs
      */
@@ -106,24 +132,17 @@ class MLAFixedValuesExample {
             return $item_values; // leave them unchanged
         }
 
-        /*
-         * Evaluate the parameter value(s) once per page load.
-         */
+        // Evaluate the parameter value(s) once per page load.
         if ( NULL === self::$mla_fixed_values ) {
 			self::$mla_fixed_values = array();
 			foreach ( self::$shortcode_attributes as $parmkey => $parmvalue ) {
                 if ( 'mla_fixed_' == substr( $parmkey, 0, 10 ) ) {
 					if ( 'array(' == substr( $parmvalue, 0, 6 ) ) {
-	                    $function = @create_function( '', 'return ' . self::$shortcode_attributes[ $parmkey ] . ';' );
-    	                if ( is_callable( $function ) ) {
-        	                self::$mla_fixed_values[ $parmkey ] = $function();
+       	                self::$mla_fixed_values[ $parmkey ] = MLAShortcodes::mla_convert_array_parameter( 'mla_fixed_values', self::$shortcode_attributes[ $parmkey ], '' );;
 
-		                    if ( ! is_array( self::$mla_fixed_values[ $parmkey ] ) ) {
-    	                        self::$mla_fixed_values[ $parmkey ] = array();
-        	                }
-						} else {
-                            self::$mla_fixed_values[ $parmkey ] = array();
-						}
+                        if ( ! is_array( self::$mla_fixed_values[ $parmkey ] ) ) {
+   	                        self::$mla_fixed_values[ $parmkey ] = array();
+       	                }
 					} else {
                         self::$mla_fixed_values[ $parmkey ] = explode( ",", $parmvalue );
                         if ( false === self::$mla_fixed_values[ $parmkey ] ) {
@@ -139,13 +158,8 @@ class MLAFixedValuesExample {
 			}
         } // initialization code
 
-        /*
-         * Apply the appropriate value to the current item.
-         */
+        // Apply the appropriate value to the current item.
         foreach ( self::$mla_fixed_values as $mla_fixed_key => $mla_fixed_value ) {
-           /*
-            * Apply the appropriate value to the current item.
-            */
             if ( isset( $mla_fixed_value[ $item_values['index'] - 1 ] ) ) {
                 $item_values[ $mla_fixed_key ] = $mla_fixed_value[ $item_values['index'] - 1 ];
             }
@@ -159,22 +173,18 @@ class MLAFixedValuesExample {
 	 *
 	 * @since 1.02
 	 *
-	 * @param	array	parameter_name => parameter_value pairs
+	 * @param	array	$markup_values parameter_name => parameter_value pairs
 	 *
 	 * @return	array	updated substitution parameter name => value pairs
 	 */
 	public static function mla_gallery_close_values_filter( $markup_values ) {
-		/*
-		 * Reset $mla_fixed_values for multiple shortcodes on the same post/page
-		 */
+		// Reset $mla_fixed_values for multiple shortcodes on the same post/page
 		self::$mla_fixed_values = NULL;
 
 		return $markup_values;
 	} // mla_gallery_close_values_filter
 } // Class MLAFixedValuesExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAFixedValuesExample::initialize');
 ?>

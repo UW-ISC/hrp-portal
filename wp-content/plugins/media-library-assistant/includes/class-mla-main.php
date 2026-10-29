@@ -1401,8 +1401,10 @@ class MLA {
 		 * It is passed in the $request so it can be filtered.
 		 */
 		if ( NULL === $request ) {
-			// Bulk Edit actions have their own NONCE check
-			if ( 'edit' !== $bulk_action ) {
+			// Bulk Edit actions must come via AJAX.  Other bulk actions come via a form submit.
+			if ( 'edit' === $bulk_action ) {
+				check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+			} else {
 				check_admin_referer( 'bulk-attachments' ); // set in class-mla-list-table.php function display_tablenav()
 			}
 
@@ -1857,7 +1859,7 @@ class MLA {
 				$tax_term_id = 0;
 				$tax_filter = 'none';
 				$term_text = '';
-				$phrase_text = trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) );
+				$phrase_text = trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ) ) );
 				
 				if ( isset( $_REQUEST['mla_terms_search']['filter'] ) ) {
 					$tax_term_id = (int) $_REQUEST['mla_terms_search']['filter'];
@@ -2080,10 +2082,12 @@ class MLA {
 
 		if ( ! empty( $custom_fields ) ) {
 			$_REQUEST[ 'custom_updates' ] = $custom_fields;
+		} else {
+			unset( $_REQUEST[ 'custom_updates' ] );
 		}
 
 		// The category taxonomy is a special case because post_categories_meta_box() changes the input name
-		if ( !isset( $_REQUEST['tax_input'] ) ) {
+		if ( ! isset( $_REQUEST['tax_input'] ) ) {
 			$_REQUEST['tax_input'] = array();
 		}
 
@@ -2156,7 +2160,6 @@ class MLA {
 				$_REQUEST['post_date_gmt'] = get_gmt_from_date( $new_date );
 			}
 
-//			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $tax_output );
 			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $_REQUEST['tax_input'] ); // phpcs:ignore
 			MLACore::mla_debug_add( __LINE__ . " MLA::mla_inline_edit_ajax_action( {$post_id} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		}
@@ -2409,7 +2412,7 @@ class MLA {
 					ob_start();
 					add_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 					wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
-					remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
+					remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10 );
 					$tax_checklist = ob_get_contents();
 					ob_end_clean();
 					
@@ -2471,7 +2474,7 @@ class MLA {
 						ob_start();
 						add_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 						wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
-						remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
+						remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10);
 						$tax_checklist = ob_get_contents();
 						ob_end_clean();
 						
@@ -2779,7 +2782,7 @@ class MLA {
 			);
 		}
 
-		if ( !wp_trash_post( $post_id, false ) ) {
+		if ( ! wp_trash_post( $post_id ) ) {
 			return array(
 				/* translators: 1: ERROR tag 2: post ID */
 				'message' => sprintf( __( '%1$s: Item %2$d could NOT be moved to Trash.', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $post_id ),

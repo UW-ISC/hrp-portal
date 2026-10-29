@@ -398,6 +398,12 @@ class MLAModal_Ajax {
 			wp_send_json_error();
 		}
 
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'You are not allowed to edit this Attachment.', 'media-library-assistant' ) );
+		}
+
+		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
 		$results = apply_filters( 'mla_media_modal_begin_fill_compat_fields', array(), $requested, $post );
 		if ( ! empty( $results ) ) {
 			wp_send_json_success( $results );
@@ -753,7 +759,17 @@ class MLAModal_Ajax {
 				}
 				$view = wp_kses( wp_unslash( $query['post_mime_type'] ), 'post' );
 				unset( $query['post_mime_type'] );
-				$query = array_merge( $query, MLACore::mla_prepare_view_query( 'view', $view ) );
+
+				if ( strpos( $view, 'table_view:' ) === 0 ) {
+					$slug = 'table_view';
+					$specification = substr( $view, 11 );
+					$query = array_merge( $query, array( $slug => $specification ) );
+				} else {
+					$slug = 'view';
+					$specification = $view;
+					$query = array_merge( $query, MLACore::mla_prepare_view_query( $slug, $specification ) );
+				}
+
 			}
 		}
 

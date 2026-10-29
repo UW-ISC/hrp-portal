@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.42';
+	const CURRENT_MLA_VERSION = '3.44';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -1420,6 +1420,19 @@ class MLACore {
 	 * @return	array	post_mime_type specification or custom field query
 	 */
 	public static function mla_prepare_view_query( $slug, $specification ) {
+		if ( 'table_view' === $slug ) {
+			$slug = $specification;
+			$specification = '';
+
+			$views = MLAMime::mla_query_view_items( array( 's' => $slug, 'orderby' => 'menu_order' ), 0, 0 );
+			foreach ( $views as $view ) {
+				if ( isset( $view->slug ) && ( $slug === $view->slug ) ) {
+					$specification = $view->specification;
+					break;
+				}
+			}
+		}
+
 		// For this query we don't need to cache anything, since we won't access the items themselves
 		$query = array (
 			'cache_results' => 'false',
@@ -1524,7 +1537,7 @@ class MLACore {
 		
 		if ( ! empty( $result['shortcode'] ) ) {
 			$tail = substr( $result['shortcode']['value'], strlen( 'shortcode:' ) );
-			$result['shortcode']['value'] = MLAShortcode_Support::mla_validate_attributes( $tail );
+			$result['shortcode']['value'] = MLAShortcodes::mla_validate_attributes( $tail );
 		}
 
 		if ( ! empty( $result['custom'] ) ) {
@@ -1969,7 +1982,7 @@ class MLACore {
 
 		switch ( $destination ) {
 			case 'buffer':
-				$results = MLACore::mla_debug_content();
+				$results = esc_html( MLACore::mla_debug_content() );
 				break;
 			case 'console':
 				foreach( self::$mla_debug_messages as $message ) {

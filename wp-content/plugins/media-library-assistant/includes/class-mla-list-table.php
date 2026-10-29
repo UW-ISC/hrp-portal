@@ -334,12 +334,8 @@ class MLA_List_Table extends WP_List_Table {
 			}
 		}
 
-		if ( isset( $_REQUEST['shortcode_query'] ) ) {
-			$submenu_arguments['shortcode_query'] = urlencode( wp_kses( wp_unslash( $_REQUEST['shortcode_query'] ), 'post' ) );
-		}
-
-		if ( isset( $_REQUEST['meta_query'] ) ) {
-			$submenu_arguments['meta_query'] = urlencode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ) );
+		if ( isset( $_REQUEST['table_view'] ) ) {
+			$submenu_arguments['table_view'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['table_view'] ) ) );
 		}
 
 		// Search box arguments
@@ -1948,7 +1944,7 @@ class MLA_List_Table extends WP_List_Table {
 		if ( empty( $mla_type->specification ) ) {
 			$query = array ( 'post_mime_type' => $view_slug );
 		} else {
-			$query = MLACore::mla_prepare_view_query( $view_slug, $mla_type->specification );
+			$query = array( 'table_view' => $view_slug );
 		}
 
 		$total_items = MLAQuery::mla_count_list_table_items( $query );
@@ -1957,22 +1953,11 @@ class MLA_List_Table extends WP_List_Table {
 			$plural = sprintf('%s <span class="count">(%%s)</span>', $mla_type->plural );
 			$nooped_plural = _n_noop( $singular, $plural, 'media-library-assistant' );
 
-			if ( isset( $query['post_mime_type'] ) ) {
-				$query['post_mime_type'] = urlencode( $query['post_mime_type'] );
+			if ( empty( $mla_type->specification ) ) {
+				$query = array ( 'post_mime_type' => $view_slug );
+			} else {
+				$query = array ( 'table_view' => $view_slug );
 			}
-
-			if ( isset( $query['shortcode_query'] ) ) {
-				$query['shortcode_query'] = urlencode( wp_json_encode( $query['shortcode_query'] ) );
-			}
-
-			if ( isset( $query['meta_query'] ) ) {
-				$query['meta_query'] = urlencode( wp_json_encode( $query['meta_query'] ) );
-			}
-
-			// These are added automatically by mla_prepare_view_query, so they don't have to be in the URL
-			unset( $query['cache_results'] );
-			unset( $query['update_post_meta_cache'] );
-			unset( $query['update_post_term_cache'] );
 
 			return "<a href='" . add_query_arg( $query, $base_url ) . "'$class>" . sprintf( translate_nooped_plural( $nooped_plural, $total_items, 'media-library-assistant' ), number_format_i18n( $total_items ) ) . '</a>';
 		}
@@ -2005,14 +1990,8 @@ class MLA_List_Table extends WP_List_Table {
 				$current_view = sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) );
 			}
 				
-			if ( isset( $_REQUEST['shortcode_query'] ) ) {
-				$query = json_decode( wp_kses( wp_unslash( $_REQUEST['shortcode_query'] ), 'post' ), true );
-				$current_view = isset( $query['slug'] ) ? $query['slug'] : $current_view;
-			}
-				
-			if ( isset( $_REQUEST['meta_query'] ) ) {
-				$query = json_decode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ), true );
-				$current_view = isset( $query['slug'] ) ? $query['slug'] : $current_view;
+			if ( !empty( $_REQUEST['table_view'] ) ) {
+				$current_view = sanitize_text_field( wp_unslash( $_REQUEST['table_view'] ) );
 			}
 		}
 

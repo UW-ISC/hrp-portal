@@ -274,6 +274,7 @@ class MLAData_Source {
 		$sizes = array();
 
 		if ( isset( $wp_attachment_metadata[ $post_id ]->meta_value ) ) {
+			// Serialized data is stored in the database
 			$attachment_metadata =  @unserialize( $wp_attachment_metadata[ $post_id ]->meta_value );
 			if ( ! is_array( $attachment_metadata ) ) {
 				$attachment_metadata = array();
@@ -559,6 +560,7 @@ class MLAData_Source {
 
 		switch( $data_source ) {
 			case 'meta':
+				// Serialized data is stored in the database
 				$attachment_metadata = isset( $wp_attachment_metadata[ $post_id ]->meta_value ) ? maybe_unserialize( $wp_attachment_metadata[ $post_id ]->meta_value ) : array();
 				$result = MLAData::mla_find_array_element( $data_value['meta_name'], $attachment_metadata, $data_value['option'], $data_value['keep_existing'] );
 				break;
@@ -622,11 +624,11 @@ class MLAData_Source {
 					$metadata = get_metadata( 'post', $post_id, '_wp_attachment_image_alt' );
 					if ( is_array( $metadata ) ) {
 						if ( count( $metadata ) == 1 ) {
-							$alt_text = maybe_unserialize( $metadata[0] );
+							$alt_text = $metadata[0];
 						} else {
 							$alt_text = array();
 							foreach ( $metadata as $single_key => $single_value ) {
-								$alt_text[ $single_key ] = maybe_unserialize( $single_value );
+								$alt_text[ $single_key ] = $single_value;
 							}
 						}
 					}

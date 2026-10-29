@@ -1355,7 +1355,10 @@ You can query by author's id or &quot;Username&quot;, the value used to log in t
 <p><a name="post_type_post_status"></a></p>
 <h4>Post Type, Post Status</h4>
 <p>
-For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display items in the trash (<code>post_status=trash</code>). You can specify more than one value in a comma-separated list, e.g., <code>post_type="post,page"</code>.
+For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display posts and pages (<code>post_status=publish</code>). You can specify more than one value in a comma-separated list, e.g., <code>post_type="post,page"</code>.
+</p>
+<p>
+For security reasons, post_status values 'draft', 'future', 'pending', 'private' and 'trash' are not allowed.
 </p>
 <p>
 You can change the <code>post_type</code> parameter to compose a "gallery" of WordPress objects such as posts, pages and custom post types. For example, to display a gallery of the published posts in a particular category you can code something like:
@@ -7428,7 +7431,9 @@ There are twenty prefix values for field-level parameters. Prefix values must be
 		<td class="mla-doc-table-label">author</td>
 		<td>
 		Values assigned to the item's author; empty if the author cannot be determined.
-		These include any of the columns in the database users and usermeta tables, e.g., <code>[+author:user_nicename+]</code> or  <code>[+author:description+]</code>.<br />
+		These include several of the columns in the database users and usermeta tables, e.g., <code>[+author:user_nicename+]</code> or  <code>[+author:description+]</code>.<br />
+		&nbsp;<br />
+		For security reasons, the only values allowed are 'user_nicename', 'user_url', 'display_name', 'first_name', 'last_name', 'nickname', 'description', 'user_first', 'user_last', 'user_bio', and 'website'.<br />
 		&nbsp;<br />
 		The ",raw" option bypasses the code to sanitize the returned value. Use this option, for example, to allow HTML tags to be returned.<br />&nbsp;
 		</td>

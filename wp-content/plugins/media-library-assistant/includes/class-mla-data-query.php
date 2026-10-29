@@ -528,7 +528,7 @@ class MLAQuery {
 		$attached_file = NULL;
 		$previous_key = '';
 		$results = array();
-		$post_meta = get_metadata( 'post', $post_id );
+		$post_meta = get_metadata( 'post', $post_id ); // Does NOT unserialize values, returns array of arrays
 
 		if ( is_array( $post_meta ) ) {
 			foreach ( $post_meta as $post_meta_key => $post_meta_value ) {
@@ -567,6 +567,11 @@ class MLAQuery {
 					
 					$previous_key = '';
 				} else {
+					// Don't allow override of the internal keys
+					if ( in_array( $post_meta_key, array( 'mla_wp_attached_file', 'mla_wp_attachment_metadata', 'mla_wp_attachment_image_alt', 'mla_thumbnail_id' ) ) ) {
+						continue;
+					}
+
 					$previous_key = $post_meta_key;
 
 					if ( stripos( $post_meta_key, 'mla_' ) === 0 ) {
@@ -1105,9 +1110,25 @@ class MLAQuery {
 				case 'mla-metavalue':
 					$clean_request[ $key ] = stripslashes( html_entity_decode( $value ) );
 					break;
+				case 'table_view':
+					$query = MLACore::mla_prepare_view_query( 'table_view', $value );
+
+					if ( isset( $query['post_mime_type'] ) ) {
+						$clean_request['post_mime_type'] = $query['post_mime_type'];
+					}
+
+					if ( isset( $query['shortcode_query'] ) ) {
+						$clean_request['shortcode_query'] = $query['shortcode_query'];
+					}
+
+					if ( isset( $query['meta_query'] ) ) {
+						$clean_request['meta_query'] = $query['meta_query'];
+					}
+
+					break;
 				case 'tax_query':
-				case 'meta_query':
-				case 'shortcode_query':
+//				case 'meta_query': // not allowed externally
+//				case 'shortcode_query': // not allowed externally
 					if ( ! empty( $value ) ) {
 						if ( is_array( $value ) ) {
 							$clean_request[ $key ] = $value;
@@ -1160,7 +1181,7 @@ class MLAQuery {
 		}
 
 		// We must patch the WHERE clause if there are leading spaces in the meta_value
-		if ( isset( $clean_request['mla-metavalue'] ) && ( 0 < strlen( $clean_request['mla-metavalue'] ) ) && ( ' ' == $clean_request['mla-metavalue'][0] ) ) {
+		if ( isset( $clean_request['mla-metavalue'] ) && ( 0 < strlen( $clean_request['mla-metavalue'] ) ) && ( ' ' === $clean_request['mla-metavalue'][0] ) ) {
 			self::$query_parameters['mla-metavalue'] = $clean_request['mla-metavalue'];
 		}
 
@@ -2093,10 +2114,12 @@ class MLAQuery {
 		if ( isset( self::$query_parameters['mla-metavalue'] ) ) {
 			if ( is_array( self::$query_parameters['mla-metavalue'] ) ) {
 				foreach ( self::$query_parameters['mla-metavalue'] as $pattern => $replacement ) {
-					$where_clause = preg_replace( '/(^.*meta_value AS CHAR\) = \')(' . $pattern . '[^\']*)/m', '${1}' . $replacement, $where_clause );
+					$replacement = esc_sql( str_replace( '$0', '&#36;', $replacement ) );
+					$where_clause = preg_replace( '/(^.*meta_value AS CHAR\) = \')(' . preg_quote( $pattern, '/' ) . '[^\']*)/m', '${1}' . $replacement, $where_clause );
 				}
 			} else {
-				$where_clause = preg_replace( '/(^.*meta_value AS CHAR\) = \')([^\']*)/m', '${1}' . self::$query_parameters['mla-metavalue'], $where_clause );
+				$replacement = esc_sql( str_replace( '$0', '&#36;', self::$query_parameters['mla-metavalue'] ) );
+				$where_clause = preg_replace( '/(^.*meta_value AS CHAR\) = \')([^\']*)/m', '${1}' . $replacement, $where_clause );
 			}
 		}
 

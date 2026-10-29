@@ -2,8 +2,8 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
-Tested up to: 7.1.2
-Stable tag: 3.42
+Tested up to: 7.1.4
+Stable tag: 3.44
 Requires at least: 5.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -198,6 +198,22 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 21. The Settings page Debug tab, where you can activate debug logging categories as well as manage and display the error log.
 
 == Changelog ==
+
+= 3.44 =
+* Fix: IMPORTANT: A Sensitive Data Exposure vulnerability (WPScan Security #56355, credit Jacek Sowinski) has been mitigated.
+* Fix: IMPORTANT: A Sensitive Data Exposure vulnerability (WPScan Security #47596, credit Karthik Ramakrishnan) has been mitigated.
+* Fix: IMPORTANT: A Stored Cross-Site Scripting vulnerability (WPScan Security #47595, credit Karthik Ramakrishnan) has been mitigated.
+* Fix: IMPORTANT: A PHP Object Injection vulnerability (WPScan Security #47593, credit Karthik Ramakrishnan) has been mitigated.
+* Fix: IMPORTANT: An SQL Injection vulnerability (Patchstack 37374) has been mitigated.
+* Fix: IMPORTANT: Cross-Site Scripting vulnerabilites (Patchstack 37177) have been mitigated.
+* Fix: Obsolete `create_function()` calls in the `mla-a-z-cloud-example` and `mla-fixed-values-example` example plugins have been removed.
+* Fix: Special handling of '\\{' and '\\}' to insert braces in shortcode parameters has been repaired.
+* Fix: The default `ajaxurl` value is now taken from the results of the WordPress `admin_url('admin-ajax.php')` function, so WordPress installs in a subdirectory are handled correctly.
+
+= 3.43 =
+* Fix: IMPORTANT: A Sensitive Data Exposure vulnerability (Patchstack 37178) has been mitigated.
+* Fix: IMPORTANT: A Cross Site Request Forgery vulnerability (Patchstack 35557) mitigation has been improved.
+* Fix: IMPORTANT: For pagination shortcodes, a Reflected Cross Site Scripting security risk (Wordfence CVE-2026-103875) has been mitigated.
 
 = 3.42 =
 * Fix: IMPORTANT: A Cross Site Request Forgery vulnerability (Patchstack 35557) has been mitigated.
@@ -415,8 +431,8 @@ Please report security bugs found in the source code of the Media LIbrary Assist
 
 == Upgrade Notice ==
 
-= 3.42 =
-IMPORTANT: Four security vulnerabilities (Patchstack 34858, 35455, 35483, 35557) have been mitigated. Handling of damaged parameters in [mla_gallery] has been improved. For WPML, term synchronization fixes and updates to support WPML 5.0+. Six fixes in all.
+= 3.44 =
+IMPORTANT: Six security vulnerabilities (Patchstack 37177, 37374 and WPScan Security 47593, 47595, 47596, 56355) have been mitigated. Example plugin PHP fixes, shortcode parameter parsing and ajaxurl handling fixes. Nine fixes in all.
 
 == Acknowledgements ==
 
