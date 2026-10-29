@@ -230,7 +230,7 @@ class MLATagCloud {
 		}
 
 		/*
-		 * The current_item and mla_paginate_current parameters can be changed
+		 * The current_item and mla_paginate_current parameter names can be changed
 		 * to support multiple clouds per page.
 		 */
 		if ( ! isset( $attr['mla_item_parameter'] ) ) {
@@ -244,12 +244,13 @@ class MLATagCloud {
 		/*
 		 * The current_item and mla_paginate_current parameters can contain
 		 * page_level parameters like {+page_ID+}
+		 * At this point we limit the parameter names to legal values, i.e., letters, numbers and underscores
 		 */
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_item_parameter'] ) );
-		$mla_item_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_item_parameter'] );
+		$attr['mla_item_parameter'] = $mla_item_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_item_parameter'] );
 
 		$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr['mla_page_parameter'] ) );
-		$mla_page_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_page_parameter'] );
+		$attr['mla_page_parameter'] = $mla_page_parameter = sanitize_title( MLAData::mla_parse_template( $attr_value, $page_values ), $defaults['mla_page_parameter'] );
 
 		/*
 		 * Special handling of current_item and mla_page_parameter to make "MLA pagination" easier.

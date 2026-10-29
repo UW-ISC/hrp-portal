@@ -579,6 +579,8 @@ class MLA_Thumbnail {
 			unset( $_GET['meta_query'] );
 			unset( $_REQUEST['shortcode_query'] );
 			unset( $_GET['shortcode_query'] );
+			unset( $_REQUEST['table_view'] );
+			unset( $_GET['table_view'] );
 
 			// Clear the "extra_nav" controls and the Search Media box, too
 			unset( $_REQUEST['m'] );

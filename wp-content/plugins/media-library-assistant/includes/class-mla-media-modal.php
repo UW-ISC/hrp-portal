@@ -32,6 +32,15 @@ class MLAModal {
 	const JAVASCRIPT_DEFINE_AJAXURL_SLUG = 'mla-define-ajaxurl-scripts';
 
 	/**
+	 * Object name for localizing JavaScript - Terms Search popup
+	 *
+	 * @since 3.44
+	 *
+	 * @var	string
+	 */
+	const JAVASCRIPT_DEFINE_AJAXURL_OBJECT = 'mla_define_ajaxurl_vars';
+
+	/**
 	 * Slug for localizing and enqueueing JavaScript - Add Media and related dialogs
 	 *
 	 * @since 1.20
@@ -452,6 +461,14 @@ class MLAModal {
 
 		// Make sure ajaxurl is defined before loading wp-lists and suggest
 		wp_enqueue_script( self::JAVASCRIPT_DEFINE_AJAXURL_SLUG, MLA_PLUGIN_URL . "js/mla-define-ajaxurl-scripts{$suffix}.js", array(), MLACore::mla_script_version(), false );
+
+		$admin_url = parse_url( admin_url('admin-ajax.php'), PHP_URL_PATH );
+
+		$script_variables = array(
+			'defaultAjaxURL' => $admin_url,
+		);
+
+		wp_localize_script( self::JAVASCRIPT_DEFINE_AJAXURL_SLUG, self::JAVASCRIPT_DEFINE_AJAXURL_OBJECT, $script_variables );
 
 		// Gutenberg Block Editor won't tolerate loading 'wp-lists' in the header section; load in footer section
 		if ( ! function_exists( 'use_block_editor_for_post_type' ) || isset( $_GET['classic-editor'] ) ) {

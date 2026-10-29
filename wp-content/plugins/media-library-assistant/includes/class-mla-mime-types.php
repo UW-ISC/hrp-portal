@@ -1066,7 +1066,7 @@ class MLAMime {
 				if ( empty( $value->specification ) ) {
 					$results[ $value->slug ] = $value->plural;
 				} else {
-					$results[ $value->specification ] = $value->plural;
+					$results[ 'table_view:' . $value->slug ] = $value->plural;
 				}
 			}
 		}

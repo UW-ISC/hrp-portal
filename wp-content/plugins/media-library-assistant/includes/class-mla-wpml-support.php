@@ -2170,7 +2170,7 @@ class MLA_WPML_Table {
 		if ( $href_count ) {
 			wp_parse_str( $href_matches[3], $href_args );
 
-			foreach ( array( 'meta_query', 'shortcode_query' ) as $mla_key ) {
+			foreach ( array( 'meta_query', 'shortcode_query', 'table_view' ) as $mla_key ) {
 				// esc_url() converts & to #038;, which wp_parse_str does not strip
 				if ( ( isset( $href_args[ $mla_key ] ) || isset( $href_args['#038;' . $mla_key ] ) ) ) {
 					$current_language = MLA_WPML::mla_wpml_open_language_switch( $lang );
