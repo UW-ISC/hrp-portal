@@ -8,7 +8,8 @@
 	"icon": "menu",
 	"description": "",
 	"supports": {
-		"html": false
+		"html": false,
+		"align": [ "wide", "full" ]
 	},
 	"attributes": {
 		"location": {

@@ -9,6 +9,15 @@ class GF_Field_Address extends GF_Field {
 	public $type = 'address';
 
 	/**
+	 * Whether the field can be used in a repeater.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @var bool
+	 */
+	public $repeatable = true;
+
+	/**
 	 * Indicates if this field supports state validation.
 	 *
 	 * @since 3.0
@@ -1417,18 +1426,31 @@ class GF_Field_Address extends GF_Field {
 
 	}
 
-	public function get_value_export( $entry, $input_id = '', $use_text = false, $is_csv = false ) {
+	/**
+	 * Format a single Address field value for export.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param mixed      $value    The raw value for $input_id, or a nested item array for whole-field values.
+	 * @param array      $entry    The entry currently being processed.
+	 * @param string|int $input_id The field or input ID.
+	 * @param bool       $use_text Not used.
+	 * @param bool       $is_csv   Not used.
+	 *
+	 * @return string
+	 */
+	protected function format_value_export( $value, $entry, $input_id = '', $use_text = false, $is_csv = false ) {
 		if ( empty( $input_id ) ) {
 			$input_id = $this->id;
 		}
 
 		if ( absint( $input_id ) == $input_id ) {
-			$street_value  = str_replace( '  ', ' ', trim( rgar( $entry, $input_id . '.1' ) ) );
-			$street2_value = str_replace( '  ', ' ', trim( rgar( $entry, $input_id . '.2' ) ) );
-			$city_value    = str_replace( '  ', ' ', trim( rgar( $entry, $input_id . '.3' ) ) );
-			$state_value   = str_replace( '  ', ' ', trim( rgar( $entry, $input_id . '.4' ) ) );
-			$zip_value     = trim( rgar( $entry, $input_id . '.5' ) );
-			$country_value = $this->get_country_code( trim( rgar( $entry, $input_id . '.6' ) ) );
+			$street_value  = str_replace( '  ', ' ', trim( rgar( $value, $input_id . '.1' ) ) );
+			$street2_value = str_replace( '  ', ' ', trim( rgar( $value, $input_id . '.2' ) ) );
+			$city_value    = str_replace( '  ', ' ', trim( rgar( $value, $input_id . '.3' ) ) );
+			$state_value   = str_replace( '  ', ' ', trim( rgar( $value, $input_id . '.4' ) ) );
+			$zip_value     = trim( rgar( $value, $input_id . '.5' ) );
+			$country_value = $this->get_country_code( trim( rgar( $value, $input_id . '.6' ) ) );
 
 			$address = $street_value;
 			$address .= ! empty( $address ) && ! empty( $street2_value ) ? "  $street2_value" : $street2_value;
@@ -1440,7 +1462,7 @@ class GF_Field_Address extends GF_Field {
 			return $address;
 		} else {
 
-			return rgar( $entry, $input_id );
+			return $value;
 		}
 	}
 

@@ -1764,7 +1764,14 @@ function gformInitChosenFields( fieldList, noResultsText ) {
 //--- CURRENCY FORMAT NUMBER FIELD -------
 //----------------------------------------
 
+/**
+ * Formats currency-formatted number fields.
+ *
+ * @deprecated Currency formatting is now handled by the theme number field module.
+ * @remove-in 4.0
+ */
 function gformInitCurrencyFormatFields(fieldList){
+    console.warn( 'gformInitCurrencyFormatFields() is deprecated and will be removed in version 4.0.' );
     jQuery(fieldList).each(function(){
         var $this = jQuery(this);
         $this.val( gformFormatMoney( jQuery(this).val() ) );

@@ -99,9 +99,11 @@ class GFFormDisplay {
 				return;
 			}
 
-			// Bypass nonce check for requests coming from the REST API
+			// REST API v2 requests bypass the front-end form nonce check.
 			$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
-			if ( ! $is_rest_request ) {
+			// Verified REST API v1 requests use a rewrite route and bypass only this nonce check.
+			$skip_form_nonce = apply_filters( 'gform_skip_form_login_nonce_' . $form_id, false );
+			if ( ! $is_rest_request && ! $skip_form_nonce ) {
 				check_admin_referer( 'gform_submit_' . $form_id, '_gform_submit_nonce_' . $form_id );
 			}
 		}
@@ -749,9 +751,34 @@ class GFFormDisplay {
 	}
 
 	/**
+	 * Whether the gf_page_{formId} query argument is disabled for a form.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @param array $form The current form.
+	 *
+	 * @return bool
+	 */
+	public static function is_page_query_arg_disabled( $form ) {
+		$form_id = absint( rgar( $form, 'id' ) );
+
+		/**
+		 * Disable the gf_page_{formId} query argument for a multi-page form.
+		 *
+		 * Return true to keep the page out of the URL and ignore the argument when a link includes it.
+		 *
+		 * @since 3.2.1
+		 *
+		 * @param bool  $disabled Whether the page query argument is disabled. Default false.
+		 * @param array $form     The current form.
+		 */
+		return (bool) gf_apply_filters( array( 'gform_disable_page_query_arg', $form_id ), false, $form );
+	}
+
+	/**
 	 * Returns the query argument used to link to a page within a form.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param int $form_id The form ID.
 	 *
@@ -766,7 +793,7 @@ class GFFormDisplay {
 	 *
 	 * Save and Continue links restore the page stored with the draft, so the page argument is ignored when gf_token is present.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param int $form_id The form ID.
 	 *
@@ -792,7 +819,7 @@ class GFFormDisplay {
 	 *
 	 * If a link goes to a page hidden by conditional logic, the first page of the form is displayed instead.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param array      $form           The current form.
 	 * @param int        $requested_page The page number from the page link.
@@ -824,7 +851,7 @@ class GFFormDisplay {
 	/**
 	 * Sets the current page from the gf_page_{form_id} query argument when one is present.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param array      $form         The current form.
 	 * @param array      $field_values Dynamic population values.
@@ -833,6 +860,10 @@ class GFFormDisplay {
 	 * @return void
 	 */
 	public static function maybe_set_current_page_from_query_arg( $form, $field_values = array(), $lead = null ) {
+		if ( self::is_page_query_arg_disabled( $form ) ) {
+			return;
+		}
+
 		$form_id        = absint( rgar( $form, 'id' ) );
 		$requested_page = self::get_linked_page_number_from_query( $form_id );
 		if ( ! $requested_page ) {
@@ -1454,7 +1485,12 @@ class GFFormDisplay {
 
 			$action              = esc_url( $action );
 			$requested_page_attr = '';
-			if ( $has_pages && ! $is_postback && ! $is_admin ) {
+			$page_query_attr     = '';
+			$require_login_attr  = self::get_require_login_form_attributes( $form );
+			$page_query_disabled = $has_pages && self::is_page_query_arg_disabled( $form );
+			if ( $page_query_disabled ) {
+				$page_query_attr = " data-gf-page-query='false'";
+			} elseif ( $has_pages && ! $is_postback && ! $is_admin ) {
 				$linked_page = self::get_linked_page_number_from_query( $form_id );
 				if ( $linked_page ) {
 					$requested_page_attr = " data-gf-requested-page='" . (int) $linked_page . "'";
@@ -1470,7 +1506,7 @@ class GFFormDisplay {
 			 *
 			 * @return string The modified form tag markup.
 			 */
-			$form_string .= gf_apply_filters( array( 'gform_form_tag', $form_id ), "<form method='post' enctype='multipart/form-data' {$target} id='gform_{$form_id}' {$form_css_class} action='{$action}' data-formid='{$form_id}'{$requested_page_attr} novalidate>", $form );
+			$form_string .= gf_apply_filters( array( 'gform_form_tag', $form_id ), "<form method='post' enctype='multipart/form-data' {$target} id='gform_{$form_id}' {$form_css_class} action='{$action}' data-formid='{$form_id}'{$require_login_attr}{$requested_page_attr}{$page_query_attr} novalidate>", $form );
 
 			// If Save and Continue token was provided but expired/invalid, display error message.
 			if ( isset( $_GET['gf_token'] ) && ! is_array( $incomplete_submission_info ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -1531,7 +1567,7 @@ class GFFormDisplay {
 			}
 
 			$tag = GFCommon::is_legacy_markup_enabled( $form ) ? 'ul' : 'div';
-			$form_string .= "<{$tag} id='gform_fields_{$form_id}' class='" . GFCommon::get_ul_classes( $form ) . "'>";
+			$form_string .= "<{$tag} id='gform_fields_{$form_id}' class='" . GFCommon::get_ul_classes( $form ) . "' data-column-layout='" . esc_attr( GFCommon::get_form_column_layout( $form ) ) . "'>";
 
 			if ( is_array( $form['fields'] ) ) {
 				$form_string .= self::get_fields( $form, $field_values, $submitted_values );
@@ -1722,7 +1758,7 @@ class GFFormDisplay {
 			$markup .= self::get_first_page_header( $form );
 
 			// Getting the field container header if this is the first page of the form.
-			$markup .= "<{$tag} id='gform_fields_{$form_id}' class='" . GFCommon::get_ul_classes( $form ) . "'>"; // Opening field container for first page.
+			$markup .= "<{$tag} id='gform_fields_{$form_id}' class='" . GFCommon::get_ul_classes( $form ) . "' data-column-layout='" . esc_attr( GFCommon::get_form_column_layout( $form ) ) . "'>"; // Opening field container for first page.
 		}
 
 		// Adding the fields for the target page.
@@ -3386,7 +3422,7 @@ class GFFormDisplay {
 
 		$gf_main = new GF_Script_Asset( 'gform_gravityforms' );
 
-		if ( self::has_checkbox_field( $form, true ) ) {
+		if ( self::has_checkbox_field( rgar( $form, 'fields' ), true ) ) {
 			$gf_main->add_localize_data( 'gf_field_checkbox', array(
 				'strings' => array(
 					'selected'   => wp_strip_all_tags( __( 'All choices are selected.', 'gravityforms' ) ),
@@ -3509,6 +3545,27 @@ class GFFormDisplay {
          * @param bool  $ajax Whether AJAX is on or off (True or False)
          */
 		gf_do_action( array( 'gform_enqueue_scripts', $form['id'] ), $form, $ajax );
+	}
+
+	/**
+	 * Data attributes used to keep a require-login form on the page when the session expires.
+	 *
+	 * The user id is the person the form was rendered for. After a login in another tab, the
+	 * script compares it with the current user and will not submit the form as someone else.
+	 *
+	 * @since 3.2.2
+	 *
+	 * @param array $form The form being rendered.
+	 *
+	 * @return string
+	 */
+	private static function get_require_login_form_attributes( $form ) {
+		$user_id = (int) get_current_user_id();
+		if ( $user_id <= 0 || ! GFCommon::form_requires_login( $form ) ) {
+			return '';
+		}
+
+		return sprintf( " data-gf-require-login='1' data-gf-user-id='%d'", $user_id );
 	}
 
 	/**
@@ -3988,10 +4045,6 @@ class GFFormDisplay {
 			self::add_init_script( $form['id'], 'calculation', self::ON_PAGE_RENDER, self::get_calculations_init_script( $form ) );
 		}
 
-		if ( self::has_currency_format_number_field( $form ) ) {
-			self::add_init_script( $form['id'], 'currency_format', self::ON_PAGE_RENDER, self::get_currency_format_init_script( $form ) );
-		}
-
 		if ( self::has_placeholder( $form ) ) {
 			self::add_init_script( $form['id'], 'placeholders', self::ON_PAGE_RENDER, self::get_placeholders_init_script( $form ) );
 		}
@@ -4087,7 +4140,20 @@ class GFFormDisplay {
 		return "gformInitChosenFields('" . implode( ',', $chosen_fields ) . "','" . esc_attr( gf_apply_filters( array( 'gform_dropdown_no_results_text', $form['id'] ), __( 'No results matched', 'gravityforms' ), $form['id'] ) ) . "');";
 	}
 
+	/**
+	 * Deprecated. Currency formatted Number fields are now formatted by the theme Number field module.
+	 *
+	 * @since Unknown
+	 * @since 3.2.0 Deprecated. Currency formatted Number fields are now formatted by the theme Number field module.
+	 * @remove-in 4.0
+	 *
+	 * @param array $form The Form Object.
+	 *
+	 * @return string
+	 */
 	public static function get_currency_format_init_script( $form ) {
+		_deprecated_function( __METHOD__, 'next', 'No replacement. Currency formatted Number fields are now formatted by the theme Number field module.' );
+
 		$currency_fields = array();
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->numberFormat == 'currency' ) {
@@ -4276,20 +4342,26 @@ class GFFormDisplay {
 	}
 
 	/**
-	 * Determines if the supplied form has a Checkbox field.
+	 * Determines if the supplied fields include a Checkbox field.
 	 *
-	 * @since  2.3
-	 * @access public
-	 *
-	 * @param array $form               The current forms properties.
-	 * @param bool  $select_all_enabled Check if the "Select All" choices setting is enabled
+	 * @since 2.3
+	 * @since 3.2.0 Updated to accept an array of fields instead of the form object.
+	 * @param array $fields             The fields to check.
+	 * @param bool  $select_all_enabled Check if the "Select All" choices setting is enabled.
 	 *
 	 * @return bool
 	 */
-	private static function has_checkbox_field( $form, $select_all_enabled = false ) {
+	private static function has_checkbox_field( $fields, $select_all_enabled = false ) {
 
-		if ( is_array( $form['fields'] ) ) {
-			foreach ( $form['fields'] as $field ) {
+		if ( is_array( $fields ) ) {
+			foreach ( $fields as $field ) {
+
+				if ( isset( $field->fields ) && is_array( $field->fields ) ) {
+					if ( self::has_checkbox_field( $field->fields, $select_all_enabled ) ) {
+						return true;
+					}
+				}
+
 				if ( $field->get_input_type() == 'checkbox' && ( ! $select_all_enabled || ( $select_all_enabled && $field->enableSelectAll ) ) ) {
 					return true;
 				}
@@ -4329,19 +4401,6 @@ class GFFormDisplay {
 			foreach ( $form['fields'] as $field ) {
 				$input_type = RGFormsModel::get_input_type( $field );
 				if ( in_array( $input_type, array( 'fileupload', 'post_image' ) ) ) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	private static function has_currency_format_number_field( $form ) {
-		if ( is_array( $form['fields'] ) ) {
-			foreach ( $form['fields'] as $field ) {
-				$input_type = RGFormsModel::get_input_type( $field );
-				if ( $input_type == 'number' && $field->numberFormat == 'currency' ) {
 					return true;
 				}
 			}
@@ -4592,7 +4651,7 @@ class GFFormDisplay {
                 $page_header_html = "
                 <div id='gform_page_{$form['id']}_{$field->pageNumber}' class='gform_page{$custom_class}' data-js='page-field-id-{$field->id}' {$style}>
                     <div class='gform_page_fields'>
-                        <{$tag} id='gform_fields_{$form['id']}_{$field->pageNumber}' class='" . GFCommon::get_ul_classes( $form ) . "'>";
+                        <{$tag} id='gform_fields_{$form['id']}_{$field->pageNumber}' class='" . GFCommon::get_ul_classes( $form ) . "' data-column-layout='" . esc_attr( GFCommon::get_form_column_layout( $form ) ) . "'>";
 
 				// When displaying a specific page, the footer for the current page will be displayed by the next page field.
 				$display_footer = $page_number == 0 || $field->pageNumber == $page_number + 1;
@@ -4619,7 +4678,7 @@ class GFFormDisplay {
 
 		$input_type = GFFormsModel::get_input_type( $field );
 
-		$error_class        = $field->failed_validation ? 'gfield_error' : '';
+		$error_class        = $field->should_show_validation_error() ? 'gfield_error' : '';
 		$admin_only_class   = $field->visibility == 'administrative' ? 'field_admin_only' : ''; // maintain for backwards compat
 		$admin_hidden_class = ( $is_admin && $field->visibility == 'hidden' ) ? 'admin-hidden' : '';
 		$visibility_class   = $is_admin ? 'gfield_visibility_visible' : sprintf( 'gfield_visibility_%s', ( $field->visibility ? $field->visibility : 'visible' ) );
@@ -4701,16 +4760,23 @@ class GFFormDisplay {
 
 		$css_class = esc_attr( $css_class );
 
-		$field_container = $field->get_field_container(
-			array(
-				'id'              => $field_id,
-				'class'           => $css_class,
-				'style'           => $style,
-				'data-field-class' => trim( $field_classes ),
-			),
-			$form
+		$container_atts = array(
+			'id'               => $field_id,
+			'class'            => $css_class,
+			'style'            => $style,
+			'data-field-class' => trim( $field_classes ),
 		);
 
+		if ( ! empty( $field->layoutGroupId ) ) {
+			$container_atts['data-group-id']   = $field->layoutGroupId;
+			$container_atts['data-field-span'] = ! empty( $field->layoutGridColumnSpan ) ? (int) $field->layoutGridColumnSpan : 12;
+
+			if ( $is_form_editor && ! empty( $field->layoutGridColumnSpan ) ) {
+				$container_atts['style'] = 'grid-column:span ' . (int) $field->layoutGridColumnSpan;
+			}
+		}
+
+		$field_container = $field->get_field_container( $container_atts, $form );
 
 		/**
 		 * Modify the markup used for the field container.
@@ -4929,6 +4995,7 @@ class GFFormDisplay {
 		 * Filter the multi-page progress steps markup.
 		 *
 		 * @since 2.0-beta-3
+		 * @since 3.2.1 Deprecated.  No replacement.
 		 *
 		 * @param string $progress_steps HTML string containing the progress steps markup.
 		 * @param array $form The current form object.
@@ -4936,8 +5003,8 @@ class GFFormDisplay {
 		 *
 		 * @see   https://docs.gravityforms.com/gform_progress_steps/
 		 */
-		$progress_steps = apply_filters( 'gform_progress_steps', $progress_steps, $form, $page );
-		$progress_steps = apply_filters( "gform_progress_steps_{$form['id']}", $progress_steps, $form, $page );
+		$progress_steps = apply_filters_deprecated( 'gform_progress_steps', array( $progress_steps, $form, $page ), '3.2.1' );
+		$progress_steps = apply_filters_deprecated( "gform_progress_steps_{$form['id']}", array( $progress_steps, $form, $page ), '3.2.1' );
 
 		return $progress_steps;
 	}
@@ -5261,11 +5328,12 @@ class GFFormDisplay {
 						   <input type='hidden' class='gform_hidden' name='is_submit_{$form_id}' value='1' />
 						   <input type='hidden' class='gform_hidden' name='gform_submit' value='{$form_id}' />";
 
-		$ajax_submit = $is_iframe_ajax ? "onclick='jQuery(\"#gform_{$form_id}\").trigger(\"submit\",[true]);'" : '';
+		$ajax_submit        = $is_iframe_ajax ? "onclick='jQuery(\"#gform_{$form_id}\").trigger(\"submit\",[true]);'" : '';
+		$require_login_attr = self::get_require_login_form_attributes( $form );
 
 		if ( GFCommon::is_legacy_markup_enabled( $form ) ) {
 			$resume_form = "<div class='form_saved_message_emailform'>
-							<form action='{$action}' method='POST' id='gform_{$form_id}' data-formid='{$form_id}' {$target}>
+							<form action='{$action}' method='POST' id='gform_{$form_id}' data-formid='{$form_id}'{$require_login_attr} {$target}>
 								{$iframe_ajax_fields}
 								<label for='gform_resume_email' class='gform_resume_email_label gfield_label' aria-describedby='email-validation-error'>{$email_input_label}</label>
 								<input type='email' name='gform_resume_email' value='{$email_esc}' id='gform_resume_email' placeholder='{$email_input_label}' aria-describedby='email-validation-error'/>
@@ -5279,7 +5347,7 @@ class GFFormDisplay {
 	                    </div>";
 		} else {
 			$resume_form = "<div class='form_saved_message_emailform'>
-						<form action='{$action}' method='POST' id='gform_{$form_id}' data-formid='{$form_id}' {$target}>
+						<form action='{$action}' method='POST' id='gform_{$form_id}' data-formid='{$form_id}'{$require_login_attr} {$target}>
 							<div class='gform-body gform_body'>
 								<div id='gform_fields_{$form_id}' class='gform_fields top_label form_sublabel_below description_below'>
 									{$iframe_ajax_fields}
@@ -5993,29 +6061,101 @@ class GFFormDisplay {
 	 *
 	 * @since 2.8.2
 	 *
-	 * @param array $form The current form object.
-	 * @param array $field The current field object.
+	 * @param array  $form  The current form object.
+	 * @param object $field The current field object.
 	 *
 	 * @return string
 	 */
 	public static function get_row_spacer( $field, $form ) {
-		$spacer = '';
+		if ( GFCommon::is_legacy_markup_enabled( $form ) || empty( $field->layoutGroupId ) ) {
+			return '';
+		}
 
-		if ( $field->layoutSpacerGridColumnSpan && ! GFCommon::is_legacy_markup_enabled( $form ) ) {
-			// check if this row needs a spacer
-			$span = intval( $field->layoutGridColumnSpan );
-			foreach ( $form['fields'] as $field2 ) {
-				if ( $field2->layoutGroupId == $field->layoutGroupId ) {
-					$span += intval( $field2->layoutGridColumnSpan );
-				}
-			}
+		$group_fields = self::get_fields_in_group( $form, $field->layoutGroupId );
+		if ( empty( $group_fields ) ) {
+			return '';
+		}
 
-			if ( $span < 12 ) {
-				$spacer = sprintf( '<div data-fieldId="%s" class="spacer gfield" style="grid-column: span %d;" data-groupId="%s"></div>', $field->id, $field->layoutSpacerGridColumnSpan, $field->layoutGroupId );
+		$last_field_in_group = $group_fields[ count( $group_fields ) - 1 ];
+
+		// Only the last field in the group outputs the trailing spacer.
+		if ( (int) $last_field_in_group->id !== (int) $field->id ) {
+			return '';
+		}
+
+		// Calculates the total span taken for the fields in this group.
+		$group_span = 0;
+		foreach ( $group_fields as $group_field ) {
+			$group_span += ! empty( $group_field->layoutGridColumnSpan ) ? intval( $group_field->layoutGridColumnSpan ) : 12;
+		}
+
+		// Calculating spacer span to fill the empty space.
+		$spacer_span = 12 - $group_span;
+
+		// An inline submit button occupies the end of the last row. Leave that span empty so the button stays on the row.
+		if ( rgars( $form, 'button/location' ) === 'inline' && self::is_last_layout_group( $form, $field->layoutGroupId ) ) {
+			$spacer_span -= (int) rgars( $form, 'button/layoutGridColumnSpan' );
+		}
+
+		return $spacer_span > 0 ? sprintf( '<div data-field-id="%s" class="spacer gfield" style="grid-column: span %d;" data-group-id="%s"></div>', $field->id, $spacer_span, $field->layoutGroupId ) : '';
+	}
+
+	/**
+	 * Determines whether a layout group is the last group on the form.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array  $form     The form object.
+	 * @param string $group_id The layout group ID.
+	 *
+	 * @return bool
+	 */
+	private static function is_last_layout_group( $form, $group_id ) {
+		$last_group_id = '';
+
+		foreach ( $form['fields'] as $field ) {
+			if ( ! empty( $field->layoutGroupId ) ) {
+				$last_group_id = $field->layoutGroupId;
 			}
 		}
 
-		return $spacer;
+		return $last_group_id === $group_id;
+	}
+
+	/**
+	 * Returns all fields that belong to the given layout group.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array  $form     The form object.
+	 * @param string $group_id The layout group ID.
+	 *
+	 * @return GF_Field[]
+	 */
+	public static function get_fields_in_group( $form, $group_id ) {
+		static $cache = array();
+
+		if ( empty( $group_id ) || empty( $form['fields'] ) ) {
+			return array();
+		}
+
+		$form_id   = absint( rgar( $form, 'id' ) );
+		$cache_key = $form_id . '_' . $group_id;
+
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
+		$fields = array();
+		foreach ( $form['fields'] as $field ) {
+			if ( ! empty( $field->layoutGroupId ) && $field->layoutGroupId === $group_id ) {
+				$fields[] = $field;
+			}
+		}
+
+		$cache[ $cache_key ] = $fields;
+
+		return $fields;
 	}
 
 	/**

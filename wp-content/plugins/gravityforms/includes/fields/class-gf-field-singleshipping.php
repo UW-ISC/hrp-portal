@@ -19,15 +19,6 @@ class GF_Field_SingleShipping extends GF_Field {
 	public $duplicatable = false;
 
 	/**
-	 * Whether the field can be used in a repeater.
-	 *
-	 * @since 3.0
-	 *
-	 * @var bool
-	 */
-	public $repeatable = false;
-	
-	/**
 	 * Indicates if this field supports state validation.
 	 *
 	 * @since 2.5.11

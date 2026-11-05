@@ -335,6 +335,23 @@
             return val === '$menu' ? $menu : val === '$wrap' ? $wrap : $(val);
         };
 
+        // Left edge (document coordinates) that a sub menu's "left" value is measured from: the padding edge of its
+        // nearest positioned ancestor. Usually that lines up with $menu, but not always: a stuck sticky menu with
+        // "Expand Background" makes the wrap position: fixed and full width, while $menu stays centred inside it.
+        const getSubmenuOriginLeft = function($submenu) {
+            let $container = $submenu.parent();
+
+            while ($container.length && !$container.is("html") && $container.css("position") === "static") {
+                $container = $container.parent();
+            }
+
+            if (!$container.length || $container.is("html")) {
+                return 0;
+            }
+
+            return $container.offset().left + (parseFloat($container.css("borderLeftWidth")) || 0);
+        };
+
         plugin.calculateDynamicSubmenuWidths = function(anchor) {
             const $item = anchor.parent();
             const $submenu = anchor.siblings(".mega-sub-menu");
@@ -344,13 +361,13 @@
             // apply dynamic width and sub menu position (only to top level mega menus)
             if (isTopLevelMegamenu && plugin.settings.panel_width) {
                 if (isDesktop) {
-                    const submenu_offset = $menu.offset();
+                    const origin_left = getSubmenuOriginLeft($submenu);
 
                     if ( plugin.settings.panel_width === '100vw' ) {
                         const target_offset = $('body').offset();
 
                         $submenu.css({
-                            left: (target_offset.left - submenu_offset.left) + "px"
+                            left: (target_offset.left - origin_left) + "px"
                         });
                     } else {
                         const $panel_width_el = resolveWidthEl(plugin.settings.panel_width);
@@ -358,7 +375,7 @@
                         if ( $panel_width_el.length > 0 ) {
                             $submenu.css({
                                 width: $panel_width_el.outerWidth(),
-                                left: ($panel_width_el.offset().left - submenu_offset.left) + "px"
+                                left: ($panel_width_el.offset().left - origin_left) + "px"
                             });
                         }
                     }

@@ -88,6 +88,12 @@ function maxmegamenu_render_callback( $attributes, $content, $block ) {
 		}
 	}
 
+	// Dynamic block: add a wrapper so alignment classes (e.g. alignwide) reach the front end.
+	// In the editor, useBlockProps() already applies them.
+	if ( ! empty( $attributes['align'] ) && ! maxmegamenu_is_editing_block_on_backend() ) {
+		$menu = '<div ' . get_block_wrapper_attributes() . '>' . $menu . '</div>';
+	}
+
 	return $menu;
 }
 

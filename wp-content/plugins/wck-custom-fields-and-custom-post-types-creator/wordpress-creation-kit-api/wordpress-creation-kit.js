@@ -177,6 +177,7 @@ function mb_sortable_elements() {
 
 				var value = jQuery(this).parent().siblings('.wck-add-form').attr('id');				
 				var id = jQuery(this).parent().attr('post');
+				var nonce = jQuery(this).parent().attr('data-reorder-nonce');
 				
 				var result = jQuery(this).sortable('toArray');
 				
@@ -196,7 +197,7 @@ function mb_sortable_elements() {
 				}
 	
 				
-				jQuery.post( wckAjaxurl ,  { action:"wck_reorder_meta"+meta, meta:value, id:id, values:values}, function(response) {
+				jQuery.post( wckAjaxurl ,  { action:"wck_reorder_meta"+meta, meta:value, id:id, values:values, _ajax_nonce:nonce}, function(response) {
 					jQuery('#container_'+value).replaceWith(response.entry_list);
 
 					jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });

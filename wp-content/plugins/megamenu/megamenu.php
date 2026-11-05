@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.10.8
+ * Version:     3.10.9
  * Requires PHP: 7.4
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
@@ -36,7 +36,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.10.8';
+		public $version = '3.10.9';
 
 
 		/**
@@ -107,6 +107,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			if ( is_admin() ) {
 				$admin_classes = [
+					'Mega_Menu_Admin_Icons',
 					'Mega_Menu_Location_Preview',
 					'Mega_Menu_Nav_Menus',
 					'Mega_Menu_Widget_Manager',
@@ -426,6 +427,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 				'Mega_Menu_Widget_Elementor_Template' => MEGAMENU_PATH . 'integration/elementor/widget-elementor-template.class.php',
 				'Mega_Menu_toggle_Blocks'             => MEGAMENU_PATH . 'classes/toggle-blocks.class.php',
 				'Mega_Menu_Admin_Notices'             => MEGAMENU_PATH . 'classes/admin-notices.class.php',
+				'Mega_Menu_Admin_Icons'               => MEGAMENU_PATH . 'classes/admin-icons.class.php',
 				'Mega_Menu_SVG_Icons'                 => MEGAMENU_PATH . 'classes/icons/svg.php',
 				'Mega_Menu_Dashicons'                 => MEGAMENU_PATH . 'classes/icons/dashicons.php',
 				'Mega_Menu_Material_Symbols'          => MEGAMENU_PATH . 'classes/icons/material-symbols.php',
@@ -1188,7 +1190,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 						$item->classes[] = 'has-icon';
 					}
 
-					if ( ! $use_flex && 'disabled' !== $item->megamenu_settings['icon'] && isset( $item->megamenu_settings['icon_position'] ) ) {
+					if ( 'disabled' !== $item->megamenu_settings['icon'] && isset( $item->megamenu_settings['icon_position'] ) && ( ! $use_flex || 'left' !== $item->megamenu_settings['icon_position'] ) ) {
 						$item->classes[] = 'icon-' . $item->megamenu_settings['icon_position'];
 					}
 
