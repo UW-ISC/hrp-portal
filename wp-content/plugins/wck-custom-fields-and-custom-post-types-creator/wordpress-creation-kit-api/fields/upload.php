@@ -15,29 +15,33 @@ else
 $upload_input_id = str_replace( '-', '_', Wordpress_Creation_Kit::wck_generate_slug( $meta . $slug_from ) );
 $upload_info_div_id = str_replace( '-', '_', Wordpress_Creation_Kit::wck_generate_slug( $meta .'_info_container_'. $slug_from ) );
  
+/* the value holds attachment ids separated by comma, keep only valid ids */
+$value = is_scalar( $value ) ? implode( ',', array_filter( array_map( 'absint', explode( ',', (string) $value ) ) ) ) : '';
+
 /* hidden input that will hold the attachment id */
-$element.= '<input id="'. esc_attr( $upload_input_id ) .'" type="hidden" size="36" name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" value="'. $value .'" class="mb-text-input mb-field"/>';
+$element.= '<input id="'. esc_attr( $upload_input_id ) .'" type="hidden" size="36" name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" value="'. esc_attr( $value ) .'" class="mb-text-input mb-field"/>';
 
 /* container for the image preview (or file ico) and name and file type */
 if( !empty ( $value ) ){
 	/* it can hold multiple attachments separated by comma */
 	$values = explode( ',', $value );
 	foreach( $values as $value ){
+		$value = absint( $value );
 		$file_src = wp_get_attachment_url($value);
 		$thumbnail = wp_get_attachment_image( $value, array( 80, 80 ), true );
-		$file_name = get_the_title( $value );			
-		$file_type = get_post_mime_type( $value );		
+		$file_name = get_the_title( $value );
+		$file_type = get_post_mime_type( $value );
 		$attachment_url = admin_url( "post.php?post={$value}&action=edit" );
 
-		$element.= '<div id="'.esc_attr( $upload_info_div_id ).'_info_container" class="upload-field-details" data-attachment_id="'. $value .'">';			
-		$element.= '<div class="file-thumb">';		
-			$element.= "<a href='{$attachment_url}' target='_blank' class='wck-attachment-link'>" . $thumbnail . "</a>";
-		$element.= '</div>';			
-		
-		$element.= '<p><span class="file-name">';			
-			$element.= $file_name;
-		$element.= '</span><span class="file-type">';			
-			$element.= $file_type;
+		$element.= '<div id="'.esc_attr( $upload_info_div_id ).'_info_container" class="upload-field-details" data-attachment_id="'. esc_attr( $value ) .'">';
+		$element.= '<div class="file-thumb">';
+			$element.= '<a href="'. esc_url( $attachment_url ) .'" target="_blank" class="wck-attachment-link">' . $thumbnail . '</a>';
+		$element.= '</div>';
+
+		$element.= '<p><span class="file-name">';
+			$element.= esc_html( $file_name );
+		$element.= '</span><span class="file-type">';
+			$element.= esc_html( $file_type );
 		$element.= '</span>';
 		if( !empty ( $value ) )
 			$element.= '<span class="wck-remove-upload">'.__( 'Remove', 'core' ).'</span>';
@@ -45,12 +49,12 @@ if( !empty ( $value ) ){
 	}
 }
 
-$element.= '<a href="#" class="button wck_upload_button" id="upload_'. esc_attr(Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'_button" data-uploader_title="'. $details['title'] .'" data-uploader_button_text="Select Files" data-upload_input="'.esc_attr( $upload_input_id ).'" ';
+$element.= '<a href="#" class="button wck_upload_button" id="upload_'. esc_attr(Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'_button" data-uploader_title="'. esc_attr( $details['title'] ) .'" data-uploader_button_text="Select Files" data-upload_input="'.esc_attr( $upload_input_id ).'" ';
 if( is_user_logged_in() )
 	$element.= 'data-uploader_logged_in="true"';
 	
 if( !empty( $post_id ) )
-	$element.= ' data-post_id="'. $post_id .'"';
+	$element.= ' data-post_id="'. esc_attr( $post_id ) .'"';
 	
 if( !empty( $details['multiple_upload'] ) ){
 	if( $details['multiple_upload'] == 'true' )
@@ -70,7 +74,7 @@ else
 	$element.= ' data-upload_in_backend="false"';
 
 if( !empty( $details['allowed_types'] ) )
-	$element.= ' data-allowed_types="'. $details['allowed_types'] .'"';
-	
-$element.= '>'. __( 'Upload ', 'wck' ) . $details['title'] .'</a>';
+	$element.= ' data-allowed_types="'. esc_attr( $details['allowed_types'] ) .'"';
+
+$element.= '>'. esc_html__( 'Upload ', 'wck' ) . esc_html( $details['title'] ) .'</a>';
 ?>

@@ -25,6 +25,15 @@ class GF_Field_Phone extends GF_Field {
 	public $type = 'phone';
 
 	/**
+	 * Whether the field can be used in a repeater.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @var bool
+	 */
+	public $repeatable = true;
+
+	/**
 	 * Whether this field allows links/URLs in the value.
 	 *
 	 * @since 3.1.0
@@ -553,7 +562,7 @@ class GF_Field_Phone extends GF_Field {
 			esc_attr( $button_id ),                             // 3: button id
 			esc_attr( $dropdown_id ),                           // 4: aria-controls
 			esc_attr( $i18n['selectCountryAriaLabel'] ),        // 5: aria-label
-			$disabled_text,                                     // 6: disabled
+			$disabled_text . ' ' . $tabindex,                   // 6: disabled
 			esc_attr( $country_iso ),                           // 7: flag icon class
 			$dial_code_display,                                 // 8: dial code with + prefix or empty
 			$country_sublabel_below,                            // 9: country sublabel below
@@ -898,24 +907,22 @@ class GF_Field_Phone extends GF_Field {
 	}
 
 	/**
-	 * Gets the value to be used when exporting the entry.
+	 * Format a single Phone field value for export.
 	 *
-	 * @since: next
-	 * @access public
+	 * @since 3.2.0
 	 *
-	 * @param array  $entry    The Entry Object.
-	 * @param string $input_id The field or input ID.
-	 * @param bool   $use_text Whether to use the text value.
-	 * @param bool   $is_csv   Whether the export is for CSV.
+	 * @param mixed      $value    The raw value for $input_id.
+	 * @param array      $entry    The entry currently being processed.
+	 * @param string|int $input_id The field or input ID.
+	 * @param bool       $use_text Not used.
+	 * @param bool       $is_csv   Not used.
 	 *
 	 * @return string
 	 */
-	public function get_value_export( $entry, $input_id = '', $use_text = false, $is_csv = false ) {
-		if ( empty( $input_id ) ) {
-			$input_id = $this->id;
+	protected function format_value_export( $value, $entry, $input_id = '', $use_text = false, $is_csv = false ) {
+		if ( is_array( $value ) ) {
+			return '';
 		}
-
-		$value = rgar( $entry, $input_id );
 
 		if ( $this->phoneFormat == 'formatted' && ! empty( $value ) && GFCommon::is_json( $value ) ) {
 			$decoded = $this->to_array( $value );
@@ -924,7 +931,7 @@ class GF_Field_Phone extends GF_Field {
 			}
 		}
 
-		return $value;
+		return (string) $value;
 	}
 
 	/**

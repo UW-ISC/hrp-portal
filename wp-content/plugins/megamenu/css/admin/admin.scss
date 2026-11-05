@@ -1,5 +1,86 @@
 @use 'sass:math' as math;
 @use 'sass:color' as color;
+@use 'sass:selector' as selector;
+@use 'sass:string' as string;
+@use 'sass:meta' as meta;
+
+// WordPress 7.2+ icons (classes/admin-icons.class.php): on the plugin's screens the body gets `megamenu-wp-icons` and
+// each icon is a CSS variable holding its SVG (--megamenu-icon-{key}), drawn here as a mask in the text colour.
+// Before 7.2 there's neither, and the dashicons stay.
+@mixin wp-icon-mask($key, $size: contain) {
+	content: "";
+	background-color: currentColor;
+	-webkit-mask: var(--megamenu-icon-#{$key}) center / #{$size} no-repeat;
+	mask: var(--megamenu-icon-#{$key}) center / #{$size} no-repeat;
+}
+
+// For a dashicon drawn by a ::before / ::after rule: the same element, with the icon instead, on 7.2+. The new icons
+// are drawn inside a 24px box with 4px of space around them, so the box is a little larger than the font size to
+// match the dashicon's size. Pass $display: null where the rule shows and hides the icon itself (e.g. a spinner).
+// $tab: an icon beside a tab's label. The tab is a flex row centring it on the label (megamenu-dialog-side-tab); its
+// box is kept within the line height so the tab keeps its height.
+@mixin wp-icon($key, $display: inline-block, $tab: false) {
+	@if not string.index(meta.inspect(&), 'body.maxmegamenu-admin') {
+		@error 'wp-icon() needs a selector inside body.maxmegamenu-admin: #{&}';
+	}
+
+	@at-root #{selector.replace(&, 'body.maxmegamenu-admin', 'body.maxmegamenu-admin.megamenu-wp-icons')} {
+		@include wp-icon-mask($key);
+		display: $display;
+		width: 1.25em;
+		height: 1.25em;
+		font-family: inherit;
+
+		@if $tab {
+			margin-top: -0.15em;
+			margin-bottom: -0.15em;
+		}
+	}
+}
+
+// Dashicon spans in the plugin's own markup (PHP and JS): dashicon => icon key. Only inside the plugin's elements, so
+// WordPress's own dashicons on Appearance > Menus are left alone.
+$wp-icon-dashicons: (
+	'admin-generic': 'settings',
+	'arrow-down-alt2': 'chevron-down',
+	'arrow-left-alt2': 'chevron-left',
+	'arrow-right-alt': 'arrow-right',
+	'arrow-right-alt2': 'chevron-right',
+	'desktop': 'desktop',
+	'download': 'download',
+	'edit': 'pencil',
+	'external': 'external',
+	'fullscreen-alt': 'fullscreen',
+	'fullscreen-exit-alt': 'fullscreen-exit',
+	'images-alt2': 'duplicate',
+	'location': 'location',
+	'menu-alt2': 'menu',
+	'no-alt': 'close',
+	'plus': 'plus',
+	'plus-alt2': 'plus',
+	'smartphone': 'mobile',
+	'trash': 'trash',
+	'update': 'update',
+	'update-alt': 'update',
+	'upload': 'upload',
+	'visibility': 'seen',
+	'warning': 'caution',
+	'welcome-add-page': 'plus',
+	'yes': 'check',
+);
+
+body.maxmegamenu-admin.megamenu-wp-icons {
+	@each $dashicon, $key in $wp-icon-dashicons {
+		:is([class*="megamenu"], [class*="mega-"]) .dashicons-#{$dashicon}::before,
+		.dashicons-#{$dashicon}:is([class*="megamenu"], [class*="mega-"])::before {
+			// the span's own box, with the icon drawn 25% larger inside it (its empty margin is what gets cropped)
+			@include wp-icon-mask($key, 125%);
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
 
 // Megamenu admin neutral ramp (aligned with WP admin neutrals; override per site/theme via `:root`).
 :root {
@@ -383,7 +464,10 @@ $mega-admin-icon-glyph: 24px;
 	-webkit-appearance: none;
 	margin: 0;
 	width: 100%;
-	display: block;
+	// the icon and label in a row, the icon centred on the label, as in the block editor's components
+	// ( `vertical-align: middle` centres it on the lowercase letters, a pixel low)
+	display: flex;
+	align-items: center;
 	padding: 10px 12px;
 	box-sizing: border-box;
 	position: relative;
@@ -944,6 +1028,7 @@ body.maxmegamenu-admin .megamenu_outer_wrap table {
 				&:before {
 					font: 400 20px/1 dashicons;
 					content: "\f348";
+					@include wp-icon('info');
 					speak: none;
 					padding: 0;
 					margin-right: 6px;
@@ -2017,6 +2102,7 @@ body.maxmegamenu-admin.nav-menus-php {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		content: "\f230"; // dashicons-location
+		@include wp-icon('location');
 	}
 
 	.megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail {
@@ -3182,6 +3268,7 @@ body.maxmegamenu-admin.nav-menus-php {
 				.mega-widget-action {
 					&::after {
 						content: '\f142';
+						@include wp-icon('chevron-up');
 					}
 				}
 			}
@@ -3235,6 +3322,7 @@ body.maxmegamenu-admin.nav-menus-php {
 						-moz-osx-font-smoothing: grayscale;
 						margin-left: 5px;
 						content: '\f463';
+						@include wp-icon('update', $display: null);
 						animation: mm-rotation 2s infinite linear;
 						vertical-align: middle;
 					}
@@ -3258,6 +3346,7 @@ body.maxmegamenu-admin.nav-menus-php {
 							-moz-osx-font-smoothing: grayscale;
 							margin-right: 2px;
 							content: "\f333";
+							@include wp-icon('menu');
 							vertical-align: middle;
 							top: -1px;
 							position: relative;
@@ -3432,18 +3521,21 @@ body.maxmegamenu-admin.nav-menus-php {
 			.mega-widget-expand {
 				&::after {
 					content: '\f345';
+					@include wp-icon('chevron-right');
 				}
 			}
 
 			.mega-widget-contract {
 				&::after {
 					content: '\f341';
+					@include wp-icon('chevron-left');
 				}
 			}
 
 			.mega-widget-action {
 				&::after {
 					content: '\f107';
+					@include wp-icon('tool');
 					margin: 0;
 				}
 			}
@@ -3795,6 +3887,7 @@ body.maxmegamenu-admin.nav-menus-php {
 		&:before {
 			font-family: dashicons;
 			content: "\f111"; // dashicons-admin-generic
+			@include wp-icon('settings');
 			font-size: 12px;
 			width: 12px;
 			height: 12px;
@@ -4325,15 +4418,21 @@ body.maxmegamenu-admin {
 			padding: 0;
 		}
 
-		// Footer bar: location settings (Save), preview (viewport). Menu item modal has no footer row.
+		// Menu item modal footer: one Save for every tab (dialog-menu-item-settings.js).
+		// The tabs' own Save buttons (free and Pro forms): the footer's Save submits those forms instead.
+		&.megamenu-menu-item-dialog .megamenu_content form p.submit {
+			display: none;
+		}
+
+		// Footer bar: location settings (Save), preview (viewport), menu item settings (Save + status).
 		&__footer {
 			flex: 0 0 auto;
 			display: flex;
 			align-items: center;
 			justify-content: flex-end;
 			gap: 12px;
-			padding: 24px;
-			border-top: 0;
+			padding: 16px 24px;
+			border-top: 1px solid var(--light-gray);
 
 			p.submit {
 				margin: 0;
@@ -4453,26 +4552,32 @@ body.maxmegamenu-admin {
 			.mega-tablist {
 				button.megamenu-dialog-tab.mega_menu:before {
 					content: "\f116";
+					@include wp-icon('block-table', $tab: true);
 				}
 
 				button.megamenu-dialog-tab.general_settings:before {
 					content: "\f111";
+					@include wp-icon('settings', $tab: true);
 				}
 
 				button.megamenu-dialog-tab.menu_icon:before {
 					content: "\f128";
+					@include wp-icon('star', $tab: true);
 				}
 
 				button.megamenu-dialog-tab.styling:before {
 					content: "\f540";
+					@include wp-icon('styles', $tab: true);
 				}
 
 				button.megamenu-dialog-tab.roles:before {
 					content: "\f110";
+					@include wp-icon('people', $tab: true);
 				}
 
 				button.megamenu-dialog-tab.badge:before {
 					content: "\f313"; // dashicons-awards
+					@include wp-icon('tag', $tab: true);
 				}
 
 				button.megamenu-dialog-tab .mm-tab-dirty-indicator {
@@ -5111,34 +5216,42 @@ body.maxmegamenu-admin {
 				.mega-tablist button {
 					&::before {
 						content: "\f111";
+						@include wp-icon('settings', $tab: true);
 					}
 
 					&[data-tab-section="general"]::before {
 						content: "\f472";
+						@include wp-icon('desktop', $tab: true);
 					}
 
 					&[data-tab-section="theme"]::before {
 						content: "\f100";
+						@include wp-icon('brush', $tab: true);
 					}
 
 					&[data-tab-section="advanced"]::before {
 						content: "\f107";
+						@include wp-icon('tool', $tab: true);
 					}
 
 					&[data-tab-section="output_options"]::before {
 						content: "\f177";
+						@include wp-icon('seen', $tab: true);
 					}
 
 					&[data-tab-section="sticky"]::before {
 						content: "\f103";
+						@include wp-icon('pin', $tab: true);
 					}
 
 					&[data-tab-section="overlay"]::before {
 						content: "\f188";
+						@include wp-icon('fullscreen', $tab: true);
 					}
 
 					&[data-tab-section="mobile"]::before {
 						content: "\f470";
+						@include wp-icon('mobile', $tab: true);
 					}
 				}
 
@@ -5203,6 +5316,7 @@ body.maxmegamenu-admin {
 			vertical-align: middle;
 			margin-right: 8px;
 			content: '\f463';
+			@include wp-icon('update', $tab: true);
 			font-size: 17px;
 			width: 18px;
 			transition: color 0.15s ease;
@@ -5818,11 +5932,10 @@ body.maxmegamenu-admin {
 				margin-bottom: 10px;
 			}
 
-			.megamenu_header_icon {
-				flex-shrink: 0;
-				width: 28px;
-				height: 28px;
-				object-fit: contain;
+			.megamenu_header_logo {
+				display: block;
+				width: auto;
+				height: 44px;
 			}
 
 			.megamenu_header_title_row h2 {
@@ -5948,6 +6061,23 @@ body.maxmegamenu-admin {
 				&.license a::before,
 				&.licence a::before {
 					content: '\f112';
+				}
+
+				// WordPress 7.2+: an icon from the WordPress icon library (page.php) instead of the dashicon
+				&.has-icon a::before {
+					display: none;
+				}
+
+				a > svg {
+					flex-shrink: 0;
+					margin: -4px 3px -4px -3px;
+					color: var(--gray);
+					vertical-align: middle;
+					transition: color 0.15s ease;
+				}
+
+				a.is-active > svg {
+					color: var(--wp-admin-theme-color);
 				}
 			}
 		}

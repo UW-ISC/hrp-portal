@@ -26,6 +26,15 @@ class GF_Field_Time extends GF_Field {
 	public $type = 'time';
 
 	/**
+	 * Whether the field can be used in a repeater.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @var bool
+	 */
+	public $repeatable = true;
+
+	/**
 	 * Sets the title of the field to be used in the form editor.
 	 *
 	 * @since  Unknown

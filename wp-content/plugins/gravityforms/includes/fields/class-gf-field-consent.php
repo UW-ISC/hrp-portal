@@ -33,13 +33,13 @@ class GF_Field_Consent extends GF_Field {
 	public $duplicatable = true;
 
 	/**
-	 * Whether the field can be used in a repeater. Consent field is currently not supported in repeaters.
+	 * Whether the field can be used in a repeater.
 	 *
-	 * @since 3.0.0
+	 * @since 3.2.0
 	 *
 	 * @var bool
 	 */
-	public $repeatable = false;
+	public $repeatable = true;
 
 	/**
 	 * Checked indicator URL.
@@ -343,6 +343,23 @@ class GF_Field_Consent extends GF_Field {
 	}
 
 	/**
+	 * Determines if the Consent checkbox has been checked.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param string|array $value The field value.
+	 *
+	 * @return bool
+	 */
+	public function is_value_empty( $value ) {
+		if ( is_array( $value ) ) {
+			$value = rgar( $value, $this->id . '.1' );
+		}
+
+		return rgblank( $value );
+	}
+
+	/**
 	 * Sanitize and format the value before it is saved to the Entry Object.
 	 *
 	 * @since 3.0.0
@@ -472,6 +489,36 @@ class GF_Field_Consent extends GF_Field {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Format a consent value for export.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param mixed      $value    The raw value for $input_id, or an array of input values for the whole field.
+	 * @param array      $entry    The entry currently being processed.
+	 * @param string|int $input_id The field or input ID.
+	 * @param bool       $use_text When processing choice based fields should the choice text be returned instead of the value.
+	 * @param bool       $is_csv   Is the value going to be used in the .csv entries export?
+	 *
+	 * @return string
+	 */
+	protected function format_value_export( $value, $entry, $input_id = '', $use_text = false, $is_csv = false ) {
+		if ( ! is_array( $value ) ) {
+			return (string) $value;
+		}
+
+		$parts = array();
+		foreach ( $this->get_entry_inputs() as $input ) {
+			$id        = (string) rgar( $input, 'id' );
+			$formatted = $this->get_value_export( $value, $id, $use_text, $is_csv );
+			if ( $formatted !== '' ) {
+				$parts[] = $formatted;
+			}
+		}
+
+		return implode( ', ', $parts );
 	}
 
 	/**

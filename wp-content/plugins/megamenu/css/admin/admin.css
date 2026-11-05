@@ -1,4 +1,265 @@
 @charset "UTF-8";
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-admin-generic::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-admin-generic:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-settings) center/125% no-repeat;
+  mask: var(--megamenu-icon-settings) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-arrow-down-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-arrow-down-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-down) center/125% no-repeat;
+  mask: var(--megamenu-icon-chevron-down) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-arrow-left-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-arrow-left-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-left) center/125% no-repeat;
+  mask: var(--megamenu-icon-chevron-left) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-arrow-right-alt::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-arrow-right-alt:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-arrow-right) center/125% no-repeat;
+  mask: var(--megamenu-icon-arrow-right) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-arrow-right-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-arrow-right-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-right) center/125% no-repeat;
+  mask: var(--megamenu-icon-chevron-right) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-desktop::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-desktop:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-desktop) center/125% no-repeat;
+  mask: var(--megamenu-icon-desktop) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-download::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-download:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-download) center/125% no-repeat;
+  mask: var(--megamenu-icon-download) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-edit::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-edit:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-pencil) center/125% no-repeat;
+  mask: var(--megamenu-icon-pencil) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-external::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-external:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-external) center/125% no-repeat;
+  mask: var(--megamenu-icon-external) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-fullscreen-alt::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-fullscreen-alt:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-fullscreen) center/125% no-repeat;
+  mask: var(--megamenu-icon-fullscreen) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-fullscreen-exit-alt::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-fullscreen-exit-alt:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-fullscreen-exit) center/125% no-repeat;
+  mask: var(--megamenu-icon-fullscreen-exit) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-images-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-images-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-duplicate) center/125% no-repeat;
+  mask: var(--megamenu-icon-duplicate) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-location::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-location:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-location) center/125% no-repeat;
+  mask: var(--megamenu-icon-location) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-menu-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-menu-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-menu) center/125% no-repeat;
+  mask: var(--megamenu-icon-menu) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-no-alt::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-no-alt:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-close) center/125% no-repeat;
+  mask: var(--megamenu-icon-close) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-plus::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-plus:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-plus-alt2::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-plus-alt2:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-smartphone::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-smartphone:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-mobile) center/125% no-repeat;
+  mask: var(--megamenu-icon-mobile) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-trash::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-trash:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-trash) center/125% no-repeat;
+  mask: var(--megamenu-icon-trash) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-update::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-update:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-update) center/125% no-repeat;
+  mask: var(--megamenu-icon-update) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-update-alt::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-update-alt:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-update) center/125% no-repeat;
+  mask: var(--megamenu-icon-update) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-upload::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-upload:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-upload) center/125% no-repeat;
+  mask: var(--megamenu-icon-upload) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-visibility::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-visibility:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-seen) center/125% no-repeat;
+  mask: var(--megamenu-icon-seen) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-warning::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-warning:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-caution) center/125% no-repeat;
+  mask: var(--megamenu-icon-caution) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-welcome-add-page::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-welcome-add-page:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  mask: var(--megamenu-icon-plus) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+body.maxmegamenu-admin.megamenu-wp-icons :is([class*=megamenu], [class*=mega-]) .dashicons-yes::before,
+body.maxmegamenu-admin.megamenu-wp-icons .dashicons-yes:is([class*=megamenu], [class*=mega-])::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-check) center/125% no-repeat;
+  mask: var(--megamenu-icon-check) center/125% no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 :root {
   --wp--preset--font-family--material-symbols: "Material Symbols", monospace;
   --black: #1e1e1e; /* WP Base black */
@@ -217,6 +478,17 @@ body.maxmegamenu-admin .megamenu_outer_wrap table td.mega-value .mega-info:befor
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu_outer_wrap table td.mega-value .mega-info:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-info) center/contain no-repeat;
+  mask: var(--megamenu-icon-info) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin .megamenu_outer_wrap table td.mega-value #megamenu-theme-textarea-custom_css {
   flex: 1 1 100%;
   width: 100%;
@@ -1268,6 +1540,17 @@ body.maxmegamenu-admin.nav-menus-php .menu-theme-locations .menu-settings-group-
   -moz-osx-font-smoothing: grayscale;
   content: "\f230";
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .menu-theme-locations .menu-settings-group-name::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-location) center/contain no-repeat;
+  mask: var(--megamenu-icon-location) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail {
   flex: 1 1 auto;
   width: 100%;
@@ -2279,6 +2562,17 @@ body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget.open .mega-widget-action::after {
   content: "\f142";
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget.open .mega-widget-action::after {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-up) center/contain no-repeat;
+  mask: var(--megamenu-icon-chevron-up) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-top {
   display: flex;
   flex-direction: row;
@@ -2325,6 +2619,16 @@ body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_
   animation: mm-rotation 2s infinite linear;
   vertical-align: middle;
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-title h4:after {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-update) center/contain no-repeat;
+  mask: var(--megamenu-icon-update) center/contain no-repeat;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-title h4.loading:after {
   display: inline-block;
 }
@@ -2340,6 +2644,17 @@ body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_
   top: -1px;
   position: relative;
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget[data-type=menu_item] .mega-widget-title h4:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-menu) center/contain no-repeat;
+  mask: var(--megamenu-icon-menu) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget[data-type=menu_item] form {
   display: flex;
   flex-direction: column;
@@ -2531,13 +2846,46 @@ body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-expand::after {
   content: "\f345";
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-expand::after {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-right) center/contain no-repeat;
+  mask: var(--megamenu-icon-chevron-right) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-contract::after {
   content: "\f341";
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-contract::after {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-chevron-left) center/contain no-repeat;
+  mask: var(--megamenu-icon-chevron-left) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-action::after {
   content: "\f107";
   margin: 0;
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-action::after {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-tool) center/contain no-repeat;
+  mask: var(--megamenu-icon-tool) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu-menu-item-dialog .megamenu_outer_wrap.megamenu-dialog-rail .megamenu_content.mega_menu .mega-widget-option.disabled:hover {
   color: var(--gray);
 }
@@ -3073,6 +3421,17 @@ body.maxmegamenu-admin.nav-menus-php .megamenu_launch.button.button-primary.butt
   display: inline-block;
   flex-shrink: 0;
 }
+body.nav-menus-php.maxmegamenu-admin.megamenu-wp-icons .megamenu_launch.button.button-primary.button-small:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+}
+
 body.maxmegamenu-admin.nav-menus-php .megamenu_launch.button.button-primary.button-small.megamenu_disabled:before, body.maxmegamenu-admin.nav-menus-php .megamenu_launch.button.button-primary.button-small[aria-disabled=true]:before {
   color: var(--medium-gray);
 }
@@ -3516,14 +3875,17 @@ body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog b
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog body.maxmegamenu-admin .megamenu-admin-modal__body {
   padding: 0;
 }
+body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu_content form p.submit {
+  display: none;
+}
 body.maxmegamenu-admin .megamenu-admin-modal__footer {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 24px;
-  border-top: 0;
+  padding: 16px 24px;
+  border-top: 1px solid var(--light-gray);
 }
 body.maxmegamenu-admin .megamenu-admin-modal__footer p.submit {
   margin: 0;
@@ -3623,21 +3985,99 @@ body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.mega_menu:before {
   content: "\f116";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.mega_menu:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-block-table) center/contain no-repeat;
+  mask: var(--megamenu-icon-block-table) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.general_settings:before {
   content: "\f111";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.general_settings:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.menu_icon:before {
   content: "\f128";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.menu_icon:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-star) center/contain no-repeat;
+  mask: var(--megamenu-icon-star) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.styling:before {
   content: "\f540";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.styling:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-styles) center/contain no-repeat;
+  mask: var(--megamenu-icon-styles) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.roles:before {
   content: "\f110";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.roles:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-people) center/contain no-repeat;
+  mask: var(--megamenu-icon-people) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.badge:before {
   content: "\f313";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab.badge:before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-tag) center/contain no-repeat;
+  mask: var(--megamenu-icon-tag) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-menu-item-dialog .megamenu-admin-modal__body .megamenu_outer_wrap .mega-tablist button.megamenu-dialog-tab .mm-tab-dirty-indicator {
   display: inline-flex;
   align-items: center;
@@ -4217,27 +4657,131 @@ body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button::before {
   content: "\f111";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  mask: var(--megamenu-icon-settings) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=general]::before {
   content: "\f472";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=general]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-desktop) center/contain no-repeat;
+  mask: var(--megamenu-icon-desktop) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=theme]::before {
   content: "\f100";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=theme]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-brush) center/contain no-repeat;
+  mask: var(--megamenu-icon-brush) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=advanced]::before {
   content: "\f107";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=advanced]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-tool) center/contain no-repeat;
+  mask: var(--megamenu-icon-tool) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=output_options]::before {
   content: "\f177";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=output_options]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-seen) center/contain no-repeat;
+  mask: var(--megamenu-icon-seen) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=sticky]::before {
   content: "\f103";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=sticky]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-pin) center/contain no-repeat;
+  mask: var(--megamenu-icon-pin) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=overlay]::before {
   content: "\f188";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=overlay]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-fullscreen) center/contain no-repeat;
+  mask: var(--megamenu-icon-fullscreen) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=mobile]::before {
   content: "\f470";
 }
+body.maxmegamenu-admin.megamenu-wp-icons .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .mega-tablist button[data-tab-section=mobile]::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-mobile) center/contain no-repeat;
+  mask: var(--megamenu-icon-mobile) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin .megamenu-admin-modal.megamenu-location-settings-dialog .megamenu-admin-modal__body .megamenu-location-settings-dialog__surface .megamenu-dialog-panels {
   padding: 10px 32px 32px;
 }
@@ -4274,7 +4818,8 @@ body.maxmegamenu-admin .mega-tablist button {
   -webkit-appearance: none;
   margin: 0;
   width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 10px 12px;
   box-sizing: border-box;
   position: relative;
@@ -4329,6 +4874,19 @@ body.maxmegamenu-admin .mega-tablist button::before {
   width: 18px;
   transition: color 0.15s ease;
 }
+body.maxmegamenu-admin.megamenu-wp-icons .mega-tablist button::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask: var(--megamenu-icon-update) center/contain no-repeat;
+  mask: var(--megamenu-icon-update) center/contain no-repeat;
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  font-family: inherit;
+  margin-top: -0.15em;
+  margin-bottom: -0.15em;
+}
+
 body.maxmegamenu-admin:not(.nav-menus-php) #wpbody-content > .wrap {
   margin-block-start: 0;
   margin-inline: 0;
@@ -4887,11 +5445,10 @@ body.maxmegamenu-admin .megamenu_header .megamenu_header_left .megamenu_header_t
   gap: 10px;
   margin-bottom: 10px;
 }
-body.maxmegamenu-admin .megamenu_header .megamenu_header_left .megamenu_header_icon {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
+body.maxmegamenu-admin .megamenu_header .megamenu_header_left .megamenu_header_logo {
+  display: block;
+  width: auto;
+  height: 44px;
 }
 body.maxmegamenu-admin .megamenu_header .megamenu_header_left .megamenu_header_title_row h2 {
   margin: 0;
@@ -4953,7 +5510,8 @@ body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.m
   -webkit-appearance: none;
   margin: 0;
   width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 10px 12px;
   box-sizing: border-box;
   position: relative;
@@ -5045,6 +5603,19 @@ body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.m
 }
 body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.mega-page-navigation ul li.license a::before, body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.mega-page-navigation ul li.licence a::before {
   content: "\f112";
+}
+body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.mega-page-navigation ul li.has-icon a::before {
+  display: none;
+}
+body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.mega-page-navigation ul li a > svg {
+  flex-shrink: 0;
+  margin: -4px 3px -4px -3px;
+  color: var(--gray);
+  vertical-align: middle;
+  transition: color 0.15s ease;
+}
+body.maxmegamenu-admin .megamenu_wrap.megamenu-dialog-rail > .mega-tablist nav.mega-page-navigation ul li a.is-active > svg {
+  color: var(--wp-admin-theme-color);
 }
 body.maxmegamenu-admin h3.first {
   margin-top: 0;

@@ -19,15 +19,6 @@ class GF_Field_CreditCard extends GF_Field {
 	public $duplicatable = false;
 
 	/**
-	 * Whether the field can be used in a repeater.
-	 *
-	 * @since 3.0
-	 *
-	 * @var bool
-	 */
-	public $repeatable = false;
-
-	/**
 	 * Indicates the field is used to capture payments.
 	 *
 	 * @since 2.9.23
