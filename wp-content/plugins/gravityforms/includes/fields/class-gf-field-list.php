@@ -25,6 +25,15 @@ class GF_Field_List extends GF_Field {
 	public $type = 'list';
 
 	/**
+	 * Whether the field can be used in a repeater.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @var bool
+	 */
+	public $repeatable = true;
+
+	/**
 	 * Sets the field title to be displayed in the form editor.
 	 *
 	 * @since  Unknown
@@ -1002,35 +1011,62 @@ class GF_Field_List extends GF_Field {
 	}
 
 	/**
-	 * Gets the field value, formatted for exports. For CSV export return an array.
+	 * Gets the field value, formatted for exports and feed mapping.
 	 *
 	 * @since  Unknown
-	 * @access public
+	 * @since 3.2.0  Delegates formatting to format_value_export(); looks up nested values by field id.
 	 *
-	 * @used-by GFExport::start_export()
-	 * @used-by GFAddOn::get_field_value()
-	 * @uses    GF_Field_List::$id
-	 * @uses    GF_Field_List::$enableColumns
-	 * @uses    GF_Field_List::$choices
-	 * @uses    GFCommon::implode_non_blank()
-	 *
-	 * @param array  $entry    The Entry Object.
-	 * @param string $input_id Input ID to export. If not defined, uses the current input ID. Defaults to empty string.
-	 * @param bool   $use_text Not used. Defaults to false.
-	 * @param bool   $is_csv   Is the value going to be used in the CSV export? Defaults to false.
+	 * @param array      $entry    The Entry Object.
+	 * @param string|int $input_id Input ID to export. Column exports use "{field_id}.{column}".
+	 * @param bool       $use_text Not used. Defaults to false.
+	 * @param bool       $is_csv   Is the value going to be used in the CSV export? Defaults to false.
 	 *
 	 * @return string|array
 	 */
 	public function get_value_export( $entry, $input_id = '', $use_text = false, $is_csv = false ) {
 		if ( empty( $input_id ) ) {
 			$input_id = $this->id;
-		} elseif ( ! ctype_digit( $input_id ) ) {
-			$field_id_array = explode( '.', $input_id );
-			$input_id       = rgar( $field_id_array, 0 );
-			$column_num     = rgar( $field_id_array, 1 );
 		}
 
-		$value = rgar( $entry, $input_id );
+		// List field data is stored under a field_id key, so we need to use the field_id to retrieve the data.
+		$field_id = explode( '.', $input_id )[0];
+
+		if ( $this->has_nested_value( $entry, $field_id ) ) {
+			$values = array();
+			foreach ( $this->get_nested_values( $entry, $this->nestingPath, $field_id ) as $value ) {
+				$formatted = $this->format_value_export( $value, $entry, $input_id, $use_text, $is_csv );
+				if ( is_array( $formatted ) || rgblank( $formatted ) ) {
+					continue;
+				}
+				$values[] = (string) $formatted;
+			}
+
+			return implode( ', ', $values );
+		}
+
+		return $this->format_value_export( $this->get_input_values( $entry, $field_id ), $entry, $input_id, $use_text, $is_csv );
+	}
+
+	/**
+	 * Format a single List field value for export.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param mixed      $value    The raw value for the list field (serialized string or unserialized rows).
+	 * @param array      $entry    The entry currently being processed.
+	 * @param string|int $input_id The field or input ID. Column exports use "{field_id}.{column}".
+	 * @param bool       $use_text Not used.
+	 * @param bool       $is_csv   Is the value going to be used in the .csv entries export?
+	 *
+	 * @return string|array
+	 */
+	protected function format_value_export( $value, $entry, $input_id = '', $use_text = false, $is_csv = false ) {
+		if ( empty( $input_id ) ) {
+			$input_id = $this->id;
+		}
+
+		$column_num = explode( '.', $input_id )[1] ?? null;
+
 		$value = GFCommon::maybe_unserialize( $value );
 
 		if ( empty( $value ) || $is_csv ) {
@@ -1039,7 +1075,7 @@ class GF_Field_List extends GF_Field {
 
 		$list_values = $column_values = $value;
 
-		if ( isset( $column_num ) && is_numeric( $column_num ) && $this->enableColumns ) {
+		if ( is_numeric( $column_num ) && $this->enableColumns ) {
 			$column        = rgars( $this->choices, "{$column_num}/text" );
 			$column_values = array();
 			foreach ( $list_values as $value ) {

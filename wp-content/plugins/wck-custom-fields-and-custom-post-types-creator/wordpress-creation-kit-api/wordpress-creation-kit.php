@@ -513,13 +513,15 @@ class Wordpress_Creation_Kit{
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( $meta );
 
+		$reorder_nonce = wp_create_nonce( 'wck-reorder-meta' );
+
 		$list = '';	
 		$list .= '<table id="container_'.esc_attr($meta).'" class="mb-table-container widefat';
 		
 		if( $this->args['single'] ) $list .= ' single';
 		if( !$this->args['sortable'] ) $list .= ' not-sortable';
 		
-		$list .= '" post="'.esc_attr($id).'">';		
+		$list .= '" post="'.esc_attr($id).'" data-reorder-nonce="'.esc_attr( $reorder_nonce ).'">';		
 		
 		
 		if( !empty( $results ) ){
@@ -846,10 +848,13 @@ class Wordpress_Creation_Kit{
 			$return = false;
 
 		// Meta is post related
-		if( $context == 'post_meta' && is_user_logged_in() ) {
-			
+		if( $context == 'post_meta' ) {
+
+			if( !is_user_logged_in() )
+				$return = false;
+
 			// Current user must be able to edit posts
-			if( !current_user_can( 'edit_posts' ) )
+			elseif( !current_user_can( 'edit_posts' ) )
 				$return = false;
 
 			// If the user can't edit others posts the current post must be his/hers
@@ -1240,6 +1245,8 @@ class Wordpress_Creation_Kit{
 
 	/* ajax to reorder records */
 	function wck_reorder_meta(){
+		check_ajax_referer( 'wck-reorder-meta' );
+
 		if( !empty( $_POST['meta'] ) )
 			$meta = sanitize_text_field( $_POST['meta'] );
 		else 

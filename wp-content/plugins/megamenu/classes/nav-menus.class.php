@@ -233,6 +233,11 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 						<span><?php esc_html_e( 'Scroll down', 'megamenu' ); ?></span>
 					</button>
 					</div>
+					<div class="megamenu-admin-modal__footer megamenu-menu-item-dialog__footer">
+						<p class="submit">
+							<button type="button" class="button button-primary button-compact megamenu-menu-item-dialog-save" data-label="<?php esc_attr_e( 'Save', 'megamenu' ); ?>" disabled><?php esc_html_e( 'Save', 'megamenu' ); ?></button>
+						</p>
+					</div>
 				</div>
 			</div>
 			</script>
@@ -338,6 +343,7 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 					'unsaved_changes'    => __( 'The changes you made will be lost if you navigate away from this page.', 'megamenu'),
 					'unsaved_changes_tab_hint' => __( 'This tab has unsaved changes.', 'megamenu' ),
 					'saving'             => __( 'Saving', 'megamenu' ),
+					'saved'              => __( 'Saved', 'megamenu' ),
 					'nonce'              => wp_create_nonce( 'megamenu_edit' ),
 					'nonce_check_failed' => __( 'Oops. Something went wrong. Please reload the page.', 'megamenu' ),
 					'css_prefix'         => $prefix,

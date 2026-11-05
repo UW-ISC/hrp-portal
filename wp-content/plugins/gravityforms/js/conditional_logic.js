@@ -414,6 +414,11 @@ function gf_do_field_action(formId, action, fieldId, isInit, callback){
 		}
 
 		gform.doAction('gform_post_conditional_logic_field_action', formId, action, targetId, defaultValues, isInit);
+		gform.utils.trigger( {
+			event: 'gform/conditional_logic/field_action/end',
+			native: false,
+			data: { formId: formId, action: action, targetId: targetId, defaultValues: defaultValues, isInit: isInit },
+		} );
 	}
 }
 
@@ -442,6 +447,11 @@ function gf_do_next_button_action(formId, action, fieldId, isInit){
 }
 
 function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, callback, formId){
+	// Honor the visitor's reduced motion setting even when the form has animated transitions enabled.
+	if ( useAnimation && window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+		useAnimation = false;
+	}
+
 	var $target = jQuery( targetId );
 
 	/**
@@ -604,6 +614,12 @@ function gf_hide_button( $target ) {
 function gf_reset_to_default(targetId, defaultValue){
 
 	var $target = jQuery( targetId );
+
+	// Hiding a repeater should leave the fields inside it as they are.
+	if ( $target.hasClass( 'gfield--type-repeater' ) ) {
+		return;
+	}
+
     if( $target.hasClass('gfield_shipping') || $target.hasClass('gfield_total') ||
         $target.hasClass('gfield--type-shipping') || $target.hasClass('gfield--type-total') ) {
         return;

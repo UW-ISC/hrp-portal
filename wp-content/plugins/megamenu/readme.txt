@@ -132,6 +132,18 @@ See https://www.megamenu.com for more screenshots
 
 == Changelog ==
 
+= 3.10.9 =
+
+* Improvement: Updated plugin icon in the admin menu and on the settings pages
+* Improvement: WordPress 7.2 - use an outlined admin menu icon, and icons from the WordPress icon library throughout the plugin's admin screens, to match the new WordPress admin icons
+* Improvement: Menu item settings - a single Save button in a footer bar at the bottom of the dialog saves every tab, showing "Saving…" and then "Saved"
+* Improvement: Menu location block - support wide and full width alignment
+* Fix: Items within a mega menu with "Disable Link" enabled no longer show hover styling or a pointer cursor, as clicking them does nothing. Disabled items that open a tab or collapse their children keep the hover styling and pointer cursor
+* Fix: Mega menu grid - an item dragged into another column was placed below that column's "+" (add widget) button
+* Fix: Menu item icon position "Top" and "Right" had no effect when the "Use Flex CSS" theme option was enabled
+* Fix: Flex CSS - right aligned menu items lost their alignment when the first right aligned item was set to "Hide item on desktop"
+* Fix: Sticky menu - when "Panel Width (Outer)" was set to a selector (e.g. ".container") and the sticky "Expand Background" option was enabled, mega menu panels lined up with the left edge of the browser window once the menu became stuck, instead of with the selected element
+
 = 3.10.8 =
 
 * Improvement: Serve minified frontend JS (maxmegamenu.min.js) for a smaller page-load footprint

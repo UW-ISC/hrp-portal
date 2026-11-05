@@ -611,7 +611,7 @@ class GF_Query {
 	/**
 	 * Return the submitted value and its plain-text and KSES-encoded ampersand forms.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param mixed $value The search value.
 	 *

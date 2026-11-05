@@ -1170,6 +1170,10 @@ class GFFormsModel {
 			}
 
 			$field = GF_Fields::create( $field );
+
+			// Resetting any saved nestingPath. nestingPath is dynamically calculated below.
+			unset( $field->nestingPath );
+
 			if ( isset( $form['id'] ) ) {
 				$field->formId = $form['id'];
 			}
@@ -1200,22 +1204,30 @@ class GFFormsModel {
 	 * Converts the sub fields to field objects.
 	 *
 	 * @since 2.4
+	 * @since 3.2.0 Added $nesting_path parameter and sets nestingPath on nested fields.
 	 *
 	 * @param GF_Field $field         The repeater field to be converted to objects.
 	 * @param int      $form_id       The current form ID.
 	 * @param int      $page_number   The page number the parent field is located on.
 	 * @param int      $nesting_level The level at which a repeater field is nested.
+	 * @param array    $nesting_path  Parent repeater IDs for this field, closest parent first.
 	 */
-	private static function convert_sub_field_objects( &$field, $form_id, $page_number, $nesting_level = 0 ) {
+	private static function convert_sub_field_objects( &$field, $form_id, $page_number, $nesting_level = 0, $nesting_path = array() ) {
 		$field->nestingLevel = $nesting_level;
-		foreach ( $field->fields as &$field ) {
-			$field             = GF_Fields::create( $field );
-			$field->formId     = $form_id;
-			$field->pageNumber = $page_number;
-			$field->post_convert_field();
-			if ( is_array( $field['fields'] ) ) {
+		$field->nestingPath  = empty( $nesting_path ) ? null : $nesting_path;
+
+		// Closest parent first: this repeater, then its ancestors.
+		$child_path = array_merge( array( $field->id ), $nesting_path );
+
+		foreach ( $field->fields as &$sub_field ) {
+			$sub_field              = GF_Fields::create( $sub_field );
+			$sub_field->formId      = $form_id;
+			$sub_field->pageNumber  = $page_number;
+			$sub_field->nestingPath = $child_path;
+			$sub_field->post_convert_field();
+			if ( is_array( $sub_field['fields'] ) ) {
 				$new_nesting_level = $nesting_level + 1;
-				self::convert_sub_field_objects( $field, $form_id, $page_number, $new_nesting_level );
+				self::convert_sub_field_objects( $sub_field, $form_id, $page_number, $new_nesting_level, $child_path );
 			}
 		}
 	}
@@ -2197,40 +2209,77 @@ class GFFormsModel {
 		// Make sure the form isn't in the cache before calling get_form_meta().
 		self::flush_current_form( self::get_form_cache_key( $form_id ) );
 		$form = self::get_form_meta( $form_id );
-		// check if form has consent field.
-		if ( GFCommon::has_consent_field( $new_display_meta ) ) {
-			$revisions_table_name = self::get_form_revisions_table_name();
 
-			// create the first revision.
-			if ( intval( $wpdb->get_var( $wpdb->prepare( 'SELECT count(0) FROM %i WHERE form_id=%d', $revisions_table_name, $form_id ) ) ) === 0 ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->query( $wpdb->prepare( 'INSERT INTO %i(form_id, display_meta, date_created) VALUES (%d, %s, utc_timestamp())', $revisions_table_name, $form_id, json_encode( $new_display_meta ) ) );
+		// Getting all consent fields (top level or inside a repeater)
+		$consent_fields = self::get_consent_fields( rgar( $new_display_meta, 'fields' ) );
 
-				return;
-			}
+		// If there are no consent fields on the form, abort and don't create a revision.
+		if ( empty( $consent_fields ) ) {
+			return;
+		}
 
-			$old_consent_fields = array();
-			foreach ( $form['fields'] as $field ) {
-				if ( $field->get_input_type() === 'consent' ) {
-					$old_consent_fields[ $field->id ] = $field->description;
-				}
-			}
+		$revisions_table_name = self::get_form_revisions_table_name();
 
-			// check if consent field description changed.
-			$create_revision = false;
-			foreach ( $new_display_meta['fields'] as $field ) {
-				if ( self::get_input_type( $field ) === 'consent' ) {
-					if ( $field['description'] !== rgar( $old_consent_fields, $field['id'] ) ) {
-						$create_revision = true;
+		// Create the first revision if one doesn't exist.
+		if ( intval( $wpdb->get_var( $wpdb->prepare( 'SELECT count(0) FROM %i WHERE form_id=%d', $revisions_table_name, $form_id ) ) ) === 0 ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( 'INSERT INTO %i(form_id, display_meta, date_created) VALUES (%d, %s, utc_timestamp())', $revisions_table_name, $form_id, json_encode( $new_display_meta ) ) );
+			return;
+		}
 
-						break;
-					}
-				}
-			}
+		$old_consent_fields = self::get_consent_fields( rgar( $form, 'fields' ) );
 
-			if ( $create_revision ) {
-				$wpdb->query( $wpdb->prepare( 'INSERT INTO %i (form_id, display_meta, date_created) VALUES(%d, %s, utc_timestamp())', $revisions_table_name, $form_id, json_encode( $new_display_meta ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// check if consent field description changed.
+		$create_revision = false;
+		foreach ( $consent_fields as $field_id => $field ) {
+			$old_field       = rgar( $old_consent_fields, $field_id );
+			$old_description = $old_field ? $old_field->description : '';
+
+			$description = rgobj( $field, 'description' );
+			if ( $description !== $old_description ) {
+				$create_revision = true;
+
+				break;
 			}
 		}
+
+		if ( $create_revision ) {
+			$wpdb->query( $wpdb->prepare( 'INSERT INTO %i (form_id, display_meta, date_created) VALUES(%d, %s, utc_timestamp())', $revisions_table_name, $form_id, json_encode( $new_display_meta ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		}
+	}
+
+	/**
+	 * Returns each consent field, including consent fields inside repeaters.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array $fields The form fields.
+	 *
+	 * @return array Consent fields keyed by field ID.
+	 */
+	private static function get_consent_fields( $fields ) {
+		$consent_fields = array();
+
+		if ( ! is_array( $fields ) ) {
+			return $consent_fields;
+		}
+
+		foreach ( $fields as $field ) {
+			// Creating a field object if needed.
+			if ( is_array( $field ) ) {
+				$field = GF_Fields::create( $field );
+			}
+
+			if ( self::get_input_type( $field ) === 'consent' ) {
+				$consent_fields[ $field->id ] = $field;
+			}
+
+			$sub_fields = rgobj( $field, 'fields' );
+			if ( is_array( $sub_fields ) ) {
+				$consent_fields = $consent_fields + self::get_consent_fields( $sub_fields );
+			}
+		}
+
+		return $consent_fields;
 	}
 
 	/**
@@ -3539,30 +3588,29 @@ class GFFormsModel {
 				continue;
 			}
 
-			// Process repeater fields using get_field_value to get hydrated structure for order total calculations.
-			if ( $field instanceof GF_Field_Repeater ) {
-				if ( ! RGFormsModel::is_field_hidden( $form, $field, array() ) ) {
-					$lead[ $field->id ] = self::get_field_value( $field );
-				}
+			// If a field is hidden by conditional logic, don't save it.
+			if ( RGFormsModel::is_field_hidden( $form, $field, array() ) ) {
 				continue;
 			}
 
-			// only save fields that are not hidden
-			if ( ! RGFormsModel::is_field_hidden( $form, $field, array() ) ) {
+			// Process repeater fields using get_field_value to get hydrated structure for order total calculations.
+			if ( $field->type === 'repeater' ) {
+				$lead[ $field->id ] = $field->get_value_create_entry( $form, $lead );
+				continue;
+			}
 
-				if ( $field->type == 'post_category' ) {
-					$field = GFCommon::add_categories_as_choices( $field, '' );
+			if ( $field->type === 'post_category' ) {
+				$field = GFCommon::add_categories_as_choices( $field, '' );
+			}
+
+			$inputs = $field->get_entry_inputs();
+
+			if ( is_array( $inputs ) ) {
+				foreach ( $inputs as $input ) {
+					$lead[ (string) $input['id'] ] = self::get_prepared_input_value( $form, $field, $lead, $input['id'] );
 				}
-
-				$inputs = $field->get_entry_inputs();
-
-				if ( is_array( $inputs ) ) {
-					foreach ( $inputs as $input ) {
-						$lead[ (string) $input['id'] ] = self::get_prepared_input_value( $form, $field, $lead, $input['id'] );
-					}
-				} else {
-					$lead[ $field->id ] = self::get_prepared_input_value( $form, $field, $lead, $field->id );
-				}
+			} else {
+				$lead[ $field->id ] = self::get_prepared_input_value( $form, $field, $lead, $field->id );
 			}
 		}
 
@@ -4605,7 +4653,7 @@ class GFFormsModel {
 				return rgar( $input, 'defaultValue' );
 			} else {
 				$value = $field->get_value_default();
-				if ( ! IS_ADMIN ) {
+				if ( ! is_admin() ) {
 					if ( is_array( $value ) ) {
 						foreach ( $value as &$_value ) {
 							$_value = GFCommon::replace_variables_prepopulate( $_value );
@@ -5544,7 +5592,13 @@ class GFFormsModel {
 		}
 
 		if ( empty( $value ) && $field->is_administrative() && ! $is_admin ) {
-			$value = self::get_default_value( $field, $input_id );
+			$default_value = self::get_default_value( $field, $input_id );
+			if ( ! empty( $field->nestingPath ) ) {
+				// Applying the default value to every submitted repeater row.
+				$top_repeater  = self::get_field( $form, end( $field->nestingPath ) );
+				$default_value = $top_repeater->get_sub_field_default_value( $field, $default_value );
+			}
+			$value = $default_value;
 		}
 
 		self::queue_save_input_value( $value, $form, $field, $lead, $current_fields, $input_id );
@@ -5573,6 +5627,7 @@ class GFFormsModel {
 		if ( is_array( $value ) && ! $isValueSubmissionArray ) {
 			foreach ( $value as $i => $v ) {
 				$repeater_index = $item_index . '_' . $i;
+
 				// use reset to check if the first item is an array
 				if ( is_array( $v ) && ! ( $field->is_value_submission_array() && ! is_array( reset( $v ) ) ) ) {
 					self::queue_save_input_value( $v, $form, $field, $lead, $current_fields, $input_id, $repeater_index );
@@ -7882,6 +7937,10 @@ class GFFormsModel {
 
 		if ( isset( $form['cssClass'] ) ) {
 			$form['cssClass'] = sanitize_text_field( $form['cssClass'] );
+		}
+
+		if ( isset( $form['columnLayout'] ) ) {
+			$form['columnLayout'] = GFCommon::whitelist( $form['columnLayout'], array( 'fill', 'fixed', 'slide' ) );
 		}
 
 		if ( isset( $form['enableHoneypot'] ) ) {

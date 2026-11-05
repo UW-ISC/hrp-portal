@@ -194,6 +194,71 @@
             var $modalBody = $dialog.find(".megamenu-admin-modal__body.megamenu-admin-modal__loading-host");
             var $outerWrap = $dialog.find(".megamenu-admin-modal__body .megamenu_outer_wrap");
 
+            // Footer bar: one Save for the whole dialog. Tabs whose forms have a Save button (`p.submit`, free and Pro)
+            // are saved from here through their own submit handlers; the per-tab buttons are hidden in CSS. Other tabs
+            // (Mega Menu, Icon) save automatically as they change.
+            var $footerSave = $dialog.find(".megamenu-menu-item-dialog-save");
+            // From data-label, not the button's text, which may still read "Saved" from an earlier save
+            var footerSaveLabel = $footerSave.attr("data-label") || "Save";
+            var footerSaved = false;
+
+            /** Forms in a tab panel that save with a Save button. */
+            var getSaveForms = function($scope) {
+                return $scope.find("form").filter(function() {
+                    return $(this).find("p.submit").length > 0;
+                });
+            };
+
+            /** Save forms with unsaved changes, in any tab. */
+            var getChangedForms = function() {
+                return getSaveForms($outerWrap).filter(function() {
+                    return !!$(this).data("mmmChanged");
+                });
+            };
+
+            /** Save forms the user can see in the active tab (not hidden sub-tabs, e.g. Pro's custom icon form). */
+            var getActiveSaveForms = function() {
+                return getSaveForms($outerWrap.find(".megamenu-dialog-panels > .megamenu_content:visible")).filter(":visible");
+            };
+
+            /**
+             * Updates the footer's Save button, the same way as the theme editor's toggle block Save: "Saving…" while
+             * saving, a disabled "Saved" afterwards until something changes, then "Save" again.
+             */
+            panel.updateFooter = function() {
+                if (!$footerSave.length) {
+                    return;
+                }
+                var changed = getChangedForms().length > 0;
+
+                if (pendingSaves > 0) {
+                    $footerSave.prop("disabled", true).text((megamenu.saving || "Saving") + "…");
+                } else if (changed) {
+                    $footerSave.prop("disabled", false).text(footerSaveLabel);
+                } else if (footerSaved) {
+                    $footerSave.prop("disabled", true).html('<span class="dashicons dashicons-yes" aria-hidden="true"></span> ' + (megamenu.saved || "Saved"));
+                } else {
+                    // nothing changed yet: Save is available on tabs with a Save button, not on tabs that save automatically
+                    $footerSave.prop("disabled", getActiveSaveForms().length === 0).text(footerSaveLabel);
+                }
+            };
+
+            /** Called when any save finishes (see end_saving). */
+            panel.onSaveComplete = function() {
+                footerSaved = true;
+                panel.updateFooter();
+            };
+
+            $footerSave.off("click.mmmFooterSave").on("click.mmmFooterSave", function() {
+                var $forms = getChangedForms();
+                if (!$forms.length) {
+                    $forms = getActiveSaveForms();
+                }
+                $forms.each(function() {
+                    $(this).trigger("submit");
+                });
+            });
+
             var setMenuItemDialogLoading = function(loading) {
                 if (!$modalBody.length) {
                     return;
@@ -395,10 +460,11 @@
                         var tabButtonLabel = typeof tabMeta.title === "string" ? tabMeta.title : "";
                         var content = $("<div />").addClass("megamenu_content").addClass(idx).html(tabHtml).hide();
                         
-                        // bind save button action
+                        // bind save button action (the footer's Save triggers this too)
                         content.find("form").on("submit", function(e) {
                             start_saving();
                             clearTabDirty(idx);
+                            $(this).removeData("mmmChanged");
                             e.preventDefault();
                             var data = $(this).serialize();
                             $.post(ajaxurl, data, function(submit_response) {
@@ -408,9 +474,32 @@
                         });
 
                         // register changes made
-                        content.find("form").on("change", function(e) {
+                        content.find("form").on("change input", function(e) {
                             markTabDirty(idx);
+                            if ($(this).find("p.submit").length) {
+                                $(this).data("mmmChanged", true);
+                                footerSaved = false;
+                                panel.updateFooter();
+                            }
                         });
+
+                        // Pro's image pickers (e.g. the custom icon) set a hidden input's value attribute without a
+                        // change event, so watch those inputs and treat a new value as a change
+                        if (typeof MutationObserver !== "undefined") {
+                            content.find("form").each(function() {
+                                var form = this;
+                                var $hidden = $(form).find("p.submit").length ? $(form).find(".mmm_image_selector").siblings("input[type='hidden']") : $();
+                                if (!$hidden.length) {
+                                    return;
+                                }
+                                var observer = new MutationObserver(function() {
+                                    $(form).trigger("change");
+                                });
+                                $hidden.each(function() {
+                                    observer.observe(this, { attributes: true, attributeFilter: ["value"] });
+                                });
+                            });
+                        }
 
                         if (idx === "menu_icon") {
                             var ICON_LAZY_CHUNK = 300;
@@ -581,6 +670,9 @@
 
                                 ensureIconLazyBuilt(tab_id);
                                 window.requestAnimationFrame(scrollIconIntoView);
+
+                                // Custom icon has a Save button; the other icon sets save as soon as an icon is picked
+                                panel.updateFooter();
                             });
 
                             content.find(".filter_icons").on("input", function() {
@@ -668,6 +760,7 @@
                             },
                             onAfterActivate: function () {
                                 syncDirtyTabIndicators();
+                                panel.updateFooter();
                                 var activeKey = tabs_container.find("button.megamenu-dialog-tab.is-active").attr("data-tab");
                                 var panelsEl = $outerWrap.find(".megamenu-dialog-panels")[0];
                                 if (activeKey === "menu_icon") {
@@ -689,6 +782,9 @@
                     $outerWrap.append(tabs_container).append(content_container);
 
                     $dialog.find(".megamenu-modal-close").trigger("focus");
+
+                    footerSaved = false;
+                    panel.updateFooter();
 
                     // Scroll-down hint: show when panels content overflows.
                     (function() {
@@ -1428,6 +1524,15 @@
                 // sortable widgets
                 var cols = grid.find(".mega-col-widgets");
 
+                // The "+" (add widget) button is the last child of each column's widget list. Dropping below a
+                // column's last widget would otherwise put the placeholder, and then the widget, after it.
+                var keepPlaceholderAboveAddButton = function(ui) {
+                    var $button = ui.placeholder.siblings(".mega-col-add-widget");
+                    if ($button.length && ui.placeholder.index() > $button.index()) {
+                        $button.before(ui.placeholder);
+                    }
+                };
+
                 cols.sortable({
                     connectWith: ".mega-col-widgets",
                     forcePlaceholderSize: true,
@@ -1442,8 +1547,20 @@
                         ui.item.css("margin-top", $(window).scrollTop());
 
                     },
+                    over: function(event, ui) {
+                        keepPlaceholderAboveAddButton(ui);
+                    },
+                    change: function(event, ui) {
+                        keepPlaceholderAboveAddButton(ui);
+                    },
                     stop: function(event, ui) {
                         ui.item.css("margin-top", "");
+
+                        // Whatever happened during the drag, the "+" ends up last in every column
+                        grid.find(".mega-col-widgets").each(function() {
+                            var $col = $(this);
+                            $col.append($col.children(".mega-col-add-widget"));
+                        });
 
                         var startParent = ui.item.data("mmm-widget-sort-parent");
                         if (startParent && ui.item.parent()[0] !== startParent) {
@@ -1854,7 +1971,14 @@
         }
 
         /** Disables visible tab save buttons and shows the header "Saving" state. */
+        // Saves in progress (tab forms, auto-saving tabs, widgets, grid), shown in the footer bar.
+        var pendingSaves = 0;
+
         var start_saving = function() {
+            pendingSaves++;
+            if (typeof panel.updateFooter === "function") {
+                panel.updateFooter();
+            }
             $(".megamenu_content:visible p.submit, .megamenu_content:visible .mega-widget-form-footer")
                 .find("button.button-primary")
                 .each(function() {
@@ -1882,6 +2006,12 @@
             var $ind = $(MENU_ITEM_DIALOG_SEL + " .megamenu-menu-item-dialog-saving-indicator");
             if ($ind.length) {
                 $ind.prop("hidden", true);
+            }
+            pendingSaves = Math.max(0, pendingSaves - 1);
+            if (pendingSaves === 0 && typeof panel.onSaveComplete === "function") {
+                panel.onSaveComplete();
+            } else if (typeof panel.updateFooter === "function") {
+                panel.updateFooter();
             }
         }
 

@@ -9,7 +9,6 @@ class GF_Field_Total extends GF_Field {
 
 	public $type         = 'total';
 	public $numberFormat = 'currency'; // This is used to property format the total during conditional logic evaluation.
-	public $repeatable   = false;
 
 	function get_form_editor_field_settings() {
 		return array(

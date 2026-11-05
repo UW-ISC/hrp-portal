@@ -336,7 +336,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 	 *
 	 * @since 1.7.7
 	 * @since 2.9.4 Updated to save the processing status for each feed of compatible add-ons.
-	 * @since next Updated to run `delay_feed()` when the feed has a condition based on the payment status and the form submission is being processed.
+	 * @since 3.2.0 Updated to run `delay_feed()` when the feed has a condition based on the payment status and the form submission is being processed.
 	 *
 	 * @access public
 	 *
@@ -811,7 +811,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 	 * Determines if the feed should be processed based on the conditional logic rules.
 	 *
 	 * @since unknown
-	 * @since next Added the $without_payment_status_rule param.
+	 * @since 3.2.0 Added the $without_payment_status_rule param.
 	 *
 	 * @param array $feed                        The feed to be evaluated.
 	 * @param array $form                        The form the feed belongs to.
@@ -851,7 +851,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 	/**
 	 * Determines if the given feed has a conditional logic rule based on the entry payment status.
 	 *
-	 * @since next
+	 * @since 3.2.0
 	 *
 	 * @param array $feed The feed to check.
 	 *
@@ -1150,7 +1150,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 	 * Return the active feed to be used when processing the given form and entry, evaluating conditional logic if configured.
 	 *
 	 * @since unknown
-	 * @since next Added the $check_for_payment_status_rule param.
+	 * @since 3.2.0 Added the $check_for_payment_status_rule param.
 	 *
 	 * @param false|array $entry                         The current entry.
 	 * @param false|array $form                          The current form.
@@ -1186,7 +1186,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 	 * Return the active feed to be used when processing the current entry, evaluating conditional logic if configured.
 	 *
 	 * @since 1.9.16
-	 * @since next Added the $check_for_payment_status_rule param.
+	 * @since 3.2.0 Added the $check_for_payment_status_rule param.
 	 *
 	 * @param array       $form                          The current form.
 	 * @param array|false $entry                         The current entry.

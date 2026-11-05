@@ -1,4 +1,4 @@
-# Copyright (C) 2025 WordPress Creation Kit
+# Copyright (C) 2026 WordPress Creation Kit
 # This file is distributed under the same license as the WordPress Creation Kit package.
 msgid ""
 msgstr ""
@@ -6,7 +6,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-13 15:39+0000\n"
+"POT-Creation-Date: 2026-11-02 14:05+0000\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -157,7 +157,7 @@ msgstr ""
 msgid "The meta name of the field, generated automatically from the title, by which you can query. Can be changed. Must be unique, only lowercase letters, no spaces and no special characters."
 msgstr ""
 
-#: wck-cfc.php:168, wck-cptc.php:50, wck-opc.php:203, wordpress-creation-kit-api/wck-fep/wck-fep.php:1047
+#: wck-cfc.php:168, wck-cptc.php:50, wck-opc.php:203, wordpress-creation-kit-api/wck-fep/wck-fep.php:1120
 msgid "Description"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgstr ""
 msgid "Metabox updated."
 msgstr ""
 
-#: wck-cfc.php:927, wordpress-creation-kit-api/wordpress-creation-kit.php:526, wordpress-creation-kit-api/wordpress-creation-kit.php:633, wordpress-creation-kit-api/wck-fep/wck-fep.php:876
+#: wck-cfc.php:927, wordpress-creation-kit-api/wordpress-creation-kit.php:528, wordpress-creation-kit-api/wordpress-creation-kit.php:635, wordpress-creation-kit-api/wck-fep/wck-fep.php:925
 msgid "Edit"
 msgstr ""
 
@@ -1161,7 +1161,7 @@ msgstr ""
 msgid "Change the \"Featured Image\" label"
 msgstr ""
 
-#: wck-fep.php:196, wordpress-creation-kit-api/wck-fep/wck-fep.php:435
+#: wck-fep.php:196, wordpress-creation-kit-api/wck-fep/wck-fep.php:439
 msgid "Add Post"
 msgstr ""
 
@@ -1169,7 +1169,7 @@ msgstr ""
 msgid "Change the \"Add Post\" label for the submit button"
 msgstr ""
 
-#: wck-fep.php:197, wordpress-creation-kit-api/wck-fep/wck-fep.php:433
+#: wck-fep.php:197, wordpress-creation-kit-api/wck-fep/wck-fep.php:437
 msgid "Update Post"
 msgstr ""
 
@@ -1177,7 +1177,7 @@ msgstr ""
 msgid "Change the \"Update Post\" label for the submit button"
 msgstr ""
 
-#: wck-fep.php:198, wordpress-creation-kit-api/wck-fep/wck-fep.php:722
+#: wck-fep.php:198, wordpress-creation-kit-api/wck-fep/wck-fep.php:771
 msgid "Post Added"
 msgstr ""
 
@@ -1185,7 +1185,7 @@ msgstr ""
 msgid "Change the \"Post Added\" success message"
 msgstr ""
 
-#: wck-fep.php:199, wordpress-creation-kit-api/wck-fep/wck-fep.php:724
+#: wck-fep.php:199, wordpress-creation-kit-api/wck-fep/wck-fep.php:773
 msgid "Post Updated"
 msgstr ""
 
@@ -1717,39 +1717,39 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:526
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:528
 msgid "Content"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:526, wordpress-creation-kit-api/wordpress-creation-kit.php:634, wordpress-creation-kit-api/wck-fep/wck-fep.php:879
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:528, wordpress-creation-kit-api/wordpress-creation-kit.php:636, wordpress-creation-kit-api/wck-fep/wck-fep.php:928
 msgid "Delete"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:582
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:584
 msgid "Map Markers"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:633
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:635
 msgid "Edit this item"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:634
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:636
 msgid "Delete this item"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:822
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:824
 msgid "Please enter a value for the required field "
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:872
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:877
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:1529
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:1536
 msgid "Syncronize WCK"
 msgstr ""
 
-#: wordpress-creation-kit-api/wordpress-creation-kit.php:1541
+#: wordpress-creation-kit-api/wordpress-creation-kit.php:1548
 msgid "Syncronize WCK Translation"
 msgstr ""
 
@@ -1761,111 +1761,131 @@ msgstr ""
 msgid "Search Location"
 msgstr ""
 
-#: wordpress-creation-kit-api/fields/upload.php:75
+#: wordpress-creation-kit-api/fields/upload.php:79
 msgid "Upload "
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:337
-msgid "Wrong form for this post type"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:345
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:302, wordpress-creation-kit-api/wck-fep/wck-fep.php:349, wordpress-creation-kit-api/wck-fep/wck-fep.php:577
 msgid "You are not allowed to edit this post."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:808
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:341
+msgid "Wrong form for this post type"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:857
 msgid "My Profile"
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:821, wordpress-creation-kit-api/wck-fep/wck-fep.php:840
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:870, wordpress-creation-kit-api/wck-fep/wck-fep.php:889
 msgid "My "
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1014, wordpress-creation-kit-api/wck-fep/wck-fep.php:1032
-msgid "Welcome %1$s! "
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1015, wordpress-creation-kit-api/wck-fep/wck-fep.php:1032
-msgid "Logout"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:973
-msgid "User:"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:975, wordpress-creation-kit-api/wck-fep/wck-fep.php:1000, wordpress-creation-kit-api/wck-fep/wck-fep.php:1041
-msgid "Password:"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:977
-msgid "Log in"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:980
-msgid "Remember"
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:989
-msgid "Don't have a user account? "
-msgstr ""
-
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:990, wordpress-creation-kit-api/wck-fep/wck-fep.php:1004
-msgid "Register."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:992
+msgid "Lost your password?"
 msgstr ""
 
 #: wordpress-creation-kit-api/wck-fep/wck-fep.php:996
-msgid "Username:"
+msgid "The username field is empty."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:998, wordpress-creation-kit-api/wck-fep/wck-fep.php:1038
-msgid "Email:"
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:998
+msgid "The password field is empty."
 msgstr ""
 
 #: wordpress-creation-kit-api/wck-fep/wck-fep.php:1002
-msgid "Confirm Password:"
+msgid "The username or password you entered is incorrect."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1006
-msgid "Back to login."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1004
+msgid "Login failed. Please try again."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1044
-msgid "Password Confirm:"
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1087, wordpress-creation-kit-api/wck-fep/wck-fep.php:1105
+msgid "Welcome %1$s! "
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1088, wordpress-creation-kit-api/wck-fep/wck-fep.php:1105
+msgid "Logout"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1046
+msgid "User:"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1048, wordpress-creation-kit-api/wck-fep/wck-fep.php:1073, wordpress-creation-kit-api/wck-fep/wck-fep.php:1114
+msgid "Password:"
 msgstr ""
 
 #: wordpress-creation-kit-api/wck-fep/wck-fep.php:1050
-msgid "Update"
+msgid "Log in"
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1099
-msgid "This username is already registered, please choose another one."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1053
+msgid "Remember"
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1096
-msgid "This username is invalid because it uses illegal characters. Please enter a valid username."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1062
+msgid "Don't have a user account? "
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1094
-msgid "Please enter a username."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1063, wordpress-creation-kit-api/wck-fep/wck-fep.php:1077
+msgid "Register."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1110
-msgid "This email is already registered, please choose another one."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1069
+msgid "Username:"
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1107
-msgid "The email address isn&#8217;t correct."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1071, wordpress-creation-kit-api/wck-fep/wck-fep.php:1111
+msgid "Email:"
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1105
-msgid "Please type your e-mail address."
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1075
+msgid "Confirm Password:"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1079
+msgid "Back to login."
 msgstr ""
 
 #: wordpress-creation-kit-api/wck-fep/wck-fep.php:1117
+msgid "Password Confirm:"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1123
+msgid "Update"
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1172
+msgid "This username is already registered, please choose another one."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1169
+msgid "This username is invalid because it uses illegal characters. Please enter a valid username."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1167
+msgid "Please enter a username."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1183
+msgid "This email is already registered, please choose another one."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1180
+msgid "The email address isn&#8217;t correct."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1178
+msgid "Please type your e-mail address."
+msgstr ""
+
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1190
 msgid "The passwords do not match."
 msgstr ""
 
-#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1115
+#: wordpress-creation-kit-api/wck-fep/wck-fep.php:1188
 msgid "Please enter a password."
 msgstr ""
 

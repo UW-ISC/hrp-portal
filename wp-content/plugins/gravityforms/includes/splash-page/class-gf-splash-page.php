@@ -217,7 +217,9 @@ class GF_Splash_Page {
 	 * @return bool
 	 */
 	public function should_display() {
-		return $this->about_version == get_transient( 'gf_updated' ) && GFForms::is_gravity_page() && GFCommon::current_user_can_any( GFCommon::all_caps() );
+		// Temporarily disable splash page display.
+		// return $this->about_version == get_transient( 'gf_updated' ) && GFForms::is_gravity_page() && GFCommon::current_user_can_any( GFCommon::all_caps() );
+		return false;
 	}
 
 }
